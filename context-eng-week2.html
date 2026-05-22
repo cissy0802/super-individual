@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 2 · Context Engineering 深度 — Super Individual Weekly</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.homework{background:linear-gradient(135deg,rgba(255,110,196,0.1),rgba(123,97,255,0.1));border:1px solid rgba(255,110,196,0.3);border-radius:10px;padding:22px 24px;margin:36px 0}
+.homework h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.68rem}}
+</style></head><body>
+<a href="https://cissy0802.github.io/" style="position:fixed;top:14px;left:14px;font-size:0.82rem;color:inherit;opacity:0.55;text-decoration:none;padding:6px 12px;border:1px solid currentColor;border-radius:20px;z-index:100;backdrop-filter:blur(6px);transition:opacity 0.2s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.55">← Hub</a>
+<div class="container">
+
+<header>
+<span class="week-tag">WEEK 02 / PHASE 1 · ENGINEERING</span>
+<h1>Context Engineering 深度</h1>
+<h2>Lost-in-the-Middle · 信息排布 · Chunk 设计 · Context Compaction</h2>
+<div class="date">2026-05-22 · BigCat</div>
+<p class="pitch">「200K context」不等于「200K 有效注意力」。</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>所有大模型厂商都在卷 context window：Claude Sonnet 4.5 给了 1M、Gemini 2.5 给到 2M、GPT-5 也跟到 400K。于是大量人开始把整个 codebase / 全公司文档 / 三十轮历史对话一股脑塞进去，然后困惑：「为什么模型答不上来？我明明把答案放进去了。」答案是 <strong>context window 长 ≠ context 有效</strong>。注意力在长序列上是退化的、信息排布的位置决定模型能不能用、chunk 切的方式比换一个 embedding model 重要 10 倍。这一期讲四件事：长 context 真实有效长度的衡量、信息在 prompt 里的物理位置怎么放、为什么 90% 的 RAG 输给作者自己的 chunk 策略、以及当 history 超长时怎么做 compaction 而不丢关键信息。</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>Lost-in-the-Middle：长 context 的真实有效长度</h2>
+<div class="claim">论断：把关键信息放进 prompt 中段，就是把它埋进模型的视觉盲区。</div>
+
+<h3>背景与原理</h3>
+<p>Liu et al. 2023 的 <em>Lost in the Middle: How Language Models Use Long Contexts</em>（TACL 2024 收录）是这一切讨论的起点。他们让模型在一组文档里找答案，把 ground-truth 文档分别放在第 1、5、10、15、20 个位置，画出准确率曲线。结果在所有测试的模型（包括 GPT-3.5、Claude、Longchat）上都是 <strong>U 形</strong>：首尾位置准确率接近 75%，中段塌到 50% 以下——比关闭整个 retrieval 还差。</p>
+<p>原因有两层。第一，预训练阶段，token 之间的依赖大多是局部的、或对齐到文档开头（causal mask 让 attention 天然偏向最近 token，RoPE 等位置编码的 long-tail 衰减也让远距离 attention score 变弱）。第二，post-training 的指令数据多数是「短 prompt → 答案」结构，模型对「指令在尾、关键事实在中段」的形态见过的样本少。</p>
+<p>2024 年 NoLiMa（Modarressi et al.）进一步证明：当 question 和 answer 之间没有词面 overlap 时，所谓的 100K+ 长上下文模型在 32K 处就掉到基线以下。Chroma 2025 年的 <em>Context Rot</em> 报告复测了 18 个最新模型（含 Claude Sonnet 4、GPT-4.1、Gemini 2.5），结论一样：<strong>有效 context 远短于宣传的 max context</strong>，且和任务难度反向相关。</p>
+
+<h3>实战示例</h3>
+<p>跑一个最小 NIAH（Needle in a Haystack）测试，先量一下你常用模型的真实有效长度：</p>
+<pre><code><span class="tag-key">import</span> anthropic, random, string
+
+client = anthropic.Anthropic()
+needle = "BigCat 的会议密码是 PURPLE-OWL-9182。"
+
+<span class="tag-key">def</span> haystack(n_tokens, needle_pos):
+    <span class="tag-claude"># 用 Paul Graham 文章拼到 n_tokens 长度</span>
+    filler = open("pg_essays.txt").read()
+    chunks = filler.split("\n\n")
+    random.shuffle(chunks)
+    text = "\n\n".join(chunks)[:n_tokens * 4]  <span class="tag-claude"># 粗略 4 char/token</span>
+    pos = int(len(text) * needle_pos)
+    <span class="tag-key">return</span> text[:pos] + "\n\n" + needle + "\n\n" + text[pos:]
+
+<span class="tag-key">for</span> length <span class="tag-key">in</span> [8000, 32000, 100000, 180000]:
+    <span class="tag-key">for</span> pos <span class="tag-key">in</span> [0.1, 0.5, 0.9]:
+        ctx = haystack(length, pos)
+        r = client.messages.create(
+            model="claude-sonnet-4-6",
+            max_tokens=128,
+            messages=[{"role":"user","content": ctx +
+                "\n\nQ: BigCat 的会议密码是什么？只回答密码。"}])
+        print(length, pos, r.content[0].text.strip())</code></pre>
+<p>跑完会得到一张 (length × position) 的命中表。<strong>你只能信任那张表里命中率 ≥ 95% 的格子</strong>——超过的部分，不管厂商宣传多少 K，都不该塞关键信息。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：很多团队用 NIAH 单针测出「100% 通过 1M context」，就放心地把多份合同、邮件、聊天记录混进 prompt。NIAH 只测「字面查找」，而真实任务要的是<strong>多跳推理 + 整合</strong>，难度高 1-2 个数量级。BABILong、RULER、LongBench v2 才是更接近真实的 benchmark。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Liu et al. 2023, <a href="https://arxiv.org/abs/2307.03172" target="_blank">arxiv.org/abs/2307.03172</a> ·
+Chroma 2025 <em>Context Rot</em>, <a href="https://research.trychroma.com/context-rot" target="_blank">research.trychroma.com/context-rot</a> ·
+Greg Kamradt 的原版 NIAH 仓库，<a href="https://github.com/gkamradt/LLMTest_NeedleInAHaystack" target="_blank">github.com/gkamradt/LLMTest_NeedleInAHaystack</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>信息排布原则：U 形分布 + Anchor + Restate</h2>
+<div class="claim">论断：prompt 不是一个 bag of tokens，它是一条<strong>有梯度的注意力管道</strong>。</div>
+
+<h3>背景与原理</h3>
+<p>既然首尾权重最高，prompt 内部的物理排布就该按重要性梯度铺。Anthropic 官方文档给的 long-context 建议（claude.com/docs · Long context tips）非常直白：<strong>把待引用的长文档放在 prompt 的最上方，让 question 出现在 user turn 的末尾</strong>。这条规则在 Claude 上反复被测过，能把 long doc Q&amp;A 的准确率提 10-20%。</p>
+<p>实操有三个动作：</p>
+<ul>
+<li><strong>Anchor（锚定）</strong>：把核心约束、当前任务目标在 system 段 + user 段末尾都写一次。Claude 长文档示例里就明确把 question 放在 <code>&lt;documents&gt;</code> 之后——而不是之前。</li>
+<li><strong>Restate（复述）</strong>：在让 Claude 引用长文档时，要求它先「quote the relevant sentences verbatim」再回答。这一步强制模型在生成答案前把信息从中段重新拉到当前 attention 区。</li>
+<li><strong>Stable prefix</strong>：把不变的指令 / schema / examples 全部放最前，让 KV cache 命中率最大化（这一点和 Week 1 的 prefix caching 同源）。</li>
+</ul>
+
+<div class="diagram">┌──────────────── Prompt 物理排布 ─────────────────┐
+│  ↑ HIGH attention                              │
+│  ┌──────────────────────────────────────────┐  │
+│  │  SYSTEM: role + guardrails + tools schema│  │ ← cache-friendly
+│  ├──────────────────────────────────────────┤  │
+│  │  REFERENCE DOCS  (large, stable per task)│  │ ← put long stuff here
+│  │  &lt;doc id="1"&gt;...&lt;/doc&gt;                    │  │
+│  │  &lt;doc id="2"&gt;...&lt;/doc&gt;                    │  │
+│  ├──────────────────────────────────────────┤  │
+│  │  …  mid-context attention sag  …         │  │ ← 不要把关键信息放这
+│  ├──────────────────────────────────────────┤  │
+│  │  CRITICAL CONSTRAINTS  (restate)         │  │
+│  │  CURRENT QUESTION  (specific, last)      │  │ ← 模型最先看到的
+│  └──────────────────────────────────────────┘  │
+│  ↑ HIGH attention                              │
+└────────────────────────────────────────────────┘</div>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-claude">&lt;documents&gt;</span>
+  <span class="tag-claude">&lt;document index="1"&gt;</span>
+    <span class="tag-claude">&lt;source&gt;</span>contracts/acme-2024.pdf<span class="tag-claude">&lt;/source&gt;</span>
+    <span class="tag-claude">&lt;content&gt;</span>...8K tokens...<span class="tag-claude">&lt;/content&gt;</span>
+  <span class="tag-claude">&lt;/document&gt;</span>
+  <span class="tag-claude">&lt;document index="2"&gt;</span>...<span class="tag-claude">&lt;/document&gt;</span>
+<span class="tag-claude">&lt;/documents&gt;</span>
+
+<span class="tag-key">Instructions (重申)</span>：
+- 只引用 documents 中明确写出的条款，不要外推
+- 先列出你将引用的原文片段，再给结论
+
+<span class="tag-key">Question</span>：
+我方在 Acme 合同里能否在第 18 个月单方面终止？请逐条列出依据。</code></pre>
+
+<div class="fail">
+<strong>失败模式</strong>：在 chat history 很长的会话里把新指令塞进 system，又指望模型「重新读一遍 system」。模型不会主动「再读」——它只是在每个 token 上做一次 attention。指令需要在<strong>最近的 user turn 里复述</strong>才会被注意到。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Anthropic Long context tips, <a href="https://docs.claude.com/en/docs/build-with-claude/prompt-engineering/long-context-tips" target="_blank">docs.claude.com/.../long-context-tips</a> ·
+Lilian Weng 的 <em>LLM Powered Autonomous Agents</em> 关于 working memory 的章节，<a href="https://lilianweng.github.io/posts/2023-06-23-agent/" target="_blank">lilianweng.github.io/posts/2023-06-23-agent</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>RAG 真正的瓶颈：Chunk 设计远比 Embedding Model 重要</h2>
+<div class="claim">论断：90% 的 RAG 写错了，错的不是 embedding，是切文档的方式。</div>
+
+<h3>背景与原理</h3>
+<p>团队上线 RAG 的标准流程：固定 512-token chunk + 50 overlap + OpenAI embedding + 简单 top-k。然后效果不好就开始换 embedding model、换向量库。换完发现差不多。这是因为：</p>
+<ul>
+<li><strong>语义边界被切坏</strong>：固定大小切，会在句中、段落中切断。一个「但是上述条件不适用于...」的转折句被切成两个 chunk，retrieval 命中其中一个就是错的答案。</li>
+<li><strong>缺少上下文（contextless chunk）</strong>：一个 chunk 里写「该条款 30 天内生效」——但「该条款」指什么？模型不知道。Anthropic 2024 年 <em>Contextual Retrieval</em> 博客指出：给每个 chunk 加一段「这个 chunk 在原文档中的上下文」前缀，retrieval 失败率降 49%；配合 BM25 再降到 67%。</li>
+<li><strong>单一粒度</strong>：法律条款适合 200 token，源代码适合按函数切，研报适合按章节切——固定粒度等于对所有任务用一种锤子。</li>
+</ul>
+<p>真正决定 RAG 上限的三件事：<strong>chunk 边界（语义切分）、chunk 上下文（contextual prefix）、检索融合（hybrid + rerank）</strong>。embedding model 在合理选择下只是 ±5% 的差异。</p>
+
+<h3>实战示例</h3>
+<p>Anthropic 推荐的 Contextual Retrieval 流程（可直接搬到自己的项目）：</p>
+<pre><code><span class="tag-claude"># 步骤 1：为每个 chunk 生成上下文（用 Claude Haiku 批量做，配合 prompt caching）</span>
+context_prompt = """
+&lt;document&gt;{whole_doc}&lt;/document&gt;
+Here is the chunk we want to situate within the whole document:
+&lt;chunk&gt;{chunk}&lt;/chunk&gt;
+Please give a short succinct context to situate this chunk within
+the overall document for improving search retrieval. Answer only
+with the context, nothing else.
+"""
+
+<span class="tag-claude"># 步骤 2：把 context 拼到 chunk 前再做 embedding + BM25 索引</span>
+indexed_chunk = f"{generated_context}\n\n{original_chunk}"
+
+<span class="tag-claude"># 步骤 3：查询时做 hybrid (dense + BM25)，取 top-150 → rerank 到 top-20</span>
+dense_hits = vector_store.search(query, k=150)
+bm25_hits  = bm25_index.search(query, k=150)
+fused = reciprocal_rank_fusion([dense_hits, bm25_hits])
+top20 = cohere_rerank(query, fused[:150], top_n=20)</code></pre>
+<p>关键工程细节：第 1 步的 <code>{whole_doc}</code> 在 prompt 里复用同一个 system + document prefix，所有 chunk 共享 prompt cache，成本可以压到原 1/10。Anthropic 自己测下来一篇 100 页文档的 contextualization 成本大约 $1.02——比换 embedding model 便宜得多，效果好得多。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：把 contextual retrieval 当 silver bullet。它对「需要外部信息消歧」的 chunk 提升大；对「完全独立可读」的 chunk（如 API 文档每条 endpoint 独立）几乎无收益，反而增加成本。先做 baseline eval，再决定哪些 corpus 上用。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Anthropic <em>Introducing Contextual Retrieval</em> 2024, <a href="https://www.anthropic.com/news/contextual-retrieval" target="_blank">anthropic.com/news/contextual-retrieval</a> ·
+LlamaIndex 的 chunking 实验，<a href="https://www.llamaindex.ai/blog" target="_blank">llamaindex.ai/blog</a> ·
+Jina AI <em>Late Chunking</em> 论文，<a href="https://arxiv.org/abs/2409.04701" target="_blank">arxiv.org/abs/2409.04701</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Context Compaction：长对话的可控压缩</h2>
+<div class="claim">论断：长会话不是「窗口爆了」的问题，是「信号被噪声稀释」的问题。</div>
+
+<h3>背景与原理</h3>
+<p>Agent / 长聊会话跑到第 50 轮，accuracy 经常断崖下跌。原因不一定是 token 超了——很多时候离 max context 还远，但模型已经晕了。这就是 <strong>context rot</strong>：相关信号被无关历史稀释，加上 lost-in-the-middle，模型把注意力压到了无关 token 上。</p>
+<p>处理 long history 有四种主流策略，工程选择对应不同 trade-off：</p>
+<ul>
+<li><strong>滑动窗口（sliding window）</strong>：只保留最近 N 轮。最简单，但会丢早期约束（「我刚才说不要用 jQuery」3 轮后被忘）。</li>
+<li><strong>Summarization compaction</strong>：每 K 轮触发一次摘要，把旧 turns 压成结构化摘要（用户偏好、已完成步骤、未决问题）。Claude Code 内置的 auto-compaction 就是这个思路，触发后保留最近若干 turn 全文 + 之前的 structured summary。</li>
+<li><strong>Hierarchical memory</strong>：working memory（最近）+ episodic memory（事件摘要）+ semantic memory（向量化检索）。MemGPT (Packer et al. 2023, <em>arxiv.org/abs/2310.08560</em>) 是经典实现，也是 Lilian Weng <em>LLM Powered Autonomous Agents</em> 推荐的模板。</li>
+<li><strong>Selective pruning（基于相关性）</strong>：用一个小模型给每个 historical turn 打分，低于阈值的整段抛掉，而不是按时间。适合 tool-use heavy 的 agent——大多数 tool output 用完一次就再也不被引用了。</li>
+</ul>
+
+<h3>实战示例</h3>
+<p>给一个长跑的 coding agent 写一段最小可用的 compaction loop：</p>
+<pre><code><span class="tag-key">def</span> maybe_compact(history, model="claude-sonnet-4-6", threshold=120_000):
+    tok = count_tokens(history)
+    <span class="tag-key">if</span> tok &lt; threshold:
+        <span class="tag-key">return</span> history
+    <span class="tag-claude"># 保留最近 6 轮全文，之前的压成结构化摘要</span>
+    recent, old = history[-6:], history[:-6]
+    summary = client.messages.create(model=model, max_tokens=2000,
+        system="You compress agent histories. Output strict JSON.",
+        messages=[{"role":"user","content": f"""
+Compress the following turns into JSON with keys:
+- goal: the user's overall objective
+- decisions: list of decisions made (with rationale)
+- artifacts: files/code created or modified (paths only)
+- open_questions: anything explicitly deferred
+- forbidden: constraints user said NOT to do
+&lt;turns&gt;{serialize(old)}&lt;/turns&gt;
+"""}]).content[0].text
+    <span class="tag-key">return</span> [{"role":"system","content":f"&lt;prior_session&gt;{summary}&lt;/prior_session&gt;"}] + recent</code></pre>
+<p>关键经验：<strong>压缩的 schema 比压缩的算法重要</strong>。强制模型按固定 key 输出（goal / decisions / artifacts / open_questions / forbidden），可以让下一轮 prompt 直接引用 <code>&lt;prior_session&gt;.forbidden</code>，比让模型自由总结鲁棒得多。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）压缩时把代码片段也总结掉，下次让 agent 改代码时它再要原文，反而多花 token。规则：<em>code / file paths / exact identifiers 永远保留原文，自然语言才压</em>。（2）每轮都 compact，把缓存彻底打掉，反向涨成本。设置 hysteresis：触发阈值 120K，恢复到 60K，期间不再触发。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Anthropic <em>Effective context engineering for AI agents</em> 工程博客, <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" target="_blank">anthropic.com/engineering/effective-context-engineering-for-ai-agents</a> ·
+MemGPT 论文, <a href="https://arxiv.org/abs/2310.08560" target="_blank">arxiv.org/abs/2310.08560</a> ·
+Simon Willison <em>Context engineering</em> 词条整理, <a href="https://simonwillison.net/tags/context-engineering/" target="_blank">simonwillison.net/tags/context-engineering</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// 综合实战 · 给个人 RAG 做一次端到端改造</h3>
+<p>把上面四点串成一个周末项目：拿你自己的 Notion / Obsidian 笔记当 corpus，做一个可日常用的 personal knowledge agent。</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>切</strong>：按 Markdown header 切（不要 fixed-size）。<code>##</code> 以上每一段为一个 chunk，附 frontmatter + breadcrumb（文件路径 + heading 链）。</li>
+<li><strong>上下文化</strong>：用 Haiku 4.5 给每个 chunk 生成 1-2 句 context prefix（cache 整个文档作为 prefix，单 chunk 增量 token 极少）。</li>
+<li><strong>检索</strong>：dense（voyage-3-large 或 BGE-M3）+ BM25 → RRF → Cohere rerank。</li>
+<li><strong>组装</strong>：把 top-K 文档放在 <code>&lt;documents&gt;</code> 段最前；指令 + question 放最末，且在末尾 restate 「只引用 documents 中明确出现的内容」。</li>
+<li><strong>长会话</strong>：超过 80K 触发摘要压缩，保留最近 6 轮 + structured summary。代码块永不压缩。</li>
+<li><strong>Eval</strong>：自己写 30 道带 ground truth 的问题（自己笔记自己懂，不用对外标注），跑命中率 / 引用准确率。下一期讲怎么把这个 eval 自动化。</li>
+</ol>
+<p style="margin-top:12px">这一套跑下来，你会发现 <strong>chunking + contextualization + rerank</strong> 这三步带来的提升，比把 embedding model 换 5 次都大。</p>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// ENGLISH GLOSSARY</h3>
+<dl>
+<dt>Context Window</dt><dd>模型一次推理能处理的最大 token 数（输入 + 输出）。1M context ≠ 1M 有效注意力。</dd>
+<dt>Lost-in-the-Middle</dt><dd>关键信息位于 prompt 中段时，模型准确率呈 U 形塌陷。Liu et al. 2023。</dd>
+<dt>NIAH (Needle in a Haystack)</dt><dd>把一个事实「针」埋进长 context「干草堆」测召回率的基准。Greg Kamradt 开源版本最常用。</dd>
+<dt>Context Rot</dt><dd>有效注意力随 context 增长退化的现象。Chroma 2025 研究术语。</dd>
+<dt>Chunking</dt><dd>把长文档切成可索引片段的过程。固定大小切是 baseline，语义切 / late chunking 是进阶。</dd>
+<dt>Contextual Retrieval</dt><dd>给每个 chunk 加一段「在原文档里的上下文」前缀，再索引。Anthropic 2024 提出。</dd>
+<dt>Hybrid Search</dt><dd>BM25（词面）+ dense embedding（语义）召回结合，常用 RRF (Reciprocal Rank Fusion) 融合。</dd>
+<dt>Reranker</dt><dd>对召回结果用交叉编码器重排，比单独检索精度高很多（Cohere / Jina / BGE-reranker）。</dd>
+<dt>Context Compaction</dt><dd>长对话超过阈值时把旧 turns 压成结构化摘要的过程。Claude Code 的 auto-compact 就是。</dd>
+<dt>Hierarchical Memory</dt><dd>working / episodic / semantic 三层记忆架构。MemGPT 是代表实现。</dd>
+</dl>
+</div>
+
+<!-- ============ Homework ============ -->
+<div class="homework">
+<h3>// 本周动手作业</h3>
+<p><strong>今晚 45 分钟实验</strong>：量一下你最常用的模型的真实有效 context。</p>
+<ol style="margin-left:24px;margin-top:10px">
+<li>用上面给的 NIAH 脚本，在 (8K / 32K / 100K / 180K) × (0.1 / 0.5 / 0.9) 共 12 个格子上各跑 5 次。</li>
+<li>用<strong>多跳针</strong>而不是单针：埋两个事实（「密码是 X」和「房间号是 Y」），让模型同时回答两个。看难度上去后哪些格子先崩。</li>
+<li>把通过率 ≥ 95% 的格子画成一张表贴到你的 CLAUDE.md / system prompt notes 里——以后写 prompt 时就知道哪段位置可信。</li>
+</ol>
+<p style="margin-top:12px"><strong>验收</strong>：你能用一张图回答「我们家这台模型，超过多少 token、信息在哪个位置之后就不能信任」。</p>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://arxiv.org/abs/2307.03172" target="_blank">Liu et al. 2023 · Lost in the Middle</a> — 长 context 注意力分布的奠基性研究</li>
+<li><a href="https://research.trychroma.com/context-rot" target="_blank">Chroma 2025 · Context Rot</a> — 18 个最新模型的有效 context 复测</li>
+<li><a href="https://www.anthropic.com/news/contextual-retrieval" target="_blank">Anthropic · Introducing Contextual Retrieval</a> — chunk 上下文化 + hybrid 的工程指南</li>
+<li><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" target="_blank">Anthropic · Effective Context Engineering for AI Agents</a> — 官方 context 工程方法论</li>
+<li><a href="https://arxiv.org/abs/2310.08560" target="_blank">Packer et al. · MemGPT</a> — hierarchical memory 的代表实现</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Weekly · Week 02 · 2026-05-22</footer>
+</div>
+<script src="https://cissy0802.github.io/comments.js" defer></script>
+<script src="https://cissy0802.github.io/search.js" defer></script>
+<script src="https://cissy0802.github.io/index-button.js" defer></script>
+</body></html>
