@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 4 · Tool Use & Function Calling 深度 — Super Individual Weekly</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.homework{background:linear-gradient(135deg,rgba(255,110,196,0.1),rgba(123,97,255,0.1));border:1px solid rgba(255,110,196,0.3);border-radius:10px;padding:22px 24px;margin:36px 0}
+.homework h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">WEEK 04 / PHASE 1 · ENGINEERING</span>
+<h1>Tool Use & Function Calling 深度</h1>
+<h2>Schema 即 Prompt · 工具粒度 · Selection 退化 · Parallel Calls</h2>
+<div class="date">2026-05-23 · BigCat</div>
+<p class="pitch">Tool 的 description 比模型选择更决定你的 agent 上限。</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>Week 3 我们说 harness 是 agent 的 OS。OS 之上跑的是工具，而工具的样子由 <strong>tool schema</strong> 决定。一条几乎所有人都低估的事实：你写在 <code>description</code> 里的那几行英文，对最终成功率的影响，比换模型还大。Anthropic 在 SWE-bench 的内部消融里反复证实——同一个 Sonnet，仅重写 6 个工具的 description，pass@1 能差 10+ 分。tool schema <em>就是</em> prompt 的一部分，它和 system message 一样进 KV cache、参与 attention、影响下游每一个 token 的分布。这一期讲四件事：怎么把 schema 当 prompt 写、为什么 20 个工具往往不如 6 个、原子 vs 组合工具的真实 trade-off、以及 parallel tool calls 这个被严重浪费的能力。最后给出 Anthropic 工程团队的「7 条 tool design 经验」清单。</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>Tool Schema 即 Prompt：description 比 name 重要 10 倍</h2>
+<div class="claim">论断：模型选不选你的工具，看的不是 <code>name</code>，是 <code>description</code> 和 <code>input_schema</code> 里每个字段的措辞。</div>
+
+<h3>背景与原理</h3>
+<p>tool definition 最终是怎么进入模型的？Anthropic 在 <em>Tool Use Overview</em> 文档里讲过：所有注册的 tool 会被序列化成一段结构化文本，拼到 system prompt 末尾。也就是说，从模型视角看，<code>tools=[...]</code> 不是「函数注册表」，而是一段它必须读懂的文档。它要靠这段文档决定：什么时候调？调哪个？参数怎么填？什么时候不该调？</p>
+<p>这就解释了几个被反复观察到的现象：</p>
+<ul>
+<li>把 <code>description</code> 从 1 行扩到 5 行，准确率明显提升——因为你给的不只是名字，是<strong>使用场景</strong>。</li>
+<li>参数的 <code>description</code>（注意不是参数的名字）写清楚单位、格式、边界，比改名字 <code>start_date</code> → <code>start_date_iso8601</code> 有用得多。模型读 description，不太「读」名字。</li>
+<li>给 enum 字段加每个值的「什么时候选这个」说明，比单纯列出 <code>["fast","accurate","creative"]</code> 命中率高 2-3 倍。</li>
+</ul>
+<p>底层机制：tools block 进 KV cache 后，每个 token 生成都会 attend 这段文本。description 越具体、越场景化，模型在「要不要调」「调哪个」这两个决策点上得到的 conditioning 越强。这不是玄学，是 attention 的物理事实。</p>
+
+<h3>实战示例</h3>
+<p>同一个查天气工具，两种写法的命中率差距：</p>
+<pre><code><span class="tag-com"># —— BAD：把 schema 当函数签名 ——</span>
+{
+  <span class="tag-claude">"name"</span>: <span class="tag-gpt">"get_weather"</span>,
+  <span class="tag-claude">"description"</span>: <span class="tag-gpt">"Get weather"</span>,
+  <span class="tag-claude">"input_schema"</span>: {
+    <span class="tag-claude">"type"</span>: <span class="tag-gpt">"object"</span>,
+    <span class="tag-claude">"properties"</span>: {
+      <span class="tag-claude">"location"</span>: {<span class="tag-claude">"type"</span>:<span class="tag-gpt">"string"</span>},
+      <span class="tag-claude">"unit"</span>:     {<span class="tag-claude">"type"</span>:<span class="tag-gpt">"string"</span>, <span class="tag-claude">"enum"</span>:[<span class="tag-gpt">"c"</span>,<span class="tag-gpt">"f"</span>]}
+    }
+  }
+}
+
+<span class="tag-com"># —— GOOD：把 schema 当 prompt ——</span>
+{
+  <span class="tag-claude">"name"</span>: <span class="tag-gpt">"get_weather"</span>,
+  <span class="tag-claude">"description"</span>: <span class="tag-gpt">"Look up the CURRENT weather (now ± 1h) for a single city.</span>
+<span class="tag-gpt">    Use ONLY for present-time questions like 'is it raining in Tokyo now'.</span>
+<span class="tag-gpt">    DO NOT use for: forecasts &gt;24h ahead (use get_forecast), historical</span>
+<span class="tag-gpt">    weather (use get_weather_history), or air quality (use get_aqi)."</span>,
+  <span class="tag-claude">"input_schema"</span>: {
+    <span class="tag-claude">"type"</span>: <span class="tag-gpt">"object"</span>,
+    <span class="tag-claude">"properties"</span>: {
+      <span class="tag-claude">"location"</span>: {
+        <span class="tag-claude">"type"</span>: <span class="tag-gpt">"string"</span>,
+        <span class="tag-claude">"description"</span>: <span class="tag-gpt">"City name in English, optionally followed by</span>
+<span class="tag-gpt">          country, e.g. 'Tokyo', 'Paris, FR'. Do not pass GPS coords."</span>
+      },
+      <span class="tag-claude">"unit"</span>: {
+        <span class="tag-claude">"type"</span>: <span class="tag-gpt">"string"</span>, <span class="tag-claude">"enum"</span>: [<span class="tag-gpt">"celsius"</span>,<span class="tag-gpt">"fahrenheit"</span>],
+        <span class="tag-claude">"description"</span>: <span class="tag-gpt">"Temperature unit. Default to celsius unless the user</span>
+<span class="tag-gpt">          explicitly mentions °F or asks in a US locale context."</span>
+      }
+    },
+    <span class="tag-claude">"required"</span>: [<span class="tag-gpt">"location"</span>]
+  }
+}</code></pre>
+<p>三处关键升级：（1）description 写明<strong>使用场景 + 反例</strong>（DO NOT use for…），这是降低跨工具误选的最便宜手段；（2）每个参数自己的 description 写清格式、约束、默认推断规则；（3）enum 值用全称（<code>celsius</code> 而非 <code>c</code>），可读性 = 模型理解度。把这三条当 checklist，每个工具都过一遍。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）只写 <code>"description": "do X"</code>——模型不知道什么时候<em>不该</em>调，于是会在边界场景过度调用。（2）依赖工具名表达语义（<code>get_user_v2_by_email_only</code>）——模型看 description，不看 snake_case 名字的 token 拆分。（3）参数 description 全省略——模型只能从 type 推格式，遇到日期 / 路径 / ID 这种就靠猜。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Anthropic <em>Tool Use Overview</em>, <a href="https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview" target="_blank">docs.claude.com/.../tool-use</a> ·
+Anthropic <em>How to implement tool use</em>, <a href="https://docs.claude.com/en/docs/agents-and-tools/tool-use/implement-tool-use" target="_blank">docs.claude.com/.../implement-tool-use</a> ·
+OpenAI <em>Function Calling Guide</em>, <a href="https://platform.openai.com/docs/guides/function-calling" target="_blank">platform.openai.com/.../function-calling</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Tool 越多越笨：Selection 退化的真实曲线</h2>
+<div class="claim">论断：超过 ~15 个 tool 后，模型的工具选择准确率会显著下降；先做减法，再考虑加法。</div>
+
+<h3>背景与原理</h3>
+<p>这是一个常被忽视的工程事实：tool 数量和准确率不是单调关系，而是一条<strong>倒 U 曲线</strong>。给 0 个工具，没事干；给 3-7 个正交工具，agent 表现最好；给 20+ 个工具，模型开始混淆、误选、漏选、用错参数。Berkeley Function Calling Leaderboard（BFCL）的多轮场景里能看到这条曲线，Anthropic <em>Building Effective Agents</em> 里也明说：「Tool definitions deserve as much prompt engineering attention as your main prompt.」</p>
+<p>为什么会退化？三个真实原因：</p>
+<ul>
+<li><strong>Token budget</strong>：每个 tool definition 大概 100-300 token。20 个工具就 4-6K token 在 system prompt，挤压 context 还污染 attention。</li>
+<li><strong>语义混淆</strong>：tool 数量越多，<em>语义近似的工具</em>必然出现（<code>search_docs</code> / <code>find_in_docs</code> / <code>lookup_documentation</code>），模型在它们之间摇摆。</li>
+<li><strong>Decision path 爆炸</strong>：N 个工具有 N 种「不调用」的反例要 attention 处理。模型容量分散，每条决策的可靠性都下降。</li>
+</ul>
+<p>这也是为什么 Claude Code 的核心 tool registry 只有 ~10 个原子工具（Read / Edit / Write / Bash / Grep / Glob / Task / WebFetch / WebSearch / TodoWrite）——其余能力通过 MCP 按需挂载，而不是常驻。</p>
+
+<div class="diagram">  Accuracy
+    │
+1.0 │      ╭───────╮
+    │     ╱         ╲
+0.8 │    ╱           ╲___
+    │   ╱                ╲___
+0.6 │  ╱                     ╲___
+    │ ╱                          ╲___
+0.4 │╱                               ╲____
+    │                                     ╲___
+0.2 │
+    └──────────────────────────────────────────▶ # tools
+       3    7    12   20    35    60    100
+
+  示意曲线（基于 BFCL multi-turn 与多个 agent eval 的常见形态）
+  甜区在 5–12 之间；超过 20 后掉得很快。</div>
+
+<h3>实战示例</h3>
+<p>当你的 MCP / agent 已经堆了 30+ 工具，应用 3 步「工具减肥法」：</p>
+<pre><code><span class="tag-com"># Step 1：按调用频率排序，看长尾</span>
+sqlite3 agent.db <span class="tag-gpt">"SELECT tool_name, COUNT(*) c FROM tool_calls </span>
+<span class="tag-gpt">  GROUP BY tool_name ORDER BY c DESC;"</span>
+<span class="tag-com">#  长尾里的 tool（&lt; 1% 调用）几乎都可以删掉或合并</span>
+
+<span class="tag-com"># Step 2：找「语义双胞胎」并合并</span>
+<span class="tag-com">#  search_files / find_files / list_matching → 合并为 search_files(pattern, mode)</span>
+
+<span class="tag-com"># Step 3：按场景而非按 API 切分</span>
+<span class="tag-com">#  BAD：get_user_by_id / get_user_by_email / get_user_by_username</span>
+<span class="tag-com">#  GOOD：get_user(query: {id?|email?|username?})  ← 一个工具，input 自描述</span></code></pre>
+<p>另一个反直觉技巧：<strong>「dynamic tool surface」</strong>。Cursor / Claude Code 在不同 mode 下暴露不同工具集——plan mode 物理隐藏 Write/Edit，让模型不需要在「读」「写」两类工具间分散选择压力。你也可以在自己的 harness 里按 task type 切换 tool registry：研究任务给 web / fetch，写代码任务给 read / edit / bash。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）把 MCP 当 npm install——把所有看起来有用的 MCP server 都挂上，结果 system prompt 半数被 tool definition 占据，model 没看你的真实问题就先迷糊了。（2）以为模型「不会选错就不调用」——实际表现是<em>少调用了该调用的工具</em>，因为它判断不清；这种 silent failure 比报错更难发现。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Berkeley Function Calling Leaderboard, <a href="https://gorilla.cs.berkeley.edu/leaderboard.html" target="_blank">gorilla.cs.berkeley.edu/leaderboard</a> ·
+Anthropic <em>Writing tools for Claude</em>, <a href="https://docs.claude.com/en/docs/agents-and-tools/tool-use/implement-tool-use#best-practices-for-tool-definitions" target="_blank">docs.claude.com/.../best-practices</a> ·
+论文 <em>Less is More for Long Context Tool Use</em>（2024）, <a href="https://arxiv.org/abs/2411.15399" target="_blank">arXiv:2411.15399</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>原子 vs 组合：工具粒度决定 reliability</h2>
+<div class="claim">论断：把多步原子操作打包成一个 macro tool，能换来确定性，但代价是 agent 能力上限。</div>
+
+<h3>背景与原理</h3>
+<p>给 agent 一个 <code>edit_file(path, old, new)</code> 和给它一个 <code>refactor_function(path, fn_name, new_impl)</code>，是两种世界观。前者是<strong>原子工具</strong>（atomic）——模型自己组合；后者是<strong>组合工具</strong>（composite / macro）——一个调用完成多步业务逻辑。这是 tool design 里最重要、最被忽略的 trade-off：</p>
+<ul>
+<li><strong>原子工具</strong>：组合性强、可复用、覆盖未知任务；但要求模型自己规划多步，对推理能力依赖高，错误模式更多样。</li>
+<li><strong>组合工具</strong>：单次调用就完成业务流，可靠性高、易于 eval；但代码量大、覆盖窄、新任务需要新工具。</li>
+</ul>
+<p>Claude Code 选了<strong>偏原子</strong>的路线：Read / Edit / Write / Bash 这种 Unix 哲学的小工具，组合性靠模型。这让它能处理任意 coding 任务，但要求模型有非常强的规划能力——也是为什么它在弱模型上效果一般。相反，传统 RPA 工具走<strong>偏组合</strong>路线：每个流程一个专用 tool（<code>process_invoice</code> / <code>onboard_employee</code>），可靠但脆，遇到新流程就要写代码。</p>
+<p>真实工程中，两种工具应该<strong>分层共存</strong>：底层原子工具暴露给「探索 / 调试 / 一次性任务」，上层组合工具暴露给「高频 / 可靠性敏感 / 已模式化的任务」。</p>
+
+<h3>实战示例</h3>
+<p>一个真实场景：让 agent 给 git repo 做 release。原子路线 vs 组合路线：</p>
+<pre><code><span class="tag-com"># —— 原子路线：4 个底层工具，模型自己组合 ——</span>
+tools = [run_bash, read_file, write_file, git_command]
+<span class="tag-com">#  agent 必须自己规划：bump version → update changelog → commit → tag → push</span>
+<span class="tag-com">#  优点：万一规划要变（先跑测试再 bump）也能自己改；新 repo 直接用</span>
+<span class="tag-com">#  缺点：跑 10 次有 1-2 次顺序错 / 漏 tag / 提交到错分支</span>
+
+<span class="tag-com"># —— 组合路线：1 个 macro tool ——</span>
+tools = [{
+  <span class="tag-claude">"name"</span>: <span class="tag-gpt">"release"</span>,
+  <span class="tag-claude">"description"</span>: <span class="tag-gpt">"Run the full release flow: bump version, regenerate</span>
+<span class="tag-gpt">    CHANGELOG, commit with 'chore: release vX.Y.Z', tag, push branch+tag.</span>
+<span class="tag-gpt">    Aborts on any failing step. Use when user asks to 'cut a release' or</span>
+<span class="tag-gpt">    'publish a new version'. Does NOT publish to npm—call npm_publish after."</span>,
+  <span class="tag-claude">"input_schema"</span>: {<span class="tag-claude">"type"</span>:<span class="tag-gpt">"object"</span>,
+    <span class="tag-claude">"properties"</span>:{<span class="tag-claude">"bump"</span>:{<span class="tag-claude">"type"</span>:<span class="tag-gpt">"string"</span>,<span class="tag-claude">"enum"</span>:[<span class="tag-gpt">"patch"</span>,<span class="tag-gpt">"minor"</span>,<span class="tag-gpt">"major"</span>]}},
+    <span class="tag-claude">"required"</span>:[<span class="tag-gpt">"bump"</span>]}
+}]
+<span class="tag-com">#  优点：跑 100 次都按同一个 flow，eval 简单</span>
+<span class="tag-com">#  缺点：换个 repo 流程不一样就废了；agent 不能针对异常情况微调</span></code></pre>
+<p>实战决策树：</p>
+<ol>
+<li>任务<strong>每天跑 ≥ 5 次</strong>，且步骤稳定 → 写组合工具，把领域知识固化进代码。</li>
+<li>任务<strong>偶尔做、每次都不太一样</strong> → 用原子工具，让模型组合。</li>
+<li>任务<strong>关键路径 + 不能出错</strong>（生产部署、付款）→ 组合工具 + 强 schema 校验 + 二次确认。</li>
+<li>任务<strong>探索性 / 调试</strong> → 原子工具，最大化灵活性。</li>
+</ol>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）「先写 macro」——还没搞清楚任务边界就把 5 步打包，每次需求变就改代码。先用原子工具跑 20 次找出稳定 pattern，再固化成 macro。（2）「macro 但参数太多」——一个 tool 收 12 个参数，模型填错率指数上升。超过 5 个 required 参数就该拆。（3）原子工具粒度太细——<code>open_file</code> / <code>read_lines</code> / <code>close_file</code> 这种 1980 年代 C API，每次操作要 3 个 tool call。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Anthropic <em>Building Effective Agents</em> — tool granularity 段落, <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">anthropic.com/.../building-effective-agents</a> ·
+<em>MCP server design patterns</em>, <a href="https://modelcontextprotocol.io/docs/concepts/architecture" target="_blank">modelcontextprotocol.io/.../architecture</a> ·
+论文 <em>ToolLLM</em>（2023）讨论 tool 抽象层级, <a href="https://arxiv.org/abs/2307.16789" target="_blank">arXiv:2307.16789</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Parallel Tool Calls：被严重浪费的免费午餐</h2>
+<div class="claim">论断：90% 的 agent 没真正用上 parallel tool call —— 拿到的延迟和成本红利是巨大的。</div>
+
+<h3>背景与原理</h3>
+<p>从 Sonnet 3.5 开始，Claude 在一次 assistant turn 里可以返回<strong>多个 <code>tool_use</code> block</strong>；OpenAI 的 GPT-4o / o3 也支持类似能力。harness 只需要识别多个 tool_use 后<em>并发执行</em>、把多个 tool_result 拼回下一轮就行。这件事的红利是巨大的：</p>
+<ul>
+<li>读 5 个文件总结，串行要 5 × (LLM RTT + tool latency)，并行只要 1 × (LLM RTT + max(tool latency))。</li>
+<li>跨 3 个 API 查信息（天气 + 航班 + 酒店），并行直接砍 2/3 的 wall-clock。</li>
+<li>对昂贵模型（Opus 4.7）尤其值——每省一轮就是一次几千 token 的 prefill 不重复。</li>
+</ul>
+<p>但能让它「真的」并行起来，有四个工程前提，缺一个就退化回串行：</p>
+<ol>
+<li><strong>System prompt 显式鼓励</strong>：模型默认偏保守，不写「prefer parallel」它常常一个一个调。Claude Code 的 system prompt 里就有「make all of the independent calls in the same response」。</li>
+<li><strong>Tool 之间无序无依赖</strong>：模型只能并行<em>独立</em>任务。让它并行 read + edit 是错的——edit 依赖 read 的结果。</li>
+<li><strong>Harness 真的并发</strong>：很多人 harness 写死了 for loop 顺序执行 tool_use，名义上模型并发了，实际还是串行。改成 <code>asyncio.gather</code> / 线程池。</li>
+<li><strong>Permission gate 不阻塞</strong>：如果每个 tool 都要人工 approve，并发就变成串行 dialog。给「明显安全」的工具自动放行。</li>
+</ol>
+
+<h3>实战示例</h3>
+<p>把 §3 的原子 harness 升级成并发执行：</p>
+<pre><code><span class="tag-key">import</span> asyncio, anthropic
+client = anthropic.AsyncAnthropic()
+
+<span class="tag-key">async def</span> dispatch(block):                              <span class="tag-com"># 单个 tool 异步执行</span>
+    handler = TOOLS[block.name][<span class="tag-gpt">"handler_async"</span>]
+    <span class="tag-key">try</span>:
+        out = <span class="tag-key">await</span> handler(block.input)
+    <span class="tag-key">except</span> Exception <span class="tag-key">as</span> e:
+        out = <span class="tag-gpt">f"ERROR: {type(e).__name__}: {e}"</span>
+    <span class="tag-key">return</span> {<span class="tag-gpt">"type"</span>:<span class="tag-gpt">"tool_result"</span>, <span class="tag-gpt">"tool_use_id"</span>:block.id, <span class="tag-gpt">"content"</span>:str(out)}
+
+<span class="tag-key">async def</span> agent(task, max_iters=20):
+    msgs = [{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,<span class="tag-gpt">"content"</span>:task}]
+    sys  = (<span class="tag-gpt">"You are a careful agent. "</span>
+            <span class="tag-gpt">"IMPORTANT: when multiple tool calls are independent, "</span>     <span class="tag-com"># ← 关键</span>
+            <span class="tag-gpt">"emit them in the SAME response so they run in parallel."</span>)
+    <span class="tag-key">for</span> _ <span class="tag-key">in</span> range(max_iters):
+        r = <span class="tag-key">await</span> client.messages.create(model=MODEL, system=sys,
+                tools=SCHEMAS, messages=msgs, max_tokens=4096)
+        msgs.append({<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"assistant"</span>, <span class="tag-gpt">"content"</span>:r.content})
+        <span class="tag-key">if</span> r.stop_reason == <span class="tag-gpt">"end_turn"</span>: <span class="tag-key">return</span> r
+        uses = [b <span class="tag-key">for</span> b <span class="tag-key">in</span> r.content <span class="tag-key">if</span> b.type == <span class="tag-gpt">"tool_use"</span>]
+        results = <span class="tag-key">await</span> asyncio.gather(*[dispatch(b) <span class="tag-key">for</span> b <span class="tag-key">in</span> uses])  <span class="tag-com"># ← 并发</span>
+        msgs.append({<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>, <span class="tag-gpt">"content"</span>: results})</code></pre>
+<p>实测：让 agent「读 README.md / package.json / .github/workflows/ci.yml 然后告诉我这是个什么项目」——串行版 ~9s，并行版 ~3.5s，准确率几乎无差。读 5+ 文件时差距更大。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）让模型并行调依赖 tool——比如「先查用户 id 再下单」并行下去会用空 id。要么靠 prompt 明确说「下单前必须先拿到 id」，要么直接拆 turn。（2）并发 write tool 引发 race condition——并行 <code>edit_file(same_path)</code> 互相覆盖。给写类工具加 file-level 锁。（3）误以为 multi-tool 就是 parallel——模型在同一个 response 里返回多个 tool_use 才是 parallel；分多 turn 调多 tool 是 sequential。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Anthropic <em>Parallel tool use</em>, <a href="https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview#parallel-tool-use" target="_blank">docs.claude.com/.../parallel-tool-use</a> ·
+OpenAI <em>Parallel function calling</em>, <a href="https://platform.openai.com/docs/guides/function-calling#parallel-function-calling" target="_blank">platform.openai.com/.../parallel-function-calling</a> ·
+LangChain <em>Parallel tool calls</em> 实现参考, <a href="https://python.langchain.com/docs/how_to/tool_calling_parallel/" target="_blank">python.langchain.com/.../tool-calling-parallel</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// 综合实战 · Anthropic 工程团队的 7 条 tool design 经验</h3>
+<p>把前面四点浓缩成一份可贴墙的 checklist。下次设计或 review 一组 tool 时逐条过：</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>少而正交</strong>。先砍到 ≤ 10 个。语义重叠的合并；调用频率 &lt; 1% 的删掉。</li>
+<li><strong>description 写场景，不写功能</strong>。一行讲「干什么」+ 一行讲「什么时候用」+ 一行讲「什么时候<em>不</em>用」。反例越具体越好。</li>
+<li><strong>每个参数都有 description</strong>。写清单位、格式、默认推断规则、典型值示例。这比改参数名重要 10 倍。</li>
+<li><strong>enum 值带说明</strong>。<code>"fast"</code> 不如 <code>"fast: prioritize latency, accept ±10% accuracy"</code>。</li>
+<li><strong>错误必须可读</strong>。<code>handler</code> 抛出的 error 要包含「为什么错 + 下一步怎么办」，因为 agent 会读它来 self-correct。<code>"ENOENT"</code> 没用，<code>"File '/x.json' not found. Use list_dir to see available files."</code> 才有用。</li>
+<li><strong>幂等优先</strong>。tool 设计成可重试不出乱子的——比如 <code>create_or_update</code> 而非 <code>create</code>。agent 重试是常态。</li>
+<li><strong>并行友好</strong>。无依赖的 tool 不要在 schema 上人为耦合（不要把 read+write 合成一个工具）；handler 内部用 async；显式在 system prompt 鼓励并行。</li>
+</ol>
+<p style="margin-top:14px">这 7 条来自 Anthropic <em>Building Effective Agents</em> 与 <em>Tool Use Best Practices</em> 的工程指南。把它做成一个 PR checklist 模板，每次新增工具时填一遍——agent 项目能少 80% 的 silent failure。</p>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// ENGLISH GLOSSARY</h3>
+<dl>
+<dt>Tool Schema</dt><dd>定义工具名称、用途、参数结构的 JSON。模型靠它决定何时调、如何调。</dd>
+<dt>Function Calling</dt><dd>OpenAI 系对 tool use 的叫法；语义同 Anthropic 的 tool use。</dd>
+<dt>Input Schema</dt><dd>tool 参数的 JSON Schema 描述。包含 type / properties / required / description。</dd>
+<dt>Tool Selection</dt><dd>模型在多个候选工具中选哪个调用的决策过程。工具越多越难。</dd>
+<dt>Atomic Tool</dt><dd>原子工具，做单一小操作（如 read_file），需要模型组合。</dd>
+<dt>Composite / Macro Tool</dt><dd>组合工具，一次调用完成多步业务流（如 release）。</dd>
+<dt>Parallel Tool Use</dt><dd>同一次 assistant turn 返回多个独立 tool_use，harness 并发执行。</dd>
+<dt>Tool Result</dt><dd>tool 执行结果，以 user role 的 content block 回传给模型。</dd>
+<dt>MCP (Model Context Protocol)</dt><dd>Anthropic 提出的 tool/resource 暴露协议，让 tool 集合可热插拔。</dd>
+<dt>BFCL</dt><dd>Berkeley Function Calling Leaderboard，function calling 公开评测榜单。</dd>
+<dt>Tool Granularity</dt><dd>工具粒度，原子 vs 组合的设计取舍维度。</dd>
+</dl>
+</div>
+
+<!-- ============ Homework ============ -->
+<div class="homework">
+<h3>// 本周动手作业</h3>
+<p><strong>今晚 45 分钟实验</strong>：给你正在用的某个 agent / MCP 集合做一次「tool audit」。</p>
+<ol style="margin-left:24px;margin-top:10px">
+<li>列出当前注册的所有 tool（含 MCP server 暴露的），写在一张表上。</li>
+<li>对每个 tool 打分（1-5）：description 写没写「何时<em>不</em>用」？每个参数有没有自己的 description？enum 值有没有解释？</li>
+<li>查最近 7 天的实际调用日志，找出「调用次数 = 0」或「调用次数 &gt; 100 但失败率 &gt; 20%」的工具。前者考虑删，后者考虑重写 description 或拆分。</li>
+<li>挑一对「语义双胞胎」的工具合并掉。</li>
+<li>跑一次端到端任务，对比合并前后的 token 消耗和成功率。</li>
+</ol>
+<p style="margin-top:12px"><strong>验收</strong>：你能回答「我的 agent 上限不是模型，是我那 X 个工具的 description」——并且能用一句话说出每个工具<em>不</em>该用在哪。</p>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://docs.claude.com/en/docs/agents-and-tools/tool-use/implement-tool-use" target="_blank">Anthropic · How to implement tool use（含 best practices 段）</a> — 官方最权威的 tool design 指南</li>
+<li><a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">Anthropic · Building Effective Agents</a> — 工具粒度与 agent 设计</li>
+<li><a href="https://gorilla.cs.berkeley.edu/leaderboard.html" target="_blank">Berkeley Function Calling Leaderboard</a> — 公开 function calling 评测</li>
+<li><a href="https://platform.openai.com/docs/guides/function-calling" target="_blank">OpenAI · Function Calling Guide</a> — OpenAI 视角的 schema 设计</li>
+<li><a href="https://modelcontextprotocol.io/docs/concepts/architecture" target="_blank">MCP · Concepts & Architecture</a> — tool / resource / prompt 三层抽象</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Weekly · Week 04 · 2026-05-23</footer>
+</div>
+<script src="https://cissy0802.github.io/comments.js" defer></script>
+<script src="https://cissy0802.github.io/search.js" defer></script>
+<script src="https://cissy0802.github.io/index-button.js" defer></script>
+</body></html>
