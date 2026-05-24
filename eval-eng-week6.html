@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 6 · Eval 工程 — Super Individual Weekly</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.homework{background:linear-gradient(135deg,rgba(255,110,196,0.1),rgba(123,97,255,0.1));border:1px solid rgba(255,110,196,0.3);border-radius:10px;padding:22px 24px;margin:36px 0}
+.homework h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">WEEK 06 / PHASE 1 · ENGINEERING</span>
+<h1>Eval 工程深度</h1>
+<h2>Golden Set · LLM-as-Judge 去偏 · Prompt Regression · Anthropic Evals</h2>
+<div class="date">2026-05-24 · BigCat</div>
+<p class="pitch">没 eval 的 prompt = 玄学；改 prompt 凭感觉 = 用 vibes 做工程。</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>问 100 个写 prompt 的人「你怎么知道改完比改前好」，99 个会说「我跑了几个例子感觉不错」。这就是为什么大多数 AI 产品上线后越调越糟——<strong>没有 eval 的 prompt 工程不是工程，是巫术</strong>。Hamel Husain 那句被工业界引爆的话——「Your AI product needs evals」——背后的真实意思是：模型只是 commodity，<em>你的 eval suite 才是护城河</em>。这一期不讲 MMLU / HumanEval 那种公开基准（基本和你的真实场景无关），讲资深用户该会的四件事：怎么从 0 搭一个能跑的最小 eval、为什么 LLM-as-judge 必须做去偏才能信、怎么把 prompt 当代码做 regression test，以及 Anthropic 自己怎么用 evals 框架开发 Claude。读完你应该能在 1 小时内给手头任意 prompt 建一个真能挡 regression 的评测系统。</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>Minimum Viable Eval：20 个例子 + 一个 scorer 起步</h2>
+<div class="claim">论断：第一版 eval 不需要框架、不需要 LLM judge、不需要 1000 条数据——20 条真实场景 + 一个 Python 函数就足以挡住 80% 的 regression。</div>
+
+<h3>背景与原理</h3>
+<p>大多数人不做 eval 的真实理由不是「不知道重要」，而是「以为要先搭一套基础设施」。这是被 Weights &amp; Biases / Braintrust / Langfuse 这些工具页面误导的结果。Hamel Husain 在 <em>Your AI Product Needs Evals</em> 里给出了 dead simple 的起手式：<strong>挑 20 条覆盖典型 + 边缘的真实输入，写一段 Python 跑 prompt 拿输出，再写一段 Python 给输出打分</strong>。这就是 MVP eval，多一个文件都不要。</p>
+<p>Eval 的核心不是工具，是<strong>数据集质量</strong>。20 条精心挑过的例子（10 条 happy path + 5 条 edge case + 5 条 adversarial），价值远大于 10000 条从生产 log 里随手抓的。Andrej Karpathy 在多次 talk 里强调过同样的事——<em>「dataset is the new code」</em>，你的 golden set 就是 eval 的 source of truth，要像维护核心代码一样维护它（diff / review / version）。</p>
+<p>Scorer 分三档，先用最便宜的：</p>
+<ul>
+<li><strong>Code-based（首选）</strong>：能用 regex / JSON schema / 字符串包含 / 单元测试判定的，绝不用 LLM judge。便宜、稳定、可重现。</li>
+<li><strong>Heuristic</strong>：长度范围、关键词命中、format 合规、Levenshtein 距离。仍然不需要 LLM。</li>
+<li><strong>LLM-as-judge（兜底）</strong>：只有当任务本质是开放式生成（摘要 / 改写 / 回答）才用。而且要做 §3 的去偏。</li>
+</ul>
+
+<div class="diagram">  Eval 的工程化层级（从下到上越贵越慢越不稳）
+
+  ┌────────────────────────────────────────────────┐
+  │ Human eval     · 真人打分 · 黄金标准但不可扩展     │
+  ├────────────────────────────────────────────────┤
+  │ LLM-as-judge   · 主观任务兜底 · 必须去偏与校准    │
+  ├────────────────────────────────────────────────┤
+  │ Heuristic      · 长度/格式/关键词 · 几乎免费       │
+  ├────────────────────────────────────────────────┤
+  │ Code-based     · regex/schema/unit test · 首选   │
+  └────────────────────────────────────────────────┘
+  原则：能往下落一级就别用上一级</div>
+
+<h3>实战示例</h3>
+<p>给一个「从邮件里抽取会议时间」的 prompt 做 MVP eval，全部不到 60 行：</p>
+<pre><code><span class="tag-com"># eval_meeting_extractor.py — 真能跑的最小 eval</span>
+<span class="tag-key">import</span> json, re, anthropic
+<span class="tag-key">from</span> dataclasses <span class="tag-key">import</span> dataclass
+<span class="tag-key">from</span> datetime <span class="tag-key">import</span> datetime
+
+client = anthropic.Anthropic()
+
+<span class="tag-com"># ① Golden Set —— 20 条手挑数据；每条都是「输入 + 期望」</span>
+GOLDEN = [
+    {<span class="tag-gpt">"id"</span>:<span class="tag-gpt">"happy_01"</span>, <span class="tag-gpt">"input"</span>:<span class="tag-gpt">"明天下午 3 点会议室 A 开周会"</span>,
+     <span class="tag-gpt">"expect"</span>:{<span class="tag-gpt">"time"</span>:<span class="tag-gpt">"15:00"</span>, <span class="tag-gpt">"location"</span>:<span class="tag-gpt">"会议室 A"</span>}},
+    {<span class="tag-gpt">"id"</span>:<span class="tag-gpt">"edge_tz"</span>,  <span class="tag-gpt">"input"</span>:<span class="tag-gpt">"Mon 9am PT sync"</span>,
+     <span class="tag-gpt">"expect"</span>:{<span class="tag-gpt">"time"</span>:<span class="tag-gpt">"09:00"</span>, <span class="tag-gpt">"tz"</span>:<span class="tag-gpt">"PT"</span>}},
+    {<span class="tag-gpt">"id"</span>:<span class="tag-gpt">"adv_noop"</span>, <span class="tag-gpt">"input"</span>:<span class="tag-gpt">"今天天气不错"</span>,
+     <span class="tag-gpt">"expect"</span>:{<span class="tag-gpt">"time"</span>:<span class="tag-key">None</span>}},  <span class="tag-com"># 不该幻觉</span>
+    <span class="tag-com"># ... 17 条更</span>
+]
+
+PROMPT = <span class="tag-gpt">"""You are a meeting time extractor. Output strict JSON:
+{"time": "HH:MM" or null, "location": str or null, "tz": str or null}
+Input: {text}"""</span>
+
+<span class="tag-key">def</span> run(text):
+    r = client.messages.create(model=<span class="tag-gpt">"claude-opus-4-7"</span>, max_tokens=200,
+        messages=[{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,<span class="tag-gpt">"content"</span>:PROMPT.format(text=text)}])
+    <span class="tag-key">return</span> json.loads(r.content[0].text)
+
+<span class="tag-com"># ② Scorer —— 全是 code-based，便宜稳定</span>
+<span class="tag-key">def</span> score(pred, expect):
+    <span class="tag-key">for</span> k, v <span class="tag-key">in</span> expect.items():
+        <span class="tag-key">if</span> pred.get(k) != v: <span class="tag-key">return</span> 0
+    <span class="tag-key">return</span> 1
+
+<span class="tag-com"># ③ Runner —— 一行 for loop</span>
+<span class="tag-key">def</span> evaluate():
+    fails = []
+    <span class="tag-key">for</span> case <span class="tag-key">in</span> GOLDEN:
+        <span class="tag-key">try</span>:
+            pred = run(case[<span class="tag-gpt">"input"</span>])
+            <span class="tag-key">if</span> score(pred, case[<span class="tag-gpt">"expect"</span>]) == 0:
+                fails.append((case[<span class="tag-gpt">"id"</span>], pred, case[<span class="tag-gpt">"expect"</span>]))
+        <span class="tag-key">except</span> Exception <span class="tag-key">as</span> e:
+            fails.append((case[<span class="tag-gpt">"id"</span>], <span class="tag-gpt">"ERROR"</span>, str(e)))
+    pass_rate = 1 - len(fails) / len(GOLDEN)
+    print(f<span class="tag-gpt">"PASS {pass_rate:.0%} ({len(GOLDEN)-len(fails)}/{len(GOLDEN)})"</span>)
+    <span class="tag-key">for</span> f <span class="tag-key">in</span> fails: print(<span class="tag-gpt">"  FAIL"</span>, f)
+    <span class="tag-key">return</span> pass_rate
+
+<span class="tag-key">if</span> __name__ == <span class="tag-gpt">"__main__"</span>: evaluate()</code></pre>
+<p>这就够上线了。每次改 PROMPT 跑一遍，从 17/20 跌到 14/20 就是 regression。三个月后你会拥有 200 条 golden set，到那时再考虑 Braintrust / Langfuse。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）从生产 log 随机抽 1000 条做 golden set——里面 80% 是简单 case，覆盖度反而比手挑的 20 条差；要按 cluster / 难度分层抽。（2）pass rate 100%——说明你的 golden set 太简单了，没有 fail 的 eval 不是 eval。（3）只看 pass rate 不看 fail 分布——哪几个 fail 是同一类？是 edge case 还是 adversarial 还是 prompt 没覆盖？分层报告比单一数字重要十倍。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Hamel Husain <em>Your AI Product Needs Evals</em>, <a href="https://hamel.dev/blog/posts/evals/" target="_blank">hamel.dev/blog/posts/evals</a> ·
+Eugene Yan <em>Task-Specific LLM Evals</em>, <a href="https://eugeneyan.com/writing/evals/" target="_blank">eugeneyan.com/writing/evals</a> ·
+Anthropic <em>Create strong empirical evaluations</em>, <a href="https://docs.anthropic.com/en/docs/test-and-evaluate/develop-tests" target="_blank">docs.anthropic.com/.../develop-tests</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>LLM-as-Judge 的偏见与去偏</h2>
+<div class="claim">论断：未校准的 LLM judge 不是 eval，是放大器——它会把你 prompt 的 bias 放大成 90% 的虚假 pass rate。</div>
+
+<h3>背景与原理</h3>
+<p>当任务是开放式生成（摘要质量、回答相关性、改写忠实度），code-based 失效，多数人转向 LLM-as-judge：给 judge 一段 instruction 让它给生成结果打分或挑赢家。问题是 LLM judge 本身带着系统性偏见，<strong>不去偏直接用，你测出来的是 judge 的偏好，不是模型的能力</strong>。</p>
+<p>Zheng 等人 2023 的 <em>Judging LLM-as-a-Judge</em>（MT-Bench 论文，NeurIPS Datasets &amp; Benchmarks）系统性证明了四类偏见，几乎所有后续研究都建立在这之上：</p>
+<ul>
+<li><strong>Position bias</strong>：pairwise 比较时，A/B 位置会显著影响赢家——GPT-4 当 judge 时一致性只有 65% 左右，换位置就翻车。</li>
+<li><strong>Verbosity bias</strong>：judge 偏爱更长的答案，即使更长 ≠ 更好。Length effect 在多个 benchmark 上稳定可重现。</li>
+<li><strong>Self-preference / self-enhancement bias</strong>：judge 偏爱与自己同模型家族的输出（GPT-4 评 GPT-4 vs Claude，倾向 GPT-4；反之亦然）。Panickssery 等 2024 在 <em>LLM Evaluators Recognize and Favor Their Own Generations</em> 做了正式测量。</li>
+<li><strong>Format / authority bias</strong>：markdown 列表、加粗、自信措辞，judge 都更喜欢，与正确性无关。</li>
+</ul>
+<p>这四个 bias 不是 prompt 问题，是 RLHF 训练目标的副产物，无法靠「我提醒 judge 别偏」消除——必须用<strong>结构性方法</strong>去偏。</p>
+
+<h3>实战示例：5 个可直接套用的去偏技巧</h3>
+<pre><code><span class="tag-com"># —— 1. 位置交换（Position Swap）——</span>
+<span class="tag-com"># Pairwise 永远跑两次：(A,B) 和 (B,A)，两次都赢才算赢；不一致记 TIE</span>
+score_ab = judge(q, ans_a, ans_b)   <span class="tag-com"># A 在前</span>
+score_ba = judge(q, ans_b, ans_a)   <span class="tag-com"># B 在前</span>
+winner = <span class="tag-gpt">"A"</span> <span class="tag-key">if</span> score_ab == <span class="tag-gpt">"A"</span> <span class="tag-key">and</span> score_ba == <span class="tag-gpt">"B"</span> <span class="tag-key">else</span> \
+         <span class="tag-gpt">"B"</span> <span class="tag-key">if</span> score_ab == <span class="tag-gpt">"B"</span> <span class="tag-key">and</span> score_ba == <span class="tag-gpt">"A"</span> <span class="tag-key">else</span> <span class="tag-gpt">"TIE"</span>
+
+<span class="tag-com"># —— 2. 长度归一（Verbosity Control）——</span>
+<span class="tag-com"># 在 judge prompt 里硬约束：长度差异 > 30% 时优先看质量</span>
+JUDGE_PROMPT = <span class="tag-gpt">"""Compare A and B. CRITICAL: do not reward verbosity.
+If lengths differ by &gt;30%, explicitly check whether the longer one
+adds substance or just padding. Penalize padding."""</span>
+
+<span class="tag-com"># —— 3. 异家族交叉评 (Cross-family Judging) ——</span>
+<span class="tag-com"># 测 Claude 输出用 GPT 当 judge，测 GPT 输出用 Claude 当 judge</span>
+<span class="tag-com"># 或者拿 3 个不同模型 judge 取多数</span>
+judges = [<span class="tag-gpt">"claude-opus-4-7"</span>, <span class="tag-gpt">"gpt-5"</span>, <span class="tag-gpt">"gemini-2.5-pro"</span>]
+votes = [judge_with(m, q, a, b) <span class="tag-key">for</span> m <span class="tag-key">in</span> judges]
+winner = max(set(votes), key=votes.count)  <span class="tag-com"># majority</span>
+
+<span class="tag-com"># —— 4. Rubric 化（替代单一分数）——</span>
+<span class="tag-com"># 不让 judge 给「整体分」，让它按维度打 0/1</span>
+RUBRIC = <span class="tag-gpt">"""Score each independently (0 or 1):
+- factual_correct: all stated facts verifiable from source?
+- completeness:   covers all parts of the question?
+- format_valid:   matches required JSON schema?
+- no_hallucination: no info absent from source?
+Return JSON: {factual_correct: 0/1, ...}"""</span>
+
+<span class="tag-com"># —— 5. 人工校准（Calibration Set）——</span>
+<span class="tag-com"># 50 条人工已标注的样本，每次跑 judge 先在这 50 条上测一致率</span>
+<span class="tag-com"># judge ↔ human 一致率 &lt; 80% → judge prompt 不可信，回去改</span>
+human_labels = load(<span class="tag-gpt">"calibration_50.json"</span>)
+judge_labels = [judge(c) <span class="tag-key">for</span> c <span class="tag-key">in</span> human_labels]
+agreement = sum(h == j <span class="tag-key">for</span> h, j <span class="tag-key">in</span> zip(human_labels, judge_labels)) / 50
+<span class="tag-key">assert</span> agreement &gt; 0.80, f<span class="tag-gpt">"Judge unreliable: {agreement:.0%}"</span></code></pre>
+<p>关键直觉：把 judge 当成「你雇来打分的实习生」。你不会让一个实习生只看完一段就拍一个总分——你给他 rubric、让他写理由、抽样复核他的打分。LLM judge 同理。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）单次 pairwise + 单个 judge——位置 bias 直接吃掉 5-10% 真实差异；（2）用同家族 judge（Claude 评 Claude 改写）——self-preference 让你的 prompt 看起来「越调越好」其实没动；（3）只让 judge 输出「A 好 / B 好」不要 reasoning——judge 几乎全在 pattern match，要求它先写理由再下判断，准确率提升 5-15 个百分点（Zheng 2023）；（4）calibration set 用 LLM 生成——校准集必须是人工标注，否则等于自己证明自己。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Zheng et al. <em>Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena</em> (NeurIPS 2023), <a href="https://arxiv.org/abs/2306.05685" target="_blank">arxiv.org/abs/2306.05685</a> ·
+Panickssery et al. <em>LLM Evaluators Recognize and Favor Their Own Generations</em>, <a href="https://arxiv.org/abs/2404.13076" target="_blank">arxiv.org/abs/2404.13076</a> ·
+Anthropic <em>Reducing bias in LLM-graded evaluations</em>, <a href="https://docs.anthropic.com/en/docs/test-and-evaluate/strengthen-guardrails/reduce-latency#tip-3-use-fewer-tokens" target="_blank">docs.anthropic.com/.../test-and-evaluate</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Prompt as Code：Regression Test 与版本化</h2>
+<div class="claim">论断：prompt 是 source code 的一种，必须 diff、必须 review、必须在 CI 跑 regression——把 prompt 散在 notebook 里 copy-paste 是 2023 年的卫生水平。</div>
+
+<h3>背景与原理</h3>
+<p>Prompt 改一行，行为可以彻底变。这不是缺点，是 LLM 的基本属性。问题是大多数团队对待 prompt 的态度还停留在「散落在 Slack 截图和 Jupyter 单元格里」，结果就是：上周改的某个 prompt 让某个边缘 case 从 pass 变 fail，没有人发现，直到客户投诉。</p>
+<p>资深做法是把 prompt 当代码全栈对待：</p>
+<ul>
+<li><strong>版本化</strong>：prompt 写在 <code>prompts/*.md</code> 或 <code>prompts/*.txt</code> 文件，进 git。变量用 <code>{{var}}</code> 占位（Jinja / f-string）。永远不要把 prompt 写在 Python 字符串里——diff 时眼睛看不到换行变化。</li>
+<li><strong>Regression suite</strong>：每个 prompt 配一个 <code>tests/test_*.py</code> 文件，里面是 §1 的 golden set。改 prompt 必须跑 regression。</li>
+<li><strong>CI 集成</strong>：GitHub Actions 在 PR 上跑 eval，pass rate 跌超过阈值 block 合并。这条是 OpenAI / Anthropic 内部团队的标配。</li>
+<li><strong>结构化 logging</strong>：每次 prompt 调用记录 <code>(prompt_version, input_hash, output, score)</code> 入 SQLite / DuckDB，事后可以「上次 v3 → v4 在哪几类 case 上变了」精确归因。</li>
+</ul>
+<p>核心心智模型——<strong>prompt 不是配置，是行为代码</strong>。配置改了顶多业务参数变，prompt 改了模型决策可能整个翻转。所以应该用比代码<em>更严格</em>的 review 流程，而不是更松。</p>
+
+<h3>实战示例：CI 跑 prompt regression 的最小配置</h3>
+<pre><code><span class="tag-com"># —— 仓库结构 ——</span>
+prompts/
+  meeting_extractor.md       <span class="tag-com"># prompt 文本，用 {{var}} 占位</span>
+  meeting_extractor.meta.yml <span class="tag-com"># 模型、温度、max_tokens、min_pass_rate</span>
+tests/
+  golden_meeting.jsonl       <span class="tag-com"># golden set</span>
+  test_meeting.py            <span class="tag-com"># pytest + 调 §1 的 evaluate()</span>
+.github/workflows/
+  eval.yml                   <span class="tag-com"># CI</span>
+
+<span class="tag-com"># —— prompts/meeting_extractor.meta.yml ——</span>
+model: claude-opus-4-7
+temperature: 0
+max_tokens: 200
+min_pass_rate: 0.90       <span class="tag-com"># 跌破这个 CI 直接红</span>
+allow_regression: []      <span class="tag-com"># 显式声明允许 fail 的 case_id</span>
+
+<span class="tag-com"># —— tests/test_meeting.py ——</span>
+<span class="tag-key">import</span> pytest, yaml
+<span class="tag-key">from</span> evaluator <span class="tag-key">import</span> evaluate
+
+<span class="tag-key">def</span> test_meeting_regression():
+    meta = yaml.safe_load(open(<span class="tag-gpt">"prompts/meeting_extractor.meta.yml"</span>))
+    result = evaluate(<span class="tag-gpt">"meeting_extractor"</span>)
+    <span class="tag-key">assert</span> result.pass_rate &gt;= meta[<span class="tag-gpt">"min_pass_rate"</span>], \
+        f<span class="tag-gpt">"Pass rate dropped: {result.pass_rate:.0%} &lt; {meta['min_pass_rate']:.0%}"</span>
+    <span class="tag-com"># 检查没有新 fail 进入</span>
+    new_fails = set(result.failed_ids) - set(meta[<span class="tag-gpt">"allow_regression"</span>])
+    <span class="tag-key">assert</span> <span class="tag-key">not</span> new_fails, f<span class="tag-gpt">"New regressions: {new_fails}"</span>
+
+<span class="tag-com"># —— .github/workflows/eval.yml ——</span>
+name: prompt-eval
+on: [pull_request]
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - <span class="tag-key">run</span>: pip install -r requirements.txt
+      - <span class="tag-key">run</span>: pytest tests/ -v
+        env: { ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }} }</code></pre>
+<p>有了这个最小集，下次有人在 PR 里改 prompt，CI 会自动跑 20 条 golden 给出 pass rate 和 diff。一周内你的团队就再也回不到「凭感觉改 prompt」的旧时代。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）temperature ≠ 0 跑 eval——结果不稳，每次跑数字飘，没人信；regression test 必须 temperature=0 且固定 seed/model_version；（2）只对比 pass rate 数字，不看 fail diff——pass rate 一样可能换了一批 fail；diff 必须列出「新挂的 case_id / 新过的 case_id」；（3）allow_regression 越列越长——这是技术债告警，每个允许 fail 的 case 必须配 issue 跟踪；（4）golden set 和模型一起进化——你优化了模型却用模型生成的数据测自己，循环论证。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Eugene Yan <em>What We've Learned From A Year of Building with LLMs</em> (Part I: Evals &amp; Monitoring), <a href="https://applied-llms.org/" target="_blank">applied-llms.org</a> ·
+Shreya Shankar <em>Operationalizing ML Tests</em>, <a href="https://www.shreya-shankar.com/" target="_blank">shreya-shankar.com</a> ·
+OpenAI Evals 框架源码, <a href="https://github.com/openai/evals" target="_blank">github.com/openai/evals</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Anthropic Evals 框架与「测能力 vs 测产品」之分</h2>
+<div class="claim">论断：Anthropic 自己开发 Claude 用的 evals 框架不是 MMLU，是几千条<strong>能力切片</strong>（capability eval）+ 产品级 task eval 的组合——你也该这么分。</div>
+
+<h3>背景与原理</h3>
+<p>Anthropic 在多篇博客和文档里透露了内部 eval 体系的轮廓（<em>Claude's Constitution</em>、<em>Core views on AI safety</em>、Anthropic Cookbook 中的 evals 例子）。关键洞察是<strong>把 eval 分两层</strong>：</p>
+<ul>
+<li><strong>Capability eval（能力切片）</strong>：针对模型的某个原子能力——数学推理、代码补全、指令跟随、长 context 检索、tool selection、refusal 准确度。这些是模型团队迭代时盯的指标，每个 capability 几百到几千条数据。</li>
+<li><strong>Task eval（任务级）</strong>：针对一个完整产品 workflow——客服 agent 解决率、code review agent 漏报率、研究 agent 引用准确度。数据量可以小（20-200 条），但每条都对应真实业务结局。</li>
+</ul>
+<p>普通团队的错误是只做其中一种：</p>
+<ul>
+<li>只做 capability eval（堆 MMLU / HumanEval 数字）——和你的真实场景脱节，分数高不代表你产品好用；</li>
+<li>只做 task eval（黑盒看端到端 pass）——出问题不知道是哪个能力挂了，无从优化。</li>
+</ul>
+<p>正确做法是<strong>双层 + 可追溯</strong>：task eval 失败时，能下钻到具体哪个 capability 挂了。比如客服 agent 漏单——是 instruction following 挂（没按 SOP 走）、还是 entity extraction 挂（没抽到订单号）、还是 refusal 挂（错误拒答）？三种都要分别有 capability eval。</p>
+
+<h3>实战示例：双层 eval 结构</h3>
+<pre><code>evals/
+├── capability/                   <span class="tag-com"># 原子能力，模型/prompt 改时跑</span>
+│   ├── instruction_following.jsonl   <span class="tag-com"># 200 条「按格式输出」</span>
+│   ├── entity_extraction.jsonl       <span class="tag-com"># 150 条「抽 JSON」</span>
+│   ├── refusal_accuracy.jsonl        <span class="tag-com"># 80 条「该拒就拒」</span>
+│   ├── long_context_recall.jsonl     <span class="tag-com"># 100 条「needle in haystack」</span>
+│   └── tool_selection.jsonl          <span class="tag-com"># 120 条「选对 tool」</span>
+└── task/                         <span class="tag-com"># 端到端业务，每次发布前跑</span>
+    ├── customer_support.jsonl        <span class="tag-com"># 50 条真实工单 → 期望分类 + 回复</span>
+    └── code_review.jsonl             <span class="tag-com"># 30 个 PR → 期望发现的 bug 列表</span>
+
+<span class="tag-com"># —— 双向追溯：task fail 时关联到 capability ——</span>
+<span class="tag-key">def</span> diagnose(task_failure):
+    <span class="tag-gpt">"""task eval fail → 自动跑相关 capability 看哪个低于阈值"""</span>
+    related = TASK_TO_CAPABILITY[task_failure.task_name]
+    <span class="tag-com"># e.g. customer_support 关联 [instruction_following, entity_extraction]</span>
+    diag = {}
+    <span class="tag-key">for</span> cap <span class="tag-key">in</span> related:
+        diag[cap] = run_capability_eval(cap).pass_rate
+    <span class="tag-key">return</span> sorted(diag.items(), key=<span class="tag-key">lambda</span> x: x[1])  <span class="tag-com"># 最低的最可疑</span>
+
+<span class="tag-com"># —— 用法 ——</span>
+<span class="tag-key">if</span> task_eval.pass_rate &lt; 0.85:
+    <span class="tag-key">print</span>(<span class="tag-gpt">"Task regressed. Capability diagnosis:"</span>)
+    <span class="tag-key">for</span> cap, rate <span class="tag-key">in</span> diagnose(task_eval): <span class="tag-key">print</span>(f<span class="tag-gpt">"  {cap}: {rate:.0%}"</span>)
+<span class="tag-com"># Output:
+#   instruction_following: 0.62  ← 罪魁祸首
+#   entity_extraction:     0.94</span></code></pre>
+
+<div class="diagram">  双层 Eval 拓扑（Anthropic 风格简化版）
+
+         ┌─────────────── Task Eval（产品级） ───────────────┐
+         │  customer_support · code_review · research_agent  │
+         │      20-200 条 · 真实业务结局 · 每次发布跑          │
+         └────────────────────┬─────────────────────────────┘
+                              │ 失败时下钻
+         ┌────────────────────▼─────────────────────────────┐
+         │ Capability Eval（原子能力切片）                    │
+         │ instruction_following · entity_extraction         │
+         │ refusal · long_context · tool_selection · math    │
+         │      100-1000 条/类 · prompt/model 改时跑          │
+         └──────────────────────────────────────────────────┘
+
+  规则：task fail 一定能映射到一个或多个 capability 退化
+       capability 全绿但 task 红 → 你的能力切片没覆盖到真实需求</div>
+
+<p>这个结构还有一个隐藏好处——<strong>换模型时可解释</strong>。Claude Opus 4.7 升 4.8、或者切到 Sonnet，你能看到「instruction_following +2%，entity_extraction -5%」，而不是只有一个糊涂的「整体好像差不多」。模型选型不再凭感觉。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）只跑公开 benchmark——MMLU / HumanEval / GSM8K 这些和你的业务几乎无关，且大概率被训练污染；（2）capability eval 太宽——一个 capability 涵盖 5 种子能力，挂了不知道哪个挂；切片要原子，宁可分得碎；（3）task 和 capability 不关联——出问题时下钻不到根因，eval 退化成「报数仪表」；（4）忽略 cost / latency 维度——产品 eval 不只是 quality，必须同时记录 token / 延迟 / cache hit；上线决定看的是 Pareto 曲线不是单点。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Anthropic Cookbook · Evals 例子, <a href="https://github.com/anthropics/anthropic-cookbook/tree/main/misc" target="_blank">github.com/anthropics/anthropic-cookbook</a> ·
+Anthropic <em>Develop empirical tests</em>, <a href="https://docs.anthropic.com/en/docs/test-and-evaluate/develop-tests" target="_blank">docs.anthropic.com/.../develop-tests</a> ·
+Liang et al. <em>HELM: Holistic Evaluation of Language Models</em>, <a href="https://crfm.stanford.edu/helm/" target="_blank">crfm.stanford.edu/helm</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// 综合实战 · 给一个 prompt 从 0 搭完整 eval（90 分钟）</h3>
+<p>把 4 节串成一个能交付的工作流。挑你手头跑得最多的一个 prompt——比如「邮件摘要 + 提取 todo」——按以下 7 步走：</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>分层（§4，10 min）</strong>：写下任务是什么，列出涉及的 2-4 个 capability（如：长 context 检索、entity extraction、format compliance）。每个 capability 决定要不要单独切片。</li>
+<li><strong>建 golden set（§1，30 min）</strong>：手挑 20 条真实 input。10 条 happy、5 条 edge、5 条 adversarial。每条标注期望输出（JSON）。存为 <code>tests/golden_xxx.jsonl</code>。</li>
+<li><strong>写 code-based scorer（§1，10 min）</strong>：能用 JSON 字段相等 / regex / schema 解决的，绝不上 LLM judge。给每条 case 写出 scorer 逻辑。</li>
+<li><strong>跑 baseline（§1，5 min）</strong>：在当前 prompt 上跑一遍，记录 pass rate 和 fail 分布。这是基线，禁止再跌破。</li>
+<li><strong>如有开放式部分加 judge（§2，20 min）</strong>：摘要质量这种打不了字符串等价的，加 LLM judge：rubric 化（拆 3-4 个 0/1 维度）+ 位置交换 + 异家族 judge。在 20 条校准集上对齐到 ≥ 80% 人工一致率。</li>
+<li><strong>接 CI（§3，10 min）</strong>：把 prompt 文件、meta.yml、pytest、GitHub Actions 串起来。在 PR 上自动跑 regression。</li>
+<li><strong>跑一次「故意改坏」（5 min）</strong>：把 prompt 改掉一句关键 instruction，看 CI 是否变红。如果没红，你的 golden set 还不够锐——补 case，直到改坏能挡住。</li>
+</ol>
+<p style="margin-top:14px">90 分钟后你拥有的不是「一个 eval 脚本」，而是<strong>这个 prompt 未来一年的护城河</strong>。下次模型升级、prompt 改写、团队成员换人，这套 eval 都在那里替你守门。这就是 Anthropic / OpenAI / Cursor 工程团队相对普通团队最大的能力差距——不是模型用得好，是 eval 做得早。</p>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// ENGLISH GLOSSARY</h3>
+<dl>
+<dt>Eval / Evaluation</dt><dd>对 LLM 或 prompt 输出系统性测分以判定是否达到要求的工程实践。</dd>
+<dt>Golden Set</dt><dd>人工挑选并标注的高质量评测数据集，是 eval 的 source of truth。</dd>
+<dt>Code-based Scorer</dt><dd>用代码（regex / schema / unit test）判定输出是否正确，便宜稳定首选。</dd>
+<dt>LLM-as-Judge</dt><dd>用另一个 LLM 给被测模型输出打分或挑赢家的评测方法。</dd>
+<dt>Position Bias</dt><dd>pairwise judge 中 A/B 位置影响打分的系统性偏差。</dd>
+<dt>Verbosity Bias</dt><dd>LLM judge 偏爱更长答案的倾向，与正确性无关。</dd>
+<dt>Self-preference Bias</dt><dd>judge 偏爱与自己同家族模型输出的倾向。</dd>
+<dt>Calibration Set</dt><dd>带人工标签的小样本集合，用来校准 LLM judge 是否可靠。</dd>
+<dt>Rubric</dt><dd>把质量拆成多个独立 0/1 维度的评分标准。</dd>
+<dt>Regression Test</dt><dd>每次修改 prompt 跑 golden set 确认没让任何 case 从 pass 变 fail。</dd>
+<dt>Capability Eval</dt><dd>针对模型某一原子能力（如 instruction following）的切片评测。</dd>
+<dt>Task Eval</dt><dd>针对完整业务 workflow 的端到端评测。</dd>
+<dt>Goodhart's Law</dt><dd>「指标一旦成为目标就不再是好指标」——eval 也会被 hack。</dd>
+</dl>
+</div>
+
+<!-- ============ Homework ============ -->
+<div class="homework">
+<h3>// 本周动手作业</h3>
+<p><strong>今晚 90 分钟实验</strong>：照「综合实战」7 步给你跑得最多的 1 个 prompt 搭完整 eval。</p>
+<ol style="margin-left:24px;margin-top:10px">
+<li>选定 prompt（候选：你的简历 review prompt、邮件摘要 prompt、code review prompt、知识库问答 prompt——挑你日常用得最频繁的一个）。</li>
+<li>手写 20 条 golden set，存为 jsonl。注意 happy / edge / adversarial 三档配比 10 / 5 / 5。</li>
+<li>写 code-based scorer，跑出 baseline pass rate。如果一次过 20/20，golden set 太软，补 case。</li>
+<li>故意把 prompt 改坏一句话，确认 pass rate 跌——你的 eval 能挡 regression 才算 eval。</li>
+<li>（可选）如果输出含开放式生成部分（摘要质量），按 §2 加 LLM-as-judge：rubric + 位置交换 + 跑一次校准。</li>
+<li>把整个 eval 提交到一个 git 仓库，跑 GitHub Actions（哪怕只是 fork 一个模板）。</li>
+</ol>
+<p style="margin-top:12px"><strong>验收</strong>：你能用一句话回答「我这个 prompt 当前 pass rate 多少 / 失败集中在哪一类 case / 改 prompt 后我怎么知道有没有变差」。能回答 = 你已经超过 90% 在用 AI 写 prompt 的人。</p>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://hamel.dev/blog/posts/evals/" target="_blank">Hamel Husain · Your AI Product Needs Evals</a> — 全行业讨论 eval 工程的引爆文，本期理论基底</li>
+<li><a href="https://eugeneyan.com/writing/evals/" target="_blank">Eugene Yan · Task-Specific LLM Evals That Do &amp; Don't Work</a> — 各种 task 该用什么 metric 的实战清单</li>
+<li><a href="https://applied-llms.org/" target="_blank">Applied LLMs · What We've Learned From A Year of Building with LLMs</a> — Eugene Yan / Hamel / Shreya 等人合写的 LLM 工程经验集</li>
+<li><a href="https://arxiv.org/abs/2306.05685" target="_blank">Zheng et al. · Judging LLM-as-a-Judge (NeurIPS 2023)</a> — LLM judge 偏见的开山论文</li>
+<li><a href="https://arxiv.org/abs/2404.13076" target="_blank">Panickssery et al. · LLM Evaluators Recognize and Favor Their Own Generations</a> — self-preference bias 的实证</li>
+<li><a href="https://docs.anthropic.com/en/docs/test-and-evaluate/develop-tests" target="_blank">Anthropic · Develop empirical tests</a> — 官方 eval 方法论</li>
+<li><a href="https://github.com/anthropics/anthropic-cookbook" target="_blank">Anthropic Cookbook</a> — 大量可运行的 eval 代码样例</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Weekly · Week 6 / 2026-05-24</footer>
+</div>
+</body></html>
