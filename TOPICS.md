@@ -3,10 +3,10 @@
 源是仓库中的文件本身（`ls *-{day,week,book,issue}*.html`）。本文件只是主题查找表：N → 主题。超过现有编号时 routine 会 append 新主题。
 
 ## Phase 1 — Engineering 核心
-- Week 1: Prompt Engineering 深度 — System prompt 架构、四层结构、XML vs MD、CoT 边界、prefix caching
+- Week 1: Prompt Engineering — System prompt 架构、四层结构、XML vs MD、CoT 边界、prefix caching
 - Week 2: Context Engineering — lost-in-the-middle、信息排布、chunk vs embedding、compaction、长 context vs RAG
 - Week 3: Harness Engineering — harness 定义、Claude Code harness 拆解、自建 harness 最小架构、Anthropic 'Building effective agents' 精读
-- Week 4: Tool Use & Function Calling 深度 — tool schema 设计、参数描述>名字、过多 tool 退化、parallel tool calls、为 Claude 设计 tool 的 7 条经验
+- Week 4: Tool Use & Function Calling — tool schema 设计、参数描述>名字、过多 tool 退化、parallel tool calls、为 Claude 设计 tool 的 7 条经验
 - Week 5: Agent Design Patterns — Reflexion / ReAct / Plan-and-execute / Multi-agent debate、agent 失败模式、Anthropic 'Less is more' 哲学
 - Week 6: Eval 工程 — LLM-as-judge 去偏、A/B prompt、regression test for prompts、Anthropic Evals 框架
 - Week 7: Memory & State 管理 — 滑动窗口 vs summarization vs vector retrieval、长期记忆 3 种架构、user profile
@@ -16,7 +16,7 @@
 
 ## Phase 2 — 应用与系统
 - Week 11: Claude Code 高阶用法 — Subagents / hooks / slash commands / MCP servers、SDK 自动化、大 repo CLAUDE.md
-- Week 12: MCP 深度 — 协议核心、自建 MCP server、stdio vs http、tool/resource/prompt 三层
+- Week 12: MCP — 协议核心、自建 MCP server、stdio vs http、tool/resource/prompt 三层
 - Week 13: Coding Agents 工程 — Cursor / Claude Code / Aider harness 差异、plan mode 重要性、AI pair programming
 - Week 14: Code Refactoring with AI — 大规模重构分步、AI 不擅长的重构、test-first AI refactor
 - Week 15: AI for Research — Deep Research 对比、个人研究 agent 自建、信息源筛选、引用追溯
