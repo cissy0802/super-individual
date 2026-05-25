@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 7 · Memory & State 管理 — Super Individual Weekly</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">WEEK 07 / PHASE 1 · ENGINEERING</span>
+<h1>Memory & State 管理</h1>
+<h2>State 四层拆解 · 短期压缩 · 长期 3 架构 · Self-Maintained Profile</h2>
+<div class="date">2026-05-25 · BigCat</div>
+<p class="pitch">LLM 是 stateless 纯函数；所有「记忆」都是你 token 预算里硬塞进去的状态。会塞和不会塞，差一个量级。</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>问 100 个做 AI 产品的人「你怎么管理 memory」，90 个会说「我塞 vector DB 里 retrieve」。这就是大多数 AI agent 用三轮就开始胡言乱语的根本原因——<strong>把所有 state 当成一种东西，用一种工具（embedding + RAG）处理</strong>。资深玩家的认知是：context window 是稀缺资源，state 至少有四类，每类的写入/读取/失效逻辑完全不同。这一期不讲怎么调 chroma 参数（那是 101），讲四件事：怎么把混在一起的 state 拆成 conversation / scratchpad / profile / knowledge 四层并分别管理；短期记忆为什么 truncate &gt; summarize &gt; hierarchical 三档要分场景选；长期记忆为什么 vector retrieval 只能解决三分之一问题，剩下两类要 structured KV + episodic event log；以及 MemGPT / Letta 路线的 self-maintained profile 怎么做到「越用越懂你」。读完你应该能在白板上画出自己 agent 的 state 拓扑，并知道每条线该走哪条路。</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>把 State 拆成四层：混在一起就是事故现场</h2>
+<div class="claim">论断：90% 的 agent memory bug 都源于一个误解——把对话历史、中间结果、用户画像、领域知识混在同一个 context 里管理。它们的生命周期、可信度、检索方式完全不同。</div>
+
+<h3>背景与原理</h3>
+<p>OS 教科书第一章告诉你内存有 register / cache / RAM / disk 的分层。LLM 的「内存」也有同样的分层，只是大多数人没意识到。Anthropic 在 <em>Building Effective Agents</em> 里反复强调一句话——「context is a budget」——你必须主动决定每个 token 用在哪。下面四类 state 必须显式分开：</p>
+<ul>
+<li><strong>Conversation State</strong>：当前会话的 message history。生命周期 = 这一次会话。可信度高（用户刚说的）。写入 append-only，读取通常按时间倒序或全量。</li>
+<li><strong>Scratchpad / Working Memory</strong>：agent 在执行任务过程中的中间结果——tool call output、reasoning step、partial plan。生命周期 = 单个 task。**用完即焚**，绝大多数 scratchpad 不该跨任务留存。</li>
+<li><strong>User Profile</strong>：跨会话稳定的用户事实——name、偏好、长期目标、过往决策。生命周期 = 用户的整个生命。可信度需要校验（用户说的可能过时）。写入需要 LLM 抽取 + 去重 + 冲突解决，读取通常全量注入 system prompt。</li>
+<li><strong>Knowledge Base</strong>：与具体用户无关的领域知识——文档、代码库、产品 spec。生命周期 = 知识本身的版本。读取必须 query-aware retrieval（这才是 RAG 真正擅长的）。</li>
+</ul>
+<p>四种 state 用一种机制（往 vector DB 塞）会同时踩三个坑：（1）对话历史按 embedding 检索丢失时序——「上一句」可能 retrieve 不到；（2）user profile 被淹在 1M 条 chunk 里，cosine similarity 选不到关键事实；（3）scratchpad 永远留存，下一次任务被无关中间结果污染。<strong>正确做法是给每层独立的存储 + 独立的 read/write policy</strong>。</p>
+
+<div class="diagram">  Agent State 四层架构（生命周期由短到长）
+
+  ┌─────────────────────────────────────────────────────────┐
+  │ Knowledge Base    · 永久 · query-aware retrieval (RAG)  │
+  ├─────────────────────────────────────────────────────────┤
+  │ User Profile      · 跨会话 · LLM 抽取 · 全量注入 system │
+  ├─────────────────────────────────────────────────────────┤
+  │ Conversation      · 单会话 · 滑窗+summary · 时序保留    │
+  ├─────────────────────────────────────────────────────────┤
+  │ Scratchpad        · 单任务 · 用完即焚 · 不跨任务留存    │
+  └─────────────────────────────────────────────────────────┘
+       每层 read / write 策略独立，混用即翻车</div>
+
+<h3>实战示例</h3>
+<p>把四层显式建模成 Python class，让 prompt 组装时强制走分层接口：</p>
+<pre><code><span class="tag-com"># memory_layers.py — 强制分层，禁止「往一个 dict 里乱塞」</span>
+<span class="tag-key">from</span> dataclasses <span class="tag-key">import</span> dataclass, field
+<span class="tag-key">from</span> typing <span class="tag-key">import</span> Protocol
+
+<span class="tag-key">class</span> MemoryLayer(Protocol):
+    <span class="tag-key">def</span> read(self, query: str) -&gt; str: ...
+    <span class="tag-key">def</span> write(self, content: str, meta: dict) -&gt; <span class="tag-key">None</span>: ...
+
+@dataclass
+<span class="tag-key">class</span> Conversation:                <span class="tag-com"># 短期，append-only</span>
+    messages: list = field(default_factory=list)
+    <span class="tag-key">def</span> read(self, _): <span class="tag-key">return</span> self.messages[-20:]   <span class="tag-com"># 默认滑窗</span>
+
+@dataclass
+<span class="tag-key">class</span> Scratchpad:                  <span class="tag-com"># 单任务，task_id scoped</span>
+    by_task: dict = field(default_factory=dict)
+    <span class="tag-key">def</span> clear(self, task_id): self.by_task.pop(task_id, <span class="tag-key">None</span>)
+
+@dataclass
+<span class="tag-key">class</span> Profile:                     <span class="tag-com"># 跨会话稳定事实</span>
+    facts: dict = field(default_factory=dict)  <span class="tag-com"># {"name":"BigCat", ...}</span>
+    <span class="tag-key">def</span> read(self, _): <span class="tag-key">return</span> self.facts            <span class="tag-com"># 全量</span>
+
+@dataclass
+<span class="tag-key">class</span> Knowledge:                   <span class="tag-com"># 文档/代码，RAG 入口</span>
+    index: object   <span class="tag-com"># 你的 vector store</span>
+    <span class="tag-key">def</span> read(self, query): <span class="tag-key">return</span> self.index.search(query, k=5)
+
+<span class="tag-com"># —— 组装 prompt 时强制走四层 ——</span>
+<span class="tag-key">def</span> build_context(query, conv, scratch, profile, kb):
+    <span class="tag-key">return</span> {
+        <span class="tag-gpt">"system"</span>: f<span class="tag-gpt">"User profile:\n{profile.read(None)}"</span>,
+        <span class="tag-gpt">"messages"</span>: conv.read(<span class="tag-key">None</span>),
+        <span class="tag-gpt">"working"</span>: scratch.by_task.get(current_task_id, []),
+        <span class="tag-gpt">"retrieved"</span>: kb.read(query),         <span class="tag-com"># 仅与 query 相关</span>
+    }</code></pre>
+<p>关键不是这段代码本身，是<strong>它强制你回答四个问题</strong>：profile 哪些字段全量进 system？scratch 什么时候 clear？conv 滑窗多少？kb retrieve top-k 多少？想不清楚四个答案的 agent，上线必出 memory 事故。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）把 user profile 用 embedding 检索——「我叫什么」这种事实型查询 cosine 经常选不到；profile 必须全量注入；（2）scratchpad 跨任务留存——上次 debug 的 stack trace 污染下次问答；（3）conversation 直接送进 vector DB——丢时序，「上一句」retrieve 不到；（4）四层混用同一个 store，rebuild index 把 profile 一起清掉。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Anthropic <em>Building Effective Agents</em>, <a href="https://www.anthropic.com/research/building-effective-agents" target="_blank">anthropic.com/research/building-effective-agents</a> ·
+Lilian Weng <em>LLM Powered Autonomous Agents</em>（Memory 章节）, <a href="https://lilianweng.github.io/posts/2023-06-23-agent/" target="_blank">lilianweng.github.io/posts/2023-06-23-agent</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>短期记忆三档：Truncate / Summarize / Hierarchical 何时用</h2>
+<div class="claim">论断：会话变长时，第一反应不该是「上 summarization」，应该是「能 truncate 就 truncate」。Summarize 是有损压缩，无脑用会把关键细节磨平。</div>
+
+<h3>背景与原理</h3>
+<p>Context 超了怎么办？三档处理方式，复杂度和损耗都不同：</p>
+<ul>
+<li><strong>Truncate（滑动窗口）</strong>：保留最近 N 条 message，前面整体丢。零成本、零损耗、可重现。适用：客服、Q&amp;A、单轮指令——对话本身就「短期相关」，老消息没价值。</li>
+<li><strong>Summarize（增量摘要）</strong>：达到阈值后把旧消息压缩成一段摘要，挂在 system prompt 顶部。损耗中、成本中。适用：研究/规划/创作这类<em>需要回顾</em>的场景。Claude Code 和 ChatGPT 长会话都用这套（Anthropic 文档里叫 "compaction"，第 2 期我们详谈过）。</li>
+<li><strong>Hierarchical（分层 + 检索）</strong>：旧消息按段落 / 主题 chunk 后入 vector store，需要时按 query retrieve 回来。损耗低但<em>架构复杂</em>。MemGPT 论文（Packer 等 2023）是这条路线的开山：用「main context」+「external context」+「self-edit 函数」让 LLM 自己调 page-in/page-out。</li>
+</ul>
+<p>三档的选择标准很简单——<strong>「我以后会不会查回早期对话的具体细节？」</strong>。客服一般不会（truncate）；写小说会但不要求精确（summarize）；做投研复盘要精确引用（hierarchical）。</p>
+
+<div class="diagram">  短期记忆三档（按损耗 vs 复杂度）
+
+       简单 ←──────────────────────────────→ 复杂
+       ┌──────────┐    ┌──────────┐    ┌──────────────┐
+   损耗│ Truncate │ →  │Summarize │ →  │ Hierarchical │
+   小  │  滑窗    │    │ 增量压缩 │    │ chunk+检索   │
+   ↑   │ 0 成本   │    │ +1 LLM   │    │ +向量库      │
+       │ 零保留   │    │ 摘要保留 │    │ 可精确召回   │
+       └──────────┘    └──────────┘    └──────────────┘
+       客服/Q&amp;A         规划/写作         投研/code review
+
+  默认走最左边；右移只在「确实需要旧细节」时</div>
+
+<h3>实战示例</h3>
+<p>三档可以放在同一个 manager 里按 message 数自动升级：</p>
+<pre><code><span class="tag-com"># conversation_manager.py — 三档自动切换</span>
+<span class="tag-key">class</span> ConversationManager:
+    <span class="tag-key">def</span> __init__(self, mode=<span class="tag-gpt">"truncate"</span>, window=20, summary_threshold=40):
+        self.messages, self.summary = [], <span class="tag-key">None</span>
+        self.mode, self.window, self.threshold = mode, window, summary_threshold
+
+    <span class="tag-key">def</span> add(self, msg): self.messages.append(msg)
+
+    <span class="tag-key">def</span> build(self):
+        <span class="tag-key">if</span> self.mode == <span class="tag-gpt">"truncate"</span>:
+            <span class="tag-key">return</span> self.messages[-self.window:]
+
+        <span class="tag-key">if</span> self.mode == <span class="tag-gpt">"summarize"</span>:
+            <span class="tag-key">if</span> len(self.messages) &gt; self.threshold:
+                old = self.messages[:-self.window]
+                self.summary = compact(self.summary, old)  <span class="tag-com"># LLM 增量摘要</span>
+                self.messages = self.messages[-self.window:]
+            head = [{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"system"</span>,<span class="tag-gpt">"content"</span>:f<span class="tag-gpt">"Prior summary:\n{self.summary}"</span>}] \
+                   <span class="tag-key">if</span> self.summary <span class="tag-key">else</span> []
+            <span class="tag-key">return</span> head + self.messages
+
+        <span class="tag-key">if</span> self.mode == <span class="tag-gpt">"hierarchical"</span>:
+            recent = self.messages[-self.window:]
+            old_chunks = self.vector.search(latest_user_msg(recent), k=5)
+            <span class="tag-key">return</span> [recall_block(old_chunks)] + recent
+
+<span class="tag-com"># —— compaction prompt（关键细节别丢）——</span>
+COMPACT = <span class="tag-gpt">"""Summarize the prior conversation. PRESERVE:
+- All factual decisions made
+- All open questions / TODOs
+- Any explicit user preferences mentioned
+DISCARD: greetings, clarifications already resolved, model's apologies.
+Existing summary: {old_summary}
+New messages: {new_msgs}
+Output (≤300 tokens):"""</span></code></pre>
+<p>compaction prompt 的 PRESERVE / DISCARD 列表是决定摘要质量的关键。Anthropic 文档里给的版本特别强调「保留 decisions 和 open TODOs」——这正是研究/编码场景最容易丢的两类信息。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）一上来就 summarize——10 轮以内的对话 summarize 是浪费 token + 损耗信息；先 truncate；（2）每次都重新摘要全部历史——成本爆炸；正确做法是<em>增量</em>摘要（旧摘要 + 新消息 → 新摘要）；（3）hierarchical 检索丢时序——retrieve 回来的 chunk 不带 timestamp 排序，LLM 会把昨天的 decision 当今天的；chunk metadata 必带 ts；（4）摘要 prompt 没列 PRESERVE 清单——摘要器自己决定丢什么，往往丢掉用户偏好这类「短不重要」实则关键的信息。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Packer et al. <em>MemGPT: Towards LLMs as Operating Systems</em>, <a href="https://arxiv.org/abs/2310.08560" target="_blank">arxiv.org/abs/2310.08560</a> ·
+Anthropic <em>Long context prompting</em>, <a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/long-context-tips" target="_blank">docs.anthropic.com/.../long-context-tips</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>长期记忆三种架构：Vector / Structured KV / Episodic Event Log</h2>
+<div class="claim">论断：Vector retrieval 只能回答「找一段与 X 相似的内容」。它解决不了「我上次怎么决定的」「我有哪些偏好」。长期记忆要按 query 类型分三套存。</div>
+
+<h3>背景与原理</h3>
+<p>把 vector DB 当万能长期记忆是 2023 年的迷思。资深做法是按<strong>查询模式</strong>分三种存储，各司其职：</p>
+<ul>
+<li><strong>Vector store（语义检索）</strong>：擅长「找相似」「找相关」的开放查询。适合：文档、聊天历史的 fuzzy recall、case-based reasoning。失败在：精确事实、列表枚举、时序查询。</li>
+<li><strong>Structured KV / SQL（精确事实）</strong>：擅长「X 的值是什么」「列出所有 Y」。适合：user preferences、entity attributes、structured profile。失败在：模糊查询。MemGPT 的 core memory 本质就是 structured KV。</li>
+<li><strong>Episodic event log（时序事件）</strong>：擅长「上次发生了什么」「这两周做了什么」「上次失败的原因」。append-only 时间序列，按 (user_id, ts) 索引。适合：反思、复盘、追溯决策路径。Reflexion 论文（Shinn 等 2023）的 reflective memory 就是这种结构。</li>
+</ul>
+<p>这三种不是互斥而是<strong>互补</strong>。一个成熟 agent 会同时有：vector store 装文档 + KV 装 profile + event log 装行为历史。Letta（MemGPT 的产品版本）官方文档把这套叫做「memory hierarchy」，并显式区分 <code>core_memory</code>（KV）、<code>archival_memory</code>（vector）、<code>recall_memory</code>（event log）。Microsoft GraphRAG 走了第四条路（知识图谱），适合实体关系密集的场景，但门槛高，普通团队优先建好前三种。</p>
+
+<h3>实战示例</h3>
+<p>用三种 store 实现一个能「记住你」的 personal agent，关键是<strong>写入路由</strong>——一条信息进来，决定它进哪个 store：</p>
+<pre><code><span class="tag-com"># memory_router.py — 一条信息进来，路由到正确的 store</span>
+ROUTE_PROMPT = <span class="tag-gpt">"""Classify this user utterance into ONE memory type:
+- FACT      : a stable fact about the user (name, role, preference)
+- EVENT     : an action/decision/experience that happened
+- DOCUMENT  : reference content (article, code, doc)
+- NONE      : transient (greeting, ack, clarification)
+Return JSON: {"type": "...", "extract": "..."}"""</span>
+
+<span class="tag-key">def</span> ingest(utterance, user_id):
+    r = llm(ROUTE_PROMPT, utterance)
+    <span class="tag-key">if</span> r[<span class="tag-gpt">"type"</span>] == <span class="tag-gpt">"FACT"</span>:
+        profile_kv.upsert(user_id, r[<span class="tag-gpt">"extract"</span>])      <span class="tag-com"># structured KV</span>
+    <span class="tag-key">elif</span> r[<span class="tag-gpt">"type"</span>] == <span class="tag-gpt">"EVENT"</span>:
+        event_log.append(user_id, ts=now(), text=r[<span class="tag-gpt">"extract"</span>])
+    <span class="tag-key">elif</span> r[<span class="tag-gpt">"type"</span>] == <span class="tag-gpt">"DOCUMENT"</span>:
+        vector_store.add(embed(r[<span class="tag-gpt">"extract"</span>]), meta={<span class="tag-gpt">"user"</span>:user_id})
+    <span class="tag-com"># NONE → drop</span>
+
+<span class="tag-com"># —— 读取时按 query 类型路由 ——</span>
+<span class="tag-key">def</span> recall(query, user_id):
+    intent = classify(query)  <span class="tag-com"># fact / temporal / semantic</span>
+    <span class="tag-key">if</span> intent == <span class="tag-gpt">"fact"</span>:
+        <span class="tag-key">return</span> profile_kv.get_all(user_id)            <span class="tag-com"># 全量 profile</span>
+    <span class="tag-key">if</span> intent == <span class="tag-gpt">"temporal"</span>:
+        <span class="tag-key">return</span> event_log.range(user_id, last=<span class="tag-gpt">"7d"</span>)    <span class="tag-com"># 按时间</span>
+    <span class="tag-key">return</span> vector_store.search(query, k=5, filter={<span class="tag-gpt">"user"</span>:user_id})</code></pre>
+<p>这套路由的精髓——<strong>问题决定存储</strong>。「我叫什么？」走 KV；「上周我们聊了什么？」走 event log；「找一段我之前提过的关于禅修的内容」走 vector。一种存储解所有问题是新手错觉。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）只用 vector store——「列出我所有偏好」这种查询 cosine 必败；（2）event log 不做 retention——半年后 100k 条事件全部 retrieve，prompt 直接撑爆；要有 decay / summarize 策略；（3）KV 没有 conflict resolution——用户半年前说「我素食」，最近说「我吃肉了」，两条都在 → LLM 困惑；写入时 overwrite + 留时间戳；（4）三套 store 不共享 user_id schema——retrieve 时 join 不上，等于没存。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Shinn et al. <em>Reflexion: Language Agents with Verbal Reinforcement Learning</em>, <a href="https://arxiv.org/abs/2303.11366" target="_blank">arxiv.org/abs/2303.11366</a> ·
+Letta（MemGPT）docs <em>Memory hierarchy</em>, <a href="https://docs.letta.com/concepts/memory" target="_blank">docs.letta.com/concepts/memory</a> ·
+Edge et al. <em>From Local to Global: GraphRAG</em>, <a href="https://arxiv.org/abs/2404.16130" target="_blank">arxiv.org/abs/2404.16130</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Self-Maintained User Profile：让 LLM 自己更新「关于你」的笔记</h2>
+<div class="claim">论断：把 user profile 当 LLM 的「自我维护文档」而不是「数据库表」——给它读 + 写的工具，让它自己决定记什么、改什么、忘什么。这是「越用越懂你」的核心机制。</div>
+
+<h3>背景与原理</h3>
+<p>第 3 节的 structured KV 解决了「存什么、怎么读」，但还有个工程问题——<strong>谁来决定写什么</strong>。三种方案：</p>
+<ul>
+<li><strong>用户显式声明</strong>：让用户填表/写 system prompt。覆盖率低、用户嫌烦。</li>
+<li><strong>规则抽取</strong>：写正则/规则识别「我叫 X」「我喜欢 Y」。脆弱、覆盖不全。</li>
+<li><strong>LLM self-maintained</strong>：给 LLM 一个 <code>update_profile</code> tool，让它在每轮对话后自主决定要不要更新 profile。MemGPT / Letta / ChatGPT memory / Claude memory 走的都是这条路。</li>
+</ul>
+<p>self-maintained 的难点不是「让它写」，是<strong>「让它写对」</strong>。Profile 是要全量注入下一次会话 system prompt 的，里面塞了垃圾就永远污染。要解决四个问题：</p>
+<ol>
+<li><strong>抽取粒度</strong>：「用户提了下他在跑步」要不要写？太细 → profile 爆炸；太粗 → 漏关键。经验规则：<em>跨会话仍然成立的稳定事实才写</em>。</li>
+<li><strong>冲突解决</strong>：新事实和旧事实矛盾时（「我素食」→「我吃肉了」）overwrite 还是 append？默认 overwrite + 留 changelog。</li>
+<li><strong>遗忘机制</strong>：profile 不能无限增长。LRU / 显式过期 / 用户主动删。Letta 用「archival」把不活跃的 fact 移到 vector store。</li>
+<li><strong>幻觉过滤</strong>：LLM 可能从对话里推断出用户没说过的事（「用户提到孩子作业 → 推断有孩子在读小学」）。所有 self-maintained write 必须能引用具体 message ID 作为 evidence，无 evidence 不写。</li>
+</ol>
+
+<h3>实战示例</h3>
+<p>给 agent 一个 profile 工具，每轮对话后跑一遍「需不需要更新」：</p>
+<pre><code><span class="tag-com"># profile_tools.py — 给 LLM 的 self-maintained profile 工具</span>
+PROFILE_UPDATE_PROMPT = <span class="tag-gpt">"""Review the latest user message and decide if the user
+profile should be updated. Only write facts that:
+1. Are explicitly stated by the user (cite message)
+2. Are likely to be true beyond this session
+3. Are not already in the profile (or contradict it)
+
+Current profile: {profile_json}
+Latest message:  {message}
+
+Output JSON:
+{
+  "action": "add" | "update" | "delete" | "none",
+  "key": "...",
+  "value": "...",
+  "evidence_msg_id": "...",   // 必填，无 evidence 直接 "none"
+  "reason": "..."
+}"""</span>
+
+<span class="tag-key">def</span> maybe_update_profile(user_id, latest_msg, msg_id):
+    current = profile_kv.get_all(user_id)
+    decision = llm(PROFILE_UPDATE_PROMPT.format(
+        profile_json=json.dumps(current), message=latest_msg))
+    <span class="tag-key">if</span> decision[<span class="tag-gpt">"action"</span>] == <span class="tag-gpt">"none"</span>: <span class="tag-key">return</span>
+    <span class="tag-key">if</span> <span class="tag-key">not</span> decision.get(<span class="tag-gpt">"evidence_msg_id"</span>): <span class="tag-key">return</span>  <span class="tag-com"># 无 evidence 拒绝</span>
+    profile_kv.apply(user_id, decision)
+    changelog.append(user_id, decision, ts=now())   <span class="tag-com"># 可追溯</span>
+
+<span class="tag-com"># —— 每个 session 起手前注入 profile ——</span>
+<span class="tag-key">def</span> build_system_prompt(user_id):
+    p = profile_kv.get_all(user_id)
+    <span class="tag-key">return</span> f<span class="tag-gpt">"""You are a personal assistant for the following user.
+Stable facts about them (use to personalize, but verify before acting):
+{json.dumps(p, indent=2, ensure_ascii=False)}
+
+Important: if a fact seems outdated, ASK the user to confirm rather than
+silently override the profile."""</span></code></pre>
+<p>三个细节决定品质：<strong>必填 evidence_msg_id</strong>（挡幻觉）、<strong>changelog</strong>（可追溯，用户问「你怎么知道我素食」能答出来）、<strong>系统 prompt 提示模型主动验证</strong>（避免基于过时 profile 自信犯错）。这三条都做到了，profile 才从「玩具」变「工程产物」。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）LLM 自由写入无审计——半年后 profile 里 30% 是模型幻觉；（2）无遗忘机制——profile 长到 5000 token，全量注入吞掉一半 context budget；（3）profile 当作 ground truth 行动——用户偏好变了，agent 还按老 profile 推荐，体验崩；任何 high-stakes 决策前必须 confirm；（4）profile 全局共享给多个 agent——隐私 / scope 失控；profile 应按 agent 或场景隔离。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Letta 官方教程 <em>Building stateful agents</em>, <a href="https://docs.letta.com/" target="_blank">docs.letta.com</a> ·
+Simon Willison <em>How ChatGPT memory works</em>, <a href="https://simonwillison.net/2024/Apr/16/llm-memory/" target="_blank">simonwillison.net/2024/Apr/16</a> ·
+Park et al. <em>Generative Agents: Interactive Simulacra of Human Behavior</em>（reflection/memory stream 设计）, <a href="https://arxiv.org/abs/2304.03442" target="_blank">arxiv.org/abs/2304.03442</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// 综合实战 · 给手头 agent 画出 state 拓扑（30 分钟）</h3>
+<p>挑你正在做的或常用的一个 agent（个人 research bot / coding agent / 客服 / 写作助手），按以下 6 步画清 state 拓扑：</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>列出四层（§1，5 min）</strong>：分别写下 Conversation / Scratchpad / Profile / Knowledge 各装什么、生命周期多长。哪一层目前是空的？空的就是潜在 bug。</li>
+<li><strong>选短期策略（§2，5 min）</strong>：会话长度分布是多少？P95 超过 30 轮就要从 truncate 升 summarize；要追溯精确细节再升 hierarchical。</li>
+<li><strong>评估长期需求（§3，10 min）</strong>：列出用户最常问的 10 个 query 类型，标注每个该走 vector / KV / event log。如果 8 个都标 vector → 真的需要其它两种，否则 over-engineered。</li>
+<li><strong>设计写入路由（§3-4，5 min）</strong>：用户每条 utterance 进来，谁决定写哪？规则 / LLM router / 用户显式？写入有没有 evidence 字段？</li>
+<li><strong>定遗忘策略（§4，3 min）</strong>：Profile 上限多少 token？超过怎么办（LRU / archival / 用户审核）？Event log 多久 decay？</li>
+<li><strong>画一张图（2 min）</strong>：在白板/draw.io 画出四层 + 路由箭头。画不出来就是设计还没成型。</li>
+</ol>
+<p style="margin-top:14px">30 分钟后你应该有：一张 state 拓扑图、四层各自的 read/write policy、写入路由的判定逻辑、遗忘机制。<strong>这就是把 agent 从 demo 升级到「越用越懂你」的产品的关键文档</strong>。下一次同事问「我们的 agent 怎么记忆的」，你递这张图，不再支支吾吾说「塞 chroma 里」。</p>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// ENGLISH GLOSSARY</h3>
+<dl>
+<dt>State</dt><dd>Agent 的「记忆」总称；本期拆为 conversation / scratchpad / profile / knowledge 四层。</dd>
+<dt>Conversation State</dt><dd>当前会话的 message history，append-only，单会话生命周期。</dd>
+<dt>Scratchpad / Working Memory</dt><dd>Agent 执行任务的中间结果（tool output、reasoning），用完即焚。</dd>
+<dt>User Profile</dt><dd>跨会话稳定的用户事实，通常 structured KV 存储，全量注入 system prompt。</dd>
+<dt>Knowledge Base</dt><dd>与用户无关的领域知识，query-aware retrieval 入口。</dd>
+<dt>Truncate / Sliding Window</dt><dd>保留最近 N 条 message，前面丢弃；最简单的短期记忆策略。</dd>
+<dt>Summarize / Compaction</dt><dd>把旧消息压缩成摘要，挂在 system prompt 顶部；有损但能保留要点。</dd>
+<dt>Hierarchical Memory</dt><dd>旧消息分块入 vector store，需要时检索回来；MemGPT 的核心架构。</dd>
+<dt>MemGPT / Letta</dt><dd>Packer 等 2023 提出的「LLM as OS」内存分层框架，Letta 是其产品化。</dd>
+<dt>Episodic Memory / Event Log</dt><dd>按时序记录用户行为/决策的 append-only log，适合复盘与时间型查询。</dd>
+<dt>Self-Maintained Profile</dt><dd>LLM 自主调用 tool 更新 user profile 的机制；ChatGPT memory / Claude memory 走此路。</dd>
+<dt>Evidence-Bound Write</dt><dd>每次 profile 写入必须挂一个 source message ID 作为 evidence；用于挡幻觉。</dd>
+<dt>Conflict Resolution</dt><dd>新事实与旧事实矛盾时的处理策略（overwrite + changelog 是默认）。</dd>
+</dl>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// 深入思考</h3>
+<details><summary>Context window 已经 1M+ token，长期记忆架构还有必要吗？直接把所有历史塞进去不行？</summary><div>不行，理由三层：（1）<em>成本</em>——1M token 每次调用 $3+，且没有 prefix cache 命中时延迟可到 30s+；（2）<em>lost-in-the-middle</em>（Liu 等 2023）——长 context 中段信息召回率掉到 50% 以下，塞进去不等于能用；（3）<em>信噪比</em>——历史里 90% 是噪音，全量注入会稀释 instruction，模型 attention 被分散。1M context 改变的是「上限提高」，不是「不再需要选择什么进 context」——context engineering 反而更重要。</div></details>
+<details><summary>MemGPT 的「self-edit memory」让 LLM 自己 page-in/page-out，看着很优雅，工业界为什么没大规模采用？</summary><div>三个工程现实：（1）<em>可预测性差</em>——LLM 决定何时 page 进哪段，调试时复现困难；（2）<em>额外 LLM 调用成本</em>——每个 decision step 多一次 inference，延迟和 token 都翻倍；（3）<em>对小模型不友好</em>——self-edit 要求模型有强 meta-cognition，GPT-4/Claude Opus 级别才稳定，小模型经常 page 出关键 fact。多数产品（ChatGPT memory / Claude memory）走更朴素路线：固定 trigger（每轮跑一次 extract）+ 简单 KV，可控性优先。</div></details>
+<details><summary>User profile 是「越多越好」还是有最优大小？怎么测？</summary><div>有最优区间，通常 200-1500 token。证据：（1）profile 太短 → 个性化弱、agent 通用化；（2）太长 → 稀释 instruction、注意力被分走、出现「按 profile 第 7 条但忽略用户当前指令」。测法：做一个 holdout 的 task eval，profile 长度作为 x 轴，task pass rate 作 y 轴，会看到倒 U 曲线。Letta 内部把 core memory 上限设到 2000 token 左右，archival 用 vector 兜底，就是基于这类经验。</div></details>
+<details><summary>Episodic event log 累计到 10 万条之后怎么办？全部 retain 还是有遗忘曲线？</summary><div>必须遗忘，但用「分层 decay」而不是粗暴 TTL。三档：（1）最近 7 天 raw retain；（2）7-90 天按周做 weekly summary，原始事件归档；（3）90 天+ 转 monthly summary 进 vector store。这正好对应人类的工作记忆 / 短期 / 长期记忆。关键的「life events」（重大决策、显式 user 标 important）走单独 timeline 永久保留。Generative Agents 论文（Park 2023）的 reflection 机制是这条思路的学术雏形——定期把 episodic events 蒸馏成 higher-level reflections。</div></details>
+<details><summary>同一个用户在不同 agent（工作助理 / 写作助理 / 投研助理）之间，profile 应该共享还是隔离？</summary><div>默认隔离，按需共享。共享的诱惑是「写一次 Profile 所有 agent 都懂我」；现实是 scope 混乱（工作 agent 不该用你的健康数据决策）+ 隐私泄露 + profile 互污染（投研 agent 误推断为「兴趣偏好」写入主 profile）。正确架构：（1）有一个 minimal global identity（name、语言偏好、时区）；（2）每个 agent 有 scoped local profile；（3）用户显式批准才能跨 agent 共享。这个边界设计比技术选型更重要，是 personal AI infra 的政治问题不只是工程问题。</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://arxiv.org/abs/2310.08560" target="_blank">Packer et al. · MemGPT: Towards LLMs as Operating Systems</a> — 内存分层的开山论文，本期理论底座</li>
+<li><a href="https://docs.letta.com/concepts/memory" target="_blank">Letta · Memory hierarchy</a> — MemGPT 团队的产品化文档，core/archival/recall 三层架构</li>
+<li><a href="https://arxiv.org/abs/2303.11366" target="_blank">Shinn et al. · Reflexion</a> — verbal RL + reflective memory，episodic 思想原型</li>
+<li><a href="https://arxiv.org/abs/2304.03442" target="_blank">Park et al. · Generative Agents</a> — memory stream + reflection 的经典实现</li>
+<li><a href="https://arxiv.org/abs/2307.03172" target="_blank">Liu et al. · Lost in the Middle</a> — 长 context 中段信息丢失的实证</li>
+<li><a href="https://lilianweng.github.io/posts/2023-06-23-agent/" target="_blank">Lilian Weng · LLM Powered Autonomous Agents</a> — Memory / Planning / Tool use 系统综述</li>
+<li><a href="https://www.anthropic.com/research/building-effective-agents" target="_blank">Anthropic · Building Effective Agents</a> — Context as budget 的官方表述</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Weekly · Week 7 / 2026-05-25</footer>
+</div>
+</body></html>
