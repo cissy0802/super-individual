@@ -299,16 +299,26 @@ Simon Willison <em>Context engineering</em> 词条整理, <a href="https://simon
 </dl>
 </div>
 
-<!-- ============ Homework ============ -->
-<div class="homework">
-<h3>// 本周动手作业</h3>
-<p><strong>今晚 45 分钟实验</strong>：量一下你最常用的模型的真实有效 context。</p>
-<ol style="margin-left:24px;margin-top:10px">
-<li>用上面给的 NIAH 脚本，在 (8K / 32K / 100K / 180K) × (0.1 / 0.5 / 0.9) 共 12 个格子上各跑 5 次。</li>
-<li>用<strong>多跳针</strong>而不是单针：埋两个事实（「密码是 X」和「房间号是 Y」），让模型同时回答两个。看难度上去后哪些格子先崩。</li>
-<li>把通过率 ≥ 95% 的格子画成一张表贴到你的 CLAUDE.md / system prompt notes 里——以后写 prompt 时就知道哪段位置可信。</li>
-</ol>
-<p style="margin-top:12px"><strong>验收</strong>：你能用一张图回答「我们家这台模型，超过多少 token、信息在哪个位置之后就不能信任」。</p>
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// 深入思考</h3>
+<details><summary>Lost-in-the-Middle 是 transformer 架构的固有缺陷，还是训练数据偏见？未来模型会消失这问题吗？</summary><div>两者都有。架构层：positional encoding 在长 context 下精度下降，attention 在中段被稀释。训练层：大多数 instruction tuning 数据是短文本，模型没学到「中段也要看」。新模型（GPT-4o long、Claude 3.5 200k）通过 needle-in-haystack 训练有改善，但 Liu et al. 2024 显示真实任务上仍有 20%+ gap。短期不会消失。</div></details>
+<details><summary>RAG 切 chunk 时，按固定字符切 vs 按 semantic boundary 切，差距多大？为什么很多 framework 默认前者？</summary><div>Semantic boundary 通常 recall 高 10-30%——embedding 是按语义单元训的，半截句子 embedding 是噪声。Framework 默认固定字符是因为简单 + 不依赖文档解析。Production 应该 hybrid：按 paragraph/heading 切，再用 max_tokens 兜底。</div></details>
+<details><summary>U 形排布把关键信息放头尾。如果只有一个关键信息，放头还是放尾？</summary><div>放尾。Recency bias 更强（attention 对最近 tokens 权重最高），且大多数任务里「最后再说一遍」比「最前说一遍」收益高。但有例外：role/persona 必须放头（影响整段输出风格），任务指令放尾。这就是为什么 system prompt 模板里 role 在最上面，user query 在最下面。</div></details>
+<details><summary>Context compaction 用 LLM 做 summarization 是常见做法，但会引入幻觉。怎么设计才能既压缩又不失真？</summary><div>三个机制：1) 结构化压缩（让 LLM 输出 JSON 而非自然语言，限制 schema）；2) 双 pass 验证（compaction 后用另一个 prompt 验证「原文是否真有 X」）；3) 保留 reference（compacted 内容引用原始 chunk id，需要细节时回查）。Claude Code 的 conversation compaction 用前两种。</div></details>
+<details><summary>Chunk 大小该 200 token 还是 800 token？取决于什么变量？</summary><div>三个变量：1) 问题粒度（细节问题需小 chunk，宏观需大）；2) embedding model 训练长度（OpenAI text-embedding-3 训在 ~256 token，超过会被 mean-pool 失真）；3) retrieval k（k=1 时大 chunk 保信息，k=10 时小 chunk 保多样）。Production 常见 200-500 + overlap 50。</div></details>
 </div>
 
 <!-- ============ Refs ============ -->

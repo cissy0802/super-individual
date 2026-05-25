@@ -376,18 +376,26 @@ Hamel Husain <em>Your AI Product Needs Evals</em>, <a href="https://hamel.dev/bl
 </dl>
 </div>
 
-<!-- ============ Homework ============ -->
-<div class="homework">
-<h3>// 本周动手作业</h3>
-<p><strong>今晚 60 分钟实验</strong>：给你正在用或正在写的某个 agent 项目做一次「pattern audit」。</p>
-<ol style="margin-left:24px;margin-top:10px">
-<li>写下这个 agent 的真实任务一句话。问自己：路径可枚举吗？如果是，把它降级成 workflow，重写一遍，对比延迟 / 成本 / 成功率。</li>
-<li>如果确实需要 agent，标记你用的是 ReAct / Plan / Reflexion 还是混合。对照 §2 决策树，是否选错了？</li>
-<li>如果是 multi-agent，列出每个 agent 的角色。问自己：worker 之间需要互相说话吗？如果不需要，确认它是 orchestrator-worker；如果需要，认真考虑改回 single agent。</li>
-<li>抽取最近 50 次 agent 跑的 trace，对照 §4 的 5 种失败模式打标签——哪种最多？给那一种加上对应的防御（max_iters / monitor / compactor / verifier 选一个）。</li>
-<li>跑同样 5 个任务对比修改前后：成功率 / token / 延迟各变了多少？</li>
-</ol>
-<p style="margin-top:12px"><strong>验收</strong>：你能用 1 句话回答「我这个 agent 为什么是 agent 而不是 workflow」、「我用 ReAct/Plan/Reflexion 中哪个、为什么」、「我的 harness 设防了哪种失败模式」。</p>
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// 深入思考</h3>
+<details><summary>ReAct 是默认选择，但 ReAct 核心是 Reason-Act-Observe 循环。这和 Chain-of-Thought 有什么本质区别？</summary><div>CoT 是单次推理（生成完整思考链再输出答案），ReAct 是交错（思考 → 动手 → 看结果 → 再思考）。本质区别：CoT 假设答案能纯推理出，ReAct 假设需要外部反馈。所以 ReAct 必须配 tool（无 tool 退化成 CoT）。Yao 2022：ReAct 在 knowledge-grounded 任务（HotpotQA）比 CoT 高 30%，纯推理（GSM8K）差不多。</div></details>
+<details><summary>Plan-and-Execute 看起来比 ReAct 系统，为什么默认不用它？</summary><div>三个原因：1) Plan 阶段的成本：一次推理生成 10 步 plan，执行到第 3 步发现 plan 错了要全 replan，浪费 token；2) 静态 plan 适应不了动态环境（如 web 内容变）；3) 实测 Plan-and-Execute 在短任务（≤5 步）输给 ReAct 5-10pp。只在长任务（10+ 步）且环境稳定（如代码生成）时才赢。</div></details>
+<details><summary>Multi-agent debate 论文很多，production 几乎没人用。除了 orchestration 复杂，还有什么本质问题？</summary><div>1) 成本 N×（agent 数）的 inference cost；2) Agent 互相 reinforce 错误（echo chamber），尤其用同一基座模型；3) 真正提升的指标少（Anthropic 实验：debate 在 reasoning task 提升 2-5%，成本翻 4 倍）。例外是 context isolation 收益大的：长文档分析（每 agent 看一段，最后 aggregate），multi-agent > single 显著。</div></details>
+<details><summary>Reflexion 让 agent 自我改进——但它需要 verifier。什么任务有好 verifier，什么任务没有？</summary><div>有 verifier：代码（运行测试）、数学（验算）、SQL（执行结果）、search（结果数 ≥ threshold）。没 verifier：写作（质量主观）、对话（无 ground truth）、设计（多答案）。无 verifier 时强行用 Reflexion 会让 agent 在自己产生的「幻觉评分」里循环退化。能写 verifier 就用 Reflexion，不能就别用。</div></details>
+<details><summary>Agent 失败模式中最常见的是什么？怎么提前 detect？</summary><div>最常见：「tool selection 死循环」——模型反复调同一 tool，因为不知道为何失败。Detection：1) 维护 last_N_tools deque (N=3)，若 [A,A,A] 就强制中断；2) 每次 tool result 后检查 progress signal（output 是否变化、是否接近目标），无 progress 就 escalate。第二常见：context overflow——历史太长，最早指令被挤掉。</div></details>
 </div>
 
 <!-- ============ Refs ============ -->

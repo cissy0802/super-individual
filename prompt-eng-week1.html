@@ -346,17 +346,26 @@ client.messages.create(
 </dl>
 </div>
 
-<!-- ============ Homework ============ -->
-<div class="homework">
-<h3>// 本周动手作业</h3>
-<p><strong>今晚 30 分钟实验</strong>：挑你用得最频繁的一个 prompt（每天调 10+ 次的那种）。</p>
-<ol style="margin-left:24px;margin-top:10px">
-<li>把它按 role / guardrails / tools / examples / context / current_input 重排成 6 段。</li>
-<li>用 XML 标签（Claude）或 Markdown headers（GPT）显式分块。</li>
-<li>调用 API 加 <code>cache_control</code>，连发 3 次同样的 system + 不同 user input，对比 <code>usage.cache_read_input_tokens</code>。</li>
-<li>命中率没到 80%？看看是哪个 block 在偷偷变化（时间戳？list 顺序？字符串拼接顺序？）。</li>
-</ol>
-<p style="margin-top:12px"><strong>验收</strong>：能截图给自己看到 cache_read &gt; cache_creation，且第二次以后请求延迟降 30%+。</p>
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// 深入思考</h3>
+<details><summary>Anthropic 推 XML，OpenAI 推 Markdown，背后是模型训练偏好还是 tokenizer 差异？换 Llama 用哪个？</summary><div>主要是 RLHF 数据偏好——Anthropic 用 XML 标签做 finetune，OpenAI 用 markdown headers。开源模型看其 instruct dataset 风格：Llama-3-Instruct 用 chat template + 轻量 markdown，所以 markdown 更安全。本质上「显式语义边界」才是关键，符号本身只是 prior 强度问题。</div></details>
+<details><summary>Prefix caching 砍 90% 成本听起来很美，什么场景反而是负面 ROI？</summary><div>缓存有 5 分钟 TTL + 写入开销（约 1.25× normal token cost）。如果某个 prefix 一天只用 3 次以下，写入成本永远摊不平。判断：在 5 分钟内若同一 prefix 调用 < ~3 次，cache 是负收益。Cron 每小时跑一次的 prompt 就是典型反例。</div></details>
+<details><summary>CoT 在 reasoning 模型上是退步，那在普通模型（如 Claude 3.5 Sonnet）上呢？什么任务上 CoT 还有正收益？</summary><div>Sprague et al. 2024 的论文显示，CoT 在 BIG-Bench 上只对数学/符号推理子集（≥3 步推理链）有显著增益（5-20%）。分类、抽取、风格 transfer 这类直觉型任务上 CoT 不仅无益还会引入幻觉。Reasoning 模型自带 CoT 后，外加只是污染输出。</div></details>
+<details><summary>四层结构里 Examples (few-shot) 应该放在第几层，为什么？放错了会怎样？</summary><div>放在 Format 定义之后、Context 之前。原因：1) Few-shot 应该看完 task/format 后再 imitate，否则模型先学例子风格而忽略 schema；2) Examples 通常稳定（不每次变），可缓存；3) 放到 user-specific context 之后会被实时数据干扰 pattern。</div></details>
+<details><summary>用 cache_breakpoint 时，role 不变但 guardrails 加了一条新规则，cache 还能命中 role 那段吗？</summary><div>可以。在 role 末尾放一个 cache_breakpoint，guardrails 在它之后。Caching 从开头逐 token 匹配到 breakpoint，breakpoint 之前完全一致就命中。Anthropic 限制最多 4 个 breakpoint，所以要规划好「稳定→缓慢变化→实时」的分段。</div></details>
 </div>
 
 <!-- ============ Refs ============ -->

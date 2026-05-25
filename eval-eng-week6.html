@@ -409,19 +409,26 @@ Liang et al. <em>HELM: Holistic Evaluation of Language Models</em>, <a href="htt
 </dl>
 </div>
 
-<!-- ============ Homework ============ -->
-<div class="homework">
-<h3>// 本周动手作业</h3>
-<p><strong>今晚 90 分钟实验</strong>：照「综合实战」7 步给你跑得最多的 1 个 prompt 搭完整 eval。</p>
-<ol style="margin-left:24px;margin-top:10px">
-<li>选定 prompt（候选：你的简历 review prompt、邮件摘要 prompt、code review prompt、知识库问答 prompt——挑你日常用得最频繁的一个）。</li>
-<li>手写 20 条 golden set，存为 jsonl。注意 happy / edge / adversarial 三档配比 10 / 5 / 5。</li>
-<li>写 code-based scorer，跑出 baseline pass rate。如果一次过 20/20，golden set 太软，补 case。</li>
-<li>故意把 prompt 改坏一句话，确认 pass rate 跌——你的 eval 能挡 regression 才算 eval。</li>
-<li>（可选）如果输出含开放式生成部分（摘要质量），按 §2 加 LLM-as-judge：rubric + 位置交换 + 跑一次校准。</li>
-<li>把整个 eval 提交到一个 git 仓库，跑 GitHub Actions（哪怕只是 fork 一个模板）。</li>
-</ol>
-<p style="margin-top:12px"><strong>验收</strong>：你能用一句话回答「我这个 prompt 当前 pass rate 多少 / 失败集中在哪一类 case / 改 prompt 后我怎么知道有没有变差」。能回答 = 你已经超过 90% 在用 AI 写 prompt 的人。</p>
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// 深入思考</h3>
+<details><summary>20 个例子的 eval 显然不够 production，但够提多少改进信号？什么时候必须扩到 200+？</summary><div>20 例够 detect ±20% 的质量变化（粗粒度，挡 regression 大部分够用）。扩到 200+ 的场景：1) Prompt iteration 进入小幅 tuning（要 detect ±5%）；2) 覆盖多语言/多场景的产品（每个 sub-pattern 至少 30 例）；3) 做 A/B 实验需要统计显著性（一般 ≥ 100 per arm）。Anthropic 内部 eval 通常 100-1000 例分层。</div></details>
+<details><summary>LLM-as-Judge 的 bias 中，「位置偏见」和「verbose bias」哪个更难去除？</summary><div>Verbose bias 更难。位置偏见可以用 swap-and-average（每对 A/B 跑两次交换顺序）抵消，几乎完全消除。Verbose bias 需要：1) 显式 prompt judge 'do not prefer longer answers'（效果有限）；2) length normalization 后处理；3) 多 judge ensemble。难根除是因为 GPT/Claude 训练数据里「详细=好」是强 prior。</div></details>
+<details><summary>把 prompt 当 source code 做 regression test——但 LLM 输出 non-deterministic，怎么处理 false positive？</summary><div>三层防御：1) 固定 temperature=0 + 固定 seed（减少大部分 nondeterminism）；2) 用 fuzzy match 而非 exact match（如 'contains key concept' 而不是 byte equal）；3) 允许 N-of-M（10 例允许 1 失败，超过才报警）。剩余 false positive 用人工 triage。Anthropic Evals 框架内置这些机制。</div></details>
+<details><summary>「Capability eval vs Product eval」怎么分？给一个具体例子。</summary><div>Capability eval 测模型本身能力，与产品无关（如 Claude 能不能识别 SQL 注入）。Product eval 测端到端体验。例：客服 agent 的 capability eval = 'Claude 在给定 ticket 下能不能找到知识库正确条目'（test retrieval）；product eval = '用户发完问题 30 秒内拿到的回答能否解决问题'（包括 retrieval + ranking + 回答风格 + latency）。两者都要——capability 帮 debug，product 帮 align 业务。</div></details>
+<details><summary>为什么 Anthropic 不用 MMLU 评 Claude？业界还用 MMLU 的原因是什么？</summary><div>不用因为：1) MMLU 已被 fit 到训练集（contamination 严重）；2) 只测 multiple choice 不测生成质量；3) 题目 outdated。业界还用因为：1) Publication 需要标准 benchmark 才能对比；2) 市场宣传需要 single number；3) 做 model selection 时还有点弱信号。Anthropic 内部用几千条手工设计的能力切片 + 真实产品 task。</div></details>
 </div>
 
 <!-- ============ Refs ============ -->

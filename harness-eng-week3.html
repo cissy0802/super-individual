@@ -336,17 +336,26 @@ Cognition <em>Don't Build Multi-Agents</em>, <a href="https://cognition.ai/blog/
 </dl>
 </div>
 
-<!-- ============ Homework ============ -->
-<div class="homework">
-<h3>// 本周动手作业</h3>
-<p><strong>今晚 60 分钟实验</strong>：把上面 100 行 minimal harness 跑起来，做一次「同 prompt 跨 harness」对比。</p>
-<ol style="margin-left:24px;margin-top:10px">
-<li>选 1 个真实任务：「分析这个 repo 的依赖关系，输出一张 Mermaid 图」。</li>
-<li>分别在 (a) 裸 messages.create 单轮、(b) 你写的 100 行 harness、(c) Claude Code 里跑同样的 user prompt。</li>
-<li>记录三个数据：完成度（0-5）、tool calls 数、最终 token 消耗。</li>
-<li>观察：同样 Sonnet 4.6，三个环境的产出质量差距通常是 1-3 倍。差的不是模型，是 harness。</li>
-</ol>
-<p style="margin-top:12px"><strong>验收</strong>：你能用一句话回答「为什么 Claude Code 比我直接调 API 强这么多」——而且答案里不会再出现「因为模型更强」这种归因。</p>
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// 深入思考</h3>
+<details><summary>Claude Code 的 plan mode 在执行前显示计划让用户审批。这是 UX 选择还是工程必需？自动执行会怎样？</summary><div>是工程必需。1) LLM 「动手前先想」准确率高 30%+（ReAct 论文实验）；2) 人工审批是最便宜的 verification，比 LLM-judge 还便宜；3) plan 记录让失败可调试。无 plan mode 的 agent 在 SWE-bench 上成功率比有的低 10-20pp。Harness 不强制 plan，agent 会 skip step 直接动手。</div></details>
+<details><summary>harness 的「OS」比喻是说它管理资源、调度、IPC——那 LLM 是 CPU 还是 process？</summary><div>LLM 是 CPU（无状态计算单元），每次 inference 是一次 syscall。Harness 维护 process state（context、memory、tool registry），调度 syscall sequence，处理 syscall return（tool result）。这个 mental model 也帮你看懂为什么 multi-agent = multi-process（有 IPC 成本），为什么 prefix caching ≈ CPU cache。</div></details>
+<details><summary>100 行 Python 写 hello world harness 听起来诱人，但 production harness 通常膨胀到几千行。膨胀的部分通常是什么？</summary><div>膨胀主要在：1) Error recovery（rate limit retry、tool 失败 fallback、partial result handling）；2) Observability（每个 tool call 的 tracing/logging/cost tracking）；3) Permission gates（每个 sensitive action 的审计与确认）；4) Context management（truncation、compaction、tool result 大小限制）；5) Prompt injection 防御。Hello world 100 行，production 1000+ 行。</div></details>
+<details><summary>Anthropic 'Building Effective Agents' 说 90% 需求该用 workflow 而不是 agent。怎么判断一个需求该用哪种？</summary><div>三个判定：1) 流程是否预先确定？是 → workflow；2) 每步是否需要看上一步结果再决策？是 → agent；3) 失败成本如何？高 → workflow（更可控）。例：发邮件提醒 = workflow（流程固定）；debug 用户错误 = agent（依赖动态发现）。误用代价：把 workflow 当 agent 跑会慢 5-10× + 不可靠。</div></details>
+<details><summary>Permission gate 是 harness 的关键。如果让 agent 自己决定哪些操作需要 confirm，会怎样？</summary><div>Agent 会倾向「都不 confirm」（lazy），尤其在迭代任务里。正确做法：把 permission policy 写死在 harness 层，不交给 agent 决策。例如 Claude Code 把 write/exec/network 等「破坏性 action」默认 confirm。原因：LLM 不会评估自身错误概率，而 harness 可以根据 action class 静态判断风险等级。</div></details>
 </div>
 
 <!-- ============ Refs ============ -->
