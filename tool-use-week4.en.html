@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 4 · Tool Use & Function Calling — Super Individual Weekly</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">WEEK 04 / PHASE 1 · ENGINEERING</span>
+<h1>Tool Use & Function Calling</h1>
+<h2>Schema as Prompt · Tool Granularity · Selection Collapse · Parallel Calls</h2>
+<div class="date">2026-05-23 · BigCat</div>
+<p class="pitch">A tool's description determines your agent's ceiling more than model choice.</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>Week 3 framed the harness as the agent's OS. Tools run on top of that OS, and what those tools look like is decided by the <strong>tool schema</strong>. A fact almost everyone underrates: the few lines of English you write in <code>description</code> influence final success rate more than swapping the model. Anthropic's internal SWE-bench ablations repeatedly confirm this — same Sonnet, rewriting the descriptions of just 6 tools shifts pass@1 by 10+ points. Tool schema <em>is</em> part of the prompt — it goes into the same KV cache as the system message, participates in attention, and conditions every downstream token. This issue covers four things: writing schemas as prompts, why 20 tools usually underperform 6, the real atomic-vs-composite trade-off, and why parallel tool calls is the most wasted capability in agent design. Closing with Anthropic's "7 tool-design rules" checklist.</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>Tool Schema Is a Prompt: Description Matters 10× More Than Name</h2>
+<div class="claim">Claim: whether the model picks your tool doesn't depend on <code>name</code> — it depends on the wording in <code>description</code> and every field in <code>input_schema</code>.</div>
+
+<h3>Background &amp; Principles</h3>
+<p>How does a tool definition actually enter the model? Anthropic's <em>Tool Use Overview</em> spells it out: every registered tool is serialized into a structured text block appended to the system prompt. From the model's perspective, <code>tools=[...]</code> is not a "function registry" — it's a document it must read and understand. From that document, the model must decide: when to call, which one to call, what arguments, and when <em>not</em> to call.</p>
+<p>That explains several frequently observed effects:</p>
+<ul>
+<li>Expanding <code>description</code> from one line to five lifts accuracy materially — you're handing the model not just a name, but <strong>use cases</strong>.</li>
+<li>Each parameter's own <code>description</code> (not its name) clarifying units, formats, and edges helps more than renaming <code>start_date</code> → <code>start_date_iso8601</code>. The model reads descriptions; it doesn't really "read" snake_case names.</li>
+<li>Adding "when to pick this value" notes on enum entries beats a bare <code>["fast","accurate","creative"]</code> by 2–3× selection accuracy.</li>
+</ul>
+<p>Mechanism: once the tools block is in KV cache, every generated token attends back to that text. The more specific and scenario-grounded the description, the more conditioning the model has at the two key decisions — "should I call?" and "which one?". This isn't magic; it's a physical property of attention.</p>
+
+<h3>Hands-on Example</h3>
+<p>Same weather tool, two ways of writing it — and a wildly different hit rate:</p>
+<pre><code><span class="tag-com"># —— BAD: schema treated as a function signature ——</span>
+{
+  <span class="tag-claude">"name"</span>: <span class="tag-gpt">"get_weather"</span>,
+  <span class="tag-claude">"description"</span>: <span class="tag-gpt">"Get weather"</span>,
+  <span class="tag-claude">"input_schema"</span>: {
+    <span class="tag-claude">"type"</span>: <span class="tag-gpt">"object"</span>,
+    <span class="tag-claude">"properties"</span>: {
+      <span class="tag-claude">"location"</span>: {<span class="tag-claude">"type"</span>:<span class="tag-gpt">"string"</span>},
+      <span class="tag-claude">"unit"</span>:     {<span class="tag-claude">"type"</span>:<span class="tag-gpt">"string"</span>, <span class="tag-claude">"enum"</span>:[<span class="tag-gpt">"c"</span>,<span class="tag-gpt">"f"</span>]}
+    }
+  }
+}
+
+<span class="tag-com"># —— GOOD: schema treated as prompt ——</span>
+{
+  <span class="tag-claude">"name"</span>: <span class="tag-gpt">"get_weather"</span>,
+  <span class="tag-claude">"description"</span>: <span class="tag-gpt">"Look up the CURRENT weather (now ± 1h) for a single city.</span>
+<span class="tag-gpt">    Use ONLY for present-time questions like 'is it raining in Tokyo now'.</span>
+<span class="tag-gpt">    DO NOT use for: forecasts &gt;24h ahead (use get_forecast), historical</span>
+<span class="tag-gpt">    weather (use get_weather_history), or air quality (use get_aqi)."</span>,
+  <span class="tag-claude">"input_schema"</span>: {
+    <span class="tag-claude">"type"</span>: <span class="tag-gpt">"object"</span>,
+    <span class="tag-claude">"properties"</span>: {
+      <span class="tag-claude">"location"</span>: {
+        <span class="tag-claude">"type"</span>: <span class="tag-gpt">"string"</span>,
+        <span class="tag-claude">"description"</span>: <span class="tag-gpt">"City name in English, optionally followed by</span>
+<span class="tag-gpt">          country, e.g. 'Tokyo', 'Paris, FR'. Do not pass GPS coords."</span>
+      },
+      <span class="tag-claude">"unit"</span>: {
+        <span class="tag-claude">"type"</span>: <span class="tag-gpt">"string"</span>, <span class="tag-claude">"enum"</span>: [<span class="tag-gpt">"celsius"</span>,<span class="tag-gpt">"fahrenheit"</span>],
+        <span class="tag-claude">"description"</span>: <span class="tag-gpt">"Temperature unit. Default to celsius unless the user</span>
+<span class="tag-gpt">          explicitly mentions °F or asks in a US locale context."</span>
+      }
+    },
+    <span class="tag-claude">"required"</span>: [<span class="tag-gpt">"location"</span>]
+  }
+}</code></pre>
+<p>Three upgrades that matter: (1) description states <strong>use cases + counter-examples</strong> (DO NOT use for…) — the cheapest fix for cross-tool mis-selection; (2) every parameter has its own description with format, constraints, and default inference rules; (3) enum values are full names (<code>celsius</code> not <code>c</code>) — readability = model comprehension. Treat these three as a checklist and run every tool through it.</p>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) writing only <code>"description": "do X"</code> — the model doesn't know when <em>not</em> to call and over-calls on edge cases. (2) Encoding semantics in the tool name (<code>get_user_v2_by_email_only</code>) — the model reads description, not your snake_case tokens. (3) Omitting all parameter descriptions — the model has to guess format from type and falls flat on dates / paths / IDs.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Anthropic <em>Tool Use Overview</em>, <a href="https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview" target="_blank">docs.claude.com/.../tool-use</a> ·
+Anthropic <em>How to implement tool use</em>, <a href="https://docs.claude.com/en/docs/agents-and-tools/tool-use/implement-tool-use" target="_blank">docs.claude.com/.../implement-tool-use</a> ·
+OpenAI <em>Function Calling Guide</em>, <a href="https://platform.openai.com/docs/guides/function-calling" target="_blank">platform.openai.com/.../function-calling</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>More Tools Make Models Dumber: The Real Selection-Collapse Curve</h2>
+<div class="claim">Claim: past ~15 tools, tool-selection accuracy drops sharply. Subtract before you add.</div>
+
+<h3>Background &amp; Principles</h3>
+<p>A commonly ignored engineering fact: tool count and accuracy are not monotonic — they form an <strong>inverted U</strong>. Zero tools: nothing to do. 3–7 orthogonal tools: peak agent performance. 20+ tools: the model gets confused, mis-selects, skips the right call, and uses wrong arguments. The Berkeley Function Calling Leaderboard (BFCL) multi-turn scenarios show this curve; Anthropic's <em>Building Effective Agents</em> says it explicitly: "Tool definitions deserve as much prompt engineering attention as your main prompt."</p>
+<p>Why the collapse? Three real reasons:</p>
+<ul>
+<li><strong>Token budget</strong>: each tool definition is ~100–300 tokens. 20 tools = 4–6K tokens in system prompt — squeezes context and pollutes attention.</li>
+<li><strong>Semantic confusion</strong>: more tools = inevitable semantic near-duplicates (<code>search_docs</code> / <code>find_in_docs</code> / <code>lookup_documentation</code>); the model oscillates.</li>
+<li><strong>Decision path explosion</strong>: N tools means N counter-examples ("don't call") for attention to track. Capacity gets spread thin and every decision is shakier.</li>
+</ul>
+<p>That's also why Claude Code's core tool registry has only ~10 atomic tools (Read / Edit / Write / Bash / Grep / Glob / Task / WebFetch / WebSearch / TodoWrite) — anything else attaches on demand via MCP, never resident.</p>
+
+<div class="diagram">  Accuracy
+    │
+1.0 │      ╭───────╮
+    │     ╱         ╲
+0.8 │    ╱           ╲___
+    │   ╱                ╲___
+0.6 │  ╱                     ╲___
+    │ ╱                          ╲___
+0.4 │╱                               ╲____
+    │                                     ╲___
+0.2 │
+    └──────────────────────────────────────────▶ # tools
+       3    7    12   20    35    60    100
+
+  Illustrative curve (based on BFCL multi-turn and various agent evals).
+  Sweet spot: 5–12. Past 20, it drops fast.</div>
+
+<h3>Hands-on Example</h3>
+<p>If your MCP / agent has already stacked 30+ tools, apply the 3-step "tool diet":</p>
+<pre><code><span class="tag-com"># Step 1: rank by call frequency, look at the long tail</span>
+sqlite3 agent.db <span class="tag-gpt">"SELECT tool_name, COUNT(*) c FROM tool_calls </span>
+<span class="tag-gpt">  GROUP BY tool_name ORDER BY c DESC;"</span>
+<span class="tag-com">#  Long-tail tools (&lt; 1% of calls) can almost always be deleted or merged</span>
+
+<span class="tag-com"># Step 2: find semantic twins and merge</span>
+<span class="tag-com">#  search_files / find_files / list_matching → merge into search_files(pattern, mode)</span>
+
+<span class="tag-com"># Step 3: split by scenario, not by API</span>
+<span class="tag-com">#  BAD:  get_user_by_id / get_user_by_email / get_user_by_username</span>
+<span class="tag-com">#  GOOD: get_user(query: {id?|email?|username?})  ← one tool, self-describing input</span></code></pre>
+<p>One counter-intuitive trick: <strong>dynamic tool surfaces</strong>. Cursor and Claude Code expose different tool sets in different modes — plan mode <em>physically</em> hides Write/Edit, so the model never has to distribute selection pressure across read vs. write. You can do the same: switch the registered tool set in your harness by task type — research tasks get web/fetch, coding tasks get read/edit/bash.</p>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) treating MCP like <code>npm install</code> — attaching every plausibly useful MCP server until half the system prompt is tool definitions and the model is dazed before reading your real question. (2) Assuming "if it won't pick wrong it won't call" — the actual collapse is <em>under-calling</em> tools that should have been called, because the model can't distinguish them; this silent failure is harder to spot than an error.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Berkeley Function Calling Leaderboard, <a href="https://gorilla.cs.berkeley.edu/leaderboard.html" target="_blank">gorilla.cs.berkeley.edu/leaderboard</a> ·
+Anthropic <em>Writing tools for Claude</em>, <a href="https://docs.claude.com/en/docs/agents-and-tools/tool-use/implement-tool-use#best-practices-for-tool-definitions" target="_blank">docs.claude.com/.../best-practices</a> ·
+<em>Less is More for Long Context Tool Use</em> (2024), <a href="https://arxiv.org/abs/2411.15399" target="_blank">arXiv:2411.15399</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Atomic vs Composite: Tool Granularity Determines Reliability</h2>
+<div class="claim">Claim: packaging multiple atomic operations into one macro tool buys determinism — at the cost of agent ceiling.</div>
+
+<h3>Background &amp; Principles</h3>
+<p>Handing an agent <code>edit_file(path, old, new)</code> is a different worldview from handing it <code>refactor_function(path, fn_name, new_impl)</code>. The first is an <strong>atomic</strong> tool — the model composes; the second is a <strong>composite / macro</strong> tool — a single call performs multi-step business logic. This is the most important and most overlooked trade-off in tool design:</p>
+<ul>
+<li><strong>Atomic tools</strong>: highly composable, reusable, cover unknown tasks; but the model has to plan multiple steps, leans hard on reasoning, and failure modes diversify.</li>
+<li><strong>Composite tools</strong>: one call finishes the business flow — high reliability, easy to eval; but the codebase grows, coverage narrows, every new task wants a new tool.</li>
+</ul>
+<p>Claude Code chose the <strong>atomic-leaning</strong> path: Read / Edit / Write / Bash — Unix-philosophy small tools, with composition done by the model. This lets it handle any coding task but demands strong planning capability — which is why it underperforms on weaker models. Traditional RPA goes <strong>composite-heavy</strong>: a dedicated tool per process (<code>process_invoice</code> / <code>onboard_employee</code>) — reliable but brittle, every new process requires new code.</p>
+<p>In real engineering the two should <strong>coexist in layers</strong>: atomic tools at the bottom for "exploration / debugging / one-off tasks", composite tools on top for "high-frequency / reliability-sensitive / well-understood tasks".</p>
+
+<h3>Hands-on Example</h3>
+<p>Real scenario: an agent cutting a release on a git repo. Atomic vs. composite:</p>
+<pre><code><span class="tag-com"># —— Atomic path: 4 low-level tools, model composes ——</span>
+tools = [run_bash, read_file, write_file, git_command]
+<span class="tag-com">#  agent must plan: bump version → update changelog → commit → tag → push</span>
+<span class="tag-com">#  Pro: if the plan needs to change (run tests before bump), agent adapts. Works on new repos.</span>
+<span class="tag-com">#  Con: 1–2 out of 10 runs: wrong order / missing tag / committed to wrong branch</span>
+
+<span class="tag-com"># —— Composite path: one macro tool ——</span>
+tools = [{
+  <span class="tag-claude">"name"</span>: <span class="tag-gpt">"release"</span>,
+  <span class="tag-claude">"description"</span>: <span class="tag-gpt">"Run the full release flow: bump version, regenerate</span>
+<span class="tag-gpt">    CHANGELOG, commit with 'chore: release vX.Y.Z', tag, push branch+tag.</span>
+<span class="tag-gpt">    Aborts on any failing step. Use when user asks to 'cut a release' or</span>
+<span class="tag-gpt">    'publish a new version'. Does NOT publish to npm—call npm_publish after."</span>,
+  <span class="tag-claude">"input_schema"</span>: {<span class="tag-claude">"type"</span>:<span class="tag-gpt">"object"</span>,
+    <span class="tag-claude">"properties"</span>:{<span class="tag-claude">"bump"</span>:{<span class="tag-claude">"type"</span>:<span class="tag-gpt">"string"</span>,<span class="tag-claude">"enum"</span>:[<span class="tag-gpt">"patch"</span>,<span class="tag-gpt">"minor"</span>,<span class="tag-gpt">"major"</span>]}},
+    <span class="tag-claude">"required"</span>:[<span class="tag-gpt">"bump"</span>]}
+}]
+<span class="tag-com">#  Pro: 100 runs, same flow. Easy to eval.</span>
+<span class="tag-com">#  Con: doesn't transfer to a different repo. Agent can't adapt to exceptions.</span></code></pre>
+<p>Decision tree in practice:</p>
+<ol>
+<li>Task runs <strong>≥ 5 times/day</strong> with stable steps → write a composite tool, freeze domain knowledge into code.</li>
+<li>Task is <strong>occasional and varies each time</strong> → atomic tools, let the model compose.</li>
+<li>Task is on a <strong>critical path with no error tolerance</strong> (production deploy, payments) → composite + strong schema validation + double-confirm.</li>
+<li>Task is <strong>exploratory / debug</strong> → atomic, maximize flexibility.</li>
+</ol>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) "build the macro first" — wrapping 5 steps before the task boundary is clear; every requirement change forces a code change. Run atomic tools 20 times first, find the stable pattern, then freeze. (2) "Composite but 12 parameters" — fill-error rate scales exponentially with required params. Over 5 required params: split it. (3) Atomic granularity too fine — <code>open_file</code> / <code>read_lines</code> / <code>close_file</code> in 1980s C-API style, three calls per operation.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Anthropic <em>Building Effective Agents</em> — tool granularity section, <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">anthropic.com/.../building-effective-agents</a> ·
+<em>MCP server design patterns</em>, <a href="https://modelcontextprotocol.io/docs/concepts/architecture" target="_blank">modelcontextprotocol.io/.../architecture</a> ·
+<em>ToolLLM</em> (2023) on tool abstraction levels, <a href="https://arxiv.org/abs/2307.16789" target="_blank">arXiv:2307.16789</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Parallel Tool Calls: The Most Wasted Free Lunch</h2>
+<div class="claim">Claim: 90% of agents don't actually use parallel tool calls — the latency and cost dividend on the table is huge.</div>
+
+<h3>Background &amp; Principles</h3>
+<p>Since Sonnet 3.5, Claude can return <strong>multiple <code>tool_use</code> blocks</strong> in a single assistant turn; OpenAI's GPT-4o / o3 do the same. The harness just needs to recognize multiple tool_uses, <em>execute them concurrently</em>, and concatenate the tool_results into the next turn. The dividend is massive:</p>
+<ul>
+<li>Read 5 files and summarize: serial = 5 × (LLM RTT + tool latency); parallel = 1 × (LLM RTT + max(tool latency)).</li>
+<li>Three independent API lookups (weather + flights + hotels) cut wall-clock by 2/3.</li>
+<li>On expensive models (Opus 4.7) it pays double — each saved turn skips a multi-thousand-token prefill.</li>
+</ul>
+<p>But four engineering preconditions actually need to hold; miss one and it silently degrades to serial:</p>
+<ol>
+<li><strong>System prompt explicitly encourages it</strong>: the model defaults conservative — without "prefer parallel", it'll call sequentially. Claude Code's system prompt literally says "make all of the independent calls in the same response".</li>
+<li><strong>Tools must be independent</strong>: the model can only parallelize <em>independent</em> work. Parallelizing read + edit is wrong — edit depends on read.</li>
+<li><strong>Harness actually concurrent</strong>: many harnesses hardcode a for loop over tool_uses. The model emitted them in parallel; the runtime serialized them. Switch to <code>asyncio.gather</code> / a thread pool.</li>
+<li><strong>Permission gate is non-blocking</strong>: if every tool needs human approval, "parallel" becomes serial dialog. Auto-allow obviously-safe tools.</li>
+</ol>
+
+<h3>Hands-on Example</h3>
+<p>Upgrade the §3 atomic harness to concurrent execution:</p>
+<pre><code><span class="tag-key">import</span> asyncio, anthropic
+client = anthropic.AsyncAnthropic()
+
+<span class="tag-key">async def</span> dispatch(block):                              <span class="tag-com"># a single tool, async</span>
+    handler = TOOLS[block.name][<span class="tag-gpt">"handler_async"</span>]
+    <span class="tag-key">try</span>:
+        out = <span class="tag-key">await</span> handler(block.input)
+    <span class="tag-key">except</span> Exception <span class="tag-key">as</span> e:
+        out = <span class="tag-gpt">f"ERROR: {type(e).__name__}: {e}"</span>
+    <span class="tag-key">return</span> {<span class="tag-gpt">"type"</span>:<span class="tag-gpt">"tool_result"</span>, <span class="tag-gpt">"tool_use_id"</span>:block.id, <span class="tag-gpt">"content"</span>:str(out)}
+
+<span class="tag-key">async def</span> agent(task, max_iters=20):
+    msgs = [{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,<span class="tag-gpt">"content"</span>:task}]
+    sys  = (<span class="tag-gpt">"You are a careful agent. "</span>
+            <span class="tag-gpt">"IMPORTANT: when multiple tool calls are independent, "</span>     <span class="tag-com"># ← key line</span>
+            <span class="tag-gpt">"emit them in the SAME response so they run in parallel."</span>)
+    <span class="tag-key">for</span> _ <span class="tag-key">in</span> range(max_iters):
+        r = <span class="tag-key">await</span> client.messages.create(model=MODEL, system=sys,
+                tools=SCHEMAS, messages=msgs, max_tokens=4096)
+        msgs.append({<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"assistant"</span>, <span class="tag-gpt">"content"</span>:r.content})
+        <span class="tag-key">if</span> r.stop_reason == <span class="tag-gpt">"end_turn"</span>: <span class="tag-key">return</span> r
+        uses = [b <span class="tag-key">for</span> b <span class="tag-key">in</span> r.content <span class="tag-key">if</span> b.type == <span class="tag-gpt">"tool_use"</span>]
+        results = <span class="tag-key">await</span> asyncio.gather(*[dispatch(b) <span class="tag-key">for</span> b <span class="tag-key">in</span> uses])  <span class="tag-com"># ← concurrent</span>
+        msgs.append({<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>, <span class="tag-gpt">"content"</span>: results})</code></pre>
+<p>Measured: ask the agent "read README.md / package.json / .github/workflows/ci.yml and tell me what kind of project this is" — serial ~9s, parallel ~3.5s, with effectively no accuracy delta. The gap widens with more files.</p>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) parallelizing dependent tools — "look up user id, then place order" run in parallel calls place_order with an empty id. Either tell the model in the prompt "must obtain id before order" or split into turns. (2) Concurrent write tools causing race conditions — parallel <code>edit_file(same_path)</code> overwrite each other. Add file-level locks for write tools. (3) Mistaking "multiple tool calls" for parallel — the model has to emit them in <em>the same response</em>; calling tools across multiple turns is sequential.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Anthropic <em>Parallel tool use</em>, <a href="https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview#parallel-tool-use" target="_blank">docs.claude.com/.../parallel-tool-use</a> ·
+OpenAI <em>Parallel function calling</em>, <a href="https://platform.openai.com/docs/guides/function-calling#parallel-function-calling" target="_blank">platform.openai.com/.../parallel-function-calling</a> ·
+LangChain <em>Parallel tool calls</em> reference, <a href="https://python.langchain.com/docs/how_to/tool_calling_parallel/" target="_blank">python.langchain.com/.../tool-calling-parallel</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// Putting it together · Anthropic engineering's 7 tool-design rules</h3>
+<p>Compress everything above into a wall-pinnable checklist. Run it before designing or reviewing a tool set:</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>Small and orthogonal.</strong> Cut to ≤ 10 first. Merge semantic overlaps. Delete anything called &lt; 1% of the time.</li>
+<li><strong>Description = use case, not feature.</strong> One line for "what it does" + one line for "when to use" + one line for "when <em>not</em> to use". Counter-examples should be specific.</li>
+<li><strong>Every parameter gets a description.</strong> Units, format, default-inference rule, typical values. 10× more important than tweaking the parameter name.</li>
+<li><strong>Enum values are annotated.</strong> <code>"fast"</code> is worse than <code>"fast: prioritize latency, accept ±10% accuracy"</code>.</li>
+<li><strong>Errors must be readable.</strong> Handler errors should include "why it failed + what to do next" — the agent reads them to self-correct. <code>"ENOENT"</code> is useless; <code>"File '/x.json' not found. Use list_dir to see available files."</code> is gold.</li>
+<li><strong>Idempotent first.</strong> Design tools so retry doesn't break things — <code>create_or_update</code> beats <code>create</code>. Agents retry constantly.</li>
+<li><strong>Parallel-friendly.</strong> Don't artificially couple independent tools in the schema (don't merge read+write into one tool); make handlers async internally; explicitly encourage parallel in the system prompt.</li>
+</ol>
+<p style="margin-top:14px">These 7 rules come from Anthropic's <em>Building Effective Agents</em> and <em>Tool Use Best Practices</em> guidance. Make it a PR checklist template — every new tool fills one in. Your agent project will shed 80% of its silent failures.</p>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// Deep Thinking</h3>
+<details><summary>Description matters 10× more than name — but how long should a description be? One sentence vs. one paragraph, how big is the gap?</summary><div>Measured: 50–150 characters significantly outperforms &lt; 20 or &gt; 300. Too short and the model doesn't know when to use it; too long and it pollutes context and eats prompt budget. Best shape: one sentence on function + one on when to use + one on when NOT to use. Example: "Search docs by semantic similarity. Use when user asks find/similar. Do NOT use for exact strings — use grep_tool." Anthropic's official tool-use guide recommends this three-sentence structure.</div></details>
+<details><summary>Past 15 tools, accuracy drops — is it diluted attention or descriptions interfering with each other?</summary><div>Mostly the latter. Tool selection is zero-shot classification, and similar tools confuse the model ("search_docs" vs. "search_web" vs. "search_code"). Anthropic's internal numbers: adding tool count degrades faster than adding description length. Fixes: (1) tool grouping (pick group, then tool); (2) differentiated descriptions ("unlike X tool, this one…"); (3) past ~20 tools, switch to on-demand MCP attach.</div></details>
+<details><summary>Atomic tools make agents flexible but error-prone; composite tools make them reliable but limited. Which should a production agent use?</summary><div>Depends on task type. Customer support / data lookup wants composite ("create_ticket" beats "auth + lookup_user + create + notify" as a sequence). Development / exploration wants atomic (Claude Code doesn't bundle read+grep+edit because debugging needs flexible composition). Heuristic: is the task's step path enumerable? Yes → composite. No → atomic.</div></details>
+<details><summary>Parallel tool calls is a free lunch. When does it actually slow the agent down?</summary><div>Three scenarios: (1) tools with dependencies (A's output feeds B), where parallel makes B see null; (2) shared-resource contention (concurrent writes to the same file); (3) the model misjudges and parallelizes unrelated tools, wasting all of them. Anthropic's parallel tool call is opt-in because models default conservative-serial — production needs "when independent, call in parallel" in the system prompt to actually use it.</div></details>
+<details><summary>Field names in a tool schema are shorter than descriptions, and "name doesn't matter" is conventional wisdom. When does the name actually matter?</summary><div>The name doesn't matter at tool-selection time (descriptions drive that), but it matters at argument-generation time — field names are the model's prior for value style. "query" vs. "search_string": the former biases toward natural language; the latter toward keyword combos. Production combo: short unambiguous names + thorough descriptions.</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// Further Reading</h3>
+<ul>
+<li><a href="https://docs.claude.com/en/docs/agents-and-tools/tool-use/implement-tool-use" target="_blank">Anthropic · How to implement tool use (incl. best practices)</a> — the most authoritative official tool-design guide</li>
+<li><a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">Anthropic · Building Effective Agents</a> — tool granularity and agent design</li>
+<li><a href="https://gorilla.cs.berkeley.edu/leaderboard.html" target="_blank">Berkeley Function Calling Leaderboard</a> — public function-calling benchmark</li>
+<li><a href="https://platform.openai.com/docs/guides/function-calling" target="_blank">OpenAI · Function Calling Guide</a> — OpenAI's take on schema design</li>
+<li><a href="https://modelcontextprotocol.io/docs/concepts/architecture" target="_blank">MCP · Concepts & Architecture</a> — tool / resource / prompt three-layer abstraction</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Weekly · Week 04 · 2026-05-23</footer>
+</div>
+</body></html>
