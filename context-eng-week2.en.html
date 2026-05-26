@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 2 · Context Engineering — Super Individual Weekly</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.68rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">WEEK 02 / PHASE 1 · ENGINEERING</span>
+<h1>Context Engineering</h1>
+<h2>Lost-in-the-Middle · Information Layout · Chunk Design · Context Compaction</h2>
+<div class="date">2026-05-22 · BigCat</div>
+<p class="pitch">"200K context" is not "200K of usable attention".</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>Every frontier lab is racing on context window size: Claude Sonnet 4.5 hits 1M, Gemini 2.5 hits 2M, GPT-5 caught up to 400K. So everyone starts stuffing whole codebases / company-wide docs / 30-turn chat histories into a single prompt — then gets confused: "Why can't the model answer? I literally put the answer in there." The answer is that <strong>a long context window is not effective context</strong>. Attention degrades on long sequences, where you place information in the prompt determines whether the model can use it, and how you chunk matters 10× more than swapping embedding models. This issue covers four things: measuring the real usable length of long context, where to physically place information in a prompt, why 90% of RAG systems lose to their own chunking strategy, and how to compact long histories without losing the critical signal.</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>Lost-in-the-Middle: The Real Effective Length of Long Context</h2>
+<div class="claim">Claim: putting critical information in the middle of a prompt is burying it in the model's blind spot.</div>
+
+<h3>Background &amp; Principles</h3>
+<p>Liu et al. 2023's <em>Lost in the Middle: How Language Models Use Long Contexts</em> (TACL 2024) is the foundational reference. They had models find an answer across a set of documents, placing the ground-truth document at positions 1, 5, 10, 15, 20 and plotting accuracy. Every tested model (GPT-3.5, Claude, Longchat) showed the same <strong>U-curve</strong>: ~75% accuracy at the head and tail, collapsing below 50% in the middle — worse than turning retrieval off entirely.</p>
+<p>Two reasons. First, in pretraining, token dependencies are mostly local or anchored to document head (causal masking biases attention toward recent tokens; RoPE-style positional encodings have long-tail decay that weakens far-range attention). Second, post-training instruction data is mostly "short prompt → answer"; the model has seen few samples of "instruction at the tail, key facts in the middle".</p>
+<p>In 2024 NoLiMa (Modarressi et al.) went further: when question and answer share no lexical overlap, supposedly 100K+ models fall below baseline at 32K. Chroma's 2025 <em>Context Rot</em> report retested 18 frontier models (Claude Sonnet 4, GPT-4.1, Gemini 2.5) and concluded the same: <strong>effective context is much shorter than advertised max context</strong>, and the gap grows with task difficulty.</p>
+
+<h3>Hands-on Example</h3>
+<p>Run a minimal NIAH (Needle in a Haystack) test to measure the real effective length of your go-to model:</p>
+<pre><code><span class="tag-key">import</span> anthropic, random, string
+
+client = anthropic.Anthropic()
+needle = "BigCat's meeting password is PURPLE-OWL-9182."
+
+<span class="tag-key">def</span> haystack(n_tokens, needle_pos):
+    <span class="tag-claude"># Pad to n_tokens with Paul Graham essays</span>
+    filler = open("pg_essays.txt").read()
+    chunks = filler.split("\n\n")
+    random.shuffle(chunks)
+    text = "\n\n".join(chunks)[:n_tokens * 4]  <span class="tag-claude"># ~4 char/token approximation</span>
+    pos = int(len(text) * needle_pos)
+    <span class="tag-key">return</span> text[:pos] + "\n\n" + needle + "\n\n" + text[pos:]
+
+<span class="tag-key">for</span> length <span class="tag-key">in</span> [8000, 32000, 100000, 180000]:
+    <span class="tag-key">for</span> pos <span class="tag-key">in</span> [0.1, 0.5, 0.9]:
+        ctx = haystack(length, pos)
+        r = client.messages.create(
+            model="claude-sonnet-4-6",
+            max_tokens=128,
+            messages=[{"role":"user","content": ctx +
+                "\n\nQ: What is BigCat's meeting password? Answer with the password only."}])
+        print(length, pos, r.content[0].text.strip())</code></pre>
+<p>You'll end up with a (length × position) hit table. <strong>Trust only the cells with ≥ 95% hit rate</strong> — beyond that, regardless of the marketed K, don't put critical information there.</p>
+
+<div class="fail">
+<strong>Failure modes</strong>: many teams measure "100% pass at 1M context" on a single-needle NIAH and confidently stuff multiple contracts, emails, and chat logs into a prompt. NIAH only tests literal lookup, while real tasks require <strong>multi-hop reasoning + integration</strong> — 1–2 orders of magnitude harder. BABILong, RULER, and LongBench v2 are far closer to reality.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Liu et al. 2023, <a href="https://arxiv.org/abs/2307.03172" target="_blank">arxiv.org/abs/2307.03172</a> ·
+Chroma 2025 <em>Context Rot</em>, <a href="https://research.trychroma.com/context-rot" target="_blank">research.trychroma.com/context-rot</a> ·
+Greg Kamradt's original NIAH repo, <a href="https://github.com/gkamradt/LLMTest_NeedleInAHaystack" target="_blank">github.com/gkamradt/LLMTest_NeedleInAHaystack</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Information Layout Principles: U-Shape + Anchor + Restate</h2>
+<div class="claim">Claim: a prompt is not a bag of tokens. It's an <strong>attention pipeline with a gradient</strong>.</div>
+
+<h3>Background &amp; Principles</h3>
+<p>Since head and tail carry the highest attention weight, your prompt's physical layout should mirror that importance gradient. Anthropic's official long-context guidance (claude.com/docs · Long context tips) is blunt: <strong>put long reference documents at the very top of the prompt and the question at the end of the user turn</strong>. This has been measured repeatedly on Claude — long-doc Q&amp;A accuracy goes up 10–20%.</p>
+<p>Three concrete moves:</p>
+<ul>
+<li><strong>Anchor</strong>: state core constraints and the current goal twice — once in the system block, once at the end of the user turn. Anthropic's long-doc example explicitly places the question <em>after</em> <code>&lt;documents&gt;</code>, not before.</li>
+<li><strong>Restate</strong>: when Claude must cite a long doc, ask it to "quote the relevant sentences verbatim" before answering. This forces the model to pull the information from the middle back into the active attention window before generating.</li>
+<li><strong>Stable prefix</strong>: put unchanging instructions / schema / examples at the very top to maximize KV cache hit rate (the same idea as Week 1's prefix caching).</li>
+</ul>
+
+<div class="diagram">┌──────────────── Prompt physical layout ─────────────────┐
+│  ↑ HIGH attention                                       │
+│  ┌─────────────────────────────────────────────────┐    │
+│  │  SYSTEM: role + guardrails + tools schema       │    │ ← cache-friendly
+│  ├─────────────────────────────────────────────────┤    │
+│  │  REFERENCE DOCS  (large, stable per task)       │    │ ← put long stuff here
+│  │  &lt;doc id="1"&gt;...&lt;/doc&gt;                           │    │
+│  │  &lt;doc id="2"&gt;...&lt;/doc&gt;                           │    │
+│  ├─────────────────────────────────────────────────┤    │
+│  │  …  mid-context attention sag  …                │    │ ← never put critical info here
+│  ├─────────────────────────────────────────────────┤    │
+│  │  CRITICAL CONSTRAINTS  (restate)                │    │
+│  │  CURRENT QUESTION  (specific, last)             │    │ ← what the model attends to first
+│  └─────────────────────────────────────────────────┘    │
+│  ↑ HIGH attention                                       │
+└─────────────────────────────────────────────────────────┘</div>
+
+<h3>Hands-on Example</h3>
+<pre><code><span class="tag-claude">&lt;documents&gt;</span>
+  <span class="tag-claude">&lt;document index="1"&gt;</span>
+    <span class="tag-claude">&lt;source&gt;</span>contracts/acme-2024.pdf<span class="tag-claude">&lt;/source&gt;</span>
+    <span class="tag-claude">&lt;content&gt;</span>...8K tokens...<span class="tag-claude">&lt;/content&gt;</span>
+  <span class="tag-claude">&lt;/document&gt;</span>
+  <span class="tag-claude">&lt;document index="2"&gt;</span>...<span class="tag-claude">&lt;/document&gt;</span>
+<span class="tag-claude">&lt;/documents&gt;</span>
+
+<span class="tag-key">Instructions (restated)</span>:
+- Cite only clauses explicitly written in the documents above. Do not extrapolate.
+- First list the verbatim passages you will cite, then give the conclusion.
+
+<span class="tag-key">Question</span>:
+Can we unilaterally terminate the Acme contract at month 18? Walk through the basis clause by clause.</code></pre>
+
+<div class="fail">
+<strong>Failure modes</strong>: in a long-running chat, dropping a new instruction into system and expecting the model to "re-read the system prompt". The model does not "re-read" anything — it just runs attention over every token once per call. Instructions need to be <strong>restated in the most recent user turn</strong> to actually land.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Anthropic Long context tips, <a href="https://docs.claude.com/en/docs/build-with-claude/prompt-engineering/long-context-tips" target="_blank">docs.claude.com/.../long-context-tips</a> ·
+Lilian Weng's working-memory section in <em>LLM Powered Autonomous Agents</em>, <a href="https://lilianweng.github.io/posts/2023-06-23-agent/" target="_blank">lilianweng.github.io/posts/2023-06-23-agent</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>RAG's Real Bottleneck: Chunk Design Matters Way More Than the Embedding Model</h2>
+<div class="claim">Claim: 90% of RAG systems are broken — and it's not the embedding, it's how you cut up the document.</div>
+
+<h3>Background &amp; Principles</h3>
+<p>Standard team workflow when shipping RAG: fixed 512-token chunk + 50 overlap + OpenAI embedding + simple top-k. Quality is bad, so they swap embedding models, then swap vector DBs. Same outcome. Why:</p>
+<ul>
+<li><strong>Semantic boundaries get butchered</strong>: fixed-size chunking cuts inside sentences and paragraphs. A "However, the above does not apply when…" pivot gets split across two chunks; retrieving one of them gives a confidently wrong answer.</li>
+<li><strong>Contextless chunks</strong>: a chunk reads "the clause becomes effective within 30 days" — but which clause? The model has no idea. Anthropic's 2024 <em>Contextual Retrieval</em> blog showed that prepending each chunk with "this chunk in the context of the document" cuts retrieval failures by 49%; adding BM25 brings it to 67%.</li>
+<li><strong>Single granularity</strong>: legal clauses want 200 tokens; source code wants per-function; equity research wants per-section. One fixed size is one hammer for every nail.</li>
+</ul>
+<p>The three things that actually determine your RAG ceiling: <strong>chunk boundaries (semantic), chunk context (contextual prefix), and retrieval fusion (hybrid + rerank)</strong>. Embedding model choice, among reasonable options, is a ±5% knob.</p>
+
+<h3>Hands-on Example</h3>
+<p>Anthropic's recommended Contextual Retrieval flow (drop-in for your own corpus):</p>
+<pre><code><span class="tag-claude"># Step 1: generate context for each chunk (batch with Claude Haiku + prompt caching)</span>
+context_prompt = """
+&lt;document&gt;{whole_doc}&lt;/document&gt;
+Here is the chunk we want to situate within the whole document:
+&lt;chunk&gt;{chunk}&lt;/chunk&gt;
+Please give a short succinct context to situate this chunk within
+the overall document for improving search retrieval. Answer only
+with the context, nothing else.
+"""
+
+<span class="tag-claude"># Step 2: prepend context to chunk, then build embedding + BM25 indexes</span>
+indexed_chunk = f"{generated_context}\n\n{original_chunk}"
+
+<span class="tag-claude"># Step 3: at query time, hybrid (dense + BM25), top-150 → rerank to top-20</span>
+dense_hits = vector_store.search(query, k=150)
+bm25_hits  = bm25_index.search(query, k=150)
+fused = reciprocal_rank_fusion([dense_hits, bm25_hits])
+top20 = cohere_rerank(query, fused[:150], top_n=20)</code></pre>
+<p>Critical engineering detail: in step 1, the <code>{whole_doc}</code> sits in the same cached system + document prefix across all chunks of that document; with prompt caching enabled, cost drops to about 1/10. Anthropic's own number: contextualizing a 100-page document costs about $1.02 — cheaper than swapping embedding models, and significantly more effective.</p>
+
+<div class="fail">
+<strong>Failure modes</strong>: treating contextual retrieval as a silver bullet. It helps a lot on chunks that need external information to disambiguate; it does almost nothing for chunks that read independently (e.g. per-endpoint API docs) and just adds cost. Run a baseline eval first, then decide which corpora to apply it to.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Anthropic <em>Introducing Contextual Retrieval</em> 2024, <a href="https://www.anthropic.com/news/contextual-retrieval" target="_blank">anthropic.com/news/contextual-retrieval</a> ·
+LlamaIndex chunking experiments, <a href="https://www.llamaindex.ai/blog" target="_blank">llamaindex.ai/blog</a> ·
+Jina AI <em>Late Chunking</em>, <a href="https://arxiv.org/abs/2409.04701" target="_blank">arxiv.org/abs/2409.04701</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Context Compaction: Controlled Compression of Long Conversations</h2>
+<div class="claim">Claim: long sessions aren't a "window overflowed" problem — they're a "signal diluted by noise" problem.</div>
+
+<h3>Background &amp; Principles</h3>
+<p>Agents and long chats often see accuracy fall off a cliff around turn 50. The cause isn't always token overflow — often you're still well under max context, but the model is already confused. This is <strong>context rot</strong>: relevant signal diluted by irrelevant history, combined with lost-in-the-middle, pushes attention onto irrelevant tokens.</p>
+<p>Four mainstream strategies for long history; the engineering choice maps to different trade-offs:</p>
+<ul>
+<li><strong>Sliding window</strong>: keep the most recent N turns. Simplest. Drops early constraints (you said "don't use jQuery" 3 turns ago — gone).</li>
+<li><strong>Summarization compaction</strong>: every K turns, compress older turns into a structured summary (user preferences, completed steps, open questions). Claude Code's built-in auto-compaction is exactly this: keep the most recent few turns verbatim plus a structured summary of everything before.</li>
+<li><strong>Hierarchical memory</strong>: working memory (recent) + episodic memory (event summaries) + semantic memory (vector retrieval). MemGPT (Packer et al. 2023, <em>arxiv.org/abs/2310.08560</em>) is the canonical implementation and Lilian Weng's recommended template in <em>LLM Powered Autonomous Agents</em>.</li>
+<li><strong>Selective pruning (relevance-based)</strong>: score every historical turn with a small model and drop low scores wholesale, instead of by time. Works well for tool-use-heavy agents — most tool outputs are used once and never referenced again.</li>
+</ul>
+
+<h3>Hands-on Example</h3>
+<p>Minimal compaction loop for a long-running coding agent:</p>
+<pre><code><span class="tag-key">def</span> maybe_compact(history, model="claude-sonnet-4-6", threshold=120_000):
+    tok = count_tokens(history)
+    <span class="tag-key">if</span> tok &lt; threshold:
+        <span class="tag-key">return</span> history
+    <span class="tag-claude"># Keep the last 6 turns verbatim; compress everything before into structured summary</span>
+    recent, old = history[-6:], history[:-6]
+    summary = client.messages.create(model=model, max_tokens=2000,
+        system="You compress agent histories. Output strict JSON.",
+        messages=[{"role":"user","content": f"""
+Compress the following turns into JSON with keys:
+- goal: the user's overall objective
+- decisions: list of decisions made (with rationale)
+- artifacts: files/code created or modified (paths only)
+- open_questions: anything explicitly deferred
+- forbidden: constraints user said NOT to do
+&lt;turns&gt;{serialize(old)}&lt;/turns&gt;
+"""}]).content[0].text
+    <span class="tag-key">return</span> [{"role":"system","content":f"&lt;prior_session&gt;{summary}&lt;/prior_session&gt;"}] + recent</code></pre>
+<p>Key lesson: <strong>the compression schema matters more than the compression algorithm</strong>. Forcing the model to emit fixed keys (goal / decisions / artifacts / open_questions / forbidden) lets the next turn directly reference <code>&lt;prior_session&gt;.forbidden</code> — far more robust than free-form summarization.</p>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) summarizing code snippets along with everything else — next turn the agent has to re-fetch the original, costing more tokens, not fewer. Rule: <em>preserve code / file paths / exact identifiers verbatim; only compress natural language</em>. (2) Compacting every turn — the cache shatters every time and you spend more, not less. Use hysteresis: trigger at 120K, drop to 60K, don't re-trigger until you cross 120K again.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Anthropic <em>Effective context engineering for AI agents</em> engineering blog, <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" target="_blank">anthropic.com/engineering/effective-context-engineering-for-ai-agents</a> ·
+MemGPT paper, <a href="https://arxiv.org/abs/2310.08560" target="_blank">arxiv.org/abs/2310.08560</a> ·
+Simon Willison <em>Context engineering</em> tag, <a href="https://simonwillison.net/tags/context-engineering/" target="_blank">simonwillison.net/tags/context-engineering</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// Putting it together · End-to-end personal RAG rebuild</h3>
+<p>Wire the four ideas above into a weekend project: use your own Notion / Obsidian notes as corpus, build a personal knowledge agent you'll actually use daily.</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>Chunk</strong>: split by Markdown headers (NOT fixed size). Each <code>##</code>-and-above section is one chunk, with frontmatter + breadcrumb (file path + heading chain).</li>
+<li><strong>Contextualize</strong>: use Haiku 4.5 to generate a 1–2 sentence context prefix per chunk (cache the whole document as prefix; the per-chunk incremental token cost is tiny).</li>
+<li><strong>Retrieve</strong>: dense (voyage-3-large or BGE-M3) + BM25 → RRF → Cohere rerank.</li>
+<li><strong>Assemble</strong>: top-K documents at the front of <code>&lt;documents&gt;</code>; instructions + question at the very tail, with a tail-end restate of "cite only content explicitly present in the documents".</li>
+<li><strong>Long sessions</strong>: trigger summarization compaction past 80K; keep the most recent 6 turns + structured summary. Code blocks are never compressed.</li>
+<li><strong>Eval</strong>: write 30 questions with ground-truth answers yourself (you wrote the notes, you're the oracle); track hit rate and citation accuracy. Next issue covers how to automate this eval.</li>
+</ol>
+<p style="margin-top:12px">Once this is running you'll see that <strong>chunking + contextualization + rerank</strong> lifts quality more than swapping your embedding model five times.</p>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// Deep Thinking</h3>
+<details><summary>Is lost-in-the-middle an inherent flaw of the transformer architecture or a training-data bias? Will future models fix it?</summary><div>Both. Architecturally: positional encoding precision degrades on long context, and attention gets diluted in the middle. Training-wise: most instruction-tuning data is short, so the model never learned that "the middle still matters". Newer models (GPT-4o long, Claude 3.5 200k) improve via needle-in-haystack training, but Liu et al. 2024 still measures a 20%+ gap on real tasks. Not disappearing soon.</div></details>
+<details><summary>For RAG chunking, fixed-character vs. semantic-boundary cutting — how big is the gap, and why do frameworks default to the former?</summary><div>Semantic boundary typically recalls 10–30% better — embedding models are trained on semantic units; half-sentence embeddings are noise. Frameworks default to fixed-character because it's simple and doesn't require document parsing. Production should be hybrid: cut by paragraph/heading, fall back to max_tokens.</div></details>
+<details><summary>U-shape layout puts critical info at head and tail. If you only have one critical thing, head or tail?</summary><div>Tail. Recency bias is stronger (attention weight to the most recent tokens is the highest), and on most tasks "say it again at the end" beats "say it once at the start". Exception: role/persona must go at the head (it conditions the entire output style); the task instruction goes at the tail. That's why standard system-prompt templates put role on top, user query at the bottom.</div></details>
+<details><summary>Context compaction via LLM summarization is standard practice, but it hallucinates. How do you compress without distortion?</summary><div>Three mechanisms: (1) structured compression (force JSON, not free prose; constrain schema); (2) two-pass verification (after compaction, a separate prompt verifies "is X actually in the original"); (3) retain references (compacted content cites the original chunk id; fetch on demand). Claude Code's conversation compaction uses (1) and (2).</div></details>
+<details><summary>Should chunks be 200 tokens or 800? What are the variables?</summary><div>Three variables: (1) question granularity (detail questions want small chunks, macro want large); (2) embedding-model training length (OpenAI text-embedding-3 is trained ~256 tokens; longer gets mean-pool distorted); (3) retrieval k (with k=1, large chunks preserve info; with k=10, small chunks preserve diversity). Production sweet spot is 200–500 + ~50 overlap.</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// Further Reading</h3>
+<ul>
+<li><a href="https://arxiv.org/abs/2307.03172" target="_blank">Liu et al. 2023 · Lost in the Middle</a> — foundational study on long-context attention distribution</li>
+<li><a href="https://research.trychroma.com/context-rot" target="_blank">Chroma 2025 · Context Rot</a> — effective-context retest across 18 frontier models</li>
+<li><a href="https://www.anthropic.com/news/contextual-retrieval" target="_blank">Anthropic · Introducing Contextual Retrieval</a> — engineering guide to chunk contextualization + hybrid</li>
+<li><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" target="_blank">Anthropic · Effective Context Engineering for AI Agents</a> — official methodology</li>
+<li><a href="https://arxiv.org/abs/2310.08560" target="_blank">Packer et al. · MemGPT</a> — canonical hierarchical-memory implementation</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Weekly · Week 02 · 2026-05-22</footer>
+</div>
+</body></html>
