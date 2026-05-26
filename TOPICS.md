@@ -12,29 +12,29 @@
 - Week 7: Memory & State 管理 — 滑动窗口 vs summarization vs vector retrieval、长期记忆 3 种架构、user profile
 - Week 8: 多模态工程 — 图片压缩与分辨率、PDF 处理、视觉 prompt 设计、多模态 RAG 的坑
 - Week 9: LLM 反直觉行为 / Prompting Patterns — Calibration 双向性（anchor 单边失控）、否定指令为何无效、列表数量=emphasis（3:1 失衡）、Examples > 抽象规则、yes-man 与 steelman、lost-in-the-middle
-- Week 10: Fine-tuning vs Prompting — LoRA / QLoRA 工程权衡、数据集质量>数量、distillation、open weights 超越 Claude 的场景
+- Week 10: RAG 实战工程 — Chunk 策略、hybrid search、reranker 真实价值、HyDE / multi-query / fusion
+- Week 11: Fine-tuning vs Prompting — LoRA / QLoRA 工程权衡、数据集质量>数量、distillation、open weights 超越 Claude 的场景
 
 ## Phase 2 — 应用与系统
-- Week 11: Claude Code 高阶用法 — Subagents / hooks / slash commands / MCP servers、SDK 自动化、大 repo CLAUDE.md
-- Week 12: MCP — 协议核心、自建 MCP server、stdio vs http、tool/resource/prompt 三层
-- Week 13: Coding Agents 工程 — Cursor / Claude Code / Aider harness 差异、plan mode 重要性、AI pair programming
-- Week 14: Code Refactoring with AI — 大规模重构分步、AI 不擅长的重构、test-first AI refactor
-- Week 15: AI for Research — Deep Research 对比、个人研究 agent 自建、信息源筛选、引用追溯
-- Week 16: Writing 工程化 — 用 AI 保持 voice、style transfer、章节-段落-句子分层 prompt
-- Week 17: Personal AI Infra — LLM gateway、跨模型路由、cache 层、observability、API key 管理
-- Week 18: Prompt Injection 攻防 — direct/indirect injection、defense in depth、untrusted content 隔离
-- Week 19: Latency Engineering — Streaming、prompt caching、并行调用、speculative decoding
-- Week 20: Cost Engineering — Token 经济学、缓存策略、model routing、batch API
+- Week 12: Claude Code 高阶用法 — Subagents / hooks / slash commands / MCP servers、SDK 自动化、大 repo CLAUDE.md
+- Week 13: MCP — 协议核心、自建 MCP server、stdio vs http、tool/resource/prompt 三层
+- Week 14: Coding Agents 工程 — Cursor / Claude Code / Aider harness 差异、plan mode 重要性、AI pair programming
+- Week 15: Code Refactoring with AI — 大规模重构分步、AI 不擅长的重构、test-first AI refactor
+- Week 16: AI for Research — Deep Research 对比、个人研究 agent 自建、信息源筛选、引用追溯
+- Week 17: Writing 工程化 — 用 AI 保持 voice、style transfer、章节-段落-句子分层 prompt
+- Week 18: Personal AI Infra — LLM gateway、跨模型路由、cache 层、observability、API key 管理
+- Week 19: Prompt Injection 攻防 — direct/indirect injection、defense in depth、untrusted content 隔离
+- Week 20: Latency Engineering — Streaming、prompt caching、并行调用、speculative decoding
+- Week 21: Cost Engineering — Token 经济学、缓存策略、model routing、batch API
 
 ## Phase 3 — 前沿与边界
-- Week 21: Agentic IDE 未来 — Cursor / Windsurf / Claude Code / Devin 路线对比
-- Week 22: Computer Use & Browser Agents — Anthropic Computer Use API、Browser Use / Playwright agent
-- Week 23: Multi-agent Systems — Orchestrator-worker、debate、specialist agents、何时反模式
-- Week 24: Synthetic Data & Self-improvement — Constitutional AI、RLAIF、self-play
-- Week 25: Local & Edge LLM — Ollama / LM Studio / MLX、量化成本、本地模型够用场景
-- Week 26: AI Eval Beyond Benchmark — MMLU/HumanEval 误导、为真实场景写 eval
-- Week 27: Inference Optimization — vLLM / TGI / TensorRT-LLM、KV cache、continuous batching
-- Week 28: Open Source Models 实战 — Llama / Qwen / DeepSeek / Mistral
-- Week 29: AI Safety in Personal Use — Model misuse、deceptive AI 早期信号、个人 agent kill switch
-- Week 30: AI Coding 的未来 5 年 — Coding agents 路线图、SWE-bench 局限、个人护城河
-- Week 31: RAG 实战工程 — Chunk 策略、hybrid search、reranker 真实价值、HyDE / multi-query / fusion
+- Week 22: Agentic IDE 未来 — Cursor / Windsurf / Claude Code / Devin 路线对比
+- Week 23: Computer Use & Browser Agents — Anthropic Computer Use API、Browser Use / Playwright agent
+- Week 24: Multi-agent Systems — Orchestrator-worker、debate、specialist agents、何时反模式
+- Week 25: Synthetic Data & Self-improvement — Constitutional AI、RLAIF、self-play
+- Week 26: Local & Edge LLM — Ollama / LM Studio / MLX、量化成本、本地模型够用场景
+- Week 27: AI Eval Beyond Benchmark — MMLU/HumanEval 误导、为真实场景写 eval
+- Week 28: Inference Optimization — vLLM / TGI / TensorRT-LLM、KV cache、continuous batching
+- Week 29: Open Source Models 实战 — Llama / Qwen / DeepSeek / Mistral
+- Week 30: AI Safety in Personal Use — Model misuse、deceptive AI 早期信号、个人 agent kill switch
+- Week 31: AI Coding 的未来 5 年 — Coding agents 路线图、SWE-bench 局限、个人护城河
