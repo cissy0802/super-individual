@@ -11,7 +11,7 @@
 - Week 6: Eval 工程 — LLM-as-judge 去偏、A/B prompt、regression test for prompts、Anthropic Evals 框架
 - Week 7: Memory & State 管理 — 滑动窗口 vs summarization vs vector retrieval、长期记忆 3 种架构、user profile
 - Week 8: 多模态工程 — 图片压缩与分辨率、PDF 处理、视觉 prompt 设计、多模态 RAG 的坑
-- Week 9: RAG 实战工程 — Chunk 策略、hybrid search、reranker 真实价值、HyDE / multi-query / fusion
+- Week 9: LLM 反直觉行为 / Prompting Patterns — Calibration 双向性（anchor 单边失控）、否定指令为何无效、列表数量=emphasis（3:1 失衡）、Examples > 抽象规则、yes-man 与 steelman、lost-in-the-middle
 - Week 10: Fine-tuning vs Prompting — LoRA / QLoRA 工程权衡、数据集质量>数量、distillation、open weights 超越 Claude 的场景
 
 ## Phase 2 — 应用与系统
@@ -37,3 +37,4 @@
 - Week 28: Open Source Models 实战 — Llama / Qwen / DeepSeek / Mistral
 - Week 29: AI Safety in Personal Use — Model misuse、deceptive AI 早期信号、个人 agent kill switch
 - Week 30: AI Coding 的未来 5 年 — Coding agents 路线图、SWE-bench 局限、个人护城河
+- Week 31: RAG 实战工程 — Chunk 策略、hybrid search、reranker 真实价值、HyDE / multi-query / fusion
