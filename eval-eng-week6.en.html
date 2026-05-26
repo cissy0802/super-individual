@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 6 · Eval Engineering — Super Individual Weekly</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">WEEK 06 / PHASE 1 · ENGINEERING</span>
+<h1>Eval Engineering</h1>
+<h2>Golden Set · LLM-as-Judge Debiasing · Prompt Regression · Anthropic Evals</h2>
+<div class="date">2026-05-24 · BigCat</div>
+<p class="pitch">A prompt without an eval is folk magic. Editing prompts on vibes is engineering by vibes.</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>Ask 100 prompt authors "how do you know your last edit was an improvement?" — 99 say "I tried a few examples and it felt better". That's why most AI products get <em>worse</em> after they ship: <strong>prompt engineering without evals isn't engineering, it's witchcraft</strong>. Hamel Husain's line that detonated across the industry — "Your AI product needs evals" — means something specific: the model is a commodity, <em>your eval suite is the moat</em>. This issue doesn't recap MMLU / HumanEval (mostly irrelevant to your real use case). It covers four things every senior practitioner should be doing: how to spin up a minimum viable eval from scratch, why LLM-as-judge must be debiased before you can trust it, how to treat prompts as code with regression tests, and how Anthropic itself uses evals to build Claude. By the end you should be able to set up a real regression-blocking eval for any prompt you own in an hour.</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>Minimum Viable Eval: 20 Examples + One Scorer</h2>
+<div class="claim">Claim: your first eval doesn't need a framework, an LLM judge, or 1000 rows — 20 real-scenario cases + one Python function block 80% of regressions.</div>
+
+<h3>Background &amp; Principles</h3>
+<p>Most people don't ship evals because they think it requires infrastructure first. That's what landing pages for Weights &amp; Biases / Braintrust / Langfuse made them believe. Hamel Husain's <em>Your AI Product Needs Evals</em> gives the dead-simple opening move: <strong>handpick 20 real inputs covering typical + edge cases, write Python to run the prompt and collect outputs, write Python to score each output</strong>. That's it. Don't add another file.</p>
+<p>The core of an eval isn't the tool — it's <strong>dataset quality</strong>. 20 carefully selected examples (10 happy path + 5 edge cases + 5 adversarial) are worth more than 10,000 random rows scraped from production logs. Karpathy has said the same in multiple talks — <em>"dataset is the new code"</em>. Your golden set is the source of truth for the eval; maintain it like core code (diff, review, version).</p>
+<p>Scorers have three tiers; always reach for the cheapest one first:</p>
+<ul>
+<li><strong>Code-based (preferred)</strong>: if the task can be judged with regex / JSON schema / string contains / unit tests, never reach for an LLM judge. Cheap, stable, reproducible.</li>
+<li><strong>Heuristic</strong>: length ranges, keyword hits, format compliance, Levenshtein distance. Still no LLM.</li>
+<li><strong>LLM-as-judge (last resort)</strong>: only when the task is intrinsically open-ended generation (summarization / rewrite / answer). And only with the debiasing from §3.</li>
+</ul>
+
+<div class="diagram">  Eval engineering tiers (cost / latency / variance increase upward)
+
+  ┌────────────────────────────────────────────────┐
+  │ Human eval    · gold standard · not scalable    │
+  ├────────────────────────────────────────────────┤
+  │ LLM-as-judge  · fallback for subjective tasks   │
+  │                · must be debiased & calibrated  │
+  ├────────────────────────────────────────────────┤
+  │ Heuristic     · length / format / keyword       │
+  │                · effectively free               │
+  ├────────────────────────────────────────────────┤
+  │ Code-based    · regex / schema / unit test      │
+  │                · always preferred when possible │
+  └────────────────────────────────────────────────┘
+  Rule: drop one tier if you can; don't use a higher one for vibes</div>
+
+<h3>Hands-on Example</h3>
+<p>MVP eval for "extract meeting time from an email" — fewer than 60 lines, runnable end-to-end:</p>
+<pre><code><span class="tag-com"># eval_meeting_extractor.py — minimal eval that actually runs</span>
+<span class="tag-key">import</span> json, re, anthropic
+<span class="tag-key">from</span> dataclasses <span class="tag-key">import</span> dataclass
+<span class="tag-key">from</span> datetime <span class="tag-key">import</span> datetime
+
+client = anthropic.Anthropic()
+
+<span class="tag-com"># ① Golden Set — 20 handpicked cases, each is (input + expectation)</span>
+GOLDEN = [
+    {<span class="tag-gpt">"id"</span>:<span class="tag-gpt">"happy_01"</span>, <span class="tag-gpt">"input"</span>:<span class="tag-gpt">"Weekly sync tomorrow 3pm in room A"</span>,
+     <span class="tag-gpt">"expect"</span>:{<span class="tag-gpt">"time"</span>:<span class="tag-gpt">"15:00"</span>, <span class="tag-gpt">"location"</span>:<span class="tag-gpt">"room A"</span>}},
+    {<span class="tag-gpt">"id"</span>:<span class="tag-gpt">"edge_tz"</span>,  <span class="tag-gpt">"input"</span>:<span class="tag-gpt">"Mon 9am PT sync"</span>,
+     <span class="tag-gpt">"expect"</span>:{<span class="tag-gpt">"time"</span>:<span class="tag-gpt">"09:00"</span>, <span class="tag-gpt">"tz"</span>:<span class="tag-gpt">"PT"</span>}},
+    {<span class="tag-gpt">"id"</span>:<span class="tag-gpt">"adv_noop"</span>, <span class="tag-gpt">"input"</span>:<span class="tag-gpt">"Nice weather today"</span>,
+     <span class="tag-gpt">"expect"</span>:{<span class="tag-gpt">"time"</span>:<span class="tag-key">None</span>}},  <span class="tag-com"># must not hallucinate</span>
+    <span class="tag-com"># ... 17 more</span>
+]
+
+PROMPT = <span class="tag-gpt">"""You are a meeting time extractor. Output strict JSON:
+{"time": "HH:MM" or null, "location": str or null, "tz": str or null}
+Input: {text}"""</span>
+
+<span class="tag-key">def</span> run(text):
+    r = client.messages.create(model=<span class="tag-gpt">"claude-opus-4-7"</span>, max_tokens=200,
+        messages=[{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,<span class="tag-gpt">"content"</span>:PROMPT.format(text=text)}])
+    <span class="tag-key">return</span> json.loads(r.content[0].text)
+
+<span class="tag-com"># ② Scorer — all code-based; cheap and stable</span>
+<span class="tag-key">def</span> score(pred, expect):
+    <span class="tag-key">for</span> k, v <span class="tag-key">in</span> expect.items():
+        <span class="tag-key">if</span> pred.get(k) != v: <span class="tag-key">return</span> 0
+    <span class="tag-key">return</span> 1
+
+<span class="tag-com"># ③ Runner — one for loop</span>
+<span class="tag-key">def</span> evaluate():
+    fails = []
+    <span class="tag-key">for</span> case <span class="tag-key">in</span> GOLDEN:
+        <span class="tag-key">try</span>:
+            pred = run(case[<span class="tag-gpt">"input"</span>])
+            <span class="tag-key">if</span> score(pred, case[<span class="tag-gpt">"expect"</span>]) == 0:
+                fails.append((case[<span class="tag-gpt">"id"</span>], pred, case[<span class="tag-gpt">"expect"</span>]))
+        <span class="tag-key">except</span> Exception <span class="tag-key">as</span> e:
+            fails.append((case[<span class="tag-gpt">"id"</span>], <span class="tag-gpt">"ERROR"</span>, str(e)))
+    pass_rate = 1 - len(fails) / len(GOLDEN)
+    print(f<span class="tag-gpt">"PASS {pass_rate:.0%} ({len(GOLDEN)-len(fails)}/{len(GOLDEN)})"</span>)
+    <span class="tag-key">for</span> f <span class="tag-key">in</span> fails: print(<span class="tag-gpt">"  FAIL"</span>, f)
+    <span class="tag-key">return</span> pass_rate
+
+<span class="tag-key">if</span> __name__ == <span class="tag-gpt">"__main__"</span>: evaluate()</code></pre>
+<p>This is enough to ship behind. Run it on every prompt change; dropping from 17/20 to 14/20 is a regression. Three months in you'll have a 200-case golden set — then start thinking about Braintrust / Langfuse.</p>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) sampling 1000 rows from production logs as your golden set — 80% are trivial cases, coverage is worse than 20 handpicked ones; stratify by cluster / difficulty. (2) 100% pass rate — means your golden set is too easy; an eval that never fails isn't an eval. (3) Only watching pass rate, never the fail distribution — which fails are the same category? Edge case? Adversarial? Prompt gap? Stratified reports are 10× more useful than a single number.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Hamel Husain <em>Your AI Product Needs Evals</em>, <a href="https://hamel.dev/blog/posts/evals/" target="_blank">hamel.dev/blog/posts/evals</a> ·
+Eugene Yan <em>Task-Specific LLM Evals</em>, <a href="https://eugeneyan.com/writing/evals/" target="_blank">eugeneyan.com/writing/evals</a> ·
+Anthropic <em>Create strong empirical evaluations</em>, <a href="https://docs.anthropic.com/en/docs/test-and-evaluate/develop-tests" target="_blank">docs.anthropic.com/.../develop-tests</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>LLM-as-Judge Biases and How to Debias</h2>
+<div class="claim">Claim: an uncalibrated LLM judge isn't an eval — it's an amplifier. It magnifies your prompt's own bias into a 90% fake pass rate.</div>
+
+<h3>Background &amp; Principles</h3>
+<p>When the task is open-ended generation (summary quality, answer relevance, faithful rewrite), code-based scoring breaks down and most people switch to LLM-as-judge: give a judge an instruction and have it score or pick a winner. The problem: LLM judges carry systematic biases. <strong>If you use them raw, you measure the judge's preferences, not your model's capability</strong>.</p>
+<p>Zheng et al. 2023's <em>Judging LLM-as-a-Judge</em> (the MT-Bench paper, NeurIPS Datasets &amp; Benchmarks) systematically demonstrated four biases that almost all subsequent work builds on:</p>
+<ul>
+<li><strong>Position bias</strong>: in pairwise comparisons, A/B ordering materially shifts the winner — GPT-4 as judge has ~65% consistency under position swap.</li>
+<li><strong>Verbosity bias</strong>: judges prefer longer answers, even when longer ≠ better. Length effect reproduces across multiple benchmarks.</li>
+<li><strong>Self-preference / self-enhancement bias</strong>: judges prefer outputs from their own model family (GPT-4 judging GPT-4 vs Claude leans GPT-4; vice versa). Panickssery et al. 2024 (<em>LLM Evaluators Recognize and Favor Their Own Generations</em>) measured this formally.</li>
+<li><strong>Format / authority bias</strong>: markdown lists, bolding, confident phrasing all bias judges, independent of correctness.</li>
+</ul>
+<p>None of these are prompt issues — they're side effects of RLHF objectives, and you can't eliminate them by telling the judge "don't be biased". You need <strong>structural debiasing</strong>.</p>
+
+<h3>Hands-on Example: 5 ready-to-use debias tricks</h3>
+<pre><code><span class="tag-com"># —— 1. Position Swap ——</span>
+<span class="tag-com"># Always run pairwise twice: (A,B) and (B,A). Winner must win both. Disagreement → TIE.</span>
+score_ab = judge(q, ans_a, ans_b)   <span class="tag-com"># A first</span>
+score_ba = judge(q, ans_b, ans_a)   <span class="tag-com"># B first</span>
+winner = <span class="tag-gpt">"A"</span> <span class="tag-key">if</span> score_ab == <span class="tag-gpt">"A"</span> <span class="tag-key">and</span> score_ba == <span class="tag-gpt">"B"</span> <span class="tag-key">else</span> \
+         <span class="tag-gpt">"B"</span> <span class="tag-key">if</span> score_ab == <span class="tag-gpt">"B"</span> <span class="tag-key">and</span> score_ba == <span class="tag-gpt">"A"</span> <span class="tag-key">else</span> <span class="tag-gpt">"TIE"</span>
+
+<span class="tag-com"># —— 2. Verbosity Control ——</span>
+<span class="tag-com"># Hard-constrain in the judge prompt: when length differs >30%, prioritize substance check</span>
+JUDGE_PROMPT = <span class="tag-gpt">"""Compare A and B. CRITICAL: do not reward verbosity.
+If lengths differ by &gt;30%, explicitly check whether the longer one
+adds substance or just padding. Penalize padding."""</span>
+
+<span class="tag-com"># —— 3. Cross-family Judging ——</span>
+<span class="tag-com"># Judge Claude outputs with GPT; judge GPT outputs with Claude</span>
+<span class="tag-com"># Or use 3 different models as judges and take the majority vote</span>
+judges = [<span class="tag-gpt">"claude-opus-4-7"</span>, <span class="tag-gpt">"gpt-5"</span>, <span class="tag-gpt">"gemini-2.5-pro"</span>]
+votes = [judge_with(m, q, a, b) <span class="tag-key">for</span> m <span class="tag-key">in</span> judges]
+winner = max(set(votes), key=votes.count)  <span class="tag-com"># majority</span>
+
+<span class="tag-com"># —— 4. Rubric-ize (instead of a single score) ——</span>
+<span class="tag-com"># Don't ask for an "overall score"; ask for independent 0/1 dimensions</span>
+RUBRIC = <span class="tag-gpt">"""Score each independently (0 or 1):
+- factual_correct: all stated facts verifiable from source?
+- completeness:   covers all parts of the question?
+- format_valid:   matches required JSON schema?
+- no_hallucination: no info absent from source?
+Return JSON: {factual_correct: 0/1, ...}"""</span>
+
+<span class="tag-com"># —— 5. Human Calibration Set ——</span>
+<span class="tag-com"># 50 human-labeled samples; before trusting the judge, measure agreement on these</span>
+<span class="tag-com"># judge ↔ human agreement &lt; 80% → judge prompt is unreliable, iterate</span>
+human_labels = load(<span class="tag-gpt">"calibration_50.json"</span>)
+judge_labels = [judge(c) <span class="tag-key">for</span> c <span class="tag-key">in</span> human_labels]
+agreement = sum(h == j <span class="tag-key">for</span> h, j <span class="tag-key">in</span> zip(human_labels, judge_labels)) / 50
+<span class="tag-key">assert</span> agreement &gt; 0.80, f<span class="tag-gpt">"Judge unreliable: {agreement:.0%}"</span></code></pre>
+<p>Mental model: treat the judge like an intern you hired to score things. You wouldn't let an intern read a paragraph and slap a single score on it — you'd give them a rubric, have them write reasoning, and spot-check their grading. LLM judges are the same.</p>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) single-shot pairwise with a single judge — position bias eats 5–10% of your real signal. (2) Same-family judging (Claude judging Claude rewrites) — self-preference makes your prompt look like it's "always getting better" while it isn't. (3) Asking the judge for "A wins / B wins" without reasoning — judges pattern-match most of the time; requiring reasoning before the verdict lifts accuracy 5–15pp (Zheng 2023). (4) Generating the calibration set with an LLM — the calibration set must be human-labeled, otherwise you're proving yourself with yourself.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Zheng et al. <em>Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena</em> (NeurIPS 2023), <a href="https://arxiv.org/abs/2306.05685" target="_blank">arxiv.org/abs/2306.05685</a> ·
+Panickssery et al. <em>LLM Evaluators Recognize and Favor Their Own Generations</em>, <a href="https://arxiv.org/abs/2404.13076" target="_blank">arxiv.org/abs/2404.13076</a> ·
+Anthropic <em>Reducing bias in LLM-graded evaluations</em>, <a href="https://docs.anthropic.com/en/docs/test-and-evaluate/strengthen-guardrails/reduce-latency#tip-3-use-fewer-tokens" target="_blank">docs.anthropic.com/.../test-and-evaluate</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Prompt as Code: Regression Tests and Versioning</h2>
+<div class="claim">Claim: a prompt is a form of source code. It must be diffed, reviewed, and exercised by CI regression. Prompts copy-pasted across notebooks is 2023 hygiene.</div>
+
+<h3>Background &amp; Principles</h3>
+<p>Change one line in a prompt, change the behavior entirely. That's not a flaw — it's a fundamental property of LLMs. The problem is most teams' relationship with prompts is "scattered across Slack screenshots and Jupyter cells", and the result is: a prompt change last week silently flipped an edge case from pass to fail, nobody noticed, until a customer complained.</p>
+<p>The senior approach is to treat prompts as full-stack code:</p>
+<ul>
+<li><strong>Version</strong>: prompts live in <code>prompts/*.md</code> or <code>prompts/*.txt</code>, in git. Variables use <code>{{var}}</code> placeholders (Jinja / f-string). Never embed prompts in Python string literals — diffs lose newline changes.</li>
+<li><strong>Regression suite</strong>: every prompt has a matching <code>tests/test_*.py</code> with the §1 golden set. No prompt change ships without running regression.</li>
+<li><strong>CI integration</strong>: GitHub Actions runs evals on PRs; pass-rate drop past a threshold blocks merge. Standard at OpenAI / Anthropic.</li>
+<li><strong>Structured logging</strong>: every prompt call records <code>(prompt_version, input_hash, output, score)</code> into SQLite / DuckDB so you can precisely attribute "between v3 and v4, what kind of cases changed".</li>
+</ul>
+<p>Mental model — <strong>prompts are not config, they're behavior code</strong>. Config changes alter business parameters; prompt changes can flip model decisions entirely. So they deserve <em>stricter</em> review than code, not looser.</p>
+
+<h3>Hands-on Example: minimal CI regression setup</h3>
+<pre><code><span class="tag-com"># —— Repo layout ——</span>
+prompts/
+  meeting_extractor.md       <span class="tag-com"># prompt text with {{var}} placeholders</span>
+  meeting_extractor.meta.yml <span class="tag-com"># model, temperature, max_tokens, min_pass_rate</span>
+tests/
+  golden_meeting.jsonl       <span class="tag-com"># golden set</span>
+  test_meeting.py            <span class="tag-com"># pytest invoking the §1 evaluate()</span>
+.github/workflows/
+  eval.yml                   <span class="tag-com"># CI</span>
+
+<span class="tag-com"># —— prompts/meeting_extractor.meta.yml ——</span>
+model: claude-opus-4-7
+temperature: 0
+max_tokens: 200
+min_pass_rate: 0.90       <span class="tag-com"># dropping below this turns CI red</span>
+allow_regression: []      <span class="tag-com"># explicitly approved failing case_ids</span>
+
+<span class="tag-com"># —— tests/test_meeting.py ——</span>
+<span class="tag-key">import</span> pytest, yaml
+<span class="tag-key">from</span> evaluator <span class="tag-key">import</span> evaluate
+
+<span class="tag-key">def</span> test_meeting_regression():
+    meta = yaml.safe_load(open(<span class="tag-gpt">"prompts/meeting_extractor.meta.yml"</span>))
+    result = evaluate(<span class="tag-gpt">"meeting_extractor"</span>)
+    <span class="tag-key">assert</span> result.pass_rate &gt;= meta[<span class="tag-gpt">"min_pass_rate"</span>], \
+        f<span class="tag-gpt">"Pass rate dropped: {result.pass_rate:.0%} &lt; {meta['min_pass_rate']:.0%}"</span>
+    <span class="tag-com"># ensure no new failure has slipped in</span>
+    new_fails = set(result.failed_ids) - set(meta[<span class="tag-gpt">"allow_regression"</span>])
+    <span class="tag-key">assert</span> <span class="tag-key">not</span> new_fails, f<span class="tag-gpt">"New regressions: {new_fails}"</span>
+
+<span class="tag-com"># —— .github/workflows/eval.yml ——</span>
+name: prompt-eval
+on: [pull_request]
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - <span class="tag-key">run</span>: pip install -r requirements.txt
+      - <span class="tag-key">run</span>: pytest tests/ -v
+        env: { ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }} }</code></pre>
+<p>With this minimum in place, the next time anyone changes a prompt in a PR, CI automatically runs the 20 golden cases and surfaces both the pass rate and the diff. Within a week your team won't be going back to vibes-based prompt edits.</p>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) running eval with temperature ≠ 0 — results jitter and no one trusts the numbers; regression tests must be temperature=0 with fixed seed/model_version. (2) Watching only the pass-rate number, never the fail diff — same pass rate can hide a swapped set of failures; always list "newly failing case_ids / newly passing case_ids". (3) <code>allow_regression</code> growing endlessly — that's a tech-debt alarm; every allowed failure needs a tracking issue. (4) Co-evolving the golden set with the model — optimizing the model against data the model itself generated is circular.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Eugene Yan <em>What We've Learned From A Year of Building with LLMs</em> (Part I: Evals &amp; Monitoring), <a href="https://applied-llms.org/" target="_blank">applied-llms.org</a> ·
+Shreya Shankar <em>Operationalizing ML Tests</em>, <a href="https://www.shreya-shankar.com/" target="_blank">shreya-shankar.com</a> ·
+OpenAI Evals source, <a href="https://github.com/openai/evals" target="_blank">github.com/openai/evals</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>The Anthropic Evals Framework: Capability vs Task Eval</h2>
+<div class="claim">Claim: the eval framework Anthropic actually uses to build Claude isn't MMLU — it's thousands of <strong>capability slices</strong> combined with product-level task evals. You should split your eval the same way.</div>
+
+<h3>Background &amp; Principles</h3>
+<p>Anthropic has sketched the shape of its internal eval system in blogs and docs (<em>Claude's Constitution</em>, <em>Core views on AI safety</em>, eval examples in the Anthropic Cookbook). Key insight: <strong>split evals into two layers</strong>.</p>
+<ul>
+<li><strong>Capability eval</strong>: targets one atomic capability — math reasoning, code completion, instruction following, long-context retrieval, tool selection, refusal accuracy. These are the metrics model teams iterate on; each capability has hundreds to thousands of cases.</li>
+<li><strong>Task eval</strong>: targets a complete product workflow — customer-support agent resolution rate, code-review agent false-negative rate, research-agent citation accuracy. Sample sizes can be smaller (20–200), but each case maps to a real business outcome.</li>
+</ul>
+<p>The common mistake at most teams is to do only one:</p>
+<ul>
+<li>Capability-only (chasing MMLU / HumanEval numbers) — disconnected from real use; high score, mediocre product.</li>
+<li>Task-only (black-box pass/fail) — when something breaks, you don't know which capability collapsed and can't optimize.</li>
+</ul>
+<p>The right approach is <strong>two layers + traceability</strong>: when a task eval fails, you can drill down to which specific capability went red. Example: customer-support agent dropping orders — is it instruction-following (didn't follow SOP)? entity extraction (missed the order number)? refusal (wrongly refused)? You need a capability eval for each.</p>
+
+<h3>Hands-on Example: two-layer eval layout</h3>
+<pre><code>evals/
+├── capability/                   <span class="tag-com"># atomic capabilities, run on model/prompt change</span>
+│   ├── instruction_following.jsonl   <span class="tag-com"># 200 "follow the format" cases</span>
+│   ├── entity_extraction.jsonl       <span class="tag-com"># 150 "extract JSON" cases</span>
+│   ├── refusal_accuracy.jsonl        <span class="tag-com"># 80 "refuse when you should" cases</span>
+│   ├── long_context_recall.jsonl     <span class="tag-com"># 100 needle-in-haystack cases</span>
+│   └── tool_selection.jsonl          <span class="tag-com"># 120 "pick the right tool" cases</span>
+└── task/                         <span class="tag-com"># end-to-end, run on every release</span>
+    ├── customer_support.jsonl        <span class="tag-com"># 50 real tickets → expected category + reply</span>
+    └── code_review.jsonl             <span class="tag-com"># 30 PRs → expected bug list</span>
+
+<span class="tag-com"># —— two-way traceability: when a task fails, drill to capabilities ——</span>
+<span class="tag-key">def</span> diagnose(task_failure):
+    <span class="tag-gpt">"""task eval fail → auto-run related capability evals to find the weak link"""</span>
+    related = TASK_TO_CAPABILITY[task_failure.task_name]
+    <span class="tag-com"># e.g. customer_support relates to [instruction_following, entity_extraction]</span>
+    diag = {}
+    <span class="tag-key">for</span> cap <span class="tag-key">in</span> related:
+        diag[cap] = run_capability_eval(cap).pass_rate
+    <span class="tag-key">return</span> sorted(diag.items(), key=<span class="tag-key">lambda</span> x: x[1])  <span class="tag-com"># lowest is the suspect</span>
+
+<span class="tag-com"># —— usage ——</span>
+<span class="tag-key">if</span> task_eval.pass_rate &lt; 0.85:
+    <span class="tag-key">print</span>(<span class="tag-gpt">"Task regressed. Capability diagnosis:"</span>)
+    <span class="tag-key">for</span> cap, rate <span class="tag-key">in</span> diagnose(task_eval): <span class="tag-key">print</span>(f<span class="tag-gpt">"  {cap}: {rate:.0%}"</span>)
+<span class="tag-com"># Output:
+#   instruction_following: 0.62  ← the culprit
+#   entity_extraction:     0.94</span></code></pre>
+
+<div class="diagram">  Two-layer eval topology (Anthropic-style, simplified)
+
+         ┌─────────────── Task Eval (product) ─────────────────┐
+         │  customer_support · code_review · research_agent    │
+         │      20–200 cases · real business outcome           │
+         │      run on every release                           │
+         └────────────────────┬───────────────────────────────┘
+                              │ drill down on failure
+         ┌────────────────────▼───────────────────────────────┐
+         │ Capability Eval (atomic capability slices)           │
+         │ instruction_following · entity_extraction            │
+         │ refusal · long_context · tool_selection · math       │
+         │     100–1000 per capability · run on prompt/model    │
+         └────────────────────────────────────────────────────┘
+
+  Rule: every task fail should map to one or more capability regressions.
+        capabilities all green but task red → your capability slicing
+        doesn't yet cover the real workload</div>
+
+<p>A hidden bonus: <strong>this structure makes model migration explainable</strong>. Upgrading Claude Opus 4.7 → 4.8, or switching to Sonnet, you see "instruction_following +2%, entity_extraction -5%" instead of a blurry "overall it seems similar". Model selection stops being vibes.</p>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) running only public benchmarks — MMLU / HumanEval / GSM8K are mostly irrelevant to your business and largely train-set contaminated. (2) Capability evals that are too broad — one "capability" covering 5 sub-skills; when it breaks you don't know which sub-skill. Slice atomically; err on the side of finer cuts. (3) Task and capability not linked — when something breaks, you can't drill down; the eval degrades into a dashboard. (4) Ignoring cost / latency — product eval isn't only quality; record tokens / latency / cache hit alongside. Launch decisions look at the Pareto frontier, not a single point.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Anthropic Cookbook · Evals examples, <a href="https://github.com/anthropics/anthropic-cookbook/tree/main/misc" target="_blank">github.com/anthropics/anthropic-cookbook</a> ·
+Anthropic <em>Develop empirical tests</em>, <a href="https://docs.anthropic.com/en/docs/test-and-evaluate/develop-tests" target="_blank">docs.anthropic.com/.../develop-tests</a> ·
+Liang et al. <em>HELM: Holistic Evaluation of Language Models</em>, <a href="https://crfm.stanford.edu/helm/" target="_blank">crfm.stanford.edu/helm</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// Putting it together · Build a complete eval for one prompt in 90 minutes</h3>
+<p>Wire the four sections into a deliverable workflow. Pick the prompt you run most often — say "email summary + todo extraction" — and walk through these 7 steps:</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>Layer (§4, 10 min)</strong>: write down what the task is, list the 2–4 capabilities it touches (long-context recall, entity extraction, format compliance). Decide which deserve their own slice.</li>
+<li><strong>Build the golden set (§1, 30 min)</strong>: handpick 20 real inputs — 10 happy, 5 edge, 5 adversarial. Annotate the expected JSON for each. Save as <code>tests/golden_xxx.jsonl</code>.</li>
+<li><strong>Write a code-based scorer (§1, 10 min)</strong>: anything that can be tested with JSON-field equality / regex / schema does not get an LLM judge. Write scorer logic per case.</li>
+<li><strong>Run baseline (§1, 5 min)</strong>: run on the current prompt; record pass rate and fail distribution. This is the floor — never drop below.</li>
+<li><strong>Add a judge for the open-ended bits (§2, 20 min)</strong>: for summary quality and other things that can't be string-equated, add an LLM judge: rubric-ized (3–4 independent 0/1 dimensions) + position swap + cross-family judge. Calibrate against 20 human labels until ≥ 80% agreement.</li>
+<li><strong>Wire into CI (§3, 10 min)</strong>: connect the prompt file, meta.yml, pytest, and GitHub Actions. Auto-run regression on every PR.</li>
+<li><strong>Run a deliberate break (5 min)</strong>: change one key instruction in the prompt and confirm CI turns red. If it doesn't, your golden set isn't sharp enough — add cases until breaking the prompt is detectable.</li>
+</ol>
+<p style="margin-top:14px">90 minutes later, what you have isn't "one eval script" — it's <strong>this prompt's moat for the next year</strong>. Next model upgrade, next prompt rewrite, next team member change — the eval stays as your gatekeeper. That's the biggest capability gap between Anthropic / OpenAI / Cursor engineering teams and average teams: not using the model better, but building the eval earlier.</p>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// Deep Thinking</h3>
+<details><summary>20 examples is clearly not production scale — but how much signal does it give? When do you need to expand to 200+?</summary><div>20 cases reliably detect quality swings of ±20% (coarse-grained, good enough to block most regressions). Scale to 200+ when: (1) prompt iteration moves into fine-tuning (need to detect ±5%); (2) the product covers multiple languages / scenarios (each sub-pattern wants ≥ 30 cases); (3) you're running A/B experiments and need statistical power (typically ≥ 100 per arm). Anthropic's internal evals usually run 100–1000 cases per stratum.</div></details>
+<details><summary>Which LLM-as-judge bias is hardest to remove — position or verbosity?</summary><div>Verbosity. Position bias is essentially eliminated by swap-and-average (run each pair twice with reversed order). Verbosity needs: (1) explicit "do not prefer longer answers" in the judge prompt (limited effect); (2) length normalization post-hoc; (3) multi-judge ensemble. It's stubborn because "longer = better" is a strong prior in GPT/Claude RLHF data.</div></details>
+<details><summary>Treating prompts as source code with regression tests — but LLM outputs are non-deterministic. How do you handle false positives?</summary><div>Three-layer defense: (1) fixed temperature=0 + fixed seed (kills most non-determinism); (2) fuzzy match rather than exact match ("contains key concept" instead of byte-equal); (3) allow N-of-M (a 10-case set tolerates 1 failure; only past that does CI break). Residual false positives go through human triage. Anthropic's evals framework has these baked in.</div></details>
+<details><summary>"Capability eval vs Product eval" — concrete example?</summary><div>Capability eval measures the model in isolation (can Claude detect SQL injection patterns?). Product eval measures end-to-end UX. Example for a support agent: capability eval = "given a ticket, can Claude find the correct knowledge-base article" (tests retrieval); product eval = "did the user, 30s after sending the message, get a response that solved their problem" (covers retrieval + ranking + reply style + latency). You need both — capability helps debug, product aligns to business.</div></details>
+<details><summary>Why doesn't Anthropic use MMLU to evaluate Claude? Why does the industry still use it?</summary><div>Anthropic doesn't because: (1) MMLU is largely fit into training sets (heavy contamination); (2) it only tests multiple-choice, not generation; (3) the questions are dated. The industry still uses it because: (1) publications need a standard benchmark for comparability; (2) marketing wants a single number; (3) it still carries weak signal for model selection. Anthropic internally uses thousands of handcrafted capability slices + real product tasks.</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// Further Reading</h3>
+<ul>
+<li><a href="https://hamel.dev/blog/posts/evals/" target="_blank">Hamel Husain · Your AI Product Needs Evals</a> — the blog post that detonated industry-wide discussion of eval engineering; theoretical base for this issue</li>
+<li><a href="https://eugeneyan.com/writing/evals/" target="_blank">Eugene Yan · Task-Specific LLM Evals That Do &amp; Don't Work</a> — practical metric choices per task type</li>
+<li><a href="https://applied-llms.org/" target="_blank">Applied LLMs · What We've Learned From A Year of Building with LLMs</a> — co-authored field notes from Eugene Yan / Hamel / Shreya and others</li>
+<li><a href="https://arxiv.org/abs/2306.05685" target="_blank">Zheng et al. · Judging LLM-as-a-Judge (NeurIPS 2023)</a> — the foundational paper on LLM judge biases</li>
+<li><a href="https://arxiv.org/abs/2404.13076" target="_blank">Panickssery et al. · LLM Evaluators Recognize and Favor Their Own Generations</a> — empirical evidence of self-preference bias</li>
+<li><a href="https://docs.anthropic.com/en/docs/test-and-evaluate/develop-tests" target="_blank">Anthropic · Develop empirical tests</a> — official eval methodology</li>
+<li><a href="https://github.com/anthropics/anthropic-cookbook" target="_blank">Anthropic Cookbook</a> — many runnable eval code samples</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Weekly · Week 6 / 2026-05-24</footer>
+</div>
+</body></html>
