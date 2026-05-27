@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 12 · Fine-tuning vs Prompting — Super Individual Weekly</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.crossref{margin:18px 0 0;padding:10px 16px;background:rgba(0,212,255,0.06);border:1px dashed rgba(0,212,255,0.3);border-radius:8px;font-size:0.85rem;color:#a0a4b8;text-align:center}
+.crossref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">WEEK 12 / PHASE 1 · ENGINEERING</span>
+<h1>Fine-tuning vs Prompting</h1>
+<h2>ROI Decision Tree · LoRA/QLoRA · Data Quality · Decoding Params</h2>
+<div class="date">2026-05-27 · BigCat</div>
+<p class="pitch">It's 2026, and "should I fine-tune?" is still the decision most AI engineers make too early. This week: the real ROI threshold, true engineering cost of LoRA, why 50 examples beat 50K, and the counterintuitive behavior of temperature/top-p.</p>
+<div class="crossref">
+<a href="https://cissy0802.github.io/ai-ml-daily/pretraining-day2.html">
+  Prerequisite → ai-ml-daily Day 2 (Pretraining & Fine-tuning Mechanics)
+</a>
+</div>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>Fine-tuning in 2026 is nothing like 2023. LoRA is the default (HuggingFace PEFT, Unsloth, Axolotl all one-liners), QLoRA lets 70B train on a single 4090, and open-weight models (Llama 3.3, Qwen 3, DeepSeek V3) close in on Claude 4.x / GPT-5 on many tasks. Yet <strong>most teams fine-tune at the wrong moment</strong>—training before RAG is even tuned, never deduping the 50K noisy samples, only to discover prompt + few-shot would've matched the result, and never touching inference parameters. This issue assumes you know what fine-tuning is (ai-ml-daily Day 2 covers the mechanics) and skips definitions; we go straight to the 4 engineering layers that determine ROI: <strong>① the when-to-FT decision tree → ② the real trade-offs of LoRA/QLoRA config → ③ why data quality 10x crushes quantity → ④ counterintuitive decoding parameter behavior</strong>. The key insight: fine-tuning is not "making the model smarter"—it's <strong>locking the output distribution into your subspace</strong>. Understanding this avoids 80% of common misuse.</p>
+</div>
+
+<!-- ============ Decision tree diagram ============ -->
+<div class="diagram">  ROI Ladder for AI Capability Acquisition (cheap → expensive)
+
+  Problem: model isn't good enough for my scenario
+       │
+       ▼
+  ┌─────────────────────────────────────────────────────────┐
+  │ ① Better prompt / system prompt           cost: 0       │
+  │    XML structure, few-shot, CoT, role     time: 1 hour  │
+  └─────────────────────────────────────────────────────────┘
+       │ not enough
+       ▼
+  ┌─────────────────────────────────────────────────────────┐
+  │ ② Add RAG / tool use                       cost: $      │
+  │    grounding, external knowledge, tools    time: 1-3 d  │
+  └─────────────────────────────────────────────────────────┘
+       │ still not enough
+       ▼
+  ┌─────────────────────────────────────────────────────────┐
+  │ ③ Use stronger model                        cost: $$    │
+  │    Haiku → Sonnet → Opus; mini → GPT-5      time: 5 min │
+  └─────────────────────────────────────────────────────────┘
+       │ already on top-tier model
+       ▼
+  ┌─────────────────────────────────────────────────────────┐
+  │ ④ Few-shot + structured output              cost: $     │
+  │    dynamic example selection, JSON schema   time: 1 day │
+  └─────────────────────────────────────────────────────────┘
+       │ pattern is truly stable & out-of-prompt-range
+       ▼
+  ┌─────────────────────────────────────────────────────────┐
+  │ ⑤ Fine-tune (LoRA → full)                   cost: $$$$  │
+  │    style/persona/format/distillation        time: 1-4 wk│
+  └─────────────────────────────────────────────────────────┘
+
+  90% of "needs fine-tuning" is actually stuck at ①②③④.
+  ⑤ truly fits only: style transfer / private data / on-device / latency hard limit</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>The decision framework: fine-tuning is the last step, not the first</h2>
+<div class="claim">Claim: 80% of fine-tuning is <strong>premature optimization</strong>—teams skip prompt + RAG + bigger model + few-shot and jump straight to training. The 5 cases where FT is genuinely irreplaceable: style/persona, strict format, private-domain knowledge compression, distillation to small model, hard latency constraints. Everything else should fall back upstream.</div>
+
+<h3>Background & Principle</h3>
+<p>Fine-tuning fundamentally <strong>locks the model's output distribution into the subspace of your samples</strong>—it does not "teach new knowledge" (factual memorization needs 100K+ samples to stabilize), nor "raise intelligence" (base capability is set in pretraining). Once you internalize this one sentence, <strong>most misuse evaporates</strong>: want the model to "answer specialized questions more accurately"? That's a retrieval problem, RAG beats FT; want "better reasoning"? That's a model-selection problem, swapping to Opus 4.7 / GPT-5 is 10x more effective than fine-tuning a Llama 3 8B; want a "specific speaking style", "strict JSON output", or "play a character"? <strong>That's the FT sweet spot.</strong></p>
+<p>OpenAI / Anthropic engineering docs (2024-2025) repeat the same hierarchy: prompt first, then RAG, then bigger model, then fine-tune. Anthropic literally says "<em>almost always prefer prompting over fine-tuning</em>"—not because FT doesn't work, but because the <strong>marginal-return curve</strong> drops sharply: one week of RAG tuning typically yields +30% accuracy; one week of FT typically yields +5-10%, plus you pay for eval, data prep, version management, and model hosting.</p>
+<p>The 5 scenarios where FT really earns its keep: (1) <strong>Style/persona</strong>—100-500 conversation samples to make a small model speak like a brand; prompting can't match; (2) <strong>Strict format</strong>—certain schemas must never break, FT generalizes better than constrained decoding; (3) <strong>Distillation</strong>—train a Llama 8B on Claude Opus outputs for that one task, cutting inference cost 50-100x; (4) <strong>Private-domain token distribution</strong>—medicine/law/internal-code sub-languages where FT lowers perplexity meaningfully; (5) <strong>Latency/privacy hard limits</strong>—must run on a local 7B, must not leave the company network. Almost everything else should drop back to prompt + RAG.</p>
+
+<div class="diagram">  Which technique fits which problem (decision matrix)
+
+  Problem type                       Primary       Backup       FT?
+  ──────────────────────────────────────────────────────────────
+  Insufficient factual knowledge     RAG           bigger model  ✗
+  Insufficient reasoning             bigger model  CoT           ✗
+  Strict format / JSON               prompt+CFG    FT            cond
+  Specific style / brand voice       few-shot      FT            ✓
+  Persona / character dialog         few-shot      FT            ✓
+  Ultra-low latency / local infer    distill-FT    quantize      ✓
+  Private domain (med/law/code)      RAG + FT      RAG           ✓
+  Reduce hallucination               RAG + cite    prompt        ✗
+  Cross-language                     bigger model  prompt        cond
+  Agent tool-call accuracy           prompt + few-shot           ✗
+  Tone consistency / less verbosity  prompt        FT            cond
+  Ultra-long context (1M+)           long-ctx      RAG           ✗
+
+  → FT is truly irreplaceable in only ~20% of engineering problems</div>
+
+<h3>Hands-on</h3>
+<p>A 20-line "should-I-FT" sanity check—run before every training job:</p>
+<pre><code><span class="tag-com"># pre_ft_check.py —— pre-training ROI sanity check</span>
+<span class="tag-key">def</span> should_finetune(task) -&gt; <span class="tag-gpt">str</span>:
+    checks = {
+        <span class="tag-gpt">"prompt_optimized"</span>:
+            task.has_xml_structure <span class="tag-key">and</span> task.has_few_shot &gt;= 3,
+        <span class="tag-gpt">"tried_bigger_model"</span>:
+            task.tested_on_top_tier_model,  <span class="tag-com"># Opus 4.7 / GPT-5</span>
+        <span class="tag-gpt">"rag_attempted"</span>:
+            task.is_knowledge_task &lt;= task.has_rag,
+        <span class="tag-gpt">"have_eval_set"</span>:
+            <span class="tag-key">len</span>(task.eval_examples) &gt;= 50,
+        <span class="tag-gpt">"data_quality_audited"</span>:
+            task.dataset_inspected_manually,
+        <span class="tag-gpt">"baseline_metric_known"</span>:
+            task.prompt_baseline_score <span class="tag-key">is not</span> <span class="tag-key">None</span>,
+    }
+    failed = [k <span class="tag-key">for</span> k,v <span class="tag-key">in</span> checks.items() <span class="tag-key">if not</span> v]
+    <span class="tag-key">if</span> failed:
+        <span class="tag-key">return</span> <span class="tag-gpt">f"❌ DO NOT TRAIN. Fix first: {failed}"</span>
+
+    <span class="tag-com"># 5 scenarios where FT really fits</span>
+    valid_reasons = {<span class="tag-gpt">"style_persona"</span>, <span class="tag-gpt">"strict_format"</span>,
+                     <span class="tag-gpt">"distillation"</span>, <span class="tag-gpt">"private_domain"</span>,
+                     <span class="tag-gpt">"latency_hard_constraint"</span>}
+    <span class="tag-key">if</span> task.motivation <span class="tag-key">not in</span> valid_reasons:
+        <span class="tag-key">return</span> <span class="tag-gpt">f"⚠️  Motivation '{task.motivation}' rarely benefits from FT. "</span>\
+               <span class="tag-gpt">f"Re-evaluate via prompt/RAG first."</span>
+
+    <span class="tag-com"># ROI estimate: FT gain must be &gt;= 3x the prompt gain to be worth it</span>
+    expected_gain = task.eval_target - task.prompt_baseline_score
+    <span class="tag-key">if</span> expected_gain &lt; 0.15:
+        <span class="tag-key">return</span> <span class="tag-gpt">"⚠️  Expected gain &lt; 15pp. FT ops cost likely outweighs benefit."</span>
+    <span class="tag-key">return</span> <span class="tag-gpt">"✅ Proceed. Use LoRA r=16 baseline; full FT only if LoRA insufficient."</span></code></pre>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) "<em>Our prompt is already long and complex, so it must be fully optimized.</em>" — Long ≠ good; cutting half of overly long prompts and adding 3 few-shots often raises accuracy; (2) "<em>RAG is too slow, so FT.</em>" — RAG retrieval is typically 100ms, but the FT'd model may have higher inference latency itself; measure tokens, don't guess; (3) No eval set after training—you can't detect a 5% regression until users complain; (4) Scraping data from production without auditing—PII, wrong answers, and user complaints all get trained in; (5) Going straight to full fine-tune—skipping LoRA inflates engineering cost 20x for little marginal gain.
+</div>
+
+<div class="res">
+<strong>Deeper</strong> · Anthropic <em>When to fine-tune Claude</em>, <a href="https://docs.claude.com/en/docs/build-with-claude/prompt-engineering/overview" target="_blank">docs.claude.com/.../prompt-engineering</a> ·
+OpenAI <em>Fine-tuning best practices</em>, <a href="https://platform.openai.com/docs/guides/fine-tuning" target="_blank">platform.openai.com/docs/guides/fine-tuning</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>LoRA / QLoRA: the real trade-offs of rank, target_modules, alpha</h2>
+<div class="claim">Claim: LoRA's "mystery knobs" rank/alpha/target_modules aren't black magic. <strong>Rank is capacity, alpha is a learning-rate multiplier, target_modules is coverage</strong>—each has a counterintuitive sweet spot. Most tutorials' defaults (r=8, alpha=16, q_proj+v_proj only) are conservative for most real tasks.</div>
+
+<h3>Background & Principle</h3>
+<p>LoRA (Hu et al. 2021): freeze the base weights W, add a low-rank pair <code>ΔW = B·A</code> (A is r×d, B is d×r, with <strong>r ≪ d</strong>), and train only A, B. Parameter count drops from 100% to 0.1-2%, GPU memory from 80GB to 6-12GB. QLoRA (Dettmers et al. 2023) adds one more trick: keep the base model in 4-bit NF4 quantization in VRAM, dequantize on-the-fly during forward/backward—70B becomes trainable on a single 4090 (24GB). It's one of the most important engineering breakthroughs of 2023.</p>
+<p>The real behavior of the three knobs:</p>
+<ul>
+<li><strong>rank (r)</strong>: intuitively "capacity," but <strong>not monotonically better</strong>. Sebastian Raschka's 2024 ablations show diminishing returns from r=8 to r=64 for most tasks; r&gt;128 starts overfitting. For <em>style/persona</em>, r=8-16 is enough; for <em>capability boost / distillation</em>, r=32-64; for <em>domain adaptation + lots of data</em>, consider r=128+. Default r=16 is a stable baseline.</li>
+<li><strong>alpha</strong>: often mistaken for "LoRA capacity," but it's actually a <strong>learning-rate multiplier</strong>—the update is scaled by <code>(alpha/r)·B·A</code>. HuggingFace PEFT defaults to <em>alpha = 2·r</em>, but Raschka and others repeatedly find <strong>alpha = r</strong> (scaling factor 1) equivalent or more stable across tasks. alpha &gt; 2r often lets LoRA dominate the forward pass and degenerates into "noisy training."</li>
+<li><strong>target_modules</strong>: tutorials default to only <code>q_proj + v_proj</code> (the QLoRA paper setting), but 2024 follow-up ablations (including from Dettmers) show that training <strong>all linear layers</strong> (q/k/v/o + gate/up/down) typically yields +2-5% accuracy at small memory cost. <em>q+v-only is a fallback for VRAM-constrained settings</em>, not a baseline.</li>
+</ul>
+<p>One easily missed QLoRA detail: <strong>4-bit quantization exists only in the forward pass; backward gradients compute in bf16</strong>—so "quantization loss" doesn't enter the gradient, and loss curves match plain LoRA. But at deploy time, serving 4-bit base + LoRA adapter directly <strong>adds an extra layer of quantization noise vs. training</strong>—prefer to merge the adapter and ship bf16 or 8-bit GPTQ/AWQ. Don't ship in the 4-bit training state directly.</p>
+
+<div class="diagram">  LoRA sweet spots by task type
+
+  Task                  rank   alpha   target_modules         data size
+  ──────────────────────────────────────────────────────────────────
+  Style / persona       8-16   r      q,v or all_linear        100-1000
+  Format hardening      16     r      all_linear              500-5000
+  Distillation (Opus→8B) 32-64  r      all_linear            10K-100K
+  Domain adapt (med/law/code) 64-128 r all_linear            10K-1M
+  Instruction tuning     32     r      all_linear              5K-50K
+
+  Counter-example (common bad default):
+    r=8, alpha=16, target=[q_proj,v_proj], data=unaudited →
+    Underfit on most tasks + 60% training time wasted on wrong layers</div>
+
+<h3>Hands-on</h3>
+<p>Unsloth (the highest-performance open LoRA/QLoRA stack in 2026, 2-5x faster than HF PEFT and 60% less VRAM) — minimum working config:</p>
+<pre><code><span class="tag-key">from</span> unsloth <span class="tag-key">import</span> FastLanguageModel
+<span class="tag-key">from</span> trl <span class="tag-key">import</span> SFTTrainer
+<span class="tag-key">from</span> transformers <span class="tag-key">import</span> TrainingArguments
+
+<span class="tag-com"># —— Load 4-bit quantized base (70B trainable on a single 4090) ——</span>
+model, tok = FastLanguageModel.from_pretrained(
+    model_name = <span class="tag-gpt">"unsloth/Meta-Llama-3.3-70B-Instruct-bnb-4bit"</span>,
+    max_seq_length = 4096,
+    load_in_4bit = <span class="tag-key">True</span>,           <span class="tag-com"># QLoRA: 4-bit NF4 quantization</span>
+)
+
+<span class="tag-com"># —— LoRA adapter config: stable baseline ——</span>
+model = FastLanguageModel.get_peft_model(
+    model,
+    r = 32,                          <span class="tag-com"># 32-64 for distill/capability tasks</span>
+    lora_alpha = 32,                 <span class="tag-com"># alpha = r, not 2r</span>
+    target_modules = [               <span class="tag-com"># all_linear, not just q,v</span>
+        <span class="tag-gpt">"q_proj"</span>, <span class="tag-gpt">"k_proj"</span>, <span class="tag-gpt">"v_proj"</span>, <span class="tag-gpt">"o_proj"</span>,
+        <span class="tag-gpt">"gate_proj"</span>, <span class="tag-gpt">"up_proj"</span>, <span class="tag-gpt">"down_proj"</span>,
+    ],
+    lora_dropout = 0.05,              <span class="tag-com"># 0.05-0.1 for small data, 0 for large</span>
+    use_gradient_checkpointing = <span class="tag-gpt">"unsloth"</span>,
+    random_state = 42,
+)
+
+trainer = SFTTrainer(
+    model = model,
+    train_dataset = dataset,         <span class="tag-com"># see #03, quality &gt; quantity</span>
+    tokenizer = tok,
+    max_seq_length = 4096,
+    args = TrainingArguments(
+        per_device_train_batch_size = 2,
+        gradient_accumulation_steps = 8,   <span class="tag-com"># effective batch=16</span>
+        warmup_steps = 10,
+        num_train_epochs = 2,              <span class="tag-com"># 1-3 epochs for most LoRA tasks</span>
+        learning_rate = 2e-4,              <span class="tag-com"># 10x higher than full FT</span>
+        bf16 = <span class="tag-key">True</span>,
+        logging_steps = 5,
+        optim = <span class="tag-gpt">"adamw_8bit"</span>,            <span class="tag-com"># 40% more VRAM savings</span>
+        weight_decay = 0.01,
+        lr_scheduler_type = <span class="tag-gpt">"cosine"</span>,
+    ),
+)
+trainer.train()
+
+<span class="tag-com"># —— Deploy: merge first, then ship bf16 / 8-bit, NOT 4-bit + adapter ——</span>
+model.save_pretrained_merged(<span class="tag-gpt">"./merged"</span>, tok, save_method = <span class="tag-gpt">"merged_16bit"</span>)</code></pre>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) <strong>alpha = 2r is the PEFT default but repeatedly shown suboptimal</strong>—especially at r ≥ 32, alpha &gt; r makes the LoRA delta too large; classic symptom is loss dropping after 1 epoch but eval crashing; fix is alpha = r; (2) Only training <code>q_proj, v_proj</code> and concluding "LoRA doesn't work"—the MLP layers (gate/up/down) hold 60%+ of model parameters; skipping them gives up most of the capacity; (3) Reusing the full-FT learning rate of 2e-5—LoRA needs 1e-4 to 5e-4 or it won't learn anything; (4) Training 4-bit, deploying 4-bit—extra quantization error costs 2-5% eval; merge and deploy bf16 or 8-bit; (5) QLoRA OOM at large batch sizes—<strong>the VRAM bottleneck is activations, not weights</strong>, use gradient checkpointing + small micro-batch + large accumulation.
+</div>
+
+<div class="res">
+<strong>Deeper</strong> · Hu et al. <em>LoRA: Low-Rank Adaptation of LLMs</em> (ICLR 2022), <a href="https://arxiv.org/abs/2106.09685" target="_blank">arxiv.org/abs/2106.09685</a> ·
+Dettmers et al. <em>QLoRA</em> (NeurIPS 2023), <a href="https://arxiv.org/abs/2305.14314" target="_blank">arxiv.org/abs/2305.14314</a> ·
+Raschka <em>Practical Tips for Finetuning LLMs Using LoRA</em>, <a href="https://magazine.sebastianraschka.com/p/practical-tips-for-finetuning-llms" target="_blank">magazine.sebastianraschka.com</a> ·
+Unsloth docs, <a href="https://docs.unsloth.ai/" target="_blank">docs.unsloth.ai</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>The dataset: 50 high-quality samples beat 50,000 noisy ones</h2>
+<div class="claim">Claim: the highest leverage in fine-tuning is <strong>not algorithm, not rank, not model</strong>—it's the dataset. LIMA / Zephyr / Tülu repeatedly show that 1,000 hand-picked samples beat 100,000 scraped ones; distillation data is cheaper and better than human labels. <strong>The dataset is 90% of fine-tuning</strong>, configuration is the other 10%.</div>
+
+<h3>Background & Principle</h3>
+<p>LIMA (Meta 2023) is the canonical demonstration: 1,000 hand-curated dialog samples were used to fine-tune Llama 65B, beating DaVinci-003 by 43% and the early Bard by 46% in human eval. Compared to the prevailing approach (FLAN-T5-style millions of instructions), LIMA's data was <strong>1,000x smaller and better</strong>. The reason: during instruction tuning, fine-tuning isn't teaching knowledge—it's <strong>unlocking already-present capability and locking the response format</strong>. The quality of your samples determines what quality of subspace you lock into. Feed noise = lock into noise.</p>
+<p>2024 carried this line forward: Zephyr-7B used distillation (GPT-4 outputs as teacher) + DPO preference tuning to beat human-labeled models of the same size; Tülu 3 (Allen AI 2024) systematically ablated <strong>data filtering &gt; data scale</strong>—deduping, removing hallucinated labels, sampling by difficulty all beat raw volume by a wide margin.</p>
+<p>Three iron rules of data engineering:</p>
+<ul>
+<li><strong>(1) Always dedupe</strong>: MinHash + LSH or SemDeDup to remove semantic duplicates. Real production data follows a long-tail distribution—the top-10 FAQs typically account for 60% of samples. No dedup = training the same 10 answers 10,000 times each.</li>
+<li><strong>(2) Manual sample audit is non-optional</strong>: randomly inspect 50 samples by hand; if &gt;5% are wrong, contain PII, or break formatting, <strong>throw the whole batch out</strong>. Most teams skip this step and then spend 2 weeks debugging after training, only to discover it was a data problem.</li>
+<li><strong>(3) Distillation is the de facto standard post-2024</strong>: use Claude Opus / GPT-5 as the teacher, generate 1-3 candidates per user query and pick the best with a ranker. 50-100x cheaper than human labeling, often higher quality (humans get tired, models don't). This is the shared secret behind Phi / Zephyr / Orca / Qwen-Distill.</li>
+</ul>
+<p>A counterintuitive consequence: <strong>the smaller your dataset, the higher the quality bar</strong>. Every LIMA sample was hand-vetted by the authors; Tülu 3 keeps noise rates &lt;1%. If your 500 samples have a 5% error rate, that's 25 strong counterexamples directly poisoning training—<strong>relatively</strong> 100x more impactful than 25 counterexamples among 50,000. So small + strict is <strong>harder</strong>, not easier.</p>
+
+<div class="diagram">  Quality vs quantity curve (typical)
+
+  Eval accuracy
+       │
+   85% ┤        ╭──────━━━━━━━ 1K hand-picked (LIMA-style)
+       │      ╭─╯
+   80% ┤   ╭──╯
+       │   │
+   75% ┤   │              ╭━━━━━━━━━━ 50K mixed (scraped)
+       │   │           ╭──╯
+   70% ┤   │       ╭───╯
+       │   │   ╭───╯
+   65% ┤   ╰───╯
+       │
+       └─────────────────────────────────────────────►
+         100     1K        10K        100K   data size
+
+  → Same 80% accuracy: 1K curated ≈ 50K mixed (50x cost diff)
+  → 100K mixed often loses to 1K curated (overfits to noise)</div>
+
+<h3>Hands-on</h3>
+<p>Minimum working pipeline for distillation + dedup + quality audit (Anthropic + sklearn):</p>
+<pre><code><span class="tag-key">import</span> anthropic, json, hashlib, random
+<span class="tag-key">from</span> sklearn.feature_extraction.text <span class="tag-key">import</span> TfidfVectorizer
+<span class="tag-key">from</span> sklearn.metrics.pairwise <span class="tag-key">import</span> cosine_similarity
+
+client = anthropic.Anthropic()
+
+<span class="tag-com"># —— Step 1: distill high-quality targets with Claude Opus 4.7 ——</span>
+<span class="tag-key">def</span> distill(user_query: <span class="tag-gpt">str</span>) -&gt; <span class="tag-gpt">str</span>:
+    msg = client.messages.create(
+        model=<span class="tag-gpt">"claude-opus-4-7"</span>,
+        max_tokens=800,
+        system=<span class="tag-gpt">"You are answering as the production assistant. Be precise, "</span>
+               <span class="tag-gpt">"non-redundant. Refuse politely if uncertain. Output only the reply."</span>,
+        messages=[{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,<span class="tag-gpt">"content"</span>:user_query}],
+    )
+    <span class="tag-key">return</span> msg.content[0].text
+
+<span class="tag-com"># —— Step 2: semantic dedup (simplified SemDeDup) ——</span>
+<span class="tag-key">def</span> dedupe(samples, threshold=0.92):
+    texts = [s[<span class="tag-gpt">"prompt"</span>] + <span class="tag-gpt">" "</span> + s[<span class="tag-gpt">"completion"</span>] <span class="tag-key">for</span> s <span class="tag-key">in</span> samples]
+    vec = TfidfVectorizer(max_features=20000).fit_transform(texts)
+    sim = cosine_similarity(vec)
+    keep, seen = [], <span class="tag-key">set</span>()
+    <span class="tag-key">for</span> i <span class="tag-key">in</span> <span class="tag-key">range</span>(<span class="tag-key">len</span>(samples)):
+        <span class="tag-key">if</span> i <span class="tag-key">in</span> seen: <span class="tag-key">continue</span>
+        keep.append(samples[i])
+        <span class="tag-key">for</span> j <span class="tag-key">in</span> <span class="tag-key">range</span>(i+1, <span class="tag-key">len</span>(samples)):
+            <span class="tag-key">if</span> sim[i,j] &gt; threshold: seen.add(j)
+    <span class="tag-key">return</span> keep
+
+<span class="tag-com"># —— Step 3: Claude-as-judge quality audit (auto-reject low quality) ——</span>
+<span class="tag-key">def</span> audit(sample) -&gt; <span class="tag-gpt">bool</span>:
+    msg = client.messages.create(
+        model=<span class="tag-gpt">"claude-haiku-4-5-20251001"</span>, max_tokens=10,
+        messages=[{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>, <span class="tag-gpt">"content"</span>:
+          <span class="tag-gpt">f"Rate this Q&amp;A pair on factual correctness, format integrity, "</span>
+          <span class="tag-gpt">f"and helpfulness. Output ONLY one of: GOOD / BAD.\n\n"</span>
+          <span class="tag-gpt">f"Q: {sample['prompt']}\nA: {sample['completion']}"</span>}]
+    )
+    <span class="tag-key">return</span> <span class="tag-gpt">"GOOD"</span> <span class="tag-key">in</span> msg.content[0].text.upper()
+
+<span class="tag-com"># —— Step 4: human sample review (last gate that can't be automated) ——</span>
+<span class="tag-key">def</span> human_sample_review(dataset, n=50):
+    <span class="tag-gpt">"""Dump 50 random samples to JSON. If &lt;95% pass, abort training."""</span>
+    sample = random.sample(dataset, <span class="tag-key">min</span>(n, <span class="tag-key">len</span>(dataset)))
+    json.dump(sample, <span class="tag-key">open</span>(<span class="tag-gpt">"audit_sample.json"</span>,<span class="tag-gpt">"w"</span>), indent=2, ensure_ascii=<span class="tag-key">False</span>)
+    <span class="tag-key">print</span>(<span class="tag-gpt">"Open audit_sample.json. Pass rate &lt; 95% → abort training."</span>)
+
+<span class="tag-com"># —— Full pipeline ——</span>
+queries = load_real_user_queries(n=2000)              <span class="tag-com"># real production queries</span>
+raw = [{<span class="tag-gpt">"prompt"</span>:q, <span class="tag-gpt">"completion"</span>:distill(q)} <span class="tag-key">for</span> q <span class="tag-key">in</span> queries]
+deduped = dedupe(raw)                                  <span class="tag-com"># ~1200 samples</span>
+clean = [s <span class="tag-key">for</span> s <span class="tag-key">in</span> deduped <span class="tag-key">if</span> audit(s)]          <span class="tag-com"># ~900 samples</span>
+human_sample_review(clean)                             <span class="tag-com"># you eyeball 50</span>
+<span class="tag-com"># Final ~900 samples train better than a 50K scraped set</span></code></pre>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) <strong>Skipping dedup</strong>—top-10 FAQs become 60% of samples; the model learns only those 10; (2) Including <strong>the model's own bad answers</strong>—many teams scrape from "support logs," accidentally training the cases where users said "this answer is wrong"; filter by user-feedback / thumbs-up; (3) Distilling with <strong>an unstable teacher model</strong>—using Claude Sonnet one week, GPT-5 another week creates <strong>style drift</strong> in the dataset and the student can't lock onto a stable voice; (4) Synthetic data with <strong>no ground-truth check</strong>—LLM-distilled answers are 5-10% wrong, training them as labels teaches the model to fabricate; at minimum use an independent LLM judge; (5) <strong>Ignoring negative samples</strong>—training only correct answers means the model never learns to refuse; include 5-15% "I don't know / refuse" samples (the <em>I-don't-know data</em>).
+</div>
+
+<div class="res">
+<strong>Deeper</strong> · Zhou et al. <em>LIMA: Less Is More for Alignment</em> (NeurIPS 2023), <a href="https://arxiv.org/abs/2305.11206" target="_blank">arxiv.org/abs/2305.11206</a> ·
+Lambert et al. <em>Tülu 3</em> (2024), <a href="https://arxiv.org/abs/2411.15124" target="_blank">arxiv.org/abs/2411.15124</a> ·
+Abbas et al. <em>SemDeDup</em> (2023), <a href="https://arxiv.org/abs/2303.09540" target="_blank">arxiv.org/abs/2303.09540</a> ·
+Tunstall et al. <em>Zephyr: Direct Distillation</em> (2023), <a href="https://arxiv.org/abs/2310.16944" target="_blank">arxiv.org/abs/2310.16944</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Decoding params: the counterintuitive behavior of temperature, top-p, min-p</h2>
+<div class="claim">Claim: when a fresh FT model feels "unstable," "occasionally hallucinates," or "rambles"—80% of the time it's <strong>unset decoding parameters</strong>, not the model. The interactions between temperature/top-p/min-p/repetition_penalty are counterintuitive; most API defaults (temp=1, top_p=1) are <strong>tuned for chat feel</strong>, not engineering stability, and production must override them.</div>
+
+<h3>Background & Principle</h3>
+<p>Decoding is the process of turning the model's logit distribution (over the vocab) into specific tokens. The LLM internally knows "the next token is 90% A, 5% B, 5% other"—it's the <strong>decoding strategy</strong> that decides what you actually get. The precise behavior of the three core parameters:</p>
+<ul>
+<li><strong>temperature</strong>: divide logits by a constant T before softmax. <code>p_i = softmax(logits / T)</code>. T → 0 collapses to argmax (deterministic greedy); T = 1 is no rescaling; T &gt; 1 flattens the distribution (more random). Counterintuitive: T does not control "creativity"—it only <strong>amplifies or compresses the logit gaps</strong>. <em>Code / JSON / tool-call: T=0 or 0.2</em>; <em>Style / chat: T=0.7-0.9</em>; <em>Brainstorm: T=1.0+</em>.</li>
+<li><strong>top-p (nucleus sampling)</strong>: accumulate probabilities from highest down, keep tokens whose cumulative probability ≤ p. top_p=0.9 means "cut off the bottom 10%." <strong>Counterintuitive</strong>: top_p and temperature are not independent—raising T fattens the tail, so top_p admits more noisy tokens. High T + high top_p is a <strong>runaway recipe</strong>. Production rule: <em>either low T with default top_p (T=0.2, top_p=1)</em>, <em>or default T with tight top_p (T=1, top_p=0.9)</em>—<strong>not both open</strong>.</li>
+<li><strong>min-p</strong> (2023, supported by Llama.cpp / vLLM): keep tokens with probability ≥ <code>min_p × p_top</code>—prune by <strong>ratio to top probability</strong>. More robust than top-p: top-p still admits tail noise when the distribution is sharp; min-p won't. Production recommendation: <strong>min_p = 0.05-0.1 instead of top_p</strong>.</li>
+<li><strong>repetition_penalty / presence_penalty / frequency_penalty</strong>: prevent stuck words / repeated paragraphs. Most FT'd small models get stuck on long generations—setting repetition_penalty to 1.05-1.1 fixes it immediately. But &gt; 1.2 makes output weird (forcibly avoiding common tokens breaks grammar).</li>
+</ul>
+<p>Decoding params matter more after FT than for base models, because FT <strong>tightens the distribution</strong>. With a base model at T=1 the top-10 tokens might be [20%, 15%, 10%, ...]; after FT they could be [85%, 5%, 3%, ...]. In that regime top_p=0.9 essentially passes only the top-1 (near-greedy); T=0.7 amplifies a 5% token back to 15%, injecting <strong>randomness that shouldn't be there</strong>. After FT, <strong>lower temperature, use min-p, light repetition_penalty</strong> is the stable mode.</p>
+
+<div class="diagram">  Decoding param guidance (post-FT models)
+
+  Scenario             temp   top_p / min_p              rep_penalty
+  ──────────────────────────────────────────────────────────────
+  Code / JSON tool      0.0    top_p=1 (no-op)             1.0
+  Structured extract    0.0    top_p=1                     1.0
+  RAG serious QA        0.2    min_p=0.1                    1.05
+  Chat / persona        0.7    min_p=0.05                  1.05-1.1
+  Creative / writing    0.9    min_p=0.05                  1.1
+  Brainstorm / diverse  1.0    min_p=0.02                  1.0
+
+  Counter-example (common prod default):
+    temp=1.0, top_p=1.0, rep_penalty=1.0
+    → effectively no control; small FT models drift, repeat, occasionally hallucinate</div>
+
+<h3>Hands-on</h3>
+<p>Stable decoding configs for a post-FT small model (vLLM / OpenAI-compatible API):</p>
+<pre><code><span class="tag-key">from</span> openai <span class="tag-key">import</span> OpenAI
+
+<span class="tag-com"># vLLM serve endpoint</span>
+client = OpenAI(base_url=<span class="tag-gpt">"http://localhost:8000/v1"</span>, api_key=<span class="tag-gpt">"x"</span>)
+
+<span class="tag-com"># —— Production: strict JSON output ——</span>
+resp = client.chat.completions.create(
+    model = <span class="tag-gpt">"merged-llama-3.3-8b-ft"</span>,
+    messages = msgs,
+    temperature = 0.0,            <span class="tag-com"># fully deterministic, no randomness</span>
+    top_p = 1.0,                  <span class="tag-com"># T=0 makes top_p moot; 1.0 for clarity</span>
+    max_tokens = 512,
+    response_format = {<span class="tag-gpt">"type"</span>: <span class="tag-gpt">"json_schema"</span>,
+                       <span class="tag-gpt">"json_schema"</span>: my_schema},  <span class="tag-com"># structural constraint</span>
+    extra_body = {                   <span class="tag-com"># vLLM extensions</span>
+        <span class="tag-gpt">"repetition_penalty"</span>: 1.0,
+        <span class="tag-gpt">"min_p"</span>: 0.0,
+    },
+)
+
+<span class="tag-com"># —— Production: persona / chat ——</span>
+resp = client.chat.completions.create(
+    model = <span class="tag-gpt">"merged-llama-3.3-8b-ft"</span>,
+    messages = msgs,
+    temperature = 0.7,
+    top_p = 1.0,                  <span class="tag-com"># disable top_p, let min_p take over</span>
+    max_tokens = 1024,
+    extra_body = {
+        <span class="tag-gpt">"min_p"</span>: 0.05,              <span class="tag-com"># more robust than top_p</span>
+        <span class="tag-gpt">"repetition_penalty"</span>: 1.05, <span class="tag-com"># anti-stuck, don't exceed 1.1</span>
+    },
+)
+
+<span class="tag-com"># —— Monitoring: pull logprobs to locate where the model wobbled ——</span>
+resp = client.chat.completions.create(
+    model = <span class="tag-gpt">"merged-llama-3.3-8b-ft"</span>,
+    messages = msgs,
+    temperature = 0.2,
+    logprobs = <span class="tag-key">True</span>,
+    top_logprobs = 5,             <span class="tag-com"># top-5 candidates + probs per step</span>
+    max_tokens = 200,
+)
+<span class="tag-key">for</span> token <span class="tag-key">in</span> resp.choices[0].logprobs.content:
+    <span class="tag-com"># top-1 prob &lt; 0.5 = model "hesitating" = hallucination hotspot</span>
+    <span class="tag-key">if</span> token.logprob &lt; -0.7:   <span class="tag-com"># exp(-0.7) ≈ 0.5</span>
+        <span class="tag-key">print</span>(<span class="tag-gpt">f"⚠️  uncertain at: {token.token}"</span>,
+              [(t.token, <span class="tag-gpt">f"{2.718**t.logprob:.2f}"</span>)
+               <span class="tag-key">for</span> t <span class="tag-key">in</span> token.top_logprobs])</code></pre>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) <strong>temperature=1 with top_p=1</strong>—the OpenAI/Anthropic SDK default, but practically synonymous with "unstable" for post-FT models; production must override at least one; (2) <strong>Using temperature to dial creativity</strong>—T is not a creativity knob, it's a sharpness knob; for real creativity, change the prompt (style direction, seed words), not just T; (3) <strong>repetition_penalty &gt; 1.2</strong>—forcibly avoiding recently-used tokens breaks grammar on long outputs; 1.05-1.1 is the sweet spot; (4) <strong>Non-zero temperature for code/JSON</strong>—structured output relies on T=0 + grammar/JSON schema; enabling temperature is asking for bugs; (5) <strong>Unfixed seed</strong>—running A/B eval without a fixed seed means two identical inputs give two different outputs; vLLM/OpenAI both support <code>seed</code>, fix it.
+</div>
+
+<div class="res">
+<strong>Deeper</strong> · Holtzman et al. <em>The Curious Case of Neural Text Degeneration (nucleus / top-p)</em>, <a href="https://arxiv.org/abs/1904.09751" target="_blank">arxiv.org/abs/1904.09751</a> ·
+Nguyen et al. <em>Min-p Sampling</em>, <a href="https://arxiv.org/abs/2407.01082" target="_blank">arxiv.org/abs/2407.01082</a> ·
+vLLM <em>Sampling parameters</em>, <a href="https://docs.vllm.ai/en/latest/serving/openai_compatible_server.html" target="_blank">docs.vllm.ai/.../openai_compatible_server</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// Combined playbook · A two-week prompt-to-FT decision path</h3>
+<p>Suppose you have a real production problem and the model isn't good enough. Two weeks, in ROI order, to decide whether to fine-tune:</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>Day 1 · Build the eval set (half-day, most critical step)</strong>: write 50-100 cases with ground-truth answers. No eval = stop. Every downstream change is judged by eval numbers.</li>
+<li><strong>Day 1-2 · Max out prompting</strong>: XML-structured system prompt + 3-5 few-shots + CoT (if reasoning). Run eval, log baseline.</li>
+<li><strong>Day 3 · Try a stronger model</strong>: Sonnet → Opus; GPT-5-mini → GPT-5. Often +10-20pp accuracy, faster than a week of FT. If a model swap is enough, stop here.</li>
+<li><strong>Day 4-5 · Add RAG (if it's a knowledge task)</strong>: install the hybrid + reranker stack from Week 10. Re-run eval.</li>
+<li><strong>Day 6 · Tune decoding params</strong>: temperature 1 → 0.2-0.7, add min_p=0.05, rep_penalty=1.05. Zero cost, frequently skipped.</li>
+<li><strong>Day 7 · Decision point</strong>: how far is current eval from target? Gap &lt; 10pp → keep iterating prompt/RAG; gap &gt; 15pp AND falls into the 5 valid FT scenarios → proceed to FT.</li>
+<li><strong>Day 8-10 · Dataset</strong>: distill 800-2,000 samples from Claude Opus 4.7 → dedupe → judge audit → manual review of 50. Takes longer than the actual training.</li>
+<li><strong>Day 11-12 · Training</strong>: Unsloth + QLoRA + r=32, alpha=32, all_linear, 2 epochs. Llama 3.3 8B on a 4090: 4-8 hours per epoch.</li>
+<li><strong>Day 13 · Merge + deploy</strong>: merge LoRA back to bf16, serve with vLLM. Re-run the full eval and compare to baseline.</li>
+<li><strong>Day 14 · Long-tail observation</strong>: shadow-run on production traffic for 1 day to catch any regression. Only then route real traffic.</li>
+</ol>
+<p style="margin-top:14px">Walking this path: FT is not "let's train first and see"—it's "I've maxed the upstream 4 layers, confirmed the gain curve is still steep, and now I run the shortest, cheapest LoRA cycle that gets me there." <strong>That's fine-tuning engineering for 2026.</strong> Most teams realize by Day 6 that they don't need FT at all.</p>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// Further Reading</h3>
+<ul>
+<li><a href="https://arxiv.org/abs/2106.09685" target="_blank">Hu et al. · LoRA: Low-Rank Adaptation of LLMs (ICLR 2022)</a> — the original LoRA paper, start of the PEFT era</li>
+<li><a href="https://arxiv.org/abs/2305.14314" target="_blank">Dettmers et al. · QLoRA (NeurIPS 2023)</a> — 4-bit base + LoRA; key paper enabling single-GPU 70B training</li>
+<li><a href="https://arxiv.org/abs/2305.11206" target="_blank">Zhou et al. · LIMA (NeurIPS 2023)</a> — the canonical "1K curated &gt; 100K scraped" experiment</li>
+<li><a href="https://arxiv.org/abs/2411.15124" target="_blank">Lambert et al. · Tülu 3 (2024)</a> — systematic ablation: data filtering beats data scale</li>
+<li><a href="https://magazine.sebastianraschka.com/p/practical-tips-for-finetuning-llms" target="_blank">Raschka · Practical Tips for Finetuning LLMs Using LoRA</a> — systematic ablation of rank/alpha/target</li>
+<li><a href="https://docs.unsloth.ai/" target="_blank">Unsloth Documentation</a> — the highest-performance open LoRA/QLoRA stack in 2026</li>
+<li><a href="https://arxiv.org/abs/2407.01082" target="_blank">Nguyen et al. · Min-p Sampling (2024)</a> — the robust replacement for top-p</li>
+<li><a href="https://docs.claude.com/en/docs/build-with-claude/prompt-engineering/overview" target="_blank">Anthropic · Prompt Engineering vs Fine-tuning</a> — Claude's official prompt-first stance</li>
+</ul>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// Deep Thinking</h3>
+<details><summary>If prompt + RAG + bigger model handle 80% of engineering problems, why is the open-source community still releasing fine-tuned models at full speed? What's the real driver?</summary><div>Three forces. (1) <strong>Ownership / control</strong>: FT'd weights live on your hardware—no API rate limits, no price hikes, no deprecations; for enterprise users this is a real need that prompt+RAG can't meet. (2) <strong>Distillation economics</strong>: compressing Claude Opus intelligence into Llama 8B on your business task drops unit cost from $15/M tokens to $0.2/M—a 5-100x reduction; once scale arrives, FT becomes mandatory. (3) <strong>Research value</strong>: FT is the open-source community's flagship way to demonstrate "we're keeping up"; model cards are themselves brand. DeepSeek, Qwen, and Mistral's influence comes largely from continuous FT releases. These three drivers haven't weakened in 2026, so "prompt-first" doesn't contradict "FT is still a key capability"—it just means <strong>who does the FT</strong> has shifted: from every team, to a small number of well-resourced teams + the open community, while everyone else uses their releases + prompting.</div></details>
+<details><summary>LIMA's "1,000 samples beat 100,000" — does it still hold in the GPT-5 / Claude 4.7 era, or only when base models were weaker?</summary><div>It holds even more strongly. LIMA's core insight is "instruction tuning is unlock, not teach"—the stronger the base model, the more it can unlock, and <strong>the bigger the leverage of small high-quality samples</strong>. Tülu 3 (2024) reproduced LIMA-style small-data high-quality SFT on Llama 3 with one tier higher accuracy than 2023's LIMA; Zephyr / Phi-3 / Qwen-Distill all follow the same playbook. The counterargument is that Llama 3.1/3.3/Qwen 3 use millions of samples for their instruct variants—but those aim to cover the entire long tail of tasks, which isn't a fair comparison to single-business FT. Bottom line: <strong>FT'ing your business model on 500-5,000 hand-curated samples + distillation is the 2026 best practice</strong>, and the stronger the base, the better this strategy looks.</div></details>
+<details><summary>QLoRA lets 70B train on a single GPU—but inference still needs multiple GPUs. What does this "trainable but unservable" asymmetry mean for indie developers?</summary><div>This asymmetry is the most underappreciated <strong>developer-economics inflection point</strong> of 2024-2026. Train: QLoRA lets you fine-tune 70B on a 24GB card (4090, A10) in 6-12 hours per epoch, fully self-hosted. Serve: 70B inference still needs 80GB+ VRAM (40GB even at 4-bit)—essentially an H100, billed hourly. So the indie path is actually: <strong>train big, distill to small, deploy small</strong>. Concretely: QLoRA-train a 70B on your domain, then use this 70B as a teacher to distill a 7B/8B student—8B runs on a 16GB card or M-series Mac, inference cost collapses. This "train big, serve small" route decouples training from inference compute, letting a single developer own a full <strong>customized model + deployable</strong> stack. Over the next three years this will be one of the most important moats an individual AI engineer can build.</div></details>
+<details><summary>Why haven't decoding params (temperature, top-p, min-p) converged on an "optimal default" the way LoRA did? Why do production teams still hand-tune?</summary><div>Because <strong>optimal decoding depends on the task, not the model</strong>. LoRA's optimal rank/alpha is largely a function of architecture, so a community consensus default can emerge. Decoding isn't like that—the same FT'd Llama 8B wants T=0 for code, T=0.7 for chat, T=1 for brainstorm. The task space is infinite and parameter interactions are non-convex (T × top_p has nonlinear joint effects), so no single default covers everything. Model providers' API defaults (T=1, top_p=1) are <strong>chat-feel</strong> "least-wrong" options, but they're almost never optimal for production. Medium-term we'll see <em>auto-tune decoding</em>: pick params based on prompt type (similar to GPT-5's "reasoning effort" auto-dialing by problem hardness), but in 2026 it's still manual engineering. Knowing how to tune decoding is a <strong>basic skill</strong> for an LLM engineer—on par with "can write SQL indexes."</div></details>
+<details><summary>If by 2027 open-source 7B models match Claude 4.x on most business tasks, how will the "should I FT" decision tree change?</summary><div>The decision tree flips. Today: prompt → RAG → bigger model → FT, because "bigger model" has the highest ROI. When a 7B open model is already near top-tier API, "bigger model" stops yielding gain—the only remaining levers are prompt and FT. At that point <strong>FT's relative ROI rises sharply</strong> because: (1) the base model is already strong enough that FT doesn't need to add base capability, only alignment/style/format lock—small data suffices; (2) marginal cost of private deployment approaches zero (open + quantized + edge GPU), removing the inference cost constraint; (3) data ownership becomes the core competitive moat—your FT dataset is something competitors can't replicate. Prediction: by 2027, "should I FT" will flip from "99% no" to "business moats require FT"—but still small high-quality data + LoRA, not a return to 2023's full-FT era. <strong>FT is always engineering, always ROI-driven—it's just that the ROI function itself is shifting.</strong></div></details>
+</div>
+
+<footer>BigCat · Super Individual Weekly · Week 12 / 2026-05-27</footer>
+</div>
+</body></html>
