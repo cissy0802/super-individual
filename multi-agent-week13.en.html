@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 13 · Multi-agent Systems — Super Individual Weekly</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.crossref{margin:18px 0 0;padding:10px 16px;background:rgba(0,212,255,0.06);border:1px dashed rgba(0,212,255,0.3);border-radius:8px;font-size:0.85rem;color:#a0a4b8;text-align:center}
+.crossref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">WEEK 13 / PHASE 2 · SYSTEMS</span>
+<h1>Multi-agent Systems</h1>
+<h2>When to use · Orchestrator-Worker · Debate · Protocols &amp; the coordination tax</h2>
+<div class="date">2026-05-27 · BigCat</div>
+<p class="pitch">In June 2025 Anthropic and Cognition published nearly simultaneously, taking opposite positions — Anthropic "here's how we built multi-agent", Cognition "don't build multi-agent". This issue lifts the engineering hood on that debate: when does multi-agent actually pay, and when is it just 15× token waste.</p>
+<div class="crossref">
+<a href="https://cissy0802.github.io/ai-ml-daily/multi-agent-day7.en.html">
+  Prerequisite concept → ai-ml-daily Day 7 (Multi-Agent Systems)
+</a>
+</div>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>June 2025 was the most informative week of the year. Anthropic published <em>How we built our multi-agent research system</em>, dissecting how their Research feature uses Opus 4 as orchestrator and Sonnet 4 as subagents — beating single-agent Opus 4 by <strong>90.2%</strong> on their internal eval. The same week, Cognition's (Devin team) Walden Yan published <em>Don't Build Multi-Agents</em>, arguing that multi-agent is a <strong>fragile system</strong> and advocating "single agent + long context + full trace". Two frontier teams, public collision. The point isn't "who's right" — it's that <strong>they use multi-agent for different task structures</strong>: Anthropic's Research is <em>parallel retrieval</em> (each subagent independent, then aggregate), Cognition's Devin is <em>sequential coding</em> (each step depends on the prior step's context). The engineering value of multi-agent <strong>depends entirely on whether the task decomposes into independent subtasks</strong>. This issue assumes you already know what an agent is (covered in ai-ml-daily Day 7) and goes straight to four engineering layers that decide multi-agent ROI: <strong>① when NOT to multi-agent → ② Orchestrator-Worker's real constraints → ③ Debate / multi-perspective — what actually delivers value → ④ The coordination tax and protocols (A2A vs MCP)</strong>.</p>
+</div>
+
+<!-- ============ Decision tree diagram ============ -->
+<div class="diagram">  Multi-agent decision line (2026 edition)
+
+  Problem: single agent + tools + long context is not enough
+       │
+       ▼
+  ┌─────────────────────────────────────────────────────────┐
+  │ ① Can subtasks run independently in parallel            │
+  │    (no shared intermediate state)?                      │
+  │    Yes → orchestrator-worker candidate                  │
+  │    No  → stay on single agent + long context            │
+  └─────────────────────────────────────────────────────────┘
+       │ Yes
+       ▼
+  ┌─────────────────────────────────────────────────────────┐
+  │ ② Does the single-agent context truly overflow          │
+  │    (&gt;200K still not enough)?                            │
+  │    Yes → multi-agent can split context                  │
+  │    No  → longer ctx / RAG / compaction is simpler       │
+  └─────────────────────────────────────────────────────────┘
+       │ Yes
+       ▼
+  ┌─────────────────────────────────────────────────────────┐
+  │ ③ Is task value &gt; 15× chat-token cost?                  │
+  │    Anthropic data: multi-agent ≈ 15× chat tokens        │
+  │    High-value research → worth it                       │
+  │    Generic tasks → not worth it                         │
+  └─────────────────────────────────────────────────────────┘
+       │ Yes
+       ▼
+  ┌─────────────────────────────────────────────────────────┐
+  │ ④ Are failures independently attributable               │
+  │    (each subagent verifiable on its own)?               │
+  │    Yes → ship multi-agent                               │
+  │    No  → failures cascade; stay on single + reflection  │
+  └─────────────────────────────────────────────────────────┘
+
+  Most business tasks stop at ① or ② — that's Cognition's stance.
+  Research / parallel retrieval / cross-tool inquiry → multi-agent flies.</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>Anti-pattern: 80% of "multi-agent" is single agent with extra ceremony</h2>
+<div class="claim">Claim: Cognition's Walden Yan is right — <strong>multi-agent is a fragile system by default</strong>. The problem isn't agent count, it's <strong>context-sharing collapse</strong>: subagents can't see each other's mid-flight decisions, conflicting actions overwrite each other, the orchestrator's summarization loses information. For sequentially-coupled tasks, single agent + full trace + long context is almost always more reliable, cheaper, and easier to debug.</div>
+
+<h3>Background &amp; mechanics</h3>
+<p>Cognition's <em>Don't Build Multi-Agents</em> (June 2025) nails the anti-pattern. <strong>Core claim: multi-agent failure isn't that agents aren't smart enough — it's that they can't see each other</strong>. One subagent decides "refactor this file first, then add the feature"; a concurrent subagent decides "just add the feature without touching structure". Both are internally consistent. At merge time they collide, and the orchestrator can neither judge which is better nor roll back. This <strong>implicit decision conflict</strong> is the hardest multi-agent failure mode to treat because there's no error, no stack trace — just a result that "looks weird but runs".</p>
+<p>Cognition's two engineering principles: <strong>(1) Share full context, not summaries</strong> — every subagent must see the entire trace (the orchestrator's goal, what other agents have done). Summarization is lossy compression and almost always loses something critical. <strong>(2) Actions carry implicit decisions</strong> — every tool call implies a judgment ("I chose this path, not the other"). When concurrent agents each make implicit decisions <strong>without a negotiation channel</strong>, coding/planning/anything-where-each-step-depends-on-the-last is strictly better with a single agent.</p>
+<p>This doesn't contradict Anthropic's Research system — their task structure is the opposite: <em>parallel retrieval</em> across 100 web pages, then orchestrator aggregation. Subagents are <strong>independent by construction</strong>, so the implicit decision conflict problem doesn't apply. Which means the <strong>first question</strong> when deciding multi-agent isn't "is this task complex?" — it's "do subtasks share implicit state?"</p>
+<p>Another often-overlooked anti-pattern: <strong>splitting one agent's prompt across multiple agents to "reduce complexity"</strong> — the typical example being a "PM agent + Engineer agent + Reviewer agent" sequential pipeline. This split <strong>almost never improves quality</strong> — it just relocates prompt-engineering complexity from one system prompt to three inter-agent message formats. Papers like MetaGPT (encoding SOPs as agent roles) show what's possible, but require <strong>tuning each role's prompt to production quality</strong> — which is itself 3× the work of single-agent, and inevitably introduces inter-agent message drift. Unless your product SOP is <em>actually</em> stable enough to encode as roles (rare), single agent is always the baseline.</p>
+
+<div class="diagram">  Task structure → agent count decision
+
+  Task type                     Parallel  Shared    Recommended arch
+                                          state
+  ────────────────────────────────────────────────────────────
+  Research / literature review    High     Low       Orchestrator + N workers
+  Web scraping &amp; aggregation       High     Low       Orchestrator + N workers
+  Cross-tool inquiry               High     Low       Orchestrator + N workers
+  ──────────────────────────────────────────────────────────
+  Coding agent (Devin-like)        Low      High      Single agent + long ctx
+  Long-form writing                Low      High      Single agent + long ctx
+  Debugging / refactoring          Low      High      Single agent + long ctx
+  ──────────────────────────────────────────────────────────
+  Factual QA / math                Mid      Mid       Debate (2-5 agents)
+  Critical decision review         Mid      Mid       Debate / cross-check
+  ──────────────────────────────────────────────────────────
+  "Role pipeline" splits           Low      High      ❌ Usually anti-pattern
+
+  → High shared state + low parallelism = single agent always wins</div>
+
+<h3>Hands-on example</h3>
+<p>The ROI decision tree as 6 self-check questions — if ≥3 fail, multi-agent is over-engineering:</p>
+<pre><code><span class="tag-com"># multi_agent_check.py — sanity check before building</span>
+<span class="tag-key">def</span> should_use_multi_agent(task) -&gt; <span class="tag-gpt">str</span>:
+    checks = {
+        <span class="tag-gpt">"parallelizable"</span>:
+            task.can_split_into_independent_subtasks,
+        <span class="tag-gpt">"low_implicit_state"</span>:
+            <span class="tag-key">not</span> task.requires_step_n_depends_on_step_n_minus_1,
+        <span class="tag-gpt">"context_truly_overflows"</span>:
+            task.estimated_tokens &gt; 200_000,  <span class="tag-com"># long-ctx really not enough</span>
+        <span class="tag-gpt">"value_per_query_high"</span>:
+            task.dollar_value_per_run &gt;= 1.0,  <span class="tag-com"># 15× token only justifies</span>
+        <span class="tag-gpt">"subagent_output_verifiable"</span>:
+            task.each_subagent_result_can_be_validated_independently,
+        <span class="tag-gpt">"single_agent_tried_and_failed"</span>:
+            task.has_single_agent_baseline_with_eval_score,
+    }
+    failed = [k <span class="tag-key">for</span> k,v <span class="tag-key">in</span> checks.items() <span class="tag-key">if not</span> v]
+    <span class="tag-key">if</span> <span class="tag-key">len</span>(failed) &gt;= 3:
+        <span class="tag-key">return</span> <span class="tag-gpt">f"❌ Stay on single agent. Missing: {failed}"</span>
+    <span class="tag-key">if</span> <span class="tag-gpt">"parallelizable"</span> <span class="tag-key">in</span> failed <span class="tag-key">or</span> <span class="tag-gpt">"low_implicit_state"</span> <span class="tag-key">in</span> failed:
+        <span class="tag-key">return</span> <span class="tag-gpt">"❌ Task structure fights multi-agent. Use single agent + long ctx."</span>
+    <span class="tag-key">return</span> <span class="tag-gpt">"✅ Good fit. Start with orchestrator-worker; budget 15× tokens."</span></code></pre>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) "<em>Split one agent into PM + Engineer + Reviewer</em>" — each pipeline stage only sees upstream summaries; downstream agents don't know <em>why</em> upstream decided what it did, <strong>decision context is lost</strong>, quality usually drops. (2) <strong>Concurrent subagents share tools but not trace</strong> — two subagents both write the same file, call search with different queries, overwrite each other. (3) Orchestrator <strong>passes summaries instead of raw trace</strong> — summaries lose precisely the details a subagent needs to make decisions. (4) <strong>Using multi-agent debate to "improve quality" without ground-truth eval</strong> — debate easily lets all agents become confidently wrong together, harder to detect than a single agent's error. (5) <strong>Same model, same prompt across all agents</strong> — no diversity, so debate/voting degenerates into amplifying correlated errors.
+</div>
+
+<div class="res">
+<strong>Further reading</strong> · Cognition · <em>Don't Build Multi-Agents</em> (2025), <a href="https://cognition.ai/blog/dont-build-multi-agents" target="_blank">cognition.ai/blog/dont-build-multi-agents</a> ·
+Anthropic · <em>Building effective agents</em>, <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">anthropic.com/engineering/building-effective-agents</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Orchestrator-Worker: Anthropic's bet and its real cost</h2>
+<div class="claim">Claim: Orchestrator-Worker is the <strong>only production-scale validated multi-agent pattern of 2026</strong>. Anthropic Research disclosed that Opus 4 orchestrator + Sonnet 4 workers beats single-agent Opus 4 by 90.2% — but at <strong>15× chat-token cost</strong>. Understanding the four engineering constraints that make this trade-off work (spawn criteria, subagent prompt isolation, aggregation strategy, concurrency cap) decides whether it flies or burns cash.</div>
+
+<h3>Background &amp; mechanics</h3>
+<p>Anthropic's June 2025 post <em>How we built our multi-agent research system</em> spells out the pattern. Architecture: user query → <strong>Lead Agent (Opus 4)</strong> plans, decomposes, spawns N parallel <strong>Subagents (Sonnet 4)</strong> each researching a different direction → Lead aggregates all subagent findings → produces the final answer. Key numbers: on their internal research eval, this beat single-agent Opus 4 by <strong>90.2%</strong>, while consuming about <strong>15× chat token</strong> (a typical agent is ~4× chat).</p>
+<p>Four engineering constraints that make it actually work:</p>
+<ul>
+<li><strong>(1) Spawn criteria</strong>: the Lead can't spawn freely — it must be taught what subqueries deserve a subagent. Anthropic's lead prompt provides judgment criteria for breadth, complexity, parallel payoff. <em>Counter-example</em>: telling the lead "spawn whenever you can" → it spawns a subagent for every search term, token explodes with no quality gain.</li>
+<li><strong>(2) Subagent prompt isolation</strong>: each subagent receives a prompt <strong>containing the task goal but NOT the work of other subagents</strong> — exactly opposite to Cognition's stance. Anthropic's design premise: subagents are <em>already independent</em> (different sub-directions), so cross-visibility would just inject confirmation bias. <em>This design only works on truly parallel tasks</em>; on sequential coding/refactoring it will collapse.</li>
+<li><strong>(3) Aggregation strategy</strong>: the Lead doesn't simply concat subagent results — it does a <strong>second pass of reasoning</strong>: cross-validate, dedupe, surface contradictions, fill gaps. Anthropic stresses that using a <em>stronger model</em> (Opus) for aggregation is critical; a weak aggregator just averages 5 noisy signals into 1 noisy signal.</li>
+<li><strong>(4) Concurrency cap</strong>: more subagents isn't better — beyond 5-10 the <strong>return curve flattens hard</strong> (extra agents just repeat angles already covered), while aggregation complexity rises with N. Anthropic doesn't publish exact numbers but implies 3-7 as the typical range.</li>
+</ul>
+<p>How to read the 15× token cost? A chat turn = 1 LLM call; an ordinary agent ≈ 4× because of ReAct loops; multi-agent research ≈ 15× because the lead itself loops (~4×) + each subagent loops (~4×) × N concurrent subagents (~3-5) + aggregation. Which means <strong>every query must be worth &gt; $1 to make ROI</strong>. Low-value generic tasks on multi-agent is just burning money; research, due diligence, cross-tool inquiry, deep SWE-bench — tasks where <em>one result is worth real money</em> — match.</p>
+
+<div class="diagram">  Orchestrator-Worker standard topology
+
+           User Query
+                │
+                ▼
+        ┌───────────────┐
+        │ Lead Agent    │ ← Opus / GPT-5 (strong model)
+        │  - planning    │
+        │  - task split  │
+        │  - aggregation │
+        └───────────────┘
+       /    │    │    │   \
+      /     │    │    │    \
+     ▼      ▼    ▼    ▼     ▼
+  ┌────┐ ┌────┐┌────┐┌────┐┌────┐
+  │Sub₁││Sub₂││Sub₃││Sub₄││Sub₅│  ← Sonnet/Haiku (3-7 concurrent)
+  │tool││tool││tool││tool││tool│
+  └────┘ └────┘└────┘└────┘└────┘
+     │     │    │    │     │
+     └─────┴────┴────┴─────┘
+                │
+                ▼
+        Lead aggregates + reasons
+                │
+                ▼
+           Final Answer
+
+  Token math: Lead (~4×) + N·Sub (~4× ea) + agg ≈ 15× chat
+  Fits: value/query &gt; $1, subtasks independent &amp; parallel</div>
+
+<h3>Hands-on example</h3>
+<p>Minimal working orchestrator-worker (Anthropic SDK, pseudo-code — grasp the pattern, not the details):</p>
+<pre><code><span class="tag-key">import</span> anthropic, asyncio, json
+
+client = anthropic.AsyncAnthropic()
+
+<span class="tag-com"># ============ Subagent: independently researches one sub-direction ============</span>
+<span class="tag-key">async def</span> subagent(task: <span class="tag-gpt">dict</span>) -&gt; <span class="tag-gpt">dict</span>:
+    <span class="tag-com"># NOTE: prompt only contains the sub-task, not other subagents' work</span>
+    msg = <span class="tag-key">await</span> client.messages.create(
+        model=<span class="tag-gpt">"claude-sonnet-4-6"</span>,
+        max_tokens=2000,
+        system=<span class="tag-gpt">"You are a research subagent. Focus ONLY on the assigned "</span>
+               <span class="tag-gpt">"sub-question. Use search tools. Return: findings + sources."</span>,
+        tools=[search_tool, fetch_tool],
+        messages=[{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,
+                   <span class="tag-gpt">"content"</span>: <span class="tag-gpt">f"Sub-question: {task['question']}\n"</span>
+                              <span class="tag-gpt">f"Scope: {task['scope']}"</span>}],
+    )
+    <span class="tag-com"># tool loop omitted — actually loop until stop_reason='end_turn'</span>
+    <span class="tag-key">return</span> {<span class="tag-gpt">"task"</span>: task, <span class="tag-gpt">"findings"</span>: msg.content[0].text}
+
+<span class="tag-com"># ============ Lead Agent: plan + aggregate ============</span>
+<span class="tag-key">async def</span> lead_agent(user_query: <span class="tag-gpt">str</span>) -&gt; <span class="tag-gpt">str</span>:
+    <span class="tag-com"># Step 1: planning — strong model decides whether to split, and how</span>
+    plan = <span class="tag-key">await</span> client.messages.create(
+        model=<span class="tag-gpt">"claude-opus-4-7"</span>,
+        max_tokens=1500,
+        system=<span class="tag-gpt">"You are a research lead. Decide if this query benefits from "</span>
+               <span class="tag-gpt">"parallel subagents. If YES, output JSON list of 3-7 INDEPENDENT "</span>
+               <span class="tag-gpt">"sub-questions. If NO (task is sequential or simple), output "</span>
+               <span class="tag-gpt">"{\"single\": true} and you'll handle it alone."</span>,
+        messages=[{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,<span class="tag-gpt">"content"</span>:user_query}],
+    )
+    spec = json.loads(plan.content[0].text)
+
+    <span class="tag-com"># Step 2a: doesn't fit splitting → fall back to single agent (most queries)</span>
+    <span class="tag-key">if</span> spec.get(<span class="tag-gpt">"single"</span>):
+        <span class="tag-key">return await</span> single_agent_run(user_query)
+
+    <span class="tag-com"># Step 2b: spawn subagents in parallel</span>
+    results = <span class="tag-key">await</span> asyncio.gather(*[subagent(t) <span class="tag-key">for</span> t <span class="tag-key">in</span> spec[<span class="tag-gpt">"tasks"</span>]])
+
+    <span class="tag-com"># Step 3: aggregation — strong model again; cross-check, do not concat</span>
+    aggregation = <span class="tag-key">await</span> client.messages.create(
+        model=<span class="tag-gpt">"claude-opus-4-7"</span>,
+        max_tokens=4000,
+        system=<span class="tag-gpt">"You are the research lead synthesizing N subagent reports. "</span>
+               <span class="tag-gpt">"Cross-validate, identify contradictions, fill gaps. "</span>
+               <span class="tag-gpt">"Output: comprehensive answer + confidence notes."</span>,
+        messages=[{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,
+                   <span class="tag-gpt">"content"</span>:<span class="tag-gpt">f"Original query: {user_query}\n\n"</span>
+                             <span class="tag-gpt">f"Subagent findings:\n{json.dumps(results, indent=2)}"</span>}],
+    )
+    <span class="tag-key">return</span> aggregation.content[0].text
+
+<span class="tag-com"># ============ Cost guard: hard ceiling against runaway ============</span>
+<span class="tag-com"># In prod: per-run budget + N_subagent &lt;= 7 + timeout — mandatory</span></code></pre>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) <strong>Weak model as Lead</strong> — Haiku-as-Lead is like a junior PM: poor planning, can't cross-check contradictions during aggregation. The Lead must be the strongest model in your stack. (2) <strong>No cap on subagent count</strong> — Leads tend to "spawn a few more for insurance"; without a cap they spawn 20, token explodes, no quality gain. Hardcode N ≤ 7. (3) <strong>Aggregation is just concat</strong> — concatenating 5 subagent outputs isn't aggregation, it's information piling. Must use the strong model for a real second-pass reasoning step. (4) <strong>No budget guard</strong> — runaway multi-agent can burn $10+ per query; hard token + tool-call + wallclock budgets are mandatory. (5) <strong>Multi-agent on sequential tasks</strong> — "let 5 subagents each write parts of the code" will fail at merge. Sequential tasks: single agent, always. (6) <strong>Not monitoring single-agent baseline</strong> — once on multi-agent, teams forget to A/B against single agent. The 90.2% gain might not exist for your task structure.
+</div>
+
+<div class="res">
+<strong>Further reading</strong> · Anthropic · <em>How we built our multi-agent research system</em> (2025), <a href="https://www.anthropic.com/engineering/multi-agent-research-system" target="_blank">anthropic.com/engineering/multi-agent-research-system</a> ·
+Wu et al. · <em>AutoGen: Multi-Agent Conversation Framework</em>, <a href="https://arxiv.org/abs/2308.08155" target="_blank">arxiv.org/abs/2308.08155</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Debate / Cross-check: when multi-perspective actually improves quality</h2>
+<div class="claim">Claim: Multi-agent debate (Du et al. 2023) is an overrated paradigm — <strong>it really does lift accuracy on math and factual QA</strong> (5-15pp), but on open writing, subjective judgment, and value evaluation it often degenerates into <strong>homogenized consensus</strong>. What actually works isn't "more agents" — it's <strong>where the diversity comes from</strong>: different models, different system prompts, different roles. Same model + same prompt × N runs = noise averaging, marginal gain near zero.</div>
+
+<h3>Background &amp; mechanics</h3>
+<p>Du et al. 2023 (<em>Improving Factuality and Reasoning in Language Models through Multiagent Debate</em>, arXiv 2305.14325) is the paradigm's origin. Mechanism: N LLMs answer independently → each sees the others' answers + reasoning → multi-round iteration produces consensus. The paper showed <strong>significant gains over single-answer and self-consistency</strong> on MMLU, math, factual QA. The result remains robust in 2026 — <em>when the task has a clear correct answer</em>.</p>
+<p>But debate fails in 3 settings:</p>
+<ul>
+<li><strong>(1) Open subjective tasks</strong> — "write product copy", "evaluate this business plan" — no ground truth, agents converge on a "mutually acceptable mediocre answer", much worse than letting one agent generate freely and humans pick.</li>
+<li><strong>(2) Same model + same prompt × N</strong> — "same-source diversity" is very weak; debate degenerates into self-consistency, and <strong>positive bias amplifies in sync</strong> (all agents tend toward yes-man, debate makes it worse). For debate to work, you must <em>construct real diversity</em>: Claude vs GPT vs Gemini, or same model but role-prompts strongly opposed ("you are the defender / you are the critic").</li>
+<li><strong>(3) Long-form generation</strong> — debate fits "short answer with right/wrong" tasks. Asking agents to debate every paragraph of a 5000-word article almost always degenerates into mutual flattery or stalls.</li>
+</ul>
+<p>A higher-ROI "multi-perspective" engineering pattern is <strong>asymmetric cross-check</strong>: use a <em>different</em> model / different prompt / dedicated verifier agent to audit the main agent's output. Example: main agent uses Claude Opus to write code → verifier agent uses GPT-5 to brainstorm test ideas + find edge cases. This "primary + auditor" structure is more robust in engineering than N-agent debate: <strong>clear ownership, controllable cost (2× not N×), independently attributable failures</strong>. Constitutional AI's self-review, self-refine, Reflexion are all variants of the same "primary + auditor" structure unfolded along different time dimensions.</p>
+<p>One counter-intuitive finding: <strong>asking a model to "debate its own prior answer" (self-debate / self-reflection) often works worse than having another agent critique it</strong>. The Cognition-style backward rationalization problem: once a model has produced answer A, it tends to defend A and find supporting evidence, not to genuinely question. Self-debate often turns into self-confirmation. So <em>cross-check &gt; self-reflection</em> in reliability terms — the real engineering sweet spot for multi-agent.</p>
+
+<div class="diagram">  Debate / Cross-check pattern selection
+
+  Task type                 Recommended structure       Typical gain
+  ────────────────────────────────────────────────────────────
+  Math / logic puzzles      N-agent debate (3-5)         +10-15pp acc
+  Factual QA / knowledge    Debate or RAG + cite          +5-10pp acc
+  Code correctness          Primary + verifier            +20% test pass
+  Critical decision review  Primary + cross-model audit   30%+ bugs found
+  ──────────────────────────────────────────────────────────
+  Creative writing          Single agent + human pick     debate → mediocre
+  Marketing copy / biz call Single agent + prompt variants debate converges
+  Long-form reports         Single agent + sectioned self-refine
+  ──────────────────────────────────────────────────────────
+  ❌ Same model + same prompt N times → just self-consistency, zero diversity
+  ❌ Self-debate (one agent) → backward rationalization bias
+
+  Key variable: source of diversity &gt; number of agents</div>
+
+<h3>Hands-on example</h3>
+<p>Asymmetric cross-check pattern (primary + cross-vendor verifier) — 2× cost for meaningful quality gain:</p>
+<pre><code><span class="tag-key">import</span> anthropic, openai
+
+claude = anthropic.Anthropic()
+gpt = openai.OpenAI()
+
+<span class="tag-key">def</span> primary_solve(question: <span class="tag-gpt">str</span>) -&gt; <span class="tag-gpt">str</span>:
+    <span class="tag-com"># Primary: Claude Opus answers</span>
+    msg = claude.messages.create(
+        model=<span class="tag-gpt">"claude-opus-4-7"</span>, max_tokens=1500,
+        messages=[{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,<span class="tag-gpt">"content"</span>:question}],
+    )
+    <span class="tag-key">return</span> msg.content[0].text
+
+<span class="tag-key">def</span> cross_check(question: <span class="tag-gpt">str</span>, primary_answer: <span class="tag-gpt">str</span>) -&gt; <span class="tag-gpt">dict</span>:
+    <span class="tag-com"># Verifier: cross-vendor + adversarial prompt</span>
+    <span class="tag-com"># Key 1: different model (diversity)   Key 2: oppositional role</span>
+    prompt = <span class="tag-gpt">f"""You are a SKEPTICAL reviewer. Your job is to find what is
+WRONG with the candidate answer below. Do NOT defend it.
+
+QUESTION: {question}
+
+CANDIDATE ANSWER:
+{primary_answer}
+
+Output JSON:
+{{"verdict": "correct"|"incorrect"|"uncertain",
+  "issues": [<list of concrete problems>],
+  "missing": [<facts/perspectives the candidate skipped>]}}"""</span>
+    rsp = gpt.chat.completions.create(
+        model=<span class="tag-gpt">"gpt-5"</span>, temperature=0.2,
+        messages=[{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,<span class="tag-gpt">"content"</span>:prompt}],
+        response_format={<span class="tag-gpt">"type"</span>:<span class="tag-gpt">"json_object"</span>},
+    )
+    <span class="tag-key">return</span> json.loads(rsp.choices[0].message.content)
+
+<span class="tag-key">def</span> arbitrate(question, primary, review) -&gt; <span class="tag-gpt">str</span>:
+    <span class="tag-com"># Only re-run when verifier finds issues — cost-controlled</span>
+    <span class="tag-key">if</span> review[<span class="tag-gpt">"verdict"</span>] == <span class="tag-gpt">"correct"</span> <span class="tag-key">and not</span> review[<span class="tag-gpt">"issues"</span>]:
+        <span class="tag-key">return</span> primary
+    <span class="tag-com"># Let primary revise after seeing the critique (selective, not overwrite)</span>
+    revision = claude.messages.create(
+        model=<span class="tag-gpt">"claude-opus-4-7"</span>, max_tokens=2000,
+        messages=[
+            {<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,<span class="tag-gpt">"content"</span>:question},
+            {<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"assistant"</span>,<span class="tag-gpt">"content"</span>:primary},
+            {<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,<span class="tag-gpt">"content"</span>:
+              <span class="tag-gpt">f"A skeptical reviewer raised these issues:\n"</span>
+              <span class="tag-gpt">f"{json.dumps(review, indent=2)}\n\n"</span>
+              <span class="tag-gpt">f"Revise ONLY if the issues are valid. If you disagree, explain why."</span>}],
+    )
+    <span class="tag-key">return</span> revision.content[0].text
+
+<span class="tag-com"># Usage</span>
+answer = primary_solve(question)
+review = cross_check(question, answer)
+final  = arbitrate(question, answer, review)
+<span class="tag-com"># Cost: ~2× single agent. Quality: +10-20pp on factual / code tasks</span></code></pre>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) <strong>Same-model debate</strong> — Claude vs Claude almost certainly converges to the same bias. Cross at least vendor or system-prompt. (2) <strong>Verifier with same prompt style</strong> — must explicitly use <em>oppositional roles</em> ("find errors", "skeptical"); neutral verifiers say "looks fine" too easily. (3) <strong>Cross-check on every query</strong> — doubles cost but most queries don't need it. Route by risk first (numbers, code, critical decisions). (4) <strong>Overwriting primary answer with cross-check result</strong> — verifiers also err; let primary selectively revise after seeing critique. (5) <strong>Using debate for open subjective tasks</strong> — "let 5 agents debate this slogan" inevitably converges to mediocre. Use single agent + prompt variants + human judging.
+</div>
+
+<div class="res">
+<strong>Further reading</strong> · Du et al. · <em>Improving Factuality and Reasoning through Multiagent Debate</em> (ICML 2024), <a href="https://arxiv.org/abs/2305.14325" target="_blank">arxiv.org/abs/2305.14325</a> ·
+Shinn et al. · <em>Reflexion: Language Agents with Verbal Reinforcement Learning</em>, <a href="https://arxiv.org/abs/2303.11366" target="_blank">arxiv.org/abs/2303.11366</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>The coordination tax &amp; protocols: A2A, MCP, and the cost of N²</h2>
+<div class="claim">Claim: The hidden cost of multi-agent systems isn't in tokens — it's <strong>coordination</strong>. As agent count N grows, communication complexity is O(N²), decision latency stacks linearly, failure attribution gets exponentially harder. Google's <strong>A2A protocol</strong> (April 2025) tries to standardize this, but choosing A2A vs MCP vs a homegrown message bus is fundamentally <strong>matching communication topology to task structure</strong>.</div>
+
+<h3>Background &amp; mechanics</h3>
+<p>The multi-agent "coordination tax" is the distributed-systems problem of old reborn for LLMs. Three key overheads:</p>
+<ul>
+<li><strong>(1) Communication complexity</strong> — arbitrary inter-agent comms is O(N²) edges; each edge has message encoding, token cost, context sync overhead. Past 5-7 agents performance noticeably drops (each agent's context bloats with other agents' state).</li>
+<li><strong>(2) Decision latency stacking</strong> — sequential agent pipelines stack latency (5 agents × 8s = 40s); parallel agents are bounded by the slowest subagent + aggregation latency (~1.5× single-agent). User-perceived latency is usually the biggest engineering pressure point pushing against multi-agent.</li>
+<li><strong>(3) Failure attribution</strong> — single-agent failures are easy to locate (read the trace, find the wrong step). Multi-agent failure means answering "which agent at which step did what that led to the final error" — subagent traces + lead aggregation trace + cross-agent state, debug complexity explodes. Anthropic's engineering post admits this is the hardest engineering problem in multi-agent — they solve it via <em>per-agent full traces + cross-trace correlation IDs</em>.</li>
+</ul>
+<p>April 2025 Google launched <strong>A2A (Agent-to-Agent) protocol</strong>, standardizing "agents from different frameworks and vendors discover each other, delegate tasks, and coordinate". Stack: HTTP + SSE + JSON-RPC 2.0. Each agent publishes an <strong>Agent Card</strong> (JSON describing its capabilities), client agent finds suitable targets via Cards, Task is the work-delegation abstraction. In June, Google donated A2A to the Linux Foundation; 150+ organizations now back it.</p>
+<p>A2A vs MCP — division of labor is often muddled:</p>
+<ul>
+<li><strong>MCP</strong> (Anthropic 2024): standardizes <em>LLM agent ↔ tools/data sources</em>. One agent calls GitHub, Slack, local files through an MCP server — a <strong>vertical</strong> connection (agent acquires capability).</li>
+<li><strong>A2A</strong> (Google 2025): standardizes <em>agent ↔ agent</em>. One agent delegates a task to another agent through A2A — a <strong>horizontal</strong> connection (agents collaborate).</li>
+<li>Complementary, not exclusive: real systems typically <em>use MCP for tools, A2A for other agents</em>. Google's own framing: "A2A and MCP are complementary".</li>
+</ul>
+<p>For independent developers: <strong>don't reach for protocols first</strong>. A 2-3-agent system with bare Python function calls + asyncio.gather takes a few hours. Adding A2A/MCP for general-purpose use adds serialization, network, and version-compat complexity. Protocols' value is in <em>cross-org / cross-vendor / long-lived agent ecosystems</em> — for one person's product with 3 internal agents, direct function calls are 10× simpler, 10× faster, 10× easier to debug than JSON-RPC over HTTP. When the system genuinely needs to expose internal agents externally or integrate third-party agents, migrate to A2A then.</p>
+
+<div class="diagram">  Communication topology by agent count + boundary
+
+  Agents  Boundary           Recommended         Why
+  ──────────────────────────────────────────────────────────
+  1       Single process      Direct func call    Zero overhead
+  2-3     In-process          asyncio + dict      Don't over-engineer
+  3-7     Single product       Internal msg bus    Standardized trace
+  5-20    Cross-service/team   MCP (tools) + own   MCP is de-facto standard
+  N       Cross-vendor/org     A2A                 Interop required
+  ──────────────────────────────────────────────────────────
+  Counter-example: 2-agent PoC straight to A2A
+  → 50% more code, 5× harder to debug, zero interop gain</div>
+
+<h3>Hands-on example</h3>
+<p>The most pragmatic "protocol-less" multi-agent template for indie devs (asyncio + shared trace):</p>
+<pre><code><span class="tag-key">import</span> asyncio, uuid, time, json
+<span class="tag-key">from</span> dataclasses <span class="tag-key">import</span> dataclass, field
+
+<span class="tag-com"># —— Shared trace: the debug lifeline of multi-agent ——</span>
+<span class="tag-key">@dataclass</span>
+<span class="tag-key">class</span> SharedTrace:
+    run_id: <span class="tag-gpt">str</span> = field(default_factory=<span class="tag-key">lambda</span>: <span class="tag-key">str</span>(uuid.uuid4()))
+    events: <span class="tag-gpt">list</span> = field(default_factory=<span class="tag-key">list</span>)
+
+    <span class="tag-key">def</span> log(self, agent: <span class="tag-gpt">str</span>, kind: <span class="tag-gpt">str</span>, payload: <span class="tag-gpt">dict</span>):
+        self.events.append({
+            <span class="tag-gpt">"t"</span>: time.time(), <span class="tag-gpt">"agent"</span>: agent,
+            <span class="tag-gpt">"kind"</span>: kind, <span class="tag-gpt">"payload"</span>: payload,
+        })
+
+<span class="tag-com"># —— Subagent: just an async function, no RPC ——</span>
+<span class="tag-key">async def</span> subagent(name: <span class="tag-gpt">str</span>, task: <span class="tag-gpt">dict</span>, trace: SharedTrace,
+                   budget_tokens: <span class="tag-gpt">int</span> = 8000) -&gt; <span class="tag-gpt">dict</span>:
+    trace.log(name, <span class="tag-gpt">"start"</span>, {<span class="tag-gpt">"task"</span>: task})
+    used = 0
+    <span class="tag-key">try</span>:
+        <span class="tag-com"># LLM call + tool loop (omitted)</span>
+        result = <span class="tag-key">await</span> run_llm_loop(task, budget_tokens=budget_tokens)
+        used = result[<span class="tag-gpt">"tokens_used"</span>]
+        trace.log(name, <span class="tag-gpt">"done"</span>, {<span class="tag-gpt">"tokens"</span>: used, <span class="tag-gpt">"preview"</span>: result[<span class="tag-gpt">"text"</span>][:200]})
+        <span class="tag-key">return</span> result
+    <span class="tag-key">except</span> Exception <span class="tag-key">as</span> e:
+        trace.log(name, <span class="tag-gpt">"error"</span>, {<span class="tag-gpt">"err"</span>: <span class="tag-key">str</span>(e), <span class="tag-gpt">"tokens"</span>: used})
+        <span class="tag-key">return</span> {<span class="tag-gpt">"failed"</span>: <span class="tag-key">True</span>, <span class="tag-gpt">"reason"</span>: <span class="tag-key">str</span>(e)}
+
+<span class="tag-com"># —— Orchestrator: concurrent + budget + timeout, three layers of safety ——</span>
+<span class="tag-key">async def</span> orchestrate(user_query: <span class="tag-gpt">str</span>) -&gt; <span class="tag-gpt">dict</span>:
+    trace = SharedTrace()
+    trace.log(<span class="tag-gpt">"lead"</span>, <span class="tag-gpt">"query"</span>, {<span class="tag-gpt">"query"</span>: user_query})
+
+    plan = <span class="tag-key">await</span> lead_plan(user_query, trace)
+    <span class="tag-key">if</span> <span class="tag-key">len</span>(plan[<span class="tag-gpt">"tasks"</span>]) &gt; 7:
+        plan[<span class="tag-gpt">"tasks"</span>] = plan[<span class="tag-gpt">"tasks"</span>][:7]   <span class="tag-com"># hard cap</span>
+
+    <span class="tag-com"># 3 protections: per-agent budget / global timeout / failure isolation</span>
+    <span class="tag-key">try</span>:
+        results = <span class="tag-key">await</span> asyncio.wait_for(
+            asyncio.gather(*[
+                subagent(<span class="tag-gpt">f"sub-{i}"</span>, t, trace, budget_tokens=8000)
+                <span class="tag-key">for</span> i, t <span class="tag-key">in</span> <span class="tag-key">enumerate</span>(plan[<span class="tag-gpt">"tasks"</span>])
+            ], return_exceptions=<span class="tag-key">True</span>),
+            timeout=120,                 <span class="tag-com"># 2 min global budget</span>
+        )
+    <span class="tag-key">except</span> asyncio.TimeoutError:
+        trace.log(<span class="tag-gpt">"lead"</span>, <span class="tag-gpt">"timeout"</span>, {})
+        results = [{<span class="tag-gpt">"failed"</span>: <span class="tag-key">True</span>, <span class="tag-gpt">"reason"</span>: <span class="tag-gpt">"global timeout"</span>}]
+
+    <span class="tag-com"># Aggregate over partial success (failure isolation)</span>
+    good = [r <span class="tag-key">for</span> r <span class="tag-key">in</span> results <span class="tag-key">if not</span> (<span class="tag-key">isinstance</span>(r,<span class="tag-key">dict</span>) <span class="tag-key">and</span> r.get(<span class="tag-gpt">"failed"</span>))]
+    final = <span class="tag-key">await</span> lead_aggregate(user_query, good, trace)
+
+    <span class="tag-com"># Persist trace: lifeline for debug + eval</span>
+    json.dump({<span class="tag-gpt">"run_id"</span>:trace.run_id, <span class="tag-gpt">"events"</span>:trace.events, <span class="tag-gpt">"final"</span>:final},
+              <span class="tag-key">open</span>(<span class="tag-gpt">f"runs/{trace.run_id}.json"</span>,<span class="tag-gpt">"w"</span>), ensure_ascii=<span class="tag-key">False</span>)
+    <span class="tag-key">return</span> {<span class="tag-gpt">"answer"</span>: final, <span class="tag-gpt">"trace_id"</span>: trace.run_id}</code></pre>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) <strong>No budget guard</strong> — LLM agent loops occasionally hang in a tool-call death loop, burning $50 on one query overnight. Hard caps on tokens + tool calls + wallclock are mandatory. (2) <strong>No timeout</strong> — asyncio.gather without timeout means one stuck subagent drags down the whole run. (3) <strong>Fail-fast on single-agent failure</strong> — multi-agent should use <code>return_exceptions=True</code> + partial-success aggregation, failure isolation. (4) <strong>No persisted trace</strong> — without full trace persistence, post-mortem multi-agent debugging is hopeless. Trace is the <strong>lifeline</strong> of multi-agent engineering. (5) <strong>Reaching for A2A with only 3 agents</strong> — protocol overhead vastly outweighs benefit; migrate only when cross-vendor needs arise. (6) <strong>Using MCP for agent-to-agent comms</strong> — MCP is agent ↔ tools, not agent ↔ agent; misusing the protocol introduces wrong abstraction.
+</div>
+
+<div class="res">
+<strong>Further reading</strong> · Google · <em>Agent2Agent (A2A) Protocol</em> (2025), <a href="https://a2a-protocol.org/latest/" target="_blank">a2a-protocol.org</a> ·
+Anthropic · <em>Model Context Protocol</em> (MCP), <a href="https://modelcontextprotocol.io/" target="_blank">modelcontextprotocol.io</a> ·
+Hong et al. · <em>MetaGPT: Meta Programming for Multi-Agent Framework</em>, <a href="https://arxiv.org/abs/2308.00352" target="_blank">arxiv.org/abs/2308.00352</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// End-to-end · Two-week path to a multi-agent system</h3>
+<p>Say you want to upgrade an internal task to multi-agent (e.g. "give me a weekly AI industry research brief"). Two weeks from single agent to steady-state multi-agent:</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>Day 1 · Single-agent baseline + eval</strong>: Write the simplest single-agent version (Claude Opus + search tool). Run 10 real queries, human-rate each output. That score is the baseline for every decision after. <strong>No baseline → don't ship multi-agent</strong>.</li>
+<li><strong>Day 2 · Structural diagnosis</strong>: Run #01's 6-question check against your task. ≥3 failures → stop; it's not a multi-agent problem. Research-style tasks typically pass.</li>
+<li><strong>Day 3-4 · Minimal orchestrator-worker</strong>: Use #04's asyncio template. Lead = Opus, subagents = Sonnet/Haiku, hard cap N ≤ 5. Re-run the same 10 queries and compare to baseline.</li>
+<li><strong>Day 5 · Trace persistence</strong>: Write every run's full trace as JSON, build the simplest viewer (which agent at which step spent how many tokens producing what). Looks like overkill until the first multi-agent debug session.</li>
+<li><strong>Day 6 · Aggregation quality</strong>: Verify the Lead's aggregation prompt actually does cross-validation, not concat. Common bug: Lead dumps all subagent outputs verbatim to user, with no dedupe or contradiction detection.</li>
+<li><strong>Day 7 · Decision point</strong>: Does the multi-agent eval score beat single-agent by 10pp+? No → task structure doesn't fit, revert to single agent. Yes → continue.</li>
+<li><strong>Day 8-9 · Asymmetric cross-check</strong>: Add a verifier (different model + adversarial prompt) at the critical output. Key: don't cross-check every query — use a router to judge risk first. Usually adds another 5-10pp.</li>
+<li><strong>Day 10-11 · Three-layer budgets</strong>: token / tool-call / wallclock all get hard caps. Runaway multi-agent burning $50 per query is real; this step saves you.</li>
+<li><strong>Day 12 · Failure-mode audit</strong>: Deliberately construct 5 edge cases (all subagents fail / timeout / tool unavailable / contradictory conclusions / empty results) and verify the system degrades gracefully.</li>
+<li><strong>Day 13-14 · Long-tail observation</strong>: Run 50 real queries. Watch token distribution, p50/p95 latency, failure rate. Now decide on A2A/MCP — for most indie devs, the answer is "not needed, asyncio is enough".</li>
+</ol>
+<p style="margin-top:14px">Two weeks of this path: multi-agent isn't "I'll add more agents to look advanced", it's "I've established a baseline, diagnosed task structure, validated 15× token ROI for 90% gain, prepared trace and budget guards, then went multi-agent". <strong>That's the real 2026 posture for multi-agent engineering</strong> — most business tasks reach the Day-7 decision point and find that single agent + long context is the correct answer.</p>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// Further reading</h3>
+<ul>
+<li><a href="https://www.anthropic.com/engineering/multi-agent-research-system" target="_blank">Anthropic · How we built our multi-agent research system (2025)</a> — Orchestrator-worker case study; source of 15× token / 90.2% gain numbers</li>
+<li><a href="https://cognition.ai/blog/dont-build-multi-agents" target="_blank">Cognition · Don't Build Multi-Agents (Walden Yan, 2025)</a> — The counter-argument; context-sharing thesis</li>
+<li><a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">Anthropic · Building Effective Agents</a> — Workflow vs agent decision framework</li>
+<li><a href="https://arxiv.org/abs/2305.14325" target="_blank">Du et al. · Multiagent Debate (ICML 2024)</a> — Origin of the debate paradigm; factuality/reasoning gains</li>
+<li><a href="https://arxiv.org/abs/2303.11366" target="_blank">Shinn et al. · Reflexion (NeurIPS 2023)</a> — Self-reflection paradigm; cousin of asymmetric cross-check</li>
+<li><a href="https://arxiv.org/abs/2308.08155" target="_blank">Wu et al. · AutoGen (COLM 2024)</a> — Microsoft's multi-agent conversation framework</li>
+<li><a href="https://arxiv.org/abs/2308.00352" target="_blank">Hong et al. · MetaGPT (ICLR 2024)</a> — Encoding SOPs as agent roles</li>
+<li><a href="https://a2a-protocol.org/latest/" target="_blank">Google · Agent2Agent (A2A) Protocol</a> — Agent ↔ agent interop standard</li>
+<li><a href="https://modelcontextprotocol.io/" target="_blank">Anthropic · Model Context Protocol (MCP)</a> — Agent ↔ tools standard; complementary to A2A</li>
+</ul>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// Deeper questions</h3>
+<details><summary>Anthropic and Cognition published opposing multi-agent positions in the same week (June 2025) — not contradictory, since each side's "best practice" is the other's "anti-pattern". What does this split reveal about LLM engineering?</summary><div>It reveals: <strong>architecture is a function of task, not of model</strong>. Anthropic Research's core task is "parallel retrieval + aggregation" — subtasks are naturally independent; multi-agent is a fitting parallel-compute abstraction. Cognition Devin's core task is "sequential coding + debugging" — every step heavily depends on the prior step's implicit state; multi-agent inevitably collapses on implicit decision conflicts. Both are right, in different task spaces. The deeper engineering philosophy: <strong>LLM-era "best practices" must be discussed bound to task structure, or the discussion is empty</strong>. Most debates about "multi-agent vs not", "long context vs RAG", "fine-tune vs prompt" stall because the task-structure variable is omitted. Senior engineering judgment is largely about "reading task structure" — once you can tell whether a task is parallel-decomposable, sequentially dependent, or mixed, the architectural choices follow almost automatically.</div></details>
+<details><summary>Anthropic publicly disclosed 15× chat-token consumption — what does this mean for AI economics? Will "&gt; $1 per query to make ROI" lock multi-agent into enterprise forever?</summary><div>Short-term yes, medium-term no. Short-term: $1+ per query rules out consumer-scale (C-side query value typically &lt; $0.01) and most small-to-medium light-B scenarios. What survives 15× tokens: research, due diligence, enterprise search, complex SWE-bench, parallel outbound (lead research / candidate background checks) — high single-value tasks. Medium-term (2-3 years), three forces shift the equation: (1) <strong>Inference cost exponentially dropping</strong> — Haiku 4.5 is 20×+ cheaper than Claude 1 era; cheap-subagent strategies become viable. (2) <strong>Prefix caching becoming standard</strong> — multi-agent shared system prompt + tool defs hit cache aggressively; actual token cost is closer to 6-8× than 15×. (3) <strong>Specialized small models rising</strong> — fine-tuned subagent / verifier / aggregator models reduce per-subagent cost by ~10×. Together, 2-3 years out multi-agent reaches mid-value tasks (~$0.10/query); consumer still hard.</div></details>
+<details><summary>Multi-agent debate gains 10-15pp on ground-truth tasks but degenerates into homogeneous consensus on open subjective tasks — is this an LLM trait or a debate-paradigm limit? Do human debates have this problem?</summary><div><strong>Mostly an LLM trait amplifying inherent limits of debate</strong>, with partial human analog. Debate's theoretical assumption: agents have real diversity — independent information sources, priors, reasoning paths. Same model + same prompt × N satisfies none of these: priors come from the same training data, reasoning from the same attention patterns, failure modes are homogenized. So absent ground-truth anchoring, N agents naturally converge on the "most common mediocre answer in training data" — a direct expression of RLHF + large-model averaging tendencies. Humans have a similar problem: in-group homogenization (echo chambers) produces mediocre consensus. But human debate usually relies on <em>real experiential diversity + interest diversity</em> for variance; LLM agents have neither. This means multi-agent debate has to <strong>explicitly inject diversity</strong> to work: cross-vendor models, strong-opposing role prompts, different knowledge bases / tool stacks. "More agents naturally produces diversity" is a wrong intuition for the LLM era.</div></details>
+<details><summary>A2A (Google 2025) already has 150+ org support, but Anthropic and Cognition both used internal message buses (not A2A) in their public multi-agent implementations. Early-stage normality, or structural problem with A2A?</summary><div>More likely early-stage normality, with some A2A choices still needing time to prove out. Anthropic's Research is <em>single-product internal</em> multi-agent — all subagents are Anthropic's own Claude, cross-vendor interop yields zero benefit; A2A would just add HTTP/JSON-RPC overhead for no upside. Same for Cognition. A2A's real target scenarios are <em>cross-org / cross-vendor agent ecosystems</em> — e.g. your agent delegating tasks to Slack's agent or querying Salesforce's agent — not yet at scale. Structurally A2A has two open questions: (1) <strong>Prompt injection across trust boundaries</strong> — external agents injecting malicious instructions via task descriptions has a much larger attack surface than a single MCP tool. (2) <strong>Billing / SLA model unclear</strong> — one agent delegating to another: who pays for tokens, how are timeouts handled — the protocol doesn't say. These need solving for A2A to truly take off. MCP went the same path: published 2024, internal teams validated for 1 year, ecosystem at scale in 2025-2026. A2A likely hits that phase in 2026-2027.</div></details>
+<details><summary>If by 2027 single-agent context windows are universally 10M+ tokens and reasoning is further improved, will multi-agent's engineering value disappear? Or will new "only multi-agent can solve" scenarios emerge?</summary><div>It will shift but not disappear; new scenarios will emerge. Short-term: long context + stronger reasoning will <strong>erode multi-agent's middle ground</strong> — today's "single-agent context overflows → go multi-agent" cases (research briefs, long-doc processing) will be doable with single-agent + 10M context + stronger reasoning tomorrow; ROI in those scenarios drops. But multi-agent gets <em>more</em> valuable in truly parallel + truly heterogeneous scenarios: (1) <strong>Cross-model collaboration</strong> — Claude on text + Gemini on multimodal + a dedicated code agent for verification, with complementary capabilities context size cannot replicate. (2) <strong>Cross trust-boundary collaboration</strong> — your agent collaborating with someone else's agent (A2A scenarios) cannot ever merge into one context. (3) <strong>Real-time high-parallelism tasks</strong> — e.g. monitoring 100 data streams for sub-second decisions physically requires parallel agents. (4) <strong>Specialized agent ecosystems</strong> — deeply fine-tuned domain agents (medical diagnosis / legal audit / code security) that a single general agent will never catch. So by 2027, multi-agent shifts from "remedy for context limits" to "true collaboration / interop architecture" — higher bar, narrower scenarios, but more irreplaceable.</div></details>
+</div>
+
+<footer>BigCat · Super Individual Weekly · Week 13 / 2026-05-27</footer>
+</div>
+</body></html>
