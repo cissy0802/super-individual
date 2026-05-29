@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 15 · Latency Engineering — Super Individual Weekly</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">WEEK 15 / PHASE 2 · APPLICATIONS & SYSTEMS</span>
+<h1>Latency Engineering</h1>
+<h2>TTFT vs TPOT · Streaming · Prompt Caching · Tail Latency</h2>
+<div class="date">2026-05-29 · BigCat</div>
+<p class="pitch">Users never perceive total latency — they perceive the moment the first token appears.</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>Latency is the metric people most often optimize in the wrong place. Most stare at a single "end-to-end total" number, trim output length, swap in a smaller model — only to find the bottleneck was in prefill all along. Real latency engineering has two completely different layers, each with its own levers. One is <strong>real time</strong> (what determines TTFT and TPOT separately, how prompt caching kills prefill). The other is <strong>perceived time</strong> (streaming saves zero tokens yet halves the felt wait; p99 — not the mean — is the true experience). This issue covers four things: decomposing latency into optimizable parts, using streaming to optimize perception, using prompt caching as the single largest lever on TTFT, and why fan-out amplifies tail latency into the norm — with copy-paste code to measure and mitigate.</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>Decompose Latency: TTFT vs TPOT — Measure Before You Optimize</h2>
+<div class="claim">Claim: end-to-end latency = TTFT + N × TPOT; optimize without decomposing first and nine times out of ten you cut the wrong thing.</div>
+
+<h3>Background & Principle</h3>
+<p>Generation latency has two segments with different mechanisms and different fixes:</p>
+<ul>
+<li><strong>TTFT (Time To First Token)</strong>: from request sent to the first token emitted. It = queue + <strong>prefill</strong> (running the entire input prompt through once, computing the KV cache) + network. Prefill is <strong>compute-bound</strong> and grows roughly linearly with input token count — so <strong>longer prompt, slower TTFT</strong>.</li>
+<li><strong>TPOT (Time Per Output Token, a.k.a. ITL)</strong>: once decoding token-by-token, the gap between consecutive tokens. Decode is <strong>memory-bound</strong> (every token requires sweeping the entire model weights out of VRAM), so per-token time is near-constant and barely varies with input length.</li>
+</ul>
+<p>The key corollary: <strong>long input hurts TTFT; long output hurts total time (via N × TPOT)</strong> — they're different diseases. "My agent is slow" tells you nothing about which to treat unless you decompose. Interactive apps (chat, coding) are sensitive to both — first byte fast, then smooth.</p>
+
+<div class="diagram">request ─────────────────────────────────────────▶ time
+       │◀─ TTFT ─▶│◀──────── N × TPOT ──────────▶│
+       │ (prefill) │   (decode, token by token)   │
+no-stream: [════════ stare at spinner ════════]→ see all at once
+stream:    [wait TTFT]→ first token → text scrolls in → done
+                   ▲
+            perceived latency ≈ TTFT, NOT total time</div>
+
+<h3>In Practice</h3>
+<p>Before any optimization, use streaming to measure both segments — this is step one of latency work:</p>
+<pre><code><span class="tag-key">import</span> anthropic, time
+client = anthropic.Anthropic()
+
+t0 = time.perf_counter(); ttft = <span class="tag-key">None</span>; n = 0
+<span class="tag-key">with</span> client.messages.stream(model=<span class="tag-gpt">"claude-sonnet-4-6"</span>, max_tokens=1024,
+        messages=[{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,<span class="tag-gpt">"content"</span>: prompt}]) <span class="tag-key">as</span> s:
+    <span class="tag-key">for</span> text <span class="tag-key">in</span> s.text_stream:
+        <span class="tag-key">if</span> ttft <span class="tag-key">is None</span>: ttft = time.perf_counter() - t0   <span class="tag-com"># first-token time</span>
+        n += len(text)
+total = time.perf_counter() - t0
+tpot = (total - ttft) / max(n, 1)
+<span class="tag-key">print</span>(<span class="tag-gpt">f"TTFT={ttft*1000:.0f}ms  TPOT≈{tpot*1000:.1f}ms/char  total={total*1000:.0f}ms"</span>)</code></pre>
+<p>Run this on your real prompt. If TTFT dominates → the disease is in the input (prompt too long / not cached), see §3. If N×TPOT dominates total → the disease is in the output (make the model say less, or use a faster decode path).</p>
+
+<div class="fail">
+<strong>Failure mode</strong>: estimating latency as "avg token count × price". Latency and token count are not linearly isomorphic — the same 2000 tokens all-in-input (hurts TTFT) versus all-in-output (hurts total) feel worlds apart. People also "speed up" by cutting <code>max_tokens</code>, which does nothing when the bottleneck is prefill.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · vLLM Metrics (standard definitions of TTFT / TPOT / ITL), <a href="https://docs.vllm.ai/en/stable/design/metrics/" target="_blank">docs.vllm.ai/.../metrics</a> ·
+Week 14 <em>Inference Optimization</em> — why decode is memory-bound.
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Streaming: You're Optimizing Perceived Latency, Not Real Latency</h2>
+<div class="claim">Claim: streaming saves not a single token, yet compresses the user's wait from "total time" down to "TTFT" — the cheapest experience win there is.</div>
+
+<h3>Background & Principle</h3>
+<p>Streaming changes zero real cost: total time, total tokens, total dollars are all identical. What it changes is <strong>when the user starts seeing content</strong>. Without streaming, the user stares at a spinner for the whole N×TPOT; with streaming, they start watching text scroll after just TTFT, so <strong>perceived wait ≈ TTFT</strong>. An 8-second response is "8 seconds of blank" without streaming, and "text at 0.5s, read-as-it-goes" with it — same 8 seconds, two orders of magnitude of experience.</p>
+<p>Technically, the Claude API uses <strong>SSE (Server-Sent Events)</strong>: set <code>stream:true</code> and the server pushes a one-way series of events — <code>content_block_delta</code> carries incremental text, a final <code>message_stop</code> closes it. The official SDK's <code>messages.stream()</code> wraps the raw events into a <code>text_stream</code> iterator so you don't parse them by hand.</p>
+
+<h3>In Practice</h3>
+<p>The real engineering trap is <strong>structured output</strong>: if the downstream needs complete JSON to act, streaming gains evaporate — you can't use partial JSON until the final <code>}</code>. Two fixes:</p>
+<pre><code><span class="tag-com"># Trap: streaming JSON, but the UI waits for a complete object → no gain</span>
+
+<span class="tag-com"># Fix A: split "prose for humans" and "structure for machines" into two calls</span>
+<span class="tag-com">#   stream the prose (user sees it now), don't stream the structure (parse in back)</span>
+
+<span class="tag-com"># Fix B: stream + incremental parse — feed a partial JSON parser as it arrives</span>
+<span class="tag-key">with</span> client.messages.stream(model=<span class="tag-gpt">"claude-sonnet-4-6"</span>, max_tokens=2048,
+        tools=[summary_tool],
+        messages=msgs) <span class="tag-key">as</span> s:
+    <span class="tag-key">for</span> ev <span class="tag-key">in</span> s:
+        <span class="tag-key">if</span> ev.type == <span class="tag-gpt">"input_json"</span>:           <span class="tag-com"># incremental JSON of tool input</span>
+            render_partial(ev.snapshot)        <span class="tag-com"># use the accumulated snapshot ("typing...")</span></code></pre>
+<p>Principle: <strong>stream human-facing output, keep machine-facing structure off the critical path of streaming</strong>. When you need both, split them into separate calls so the streamed one alone carries "perceived speed".</p>
+
+<div class="fail">
+<strong>Failure mode</strong>: (1) streaming + forcing complete JSON before render — streaming is wasted, the user still waits to the end. (2) Tool-call arguments also stream as <code>input_json_delta</code>, but the tool <strong>must wait for complete arguments</strong> to execute; assuming you can act mid-stream yields half-parsed args and errors. (3) A network buffer or reverse proxy (nginx) with buffering on accumulates the SSE into one blob — the "stream" actually arrives all at once.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Anthropic Streaming Messages docs (SSE event types, SDK streaming), <a href="https://docs.claude.com/en/docs/build-with-claude/streaming" target="_blank">docs.claude.com/.../streaming</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Prompt Caching: The Single Largest Lever on TTFT</h2>
+<div class="claim">Claim: TTFT is mostly prefill; a cache hit = skip recomputing the prefix = TTFT falls off a cliff, and you save money too.</div>
+
+<h3>Background & Principle</h3>
+<p>§1 established that TTFT is dominated by prefill — running the whole input through to compute the KV cache. But many requests share a <strong>repeated prefix</strong>: the same system prompt, the same tool schemas, the same few-shot batch, the unchanging history in a multi-turn chat. Prompt caching lets the server compute that prefix's KV once and store it, so the next hit <strong>skips prefill entirely</strong>, dropping TTFT from "scales with full length" to "only computes the uncached tail". It's the highest-leverage move on TTFT, and the payoff is biggest for long system prompts / large few-shot / long RAG context.</p>
+<p>Three engineering constraints you must remember: <strong>(1) the cache is prefix-match</strong> — matched byte-by-byte from the start; change one byte of the prefix and the whole thing invalidates. <strong>(2) A hit reads at ~10% of base input price, but a write costs ~1.25×</strong> (building the cache the first time is pricier). <strong>(3) Default TTL is 5 minutes, refreshed on every hit</strong>; add <code>"ttl":"1h"</code> to buy one hour (more expensive). There's also a minimum: ~1024 tokens for Sonnet, ~4096 for Opus 4.5+, before a prefix is cacheable; up to 4 breakpoints.</p>
+
+<div class="diagram">prefix-match: stable in front, volatile at the back
+┌───────────────────────────────────────────────┐
+│ [system prompt]  ←stable  ┐                     │
+│ [tool schemas]   ←stable  ├ cache_control hit→  │ skip prefill
+│ [few-shot]       ←stable  ┘  (breakpoint)       │ TTFT plummets
+│ ───────────────────────────────────────────── │
+│ [chat history]   ←semi-stable  cache_control     │ incremental cache
+│ ───────────────────────────────────────────── │
+│ [this-turn user] ←changes every time (no cache) │
+└───────────────────────────────────────────────┘
+volatile content in front = cache miss every time = lever → zero</div>
+
+<h3>In Practice</h3>
+<pre><code>resp = client.messages.create(
+    model=<span class="tag-gpt">"claude-sonnet-4-6"</span>, max_tokens=1024,
+    system=[
+        {<span class="tag-gpt">"type"</span>:<span class="tag-gpt">"text"</span>, <span class="tag-gpt">"text"</span>: LONG_STABLE_INSTRUCTIONS},   <span class="tag-com"># stable</span>
+        {<span class="tag-gpt">"type"</span>:<span class="tag-gpt">"text"</span>, <span class="tag-gpt">"text"</span>: FEWSHOT_EXAMPLES,
+         <span class="tag-gpt">"cache_control"</span>: {<span class="tag-gpt">"type"</span>:<span class="tag-gpt">"ephemeral"</span>}},        <span class="tag-com"># ← cache up to here</span>
+    ],
+    messages=[{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>, <span class="tag-gpt">"content"</span>: user_query}],       <span class="tag-com"># changes; put last</span>
+)
+<span class="tag-key">print</span>(resp.usage)  <span class="tag-com"># cache_creation_input_tokens / cache_read_input_tokens</span></code></pre>
+<p>Once live, <strong>you must watch the two fields in <code>usage</code></strong>: high <code>cache_read</code> = healthy hits; persistently high <code>cache_creation</code> = your prefix is unstable and the cache is effectively dead. This is the only hard evidence of whether caching actually works — don't go by feel.</p>
+
+<div class="fail">
+<strong>Failure mode</strong>: (1) splicing a timestamp, random ID, or username into the start of the system prompt — the prefix changes every time, cache always misses. (2) Sparse traffic: requests more than 5 minutes apart mean the cache has expired by the next call, and you paid the 1.25× write for nothing. (3) The prefix is below the minimum token threshold, so <code>cache_control</code> is silently ignored — you think you cached, you didn't.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Anthropic Prompt Caching docs (cache_control / TTL / minimums / breakpoints), <a href="https://docs.claude.com/en/docs/build-with-claude/prompt-caching" target="_blank">docs.claude.com/.../prompt-caching</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Parallelism & Tail Latency: p99 Is the Real Experience</h2>
+<div class="claim">Claim: average latency is the marketing number for your boss; p99 is the experience. And fan-out amplifies the tail into the norm.</div>
+
+<h3>Background & Principle</h3>
+<p>Two often-ignored things. First, <strong>independent sub-tasks should run in parallel</strong>: for N mutually independent calls, serial time is Σ, parallel time (<code>asyncio.gather</code>) is max. Turning "ask one by one" into "ask all at once" is often the most direct speedup.</p>
+<p>Second, the deeper trap: <strong>tail latency is amplified under fan-out</strong>. This is the classic phenomenon Google's Dean &amp; Barroso flagged in <em>The Tail at Scale</em> (CACM 2013) — when one user request fans out into K parallel sub-calls, overall latency is bounded by <strong>the slowest one</strong> (max), so a single call's "occasionally slow" p99 becomes the norm for the aggregate. The math is sobering: with a 1% chance any single call is slow, <strong>K=20 gives ≈ 1 − 0.99²⁰ ≈ 18% chance at least one is slow; K=100 gives ≈ 63%</strong>. So <strong>one service's p99 becomes the p50 of its upstream aggregate request</strong>. Optimizing the mean is pointless — you have to treat the tail.</p>
+
+<h3>In Practice</h3>
+<pre><code><span class="tag-key">import</span> asyncio, anthropic
+client = anthropic.AsyncAnthropic()
+sem = asyncio.Semaphore(8)   <span class="tag-com"># bounded concurrency, don't blow the rate limit</span>
+
+<span class="tag-key">async def</span> ask(q):
+    <span class="tag-key">async with</span> sem:
+        r = <span class="tag-key">await</span> client.messages.create(model=<span class="tag-gpt">"claude-sonnet-4-6"</span>,
+            max_tokens=512, messages=[{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,<span class="tag-gpt">"content"</span>: q}])
+    <span class="tag-key">return</span> r.content[0].text
+
+<span class="tag-com"># parallel: overall ≈ max(latency), not Σ(latency)</span>
+results = <span class="tag-key">await</span> asyncio.gather(*(ask(q) <span class="tag-key">for</span> q <span class="tag-key">in</span> questions))
+
+<span class="tag-com"># treat the tail: hedged request — past p95 with no reply, fire a duplicate, take first</span>
+<span class="tag-key">async def</span> hedged(q, p95):
+    a = asyncio.create_task(ask(q))
+    done, _ = <span class="tag-key">await</span> asyncio.wait({a}, timeout=p95)
+    <span class="tag-key">if</span> done: <span class="tag-key">return</span> a.result()
+    b = asyncio.create_task(ask(q))                       <span class="tag-com"># fire the second</span>
+    done, pend = <span class="tag-key">await</span> asyncio.wait({a, b}, return_when=asyncio.FIRST_COMPLETED)
+    <span class="tag-key">for</span> t <span class="tag-key">in</span> pend: t.cancel()
+    <span class="tag-key">return</span> done.pop().result()</code></pre>
+<p>Hedging trades ~5% extra call volume for a large drop in p99 — the classic prescription from <em>The Tail at Scale</em>. But it must pair with bounded concurrency: unbounded parallelism only triggers 429s, retries, and avalanche — the more you "optimize" the slower it gets.</p>
+
+<div class="fail">
+<strong>Failure mode</strong>: (1) using average latency as an SLO — a pretty 800ms mean while p99 is 12s means 1% of users wait until they give up, every day. (2) Blindly <code>gather</code>-ing hundreds of concurrent calls, hitting the rate limit, triggering 429 retries — overall it gets slower. (3) Forcing parallelism on <strong>dependent</strong> steps — the next step needs the previous result, so parallelizing only hands you a half-baked input.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Dean &amp; Barroso <em>The Tail at Scale</em>, CACM 2013, <a href="https://cacm.acm.org/research/the-tail-at-scale/" target="_blank">cacm.acm.org/research/the-tail-at-scale</a> ·
+Anthropic AsyncAnthropic / rate-limit docs (concurrency and 429 handling).
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// SYNTHESIS · Run a Latency Checkup on Your LLM App</h3>
+<p>String the four points into a 30-minute checkup — the order is the optimization priority:</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>Measure first</strong>: use the §1 code to get TTFT / TPOT / total on your real prompt. Without these three numbers, everything after is guesswork.</li>
+<li><strong>Big TTFT → cache first</strong>: check whether the input prefix is stable, move system + tools + few-shot to the very front with <code>cache_control</code>, and watch <code>usage</code> to confirm <code>cache_read</code> is climbing. Best bang-for-buck.</li>
+<li><strong>Perception layer → stream everything</strong>: stream all human-facing output; split out anything structured into a separate call so JSON never blocks perceived speed.</li>
+<li><strong>Many calls → parallelize + measure p99</strong>: <code>gather</code> independent sub-tasks (with a Semaphore), then run 100 times and record p50/p95/p99 — you'll almost certainly find p99 far worse than you imagined.</li>
+<li><strong>Tail hurts → add hedging</strong>: on latency-sensitive critical paths, add hedged requests to flatten p99 with ~5% extra volume.</li>
+</ol>
+<p style="margin-top:12px">Do this and your attribution of "slow" upgrades from "the model's bad" to "TTFT or TPOT? real or perceived? p50 or p99?" — that's the latency-engineering mindset.</p>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// DEEP THINKING</h3>
+<details><summary>Streaming saves not one millisecond of real time, yet it's sold as "speedup". Where else does this "perception optimization" apply in LLM products, and where's the boundary?</summary><div>Same idea: stream a "thinking… / searching…" placeholder (TTFT feels shorter), break a long task into visible intermediate artifacts (plan → draft → final), skeleton screens. All of it trades blank waiting for a first visible signal. The boundary: when the user needs <strong>correctness of the result, not a sense of progress</strong> (one-shot API returns, batch jobs, machine consumers), perception optimization is pointless or harmful — streaming JSON actually slows the downstream. It only works on interactive paths where a human is waiting at the screen.</div></details>
+<details><summary>Prompt caching says "stable content in front". Does this conflict with Week 2 Context Engineering's "important content at the ends (lost-in-the-middle)"?</summary><div>No conflict — they constrain different dimensions. Caching constrains <strong>byte-stability across requests</strong> (don't change the prefix); lost-in-the-middle constrains <strong>the attention position of info within a single request</strong>. Putting stable system/tools/few-shot at the very front satisfies both: it's a cache-friendly prefix AND occupies the high-attention opening. What you must avoid is burying "the most critical instruction for the current task" in the middle — that's neither in the attention high ground nor stable, breaking the cache. Both principles point to the same layout: stable + important skeleton up front, volatile query at the tail.</div></details>
+<details><summary>Why is prefill compute-bound while decode is memory-bound? How does this difference dictate that "long input" and "long output" need completely different fixes?</summary><div>Prefill processes all input tokens in parallel in one pass, saturating the compute → compute-bound, bottleneck is FLOPs, so caching (skip the compute) is the lever. Decode generates 1 token per step yet must sweep the entire model weights + KV cache out of VRAM each time, leaving compute idle waiting on memory → memory-bound, bottleneck is bandwidth, so batching, quantization, speculative decoding (Week 14) are the levers. Conclusion: treat TTFT (long input) by "computing less" (caching); treat TPOT (long output) by "moving less" (batch/quant/speculation) — the levers don't swap.</div></details>
+<details><summary>Hedged requests trade ~5% extra calls for a p99 drop. In what scenarios does this trade-off flip into a net loss?</summary><div>Three ways it backfires: (1) the system is already near capacity — the extra 5% pushes load up and manufactures more stragglers, a positive-feedback avalanche; (2) the call itself is expensive (long output / big model) — the 5% extra token cost may exceed the business value of the p99 improvement; (3) non-idempotent side-effecting calls (DB writes, sending messages, charging) — the duplicate executes twice, so you must guarantee idempotency or dedupe first. Hedging's premise is "cheap, idempotent, system has headroom"; otherwise Dean &amp; Barroso themselves suggest tied requests or not hedging at all.</div></details>
+<details><summary>If you could set just one latency SLO for your LLM product, would you pick TTFT or end-to-end p99? Why is picking only one dangerous?</summary><div>Interactive products mostly pick "p99 TTFT" — it encodes both "the start of perceived wait" and "tail experience". But one is dangerous: optimize only TTFT and the model can be fast on the first token then sluggish (bad TPOT), total time still terrible; optimize only end-to-end p99 and you sacrifice first-byte responsiveness for total time. The mature move is a <strong>percentile × segment matrix</strong>: set at least p99 TTFT (perception) and p99 total (completion), then weight by product type — chat leans TTFT, batch summarization leans total.</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://docs.claude.com/en/docs/build-with-claude/prompt-caching" target="_blank">Anthropic · Prompt Caching</a> — authoritative on cache_control / TTL / minimums / breakpoints</li>
+<li><a href="https://docs.claude.com/en/docs/build-with-claude/streaming" target="_blank">Anthropic · Streaming Messages</a> — SSE event types and SDK streaming interface</li>
+<li><a href="https://docs.vllm.ai/en/stable/design/metrics/" target="_blank">vLLM · Metrics</a> — industry-standard definitions of TTFT / TPOT / ITL</li>
+<li><a href="https://cacm.acm.org/research/the-tail-at-scale/" target="_blank">Dean &amp; Barroso · The Tail at Scale (CACM 2013)</a> — the foundational paper on tail latency and hedged requests</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Weekly · Week 15 · 2026-05-29</footer>
+</div>
+</body></html>

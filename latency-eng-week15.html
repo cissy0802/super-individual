@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 15 · Latency Engineering — Super Individual Weekly</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">WEEK 15 / PHASE 2 · 应用与系统</span>
+<h1>Latency Engineering</h1>
+<h2>TTFT vs TPOT · Streaming · Prompt Caching · Tail Latency</h2>
+<div class="date">2026-05-29 · BigCat</div>
+<p class="pitch">用户感知的从来不是总时延，是首 token 出现的那一刻。</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>延迟是 LLM 产品里最容易优化错地方的指标。大多数人盯着「端到端总耗时」一个数字，砍输出长度、换更小的模型——结果瓶颈在 prefill，白忙一场。真正的 latency engineering 有两层完全不同的功夫：一层是<strong>真实时间</strong>（TTFT、TPOT 各自由什么决定，prompt caching 怎么把 prefill 砍掉），另一层是<strong>用户感知时间</strong>（streaming 一个 token 都没省却能让等待「感觉」减半，p99 而非平均数才是真实体验）。这两层用不同的杠杆。这一期讲四件事：把延迟拆成可优化的分量、用 streaming 优化感知、用 prompt caching 砍 TTFT 的单一最大杠杆、以及为什么 fan-out 会把尾延迟放大成常态——并给你一套能直接跑的测量与缓解代码。</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>拆解延迟：TTFT vs TPOT，先量再优化</h2>
+<div class="claim">论断：端到端延迟 = TTFT + N × TPOT；不先分解就动手优化，十有八九砍错地方。</div>
+
+<h3>背景与原理</h3>
+<p>一次生成的耗时由两段构成，机制不同、优化手段也不同：</p>
+<ul>
+<li><strong>TTFT（Time To First Token）</strong>：从发请求到吐出第一个 token。它 = 排队 + <strong>prefill</strong>（把整个输入 prompt 过一遍、算 KV cache）+ 网络。prefill 是<strong>计算密集</strong>、随输入 token 数近似线性增长——所以 <strong>prompt 越长，TTFT 越慢</strong>。</li>
+<li><strong>TPOT（Time Per Output Token，亦称 ITL）</strong>：进入逐 token 解码后，相邻两个 token 的间隔。decode 是<strong>访存密集</strong>（每出一个 token 都要把整个模型权重从显存搬一遍），单 token 时间近似恒定，几乎不随输入长度变。</li>
+</ul>
+<p>关键推论：<strong>长输入伤 TTFT，长输出伤总时长（通过 N × TPOT）</strong>，两者是不同的病。「我的 agent 慢」如果不分解，你根本不知道该治哪个。交互式应用（chat、coding）对 TTFT 和 TPOT 都敏感——首字要快，之后要顺。</p>
+
+<div class="diagram">请求 ───────────────────────────────────────────▶ 时间
+     │◀─ TTFT ─▶│◀──────── N × TPOT ──────────▶│
+     │ (prefill) │   (decode，逐 token 吐)       │
+非流式: [════════ 全程盯 spinner ════════]→ 一次性看到全部
+流式:   [等 TTFT]→ 首 token 出现 → 逐字滚动 → 完成
+                ▲
+          用户「感知延迟」≈ TTFT，而非总时长</div>
+
+<h3>实战示例</h3>
+<p>任何优化前，先用 streaming 把两个分量测出来——这是 latency 工作的第一步：</p>
+<pre><code><span class="tag-key">import</span> anthropic, time
+client = anthropic.Anthropic()
+
+t0 = time.perf_counter(); ttft = <span class="tag-key">None</span>; n = 0
+<span class="tag-key">with</span> client.messages.stream(model=<span class="tag-gpt">"claude-sonnet-4-6"</span>, max_tokens=1024,
+        messages=[{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,<span class="tag-gpt">"content"</span>: prompt}]) <span class="tag-key">as</span> s:
+    <span class="tag-key">for</span> text <span class="tag-key">in</span> s.text_stream:
+        <span class="tag-key">if</span> ttft <span class="tag-key">is None</span>: ttft = time.perf_counter() - t0   <span class="tag-com"># 首 token 时间</span>
+        n += len(text)
+total = time.perf_counter() - t0
+tpot = (total - ttft) / max(n, 1)
+<span class="tag-key">print</span>(<span class="tag-gpt">f"TTFT={ttft*1000:.0f}ms  TPOT≈{tpot*1000:.1f}ms/char  total={total*1000:.0f}ms"</span>)</code></pre>
+<p>把这段跑在你的真实 prompt 上。如果 TTFT 占大头 → 病在输入（prompt 太长 / 没缓存），见 §3；如果 total 大头是 N×TPOT → 病在输出（让模型少说、或换更快的 decode）。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：用「平均 token 数 × 单价」估延迟。延迟和 token 数不是线性同构——同样 2000 token，全在输入（伤 TTFT）和全在输出（伤总时长）体验天差地别。还有人靠砍 <code>max_tokens</code> 来「提速」，但瓶颈在 prefill 时这毫无用处。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · vLLM Metrics（TTFT / TPOT / ITL 的标准定义）, <a href="https://docs.vllm.ai/en/stable/design/metrics/" target="_blank">docs.vllm.ai/.../metrics</a> ·
+Week 14《Inference Optimization》— 为何 decode 是 memory-bound。
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Streaming：优化的是「感知延迟」，不是真实延迟</h2>
+<div class="claim">论断：流式一个 token 都没省，却能把用户的等待从「总时长」压到「TTFT」——这是最便宜的体验优化。</div>
+
+<h3>背景与原理</h3>
+<p>Streaming 不改变任何真实耗时：总时间、总 token、总成本都一样。它改变的是<strong>用户什么时候开始看到内容</strong>。非流式下用户盯着 spinner 等完整个 N×TPOT；流式下等到 TTFT 就开始逐字滚动，<strong>感知等待 ≈ TTFT</strong>。一个 8 秒生成的回答，非流式是「8 秒空白」，流式是「0.5 秒出字、边读边出」——同样的 8 秒，体验是两个量级。</p>
+<p>技术上 Claude API 用 <strong>SSE（Server-Sent Events）</strong>：设 <code>stream:true</code>，服务端单向推一串事件——<code>content_block_delta</code> 携带增量文本，最后 <code>message_stop</code> 收尾。官方 SDK 的 <code>messages.stream()</code> 帮你把原始事件封装成 <code>text_stream</code> 迭代器，不用手解析。</p>
+
+<h3>实战示例</h3>
+<p>流式真正的工程坑在<strong>结构化输出</strong>：如果下游要完整 JSON 才能用，流式收益归零——你得等最后一个 <code>}</code> 才能 parse，中间的 partial JSON 用不了。两个解法：</p>
+<pre><code><span class="tag-com"># 坑：流式 JSON，但 UI 要等完整对象才能渲染 → 等于没流式</span>
+
+<span class="tag-com"># 解法 A：把"给人看的散文"和"给机器的结构"拆成两次调用</span>
+<span class="tag-com">#   散文那次流式（用户立刻看到），结构那次不流式（后台解析）</span>
+
+<span class="tag-com"># 解法 B：流式但增量解析——边收边喂 partial JSON parser</span>
+<span class="tag-key">with</span> client.messages.stream(model=<span class="tag-gpt">"claude-sonnet-4-6"</span>, max_tokens=2048,
+        tools=[summary_tool],
+        messages=msgs) <span class="tag-key">as</span> s:
+    <span class="tag-key">for</span> ev <span class="tag-key">in</span> s:
+        <span class="tag-key">if</span> ev.type == <span class="tag-gpt">"input_json"</span>:           <span class="tag-com"># 工具入参的增量 JSON</span>
+            render_partial(ev.snapshot)        <span class="tag-com"># 用累积快照，可渲染"打字中"</span></code></pre>
+<p>原则：<strong>面向人的输出尽量流式，面向机器的结构尽量别在关键路径上流式</strong>。需要两者兼顾时，把它们拆成不同调用，让流式那条单独承载「感知速度」。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）流式 + 强制完整 JSON 才渲染——流式白做，用户还是等到底。（2）工具调用的入参也是流式 <code>input_json_delta</code>，但工具<strong>必须等参数完整</strong>才能执行；误以为能边流边调用会拿到半截参数报错。（3）网络层 buffer 或反代（nginx）开了缓冲，把 SSE 攒成一坨再发，前端「流式」其实一次性到达。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Anthropic Streaming Messages 文档（SSE 事件类型、SDK 流式）, <a href="https://docs.claude.com/en/docs/build-with-claude/streaming" target="_blank">docs.claude.com/.../streaming</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Prompt Caching：砍 TTFT 的单一最大杠杆</h2>
+<div class="claim">论断：TTFT 主要花在 prefill；缓存命中 = 跳过重算 prefix = TTFT 断崖式下降，还顺带省钱。</div>
+
+<h3>背景与原理</h3>
+<p>§1 说了 TTFT 大头是 prefill——把整段输入过一遍算 KV cache。但很多请求的输入<strong>前缀是重复的</strong>：同一套 system prompt、同一组 tool schema、同一批 few-shot、多轮对话里不变的历史。Prompt caching 让服务端把这段 prefix 的 KV 算一次存住，下次<strong>命中就直接跳过 prefill</strong>，TTFT 从「随全长增长」降到「只算未命中的尾巴」。这是 TTFT 优化里杠杆最大的一招，对长 system prompt / 大 few-shot / RAG 长上下文的场景收益最猛。</p>
+<p>三个必须记住的工程约束：<strong>(1) 缓存是 prefix-match</strong>——从头逐字节匹配，前缀任何一字节变了，整段失效。<strong>(2) 命中读取只花基础输入价的 ~10%，但写入要 ~1.25×</strong>（首次建缓存更贵）。<strong>(3) 默认 TTL 5 分钟、每次命中刷新</strong>；可加 <code>"ttl":"1h"</code> 买 1 小时（更贵）。还有最小门槛：Sonnet ~1024 token、Opus 4.5+ ~4096 token 才可缓存，最多 4 个 breakpoint。</p>
+
+<div class="diagram">prefix-match：稳定的放前，易变的放后
+┌───────────────────────────────────────────────┐
+│ [system prompt]  ←稳定  ┐                       │
+│ [tool schemas]   ←稳定  ├ cache_control 命中→   │ 跳过 prefill
+│ [few-shot 示例]  ←稳定  ┘  (breakpoint)         │ TTFT 暴跌
+│ ───────────────────────────────────────────── │
+│ [对话历史]       ←半稳定  cache_control          │ 增量缓存
+│ ───────────────────────────────────────────── │
+│ [本轮 user 输入] ←每次变  (不缓存，放最后)        │
+└───────────────────────────────────────────────┘
+把易变内容放前面 = 每次 cache miss = 杠杆直接归零</div>
+
+<h3>实战示例</h3>
+<pre><code>resp = client.messages.create(
+    model=<span class="tag-gpt">"claude-sonnet-4-6"</span>, max_tokens=1024,
+    system=[
+        {<span class="tag-gpt">"type"</span>:<span class="tag-gpt">"text"</span>, <span class="tag-gpt">"text"</span>: LONG_STABLE_INSTRUCTIONS},   <span class="tag-com"># 稳定</span>
+        {<span class="tag-gpt">"type"</span>:<span class="tag-gpt">"text"</span>, <span class="tag-gpt">"text"</span>: FEWSHOT_EXAMPLES,
+         <span class="tag-gpt">"cache_control"</span>: {<span class="tag-gpt">"type"</span>:<span class="tag-gpt">"ephemeral"</span>}},        <span class="tag-com"># ← 缓存到此处</span>
+    ],
+    messages=[{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>, <span class="tag-gpt">"content"</span>: user_query}],       <span class="tag-com"># 每次变，放最后</span>
+)
+<span class="tag-key">print</span>(resp.usage)  <span class="tag-com"># cache_creation_input_tokens / cache_read_input_tokens</span></code></pre>
+<p>上线后<strong>必须盯 <code>usage</code> 里的两个字段</strong>：<code>cache_read</code> 高 = 命中良好；<code>cache_creation</code> 持续偏高 = 你的 prefix 不稳定，缓存形同虚设。这是判断缓存到底有没有生效的唯一硬证据，别靠感觉。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）把时间戳、随机 ID、用户名拼进 system prompt 开头——前缀每次都变，缓存永远 miss。（2）稀疏流量：请求间隔 &gt; 5 分钟，缓存到下一次已过期，白付了 1.25× 的写入费。（3）prefix 没到最小 token 门槛，<code>cache_control</code> 被静默忽略，你以为缓存了其实没有。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Anthropic Prompt Caching 文档（cache_control / TTL / 最小门槛 / breakpoint）, <a href="https://docs.claude.com/en/docs/build-with-claude/prompt-caching" target="_blank">docs.claude.com/.../prompt-caching</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>并行化与尾延迟：p99 才是用户的真实体验</h2>
+<div class="claim">论断：平均延迟是给老板看的营销数字，p99 才是体验；fan-out 会把尾部放大成常态。</div>
+
+<h3>背景与原理</h3>
+<p>两件常被忽视的事。其一，<strong>独立子任务该并行</strong>：N 个互不依赖的调用，串行耗时是 Σ，并行（<code>asyncio.gather</code>）耗时是 max。把「逐个问」改成「一起问」往往是最直接的提速。</p>
+<p>其二，也是更深的坑：<strong>尾延迟在 fan-out 下会被放大</strong>。这是 Google 的 Dean &amp; Barroso 在《The Tail at Scale》（CACM 2013）点出的经典现象——当一个用户请求扇出成 K 个并行子调用，整体延迟取决于<strong>最慢的那一个</strong>（max），于是单个调用的 p99「偶发慢」会变成聚合请求的常态。算一下就触目惊心：单调用 1% 概率慢，<strong>K=20 时至少一个慢的概率 ≈ 1 − 0.99²⁰ ≈ 18%；K=100 时 ≈ 63%</strong>。所以<strong>一个服务的 p99 会变成它上游聚合请求的 p50</strong>。优化平均数毫无意义，要治的是尾巴。</p>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-key">import</span> asyncio, anthropic
+client = anthropic.AsyncAnthropic()
+sem = asyncio.Semaphore(8)   <span class="tag-com"># 有界并发，别打爆 rate limit</span>
+
+<span class="tag-key">async def</span> ask(q):
+    <span class="tag-key">async with</span> sem:
+        r = <span class="tag-key">await</span> client.messages.create(model=<span class="tag-gpt">"claude-sonnet-4-6"</span>,
+            max_tokens=512, messages=[{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,<span class="tag-gpt">"content"</span>: q}])
+    <span class="tag-key">return</span> r.content[0].text
+
+<span class="tag-com"># 并行：整体 ≈ max(latency)，而非 Σ(latency)</span>
+results = <span class="tag-key">await</span> asyncio.gather(*(ask(q) <span class="tag-key">for</span> q <span class="tag-key">in</span> questions))
+
+<span class="tag-com"># 治尾巴：hedged request——过了 p95 还没回，补发一份，取先到的</span>
+<span class="tag-key">async def</span> hedged(q, p95):
+    a = asyncio.create_task(ask(q))
+    done, _ = <span class="tag-key">await</span> asyncio.wait({a}, timeout=p95)
+    <span class="tag-key">if</span> done: <span class="tag-key">return</span> a.result()
+    b = asyncio.create_task(ask(q))                       <span class="tag-com"># 补发第二份</span>
+    done, pend = <span class="tag-key">await</span> asyncio.wait({a, b}, return_when=asyncio.FIRST_COMPLETED)
+    <span class="tag-key">for</span> t <span class="tag-key">in</span> pend: t.cancel()
+    <span class="tag-key">return</span> done.pop().result()</code></pre>
+<p>Hedging 用约 5% 的额外调用量，换 p99 的大幅下降——这是《The Tail at Scale》给的经典处方。但它和「有界并发」要配合：无限并发只会触发 429、重试、雪崩，越优化越慢。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）用平均延迟做 SLO——平均 800ms 很漂亮，但 p99 是 12 秒，那 1% 用户每天都在等到放弃。（2）无脑 <code>gather</code> 几百个并发，撞 rate limit 触发 429 重试，整体反而更慢。（3）对<strong>有依赖</strong>的步骤强行并行——下一步要上一步结果，并行只会拿到半成品。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Dean &amp; Barroso《The Tail at Scale》, CACM 2013, <a href="https://cacm.acm.org/research/the-tail-at-scale/" target="_blank">cacm.acm.org/research/the-tail-at-scale</a> ·
+Anthropic AsyncAnthropic / rate limit 文档（并发与 429 处理）。
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// 综合实战 · 给你的 LLM app 做一次 latency 体检</h3>
+<p>把四点串成一次半小时的体检，顺序就是优化的优先级：</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>先量再说</strong>：用 §1 的代码在真实 prompt 上测出 TTFT / TPOT / total 三个数。没有这三个数，后面全是瞎猜。</li>
+<li><strong>TTFT 大 → 先上缓存</strong>：检查输入前缀是否稳定，把 system + tools + few-shot 提到最前并打 <code>cache_control</code>，盯 <code>usage</code> 确认 <code>cache_read</code> 起来了。这是性价比最高的一步。</li>
+<li><strong>感知层 → 全程 streaming</strong>：面向人的输出一律流式；要结构化的拆成单独调用，别让 JSON 卡住感知速度。</li>
+<li><strong>多调用 → 并行 + 测 p99</strong>：独立子任务 <code>gather</code>（带 Semaphore），然后跑 100 次记录 p50/p95/p99——你几乎一定会发现 p99 远超想象。</li>
+<li><strong>尾巴痛 → 上 hedging</strong>：对延迟敏感的关键路径加 hedged request，用 ~5% 额外量压平 p99。</li>
+</ol>
+<p style="margin-top:12px">做完这套，你对「慢」的归因会从「模型不行」升级到「TTFT 还是 TPOT？真实还是感知？p50 还是 p99？」——这才是 latency engineering 的思维方式。</p>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// ENGLISH GLOSSARY</h3>
+<dl>
+<dt>TTFT (Time To First Token)</dt><dd>发请求到吐出首 token 的时间 = 排队 + prefill + 网络。决定用户「感知」的等待。</dd>
+<dt>TPOT / ITL</dt><dd>Time Per Output Token / Inter-Token Latency，逐 token 解码时相邻两 token 的间隔，近似恒定。</dd>
+<dt>Prefill</dt><dd>把整段输入 prompt 过一遍、算 KV cache 的阶段，计算密集，随输入长度增长——TTFT 的主因。</dd>
+<dt>Decode</dt><dd>逐 token 自回归生成阶段，访存密集，决定 TPOT。</dd>
+<dt>Streaming / SSE</dt><dd>用 Server-Sent Events 把输出增量推给客户端，优化感知延迟而非真实延迟。</dd>
+<dt>Prompt Caching</dt><dd>缓存稳定 prefix 的 KV，命中即跳过 prefill。prefix-match，读 ~10%、写 ~1.25×，默认 5 分钟 TTL。</dd>
+<dt>Cache Breakpoint</dt><dd>用 cache_control 标记的缓存边界，最多 4 个，控制哪几段可独立缓存。</dd>
+<dt>p50 / p95 / p99</dt><dd>延迟分位数。p99 = 最慢 1% 的延迟，比平均数更能反映真实体验。</dd>
+<dt>Tail Amplification</dt><dd>fan-out 下整体延迟取 max，单调用的 p99 会变成聚合请求的 p50（《The Tail at Scale》）。</dd>
+<dt>Hedged Request</dt><dd>过了 p95 还没回就补发一份重复请求，取先到的，用少量额外量压平尾延迟。</dd>
+</dl>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// 深入思考</h3>
+<details><summary>Streaming 不省一毫秒真实时间，却被当成"提速"。这种"感知优化"还能用在 LLM 产品的哪些地方？边界在哪？</summary><div>同源思路：先回流式的"思考中/检索中"占位文本（让 TTFT 感觉更短）、把长任务拆成可见的中间产物（plan → 草稿 → 终稿）、骨架屏。本质都是「用首个可见信号换掉空白等待」。边界：当用户需要的是<strong>结果的正确性而非过程感</strong>时（如一次性 API 返回、批处理、机器消费），感知优化无意义甚至有害——流式 JSON 反而拖慢下游。感知优化只对「有人在屏幕前等」的交互路径有效。</div></details>
+<details><summary>Prompt caching 把"稳定内容放前面"。这和 Week 2 Context Engineering 的"重要内容放两头（lost-in-the-middle）"是否冲突？</summary><div>不冲突，因为约束的是不同维度。Caching 约束的是<strong>跨请求的字节稳定性</strong>（前缀别变），lost-in-the-middle 约束的是<strong>单次请求内信息的注意力位置</strong>。稳定的 system/tools/few-shot 放最前正好两全：既是 cache 友好的前缀，又占据高注意力的开头。真正要避免的是把「当前任务最关键的指令」埋进中段——那既不在注意力高地，又因为常变而破坏缓存。两个原则指向同一个布局：稳定+重要的骨架在前，易变的查询在尾。</div></details>
+<details><summary>为什么 prefill 是计算密集而 decode 是访存密集?这个差异如何决定了"长输入"和"长输出"要用完全不同的优化手段?</summary><div>Prefill 一次性并行处理全部输入 token，算力被喂满 → compute-bound，瓶颈是 FLOPs，所以缓存（跳过计算）是杠杆。Decode 每步只生成 1 个 token，却要把整个模型权重 + KV cache 从显存搬一遍，算力闲着等内存 → memory-bound，瓶颈是带宽，所以 batching、量化、speculative decoding（Week 14）是杠杆。结论：治 TTFT（长输入）靠"少算"（缓存），治 TPOT（长输出）靠"少搬"（批/量化/投机）——手段不可互换。</div></details>
+<details><summary>Hedged request 用 ~5% 额外调用换 p99 下降。这个 trade-off 在什么场景下会反过来变成净亏损?</summary><div>三种情况翻车：(1) 系统已接近容量上限——补发的 5% 推高负载，反而制造更多 straggler，正反馈雪崩；(2) 调用本身昂贵（长输出 / 大模型）——5% 的额外 token 成本可能超过 p99 改善的业务价值；(3) 非幂等的副作用调用（写库、发消息、扣费）——补发会重复执行，必须先保证幂等或加去重。Hedging 的前提是「便宜、幂等、系统有余量」，否则 Dean&amp;Barroso 自己也建议改用 tied request 或干脆不 hedge。</div></details>
+<details><summary>如果给你的 LLM 产品只能定一个 latency SLO 指标,你选 TTFT 还是 p99 端到端?为什么单选很危险?</summary><div>交互式产品多半选「p99 TTFT」——它同时编码了"用户感知的起点"和"尾部体验"。但单选危险：只盯 TTFT，模型可能首 token 飞快、之后慢吞吞（TPOT 烂），总时长仍糟；只盯 p99 端到端，又会牺牲首字响应去优化总时长。成熟做法是<strong>分位数 × 分量的矩阵</strong>：至少同时设 p99 TTFT（感知）和 p99 total（完成）两个门，再按产品类型加权——chat 偏 TTFT，批量摘要偏 total。</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://docs.claude.com/en/docs/build-with-claude/prompt-caching" target="_blank">Anthropic · Prompt Caching</a> — cache_control / TTL / 最小门槛 / breakpoint 权威说明</li>
+<li><a href="https://docs.claude.com/en/docs/build-with-claude/streaming" target="_blank">Anthropic · Streaming Messages</a> — SSE 事件类型与 SDK 流式接口</li>
+<li><a href="https://docs.vllm.ai/en/stable/design/metrics/" target="_blank">vLLM · Metrics</a> — TTFT / TPOT / ITL 的工业标准定义</li>
+<li><a href="https://cacm.acm.org/research/the-tail-at-scale/" target="_blank">Dean &amp; Barroso · The Tail at Scale (CACM 2013)</a> — 尾延迟与 hedged request 的奠基论文</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Weekly · Week 15 · 2026-05-29</footer>
+</div>
+</body></html>
