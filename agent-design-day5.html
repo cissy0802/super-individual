@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 5 · Agent Design Patterns — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.homework{background:linear-gradient(135deg,rgba(255,110,196,0.1),rgba(123,97,255,0.1));border:1px solid rgba(255,110,196,0.3);border-radius:10px;padding:22px 24px;margin:36px 0}
+.homework h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 05 / PHASE 1 · ENGINEERING</span>
+<h1>Agent Design Patterns</h1>
+<h2>Workflow vs Agent · ReAct / Plan / Reflexion · Multi-agent 反模式 · 失败模式手册</h2>
+<div class="date">2026-05-23 · BigCat</div>
+<p class="pitch">能用 workflow 解决的事，别用 agent；能用 single agent 的事，别用 multi-agent。</p>
+</header>
+<div class="cross-ref" style="margin: 24px auto; max-width: 760px; padding: 14px 18px; border-left: 3px solid #00d4ff; background: rgba(0,212,255,0.10); border-radius: 4px; font-size: 0.92rem;">
+  <a href="https://cissy0802.github.io/ai-ml-daily/agent-architectures-day5.html" style="color: #00d4ff; text-decoration: none; font-weight: 500;">
+    前置概念 → ai-ml-daily Day 5: Agent 架构（ReAct, Plan-and-Execute, Reflexion）
+  </a>
+</div>
+
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>过去一年「agent」被滥用到几乎失去意义——任何带 LLM 调用的脚本都自称 agent，任何 demo 都堆 3 个角色互相 debate。但当你真的把这些跑进生产，会发现一条残酷的曲线：<strong>agent 化程度越高，可靠性越低、延迟越大、token 成本越爆</strong>。Anthropic 在 <em>Building Effective Agents</em> 里给出了那条被反复引用的结论——「Find the simplest solution possible, and only increase complexity when needed」。这一期不讲哪个框架更好（LangGraph / CrewAI / AutoGen 谁更香这种事毫无意义），讲<strong>真正决定可靠性的四件事</strong>：什么时候 <em>不</em> 该用 agent、ReAct/Plan/Reflexion 三种主流 loop 的真实差异、为什么 multi-agent 几乎都是反模式、以及让 agent 项目挂掉的五种典型失败模式与诊断方法。</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>Workflow vs Agent：先问该不该用 agent</h2>
+<div class="claim">论断：90% 自称 agent 的项目其实是 workflow；workflow 用 agent 跑只会更慢更贵更不可靠。</div>
+
+<h3>背景与原理</h3>
+<p>Anthropic <em>Building Effective Agents</em> 给出了一个被严重低估的二分法：</p>
+<ul>
+<li><strong>Workflow</strong>：LLM 与 tool 沿着<em>预定义代码路径</em>编排执行。你写代码决定下一步是什么，LLM 只在节点上做判断或生成。</li>
+<li><strong>Agent</strong>：LLM <em>动态决定</em>自己用什么工具、走什么路径，循环直到自认为完成。</li>
+</ul>
+<p>区别不在「用没用 tool」，而在<strong>控制流由谁决定</strong>。一个跑 5 步 prompt chain 的 RAG 是 workflow，不是 agent；一个能自己决定要不要再查一次资料、要不要换工具的才是 agent。</p>
+<p>为什么这件事重要？因为 <strong>agent 的可靠性大致等于「每一步成功率」的 N 次方</strong>。每步 95% 成功的 agent，跑 10 步只剩 60%；跑 20 步只剩 36%。workflow 把不必要的「自决」固化成代码，等于把指数衰减压成线性。同样的任务，能写成 workflow 就不要写成 agent——这不是性能洁癖，是 reliability 的物理事实。</p>
+<p>什么时候 <em>该</em> 用 agent？Anthropic 的判断标准只有一条：<strong>任务的步骤数和路径不可预先枚举</strong>。比如「修这个 bug」——你不知道要读几个文件、改几处；「研究这个开源项目」——你不知道要 fetch 多少链接。其余 90% 的场景（提取信息 + 改写 + 校验 + 存库；分类 + 路由；翻译 + 润色 + 翻回去对照）都是 workflow。</p>
+
+<div class="diagram">  Workflow（路径写死，LLM 做节点判断）
+
+  input ──▶ [classify] ──┬──▶ [extract] ──▶ [validate] ──▶ output
+                         └──▶ [summarize] ──▶ [validate] ──▶ output
+  ✓ 步数确定  ✓ 可单元测试  ✓ p99 延迟可控  ✓ 成本可预测
+
+  Agent（路径动态，LLM 自决下一步）
+
+  input ──▶ ┌─ LLM ─┐ ──tool_use──▶ [tool] ──tool_result──┐
+            │       │ ◀──────────────────────────────────┘
+            └─ stop?─┘ ──end_turn──▶ output
+  ✓ 路径不可枚举  ✗ 步数不定  ✗ 难单测  ✗ p99 延迟不可控</div>
+
+<h3>实战示例</h3>
+<p>「给一份会议录音生成结构化纪要 + 待办 + 关键决策」——是 workflow，不是 agent：</p>
+<pre><code><span class="tag-com"># —— 这是 workflow（5 行业务代码 + 3 次 LLM 调用） ——</span>
+transcript = whisper.transcribe(audio_path)
+summary    = llm(SUMMARY_PROMPT,  transcript)
+todos      = llm(TODO_PROMPT,     transcript)
+decisions  = llm(DECISION_PROMPT, transcript)
+<span class="tag-key">return</span> {<span class="tag-gpt">"summary"</span>:summary, <span class="tag-gpt">"todos"</span>:todos, <span class="tag-gpt">"decisions"</span>:decisions}
+
+<span class="tag-com"># 步数固定 = 3, 不需要 agent loop / tool selection / state machine</span>
+<span class="tag-com"># p99 延迟 = 3 × LLM 调用上界, 可缓存可批量可并行</span></code></pre>
+<p>「修这个 issue：用户报告 dashboard 在 Safari 上偶发 white screen」——是 agent：</p>
+<pre><code><span class="tag-com"># —— 这是 agent（路径不可枚举） ——</span>
+<span class="tag-com"># 可能的步骤：</span>
+<span class="tag-com">#   读 issue → grep dashboard 入口 → 读 entry → 看 git log →</span>
+<span class="tag-com">#   找 Safari 相关 polyfill → 跑测试 → 改 → 再跑 → 写 PR</span>
+<span class="tag-com"># 但「可能」二字意味着具体走哪条路要看每步看到什么</span>
+agent(task=issue_body, tools=[read,grep,bash,edit,write,fetch])</code></pre>
+<p>一个简单决策口诀：<strong>能在白板上把所有可能路径画出来，就是 workflow；画不出来，才是 agent</strong>。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）把固定流程写成 agent，让模型每一步「自决」该 extract 还是 summarize——成功率从 99% 掉到 80%，因为引入了不必要的 selection 风险。（2）用 agent 实现路由——「问候问题/技术问题/账户问题分流」用 classifier workflow 就够，包成 agent 加 tool 是 over-engineering。（3）混合：路径明明确定但用 agent 跑「显得 AI 一点」——延迟 / 成本 / 不可观测性三杀。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Anthropic <em>Building Effective Agents</em>, <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">anthropic.com/engineering/building-effective-agents</a> ·
+Lilian Weng <em>LLM Powered Autonomous Agents</em>, <a href="https://lilianweng.github.io/posts/2023-06-23-agent/" target="_blank">lilianweng.github.io/.../agent</a> ·
+Simon Willison <em>What are agents?</em>, <a href="https://simonwillison.net/2025/Sep/18/agents/" target="_blank">simonwillison.net/.../agents</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>ReAct vs Plan-and-Execute vs Reflexion：三种 loop 的真实分工</h2>
+<div class="claim">论断：默认用 ReAct；任务跨越 ≥ 8 步且高代价才上 Plan；只有可验证型任务才用 Reflexion。</div>
+
+<h3>背景与原理</h3>
+<p>三种最常见的 agent loop，被 LangChain / LlamaIndex 文档讲得像三种「框架选择」，其实是<strong>三种不同复杂度场景的不同收益曲线</strong>。理解它们什么时候 work、什么时候不 work，比记住它们的名字重要 100 倍。</p>
+<p><strong>ReAct（Yao et al. 2022, arXiv:2210.03629）</strong>——Thought / Action / Observation 三段交替，每一步看完结果再决定下一步。优点：简单、低延迟、容错好（错了下一步可纠）。Claude Code、Cursor 的 agent loop 本质都是 ReAct 的变体。<strong>这是默认应该选的 pattern</strong>。</p>
+<p><strong>Plan-and-Execute（Wang et al. 2023, arXiv:2305.04091）</strong>——先用一次 LLM 调用生成完整计划（List[step]），再逐步执行。优点：步骤之间可并行、计划阶段可被人 review、token 利用率高。缺点：<em>计划基于不完整信息</em>，执行中遇到意外只能强行走完或全盘 replan。适用：步骤多（≥ 8）、每步代价高（涉及钱 / 时间）、且初始信息足够支持靠谱 plan 的场景。</p>
+<p><strong>Reflexion（Shinn et al. 2023, arXiv:2303.11366）</strong>——做完后让 LLM 反思「这次哪里没做好」，把反思写进 memory，下一轮带着反思重新做。它在论文里在 HumanEval / AlfWorld 上有明显提升，<strong>但前提是任务结果可验证</strong>（代码能跑测试、游戏有 score）。在「写文章」「客服对话」这类<em>没 ground truth</em> 的任务上，反思容易变成自我感觉良好的 noise——模型反思出来的「下次该这样」很可能是错的。</p>
+
+<div class="diagram">  ReAct（默认）
+  ┌─ Thought ─▶ Action ─▶ Observation ─┐
+  └─────────────────◀──────────────────┘
+   每步看到结果再决定 ✓ 容错 ✓ 低延迟 ✗ 难并行
+
+  Plan-and-Execute（步多 + 高代价）
+  ┌─ Plan ─▶ [s1,s2,s3,...,s10]
+  │            │ │ │       │
+  │            ▼ ▼ ▼  …    ▼   (可并行)
+  └────────── Execute ────── output
+   ✓ 计划可 review ✗ 不能动态调整
+
+  Reflexion（可验证任务）
+  ┌─ Trajectory ─▶ Verifier ─▶ pass? ──end
+  │                              │ fail
+  │                              ▼
+  └────── Reflect ──▶ Memory ────┘
+   ✓ HumanEval/AlfWorld 类有提升 ✗ 无 verifier 时多半无用</div>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-com"># —— ReAct 骨架（你自己 harness 的 hot path） ——</span>
+<span class="tag-key">while</span> <span class="tag-key">True</span>:
+    r = llm(system=SYS, tools=TOOLS, messages=msgs)
+    msgs.append({<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"assistant"</span>,<span class="tag-gpt">"content"</span>:r.content})
+    <span class="tag-key">if</span> r.stop_reason == <span class="tag-gpt">"end_turn"</span>: <span class="tag-key">break</span>
+    results = [run_tool(b) <span class="tag-key">for</span> b <span class="tag-key">in</span> r.content <span class="tag-key">if</span> b.type==<span class="tag-gpt">"tool_use"</span>]
+    msgs.append({<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,<span class="tag-gpt">"content"</span>:results})
+
+<span class="tag-com"># —— Plan-and-Execute 骨架 ——</span>
+plan = llm(PLAN_PROMPT, task)                <span class="tag-com"># List[Step], step 间标 deps</span>
+<span class="tag-key">for</span> wave <span class="tag-key">in</span> topo_sort(plan):              <span class="tag-com"># 按依赖分波</span>
+    <span class="tag-key">await</span> asyncio.gather(*[execute(s) <span class="tag-key">for</span> s <span class="tag-key">in</span> wave])
+<span class="tag-key">if</span> not satisfied(plan.goal):
+    plan = llm(REPLAN_PROMPT, task, history)  <span class="tag-com"># 整体 replan, 不是局部修</span>
+
+<span class="tag-com"># —— Reflexion 骨架（只在 verifier 存在时用） ——</span>
+<span class="tag-key">for</span> attempt <span class="tag-key">in</span> range(MAX_ATTEMPTS):
+    traj   = react_agent(task, memory=reflections)
+    result = verifier(traj)                  <span class="tag-com"># 例：跑测试 / 校验 schema</span>
+    <span class="tag-key">if</span> result.passed: <span class="tag-key">return</span> traj
+    reflections.append(llm(REFLECT_PROMPT, traj, result.errors))</code></pre>
+<p>选型决策树：</p>
+<ol>
+<li>任务路径不可枚举 → 用 agent；否则用 workflow（见 §1）。</li>
+<li>任务平均步数 ≤ 7 步、每步成本低 → <strong>ReAct</strong>。</li>
+<li>步数多（10+）、每步代价高（发邮件 / 调付费 API / 改生产）、初始信息够规划 → <strong>Plan-and-Execute</strong>。</li>
+<li>有自动可验证 oracle（测试 / schema / score） → 在 ReAct 外层套 <strong>Reflexion</strong>。</li>
+<li>没有 oracle 但你想加「反思」？停。先想办法造 oracle，或加 LLM-as-judge（见 Day 6）。</li>
+</ol>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）默认上 Plan-and-Execute 觉得「更高级」——计划基于错信息，执行时全 plan 报废，比 ReAct 更慢更贵。（2）给所有任务都加 Reflexion——没 verifier 时反思 = 自说自话；论文里那些数字都是有 oracle 的实验。（3）混合三种 pattern——「让 agent 先 plan，每步用 ReAct，最后 reflect」听起来酷，工程上 debug 噩梦。先纯一种跑稳，再考虑混合。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · ReAct paper, <a href="https://arxiv.org/abs/2210.03629" target="_blank">arXiv:2210.03629</a> ·
+Reflexion paper, <a href="https://arxiv.org/abs/2303.11366" target="_blank">arXiv:2303.11366</a> ·
+Plan-and-Solve paper, <a href="https://arxiv.org/abs/2305.04091" target="_blank">arXiv:2305.04091</a> ·
+Lilian Weng <em>LLM Powered Autonomous Agents</em>（含 ReAct/Reflexion 对比）, <a href="https://lilianweng.github.io/posts/2023-06-23-agent/" target="_blank">lilianweng.github.io</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Multi-agent 几乎都是反模式：什么时候是例外</h2>
+<div class="claim">论断：默认 single agent + 好 prompt + 好 tools；只有「context 隔离收益 &gt; orchestration 成本」时 multi-agent 才赢。</div>
+
+<h3>背景与原理</h3>
+<p>2023-2024 年 AutoGen / CrewAI / MetaGPT 把 multi-agent 炒成「未来」，2025 年的工程现实是：<strong>大多数 multi-agent 系统的产出，不如同一个模型 + 一个写得好的 system prompt + 一组好工具</strong>。原因相当物理：</p>
+<ul>
+<li><strong>Token 成本爆炸</strong>：N 个 agent 互相对话，每轮每个 agent 都要把对方的发言读一遍，token 消耗近似 N² 增长。Anthropic 自己在 <em>How we built our multi-agent research system</em> 里给出的数据：multi-agent 比 single agent 大约 <strong>多用 15 倍 token</strong>。所以他们只在「研究」这种「parallelizable + 高价值 + 上下文巨大」的场景才用。</li>
+<li><strong>错误叠加</strong>：每个 agent 都有自己的错误率，N 个 agent 串起来错误指数累积。「Manager / Worker / Critic」三角形看着合理，实际可能比单 agent 准确率还低。</li>
+<li><strong>Orchestration 复杂度</strong>：谁先说？什么时候 stop？怎么解决冲突？这些 meta-logic 都是 bug 源。</li>
+</ul>
+<p>那 multi-agent 什么时候真的值？Anthropic 给出的具体场景特征：</p>
+<ol>
+<li><strong>任务天然并行</strong>——可拆成独立子任务，子任务之间几乎无依赖。比如「搜 5 个不同主题然后汇总」。</li>
+<li><strong>每个子 agent 都要消耗大量 context</strong>——分到不同 agent 是为了不让一个 agent 的 context window 被挤爆，每个 agent 看自己的小窗口。</li>
+<li><strong>orchestrator-worker 而非 peer debate</strong>——一个明确的 lead agent 拆任务、分发、汇总；worker 不互相说话。peer debate（多个 agent 互相辩论）在真实任务里几乎没赢过。</li>
+</ol>
+<p>这也是为什么 Claude Code 的 <code>Task</code> tool 就是 orchestrator-worker：主 agent 调 Task 启动子 agent 做独立调研，子 agent 完成后返回一段总结。<em>不</em>是让子 agent 互相对话。</p>
+
+<div class="diagram">  ✓ Orchestrator-Worker（推荐）         ✗ Peer Debate（多半反模式）
+
+        ┌─ Lead Agent ─┐                  ┌──▶ Agent A ◀──┐
+        │   plan       │                  │       │       │
+   ┌────┼────┬────┐    │                  │       ▼       │
+   ▼    ▼    ▼    ▼    │                  ▼   Agent B     ▼
+  WkA  WkB  WkC  WkD   │              Agent C ──▶ ◀── Agent D
+   │    │    │    │    │                  ↑       ↓       │
+   └────┴────┴────┴────┘                  └───────┴───────┘
+   并行执行 → 汇总                          所有人都和所有人说话
+   context 隔离, 无 peer chat              token N², 错误叠加, 谁先 stop?</div>
+
+<h3>实战示例</h3>
+<p>「调研 5 家竞品 + 写一份对比报告」——这是 multi-agent 真正赢的场景：</p>
+<pre><code><span class="tag-com"># —— Orchestrator-Worker：lead 拆任务, workers 并行调研, lead 汇总 ——</span>
+<span class="tag-key">async def</span> research_orchestrator(query):
+    plan = lead_agent(<span class="tag-gpt">f"Break this research into 3-6 independent subtopics: {query}"</span>)
+    <span class="tag-com"># plan = [&quot;company A pricing&quot;, &quot;company B product&quot;, ...]</span>
+
+    subreports = <span class="tag-key">await</span> asyncio.gather(*[
+        worker_agent(topic, tools=[web_search, fetch], max_iters=15)
+        <span class="tag-key">for</span> topic <span class="tag-key">in</span> plan
+    ])  <span class="tag-com"># 每个 worker 自己一个 context window, 不互相通信</span>
+
+    <span class="tag-key">return</span> lead_agent(<span class="tag-gpt">f"Synthesize into a report: {subreports}"</span>)
+
+<span class="tag-com"># 收益: 每个 worker 自己处理 50k token 的 web 内容</span>
+<span class="tag-com">#       单 agent 串行做要 ~250k context, 不仅慢, 还 lost-in-the-middle</span>
+<span class="tag-com">#       分给 5 个 worker 后, lead 只看 5 段总结 ~5k token, 高质量汇总</span></code></pre>
+<p>「写一个函数」——这是 multi-agent 不该出现的场景：</p>
+<pre><code><span class="tag-com"># BAD: "coder + reviewer + tester" 三 agent debate</span>
+<span class="tag-com">#   - 3× token, 3× latency, 错误叠加</span>
+<span class="tag-com">#   - reviewer 看不到 coder 没说出的上下文</span>
+<span class="tag-com">#   - tester 跑测试这步本来就不是 LLM, 是 tool</span>
+
+<span class="tag-com"># GOOD: 1 个 agent + 测试 tool + 好 system prompt</span>
+agent(task, tools=[read, edit, run_tests],
+      system=<span class="tag-gpt">"Write code, run tests, fix until green."</span>)
+<span class="tag-com">#   1× token, 用 verifier (tests) 替代 reviewer/tester agent</span></code></pre>
+<p>判断 multi-agent 该不该上的口诀：「<strong>能不能让 worker 之间不说话</strong>」？能 → orchestrator-worker 可上；不能（worker 必须 debate / 协作 / 互相依赖）→ 改回 single agent 或拆 workflow。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）「Manager / Engineer / Critic / PM」四角色——agent 互相 review，token 爆炸，没人真正 stop。（2）peer debate 用来「提升准确率」——研究表明对客观任务（数学 / 代码）提升微弱，主观任务（写作）甚至更糟。（3）忘了 verifier 比另一个 agent 强 10 倍——能跑测试就别让另一个 agent 「review code」；能 schema validation 就别让另一个 agent 「check output」。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Anthropic <em>How we built our multi-agent research system</em>, <a href="https://www.anthropic.com/engineering/built-multi-agent-research-system" target="_blank">anthropic.com/.../built-multi-agent-research-system</a> ·
+Cognition AI <em>Don't Build Multi-Agents</em>, <a href="https://cognition.ai/blog/dont-build-multi-agents" target="_blank">cognition.ai/blog/dont-build-multi-agents</a> ·
+论文 <em>Should We Be Going MAD?</em> on multi-agent debate limits, <a href="https://arxiv.org/abs/2402.18272" target="_blank">arXiv:2402.18272</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Agent 失败模式手册：5 种死法 + 诊断方法</h2>
+<div class="claim">论断：每个上过生产的 agent 都死过这 5 种死法之一；先认识它们，再设防。</div>
+
+<h3>背景与原理</h3>
+<p>当你跑过几个真实 agent 项目，会发现失败长得很像——它们反复以以下 5 种「死法」出现。把它们做成内部 incident 分类，能让你的迭代速度翻倍。</p>
+<ol>
+<li><strong>无限循环（Loop Lock）</strong>：agent 卡在 read → think → read same file → think 的循环；或反复调同一个失败 tool 期待不同结果。根因：模型对当前结果没新理解，但 stop 条件没触发。</li>
+<li><strong>过度规划（Over-planning）</strong>：花几轮在 plan、写 todo、推理「我接下来应该」，token 耗了一半还没真正做事。根因：system prompt 鼓励了 verbosity，或任务太抽象触发了模型的「show your work」习惯。</li>
+<li><strong>Tool Thrashing</strong>：在多个相似工具之间反复横跳，或拿到 tool error 后不修参数只换工具。根因：tool description 重叠（见 W04 §2），或 error message 不可读（见 W04 §combo）。</li>
+<li><strong>Context Bloat</strong>：context 一路膨胀到 80%+ 窗口，模型开始遗忘任务起点（lost-in-the-middle，见 W02）、误用早期数据、产出越来越偏。根因：每轮 tool_result 都全文塞回，没有 compaction。</li>
+<li><strong>Silent Stop / 提前 end_turn</strong>：任务没完成 agent 就说「Done!」。根因：完成判定模糊，模型把「我做了点东西」当「目标达成」。</li>
+</ol>
+<p>这 5 种失败几乎都不会在 dev 时被发现——开发者跑 3 个 happy path 就部署，生产里第一周就全部撞见。诊断不靠看 log，靠 <strong>trace</strong>：每个 turn 记 (tool_name, args_hash, result_hash, token_delta, elapsed)，用脚本扫异常 pattern。</p>
+
+<h3>实战示例</h3>
+<p>给你的 agent harness 加一个 30 行的 failure detector：</p>
+<pre><code><span class="tag-key">from</span> hashlib <span class="tag-key">import</span> md5
+
+<span class="tag-key">def</span> hash_call(name, args):
+    <span class="tag-key">return</span> md5(<span class="tag-gpt">f"{name}|{sorted(args.items())}"</span>.encode()).hexdigest()[:8]
+
+<span class="tag-key">class</span> AgentMonitor:
+    <span class="tag-key">def</span> __init__(self):
+        self.history = []  <span class="tag-com"># list of (turn, name, args_hash, result_hash)</span>
+        self.token_path = []
+
+    <span class="tag-key">def</span> record(self, turn, name, args, result, tokens):
+        ah, rh = hash_call(name, args), md5(str(result).encode()).hexdigest()[:8]
+        self.history.append((turn, name, ah, rh))
+        self.token_path.append(tokens)
+
+    <span class="tag-key">def</span> check(self):
+        h = self.history
+        <span class="tag-com"># 1. Loop lock: 同 (name, args_hash) 连续 ≥ 3 次, 且 result_hash 几乎不变</span>
+        <span class="tag-key">if</span> len(h) &gt;= 3 <span class="tag-key">and</span> len(set((x[1],x[2]) <span class="tag-key">for</span> x <span class="tag-key">in</span> h[-3:])) == 1:
+            <span class="tag-key">return</span> <span class="tag-gpt">"LOOP_LOCK"</span>
+        <span class="tag-com"># 2. Tool thrashing: 最近 5 轮调了 4+ 个不同 tool</span>
+        <span class="tag-key">if</span> len(h) &gt;= 5 <span class="tag-key">and</span> len(set(x[1] <span class="tag-key">for</span> x <span class="tag-key">in</span> h[-5:])) &gt;= 4:
+            <span class="tag-key">return</span> <span class="tag-gpt">"TOOL_THRASHING"</span>
+        <span class="tag-com"># 3. Context bloat: token 占用单调上升且 &gt; 80% 窗口</span>
+        <span class="tag-key">if</span> self.token_path <span class="tag-key">and</span> self.token_path[-1] &gt; 0.8 * MAX_CTX:
+            <span class="tag-key">return</span> <span class="tag-gpt">"CONTEXT_BLOAT"</span>
+        <span class="tag-key">return</span> <span class="tag-key">None</span>
+
+<span class="tag-com"># 在 harness 主循环里调用</span>
+<span class="tag-key">if</span> (state := monitor.check()):
+    <span class="tag-key">if</span>   state == <span class="tag-gpt">"LOOP_LOCK"</span>:       inject_msg(<span class="tag-gpt">"You're repeating. Try a different approach or ask the user."</span>)
+    <span class="tag-key">elif</span> state == <span class="tag-gpt">"TOOL_THRASHING"</span>:  inject_msg(<span class="tag-gpt">"Stop trying tools. State your hypothesis first."</span>)
+    <span class="tag-key">elif</span> state == <span class="tag-gpt">"CONTEXT_BLOAT"</span>:   compact_history(msgs)</code></pre>
+<p>对应防御策略：</p>
+<ul>
+<li><strong>Loop Lock</strong>：harness 强制 max_iters；检测到 loop 注入「You appear to be stuck, try a different approach or ask the user」；记录到 trace。</li>
+<li><strong>Over-planning</strong>：system prompt 加「Be terse. Don't restate the plan each turn」；plan mode 限制 plan 长度。</li>
+<li><strong>Tool Thrashing</strong>：合并语义近似 tool（见 W04）；error message 写「下一步该怎么办」；harness 在连续 3 次相同 error 后停。</li>
+<li><strong>Context Bloat</strong>：每隔 K 轮做一次 summarization（见 W02）；老的 tool_result 替换为「[summarized: N bytes]」。Claude Code 内置就是这样做的。</li>
+<li><strong>Silent Stop</strong>：用 verifier 而不是 LLM 判断完成——能跑测试就跑测试，能 schema 校验就 schema 校验；只有 verifier pass 才允许 end_turn。</li>
+</ul>
+
+<div class="fail">
+<strong>失败模式（元）</strong>：（1）只看 happy path 上线——dev 跑通 ≠ 生产可用；agent 必须用 trace 抽样和 failure replay 工具迭代。（2）出问题就换模型——很多人把 ReAct 卡死归咎于「Claude 不够聪明」，其实是 harness 没设 max_iters / verifier / compaction。模型解决不了系统问题。（3）用更复杂的 framework 解决简单 bug——LangGraph 替换 LangChain 不会修好你的 loop lock，加 30 行 monitor 才会。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Anthropic <em>Effective context engineering for AI agents</em>, <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" target="_blank">anthropic.com/.../effective-context-engineering</a> ·
+Anthropic <em>Building Effective Agents</em> — failure modes 段, <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">anthropic.com/.../building-effective-agents</a> ·
+Hamel Husain <em>Your AI Product Needs Evals</em>, <a href="https://hamel.dev/blog/posts/evals/" target="_blank">hamel.dev/blog/posts/evals</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// 综合实战 · 给一个新 agent 项目的 7 步决策清单</h3>
+<p>把这 4 节浓缩成一份「开 agent 项目前先过」的 checklist。下次有人喊「我想做个 AI agent」时拿这张表问回去：</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>能不能写成 workflow？</strong> 如果路径可枚举，不要做 agent。代码 + 几个 LLM 调用解决（见 §1）。</li>
+<li><strong>步数和代价多少？</strong> 平均 ≤ 7 步、低代价 → ReAct；&gt; 10 步且高代价 → Plan-and-Execute（见 §2）。</li>
+<li><strong>有没有 verifier？</strong> 有（测试 / schema / score）→ 可考虑外套 Reflexion；没有 → 不要碰 Reflexion，先想办法造 verifier。</li>
+<li><strong>真的需要 multi-agent 吗？</strong> 默认 single agent + 好 tools。只有「任务天然并行 + 子任务 context 大 + orchestrator-worker 拓扑」才上 multi-agent（见 §3）。</li>
+<li><strong>Tool registry ≤ 10？</strong> 见 W04 §2，超过 15 个 tool 已经在退化区。</li>
+<li><strong>Harness 防 5 种死法了吗？</strong> max_iters、loop detector、context compactor、tool error 上限、verifier-based stop 各加一条（见 §4）。</li>
+<li><strong>有 eval 吗？</strong> 不是 happy path demo，是 20+ 真实场景的 regression suite（Day 6 主题）。没 eval 的 agent = 玄学项目。</li>
+</ol>
+<p style="margin-top:14px">能在这 7 步里诚实回答「不需要 agent / single agent 够 / 不需要 multi-agent」是顶级工程素养。Anthropic / Cognition / Cursor 工程团队的共识，归结起来就是一句话——<strong>complexity is a tax, pay only when it's worth it</strong>。</p>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// ENGLISH GLOSSARY</h3>
+<dl>
+<dt>Workflow</dt><dd>预定义代码路径编排 LLM 调用与 tool，路径由代码决定。</dd>
+<dt>Agent</dt><dd>由 LLM 动态决定下一步、循环到自认完成的 system。</dd>
+<dt>ReAct</dt><dd>Reasoning + Acting，Thought / Action / Observation 交替的最常见 agent loop。</dd>
+<dt>Plan-and-Execute</dt><dd>先一次性生成完整计划再分步执行的 pattern，适合多步高代价任务。</dd>
+<dt>Reflexion</dt><dd>做完后自我反思并写入 memory，下一轮带反思重做；需要 verifier。</dd>
+<dt>Orchestrator-Worker</dt><dd>一个 lead agent 拆任务分发给若干 worker 子 agent 并行执行后汇总。</dd>
+<dt>Peer Debate</dt><dd>多个 agent 互相辩论，多数真实场景为反模式。</dd>
+<dt>Loop Lock</dt><dd>agent 卡在重复同一调用却期待不同结果的死循环。</dd>
+<dt>Tool Thrashing</dt><dd>在相似工具之间反复横跳无法收敛。</dd>
+<dt>Context Bloat</dt><dd>对话历史持续膨胀至挤压窗口、产出退化。</dd>
+<dt>Verifier</dt><dd>自动判断 agent 输出是否达标的程序，如单元测试 / schema validation。</dd>
+<dt>Trace</dt><dd>每个 turn 的结构化日志，用于事后分析失败模式。</dd>
+</dl>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// 深入思考</h3>
+<details><summary>ReAct 是默认选择，但 ReAct 核心是 Reason-Act-Observe 循环。这和 Chain-of-Thought 有什么本质区别？</summary><div>CoT 是单次推理（生成完整思考链再输出答案），ReAct 是交错（思考 → 动手 → 看结果 → 再思考）。本质区别：CoT 假设答案能纯推理出，ReAct 假设需要外部反馈。所以 ReAct 必须配 tool（无 tool 退化成 CoT）。Yao 2022：ReAct 在 knowledge-grounded 任务（HotpotQA）比 CoT 高 30%，纯推理（GSM8K）差不多。</div></details>
+<details><summary>Plan-and-Execute 看起来比 ReAct 系统，为什么默认不用它？</summary><div>三个原因：1) Plan 阶段的成本：一次推理生成 10 步 plan，执行到第 3 步发现 plan 错了要全 replan，浪费 token；2) 静态 plan 适应不了动态环境（如 web 内容变）；3) 实测 Plan-and-Execute 在短任务（≤5 步）输给 ReAct 5-10pp。只在长任务（10+ 步）且环境稳定（如代码生成）时才赢。</div></details>
+<details><summary>Multi-agent debate 论文很多，production 几乎没人用。除了 orchestration 复杂，还有什么本质问题？</summary><div>1) 成本 N×（agent 数）的 inference cost；2) Agent 互相 reinforce 错误（echo chamber），尤其用同一基座模型；3) 真正提升的指标少（Anthropic 实验：debate 在 reasoning task 提升 2-5%，成本翻 4 倍）。例外是 context isolation 收益大的：长文档分析（每 agent 看一段，最后 aggregate），multi-agent > single 显著。</div></details>
+<details><summary>Reflexion 让 agent 自我改进——但它需要 verifier。什么任务有好 verifier，什么任务没有？</summary><div>有 verifier：代码（运行测试）、数学（验算）、SQL（执行结果）、search（结果数 ≥ threshold）。没 verifier：写作（质量主观）、对话（无 ground truth）、设计（多答案）。无 verifier 时强行用 Reflexion 会让 agent 在自己产生的「幻觉评分」里循环退化。能写 verifier 就用 Reflexion，不能就别用。</div></details>
+<details><summary>Agent 失败模式中最常见的是什么？怎么提前 detect？</summary><div>最常见：「tool selection 死循环」——模型反复调同一 tool，因为不知道为何失败。Detection：1) 维护 last_N_tools deque (N=3)，若 [A,A,A] 就强制中断；2) 每次 tool result 后检查 progress signal（output 是否变化、是否接近目标），无 progress 就 escalate。第二常见：context overflow——历史太长，最早指令被挤掉。</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">Anthropic · Building Effective Agents</a> — 本期理论基底；workflow vs agent 的官方定义</li>
+<li><a href="https://www.anthropic.com/engineering/built-multi-agent-research-system" target="_blank">Anthropic · How we built our multi-agent research system</a> — multi-agent 何时真的值的工程笔记</li>
+<li><a href="https://cognition.ai/blog/dont-build-multi-agents" target="_blank">Cognition · Don't Build Multi-Agents</a> — 来自 Devin 团队的反面意见</li>
+<li><a href="https://lilianweng.github.io/posts/2023-06-23-agent/" target="_blank">Lilian Weng · LLM Powered Autonomous Agents</a> — agent 设计的体系化综述</li>
+<li><a href="https://arxiv.org/abs/2210.03629" target="_blank">ReAct paper (arXiv:2210.03629)</a> & <a href="https://arxiv.org/abs/2303.11366" target="_blank">Reflexion paper (arXiv:2303.11366)</a> — 两篇必读原始论文</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 05 · 2026-05-23</footer>
+</div>
+<script src="https://cissy0802.github.io/comments.js" defer></script>
+<script src="https://cissy0802.github.io/search.js" defer></script>
+<script src="https://cissy0802.github.io/index-button.js" defer></script>
+<script src="https://cissy0802.github.io/i18n-tts.js" defer></script>
+</body></html>

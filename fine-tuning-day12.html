@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 12 · Fine-tuning vs Prompting — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.crossref{margin:18px 0 0;padding:10px 16px;background:rgba(0,212,255,0.06);border:1px dashed rgba(0,212,255,0.3);border-radius:8px;font-size:0.85rem;color:#a0a4b8;text-align:center}
+.crossref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 12 / PHASE 1 · ENGINEERING</span>
+<h1>Fine-tuning vs Prompting</h1>
+<h2>ROI 决策树 · LoRA/QLoRA · 数据集质量 · 解码参数</h2>
+<div class="date">2026-05-27 · BigCat</div>
+<p class="pitch">2026 年了，「该不该 fine-tune」仍是大多数 AI 工程师过早做的决定。这一期把决策门槛、LoRA 真实工程成本、50 条数据干掉 50K、temperature/top-p 反直觉行为一次说穿。</p>
+<div class="crossref">
+<a href="https://cissy0802.github.io/ai-ml-daily/pretraining-day2.html">
+  前置概念 → ai-ml-daily Day 2 (预训练与微调机制)
+</a>
+</div>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>2026 年的 fine-tuning 已经不是 2023 年了。LoRA 已成默认（HuggingFace PEFT、Unsloth、Axolotl 一行启动），QLoRA 让 70B 在单卡 4090 上能训，开源模型（Llama 3.3、Qwen 3、DeepSeek V3）多个任务上和 Claude 4.x / GPT-5 差距小到生产可换。但<strong>大多数团队仍在错的时机 fine-tune</strong>——RAG 没做完就开训、数据集 50K 条噪声不去重、训完发现 prompt + few-shot 就能达到同样效果、推理参数从来没调过。这一期假设你知道 fine-tuning 是什么（ai-ml-daily Day 2 讲过），不重复定义；直接讲 4 个决定 ROI 的工程层：<strong>① 何时该 FT 的决策树 → ② LoRA/QLoRA 配置的真实权衡 → ③ 数据集质量为何 10 倍碾压数量 → ④ 解码参数的反直觉行为</strong>。重点：fine-tuning 不是「让模型变聪明」，是<strong>把分布锁定到你的子空间</strong>——理解这点 80% 的误用就避开了。</p>
+</div>
+
+<!-- ============ Decision tree diagram ============ -->
+<div class="diagram">  AI 能力获取的 ROI 阶梯（从便宜到昂贵）
+
+  问题：模型在我的场景下表现不够好
+       │
+       ▼
+  ┌─────────────────────────────────────────────────────────┐
+  │ ① 换更好的 prompt / system prompt          成本：0       │
+  │    XML 结构、few-shot examples、CoT、role  时间：1 小时  │
+  └─────────────────────────────────────────────────────────┘
+       │ 不够好
+       ▼
+  ┌─────────────────────────────────────────────────────────┐
+  │ ② 加 RAG / Tool use                         成本：$     │
+  │    grounding、外部知识、工具调用            时间：1-3 天 │
+  └─────────────────────────────────────────────────────────┘
+       │ 仍不够好
+       ▼
+  ┌─────────────────────────────────────────────────────────┐
+  │ ③ 换更大 / 更强的模型                       成本：$$    │
+  │    Haiku → Sonnet → Opus；GPT-mini → GPT-5  时间：5 分钟│
+  └─────────────────────────────────────────────────────────┘
+       │ 已用顶级模型仍不够
+       ▼
+  ┌─────────────────────────────────────────────────────────┐
+  │ ④ Few-shot + structured output              成本：$     │
+  │    动态 example 选择、JSON schema、CFG       时间：1 天  │
+  └─────────────────────────────────────────────────────────┘
+       │ 模式真的稳定不出 prompt 区
+       ▼
+  ┌─────────────────────────────────────────────────────────┐
+  │ ⑤ Fine-tune (LoRA → full)                  成本：$$$$  │
+  │    style/persona/格式/小模型蒸馏             时间：1-4 周│
+  └─────────────────────────────────────────────────────────┘
+
+  90% 的「需要 fine-tune」其实卡在 ①②③④ 没做满。
+  ⑤ 真正适用：style transfer / 私有数据 / on-device 蒸馏 / latency 极限</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>决策框架：Fine-tuning 是最后一步，不是第一步</h2>
+<div class="claim">论断：80% 的 fine-tune 在工程上是<strong>过早优化</strong>——团队没把 prompt + RAG + 换模型 + few-shot 这四步做满就跳到训练。Fine-tuning 真正不可替代的场景只有 5 个：style/persona、格式严格化、私有领域知识压缩、小模型蒸馏、超低延迟约束。其余都该回退到上游。</div>
+
+<h3>背景与原理</h3>
+<p>Fine-tuning 的本质是<strong>把模型的输出分布锁定到你提供的样本子空间</strong>——不是「教会新知识」（事实记忆要 100K+ 样本才稳）、也不是「提升智能」（base capability 由 pretraining 决定）。这一句澄清掉，<strong>大部分误用就消失了</strong>：你想让模型「更准确地回答专业问题」？这是知识检索问题，FT 不如 RAG；你想让模型「逻辑更强」？这是 base model 选型问题，换 Opus 4.7 / GPT-5 比 FT 一个 Llama 3 8B 强 10 倍；你想让模型「按某种风格说话」「严格输出 JSON」「模仿一个角色」？<strong>这才是 FT 的甜点</strong>。</p>
+<p>OpenAI / Anthropic 工程文档（2024-2025）反复强调同一原则：先 prompt，再 RAG，再换模型，最后 fine-tune。Anthropic 在 Claude 文档里直接写「<em>almost always prefer prompting over fine-tuning</em>」——不是因为 FT 不能用，而是 FT 的<strong>边际收益曲线</strong>陡降：第一周 RAG 调优能涨 30% accuracy，第一周 FT 通常涨 5-10%，但 FT 还要付 eval 成本、数据成本、维护成本、版本管理成本、模型托管成本。</p>
+<p>那 FT 真正应该做的 5 个场景：（1）<strong>Style/persona</strong>——用 100-500 条对话样本让小模型说话像某个品牌，prompt 几乎做不到；（2）<strong>格式严格化</strong>——某个 schema 要 100% 不破，FT 比 constrained decoding 通用性更好；（3）<strong>蒸馏</strong>——把 Claude Opus 在某任务上的输出训进 Llama 8B，推理成本降 50-100 倍；（4）<strong>私有领域 token 分布</strong>——医学/法律/代码私库等子语言，FT 后 perplexity 显著下降；（5）<strong>延迟/隐私硬约束</strong>——必须在 7B 本地模型上跑、必须不出公司网络。其他场景几乎都该回退到 prompt + RAG。</p>
+
+<div class="diagram">  哪个手段适合哪个问题（决策矩阵）
+
+  问题类型                          首选         次选        FT?
+  ──────────────────────────────────────────────────────────────
+  事实知识不够                     RAG          换模型       ✗
+  推理能力不够                     换模型        CoT          ✗
+  特定格式 / JSON 输出             prompt+CFG   FT          条件
+  特定风格 / 品牌口吻              few-shot     FT          ✓
+  特定 persona / 角色对话          few-shot     FT          ✓
+  超低延迟 / 本地推理              蒸馏 FT      量化         ✓
+  私有领域语言 (医/法/code)        RAG + FT     RAG          ✓
+  减少 hallucination               RAG + cite   prompt       ✗
+  跨语种               换模型        prompt   条件
+  Agent 工具调用准确率              prompt + few-shot         ✗
+  Tone 一致 / 减少冗长             prompt       FT          条件
+  超大上下文 (1M+)                 long-ctx     RAG          ✗
+
+  → FT 真正不可替代只占 ~20% 的工程问题</div>
+
+<h3>实战示例</h3>
+<p>20 行的「该不该 FT」自检脚本——开训前必跑：</p>
+<pre><code><span class="tag-com"># pre_ft_check.py —— 训练前的 ROI sanity check</span>
+<span class="tag-key">def</span> should_finetune(task) -&gt; <span class="tag-gpt">str</span>:
+    checks = {
+        <span class="tag-gpt">"prompt_optimized"</span>:
+            task.has_xml_structure <span class="tag-key">and</span> task.has_few_shot &gt;= 3,
+        <span class="tag-gpt">"tried_bigger_model"</span>:
+            task.tested_on_top_tier_model,  <span class="tag-com"># Opus 4.7 / GPT-5</span>
+        <span class="tag-gpt">"rag_attempted"</span>:
+            task.is_knowledge_task &lt;= task.has_rag,
+        <span class="tag-gpt">"have_eval_set"</span>:
+            <span class="tag-key">len</span>(task.eval_examples) &gt;= 50,
+        <span class="tag-gpt">"data_quality_audited"</span>:
+            task.dataset_inspected_manually,
+        <span class="tag-gpt">"baseline_metric_known"</span>:
+            task.prompt_baseline_score <span class="tag-key">is not</span> <span class="tag-key">None</span>,
+    }
+    failed = [k <span class="tag-key">for</span> k,v <span class="tag-key">in</span> checks.items() <span class="tag-key">if not</span> v]
+    <span class="tag-key">if</span> failed:
+        <span class="tag-key">return</span> <span class="tag-gpt">f"❌ DO NOT TRAIN. Fix first: {failed}"</span>
+
+    <span class="tag-com"># 5 个 FT 真正适合的场景</span>
+    valid_reasons = {<span class="tag-gpt">"style_persona"</span>, <span class="tag-gpt">"strict_format"</span>,
+                     <span class="tag-gpt">"distillation"</span>, <span class="tag-gpt">"private_domain"</span>,
+                     <span class="tag-gpt">"latency_hard_constraint"</span>}
+    <span class="tag-key">if</span> task.motivation <span class="tag-key">not in</span> valid_reasons:
+        <span class="tag-key">return</span> <span class="tag-gpt">f"⚠️  Motivation '{task.motivation}' rarely benefits from FT. "</span>\
+               <span class="tag-gpt">f"Re-evaluate via prompt/RAG first."</span>
+
+    <span class="tag-com"># ROI 估算：FT 收益必须 &gt;= 3x prompt 收益才划算</span>
+    expected_gain = task.eval_target - task.prompt_baseline_score
+    <span class="tag-key">if</span> expected_gain &lt; 0.15:
+        <span class="tag-key">return</span> <span class="tag-gpt">"⚠️  Expected gain &lt; 15pp. FT ops cost likely outweighs benefit."</span>
+    <span class="tag-key">return</span> <span class="tag-gpt">"✅ Proceed. Use LoRA r=16 baseline; full FT only if LoRA insufficient."</span></code></pre>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）「<em>我们的 prompt 已经很长很复杂了，所以肯定优化到头了</em>」——长 ≠ 好；多数过长 prompt 删一半 + 加 3 个 few-shot 反而升 accuracy；（2）「<em>RAG 太慢，所以 FT</em>」——RAG 的 retrieval 延迟通常 100ms，FT 模型本身推理延迟可能更高；先看 token 而不是猜；（3）训完没 eval set——FT 后比训前差 5% 你都发现不了，等用户反馈才知道；（4）数据从生产直接抓不审计——把 PII、错误回答、用户骂模型的 reply 全训进去；（5）一上来就 full fine-tune——LoRA 没试就跳 full，工程成本翻 20 倍而很少有相应收益。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Anthropic <em>When to fine-tune Claude (vs prompt)</em>, <a href="https://docs.claude.com/en/docs/build-with-claude/prompt-engineering/overview" target="_blank">docs.claude.com/.../prompt-engineering</a> ·
+OpenAI <em>Fine-tuning best practices</em>, <a href="https://platform.openai.com/docs/guides/fine-tuning" target="_blank">platform.openai.com/docs/guides/fine-tuning</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>LoRA / QLoRA：rank、target_modules、alpha 的真实权衡</h2>
+<div class="claim">论断：LoRA 的「神秘旋钮」rank/alpha/target_modules 不是玄学。<strong>rank 是容量、alpha 是学习率乘子、target_modules 是覆盖面</strong>——三者各有反直觉的 sweet spot，多数 tutorial 给的默认（r=8, alpha=16, q_proj+v_proj only）对大多数任务都偏保守。</div>
+
+<h3>背景与原理</h3>
+<p>LoRA（Hu et al. 2021）的核心：冻结基础权重 W，加一对低秩矩阵 <code>ΔW = B·A</code>（A 是 r×d，B 是 d×r，<strong>r ≪ d</strong>），只训 A、B。参数量从 100% 降到 0.1-2%，显存从 80GB 降到 6-12GB。QLoRA（Dettmers et al. 2023）再加一招：base 模型用 4-bit NF4 量化常驻显存，前向反向时按需 dequantize——70B 模型在单张 4090（24GB）能训，是 2023 年最重要的工程突破之一。</p>
+<p>三个核心旋钮的真实行为：</p>
+<ul>
+<li><strong>rank (r)</strong>：直觉是「容量」，但<strong>不是越大越好</strong>。Sebastian Raschka 2024 年 ablation 显示，多数任务 r=8 到 r=64 的收益曲线很平；r&gt;128 反而过拟合。<em>style/persona 类</em>用 r=8-16 就够；<em>能力增强 / 蒸馏</em>用 r=32-64；<em>领域适配 + 大量数据</em>才考虑 r=128+。默认 r=16 是稳态。</li>
+<li><strong>alpha</strong>：常被误解为 LoRA 的「容量」，实际是<strong>学习率乘子</strong>——更新量按 <code>(alpha/r)·B·A</code> 缩放。HuggingFace PEFT 文档约定 <em>alpha = 2·r</em>，但 Raschka 等多次复现：<strong>alpha = r</strong>（即缩放因子 1）在大多任务上等价且更稳。alpha &gt; 2r 容易让 LoRA 矩阵主导前向、退化为「乱训练」。</li>
+<li><strong>target_modules</strong>：教程默认只训 <code>q_proj + v_proj</code>（QLoRA 论文设定），但 2024 年 ablation（Dettmers 自己后续）显示<strong>训所有线性层</strong>（q/k/v/o + gate/up/down）通常 +2-5% accuracy，显存代价不大。<em>只训 q+v 是显存极限场景的 fallback</em>，不是 baseline。</li>
+</ul>
+<p>QLoRA 一个易忽视的细节：<strong>4-bit 量化只在前向推理时存在，反向梯度计算回到 bf16</strong>——所以「量化损失」不会进梯度，loss 曲线和 LoRA 几乎一致。但推理时如果直接用 4-bit base + LoRA adapter 部署，<strong>会比训练时多一层量化噪声</strong>——生产推理建议 merge 后用 bf16 或 8-bit GPTQ/AWQ，不要直接拿训练时的 4-bit 状态发布。</p>
+
+<div class="diagram">  LoRA 参数 sweet spot（按任务类型）
+
+  任务类型              rank   alpha   target_modules         data size
+  ──────────────────────────────────────────────────────────────────
+  Style / persona       8-16   r      q,v 或 all_linear        100-1000
+  Format 严格化         16     r      all_linear              500-5000
+  小模型蒸馏 (Opus→8B)  32-64  r      all_linear             10K-100K
+  领域适配 (医/法/code) 64-128 r      all_linear             10K-1M
+  Instruction tune      32     r      all_linear              5K-50K
+
+  反例（常见错误默认）：
+    r=8, alpha=16, target=[q_proj,v_proj], data=未审计 →
+    多数任务上欠拟合 + 训练时间 60% 浪费在错的层</div>
+
+<h3>实战示例</h3>
+<p>Unsloth（2026 年 LoRA/QLoRA 性能最高的开源训练栈，比 HF PEFT 快 2-5x、显存省 60%）的最小可工作配置：</p>
+<pre><code><span class="tag-key">from</span> unsloth <span class="tag-key">import</span> FastLanguageModel
+<span class="tag-key">from</span> trl <span class="tag-key">import</span> SFTTrainer
+<span class="tag-key">from</span> transformers <span class="tag-key">import</span> TrainingArguments
+
+<span class="tag-com"># —— 加载 4-bit 量化 base（70B 在单卡 4090 可训）——</span>
+model, tok = FastLanguageModel.from_pretrained(
+    model_name = <span class="tag-gpt">"unsloth/Meta-Llama-3.3-70B-Instruct-bnb-4bit"</span>,
+    max_seq_length = 4096,
+    load_in_4bit = <span class="tag-key">True</span>,           <span class="tag-com"># QLoRA: 4-bit NF4 量化</span>
+)
+
+<span class="tag-com"># —— LoRA adapter 配置：稳态默认 ——</span>
+model = FastLanguageModel.get_peft_model(
+    model,
+    r = 32,                          <span class="tag-com"># 蒸馏/能力任务推荐 32-64</span>
+    lora_alpha = 32,                 <span class="tag-com"># alpha = r，不要 2r</span>
+    target_modules = [               <span class="tag-com"># all_linear，不要只 q,v</span>
+        <span class="tag-gpt">"q_proj"</span>, <span class="tag-gpt">"k_proj"</span>, <span class="tag-gpt">"v_proj"</span>, <span class="tag-gpt">"o_proj"</span>,
+        <span class="tag-gpt">"gate_proj"</span>, <span class="tag-gpt">"up_proj"</span>, <span class="tag-gpt">"down_proj"</span>,
+    ],
+    lora_dropout = 0.05,              <span class="tag-com"># 小数据集开 0.05-0.1，大集开 0</span>
+    use_gradient_checkpointing = <span class="tag-gpt">"unsloth"</span>,
+    random_state = 42,
+)
+
+trainer = SFTTrainer(
+    model = model,
+    train_dataset = dataset,         <span class="tag-com"># 见 #03，质量&gt;数量</span>
+    tokenizer = tok,
+    max_seq_length = 4096,
+    args = TrainingArguments(
+        per_device_train_batch_size = 2,
+        gradient_accumulation_steps = 8,   <span class="tag-com"># effective batch=16</span>
+        warmup_steps = 10,
+        num_train_epochs = 2,              <span class="tag-com"># LoRA 多数任务 1-3 epoch</span>
+        learning_rate = 2e-4,              <span class="tag-com"># LoRA 标准 2e-4，比 full FT 高 10x</span>
+        bf16 = <span class="tag-key">True</span>,
+        logging_steps = 5,
+        optim = <span class="tag-gpt">"adamw_8bit"</span>,            <span class="tag-com"># 显存再省 40%</span>
+        weight_decay = 0.01,
+        lr_scheduler_type = <span class="tag-gpt">"cosine"</span>,
+    ),
+)
+trainer.train()
+
+<span class="tag-com"># —— 生产部署：merge 后用 bf16 / 8-bit，别直接发布 4-bit + adapter ——</span>
+model.save_pretrained_merged(<span class="tag-gpt">"./merged"</span>, tok, save_method = <span class="tag-gpt">"merged_16bit"</span>)</code></pre>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）<strong>alpha = 2r 是 PEFT 默认但已被多次复现为次优</strong>——尤其在 r ≥ 32 时，alpha &gt; r 让 LoRA 矩阵幅度过大，常见症状是训练 1 epoch 后 loss 跳水但 eval 反而崩；改 alpha = r 解决；（2）只训 <code>q_proj, v_proj</code> 然后觉得 LoRA「没效果」——MLP 层（gate/up/down）占模型参数 60%+，不训等于放弃大半容量；（3）learning rate 复用 full FT 的 2e-5——LoRA 应当用 1e-4 到 5e-4，低了根本学不动；（4）4-bit 训练直接 4-bit 部署——多了一层量化误差，eval 掉 2-5%；正确做法是 merge 后 bf16 或 8-bit 部署；（5）QLoRA 训练时 batch_size 拉太大爆显存——QLoRA 的<strong>显存瓶颈在 activation 而不是权重</strong>，要靠 gradient checkpointing + 小 micro batch + 大 accumulation。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Hu et al. <em>LoRA: Low-Rank Adaptation of LLMs</em> (ICLR 2022), <a href="https://arxiv.org/abs/2106.09685" target="_blank">arxiv.org/abs/2106.09685</a> ·
+Dettmers et al. <em>QLoRA: Efficient Finetuning of Quantized LLMs</em> (NeurIPS 2023), <a href="https://arxiv.org/abs/2305.14314" target="_blank">arxiv.org/abs/2305.14314</a> ·
+Raschka <em>Practical Tips for Finetuning LLMs Using LoRA</em>, <a href="https://magazine.sebastianraschka.com/p/practical-tips-for-finetuning-llms" target="_blank">magazine.sebastianraschka.com/.../lora-tips</a> ·
+Unsloth docs, <a href="https://docs.unsloth.ai/" target="_blank">docs.unsloth.ai</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>数据集：50 条高质量 &gt; 50,000 条噪声</h2>
+<div class="claim">论断：fine-tuning 的最大杠杆<strong>不在算法、不在 rank、不在模型</strong>——在数据集。LIMA / Zephyr / Tülu 系列论文反复证明：1000 条人精挑的样本，超越 100,000 条网上抓来的；distillation 数据比人工标注 cheaper + better。<strong>数据集是 fine-tuning 的 90%</strong>，剩下 10% 是配置。</div>
+
+<h3>背景与原理</h3>
+<p>LIMA（Meta 2023）是这个原则的标杆：用 <strong>1000 条</strong>人工精挑的对话样本 fine-tune Llama 65B，效果在人评测上 43% 优于 DaVinci-003、46% 优于 Bard（早期版本）。对比当时主流做法（FLAN-T5 那种百万条指令数据），<strong>数据量小 1000 倍、效果反而更好</strong>。原因：fine-tuning 在 instruction-tune 阶段不是教知识，是<strong>解锁已有能力 + 锁定回答格式</strong>——你给的样本数 quality 决定锁定到什么质量的子空间。喂噪声 = 锁到噪声子空间。</p>
+<p>2024 年延续这条线：Zephyr-7B 用 distillation（GPT-4 输出当老师）+ DPO 偏好对齐打败了同等大小的人工标注模型；Tülu 3（Allen AI 2024）系统消融证明<strong>数据筛选 &gt; 数据规模</strong>——去重、去 hallucination 标注、按难度采样，比单纯堆量提升大得多。</p>
+<p>三个数据工程铁律：</p>
+<ul>
+<li><strong>(1) 去重必须做</strong>：MinHash + LSH 或 SemDeDup 把语义重复去掉。生产数据自然分布是长尾，FAQ Top 10 通常占样本 60%——不去重 = 训了 10 个同样的回答 10000 次。</li>
+<li><strong>(2) 人工抽样审计</strong>：随机抽 50 条人眼看，发现 &gt; 5% 错答/PII/格式破损就<strong>整批不能用</strong>。这一步多数团队跳过，然后训完 debug 2 周才发现是数据问题。</li>
+<li><strong>(3) Distillation 是 2024 后的事实标准</strong>：用 Claude Opus / GPT-5 当老师，对每条 user query 生成 1-3 个候选 + ranker 选最优，作为训练目标。比人工标注便宜 50-100 倍，质量经常更高（人会累、模型不累）。这是 Phi / Zephyr / Orca / Qwen-Distill 系列的共同秘方。</li>
+</ul>
+<p>有一个反常识结论：<strong>数据集越小，质量门槛越高</strong>。LIMA 1000 条里每条都被作者人工挑过；Tülu 3 把噪声率压到 &lt;1%。你的 500 条数据如果有 5% 是错的，等于 25 条强反例直接污染——比 50000 条 5% 噪声里 25 条反例的<strong>相对权重</strong>大 100 倍。所以小数据 + 严挑 是<strong>更难</strong>而不是更简单的工程。</p>
+
+<div class="diagram">  数据集质量 vs 数量（典型曲线）
+
+  Eval accuracy
+       │
+   85% ┤        ╭──────━━━━━━━ 1000 条精挑 (LIMA 风格)
+       │      ╭─╯
+   80% ┤   ╭──╯
+       │   │
+   75% ┤   │              ╭━━━━━━━━━━ 50K 条混杂 (生产抓取)
+       │   │           ╭──╯
+   70% ┤   │       ╭───╯
+       │   │   ╭───╯
+   65% ┤   ╰───╯
+       │
+       └─────────────────────────────────────────────►
+         100     1K        10K        100K   data size
+
+  → 同样 80% accuracy：1K 精挑 ≈ 50K 混杂（成本差 50 倍）
+  → 100K 混杂经常打不过 1K 精挑（过拟合到噪声分布）</div>
+
+<h3>实战示例</h3>
+<p>distillation + 去重 + 质量审计的最小可运行 pipeline（Anthropic + sklearn）：</p>
+<pre><code><span class="tag-key">import</span> anthropic, json, hashlib, random
+<span class="tag-key">from</span> sklearn.feature_extraction.text <span class="tag-key">import</span> TfidfVectorizer
+<span class="tag-key">from</span> sklearn.metrics.pairwise <span class="tag-key">import</span> cosine_similarity
+
+client = anthropic.Anthropic()
+
+<span class="tag-com"># —— Step 1: 用 Claude Opus 4.7 蒸馏出高质量训练目标 ——</span>
+<span class="tag-key">def</span> distill(user_query: <span class="tag-gpt">str</span>) -&gt; <span class="tag-gpt">str</span>:
+    msg = client.messages.create(
+        model=<span class="tag-gpt">"claude-opus-4-7"</span>,
+        max_tokens=800,
+        system=<span class="tag-gpt">"You are answering as the production assistant. Be precise, "</span>
+               <span class="tag-gpt">"non-redundant. Refuse politely if uncertain. Output only the reply."</span>,
+        messages=[{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,<span class="tag-gpt">"content"</span>:user_query}],
+    )
+    <span class="tag-key">return</span> msg.content[0].text
+
+<span class="tag-com"># —— Step 2: 语义去重（SemDeDup 简化版）——</span>
+<span class="tag-key">def</span> dedupe(samples, threshold=0.92):
+    texts = [s[<span class="tag-gpt">"prompt"</span>] + <span class="tag-gpt">" "</span> + s[<span class="tag-gpt">"completion"</span>] <span class="tag-key">for</span> s <span class="tag-key">in</span> samples]
+    vec = TfidfVectorizer(max_features=20000).fit_transform(texts)
+    sim = cosine_similarity(vec)
+    keep, seen = [], <span class="tag-key">set</span>()
+    <span class="tag-key">for</span> i <span class="tag-key">in</span> <span class="tag-key">range</span>(<span class="tag-key">len</span>(samples)):
+        <span class="tag-key">if</span> i <span class="tag-key">in</span> seen: <span class="tag-key">continue</span>
+        keep.append(samples[i])
+        <span class="tag-key">for</span> j <span class="tag-key">in</span> <span class="tag-key">range</span>(i+1, <span class="tag-key">len</span>(samples)):
+            <span class="tag-key">if</span> sim[i,j] &gt; threshold: seen.add(j)
+    <span class="tag-key">return</span> keep
+
+<span class="tag-com"># —— Step 3: Claude-as-judge 质量审计（自动拒绝低质样本）——</span>
+<span class="tag-key">def</span> audit(sample) -&gt; <span class="tag-gpt">bool</span>:
+    msg = client.messages.create(
+        model=<span class="tag-gpt">"claude-haiku-4-5-20251001"</span>, max_tokens=10,
+        messages=[{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>, <span class="tag-gpt">"content"</span>:
+          <span class="tag-gpt">f"Rate this Q&amp;A pair on factual correctness, format integrity, "</span>
+          <span class="tag-gpt">f"and helpfulness. Output ONLY one of: GOOD / BAD.\n\n"</span>
+          <span class="tag-gpt">f"Q: {sample['prompt']}\nA: {sample['completion']}"</span>}]
+    )
+    <span class="tag-key">return</span> <span class="tag-gpt">"GOOD"</span> <span class="tag-key">in</span> msg.content[0].text.upper()
+
+<span class="tag-com"># —— Step 4: 人工抽样确认（无法自动化的最后一道闸）——</span>
+<span class="tag-key">def</span> human_sample_review(dataset, n=50):
+    <span class="tag-gpt">"""随机 50 条打到本地 JSON，人眼过一遍。&lt;95% 通过整批弃用"""</span>
+    sample = random.sample(dataset, <span class="tag-key">min</span>(n, <span class="tag-key">len</span>(dataset)))
+    json.dump(sample, <span class="tag-key">open</span>(<span class="tag-gpt">"audit_sample.json"</span>,<span class="tag-gpt">"w"</span>), indent=2, ensure_ascii=<span class="tag-key">False</span>)
+    <span class="tag-key">print</span>(<span class="tag-gpt">"Open audit_sample.json. Pass rate &lt; 95% → abort training."</span>)
+
+<span class="tag-com"># —— 全流程 ——</span>
+queries = load_real_user_queries(n=2000)              <span class="tag-com"># 真实生产 query</span>
+raw = [{<span class="tag-gpt">"prompt"</span>:q, <span class="tag-gpt">"completion"</span>:distill(q)} <span class="tag-key">for</span> q <span class="tag-key">in</span> queries]
+deduped = dedupe(raw)                                  <span class="tag-com"># ~1200 条</span>
+clean = [s <span class="tag-key">for</span> s <span class="tag-key">in</span> deduped <span class="tag-key">if</span> audit(s)]          <span class="tag-com"># ~900 条</span>
+human_sample_review(clean)                             <span class="tag-com"># 你亲眼看 50 条</span>
+<span class="tag-com"># 最终 ~900 条 = 比 50K 抓取数据集 train 得更好</span></code></pre>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）<strong>不去重</strong>——FAQ 前 10 个问题占 60% 训练样本，模型只学会回答这 10 个；（2）混入<strong>模型本身的失败回答</strong>——很多团队从「客服日志」抓数据，里面用户说「这个回答不对」的部分被全部训了进去；必须按 user feedback / thumbs-up 过滤；（3）distillation 时<strong>老师模型不固定</strong>——上周用 Claude Sonnet、本周用 GPT-5 出 distill，<strong>style drift</strong> 进训练集，模型学不出稳定 voice；（4）合成数据<strong>没有 ground truth 校验</strong>——LLM 蒸馏的回答 5-10% 是错的，直接当 label 训等于教模型编；至少用一个独立 LLM 做 judge；（5）忽视<strong>负样本</strong>——只训正确回答，模型不知道什么时候该拒答；要混入 5-15% 「不知道 / 拒答」的样本（也叫 <em>I-don't-know data</em>）。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Zhou et al. <em>LIMA: Less Is More for Alignment</em> (NeurIPS 2023), <a href="https://arxiv.org/abs/2305.11206" target="_blank">arxiv.org/abs/2305.11206</a> ·
+Lambert et al. <em>Tülu 3: Pushing Frontiers in Open Language Model Post-Training</em> (2024), <a href="https://arxiv.org/abs/2411.15124" target="_blank">arxiv.org/abs/2411.15124</a> ·
+Abbas et al. <em>SemDeDup: Data-efficient learning via semantic dedup</em> (2023), <a href="https://arxiv.org/abs/2303.09540" target="_blank">arxiv.org/abs/2303.09540</a> ·
+Tunstall et al. <em>Zephyr: Direct Distillation</em> (2023), <a href="https://arxiv.org/abs/2310.16944" target="_blank">arxiv.org/abs/2310.16944</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>解码参数：temperature、top-p、min-p 的反直觉行为</h2>
+<div class="claim">论断：FT 训完发现模型「不稳」「偶发胡说」「输出冗长」——80% 是<strong>解码参数没调</strong>，不是模型问题。temperature/top-p/min-p/repetition_penalty 的相互作用反直觉，多数 API 默认值（temp=1, top_p=1）是<strong>面向 chat 体感</strong>而不是面向工程稳定性的，生产环境必须调。</div>
+
+<h3>背景与原理</h3>
+<p>解码 = 把模型输出的 logits（vocab 上的分布）转成具体 token 的过程。LLM 内部本来知道「下一个 token 90% 是 A、5% 是 B、5% 是其它」——是<strong>解码策略</strong>决定你拿到什么。三个核心参数的精确行为：</p>
+<ul>
+<li><strong>temperature</strong>：在 softmax 前除一个常数 T。<code>p_i = softmax(logits / T)</code>。T → 0 退化为 argmax（确定性贪婪）；T = 1 不缩放；T &gt; 1 把分布拉平（更随机）。反直觉：T 不直接控制「creativity」，它只是<strong>放大或压缩 logit 差距</strong>。<em>code / JSON / tool-call 生产场景 T=0 或 0.2</em>，<em>style/对话 T=0.7-0.9</em>，<em>brainstorm 才用 1.0+</em>。</li>
+<li><strong>top-p (nucleus sampling)</strong>：按概率从高到低累加，只保留累计概率 ≤ p 的 token 池里采样。top_p=0.9 意味着「砍掉尾巴 10% 概率」。<strong>反直觉</strong>：top_p 与 temperature 不是独立的——T 升高时 top_p 会包含更多 noisy token（因为分布更平），所以高 T + 高 top_p 是<strong>失控配方</strong>。生产建议：<em>要么 T 低 top_p 默认（T=0.2, top_p=1）</em>，<em>要么 T 默认 top_p 收紧（T=1, top_p=0.9）</em>，<strong>不要两边都开大</strong>。</li>
+<li><strong>min-p</strong>（2023 年新参数，Llama.cpp / vLLM 支持）：保留概率 ≥ <code>min_p × p_top</code> 的 token——按<strong>相对于最高概率的比例</strong>剪枝。比 top-p 更鲁棒：top-p 在「分布很尖锐」时仍会保留尾巴噪声，min-p 不会。生产推荐<strong>min_p = 0.05-0.1 替代 top_p</strong>。</li>
+<li><strong>repetition_penalty / presence_penalty / frequency_penalty</strong>：用来防止「卡词」/「重复段」。多数 FT 后的小模型在长生成时会卡——加 1.05-1.1 的 repetition_penalty 立刻好。但 &gt; 1.2 会让输出变怪（强制不用某些 token，破坏语法）。</li>
+</ul>
+<p>FT 后的解码参数比 base 模型更关键，因为 FT <strong>把分布锁紧</strong>——T=1 时 base 模型的 top-10 token 概率可能是 [20%, 15%, 10%, ...]，FT 后变成 [85%, 5%, 3%, ...]。这种情况下 top_p=0.9 几乎只让 top-1 通过，等价 greedy；T=0.7 反而把 5% 的 token 概率放大到 15%，引入<strong>本来不应该有的随机性</strong>。FT 后<strong>降 temperature、用 min-p、低 repetition_penalty</strong> 是稳态。</p>
+
+<div class="diagram">  解码参数生产建议（FT 后模型）
+
+  场景                temp   top_p / min_p              rep_penalty
+  ──────────────────────────────────────────────────────────────
+  Code / JSON tool      0.0    top_p=1 (no-op)             1.0
+  Structured extract    0.0    top_p=1                     1.0
+  RAG 严肃问答         0.2    min_p=0.1                    1.05
+  Chat / Persona        0.7    min_p=0.05                  1.05-1.1
+  Creative / 写作       0.9    min_p=0.05                  1.1
+  Brainstorm 多样       1.0    min_p=0.02                  1.0
+
+  反例（常见 prod 默认）：
+    temp=1.0, top_p=1.0, rep_penalty=1.0
+    → 等价于全无控制；FT 后小模型很容易飘 / 重复 / 偶发胡说</div>
+
+<h3>实战示例</h3>
+<p>FT 后小模型的稳态解码配置（vLLM / OpenAI 兼容 API）：</p>
+<pre><code><span class="tag-key">from</span> openai <span class="tag-key">import</span> OpenAI
+
+<span class="tag-com"># vLLM serve 起来的本地 endpoint</span>
+client = OpenAI(base_url=<span class="tag-gpt">"http://localhost:8000/v1"</span>, api_key=<span class="tag-gpt">"x"</span>)
+
+<span class="tag-com"># —— 生产配置：JSON 严格输出场景 ——</span>
+resp = client.chat.completions.create(
+    model = <span class="tag-gpt">"merged-llama-3.3-8b-ft"</span>,
+    messages = msgs,
+    temperature = 0.0,            <span class="tag-com"># 完全确定性，不要随机</span>
+    top_p = 1.0,                  <span class="tag-com"># T=0 时 top_p 无意义，给 1.0 表明态度</span>
+    max_tokens = 512,
+    response_format = {<span class="tag-gpt">"type"</span>: <span class="tag-gpt">"json_schema"</span>,
+                       <span class="tag-gpt">"json_schema"</span>: my_schema},  <span class="tag-com"># 结构强约束</span>
+    extra_body = {                   <span class="tag-com"># vLLM 扩展</span>
+        <span class="tag-gpt">"repetition_penalty"</span>: 1.0,
+        <span class="tag-gpt">"min_p"</span>: 0.0,
+    },
+)
+
+<span class="tag-com"># —— 生产配置：Persona / chat 场景 ——</span>
+resp = client.chat.completions.create(
+    model = <span class="tag-gpt">"merged-llama-3.3-8b-ft"</span>,
+    messages = msgs,
+    temperature = 0.7,
+    top_p = 1.0,                  <span class="tag-com"># 关掉 top_p，让 min_p 接管</span>
+    max_tokens = 1024,
+    extra_body = {
+        <span class="tag-gpt">"min_p"</span>: 0.05,              <span class="tag-com"># 比 top_p 更鲁棒</span>
+        <span class="tag-gpt">"repetition_penalty"</span>: 1.05, <span class="tag-com"># 防卡词，但不要 &gt; 1.1</span>
+    },
+)
+
+<span class="tag-com"># —— 监控：把 logprob 也抓回来，用来定位「为什么模型在这里飘了」 ——</span>
+resp = client.chat.completions.create(
+    model = <span class="tag-gpt">"merged-llama-3.3-8b-ft"</span>,
+    messages = msgs,
+    temperature = 0.2,
+    logprobs = <span class="tag-key">True</span>,
+    top_logprobs = 5,             <span class="tag-com"># 每步看 top-5 候选 + 概率</span>
+    max_tokens = 200,
+)
+<span class="tag-key">for</span> token <span class="tag-key">in</span> resp.choices[0].logprobs.content:
+    <span class="tag-com"># top-1 概率 &lt; 0.5 = 模型在「犹豫」，是 hallucination 高风险点</span>
+    <span class="tag-key">if</span> token.logprob &lt; -0.7:   <span class="tag-com"># exp(-0.7) ≈ 0.5</span>
+        <span class="tag-key">print</span>(<span class="tag-gpt">f"⚠️  uncertain at: {token.token}"</span>,
+              [(t.token, <span class="tag-gpt">f"{2.718**t.logprob:.2f}"</span>)
+               <span class="tag-key">for</span> t <span class="tag-key">in</span> token.top_logprobs])</code></pre>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）<strong>temperature=1 配 top_p=1</strong>——这是 OpenAI/Anthropic SDK 的默认，但对 FT 后模型几乎是「不稳定」的代名词；生产场景至少改一个；（2）<strong>用 temperature 控制「创意」</strong>——T 不是 creativity dial，它是「分布锐度」dial；要更有创意正确做法是改 prompt（提供风格、添加随机种子词），不是无脑拉 T；（3）<strong>repetition_penalty &gt; 1.2</strong>——强制不用刚出现过的 token，对长输出会破坏自然语法，看似「不重复」其实是退化；1.05-1.1 是甜点；（4）<strong>code / JSON 场景用非 0 temperature</strong>——结构化输出靠 0 温度 + grammar/JSON schema，开温度等于自找 bug；（5）<strong>seed 没固定</strong>——FT 完做 A/B eval，没固定 seed → 同样输入两次结果不同，eval 数字没意义；vLLM/OpenAI 都支持 <code>seed</code>，必固定。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Holtzman et al. <em>The Curious Case of Neural Text Degeneration (Nucleus / top-p)</em>, <a href="https://arxiv.org/abs/1904.09751" target="_blank">arxiv.org/abs/1904.09751</a> ·
+Nguyen et al. <em>Min-p Sampling: Balancing Creativity and Coherence</em>, <a href="https://arxiv.org/abs/2407.01082" target="_blank">arxiv.org/abs/2407.01082</a> ·
+vLLM <em>Sampling parameters</em>, <a href="https://docs.vllm.ai/en/latest/serving/openai_compatible_server.html" target="_blank">docs.vllm.ai/.../openai_compatible_server</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// 综合实战 · 从 prompt 到 FT 的两周决策路径</h3>
+<p>假设你手上一个真实生产问题，模型表现不够好。按 ROI 顺序两周决定要不要 FT：</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>Day 1 · 建 eval set（半天，最关键的一步）</strong>：写 50-100 条带标准答案的 eval 案例。没有 eval 就停下来；后面所有改动都靠 eval 数字判优劣。</li>
+<li><strong>Day 1-2 · Prompt 拉满</strong>：XML 结构化 system prompt + 3-5 个 few-shot + CoT（如果是推理任务）。跑 eval，记基准。</li>
+<li><strong>Day 3 · 换更强模型</strong>：Sonnet → Opus；GPT-5-mini → GPT-5。多数情况下 +10-20pp accuracy，比 FT 一周快得多。如果换模型已够，到此为止。</li>
+<li><strong>Day 4-5 · 加 RAG（若是知识任务）</strong>：按 Day 10 的 hybrid + reranker 配置上一套。再跑 eval。</li>
+<li><strong>Day 6 · 调解码参数</strong>：温度从 1 降到 0.2-0.7，加 min_p=0.05，rep_penalty=1.05。这一步 0 成本，但常被忽略。</li>
+<li><strong>Day 7 · 决策点</strong>：现在的 eval 数字 vs 目标差多少？差 &lt; 10pp → 继续 prompt/RAG 微调；差 &gt; 15pp 且属于 style/persona/格式/蒸馏 5 种合适场景 → 进入 FT 阶段。</li>
+<li><strong>Day 8-10 · 数据集</strong>：用 Claude Opus 4.7 蒸馏 800-2000 条 → 去重 → judge 审计 → 人工抽 50 条审。这一步比训练本身耗时。</li>
+<li><strong>Day 11-12 · 训练</strong>：Unsloth + QLoRA + r=32, alpha=32, all_linear，2 epoch。Llama 3.3 8B 在 4090 上 4-8 小时一轮。</li>
+<li><strong>Day 13 · Merge + 部署</strong>：Merge LoRA 回 bf16，vLLM serve。一定要重新跑完整 eval，对比 baseline。</li>
+<li><strong>Day 14 · 长尾观察</strong>：生产 shadow traffic 跑 1 天，看真实分布下是否有 regression。没问题再切流量。</li>
+</ol>
+<p style="margin-top:14px">两周走完这条路径——FT 不是「我先训了再说」，是「我已经把上游 4 层做满、确认收益曲线仍陡、然后用最便宜的 LoRA 走最少的训练周期」。<strong>这才是 2026 年 fine-tuning 的工程姿势</strong>。多数团队走到 Day 6 就发现根本不需要 FT。</p>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// ENGLISH GLOSSARY</h3>
+<dl>
+<dt>Fine-tuning</dt><dd>在 pretrained model 上用特定数据集继续训练；用来锁定输出分布或蒸馏到小模型。</dd>
+<dt>LoRA (Low-Rank Adaptation)</dt><dd>冻结主权重、只训低秩 adapter 矩阵的 PEFT 方法；显存降 90%。</dd>
+<dt>QLoRA</dt><dd>把 base model 4-bit 量化后再做 LoRA；70B 单卡可训。</dd>
+<dt>PEFT (Parameter-Efficient Fine-Tuning)</dt><dd>只更新少量参数的微调家族；LoRA/IA³/Prefix tuning 等。</dd>
+<dt>Rank (r)</dt><dd>LoRA 的低秩矩阵维度；容量旋钮，但非越大越好。</dd>
+<dt>Alpha</dt><dd>LoRA 的 scaling 因子；实际作用是学习率乘子（alpha/r）。</dd>
+<dt>target_modules</dt><dd>LoRA 要插入的层；建议训 all_linear 而非只 q,v。</dd>
+<dt>Distillation</dt><dd>用大模型的输出当训练目标训小模型；2024 后开源模型主流策略。</dd>
+<dt>LIMA</dt><dd>Meta 2023 论文；1000 条精挑数据 &gt; 100K 抓取数据的最佳示例。</dd>
+<dt>SemDeDup</dt><dd>基于 embedding 相似度的语义去重方法。</dd>
+<dt>DPO (Direct Preference Optimization)</dt><dd>用偏好对比数据直接优化策略，无需 reward model；RLHF 的轻量替代。</dd>
+<dt>Temperature</dt><dd>解码采样参数；softmax 前除 T，控制分布锐度。</dd>
+<dt>Top-p / Nucleus sampling</dt><dd>累计概率截断的 token 池采样；高 T 时容易引入噪声。</dd>
+<dt>Min-p</dt><dd>按相对最高概率比例剪枝的采样；比 top-p 鲁棒。</dd>
+<dt>Repetition penalty</dt><dd>对已出现 token 的 logit 惩罚；防卡词，但 &gt; 1.2 会破坏语法。</dd>
+<dt>Merge (LoRA merge)</dt><dd>把 LoRA adapter 矩阵融回 base 权重，得到独立 checkpoint。</dd>
+</dl>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// 深入思考</h3>
+<details><summary>如果 prompt + RAG + 换模型几乎能搞定 80% 工程问题，为什么开源社区还在拼命发布 fine-tune 模型？背后的真实驱动是什么？</summary><div>三个力学。（1）<strong>所有权 / 可控性</strong>：FT 出的模型权重在自己手里，不受 API 厂商限速、不涨价、不下线；这是企业级用户的真需求，prompt+RAG 解决不了。（2）<strong>蒸馏经济学</strong>：把 Claude Opus 在自己业务上的智能压进 Llama 8B，推理成本从 $15/M tokens 降到 $0.2/M——这是 5-100 倍的单位成本下降，规模一上来 FT 是必须的。（3）<strong>研究价值</strong>：FT 是开源社区证明「我们能跟上」的核心活动，模型卡片本身就是品牌；DeepSeek、Qwen、Mistral 的影响力一大半来自持续放出新 FT。这三个驱动在 2026 年都没有变弱，所以「prompt 优先」并不矛盾于「FT 仍是关键能力」——只是<strong>谁来 FT</strong>变了：以前是每个团队，现在是少数有规模的团队 + 开源社区，剩下的人用别人 FT 出的模型 + prompt。</div></details>
+<details><summary>LIMA 用 1000 条数据打败 100K 条这个事实，到 GPT-5 / Claude 4.7 时代还成立吗？还是只在 base model 较弱的时代才有效？</summary><div>更成立而不是更不成立。LIMA 的本质洞察是「instruction tuning 是 unlock 而不是 teach」——base model 越强，能 unlock 的能力越多，<strong>少量高质量样本的杠杆就越大</strong>。Tülu 3（2024）在 Llama 3 上复现 LIMA 风格的小数据高质量 SFT，accuracy 比 2023 年的 LIMA 高一档；Zephyr / Phi-3 / Qwen-Distill 都在用类似策略。反方向论据是 Llama 3.1 / 3.3 / Qwen 3 等大厂 instruct 模型仍用百万级数据——但他们的目标不一样（覆盖全 long tail 任务），不能直接对比单业务 FT。结论：你的业务 FT 用 500-5000 条精挑数据 + distillation 是 2026 年的<strong>最优实践</strong>，base model 越强这个策略越占优。</div></details>
+<details><summary>QLoRA 让 70B 在单卡能训，但推理仍要多卡——这个「训得起、用不起」的不对称，对独立开发者意味着什么？</summary><div>这个不对称是 2024-2026 年最被低估的<strong>开发者经济学转折</strong>。训：QLoRA 让你能在 24GB 卡（4090, A10）上 fine-tune 70B 模型，6-12 小时一轮训练，全自己掌控。用：70B 推理需要 80GB+ 显存（4-bit 也要 40GB），单卡 H100 才能跑起来，按 hour billing。所以独立开发者的可行路径其实是：<strong>训大模型 + 蒸馏到小模型 + 部署小模型</strong>。具体说：用 QLoRA 把 70B 在你的领域上训好，然后用这个 70B 当老师，distill 出 7B/8B 学生模型——8B 可以在 16GB 卡或 Mac M-series 上跑推理，推理成本骤降。这条「训大用小」的路线把训练算力和推理算力解耦，让一个独立开发者也能拥有<strong>定制模型 + 可部署</strong>的完整 stack。未来 3 年这会是个人 AI 工程师最重要的护城河之一。</div></details>
+<details><summary>解码参数（temperature、top-p、min-p）为什么没有像 LoRA 那样「卷出最优默认」？为什么生产团队还需要手调？</summary><div>因为<strong>最优解码取决于任务而非模型</strong>。LoRA 的最优 rank/alpha 大体上是模型架构的函数，可以「卷出公认默认」；解码不是——同一个 FT 后的 Llama 8B，做 code 时要 T=0、做 chat 时要 T=0.7、做 brainstorm 时要 T=1。任务空间无限大、参数交互非凸（T 和 top_p 的组合效应是非线性的），没有单一默认能覆盖。所以模型厂商的 API 默认（T=1, top_p=1）是<strong>偏向 chat 体感</strong>的「最不出错」选项，但对生产工程几乎一定不是最优。中期看会出现 <em>auto-tune decoding</em>：根据 prompt 类型自动选解码参数（类似 GPT-5 的「reasoning effort」按问题难度自动调），但 2026 年仍是手动工程。学会调解码参数是 LLM 工程师的<strong>基本功</strong>，跟「会写 SQL index」一个量级。</div></details>
+<details><summary>如果 2027 年开源 7B 模型在大多数业务任务上和 Claude 4.x 几乎打平，「该不该 FT」的决策树会怎么变？</summary><div>决策树会反过来。今天的顺序是 prompt → RAG → 换更强模型 → FT，因为换模型的 ROI 最高。当 7B 开源模型已经接近顶级 API 时，「换更强模型」这一步收益骤降——剩下能动的就只有 prompt 和 FT。这时<strong>FT 的相对 ROI 大幅提升</strong>，因为：（1）模型本身够强，FT 不需要补 base capability，只需要 alignment/style/格式锁定，少量数据就够；（2）私有部署的边际成本几乎为零（开源 + 量化 + 边缘 GPU），推理 cost 不再是约束；（3）数据所有权变成核心竞争力——你的 FT 数据集是别人复制不了的护城河。预测：2027 年「该不该 FT」会从「99% 不该」反转到「业务护城河必须 FT」——但仍是少量高质量数据 + LoRA，不是回到 2023 年的 full FT 时代。<strong>FT 永远是工程，永远要走 ROI 决策——只是 ROI 函数本身在变</strong>。</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://arxiv.org/abs/2106.09685" target="_blank">Hu et al. · LoRA: Low-Rank Adaptation of LLMs (ICLR 2022)</a> — LoRA 原论文，PEFT 时代的起点</li>
+<li><a href="https://arxiv.org/abs/2305.14314" target="_blank">Dettmers et al. · QLoRA (NeurIPS 2023)</a> — 4-bit base + LoRA 训练；70B 单卡训的关键论文</li>
+<li><a href="https://arxiv.org/abs/2305.11206" target="_blank">Zhou et al. · LIMA: Less Is More for Alignment (NeurIPS 2023)</a> — 1000 条精挑 &gt; 100K 抓取的标杆实验</li>
+<li><a href="https://arxiv.org/abs/2411.15124" target="_blank">Lambert et al. · Tülu 3 (2024)</a> — 系统消融数据筛选 &gt; 数据规模</li>
+<li><a href="https://magazine.sebastianraschka.com/p/practical-tips-for-finetuning-llms" target="_blank">Raschka · Practical Tips for Finetuning LLMs Using LoRA</a> — LoRA rank/alpha/target 系统 ablation</li>
+<li><a href="https://docs.unsloth.ai/" target="_blank">Unsloth Documentation</a> — 2026 年 LoRA/QLoRA 性能最高的开源训练栈</li>
+<li><a href="https://arxiv.org/abs/2407.01082" target="_blank">Nguyen et al. · Min-p Sampling (2024)</a> — top-p 的鲁棒替代</li>
+<li><a href="https://docs.claude.com/en/docs/build-with-claude/prompt-engineering/overview" target="_blank">Anthropic · Prompt Engineering vs Fine-tuning</a> — Claude 官方对 FT 优先级的立场</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 12 / 2026-05-27</footer>
+</div>
+<script src="https://cissy0802.github.io/comments.js" defer></script>
+<script src="https://cissy0802.github.io/search.js" defer></script>
+<script src="https://cissy0802.github.io/index-button.js" defer></script>
+<script src="https://cissy0802.github.io/i18n-tts.js" defer></script>
+</body></html>

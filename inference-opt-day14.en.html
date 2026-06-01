@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 14 · Inference Optimization — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 14 / PHASE 2 · SYSTEMS</span>
+<h1>Inference Optimization</h1>
+<h2>Memory-Bound · Continuous Batching · KV Cache · Speculative Decoding</h2>
+<div class="date">2026-05-28 · BigCat</div>
+<p class="pitch">The whole secret of inference optimization is feeding a GPU that's starving for memory bandwidth.</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>The moment you go from "calling an API" to "hosting your own open model," cost, latency, and throughput become your engineering problem. Most people's first instinct is "buy a beefier GPU"—then they swap in an H100, throughput rises 20%, and money burns. The reason is a counterintuitive fact: <strong>token-by-token decoding is not compute-bound, it's memory-bound</strong>—the GPU's compute units sit mostly idle; the bottleneck is the bandwidth to move model weights from HBM into the compute units. Grasp this and every downstream optimization (continuous batching, KV cache paging, speculative decoding, quantization) lines up: <strong>they all answer one question—how to compute more tokens per single weight load</strong>. This issue skips "what is inference" and covers the decisions a senior engineer actually makes: how to locate the bottleneck, the marginal payoff of the four levers, their failure modes, and how to choose between vLLM / TGI / TensorRT-LLM.</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>Decode is memory-bound: continuous batching is the first lever</h2>
+<div class="claim">Claim: single-request inference wastes 90%+ of the GPU; the first step to throughput isn't a new card, it's continuous batching.</div>
+
+<h3>Background & principle</h3>
+<p>Inference has two phases with completely different bottlenecks. <strong>Prefill</strong> (processing the prompt) computes all tokens in parallel—compute-bound. <strong>Decode</strong> (generating one token at a time) computes just 1 token per step yet must <strong>re-stream the entire model weights from HBM</strong>—arithmetic intensity is tiny, the Tensor Cores sit mostly idle, and the real bottleneck is memory bandwidth. That's why at batch=1 even the priciest card stays underutilized.</p>
+<p>The fix is to <strong>pack the same decode step from many requests into one batch</strong>: weights are streamed once, a token is computed for N requests simultaneously, and throughput scales near-linearly. But traditional <em>static batching</em> has a fatal flaw—it can't release the batch until the longest sequence in it finishes, so short requests are dragged down by long ones and GPU utilization collapses as generation proceeds. Orca (OSDI'22) introduced <strong>iteration-level scheduling</strong> (i.e. continuous batching): after every decode step, it evicts finished requests and admits queued ones, so the GPU never idles. Anyscale measured <strong>23× throughput</strong> versus a naive HF implementation. This is the single highest-payoff change.</p>
+
+<div class="diagram">Static batching (wait for longest)      Continuous batching (per-step scheduling)
+ step→  1  2  3  4  5  6              step→  1  2  3  4  5  6
+ R1 [██████]................          R1 [██████]R5[████....
+ R2 [████]..................          R2 [████]R6[██████....
+ R3 [██████████████]........          R3 [██████████████]....
+ R4 [██]....................          R4 [██]R7[████]R8[██..
+        ↑ R1/R2/R4 done early          ↑ a slot frees → fill it now
+          GPU idles waiting on R3        GPU stays saturated</div>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># vLLM does continuous batching by default — serve in one line</span>
+vllm serve meta-llama/Llama-3.1-8B-Instruct \
+  --max-num-seqs 256          <span class="tag-com"># concurrent request cap = how big batch can grow</span>
+
+<span class="tag-com"># Diagnose whether you're memory-bound / under-batched:</span>
+<span class="tag-com"># while load-testing, watch nvidia-smi — if GPU-Util is high but SM</span>
+<span class="tag-com"># compute is low, mem bandwidth is maxed, and throughput rises</span>
+<span class="tag-com"># near-linearly with batch → you're memory-bound, batching pays off</span>
+nvidia-smi dmon -s u        <span class="tag-com"># compare sm% vs mem%</span></code></pre>
+<p>Remember the division of labor: <strong>throughput comes from bigger batches, latency from smaller batches</strong>—a zero-sum pair. Decide which one you're optimizing first.</p>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) Forcing large batches in a low-QPS setting—there simply aren't enough concurrent requests to fill the batch, so the gain is ~zero. (2) Chasing throughput while ignoring <strong>TTFT</strong> (time-to-first-token): bigger batches queue new requests longer, so interactive UX actually degrades. Throughput and latency must be separate targets.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Orca (origin of continuous batching), <a href="https://www.usenix.org/conference/osdi22/presentation/yu" target="_blank">usenix.org · OSDI'22</a> ·
+Anyscale <em>How continuous batching enables 23x throughput</em>, <a href="https://www.anyscale.com/blog/continuous-batching-llm-inference" target="_blank">anyscale.com/blog</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>KV cache is the real memory hog: PagedAttention + prefix caching</h2>
+<div class="claim">Claim: what limits batch size is often not the model weights but the KV cache; manage it like virtual memory (paging + prefix reuse) and you can double throughput.</div>
+
+<h3>Background & principle</h3>
+<p>Continuous batching wants larger batches, but the bigger the batch and the longer the sequence, the more memory the <strong>KV cache</strong> eats—at long context it can exceed the weights themselves. A size estimate (standard formula, not a cited figure):</p>
+<pre><code>KV_bytes ≈ 2 × n_layers × n_kv_heads × head_dim
+           × seq_len × batch × dtype_bytes
+<span class="tag-com"># the "2" = K and V; one 8K-context request can reach hundreds of MB</span></code></pre>
+<p>The traditional approach <strong>pre-reserves contiguous memory</strong> for each request at "max length," but actual lengths vary, so 60-80% of memory is wasted on fragmentation and over-reservation—squeezing your achievable batch. <strong>PagedAttention</strong> (vLLM's core, SOSP'23) borrows the OS's virtual memory: it splits the KV cache into fixed-size blocks (pages), stored non-contiguously and allocated on demand, cutting waste below 4%—effectively doubling the batch and yielding 2-4× throughput.</p>
+<p>The second trick is <strong>prefix caching</strong>: if several requests share an identical prefix (system prompt, few-shot examples, a long document), that prefix's KV is computed once and reused across requests. This is exactly <strong>how Anthropic prompt caching works server-side</strong>—put stable content first and volatile content last, and a cache hit skips the redundant prefill.</p>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># vLLM: enable prefix caching + quantize KV cache (save half the memory)</span>
+vllm serve <model> \
+  --enable-prefix-caching \    <span class="tag-com"># KV of identical prefixes is reused</span>
+  --kv-cache-dtype fp8         <span class="tag-com"># fp8 KV halves memory, lifts throughput</span>
+
+<span class="tag-com"># Prompt layout: stable prefix first, volatile last — required for a hit</span>
+[system + tool defs + few-shot]  ← byte-identical across reqs → cache hit
+[this turn's user input]         ← differs each time → prefill only this bit</code></pre>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) Prefix caching <strong>only hits when the prefix is byte-for-byte identical</strong>—stick a timestamp / random ID / shuffled concatenation order into the system prompt and the hit rate drops to zero. (2) fp8 KV cache loses accuracy on long-context, high-precision tasks (math, long reasoning chains); test with your own eval before shipping, don't just read the throughput number.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · vLLM PagedAttention paper, <a href="https://arxiv.org/abs/2309.06180" target="_blank">arXiv:2309.06180</a> ·
+Anthropic Prompt Caching docs, <a href="https://docs.claude.com/en/docs/build-with-claude/prompt-caching" target="_blank">docs.claude.com/.../prompt-caching</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Speculative decoding: a small model runs ahead, doubling throughput with identical output</h2>
+<div class="claim">Claim: since decode is memory-bound, verifying a few extra tokens per weight load is nearly free—draft-then-verify is a lossless 2-3× speedup.</div>
+
+<h3>Background & principle</h3>
+<p>The key insight follows from §1: during decode the GPU's compute sits idle, so why not <strong>compute the probabilities of several tokens at once</strong>. Speculative decoding (Leviathan et al., ICML'23) lets a <strong>cheap draft model</strong> quickly guess k candidate tokens, then has the big model <strong>verify all k in a single parallel forward</strong>—accepting the longest correct prefix and resampling at the first disagreement. When the draft guesses well, one step advances several tokens; when it's wrong, you simply fall back to normal speed.</p>
+<p>The most counterintuitive part: via rejection sampling, the <strong>final output distribution is provably identical to the original model</strong>—this is lossless acceleration, not an approximation. The speedup depends on the <strong>acceptance rate</strong> (how often the draft is right) and the draft/target cost ratio. <strong>Medusa</strong> (arXiv 2401.10774) goes further: instead of a separate draft model, it adds a few lightweight decoding heads + tree attention so the model speculates on itself, removing the burden of maintaining two models—measured at 2.3-3.6×.</p>
+
+<div class="diagram">                ┌─ draft model guesses k ─┐
+prompt ──▶ "the cat sat on"  ──▶  draft: [" the"," mat"," and"," ran"]
+                                          │  (cheap, fast)
+                                          ▼
+        big model verifies all 4 at once ──▶ accept " the"," mat"  ✓✓
+                                       3rd disagrees ✗ → resample " ."
+        result: one big-model forward advanced 3 tokens (not 1)
+        distribution identical to original (rejection sampling = lossless)</div>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># vLLM: use a small model as draft (must share tokenizer, ~10-20× smaller)</span>
+vllm serve meta-llama/Llama-3.1-70B-Instruct \
+  --speculative-model meta-llama/Llama-3.2-1B-Instruct \
+  --num-speculative-tokens 5     <span class="tag-com"># guess 5; too many backfires</span>
+
+<span class="tag-com"># No draft model handy? Use n-gram speculation (zero extra model)</span>
+  --speculative-model "[ngram]" --ngram-prompt-lookup-max 4</code></pre>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) <strong>Gains vanish at high batch</strong>—with a large batch the GPU is already compute-bound (§1's idle compute is now full), so there's no spare capacity to verify speculative tokens, and the draft overhead makes it slower. Speculative decoding is a lever for <strong>low-concurrency / heavily interactive</strong> workloads. (2) If draft and target distributions diverge too much → low acceptance → net loss. Code and structured output have high acceptance (formulaic); free-form creative writing is low.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Leviathan et al. <em>Fast Inference via Speculative Decoding</em>, <a href="https://arxiv.org/abs/2211.17192" target="_blank">arXiv:2211.17192</a> ·
+Medusa (multiple decoding heads), <a href="https://arxiv.org/abs/2401.10774" target="_blank">arXiv:2401.10774</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Choosing an engine & quantization: the vLLM / TGI / TensorRT-LLM trade-offs</h2>
+<div class="claim">Claim: there's no "fastest engine," only the one that matches your workload + ops constraints; quantization is the second-biggest lever, with hidden traps.</div>
+
+<h3>Background & principle</h3>
+<p>All three major open engines implement the core optimizations of §1-§3; they differ in the triangle of <strong>peak performance vs deployment flexibility vs onboarding cost</strong>:</p>
+<ul>
+<li><strong>vLLM</strong>: native PagedAttention, fastest iteration, Python-friendly, lowest onboarding. The default starting point for most self-hosting.</li>
+<li><strong>TGI</strong> (HuggingFace): production-ready, seamless with the HF ecosystem/Endpoints, multi-backend (incl. TRT-LLM). Pick it for stable ops.</li>
+<li><strong>TensorRT-LLM</strong> (NVIDIA): peak performance on NVIDIA cards, but requires <strong>pre-compiling an engine per GPU architecture</strong>—heaviest ops, least flexible. Worth it only when you chase max throughput-per-card and your model/hardware are stable.</li>
+</ul>
+<p>The second-biggest lever is <strong>quantization</strong>: compress weights from fp16 to int4/fp8. Because decode is memory-bound (§1), <strong>smaller weights = faster streaming = directly faster decode</strong>, while freeing memory to enlarge the batch. <strong>weight-only int4</strong> (AWQ / GPTQ) halves memory and adds speed; <strong>fp8</strong> (weights + activations) needs Hopper or newer and loses less precision.</p>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># Quick decision sheet</span>
+fast validation / self-host / rapid iteration  → vLLM
+HF ecosystem / stable production ops            → TGI
+squeeze NVIDIA cards / stable model             → TensorRT-LLM
+
+<span class="tag-com"># Quantization picks</span>
+memory-tight, must fit a big model              → AWQ int4 (weight-only)
+Hopper+, want precision and speed               → fp8 (weights + KV cache)
+vllm serve <model> --quantization awq   <span class="tag-com"># one flag</span></code></pre>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) A TensorRT-LLM compiled artifact <strong>locks to a GPU arch + config</strong>—change cards or the batch/seq cap and you recompile, spiking CI/CD complexity; don't adopt it early for a 10% throughput bump. (2) int4 quantization <strong>degrades reasoning / math tasks</strong> far more than chit-chat; you must run your own eval—comparing throughput without comparing quality is the most common self-deception.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · vLLM, <a href="https://github.com/vllm-project/vllm" target="_blank">github.com/vllm-project/vllm</a> ·
+TGI, <a href="https://github.com/huggingface/text-generation-inference" target="_blank">github.com/huggingface/text-generation-inference</a> ·
+TensorRT-LLM, <a href="https://github.com/NVIDIA/TensorRT-LLM" target="_blank">github.com/NVIDIA/TensorRT-LLM</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// Capstone · Stand up an inference service that measures itself</h3>
+<p>Chain the four points into a weekend project: host an 8B model with vLLM, stack the optimizations one at a time, and measure marginal gains—the only way to turn "I know this" into "I've done this."</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>Define metrics, measure them separately</strong>: <code>TTFT</code> (time-to-first-token), <code>TPOT</code> (time-per-output-token), <code>throughput</code> (total tokens/s). Load-test with vLLM's <code>benchmark_serving.py</code>—never measure throughput with a single request.</li>
+<li><strong>Baseline</strong>: default continuous batching, sweep <code>--max-num-seqs</code> from 16 to 256, plot the throughput-latency curve, and find your "knee."</li>
+<li><strong>Add §2</strong>: turn on <code>--enable-prefix-caching</code>, construct a request stream sharing a system prompt, and see how much TTFT drops on a hit.</li>
+<li><strong>Add §3</strong>: in a low-concurrency setting attach a 1B draft model, measure acceptance rate and TPOT change—then crank concurrency up and watch the speculative gain vanish (confirming §3's failure mode).</li>
+<li><strong>Add §4</strong>: switch to an AWQ int4 build, compare memory footprint, how much bigger a batch you can fit, and the throughput lift—then run 10 questions with known answers to check <strong>whether quality dropped</strong>.</li>
+</ol>
+<p style="margin-top:12px">Once you've done this loop, any "our inference is N× faster" pitch triggers a reflex: <strong>measuring TTFT or throughput? at what concurrency? did quality drop?</strong>—instead of being swept along by a single isolated throughput number.</p>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// GLOSSARY</h3>
+<dl>
+<dt>Prefill</dt><dd>The phase that processes the input prompt; all tokens computed in parallel, compute-bound.</dd>
+<dt>Decode</dt><dd>The phase that generates output tokens one at a time; re-streams all weights per step, memory-bound.</dd>
+<dt>Memory-bound</dt><dd>Bottlenecked by memory bandwidth, not compute—the essence of LLM decoding and the thesis behind every downstream optimization.</dd>
+<dt>Continuous Batching</dt><dd>Iteration-level scheduling: add/evict requests every decode step so the GPU never idles.</dd>
+<dt>KV Cache</dt><dd>Cached Key/Value of past tokens to avoid recompute; the main memory consumer at long context.</dd>
+<dt>PagedAttention</dt><dd>Manages the KV cache like OS virtual-memory pages, eliminating fragmentation; vLLM's core.</dd>
+<dt>Prefix Caching</dt><dd>Reuse the KV of an identical prefix across requests; the server-side principle of prompt caching.</dd>
+<dt>Speculative Decoding</dt><dd>A draft model guesses, the target model verifies in parallel; lossless 2-3× speedup.</dd>
+<dt>TTFT / TPOT</dt><dd>Time-To-First-Token / Time-Per-Output-Token, the two core interactive-latency metrics.</dd>
+<dt>Weight-only Quantization</dt><dd>Quantize only the weights (e.g. AWQ int4), saving memory and speeding up memory-bound decode.</dd>
+</dl>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// DEEP THINKING</h3>
+<details><summary>Continuous batching raises throughput and so does speculative decoding—why can't you just stack them?</summary><div>Because both fight over the same resource: idle compute. Continuous batching fills that idle compute with a large batch, pushing the system toward compute-bound; speculative decoding needs <strong>spare compute to verify speculative tokens in parallel</strong> to pay off. Once the batch is large, there's nowhere to compute the verification tokens, so the draft overhead is pure loss. Rule of thumb: <code>high-concurrency services</code> rely on batching, <code>low-concurrency / single-user interaction</code> (e.g. a local coding agent) relies on speculative. Production systems often switch dynamically by current load rather than running both wide open.</div></details>
+<details><summary>Why does prompt caching save cost and latency but only for the prefix—not for identical fragments in the middle or end?</summary><div>Because attention is causal: each token's KV representation depends on <strong>all tokens before it</strong>. Identical prefix → that KV's compute context is identical → directly reusable. But an identical fragment in the middle is preceded by different tokens, so its KV is "colored" by a different context and can't be reused. That's why engineering practice puts stable content (system / tool defs / few-shot) strictly first and volatile content last—this is a physical constraint on prefix-cache hit rate, not a convention.</div></details>
+<details><summary>Speculative decoding claims to be "lossless"—the output distribution is identical to the original model. How can that not trade quality for speed?</summary><div>The key is the math of rejection sampling: draft proposal distribution q, target true distribution p. For each speculative token, accept with probability min(1, p/q); on rejection, resample from the corrected distribution (p−q)⁺. It can be proven the final sample follows p exactly. So the speedup comes from <strong>compressing several serial steps into one parallel forward</strong>, not from approximation. The better the draft (q closer to p), the more is accepted and the faster it runs—but even with a wildly wrong draft, output quality is unchanged, it just degrades to normal speed. Speed is the wager, quality is guaranteed.</div></details>
+<details><summary>If "decode is memory-bound," why can Mixture-of-Experts (MoE) models scale up without adding activated compute? Does that contradict memory-bound?</summary><div>No contradiction—it reinforces it. MoE activates only a small subset of experts per token, so activated FLOPs don't grow linearly with total params—but <strong>all expert weights must still reside in memory, and the portion that is streamed still goes through HBM</strong>. So MoE pushes the bottleneck further toward "memory capacity + bandwidth + irregular access from expert routing." That's why the core challenge of MoE inference is memory and expert parallelism / scheduling, not compute. The memory-bound lens explains exactly where MoE's engineering weight sits.</div></details>
+<details><summary>If you could give a team only one inference-optimization tip, and their QPS is very low (internal tool, single-digit concurrency), what would you say?</summary><div>"Don't touch batching—do speculative decoding + quantization first." At low QPS continuous batching has no requests to pack, so throughput optimization is nearly useless; what hurts users is per-request latency. Here the GPU's compute is largely idle—ideal soil for speculative decoding to cut TPOT directly. Layer on weight-only int4 quantization to both speed up the memory-bound decode and let smaller cards run it. Save the expensive multi-card batching strategy for truly high-concurrency production. Using the wrong lever wastes more money than not optimizing at all.</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://www.anyscale.com/blog/continuous-batching-llm-inference" target="_blank">Anyscale · How continuous batching enables 23x throughput</a> — the foundational throughput-optimization post</li>
+<li><a href="https://arxiv.org/abs/2309.06180" target="_blank">Kwon et al. · PagedAttention (vLLM)</a> — the paper that manages KV cache as virtual memory</li>
+<li><a href="https://www.usenix.org/conference/osdi22/presentation/yu" target="_blank">Yu et al. · Orca (OSDI'22)</a> — origin of continuous batching / iteration-level scheduling</li>
+<li><a href="https://arxiv.org/abs/2211.17192" target="_blank">Leviathan et al. · Speculative Decoding (ICML'23)</a> — the math of lossless acceleration</li>
+<li><a href="https://github.com/vllm-project/vllm" target="_blank">vLLM source</a> — read every optimization in this issue into code</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 14 · 2026-05-28</footer>
+</div>
+<script src="https://cissy0802.github.io/comments.js" defer></script>
+<script src="https://cissy0802.github.io/search.js" defer></script>
+<script src="https://cissy0802.github.io/index-button.js" defer></script>
+<script src="https://cissy0802.github.io/i18n-tts.js" defer></script>
+</body></html>

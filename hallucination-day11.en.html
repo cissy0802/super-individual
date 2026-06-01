@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 11 · Hallucination Engineering — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.crossref{margin:18px 0 0;padding:10px 16px;background:rgba(0,212,255,0.06);border:1px dashed rgba(0,212,255,0.3);border-radius:8px;font-size:0.85rem;color:#a0a4b8;text-align:center}
+.crossref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 11 / PHASE 1 · ENGINEERING</span>
+<h1>Hallucination Engineering</h1>
+<h2>RLHF Bias · Token Risk Map · Grounding Stack · Calibration Eval</h2>
+<div class="date">2026-05-27 · BigCat</div>
+<p class="pitch">Hallucination is not a prompting problem — it is a structural side effect of the RLHF training objective. This issue starts with a token-level risk map and decomposes "make the model lie less" into four engineerable layers.</p>
+<div class="crossref">
+<a href="https://cissy0802.github.io/ai-ml-daily/interpretability-day22.html">
+  Prerequisite → ai-ml-daily Day 22 (Interpretability / Internal Model Signals)
+</a>
+</div>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>The awkward 2025 reality: Claude 4.7 / GPT-5 still post <strong>5–15% hallucination rates</strong> on SimpleQA and HaluEval, and <strong>the more specific the question, the more elaborate the fabrication</strong>. Even more counter-intuitive — models actually <strong>know they don't know</strong>. Kadavath et al. (2022) showed that the last hidden layer carries a strong P(True) signal, yet the generated output almost never says "I don't know." That gap isn't something prompt engineering can close — it's the structural result of <strong>RLHF reward models systematically preferring confident answers over abstentions</strong>. This issue assumes you already know what hallucination is and what RAG is (last week); we go straight into four engineering layers: <strong>① understanding the RLHF bias mechanism → ② knowing which tokens are ~100% fabricated → ③ a three-layer grounding stack → ④ hallucination-aware eval</strong>. Every layer maps to actual code or config changes — not just "write a better prompt."</p>
+</div>
+
+<!-- ============ Risk map diagram ============ -->
+<div class="diagram">  Token-level hallucination risk map (by real-world incident frequency)
+
+  Risk level             Typical token                           Fabrication rate
+  ──────────────────────────────────────────────────────────────────────
+  ★★★★★ Fatal      URL / DOI / arXiv ID                          ~95%
+                    paper title + author combos                  ~80%
+                    function signatures (library + version)      ~70%
+                    commit hash / line number                    ~85%
+                    specific dates (YYYY-MM-DD) + event          ~60%
+  ──────────────────────────────────────────────────────────────────────
+  ★★★★  Dangerous  legal clause numbers / case name              ~50%
+                    drug dosage / clinical data                  ~40%
+                    company earnings numbers                     ~45%
+                    person's exact title + tenure                ~35%
+  ──────────────────────────────────────────────────────────────────────
+  ★★★   Caution    historical event years                        ~15%
+                    country / city statistics                    ~20%
+                    book publication years                       ~12%
+  ──────────────────────────────────────────────────────────────────────
+  ★     Safe       common sense / physics / math facts          &lt; 3%
+                    core facts about high-frequency public figs &lt; 5%
+
+  Rule: fabrication ≈ specificity × rarity / training-coverage
+        the more "precise & rare" the token, the exponentially higher the rate</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>Hallucination Isn't a Bug — RLHF Trained "Don't Say I Don't Know" Into Models</h2>
+<div class="claim">Claim: a pretrained-only base model (no RLHF) outputs low-entropy distributions or meta-commentary ("I'm not sure") when uncertain. <strong>RLHF stage human annotators systematically prefer "confident answer" &gt; "I don't know"</strong> — so the reward model penalizes abstention. The model learns to <strong>substitute fabrication for honesty</strong>. This is not a prompt engineering problem; it's a training-objective problem.</div>
+
+<h3>Background &amp; mechanism</h3>
+<p>The core evidence is OpenAI's 2025 paper <em>"Why Language Models Hallucinate"</em>: a controlled experiment showing the <strong>same base model has a higher hallucination rate after RLHF than before</strong>. Decomposed: (1) pretraining uses cross-entropy loss, so the optimal model matches the true probability distribution including "this token should have 30% probability of being X" — uncertainty is preserved; (2) RLHF uses pairwise reward, and annotators shown "I don't know" vs. "specific but possibly wrong" prefer the latter (because the former is "unhelpful") — the reward model encodes this preference; (3) during RL fine-tuning, the model abandons calibration to maximize reward, producing the most confident answer rather than the most truthful distribution.</p>
+<p>Anthropic's Kadavath et al. 2022 made this concrete with linear probes: on the last hidden state of a base model, a few hundred samples train a P(True) probe with <strong>AUC &gt; 0.85</strong> — meaning the model internally knows it doesn't know. But the post-RLHF generation manifold has been collapsed toward a confident pole by the reward signal. So the engineering response is not "make the model smarter" — it is to <strong>restore the calibration signal</strong>, via logprobs, self-consistency, or an explicit prompt frame that gives abstention positive weight.</p>
+
+<h3>Tactic</h3>
+<p>Give the model an "abstention-is-legitimate" frame + use logprobs to calibrate confidence (OpenAI / Anthropic both support this):</p>
+<pre><code><span class="tag-key">import</span> anthropic, math
+client = anthropic.Anthropic()
+
+<span class="tag-com"># —— Key 1: system prompt explicitly rewards "I don't know" ——</span>
+SYS = <span class="tag-gpt">"""You will be asked a factual question. Your response MUST start
+with one of three tokens, then explain:
+  KNOWN: I am confident in the answer and can cite the source class.
+  UNSURE: I have partial information but cannot verify specifics.
+  UNKNOWN: I do not know; do not speculate.
+Saying UNKNOWN when uncertain is rewarded, not penalized.
+Hallucinating a specific answer is the worst outcome."""</span>
+
+<span class="tag-key">def</span> ask(q):
+    msg = client.messages.create(
+        model=<span class="tag-gpt">"claude-opus-4-7"</span>,
+        max_tokens=300,
+        system=SYS,
+        messages=[{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,<span class="tag-gpt">"content"</span>:q}]
+    )
+    <span class="tag-key">return</span> msg.content[0].text
+
+<span class="tag-com"># —— Key 2: extract token-level uncertainty via logprobs (OpenAI API) ——</span>
+<span class="tag-com"># Claude doesn't expose logprobs yet; OpenAI / Gemini / open-source do.</span>
+<span class="tag-key">from</span> openai <span class="tag-key">import</span> OpenAI
+oa = OpenAI()
+
+<span class="tag-key">def</span> answer_with_confidence(q):
+    r = oa.chat.completions.create(
+        model=<span class="tag-gpt">"gpt-5"</span>, messages=[{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,<span class="tag-gpt">"content"</span>:q}],
+        logprobs=<span class="tag-key">True</span>, top_logprobs=5
+    )
+    text = r.choices[0].message.content
+    <span class="tag-com"># average token logprob → perplexity → uncertainty proxy</span>
+    logprobs = [t.logprob <span class="tag-key">for</span> t <span class="tag-key">in</span> r.choices[0].logprobs.content]
+    avg_lp = sum(logprobs)/len(logprobs)
+    conf = math.exp(avg_lp)  <span class="tag-com"># 0~1</span>
+    <span class="tag-key">if</span> conf &lt; 0.5: text = <span class="tag-gpt">f"[LOW-CONF {conf:.2f}] "</span> + text
+    <span class="tag-key">return</span> text, conf
+
+<span class="tag-com"># —— Key 3: self-consistency as a fallback signal (without logprobs) ——</span>
+<span class="tag-com"># Run the same question 5x at temperature=0.7; high divergence → untrustworthy</span>
+<span class="tag-key">def</span> consistency_check(q, n=5):
+    answers = [ask(q) <span class="tag-key">for</span> _ <span class="tag-key">in</span> range(n)]
+    <span class="tag-key">return</span> answers</code></pre>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) writing "do not fabricate" in the system prompt — this instruction is mostly ineffective, the model still hallucinates (see W9 on negation failure); you need a <strong>positive incentive</strong> for abstention; (2) self-reported confidence ("on a scale of 1-10...") — research repeatedly shows this is <strong>backward rationalization</strong>; models grossly over-rate themselves (Tian et al. 2023). Use logprobs or self-consistency instead; (3) treating KNOWN/UNSURE/UNKNOWN tags as user-facing answers — users don't parse three-tier semantics; do UI-level color coding or rewrite as "I don't know" / "I estimate that..." in natural language.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · OpenAI <em>Why Language Models Hallucinate</em> (2025), <a href="https://openai.com/research/why-language-models-hallucinate" target="_blank">openai.com/research/why-language-models-hallucinate</a> ·
+Kadavath et al. <em>Language Models (Mostly) Know What They Know</em>, <a href="https://arxiv.org/abs/2207.05221" target="_blank">arxiv.org/abs/2207.05221</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Which Tokens Are Almost 100% Fabricated: the Specificity Reverse Principle</h2>
+<div class="claim">Claim: hallucination is not uniformly distributed — it concentrates on <strong>specific and rare</strong> token classes. URLs, DOIs, arXiv IDs, commit hashes, function signatures, and citation page numbers are six danger zones with 70–95% fabrication rates. <strong>The more specific the question, the more elaborate the fabrication</strong> — call this the "specificity reverse principle," a first-class engineering assumption.</div>
+
+<h3>Background &amp; mechanism</h3>
+<p>Why do these six token classes hallucinate so absurdly often? The root cause: <strong>they have weak statistical signatures in the pretraining corpus</strong>. URL strings, commit hashes — these are "high-entropy non-inferable" literal strings with no generalizable semantic regularity, only verbatim memorization. At positions the model hasn't memorized, next-token sampling generates "plausible-looking" characters (URL-shape correct, function-name style correct, date format correct), but the underlying distribution is nearly uniform — the model has no idea it's making things up. OpenAI 2025 quantifies this: when prompted to produce an "arXiv paper ID," gpt-4-class models output format-correct but nonexistent IDs in &gt; 50% of cases.</p>
+<p>Even more counter-intuitive is the <strong>specificity reverse principle</strong>: ask "list 3 papers on Transformers" — fabrication rate ~30%. Ask "list 3 papers from ICLR 2023 on Transformer attention optimization, with title, authors, arXiv ID" — fabrication rate &gt; 80%. <strong>The more specific the question, the more hallucination is activated</strong>, because the prompt pushes the model into a specific but training-sparse region of state-space, and the only fallback is "style-completing the details." This contradicts human intuition — we expect that asking more specifically yields more precision — so engineering must make this a first-class assumption: <strong>actively detect, actively ground</strong>.</p>
+
+<div class="diagram">  Specificity Reverse Principle, measured
+
+  Prompt 1 (broad): "List some Transformer optimization directions"
+    → accuracy 85% (all the directions exist)
+
+  Prompt 2 (more specific): "List 3 ICLR 2023 Transformer papers"
+    → accuracy 30% (half the titles right, half the authors made up)
+
+  Prompt 3 (maximum specificity): "List 3 ICLR 2023 Transformer papers
+                                   with arXiv ID, first-author email, page numbers"
+    → accuracy &lt; 5% (almost entirely fabricated)
+
+  ✗ User intuition: more specific → more accurate
+  ✓ Engineering reality: more specific → more fabrication
+
+  Response: detect high-risk token classes → force grounding (tool / RAG)
+            or refuse to generate ("this kind of detail requires verification")</div>
+
+<h3>Tactic</h3>
+<p>Use regex + LLM-as-judge to detect high-risk tokens; rewrite or refuse when necessary:</p>
+<pre><code><span class="tag-key">import</span> re
+
+<span class="tag-com"># —— High-risk token class regexes (scan LLM output) ——</span>
+RISK_PATTERNS = {
+    <span class="tag-gpt">"url"</span>:        <span class="tag-gpt">r'https?://[^\s)]+'</span>,
+    <span class="tag-gpt">"arxiv"</span>:      <span class="tag-gpt">r'arXiv:\d{4}\.\d{4,5}'</span>,
+    <span class="tag-gpt">"doi"</span>:        <span class="tag-gpt">r'10\.\d{4,9}/[-._;()/:A-Za-z0-9]+'</span>,
+    <span class="tag-gpt">"commit"</span>:     <span class="tag-gpt">r'\b[a-f0-9]{7,40}\b'</span>,
+    <span class="tag-gpt">"fn_call"</span>:    <span class="tag-gpt">r'\b[a-z_]+\.[a-z_]+\([^)]*\)'</span>,
+    <span class="tag-gpt">"exact_date"</span>: <span class="tag-gpt">r'\b\d{4}-\d{2}-\d{2}\b'</span>,
+    <span class="tag-gpt">"page_num"</span>:   <span class="tag-gpt">r'\b(?:p\.?|page)\s*\d{1,4}\b'</span>,
+    <span class="tag-gpt">"isbn"</span>:       <span class="tag-gpt">r'\bISBN[-: ]?(?:\d{9}[\dX]|\d{13})\b'</span>
+}
+
+<span class="tag-key">def</span> scan_high_risk(text):
+    hits = {}
+    <span class="tag-key">for</span> kind, pat <span class="tag-key">in</span> RISK_PATTERNS.items():
+        m = re.findall(pat, text)
+        <span class="tag-key">if</span> m: hits[kind] = m
+    <span class="tag-key">return</span> hits
+
+<span class="tag-com"># —— Usage 1: post-generation audit ——</span>
+<span class="tag-key">def</span> answer_with_risk_audit(q):
+    raw = ask(q)
+    risks = scan_high_risk(raw)
+    <span class="tag-key">if</span> risks:
+        <span class="tag-com"># trigger grounding: verify each URL / DOI via web search tool</span>
+        verified = verify_with_tools(raw, risks)
+        <span class="tag-key">return</span> verified
+    <span class="tag-key">return</span> raw
+
+<span class="tag-com"># —— Usage 2: proactively counter specificity-reverse at prompt time ——</span>
+SAFE_SPECIFICITY = <span class="tag-gpt">"""When asked for citations, URLs, function signatures,
+or exact numeric details: DO NOT fabricate.
+- If you cannot verify the exact reference, say "I recall a paper by [author class] on [topic]
+  around [approximate year] but cannot verify the exact title/ID."
+- Prefer naming conventions over fabricated specifics:
+  "the original Transformer paper (Vaswani et al. ~2017)" is preferred over
+  "Vaswani et al., 'Attention is All You Need', arXiv:1706.03762" if uncertain."""</span>
+
+<span class="tag-com"># Note: well-remembered facts keep their detail; uncertain ones degrade gracefully</span></code></pre>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) scanning without acting — detection is only step one, you must ground/verify, rewrite, or annotate "[unverified]"; (2) regex false positives — <code>\b[a-f0-9]{7,40}\b</code> matches "abcdef0"; combine with context (require nearby "git" / "commit" keyword); (3) treating <em>specificity suppression</em> as deleting all specifics — wrong; well-remembered high-frequency facts ("Python sort uses Timsort") should keep their detail; only degrade rare/low-frequency tokens; (4) treating "specificity reverse" as an iron law — it's a <strong>tendency</strong>, not absolute. In domains with high training coverage (mainstream library APIs), specificity actually improves accuracy. Calibrate per domain.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Min et al. <em>FActScore: Fine-grained Atomic Evaluation of Factual Precision</em> (EMNLP 2023), <a href="https://arxiv.org/abs/2305.14251" target="_blank">arxiv.org/abs/2305.14251</a> ·
+Manakul et al. <em>SelfCheckGPT</em> (EMNLP 2023), <a href="https://arxiv.org/abs/2303.08896" target="_blank">arxiv.org/abs/2303.08896</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>The Grounding Stack: Tool Fact-check / Structured Output / Verification Chain</h2>
+<div class="claim">Claim: a single line of defense always leaks. Production hallucination mitigation needs <strong>three layers stacked</strong>: (A) tool-grounded fact-check forces high-risk tokens through external verification; (B) structured output schema uses grammar/JSON enums to outright forbid fabrication space; (C) verification chain uses a different LLM with a different prompt angle to independently audit. Together, on FActScore, these cut hallucination rate to a quarter or a third of baseline.</div>
+
+<h3>Background &amp; mechanism</h3>
+<p>The engineering rationale for each layer:</p>
+<ul>
+<li><strong>Tool fact-check</strong>: URL/DOI/citation-class tokens — the model cannot "think harder" to get these right, but <strong>calling web search, Semantic Scholar, or the GitHub API</strong> verifies them with 100% reliability. Anthropic has internalized this in Claude 4: web_search tool fires automatically on citation-class outputs. Engineering key: make tool calls <strong>after generation, not before</strong> — generate first, scan for risky tokens, then batch-verify. This saves 5–10× tokens vs. pre-querying.</li>
+<li><strong>Structured output</strong>: JSON Schema or grammar-constrained sampling (OpenAI strict mode, vLLM Outlines, llama.cpp GBNF) cuts off non-compliant generation at the token level. Constrain "answer" to <code>enum: ["yes","no","unknown"]</code> and the model is <strong>physically incapable</strong> of producing a fourth option. That's an order of magnitude stronger than prompt-level constraint — it's a hard constraint, not advice.</li>
+<li><strong>Verification chain</strong>: a second LLM in "skeptic" role audits independently, with prompt and context <strong>different</strong> from the generator — otherwise both instances share the same hallucination (a self-consistency failure mode). Anthropic engineering experience: generator = Opus, verifier = <strong>different model family</strong> (Haiku or GPT). The ensemble is more robust.</li>
+</ul>
+<p>Stacked ROI: Min et al. FActScore measurements — pure generator hallucination rate ~25%, plus tool grounding drops to ~12%, plus structured output to ~7%, plus verification chain to ~5%. <strong>Each layer independently contributes 30–50%</strong>, and the failure modes don't overlap (what tool misses, structured catches; what structured misses, verifier catches).</p>
+
+<div class="diagram">  Three-layer grounding architecture
+
+  ┌─────────────────── USER QUERY ──────────────────┐
+  │                                                  │
+  │  ┌── Generator (Claude Opus) ──────────────────┐ │
+  │  │  Produce draft answer + self-tag           │ │
+  │  │  KNOWN/UNSURE/UNKNOWN                      │ │
+  │  └──────────────────────────────────────────────┘ │
+  │                  │                                │
+  │                  ▼                                │
+  │  ┌── Layer A · Tool fact-check ────────────────┐  │
+  │  │  scan_high_risk(answer)                     │  │
+  │  │  ├ URL → web_search.verify(url)             │  │
+  │  │  ├ DOI → semantic_scholar.lookup(doi)       │  │
+  │  │  └ commit → github.exists(repo, hash)       │  │
+  │  └──────────────────────────────────────────────┘ │
+  │                  │                                │
+  │                  ▼                                │
+  │  ┌── Layer B · Structured output ──────────────┐  │
+  │  │  enforce JSON schema with enum + strict     │  │
+  │  │  citation MUST be from verified set OR null │  │
+  │  └──────────────────────────────────────────────┘ │
+  │                  │                                │
+  │                  ▼                                │
+  │  ┌── Layer C · Verification chain ─────────────┐  │
+  │  │  Verifier = different model (Haiku / GPT)   │  │
+  │  │  prompt: "list facts that COULD be wrong"   │  │
+  │  │  flag any unverifiable claim                │  │
+  │  └──────────────────────────────────────────────┘ │
+  │                  │                                │
+  └──────────────────┼────────────────────────────────┘
+                     ▼
+              FINAL ANSWER
+   (claims that failed verification are tagged [unverified])</div>
+
+<h3>Tactic</h3>
+<p>Minimal three-layer implementation (generator → tool verify → structured → verifier):</p>
+<pre><code><span class="tag-key">import</span> anthropic, json, re
+client = anthropic.Anthropic()
+
+<span class="tag-com"># —— Layer A: tool fact-check ——————————————————————</span>
+TOOLS = [{
+    <span class="tag-gpt">"name"</span>:<span class="tag-gpt">"verify_citation"</span>,
+    <span class="tag-gpt">"description"</span>:<span class="tag-gpt">"Verify if a citation (arXiv ID, DOI, URL) actually exists."</span>,
+    <span class="tag-gpt">"input_schema"</span>:{<span class="tag-gpt">"type"</span>:<span class="tag-gpt">"object"</span>,<span class="tag-gpt">"properties"</span>:{
+        <span class="tag-gpt">"identifier"</span>:{<span class="tag-gpt">"type"</span>:<span class="tag-gpt">"string"</span>},
+        <span class="tag-gpt">"kind"</span>:{<span class="tag-gpt">"type"</span>:<span class="tag-gpt">"string"</span>,<span class="tag-gpt">"enum"</span>:[<span class="tag-gpt">"arxiv"</span>,<span class="tag-gpt">"doi"</span>,<span class="tag-gpt">"url"</span>]}
+    },<span class="tag-gpt">"required"</span>:[<span class="tag-gpt">"identifier"</span>,<span class="tag-gpt">"kind"</span>]}
+}]
+
+<span class="tag-key">def</span> verify_citation(identifier, kind):
+    <span class="tag-com"># Real impl: call Semantic Scholar / arXiv API / HEAD request</span>
+    <span class="tag-key">if</span> kind == <span class="tag-gpt">"arxiv"</span>:
+        <span class="tag-key">return</span> arxiv_api.exists(identifier)
+    <span class="tag-com"># ...</span>
+
+<span class="tag-com"># —— Layer B: structured output with strict schema ——————</span>
+ANSWER_SCHEMA = {
+    <span class="tag-gpt">"type"</span>:<span class="tag-gpt">"object"</span>,
+    <span class="tag-gpt">"properties"</span>:{
+        <span class="tag-gpt">"answer"</span>:{<span class="tag-gpt">"type"</span>:<span class="tag-gpt">"string"</span>},
+        <span class="tag-gpt">"confidence"</span>:{<span class="tag-gpt">"type"</span>:<span class="tag-gpt">"string"</span>,
+                       <span class="tag-gpt">"enum"</span>:[<span class="tag-gpt">"known"</span>,<span class="tag-gpt">"unsure"</span>,<span class="tag-gpt">"unknown"</span>]},
+        <span class="tag-gpt">"citations"</span>:{<span class="tag-gpt">"type"</span>:<span class="tag-gpt">"array"</span>,
+                      <span class="tag-gpt">"items"</span>:{<span class="tag-gpt">"type"</span>:<span class="tag-gpt">"string"</span>,
+                              <span class="tag-gpt">"description"</span>:<span class="tag-gpt">"Must be in verified_set or omitted."</span>}}
+    },
+    <span class="tag-gpt">"required"</span>:[<span class="tag-gpt">"answer"</span>,<span class="tag-gpt">"confidence"</span>]
+}
+
+<span class="tag-key">def</span> generate(q, verified_citations):
+    <span class="tag-key">return</span> client.messages.create(
+        model=<span class="tag-gpt">"claude-opus-4-7"</span>, max_tokens=800,
+        tools=TOOLS,
+        system=<span class="tag-gpt">f"Cite only from this verified set: {verified_citations}. "</span>
+               <span class="tag-gpt">"Set confidence=unknown rather than guessing. "</span>
+               <span class="tag-gpt">"Output JSON conforming to the response_format schema."</span>,
+        messages=[{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,<span class="tag-gpt">"content"</span>:q}]
+    )
+
+<span class="tag-com"># —— Layer C: verifier (different model / different prompt) ——</span>
+<span class="tag-key">def</span> verify(answer_json, question):
+    <span class="tag-com"># Use Haiku as a cheap verifier; flip prompt angle to "find flaws"</span>
+    msg = client.messages.create(
+        model=<span class="tag-gpt">"claude-haiku-4-5-20251001"</span>, max_tokens=400,
+        system=<span class="tag-gpt">"You are a strict fact-checker. List every claim "</span>
+               <span class="tag-gpt">"in the answer that CANNOT be verified from common knowledge. "</span>
+               <span class="tag-gpt">"Output JSON: {unverifiable: [...]}"</span>,
+        messages=[{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,<span class="tag-gpt">"content"</span>:
+            <span class="tag-gpt">f"Question: {question}\nAnswer: {json.dumps(answer_json)}"</span>}]
+    )
+    <span class="tag-key">return</span> json.loads(msg.content[0].text)
+
+<span class="tag-com"># —— Pipeline ——————————————————————————————————————————</span>
+<span class="tag-key">def</span> grounded_answer(q):
+    draft = quick_draft(q)                       <span class="tag-com"># Layer 0: draft</span>
+    risks = scan_high_risk(draft)                 <span class="tag-com"># from §02</span>
+    verified = {k: [v <span class="tag-key">for</span> v <span class="tag-key">in</span> vs <span class="tag-key">if</span> verify_citation(v,k)]
+                <span class="tag-key">for</span> k,vs <span class="tag-key">in</span> risks.items()}         <span class="tag-com"># Layer A</span>
+    final = generate(q, verified)                 <span class="tag-com"># Layer B (structured)</span>
+    flags = verify(final, q)                      <span class="tag-com"># Layer C</span>
+    <span class="tag-key">return</span> annotate_unverified(final, flags)</code></pre>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) all three layers use the same model — shared bias means verifier rubber-stamps generator's hallucination; cross-family is mandatory; (2) structured output too rigid — schema must NOT have <code>required: ["citations"]</code>, or the model is forced to fabricate; citations are always optional; (3) verifier prompt phrased as "is this correct" — triggers sycophancy, the verifier tends to agree with the generator; phrase it as "list unverifiable claims" (steelman in reverse); (4) tool fact-check has no timeout — one slow API hangs the whole pipeline; use async + p95 cutoff; (5) overhead too high — three layers serially means 3–4× latency; only run the full chain on high-risk queries (containing citation/numeric/date), skip verifier on simple ones.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · OpenAI <em>Structured Outputs Guide</em>, <a href="https://platform.openai.com/docs/guides/structured-outputs" target="_blank">platform.openai.com/docs/guides/structured-outputs</a> ·
+Outlines <em>Grammar-constrained generation</em>, <a href="https://github.com/dottxt-ai/outlines" target="_blank">github.com/dottxt-ai/outlines</a> ·
+Anthropic <em>Reducing hallucinations</em>, <a href="https://docs.anthropic.com/en/docs/test-and-evaluate/strengthen-guardrails/reduce-hallucinations" target="_blank">docs.anthropic.com/.../reduce-hallucinations</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Hallucination-aware Eval: Stop Looking at Accuracy, Look at Abstention &amp; Calibration</h2>
+<div class="claim">Claim: most hallucination evals still use accuracy@all — and this metric <strong>does not distinguish "correct" from "willing to answer"</strong>. By construction it rewards "confident fabrication" with high scores. The right metric trio: <strong>coverage-accuracy curve (how much do you answer × how often are you right) + calibration ECE + abstention F1</strong>. These metrics expose the truth that polished post-RLHF models hide in benchmark rankings.</div>
+
+<h3>Background &amp; mechanism</h3>
+<p>The root cause is benchmark design misalignment. SimpleQA, TriviaQA, HaluEval all use <code>accuracy = correct / total</code> — but this lumps "I don't know" with "wrong answer" at zero points. The optimal model strategy becomes: <strong>never abstain, always be confident</strong>. This perfectly rewards the bias RLHF already installed; eval and training objective push hallucination the same way.</p>
+<p>The 2024–2025 academic consensus shifted to the <strong>selective prediction</strong> framework: split the model into two components — (1) answer function: produce a concrete answer; (2) confidence function: self-rate reliability. Evaluation trio:</p>
+<ul>
+<li><strong>Coverage-Accuracy Curve</strong>: x-axis is coverage (fraction answered), y-axis is accuracy (correct rate among answered). A model that abstains has a curve that <strong>bulges upward</strong> — answering 50% but 95% correct is more useful in production than answering 100% but 75% correct. AUC (Area Under Curve) is the headline metric.</li>
+<li><strong>Expected Calibration Error (ECE)</strong>: bucket model predictions by confidence, compare mean confidence vs. actual accuracy per bucket. Weighted sum of gaps = ECE. Ideal model ECE = 0: 80% confidence means 80% correct rate in practice. Llama-3 family: ECE 0.05–0.12; gpt-4 class: 0.03–0.08 — several-x difference.</li>
+<li><strong>Abstention F1</strong>: treat "questions that should be abstained on" as the positive class, the model's abstention behavior gets precision/recall. Complements raw accuracy — a model that achieves high abstention-recall on hard questions may not "win" accuracy but its hallucination risk is an order of magnitude lower.</li>
+</ul>
+<p>The key insight from OpenAI's 2025 Why-Hallucinate paper: <strong>under selective scoring, the "reasonable ranking" of all major models reshuffles</strong> — some benchmark leaders are calibration-bottom-feeders. If your application is hallucination-sensitive (medicine, law, finance, research), <strong>you cannot trust benchmark rankings</strong>; you must run selective eval yourself.</p>
+
+<div class="diagram">  Coverage-Accuracy curve comparison
+
+   acc
+   100│●
+      │  ●
+    90│    ●← Model A: high calibration (abstains more, high correct rate)
+      │      ●
+    80│        ●
+      │           ●        ●─── Model B: low calibration
+    70│             ●     ●     (answers more but wrong more)
+      │               ● ●
+    60│                ●
+      │                  ●
+    50└─────────────────────→ coverage
+      0%   20%  40%  60%  80% 100%
+
+   AUC(A) &gt; AUC(B) → A is more valuable in production
+                     even if acc(A) &lt; acc(B) at 100% coverage
+
+   Traditional acc@100% only looks at the right endpoint → misses A's advantage</div>
+
+<h3>Tactic</h3>
+<p>A minimal selective-eval framework (model-agnostic):</p>
+<pre><code><span class="tag-key">import</span> numpy as np
+<span class="tag-key">from</span> sklearn.metrics <span class="tag-key">import</span> auc
+
+<span class="tag-com"># data: list of (question, gold_answer, model_answer, model_confidence)</span>
+<span class="tag-com"># model_confidence ∈ [0,1] — logprob avg / self-report / consistency rate</span>
+
+<span class="tag-key">def</span> coverage_accuracy_curve(samples):
+    <span class="tag-com"># sort by confidence descending</span>
+    sorted_s = sorted(samples, key=<span class="tag-key">lambda</span> s: -s[<span class="tag-gpt">"conf"</span>])
+    points = []
+    correct_so_far = 0
+    <span class="tag-key">for</span> i, s <span class="tag-key">in</span> enumerate(sorted_s, 1):
+        correct_so_far += int(s[<span class="tag-gpt">"correct"</span>])
+        coverage = i / len(sorted_s)
+        accuracy = correct_so_far / i
+        points.append((coverage, accuracy))
+    <span class="tag-key">return</span> points  <span class="tag-com"># plot + AUC</span>
+
+<span class="tag-key">def</span> ece(samples, n_bins=10):
+    <span class="tag-com"># Expected Calibration Error</span>
+    bins = np.linspace(0, 1, n_bins+1)
+    ece_val, total = 0.0, len(samples)
+    <span class="tag-key">for</span> i <span class="tag-key">in</span> range(n_bins):
+        bucket = [s <span class="tag-key">for</span> s <span class="tag-key">in</span> samples
+                  <span class="tag-key">if</span> bins[i] &lt;= s[<span class="tag-gpt">"conf"</span>] &lt; bins[i+1]]
+        <span class="tag-key">if</span> <span class="tag-key">not</span> bucket: <span class="tag-key">continue</span>
+        avg_conf = np.mean([s[<span class="tag-gpt">"conf"</span>] <span class="tag-key">for</span> s <span class="tag-key">in</span> bucket])
+        acc = np.mean([s[<span class="tag-gpt">"correct"</span>] <span class="tag-key">for</span> s <span class="tag-key">in</span> bucket])
+        ece_val += (len(bucket)/total) * abs(avg_conf - acc)
+    <span class="tag-key">return</span> ece_val   <span class="tag-com"># lower is better; &lt;0.05 is very good</span>
+
+<span class="tag-key">def</span> abstention_f1(samples, gold_difficulty):
+    <span class="tag-com"># gold_difficulty: which questions SHOULD be abstained (hard set / OOD set)</span>
+    tp = sum(1 <span class="tag-key">for</span> s <span class="tag-key">in</span> samples
+             <span class="tag-key">if</span> s[<span class="tag-gpt">"abstained"</span>] <span class="tag-key">and</span> gold_difficulty[s[<span class="tag-gpt">"id"</span>]] == <span class="tag-gpt">"hard"</span>)
+    fp = sum(1 <span class="tag-key">for</span> s <span class="tag-key">in</span> samples
+             <span class="tag-key">if</span> s[<span class="tag-gpt">"abstained"</span>] <span class="tag-key">and</span> gold_difficulty[s[<span class="tag-gpt">"id"</span>]] == <span class="tag-gpt">"easy"</span>)
+    fn = sum(1 <span class="tag-key">for</span> s <span class="tag-key">in</span> samples
+             <span class="tag-key">if</span> <span class="tag-key">not</span> s[<span class="tag-gpt">"abstained"</span>] <span class="tag-key">and</span> gold_difficulty[s[<span class="tag-gpt">"id"</span>]] == <span class="tag-gpt">"hard"</span>)
+    precision = tp / (tp + fp + 1e-9)
+    recall = tp / (tp + fn + 1e-9)
+    <span class="tag-key">return</span> 2 * precision * recall / (precision + recall + 1e-9)
+
+<span class="tag-com"># —— Reporting ——</span>
+<span class="tag-key">def</span> selective_report(samples, gold_difficulty):
+    curve = coverage_accuracy_curve(samples)
+    <span class="tag-key">return</span> {
+        <span class="tag-gpt">"accuracy@100"</span>: curve[-1][1],
+        <span class="tag-gpt">"accuracy@50"</span>:  curve[len(curve)//2][1],
+        <span class="tag-gpt">"AUC"</span>:           auc(*zip(*curve)),
+        <span class="tag-gpt">"ECE"</span>:           ece(samples),
+        <span class="tag-gpt">"abstention_F1"</span>: abstention_f1(samples, gold_difficulty)
+    }</code></pre>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) ECE without AUC — a model that always outputs 50% confidence has low ECE but is useless; report all four metrics; (2) self-reported confidence as the confidence signal — Tian et al. 2023 proved this is backward rationalization, nearly uncalibrated; use logprob avg or self-consistency rate; (3) abstention F1 without a "hard set" — you need a batch the model <strong>provably doesn't know</strong> (out-of-domain, post-cutoff events); use SimpleQA's unknown subset or build your own; (4) eval only on dev set — production hallucination eval should <strong>sample online</strong>: 50 real queries per day, human label + automatic metrics, otherwise you won't see post-cutoff drift.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · El-Yaniv &amp; Wiener <em>On the Foundations of Noise-free Selective Classification</em> (JMLR 2010, math foundation for selective prediction), <a href="https://www.jmlr.org/papers/v11/el-yaniv10a.html" target="_blank">jmlr.org/.../el-yaniv10a</a> ·
+Tian et al. <em>Just Ask for Calibration</em> (EMNLP 2023), <a href="https://arxiv.org/abs/2305.14975" target="_blank">arxiv.org/abs/2305.14975</a> ·
+OpenAI <em>SimpleQA</em>, <a href="https://openai.com/index/introducing-simpleqa/" target="_blank">openai.com/index/introducing-simpleqa</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// Putting it all together · Bringing hallucination mitigation into your product</h3>
+<p>The four sections above aren't independent tricks — they map to four engineering layers of hallucination mitigation. Adoption path by ROI:</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>Step 1 · Write a selective system prompt (30 min, immediate effect)</strong>: bake "KNOWN / UNSURE / UNKNOWN three-tier + abstention gets positive credit" into your system prompt, and you immediately switch the model from "must-answer mode" to "calibration mode." This is the <strong>zero-cost highest-ROI</strong> step.</li>
+<li><strong>Step 2 · Add a high-risk token scanner (2 hours, –30% hallucination)</strong>: use the §02 regexes to scan outputs for URL/DOI/arXiv/commit/date; any hit triggers verification or [unverified] tag. Even without a grounding tool, just adding an [unverified] label in the UI <strong>dramatically reduces user-misled risk</strong>.</li>
+<li><strong>Step 3 · Add tool fact-check (half day, another –30%)</strong>: for high-risk tokens caught in §02, call real APIs (arXiv, Semantic Scholar, HEAD request, GitHub API). Model + tool combined is an order of magnitude stronger than pure prompt engineering.</li>
+<li><strong>Step 4 · Add structured output (2 hours, hard-constraint safety net)</strong>: confidence field as an enum, citation field drawn from a verified_set — the model is physically incapable of fabricating space. Complements tool fact-check.</li>
+<li><strong>Step 5 · Set up selective eval (1 day, long-term maintainable)</strong>: build 100–200 questions mixing easy / hard / unknown; on every model upgrade / prompt change, re-run coverage-accuracy + ECE + abstention F1. This is the only way to <strong>prevent regression</strong>.</li>
+</ol>
+<p style="margin-top:14px">Once you've done these five steps, your application's <strong>user trust</strong> in hallucination-sensitive scenarios will jump a tier — not because the model got smarter, but because it <strong>now admits ignorance, annotates uncertainty, and triggers external verification</strong>. These three properties matter more to final product quality than "swap in a bigger model."</p>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// Deep thinking</h3>
+<details><summary>If RLHF is the root cause of hallucination, will future training paradigms (DPO, Constitutional AI, self-rewarding) fix it at the source?</summary><div>Partially mitigate, not fundamentally solve, because the problem isn't the RLHF algorithm — it's the <strong>"what is a good answer" human preference</strong>. Even with DPO or Constitutional AI, annotators / judge models still prefer "sounds knowledgeable" over "honestly admits ignorance." OpenAI 2025 specifically points out this is a <strong>signal gap</strong> between reward model and ground truth, not a PPO bug. Two genuine breakthrough paths: (1) <em>introducing abstention reward during training</em> — explicitly label "abstain when you should" as positive samples rather than letting judges pass it indirectly; Anthropic's Constitutional Self-Critique is an early attempt; (2) <em>uncertainty-aware loss</em> — directly align model confidence with actual accuracy (calibration loss) during training, not just "sounds correct." But both make calibration data collection far more expensive than preference data, so commercial adoption is slow short-term. So for the next 3–5 years, engineering mitigation (this issue's four layers) remains the main battleground.</div></details>
+<details><summary>Will the Specificity Reverse Principle get worse or better on long-context / large-context models?</summary><div><strong>Worse</strong>, counter-intuitive but mechanistic. Surface intuition: larger context = better grounding. Actual: (1) <em>lost-in-the-middle</em> (W2 / W10) causes mid-context specific facts to be ignored, model falls back to parametric memory and fabricates; (2) long context invites users to ask <strong>multi-variable, multi-constraint</strong> composite queries ("list ICLR 2023 attention papers with &gt;100 citations from European authors"), specificity dimensions stack, each may fabricate slightly, compound fabrication rate grows exponentially; (3) long context makes <strong>synthesized fiction</strong> easier — splicing real fragments to create a non-existent "fact." Anthropic engineering experience: long context + high specificity = highest hallucination risk combination, mandatory grounding + verification. Long context is not the hallucination cure — it's a new challenge surface. Selective eval is especially important under long context.</div></details>
+<details><summary>Does putting "abstention gets positive credit" in the prompt actually work, or is it placebo? Is the model pretending to be calibrated?</summary><div>Genuinely works, but with a <strong>clear ceiling</strong>. Tian et al. 2023 and Lin et al. 2022 both ran ablations: an abstention-permitting prompt cuts hallucination rate by 20–40% (varies by domain), and significantly improves ECE. Mechanism: the prompt doesn't "make the model smarter" — it <strong>shifts the perceived shape of the reward landscape</strong>. When the model infers "what does this user/system want," it now incorporates "I don't know is acceptable" as a signal. But the ceiling: confident-wrong facts in parametric memory (versions misremembered during training) — prompts can't reach them; the model "knows" them. For that, you need §03 external grounding. Prompt-level intervention is <strong>necessary but not sufficient</strong> — it makes the model more calibrated on the questions it knows, but powerless against parametric errors. Full mitigation always means prompt + scanner + tool + structured + eval, all five layers. Don't expect any single layer to be a silver bullet.</div></details>
+<details><summary>Hallucination mitigation vs. user experience: tagging every answer [unverified], degrading specificity, adding abstention — does this make the product "look unintelligent"?</summary><div>This is a product-philosophy question without a technical right answer, but two observations. (1) <em>Professional users prefer honesty over confidence</em>: doctors, lawyers, researchers testing AI tools nearly unanimously report "I'd rather it say I don't know than fabricate." Anthropic tuned Claude 4 toward honesty and the B2B response was strongly positive. So "looks unintelligent" is a consumer-demo concern, not a B2B concern. (2) <em>UI design can transform honesty signals into trust signals</em>: [unverified] doesn't need to be shown to users; use subtle color coding or hover tooltip; UNKNOWN doesn't show "I don't know" — show "let me look that up" + trigger tool. Honesty at the mechanism layer, elegance at the presentation layer. BigCat's take: consumer products may continue prioritizing "confident fluency" short-to-mid term, but any serious-use product (learning, research, decision support) — the long-term winner is honesty-first. Not a moral choice — it's <strong>trust economics</strong>: once caught fabricating, user trust in the tool is permanently damaged.</div></details>
+<details><summary>If internal signals (P(True) probes) can predict the model's own hallucination, why don't APIs just expose this as a confidence field?</summary><div>Technically possible, commercially and operationally blocked. Anthropic and OpenAI both ran internal experiments (Kadavath 2022 / OpenAI 2024 calibration probes); hidden-state probes hit AUC 0.85+ on multiple-choice, 0.7+ on open-ended. Not productized because: (1) <em>probes need a held-out calibration set and retraining on every model update</em> — operational cost not trivial; (2) <em>exposing the probe = letting the outside peer inside the model</em>; expanded attack surface (reverse-engineering model behavior); (3) <em>logprob endpoints already cover most use cases</em> — OpenAI / Gemini / open-source all offer logprobs, an additional probe API has low marginal value; (4) <em>"my model knows it doesn't know" is a negative selling point</em> commercially — markets prefer "answers everything." Status: internal signal exists, research confirms it's strong, productization path blocked. Mid-to-long term: probes won't become a public API directly, but will be internalized as <strong>automatic abstention signals at generation time</strong> — next-gen RLHF / DPO will use probe signal as auxiliary loss, so generation is naturally calibrated. This is the direction hinted at in OpenAI's 2025 paper.</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// Further reading</h3>
+<ul>
+<li><a href="https://openai.com/research/why-language-models-hallucinate" target="_blank">OpenAI · Why Language Models Hallucinate (2025)</a> — systematic analysis of RLHF–hallucination causality; required reading</li>
+<li><a href="https://arxiv.org/abs/2207.05221" target="_blank">Kadavath et al. · Language Models (Mostly) Know What They Know (Anthropic 2022)</a> — origin of the P(True) probe</li>
+<li><a href="https://arxiv.org/abs/2305.14251" target="_blank">Min et al. · FActScore (EMNLP 2023)</a> — benchmark for fine-grained fact precision on long answers</li>
+<li><a href="https://arxiv.org/abs/2303.08896" target="_blank">Manakul et al. · SelfCheckGPT (EMNLP 2023)</a> — hallucination detection without external knowledge</li>
+<li><a href="https://arxiv.org/abs/2305.14975" target="_blank">Tian et al. · Just Ask for Calibration (EMNLP 2023)</a> — debunks self-reported confidence</li>
+<li><a href="https://docs.anthropic.com/en/docs/test-and-evaluate/strengthen-guardrails/reduce-hallucinations" target="_blank">Anthropic · Reducing Hallucinations engineering guide</a> — official grounding + structured output recommendations</li>
+<li><a href="https://openai.com/index/introducing-simpleqa/" target="_blank">OpenAI · SimpleQA (2024)</a> — short-form factuality benchmark designed for hallucination</li>
+<li><a href="https://github.com/dottxt-ai/outlines" target="_blank">Outlines · Grammar-constrained generation</a> — open-source token-level hard constraints</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 11 / 2026-05-27</footer>
+</div>
+<script src="https://cissy0802.github.io/comments.js" defer></script>
+<script src="https://cissy0802.github.io/search.js" defer></script>
+<script src="https://cissy0802.github.io/index-button.js" defer></script>
+<script src="https://cissy0802.github.io/i18n-tts.js" defer></script>
+</body></html>

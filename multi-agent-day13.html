@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 13 · Multi-agent Systems — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.crossref{margin:18px 0 0;padding:10px 16px;background:rgba(0,212,255,0.06);border:1px dashed rgba(0,212,255,0.3);border-radius:8px;font-size:0.85rem;color:#a0a4b8;text-align:center}
+.crossref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 13 / PHASE 2 · SYSTEMS</span>
+<h1>Multi-agent Systems</h1>
+<h2>何时该用 · Orchestrator-Worker · Debate · 协同协议与协调税</h2>
+<div class="date">2026-05-27 · BigCat</div>
+<p class="pitch">2025 年 6 月 Anthropic 和 Cognition 几乎同时发文，立场完全相反——Anthropic「这样建多 agent」，Cognition「别建多 agent」。这一期把这场争论的工程底牌掀开：什么时候多 agent 真有价值，什么时候是 15× token 的浪费。</p>
+<div class="crossref">
+<a href="https://cissy0802.github.io/ai-ml-daily/multi-agent-day7.html">
+  前置概念 → ai-ml-daily Day 7 (Multi-Agent 系统)
+</a>
+</div>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>2025 年 6 月行业最有信息量的一周：Anthropic 发布 <em>How we built our multi-agent research system</em>，详细拆解他们的 Research 功能用 Opus 4 做 orchestrator + Sonnet 4 做 subagents，在内部 eval 上比 single-agent Opus 4 高 <strong>90.2%</strong>；同周 Cognition（Devin 团队）的 Walden Yan 发表 <em>Don't Build Multi-Agents</em>，明确说多 agent 是<strong>脆弱系统</strong>，主张「单 agent + 长 context + 完整 trace」。两个一线团队，公开对撞。重点不是「谁对」——是<strong>他们用多 agent 的任务结构不同</strong>：Anthropic 的 Research 是<em>并行检索</em>（每个 subagent 独立、最后聚合），Cognition 的 Devin 是<em>串行编码</em>（每一步依赖前一步的上下文）。多 agent 的工程价值<strong>完全取决于任务能否分解为独立子任务</strong>。这一期假设你已经懂 agent 是什么（ai-ml-daily Day 7 讲过），直接讲 4 个决定多 agent ROI 的工程层：<strong>① 何时不该多 agent 的决策线 → ② Orchestrator-Worker 的真实约束 → ③ Debate / 多视角的几乎所有真实价值 → ④ 协调税与通信协议（A2A vs MCP）</strong>。</p>
+</div>
+
+<!-- ============ Decision tree diagram ============ -->
+<div class="diagram">  多 agent 决策线（2026 年版）
+
+  问题：单 agent + tools + 长 context 已经不够好
+       │
+       ▼
+  ┌─────────────────────────────────────────────────────────┐
+  │ ① 子任务能并行独立完成吗（不共享中间状态）？             │
+  │    Yes → orchestrator-worker 候选                       │
+  │    No  → 留在单 agent + 长 context                      │
+  └─────────────────────────────────────────────────────────┘
+       │ Yes
+       ▼
+  ┌─────────────────────────────────────────────────────────┐
+  │ ② 单 agent 的 context 真的爆了吗（> 200K 仍不够）？     │
+  │    Yes → 多 agent 可摊分 context                        │
+  │    No  → 加长 ctx / 加 RAG / compaction 更简单          │
+  └─────────────────────────────────────────────────────────┘
+       │ Yes
+       ▼
+  ┌─────────────────────────────────────────────────────────┐
+  │ ③ 任务价值 > 15× token 成本？                            │
+  │    Anthropic 数据：multi-agent ≈ 15× chat token         │
+  │    研究类高价值任务 → 划算                              │
+  │    通用任务 → 不划算                                    │
+  └─────────────────────────────────────────────────────────┘
+       │ Yes
+       ▼
+  ┌─────────────────────────────────────────────────────────┐
+  │ ④ 失败可独立判定吗（每个 subagent 输出可单独验证）？     │
+  │    Yes → 上 multi-agent                                 │
+  │    No  → 失败会级联放大，留在单 agent + reflection     │
+  └─────────────────────────────────────────────────────────┘
+
+  绝大多数业务任务停在 ① 或 ② —— 这就是 Cognition 的立场。
+  Research / 大规模并行检索 / 跨工具调研 → 多 agent 真正起飞。</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>反模式：80% 的「多 agent」是单 agent 加上花架子</h2>
+<div class="claim">论断：Cognition 的 Walden Yan 是对的——<strong>多 agent 默认是脆弱系统</strong>。问题不是 agent 数量，是 <strong>context sharing 的崩塌</strong>：subagent 看不到彼此的中间决策、conflicting actions 互相覆盖、orchestrator 的 summarization 丢信息。在任务可串行的场景，单 agent + 完整 trace + 长 context 几乎总是更可靠、更便宜、更易 debug。</div>
+
+<h3>背景与原理</h3>
+<p>Cognition 在 <em>Don't Build Multi-Agents</em>（2025 年 6 月）里把这个反模式讲透了。<strong>核心 claim：multi-agent 系统的失败不是 agent 不够聪明，是它们看不到彼此</strong>。一个 subagent 决定「先 refactor 这个文件再加 feature」，另一个并发 subagent 决定「直接加 feature 不动结构」——两个都在自己 context 里逻辑自洽，merge 时冲突，orchestrator 既无法判优劣也无法回滚。这种<strong>隐式决策冲突</strong>（implicit decision conflict）是多 agent 最难治的失败模式，因为没有报错、没有 stack trace，只有一个看起来「奇怪但能跑」的结果。</p>
+<p>Cognition 的两条工程原则：<strong>(1) Share full context, not summaries</strong>——任何 subagent 都要能看到整个 trace（包括 orchestrator 的目标、其他 agent 已经做了什么），summarization 是有损压缩，几乎一定会丢关键信息；<strong>(2) Actions carry implicit decisions</strong>——每个 tool call 都隐含一个判断（「我选择这条路而不是另一条」），并发 agent 各自做隐式决策时<strong>没有协商机制</strong>，所以编码、规划这类<em>每一步依赖前一步</em>的任务，单 agent 严格优于多 agent。</p>
+<p>这跟 Anthropic 的 Research 系统不矛盾——它们的任务结构正好相反：<em>并行检索</em> 100 个网页、然后 orchestrator 聚合答案。每个 subagent 之间<strong>本来就独立</strong>，没有 implicit decision conflict 问题。所以判断要不要多 agent 的<strong>第一个问题</strong>不是「这个任务复杂吗」，是「子任务之间有没有隐式共享状态」。</p>
+<p>另一个常被忽视的反模式：<strong>把单 agent 的 prompt 拆成多个 agent 来「降低复杂度」</strong>——typical 例子是「PM agent + Engineer agent + Reviewer agent」串行 pipeline。这种拆法<strong>几乎从不带来质量提升</strong>，只是把 prompt 工程的复杂度从 1 个 system prompt 转移到 3 个 agent 间的 message format 设计。MetaGPT 这类「SOP 编码进 agent 角色」的论文展示了上限，但需要<strong>把每个角色的 prompt 都调到生产质量</strong>——这本身工作量比单 agent 高 3×，且必然引入 agent 间 message drift 问题。除非你的产品 SOP <em>真的</em>稳定到可以编码成 agent 角色（极少），否则单 agent 永远是 baseline。</p>
+
+<div class="diagram">  任务结构 → agent 数量决策
+
+  任务类型                    并行性  状态共享  推荐架构
+  ────────────────────────────────────────────────────────────
+  Research / 文献综述          高     低        Orchestrator + N workers
+  Web 抓取聚合                 高     低        Orchestrator + N workers
+  跨工具大规模信息整合          高     低        Orchestrator + N workers
+  ──────────────────────────────────────────────────────────
+  Coding agent (Devin 类)      低     高        单 agent + 长 context
+  长 form 写作                  低     高        单 agent + 长 context
+  调试 / 重构                   低     高        单 agent + 长 context
+  ──────────────────────────────────────────────────────────
+  Factual QA / 数学题           中     中        Debate (2-5 agents, 1 题)
+  关键决策审查                  中     中        Debate / Cross-check
+  ──────────────────────────────────────────────────────────
+  「分角色 pipeline」          低     高        ❌ 通常是反模式
+
+  → 状态共享高 + 并行性低 = 单 agent 永远赢</div>
+
+<h3>实战示例</h3>
+<p>用之前的 ROI 决策树问自己 6 个问题——如果有 ≥ 3 个 No，多 agent 就是过度工程：</p>
+<pre><code><span class="tag-com"># multi_agent_check.py —— 开建前的 sanity check</span>
+<span class="tag-key">def</span> should_use_multi_agent(task) -&gt; <span class="tag-gpt">str</span>:
+    checks = {
+        <span class="tag-gpt">"parallelizable"</span>:
+            task.can_split_into_independent_subtasks,
+        <span class="tag-gpt">"low_implicit_state"</span>:
+            <span class="tag-key">not</span> task.requires_step_n_depends_on_step_n_minus_1,
+        <span class="tag-gpt">"context_truly_overflows"</span>:
+            task.estimated_tokens &gt; 200_000,  <span class="tag-com"># long-ctx 真不够</span>
+        <span class="tag-gpt">"value_per_query_high"</span>:
+            task.dollar_value_per_run &gt;= 1.0,  <span class="tag-com"># 15× token 才划算</span>
+        <span class="tag-gpt">"subagent_output_verifiable"</span>:
+            task.each_subagent_result_can_be_validated_independently,
+        <span class="tag-gpt">"single_agent_tried_and_failed"</span>:
+            task.has_single_agent_baseline_with_eval_score,
+    }
+    failed = [k <span class="tag-key">for</span> k,v <span class="tag-key">in</span> checks.items() <span class="tag-key">if not</span> v]
+    <span class="tag-key">if</span> <span class="tag-key">len</span>(failed) &gt;= 3:
+        <span class="tag-key">return</span> <span class="tag-gpt">f"❌ Stay on single agent. Missing: {failed}"</span>
+    <span class="tag-key">if</span> <span class="tag-gpt">"parallelizable"</span> <span class="tag-key">in</span> failed <span class="tag-key">or</span> <span class="tag-gpt">"low_implicit_state"</span> <span class="tag-key">in</span> failed:
+        <span class="tag-key">return</span> <span class="tag-gpt">"❌ Task structure fights multi-agent. Use single agent + long ctx."</span>
+    <span class="tag-key">return</span> <span class="tag-gpt">"✅ Good fit. Start with orchestrator-worker; measure 15× token budget."</span></code></pre>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）「<em>把单 agent 拆成 PM + Engineer + Reviewer 三个 agent</em>」——pipeline 中每个 agent 只看上游的 summary，下游 agent 不知道上游为什么这么决定，<strong>决策上下文丢失</strong>，质量通常反而下降；（2）<strong>并发 subagent 共享工具但不共享 trace</strong>——两个 subagent 各自 write 同一个文件、各自调用 search 用不同 query，结果互相覆盖；（3）orchestrator <strong>用 summary 而非 raw trace 给 subagent</strong>——summary 丢的恰好是 subagent 需要做决策的细节；（4）<strong>用多 agent debate 来「提升质量」却没有 ground truth eval</strong>——debate 容易让所有 agent 一起 confidently wrong，比单 agent 更难发现错；（5）<strong>多 agent 用同一个模型同一个 prompt</strong>——没有 diversity 时 debate/voting 退化为相关误差放大，等于把 N 票全投给同一个判断。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Cognition · <em>Don't Build Multi-Agents</em> (2025), <a href="https://cognition.ai/blog/dont-build-multi-agents" target="_blank">cognition.ai/blog/dont-build-multi-agents</a> ·
+Anthropic · <em>Building effective agents</em>, <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">anthropic.com/engineering/building-effective-agents</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Orchestrator-Worker：Anthropic 的赌注与真实成本</h2>
+<div class="claim">论断：Orchestrator-Worker 是 2026 年<strong>唯一被生产规模验证</strong>的多 agent 模式。Anthropic Research 系统披露 Opus 4 orchestrator + Sonnet 4 workers 比 single-agent Opus 4 高 90.2% — 但代价是 <strong>15× chat token 成本</strong>。理解这个 trade-off 的 4 个工程约束（任务 spawn 准则、subagent prompt 隔离、聚合策略、并发上限）决定它是飞起还是烧钱。</div>
+
+<h3>背景与原理</h3>
+<p>Anthropic 在 2025 年 6 月的 <em>How we built our multi-agent research system</em> 博客里把这个模式讲得最具体。架构：用户 query → <strong>Lead Agent (Opus 4)</strong> 做规划、拆分子任务、spawn N 个并行 <strong>Subagents (Sonnet 4)</strong> 各自查不同方向 → Lead 聚合所有 subagent 的发现 → 生成最终答案。关键数字：内部 research eval 上比 single-agent Opus 4 高 <strong>90.2%</strong>，但 <strong>token 消耗约为普通 chat 的 15×</strong>（普通 agent 大约 4×）。</p>
+<p>四个让这个模式真正 work 的工程约束：</p>
+<ul>
+<li><strong>(1) Spawn 准则</strong>：Lead Agent 不能<em>随便</em> spawn——它要被明确教会「什么样的子查询值得开一个 subagent」。Anthropic 的 prompt 给了 lead 「衡量任务广度、复杂度、并行收益」的判断准则。<em>反例</em>：让 lead 「能 spawn 就 spawn」→ 它会为每个搜索词都开一个 subagent，token 爆炸而无质量提升。</li>
+<li><strong>(2) Subagent prompt 隔离</strong>：每个 subagent 拿到的 prompt 必须<strong>包含任务目标但不包含其他 subagent 的工作</strong>——这是和 Cognition 立场相反的地方。Anthropic 这样设计的前提：subagent 之间<em>本来就独立</em>（查不同子方向），互相看反而引入 confirmation bias。<em>这个设计只在「真正并行」任务上 work</em>，coding/refactoring 这种串行任务上必然崩。</li>
+<li><strong>(3) 聚合策略</strong>：Lead Agent 不是简单 concat subagent 结果——它做<strong>二次推理</strong>：交叉验证、去重、识别矛盾、补漏。Anthropic 强调这一步用<em>更强的模型</em>（Opus）至关重要，弱模型的聚合等于把 5 个噪音平均成 1 个噪音。</li>
+<li><strong>(4) 并发上限</strong>：subagent 数量不是越多越好——超过 5-10 个之后<strong>收益曲线骤平</strong>（多了的 agent 只是重复已经覆盖的角度），同时 lead 聚合复杂度随 N 上升而下降。Anthropic 没给具体数字但暗示常用区间是 3-7 个 subagent。</li>
+</ul>
+<p>15× token 成本怎么理解？普通 chat 1 turn = 1 个 LLM 调用；普通 agent ≈ 4× 因为 ReAct loop 多轮；multi-agent research ≈ 15× 因为：lead 自己跑多轮（~4×）+ 每个 subagent 各跑多轮（~4×）× N 个并发 subagent（~3-5）+ 聚合。这意味着<strong>每 query 成本要 &gt; $1 才有 ROI</strong>。低价值通用任务用 multi-agent 是直接烧钱；研究、尽职调查、跨工具调研、深度 SWE-bench 这类<em>结果一份值钱</em>的场景才匹配。</p>
+
+<div class="diagram">  Orchestrator-Worker 标准拓扑
+
+           User Query
+                │
+                ▼
+        ┌───────────────┐
+        │ Lead Agent    │ ← Opus / GPT-5 (强模型)
+        │  - 规划         │
+        │  - 拆任务       │
+        │  - 聚合         │
+        └───────────────┘
+       /    │    │    │   \
+      /     │    │    │    \
+     ▼      ▼    ▼    ▼     ▼
+  ┌────┐ ┌────┐┌────┐┌────┐┌────┐
+  │Sub₁││Sub₂││Sub₃││Sub₄││Sub₅│  ← Sonnet / Haiku (并发 3-7)
+  │tool││tool││tool││tool││tool│
+  └────┘ └────┘└────┘└────┘└────┘
+     │     │    │    │     │
+     └─────┴────┴────┴─────┘
+                │
+                ▼
+         Lead 聚合 + 推理
+                │
+                ▼
+           Final Answer
+
+  Token 账：Lead (~4×) + N·Sub (~4× each) + 聚合 ≈ 15× chat
+  适用：value/query &gt; $1，且子任务独立可并行</div>
+
+<h3>实战示例</h3>
+<p>最小可工作的 orchestrator-worker（Anthropic SDK，伪代码——抓住模式而非细节）：</p>
+<pre><code><span class="tag-key">import</span> anthropic, asyncio, json
+
+client = anthropic.AsyncAnthropic()
+
+<span class="tag-com"># ============ Subagent: 独立查一个子方向 ============</span>
+<span class="tag-key">async def</span> subagent(task: <span class="tag-gpt">dict</span>) -&gt; <span class="tag-gpt">dict</span>:
+    <span class="tag-com"># 注意：prompt 只给本子任务，不给其他 subagent 的工作</span>
+    msg = <span class="tag-key">await</span> client.messages.create(
+        model=<span class="tag-gpt">"claude-sonnet-4-6"</span>,
+        max_tokens=2000,
+        system=<span class="tag-gpt">"You are a research subagent. Focus ONLY on the assigned "</span>
+               <span class="tag-gpt">"sub-question. Use search tools. Return: findings + sources."</span>,
+        tools=[search_tool, fetch_tool],
+        messages=[{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,
+                   <span class="tag-gpt">"content"</span>: <span class="tag-gpt">f"Sub-question: {task['question']}\n"</span>
+                              <span class="tag-gpt">f"Scope: {task['scope']}"</span>}],
+    )
+    <span class="tag-com"># tool loop 省略，实际要循环到 stop_reason='end_turn'</span>
+    <span class="tag-key">return</span> {<span class="tag-gpt">"task"</span>: task, <span class="tag-gpt">"findings"</span>: msg.content[0].text}
+
+<span class="tag-com"># ============ Lead Agent: 规划 + 聚合 ============</span>
+<span class="tag-key">async def</span> lead_agent(user_query: <span class="tag-gpt">str</span>) -&gt; <span class="tag-gpt">str</span>:
+    <span class="tag-com"># Step 1: 规划——用强模型决定要不要拆、拆成什么</span>
+    plan = <span class="tag-key">await</span> client.messages.create(
+        model=<span class="tag-gpt">"claude-opus-4-7"</span>,
+        max_tokens=1500,
+        system=<span class="tag-gpt">"You are a research lead. Decide if this query benefits from "</span>
+               <span class="tag-gpt">"parallel subagents. If YES, output JSON list of 3-7 INDEPENDENT "</span>
+               <span class="tag-gpt">"sub-questions. If NO (task is sequential or simple), output "</span>
+               <span class="tag-gpt">"{\"single\": true} and you'll handle it alone."</span>,
+        messages=[{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,<span class="tag-gpt">"content"</span>:user_query}],
+    )
+    spec = json.loads(plan.content[0].text)
+
+    <span class="tag-com"># Step 2a: 任务不适合拆 → fallback 单 agent (绝大多数 query)</span>
+    <span class="tag-key">if</span> spec.get(<span class="tag-gpt">"single"</span>):
+        <span class="tag-key">return await</span> single_agent_run(user_query)
+
+    <span class="tag-com"># Step 2b: 并行 spawn subagents</span>
+    results = <span class="tag-key">await</span> asyncio.gather(*[subagent(t) <span class="tag-key">for</span> t <span class="tag-key">in</span> spec[<span class="tag-gpt">"tasks"</span>]])
+
+    <span class="tag-com"># Step 3: 聚合——再次用强模型，必须做 cross-check 而非 concat</span>
+    aggregation = <span class="tag-key">await</span> client.messages.create(
+        model=<span class="tag-gpt">"claude-opus-4-7"</span>,
+        max_tokens=4000,
+        system=<span class="tag-gpt">"You are the research lead synthesizing N subagent reports. "</span>
+               <span class="tag-gpt">"Cross-validate, identify contradictions, fill gaps. "</span>
+               <span class="tag-gpt">"Output: comprehensive answer + confidence notes."</span>,
+        messages=[{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,
+                   <span class="tag-gpt">"content"</span>:<span class="tag-gpt">f"Original query: {user_query}\n\n"</span>
+                             <span class="tag-gpt">f"Subagent findings:\n{json.dumps(results, indent=2)}"</span>}],
+    )
+    <span class="tag-key">return</span> aggregation.content[0].text
+
+<span class="tag-com"># ============ Cost guard：硬上限防失控 ============</span>
+<span class="tag-com"># 在 production 必须包：单次 budget 上限 + N_subagent &lt;= 7 + timeout</span></code></pre>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）<strong>Lead 用弱模型</strong>——Haiku 做 lead 等于让小学生当 PM，规划质量差、聚合 cross-check 不出矛盾；lead 必须是该 stack 里最强的模型；（2）<strong>Subagent 数量无上限</strong>——lead 喜欢「多开几个保险」，没上限会 spawn 20 个 subagent，token 爆炸还没质量提升；硬编码 N ≤ 7；（3）<strong>聚合只是 concat</strong>——把 5 个 subagent 输出拼起来不叫聚合，叫信息堆积；必须用强模型再做一轮推理；（4）<strong>没有 budget guard</strong>——multi-agent 失控时单 query 能烧掉 $10+，必须包硬 token budget + tool call 上限；（5）<strong>用 multi-agent 处理串行任务</strong>——「让 5 个 subagent 各自写代码的不同部分」必然 merge 失败；这种任务永远单 agent；（6）<strong>不监控 single-agent baseline</strong>——上了 multi-agent 之后忘了对比，可能 90.2% 提升根本不存在（你的任务结构本来就不适合）。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Anthropic · <em>How we built our multi-agent research system</em> (2025), <a href="https://www.anthropic.com/engineering/multi-agent-research-system" target="_blank">anthropic.com/engineering/multi-agent-research-system</a> ·
+Wu et al. · <em>AutoGen: Multi-Agent Conversation Framework</em>, <a href="https://arxiv.org/abs/2308.08155" target="_blank">arxiv.org/abs/2308.08155</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Debate / Cross-check：什么时候多视角真的提升质量</h2>
+<div class="claim">论断：Multi-agent debate（Du et al. 2023）是个被高估的范式——<strong>它在数学题、事实 QA 上确实涨点</strong>（5-15pp），但在开放写作、主观判断、价值评估上经常退化为<strong>同质化共识</strong>。真正起作用的不是「agent 数量」，是<strong>diversity 来源</strong>：不同模型、不同 system prompt、不同 role。同模型同 prompt 跑 N 次 = 把噪声平均，提升边际接近 0。</div>
+
+<h3>背景与原理</h3>
+<p>Du et al. 2023（<em>Improving Factuality and Reasoning in Language Models through Multiagent Debate</em>，arXiv 2305.14325）是这个范式的起点。核心机制：让 N 个 LLM 各自独立回答 → 互相看到对方答案 + 论据 → 多轮迭代后输出共识答案。论文在 MMLU、数学题、事实 QA 上证明<strong>显著优于单次回答和 self-consistency</strong>。这个结果到 2026 年仍稳健——<em>当任务有明确正确答案</em>。</p>
+<p>但 debate 在 3 个场景上几乎不 work：</p>
+<ul>
+<li><strong>(1) 开放主观任务</strong>——「写一段产品文案」「评估这个商业计划」——没有 ground truth，agent 之间会 converge 到一个「大家都接受的平庸答案」，远不如让一个 agent 直接生成 + 人评筛选。</li>
+<li><strong>(2) 同模型同 prompt 的 N 次重复</strong>——「同源 diversity」很弱，debate 退化为 self-consistency，<strong>正向 bias 同步放大</strong>（所有 agent 都倾向 yes-man，debate 后反而更 yes-man）。要让 debate work，必须<em>构造真 diversity</em>：用 Claude vs GPT vs Gemini、或同模型但角色 prompt 强对立（「你是支持者 / 你是反对者」）。</li>
+<li><strong>(3) 长 form generation</strong>——debate 适合「短答案有对错」的任务；让 agent 对 5000 字文章逐段 debate，几乎一定退化为相互奉承或卡死。</li>
+</ul>
+<p>更高 ROI 的「多视角」工程模式是 <strong>asymmetric cross-check</strong>（不对称交叉验证）：用一个<em>不同的</em>模型 / 不同的 prompt / 单独的 verifier agent 来检查主 agent 的输出。例如：主 agent 用 Claude Opus 写代码 → verifier agent 用 GPT-5 单独跑 testing 思路 + 找 edge case。这种「主+审计」结构比 N-agent debate 在工程上更稳：<strong>责任清晰、成本可控（2× 而非 N×）、失败可独立 attribute</strong>。Constitutional AI 自己审、self-refine、Reflexion 都是同源的「主+审」结构在不同时间维度的展开。</p>
+<p>还有一个反直觉发现：<strong>让模型「debate 自己之前的答案」（self-debate / self-reflection）效果常不如「让另一个 agent 来 critique」</strong>。Cognition 的 backward rationalization 问题：模型一旦给了答案 A，它会倾向于为 A 辩护、找证据支持，而非真正质疑——self-debate 经常变成 self-confirmation。所以<em>cross-check 比 self-reflection 更可靠</em>，这是 multi-agent 在工程上真正的甜点。</p>
+
+<div class="diagram">  Debate / Cross-check 模式选择
+
+  任务类型               推荐结构              典型增益
+  ──────────────────────────────────────────────────────────
+  数学题 / 逻辑题         N-agent debate (3-5)    +10-15pp acc
+  事实 QA / 知识题         debate or RAG cite     +5-10pp acc
+  Code 正确性             主 agent + verifier     test pass +20%
+  关键决策审查             主 + 不同模型审计       发现 30%+ bug
+  ──────────────────────────────────────────────────────────
+  创意写作                 单 agent + 人评筛选      debate 反而平庸
+  产品文案 / 商业判断      单 agent + 多 prompt     debate 易 converge
+  长 form 报告             单 agent + 分段 self-refine
+  ──────────────────────────────────────────────────────────
+  ❌ 同模型同 prompt N 次 → 等于 self-consistency，diversity = 0
+  ❌ Self-debate 一个 agent → backward rationalization 偏差大
+
+  关键变量：diversity 来源 &gt; agent 数量</div>
+
+<h3>实战示例</h3>
+<p>Asymmetric cross-check 模式（主 agent + 不同模型 verifier），2× 成本换可观质量提升：</p>
+<pre><code><span class="tag-key">import</span> anthropic, openai
+
+claude = anthropic.Anthropic()
+gpt = openai.OpenAI()
+
+<span class="tag-key">def</span> primary_solve(question: <span class="tag-gpt">str</span>) -&gt; <span class="tag-gpt">str</span>:
+    <span class="tag-com"># 主 agent：Claude Opus 出答案</span>
+    msg = claude.messages.create(
+        model=<span class="tag-gpt">"claude-opus-4-7"</span>, max_tokens=1500,
+        messages=[{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,<span class="tag-gpt">"content"</span>:question}],
+    )
+    <span class="tag-key">return</span> msg.content[0].text
+
+<span class="tag-key">def</span> cross_check(question: <span class="tag-gpt">str</span>, primary_answer: <span class="tag-gpt">str</span>) -&gt; <span class="tag-gpt">dict</span>:
+    <span class="tag-com"># Verifier：用不同厂商模型 + adversarial prompt</span>
+    <span class="tag-com"># 关键 1：换模型（diversity）  关键 2：角色对立（反方）</span>
+    prompt = <span class="tag-gpt">f"""You are a SKEPTICAL reviewer. Your job is to find what is
+WRONG with the candidate answer below. Do NOT defend it.
+
+QUESTION: {question}
+
+CANDIDATE ANSWER:
+{primary_answer}
+
+Output JSON:
+{{"verdict": "correct"|"incorrect"|"uncertain",
+  "issues": [<list of concrete problems>],
+  "missing": [<facts/perspectives the candidate skipped>]}}"""</span>
+    rsp = gpt.chat.completions.create(
+        model=<span class="tag-gpt">"gpt-5"</span>, temperature=0.2,
+        messages=[{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,<span class="tag-gpt">"content"</span>:prompt}],
+        response_format={<span class="tag-gpt">"type"</span>:<span class="tag-gpt">"json_object"</span>},
+    )
+    <span class="tag-key">return</span> json.loads(rsp.choices[0].message.content)
+
+<span class="tag-key">def</span> arbitrate(question, primary, review) -&gt; <span class="tag-gpt">str</span>:
+    <span class="tag-com"># 仅当 verifier 找出问题时才重新跑——成本可控</span>
+    <span class="tag-key">if</span> review[<span class="tag-gpt">"verdict"</span>] == <span class="tag-gpt">"correct"</span> <span class="tag-key">and not</span> review[<span class="tag-gpt">"issues"</span>]:
+        <span class="tag-key">return</span> primary
+    <span class="tag-com"># 让主 agent 看到 critique 后修订（不是简单覆盖）</span>
+    revision = claude.messages.create(
+        model=<span class="tag-gpt">"claude-opus-4-7"</span>, max_tokens=2000,
+        messages=[
+            {<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,<span class="tag-gpt">"content"</span>:question},
+            {<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"assistant"</span>,<span class="tag-gpt">"content"</span>:primary},
+            {<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,<span class="tag-gpt">"content"</span>:
+              <span class="tag-gpt">f"A skeptical reviewer raised these issues:\n"</span>
+              <span class="tag-gpt">f"{json.dumps(review, indent=2)}\n\n"</span>
+              <span class="tag-gpt">f"Revise ONLY if the issues are valid. If you disagree, explain why."</span>}],
+    )
+    <span class="tag-key">return</span> revision.content[0].text
+
+<span class="tag-com"># 用法</span>
+answer = primary_solve(question)
+review = cross_check(question, answer)
+final  = arbitrate(question, answer, review)
+<span class="tag-com"># 成本：~2× single agent。质量：对 factual/code 任务通常 +10-20pp</span></code></pre>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）<strong>同模型 debate</strong>——Claude vs Claude 几乎一定 converge 到同一个偏差，等于浪费一次 call；至少跨厂商或跨 system prompt；（2）<strong>Verifier 用同样 prompt 风格</strong>——必须明确<em>角色对立</em>（「找错」「skeptical」），中性 verifier 容易给「looks fine」；（3）<strong>对所有 query 都跑 cross-check</strong>——成本翻倍但绝大多数 query 没问题；用 router 先判断「这个 query 是否高风险」（涉及数字、代码、关键决策）再决定要不要 verify；（4）<strong>把 cross-check 结果直接覆盖主答案</strong>——verifier 也会错，让主 agent 看到 critique 后<em>选择性</em>修订更稳；（5）<strong>用 debate 处理开放主观任务</strong>——「让 5 个 agent debate 这个广告语好不好」必然 converge 到平庸；这类任务用单 agent + 多 prompt 变体 + 人评。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Du et al. · <em>Improving Factuality and Reasoning through Multiagent Debate</em> (ICML 2024), <a href="https://arxiv.org/abs/2305.14325" target="_blank">arxiv.org/abs/2305.14325</a> ·
+Shinn et al. · <em>Reflexion: Language Agents with Verbal Reinforcement Learning</em>, <a href="https://arxiv.org/abs/2303.11366" target="_blank">arxiv.org/abs/2303.11366</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>协调税与通信协议：A2A、MCP、和 N² 的代价</h2>
+<div class="claim">论断：多 agent 系统的隐藏成本不在 token，在<strong>协调（coordination）</strong>——agent 数 N 上升时通信复杂度 O(N²)、决策延迟线性叠加、失败 attribution 指数级困难。2025 年 4 月 Google 推出的 <strong>A2A 协议</strong>试图把这些标准化，但选择 A2A vs MCP vs 自建消息总线，本质是<strong>不同任务结构匹配不同通信拓扑</strong>。</div>
+
+<h3>背景与原理</h3>
+<p>多 agent 系统的「协调税」是分布式系统老问题在 LLM 时代的翻版。三个关键开销：</p>
+<ul>
+<li><strong>(1) 通信复杂度</strong>——agent 之间任意通信是 O(N²) 条边，每条边都要消息编码、token 消耗、上下文同步；超过 5-7 个 agent 就显著掉性能（每个 agent 上下文里塞太多别的 agent 状态）。</li>
+<li><strong>(2) 决策延迟叠加</strong>——串行 agent pipeline 是 latency 累加（5 个 agent × 8s = 40s）；并行 agent 受限于最慢 subagent + 聚合延迟（约 1.5× 单 agent 时间）；用户感知延迟通常是多 agent 反对方向最大的工程压力。</li>
+<li><strong>(3) 失败 attribution</strong>——单 agent 失败容易定位（看 trace 找出错那一步）；multi-agent 失败要回答「哪个 agent 在哪一步做了什么导致最终错」——subagent 各自 trace + lead 聚合 trace + 跨 agent 状态，debug 复杂度暴涨。Anthropic 的工程博客承认这是 multi-agent 最难解的工程问题，他们用<em>每个 agent 全 trace 落库 + 跨 trace 关联 id</em> 才勉强能 debug。</li>
+</ul>
+<p>2025 年 4 月 Google 推出 <strong>A2A（Agent-to-Agent）协议</strong>，标准化「不同框架不同厂商的 agent 互相发现 + 委派任务 + 协调」。技术栈：HTTP + SSE + JSON-RPC 2.0，每个 agent 用 <strong>Agent Card</strong>（JSON 描述自身能力）发布，client agent 通过 Card 找合适的目标 agent，Task 抽象封装委派。6 月 Google 把 A2A 捐给 Linux Foundation，已有 150+ 组织支持。</p>
+<p>A2A vs MCP 的分工经常被混：</p>
+<ul>
+<li><strong>MCP</strong>（Anthropic 2024）：标准化 <em>LLM agent ↔ tools/data sources</em>。一个 agent 通过 MCP server 调用 GitHub、Slack、本地文件——是<strong>纵向</strong>连接（agent 拿到能力）。</li>
+<li><strong>A2A</strong>（Google 2025）：标准化 <em>agent ↔ agent</em>。一个 agent 通过 A2A 把任务委派给另一个 agent——是<strong>横向</strong>连接（agent 之间协作）。</li>
+<li>互补不互斥：实际系统通常<em>agent 通过 MCP 拿工具、通过 A2A 拿别的 agent 帮忙</em>。Google 自己的官方说法就是 "A2A and MCP are complementary"。</li>
+</ul>
+<p>但对独立开发者：<strong>不要先上协议</strong>。2-3 个 agent 的系统用裸 Python function call + asyncio.gather 几小时能搞定；上了 A2A/MCP 这种通用协议反而增加序列化、网络、版本兼容的复杂度。协议的价值在<em>跨组织 / 跨厂商 / 长期演进的 agent 生态</em>——你一个人的产品里 3 个 agent，直接函数调用比 JSON-RPC over HTTP 简单 10×、快 10×、易 debug 10×。等系统真的需要把内部 agent 暴露给外部、或者整合多个第三方 agent 时，再迁移到 A2A 也不晚。</p>
+
+<div class="diagram">  通信拓扑选择 (按 agent 数量与边界)
+
+  agent 数  边界           推荐协议            为什么
+  ──────────────────────────────────────────────────────────
+  1         单进程          直接函数调用         零开销
+  2-3       单进程内部       asyncio + dict      不要过度工程
+  3-7       单产品内部       内部 message bus     标准化 trace
+  5-20      跨服务/团队      MCP (tools) + 自建   MCP 已成事实标准
+  N         跨厂商/组织      A2A                 互操作性需求
+  ──────────────────────────────────────────────────────────
+  反例：2 个 agent 的 PoC 上来就 A2A
+  → 多 50% 代码量、调试难 5×、零互操作性收益</div>
+
+<h3>实战示例</h3>
+<p>独立开发者最务实的「无协议」多 agent 通信模板（asyncio + shared trace）：</p>
+<pre><code><span class="tag-key">import</span> asyncio, uuid, time, json
+<span class="tag-key">from</span> dataclasses <span class="tag-key">import</span> dataclass, field
+
+<span class="tag-com"># —— 共享 trace：debug 多 agent 的命脉 ——</span>
+<span class="tag-key">@dataclass</span>
+<span class="tag-key">class</span> SharedTrace:
+    run_id: <span class="tag-gpt">str</span> = field(default_factory=<span class="tag-key">lambda</span>: <span class="tag-key">str</span>(uuid.uuid4()))
+    events: <span class="tag-gpt">list</span> = field(default_factory=<span class="tag-key">list</span>)
+
+    <span class="tag-key">def</span> log(self, agent: <span class="tag-gpt">str</span>, kind: <span class="tag-gpt">str</span>, payload: <span class="tag-gpt">dict</span>):
+        self.events.append({
+            <span class="tag-gpt">"t"</span>: time.time(), <span class="tag-gpt">"agent"</span>: agent,
+            <span class="tag-gpt">"kind"</span>: kind, <span class="tag-gpt">"payload"</span>: payload,
+        })
+
+<span class="tag-com"># —— Subagent：直接 async 函数，不上 RPC ——</span>
+<span class="tag-key">async def</span> subagent(name: <span class="tag-gpt">str</span>, task: <span class="tag-gpt">dict</span>, trace: SharedTrace,
+                   budget_tokens: <span class="tag-gpt">int</span> = 8000) -&gt; <span class="tag-gpt">dict</span>:
+    trace.log(name, <span class="tag-gpt">"start"</span>, {<span class="tag-gpt">"task"</span>: task})
+    used = 0
+    <span class="tag-key">try</span>:
+        <span class="tag-com"># LLM call + tool loop (省略)</span>
+        result = <span class="tag-key">await</span> run_llm_loop(task, budget_tokens=budget_tokens)
+        used = result[<span class="tag-gpt">"tokens_used"</span>]
+        trace.log(name, <span class="tag-gpt">"done"</span>, {<span class="tag-gpt">"tokens"</span>: used, <span class="tag-gpt">"preview"</span>: result[<span class="tag-gpt">"text"</span>][:200]})
+        <span class="tag-key">return</span> result
+    <span class="tag-key">except</span> Exception <span class="tag-key">as</span> e:
+        trace.log(name, <span class="tag-gpt">"error"</span>, {<span class="tag-gpt">"err"</span>: <span class="tag-key">str</span>(e), <span class="tag-gpt">"tokens"</span>: used})
+        <span class="tag-key">return</span> {<span class="tag-gpt">"failed"</span>: <span class="tag-key">True</span>, <span class="tag-gpt">"reason"</span>: <span class="tag-key">str</span>(e)}
+
+<span class="tag-com"># —— Orchestrator: 并发 + budget + timeout 三层防护 ——</span>
+<span class="tag-key">async def</span> orchestrate(user_query: <span class="tag-gpt">str</span>) -&gt; <span class="tag-gpt">dict</span>:
+    trace = SharedTrace()
+    trace.log(<span class="tag-gpt">"lead"</span>, <span class="tag-gpt">"query"</span>, {<span class="tag-gpt">"query"</span>: user_query})
+
+    plan = <span class="tag-key">await</span> lead_plan(user_query, trace)
+    <span class="tag-key">if</span> <span class="tag-key">len</span>(plan[<span class="tag-gpt">"tasks"</span>]) &gt; 7:
+        plan[<span class="tag-gpt">"tasks"</span>] = plan[<span class="tag-gpt">"tasks"</span>][:7]   <span class="tag-com"># 硬上限</span>
+
+    <span class="tag-com"># 三层保护：每 agent budget / 总超时 / 失败不阻塞</span>
+    <span class="tag-key">try</span>:
+        results = <span class="tag-key">await</span> asyncio.wait_for(
+            asyncio.gather(*[
+                subagent(<span class="tag-gpt">f"sub-{i}"</span>, t, trace, budget_tokens=8000)
+                <span class="tag-key">for</span> i, t <span class="tag-key">in</span> <span class="tag-key">enumerate</span>(plan[<span class="tag-gpt">"tasks"</span>])
+            ], return_exceptions=<span class="tag-key">True</span>),
+            timeout=120,                 <span class="tag-com"># 总 budget 2 分钟</span>
+        )
+    <span class="tag-key">except</span> asyncio.TimeoutError:
+        trace.log(<span class="tag-gpt">"lead"</span>, <span class="tag-gpt">"timeout"</span>, {})
+        results = [{<span class="tag-gpt">"failed"</span>: <span class="tag-key">True</span>, <span class="tag-gpt">"reason"</span>: <span class="tag-gpt">"global timeout"</span>}]
+
+    <span class="tag-com"># 部分成功也能聚合 (failure isolation)</span>
+    good = [r <span class="tag-key">for</span> r <span class="tag-key">in</span> results <span class="tag-key">if not</span> (<span class="tag-key">isinstance</span>(r,<span class="tag-key">dict</span>) <span class="tag-key">and</span> r.get(<span class="tag-gpt">"failed"</span>))]
+    final = <span class="tag-key">await</span> lead_aggregate(user_query, good, trace)
+
+    <span class="tag-com"># 落库：trace 是后续 debug + eval 的命脉</span>
+    json.dump({<span class="tag-gpt">"run_id"</span>:trace.run_id, <span class="tag-gpt">"events"</span>:trace.events, <span class="tag-gpt">"final"</span>:final},
+              <span class="tag-key">open</span>(<span class="tag-gpt">f"runs/{trace.run_id}.json"</span>,<span class="tag-gpt">"w"</span>), ensure_ascii=<span class="tag-key">False</span>)
+    <span class="tag-key">return</span> {<span class="tag-gpt">"answer"</span>: final, <span class="tag-gpt">"trace_id"</span>: trace.run_id}</code></pre>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）<strong>没 budget guard</strong>——LLM agent loop 偶发卡在 tool call 死循环，一个 query 烧 $50 一觉醒来才发现；硬 token + tool call + wallclock 三层 budget 必须；（2）<strong>没 timeout</strong>—asyncio.gather 没 timeout 时一个 subagent 挂会拖死整个 run；（3）<strong>失败一个就 fail-fast 整个 run</strong>——multi-agent 应该用 <code>return_exceptions=True</code> + 部分成功聚合，失败 isolation；（4）<strong>没存 trace</strong>——multi-agent 失败时如果没有完整 trace 落库，事后根本不知道哪一步出错；trace 是 multi-agent 工程的<strong>命脉</strong>；（5）<strong>上 A2A 协议但只有 3 个 agent</strong>——协议开销远超收益，等到跨厂商需求出现再迁移；（6）<strong>用 MCP 让 agent 之间通信</strong>——MCP 是 agent ↔ tools，不是 agent ↔ agent；用错协议引入抽象不对位。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Google · <em>Agent2Agent (A2A) Protocol</em> (2025), <a href="https://a2a-protocol.org/latest/" target="_blank">a2a-protocol.org</a> ·
+Anthropic · <em>Model Context Protocol</em> (MCP), <a href="https://modelcontextprotocol.io/" target="_blank">modelcontextprotocol.io</a> ·
+Hong et al. · <em>MetaGPT: Meta Programming for Multi-Agent Framework</em>, <a href="https://arxiv.org/abs/2308.00352" target="_blank">arxiv.org/abs/2308.00352</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// 综合实战 · 多 agent 系统的两周建设路径</h3>
+<p>假设你想把一个内部任务升级到 multi-agent 架构（例：「每周帮我做 AI 行业研究简报」），两周从单 agent 走到稳态 multi-agent：</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>Day 1 · 单 agent baseline + eval</strong>：先写一个最简单的单 agent 版本（Claude Opus + search tool），跑 10 个真实 query，人评每个输出打分。这个分数是后面所有决策的 baseline。<strong>没有 baseline 不上 multi-agent</strong>。</li>
+<li><strong>Day 2 · 结构诊断</strong>：用 #01 的 6 问 check 你的任务结构。如果有 3 项以上不通过 → 停下；不是 multi-agent 的问题。研究类任务通常都过。</li>
+<li><strong>Day 3-4 · Orchestrator-worker 最小版</strong>：照 #04 的 asyncio 模板写。Lead 用 Opus，subagent 用 Sonnet/Haiku，硬上限 N ≤ 5。同样 10 个 query 跑一遍，对比 baseline。</li>
+<li><strong>Day 5 · Trace 落库</strong>：每个 run 全 trace 写 JSON，建一个最简单的 viewer（哪个 agent 哪一步花了多少 token 输出了什么）。这一步看着多余，等第一次 debug multi-agent 失败时你会感谢自己。</li>
+<li><strong>Day 6 · 聚合质量</strong>：检查 lead 的 aggregation prompt 是不是真的在做 cross-validation 而不是 concat。常见 bug：lead 把所有 subagent 输出一字不漏 dump 给用户，没做去重和矛盾识别。</li>
+<li><strong>Day 7 · 决策点</strong>：multi-agent 版的 eval 分数有没有比单 agent 高 10pp+？没有 → 任务结构不适合，回单 agent；有 → 继续。</li>
+<li><strong>Day 8-9 · Asymmetric cross-check</strong>：在关键输出处加一个 verifier（不同模型 + 反方 prompt）。重点：不是所有 query 都跑 cross-check，用一个 router 先判断风险。这一步通常再涨 5-10pp。</li>
+<li><strong>Day 10-11 · 三层 budget</strong>：token / tool call / wallclock 都加硬上限。multi-agent 失控时单 query 烧 $50 是真事；这一步保命。</li>
+<li><strong>Day 12 · 失败模式 audit</strong>：故意构造 5 个 edge case（subagent 全失败、超时、tool 不可用、矛盾结论、空结果），验证系统能 graceful degrade。</li>
+<li><strong>Day 13-14 · 长尾观察</strong>：跑 50 个真实 query，看 token 分布、延迟 p50/p95、失败 rate。这时再决定要不要上 A2A/MCP——绝大多数独立开发者的答案是「不需要，asyncio 已经够了」。</li>
+</ol>
+<p style="margin-top:14px">两周走完这条路径：multi-agent 不是「我多开几个 agent 显得高级」，是「我已经 baseline、已经诊断任务结构、已经验证 15× token 换 90% 提升的 ROI、已经备好 trace 和 budget guard，然后才上多 agent」。<strong>这是 2026 年 multi-agent 工程的真实姿势</strong>——绝大多数业务任务走到 Day 7 决策点就会发现，单 agent + 长 context 才是正确答案。</p>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// ENGLISH GLOSSARY</h3>
+<dl>
+<dt>Multi-agent System (MAS)</dt><dd>多个 LLM agent 协同完成任务的系统；agent 通过工具调用、消息传递或共享状态协调。</dd>
+<dt>Orchestrator-Worker</dt><dd>由 lead agent 规划任务、spawn worker subagents 并行执行、最后聚合的拓扑；Anthropic Research 系统的标准模式。</dd>
+<dt>Subagent</dt><dd>被 orchestrator 派出去做子任务的 agent；通常用更便宜的模型（Sonnet/Haiku）以控制成本。</dd>
+<dt>Implicit Decision Conflict</dt><dd>并发 agent 各自做隐式决策且无协商时产生的冲突；Cognition 反对 multi-agent 的核心论据。</dd>
+<dt>Context Sharing</dt><dd>agent 之间共享完整 trace vs 只共享 summary；Cognition 主张 full context，Anthropic Research 主张 task-scoped。</dd>
+<dt>Multi-agent Debate</dt><dd>多个 agent 独立回答后互相 critique、多轮迭代后输出共识；Du et al. 2023 的范式。</dd>
+<dt>Self-Consistency</dt><dd>同 agent 同 prompt 跑 N 次取多数票；与 debate 易混，但 diversity 来源完全不同。</dd>
+<dt>Asymmetric Cross-check</dt><dd>用不同模型 / 反方 prompt 的 verifier 检查主 agent 输出；比 N-agent debate 工程上更稳。</dd>
+<dt>Backward Rationalization</dt><dd>模型给出答案后倾向为之辩护而非质疑；self-debate 容易退化为 self-confirmation 的成因。</dd>
+<dt>A2A (Agent-to-Agent) Protocol</dt><dd>Google 2025 年 4 月开源的 agent 间通信标准；HTTP + SSE + JSON-RPC 2.0；现属 Linux Foundation。</dd>
+<dt>Agent Card</dt><dd>A2A 协议里描述 agent 能力的 JSON 文档；用于 agent discovery。</dd>
+<dt>MCP (Model Context Protocol)</dt><dd>Anthropic 2024 的 agent ↔ tools 协议；和 A2A 互补不互斥。</dd>
+<dt>Coordination Tax</dt><dd>agent 数量增加带来的通信、决策、debug 复杂度开销；O(N²) 通信 + 延迟叠加 + attribution 困难。</dd>
+<dt>Failure Attribution</dt><dd>multi-agent 失败时确定「哪个 agent 哪一步出错」的能力；trace 完整度决定可行性。</dd>
+<dt>Shared Trace</dt><dd>所有 agent 的事件统一写入的事件流；multi-agent 的 debug 命脉。</dd>
+<dt>Token Multiplier (15×)</dt><dd>Anthropic 数据：multi-agent research 系统约用普通 chat 的 15× token；ROI 门槛。</dd>
+</dl>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// 深入思考</h3>
+<details><summary>Anthropic 和 Cognition 几乎同时（2025 年 6 月）发出立场完全相反的多 agent 文章，这不矛盾——他们各自的「最优解」恰好是对方的「反模式」。这个分裂揭示了 LLM 工程怎样的本质特征？</summary><div>揭示的是：<strong>架构是任务函数，不是模型函数</strong>。Anthropic Research 系统的核心任务是「并行检索 + 聚合」，子任务天然独立，多 agent 是合适的并行计算抽象；Cognition Devin 的核心任务是「串行编码 + 调试」，每一步严重依赖前一步的隐式状态，多 agent 必然在 implicit decision conflict 上崩。两边都对，只是在不同任务空间。这指向一个更深的工程哲学：<strong>LLM 时代的「best practice」必须绑定任务结构来谈，否则等于没说</strong>。「该不该用 multi-agent」「该不该用长 context」「该不该用 RAG」这些争论之所以经常没结论，是因为讨论时遗漏了任务结构这个变量。资深工程师的判断力一大半在「识别任务结构」上——能看出一个任务是并行可分解、串行强依赖、还是混合结构，剩下的架构选择几乎自动。</div></details>
+<details><summary>Anthropic 公开多 agent 系统使用 15× chat token——这个数字对 AI 经济学意味着什么？「每 query &gt; $1 才有 ROI」会把多 agent 永远锁在 enterprise 场景吗？</summary><div>短期是，中期不是。短期看，单 query $1+ 的成本结构把 multi-agent 排除了消费级（C 端 query 价值通常 &lt; $0.01）和大多数中小 B 端轻量场景。能撑住 15× token 的只有：研究、尽职调查、企业搜索、复杂 SWE-bench、并行 outbound（销售线索研究 / 候选人背调）等单次价值高的场景。但中期看（2-3 年），三个力量会改变方程：（1）<strong>推理成本指数下降</strong>——Haiku 4.5 已经比 Claude 1 时代便宜 20×+，subagent 用便宜模型的方案越来越划算；（2）<strong>prefix caching 普及</strong>——多 agent 共享 system prompt + 工具定义可以大幅缓存命中，实际 token 成本不是 15× 而可能是 6-8×；（3）<strong>专用小模型崛起</strong>——为 multi-agent 角色 fine-tune 的专用小模型（research subagent、verifier、aggregator）可以把单 subagent 成本压到 1/10。这三个加起来，2-3 年内 multi-agent 会下沉到中等价值任务（每 query $0.10），消费级仍难。</div></details>
+<details><summary>Multi-agent debate 在 ground truth 任务上涨 10-15pp 但在开放主观任务上退化为同质化共识——这个不对称是 LLM 特性还是 debate 范式本身的局限？人类 debate 也有这个问题吗？</summary><div><strong>主要是 LLM 特性放大了 debate 范式的固有问题</strong>，但人类也部分有。Debate 的理论假设是「agent 之间真有 diversity」——独立信息源、独立先验、独立推理路径。同模型同 prompt 跑 N 次完全没满足这个假设：它们的先验是同一份训练数据、推理路径是同一个 attention pattern、连失败模式都同质化。所以一旦没有 ground truth 拉锚，N 个 agent 自然 converge 到「训练数据上最常见的中庸答案」——这是 RLHF + 大模型平均化倾向的直接体现。人类 debate 类似问题：群体内同质化（echo chamber）也会产生平庸共识，但人类 debate 通常依赖<em>真实经验差异 + 利益差异</em>提供 diversity，LLM agent 没有这两个机制。这意味着 multi-agent debate 想 work 必须工程上<strong>显式注入 diversity</strong>：跨厂商模型、强对立角色 prompt、不同知识库 / 工具组合。靠「多开几个 agent」自然产生 diversity 在 LLM 时代是错的直觉。</div></details>
+<details><summary>A2A 协议（Google 2025）已经有 150+ 组织支持，但 Anthropic 和 Cognition 在他们公开的 multi-agent 实现里都没用 A2A，而是用内部消息总线。这是早期阶段的常态，还是揭示了 A2A 本身有结构问题？</summary><div>更可能是早期阶段常态，但 A2A 确有一些结构选择需要时间证明。Anthropic Research 系统是<em>单产品内部</em>多 agent——所有 subagent 都是 Anthropic 自己的 Claude，跨厂商互操作性收益为零，用 A2A 等于背 HTTP/JSON-RPC 开销没拿到任何好处；Cognition Devin 也是同样情况。A2A 真正的目标场景是<em>跨组织 / 跨厂商 agent 生态</em>——比如你的 agent 调用 Slack 的 agent 委派任务、调用 Salesforce 的 agent 查数据，这种「企业 agent 之间互联」场景目前还没大规模落地。结构上 A2A 有两个 open question：（1）<strong>跨 trust boundary 的 prompt injection</strong>——外部 agent 通过 task description 注入恶意指令的攻击面比单 MCP 工具大很多；（2）<strong>计费 / SLA 模型不清</strong>——一个 agent 委派给另一个 agent，token 费谁付、超时怎么算，协议没规定。这两个解决了 A2A 才会真正起飞。MCP 走了类似的路径：2024 年发布后内部团队先用 1 年验证，2025-2026 才大规模生态化——A2A 大概率在 2026-2027 进入类似阶段。</div></details>
+<details><summary>如果 2027 年 single agent 的 context window 普遍到 10M+ tokens、推理能力进一步提升，multi-agent 的工程价值会消失吗？还是会出现新的「只有 multi-agent 能解」的场景？</summary><div>会改变但不会消失，且新场景会出现。短期看，long context + 强推理能力会<strong>蚕食 multi-agent 的中间地带</strong>——今天那些「单 agent context 不够 → 才上 multi-agent」的场景（研究简报、长文档处理），明天单 agent 用 10M context + 更强推理就能搞定，multi-agent 在这些场景的 ROI 会下降。但 multi-agent 在<em>真并行</em> + <em>真异构</em>场景反而会更有价值：（1）<strong>跨模型协作</strong>——Claude 用文字推理 + Gemini 处理多模态 + 一个专用 code agent 验证，能力互补不是 context 大小能替代的；（2）<strong>跨 trust boundary 协作</strong>——你的 agent 和别人的 agent 协作（A2A 场景），永远不可能合并到一个 context；（3）<strong>real-time 高并行任务</strong>——比如同时监控 100 个数据源做秒级决策，物理上必须并行 agent；（4）<strong>specialized agent ecosystems</strong>——为特定领域深度 fine-tune 的小专用 agent（医疗诊断 / 法律审计 / 代码安全），单个通用 agent 永远赶不上。所以 2027 年 multi-agent 会从「补救 context 不足的工具」转向「真正的协作 / 互操作架构」——更高门槛、更窄场景、但更不可替代。</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://www.anthropic.com/engineering/multi-agent-research-system" target="_blank">Anthropic · How we built our multi-agent research system (2025)</a> — orchestrator-worker 实战拆解，15× token / 90.2% 提升核心数据</li>
+<li><a href="https://cognition.ai/blog/dont-build-multi-agents" target="_blank">Cognition · Don't Build Multi-Agents (Walden Yan, 2025)</a> — multi-agent 反方论据；context sharing 论点</li>
+<li><a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">Anthropic · Building Effective Agents</a> — workflow vs agent 决策框架</li>
+<li><a href="https://arxiv.org/abs/2305.14325" target="_blank">Du et al. · Multiagent Debate (ICML 2024)</a> — debate 范式起点；factuality/reasoning 涨点的原始论文</li>
+<li><a href="https://arxiv.org/abs/2303.11366" target="_blank">Shinn et al. · Reflexion (NeurIPS 2023)</a> — self-reflection 范式；asymmetric cross-check 的近亲</li>
+<li><a href="https://arxiv.org/abs/2308.08155" target="_blank">Wu et al. · AutoGen (COLM 2024)</a> — Microsoft 的 multi-agent conversation framework</li>
+<li><a href="https://arxiv.org/abs/2308.00352" target="_blank">Hong et al. · MetaGPT (ICLR 2024)</a> — SOP 编码成 agent 角色的代表作</li>
+<li><a href="https://a2a-protocol.org/latest/" target="_blank">Google · Agent2Agent (A2A) Protocol</a> — agent ↔ agent 互操作标准</li>
+<li><a href="https://modelcontextprotocol.io/" target="_blank">Anthropic · Model Context Protocol (MCP)</a> — agent ↔ tools 标准，和 A2A 互补</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 13 / 2026-05-27</footer>
+</div>
+<script src="https://cissy0802.github.io/comments.js" defer></script>
+<script src="https://cissy0802.github.io/search.js" defer></script>
+<script src="https://cissy0802.github.io/index-button.js" defer></script>
+<script src="https://cissy0802.github.io/i18n-tts.js" defer></script>
+</body></html>

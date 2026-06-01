@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 14 · Inference Optimization — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 14 / PHASE 2 · SYSTEMS</span>
+<h1>Inference Optimization</h1>
+<h2>Memory-Bound · Continuous Batching · KV Cache · Speculative Decoding</h2>
+<div class="date">2026-05-28 · BigCat</div>
+<p class="pitch">推理优化的全部秘密，是喂饱一块被内存带宽饿着的 GPU。</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>当你从「调 API」走向「自己 host 开源模型」——成本、延迟、吞吐瞬间变成你的工程问题。大多数人第一反应是「买更强的卡」，结果换了 H100 吞吐只涨 20%，钱白烧。原因是一个反直觉的事实：<strong>LLM 的逐 token 解码不是 compute-bound，是 memory-bound</strong>——GPU 的算力大半在空转，瓶颈是把模型权重从显存搬进计算单元的带宽。理解这一点，下游所有优化（continuous batching、KV cache 分页、speculative decoding、量化）就串成一条线：<strong>它们都在回答同一个问题——怎么用一次权重搬运，多算几个 token</strong>。这一期不讲「推理是什么」，讲资深工程师真正要做的决策：怎么定位瓶颈、四个杠杆的边际收益、各自的失败模式，以及 vLLM / TGI / TensorRT-LLM 怎么选。</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>Decode 是 memory-bound：continuous batching 是第一杠杆</h2>
+<div class="claim">论断：单请求推理在浪费 90%+ 的 GPU；提吞吐的第一步不是换卡，是 continuous batching。</div>
+
+<h3>背景与原理</h3>
+<p>推理分两段，瓶颈完全不同：<strong>prefill</strong>（处理 prompt）能并行算所有 token，是 compute-bound；<strong>decode</strong>（逐个生成）每步只算 1 个 token，却要把<strong>整个模型权重重新从 HBM 搬一遍</strong>——算术强度极低，GPU 的 Tensor Core 大半闲置，真正的瓶颈是显存带宽。这就是为什么 batch=1 时再贵的卡也跑不满。</p>
+<p>解法是<strong>把多个请求的同一 decode step 拼成一个 batch</strong>：权重搬一次，同时为 N 个请求各算一个 token，吞吐近似线性放大。但传统 <em>static batching</em> 有致命缺陷——它等整个 batch 里最长的序列生成完才能释放，短请求被长请求拖死，GPU 利用率随生成进度暴跌。Orca（OSDI'22）提出 <strong>iteration-level scheduling</strong>（即 continuous batching）：每个 decode step 结束就动态踢出已完成的、塞入排队的新请求，GPU 永不空转。Anyscale 实测对比 HF 朴素实现达到 <strong>23× 吞吐</strong>。这是单一改动里收益最大的。</p>
+
+<div class="diagram">Static batching（等最长序列）          Continuous batching（逐 step 调度）
+ step→  1  2  3  4  5  6              step→  1  2  3  4  5  6
+ R1 [██████]................          R1 [██████]R5[████....
+ R2 [████]..................          R2 [████]R6[██████....
+ R3 [██████████████]........          R3 [██████████████]....
+ R4 [██]....................          R4 [██]R7[████]R8[██..
+        ↑ R1/R2/R4 早完成              ↑ 一空出就立刻补新请求
+          GPU 却空转等 R3               GPU 利用率拉满</div>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-com"># vLLM 默认就是 continuous batching，一行起服务</span>
+vllm serve meta-llama/Llama-3.1-8B-Instruct \
+  --max-num-seqs 256          <span class="tag-com"># 并发请求上限，决定 batch 能多大</span>
+
+<span class="tag-com"># 诊断你到底是不是 memory-bound / under-batched：</span>
+<span class="tag-com"># 压测时盯 nvidia-smi —— 若 GPU-Util 高但 SM 算力占用低、显存带宽打满</span>
+<span class="tag-com"># 且吞吐随 batch 几乎线性上涨 → 你被内存带宽卡住，加 batch 就赚</span>
+nvidia-smi dmon -s u        <span class="tag-com"># 看 sm% 与 mem% 的差距</span></code></pre>
+<p>记住分工：<strong>throughput（吞吐）靠加 batch，latency（延迟）靠减 batch</strong>——这是一对零和。先想清你优化的是哪个。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）低 QPS 场景硬上大 batch——没那么多并发请求可拼，batch 永远填不满，收益约等于零。（2）只看吞吐忽视 <strong>TTFT</strong>（首 token 延迟）：batch 越大，新请求排队越久，交互式应用体感反而变差。throughput 与 latency 必须分开定指标。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Orca（continuous batching 起源）, <a href="https://www.usenix.org/conference/osdi22/presentation/yu" target="_blank">usenix.org · OSDI'22</a> ·
+Anyscale <em>How continuous batching enables 23x throughput</em>, <a href="https://www.anyscale.com/blog/continuous-batching-llm-inference" target="_blank">anyscale.com/blog</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>KV cache 才是内存霸主：PagedAttention + prefix caching</h2>
+<div class="claim">论断：限制 batch size 的往往不是模型权重，是 KV cache；把它当虚拟内存管（分页 + 前缀复用）能直接翻倍吞吐。</div>
+
+<h3>背景与原理</h3>
+<p>continuous batching 想拉大 batch，但 batch 越大、序列越长，<strong>KV cache 吃的显存越多</strong>——长上下文下它能超过权重本身。大小估算（标准公式，非引用具体数字）：</p>
+<pre><code>KV_bytes ≈ 2 × n_layers × n_kv_heads × head_dim
+           × seq_len × batch × dtype_bytes
+<span class="tag-com"># 「2」= K 和 V 两份；一条 8K 上下文的请求，KV 可达几百 MB</span></code></pre>
+<p>传统做法给每个请求<strong>连续预留</strong>「最大长度」的显存，但请求实际长度不一，导致 60-80% 显存被碎片和过度预留浪费——能放下的 batch 被白白压小。<strong>PagedAttention</strong>（vLLM 的核心，SOSP'23）照搬操作系统的虚拟内存：把 KV cache 切成固定大小的 block（页），非连续存储、按需分配，浪费降到 4% 以下，等价于 batch 翻倍、吞吐 2-4×。</p>
+<p>第二招是 <strong>prefix caching</strong>：多个请求若共享相同前缀（system prompt、few-shot 示例、长文档），那段前缀的 KV 只算一次、跨请求复用。这正是 <strong>Anthropic prompt caching 在服务端的原理</strong>——你把稳定内容放前面、变动内容放后面，命中缓存就省掉重复 prefill。</p>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-com"># vLLM 开 prefix caching + 量化 KV cache（再省一半显存）</span>
+vllm serve <model> \
+  --enable-prefix-caching \    <span class="tag-com"># 相同前缀的 KV 自动复用</span>
+  --kv-cache-dtype fp8         <span class="tag-com"># KV 用 fp8，显存腰斩、吞吐再涨</span>
+
+<span class="tag-com"># prompt 结构：稳定前缀在前，变动在后 —— 才能命中前缀缓存</span>
+[system + 工具定义 + few-shot]   ← 跨请求逐字节相同 → 缓存命中
+[用户本轮输入]                   ← 每次不同 → 只 prefill 这一小段</code></pre>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）prefix caching <strong>只在前缀逐字节相同时命中</strong>——在 system prompt 里塞了时间戳 / 随机 ID / 动态拼接顺序错乱，命中率瞬间归零。（2）fp8 KV cache 在长上下文 + 高精度任务（数学、长链推理）会掉点，上线前必须用自己的 eval 测，别只看吞吐数字。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · vLLM PagedAttention 论文, <a href="https://arxiv.org/abs/2309.06180" target="_blank">arXiv:2309.06180</a> ·
+Anthropic Prompt Caching 文档, <a href="https://docs.claude.com/en/docs/build-with-claude/prompt-caching" target="_blank">docs.claude.com/.../prompt-caching</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Speculative decoding：小模型偷跑，吞吐翻倍且输出不变</h2>
+<div class="claim">论断：既然 decode 是 memory-bound，一次搬权重多验几个 token 几乎免费——draft-then-verify 是无损 2-3× 加速。</div>
+
+<h3>背景与原理</h3>
+<p>关键洞察接着 §1：decode 时 GPU 算力本来就闲着，那不如<strong>一次 forward 多算几个 token 的概率</strong>。Speculative decoding（Leviathan et al., ICML'23）让一个<strong>便宜的 draft 模型</strong>先快速猜出 k 个候选 token，再让大模型<strong>一次并行验证</strong>这 k 个——接受最长的正确前缀，在第一个分歧点重采。draft 猜得准就一步前进多个 token，猜错也只是回退到正常速度。</p>
+<p>最反直觉的一点：通过 rejection sampling，<strong>最终输出分布与原模型严格一致</strong>——这是无损加速，不是近似。加速比取决于 <strong>acceptance rate</strong>（draft 猜中率）与 draft/target 的成本比。<strong>Medusa</strong>（arXiv 2401.10774）更进一步：不用单独 draft 模型，给原模型加几个轻量 decoding head + tree attention 自己猜自己，省掉维护两个模型的麻烦，实测 2.3-3.6×。</p>
+
+<div class="diagram">                ┌─ draft 模型猜 k 个 ─┐
+prompt ──▶ "the cat sat on"  ──▶  draft: [" the"," mat"," and"," ran"]
+                                          │  (便宜、快)
+                                          ▼
+        大模型一次并行验证这 4 个候选 ──▶ 接受 " the"," mat"  ✓✓
+                                       第 3 个分歧 ✗ → 重采 " ."
+        结果：一次大模型 forward 前进了 3 个 token（而非 1 个）
+        分布与原模型完全相同（rejection sampling 保证无损）</div>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-com"># vLLM：用小模型当 draft（必须同 tokenizer，小 10-20×）</span>
+vllm serve meta-llama/Llama-3.1-70B-Instruct \
+  --speculative-model meta-llama/Llama-3.2-1B-Instruct \
+  --num-speculative-tokens 5     <span class="tag-com"># 一次猜 5 个，太多反而拖慢</span>
+
+<span class="tag-com"># 无现成 draft 模型时，用 n-gram 投机（零额外模型，靠上文重复）</span>
+  --speculative-model "[ngram]" --ngram-prompt-lookup-max 4</code></pre>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）<strong>高 batch 下收益消失</strong>——batch 大时 GPU 已经 compute-bound（§1 的空闲算力被填满了），没有余力做投机验证，反而因 draft 开销变慢。Speculative decoding 是<strong>低并发 / 重交互</strong>场景的杠杆。（2）draft 与 target 分布差太大 → acceptance 低 → 净亏。代码、结构化输出 acceptance 高（套路强），自由创作低。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Leviathan et al. <em>Fast Inference via Speculative Decoding</em>, <a href="https://arxiv.org/abs/2211.17192" target="_blank">arXiv:2211.17192</a> ·
+Medusa（多 decoding head）, <a href="https://arxiv.org/abs/2401.10774" target="_blank">arXiv:2401.10774</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>选引擎与量化：vLLM / TGI / TensorRT-LLM 的工程权衡</h2>
+<div class="claim">论断：没有「最快引擎」，只有匹配你 workload + 运维约束的引擎；量化是第二大杠杆，但有暗坑。</div>
+
+<h3>背景与原理</h3>
+<p>三大开源引擎都实现了 §1-§3 的核心优化，差别在<strong>峰值性能 vs 部署灵活 vs 上手成本</strong>这三角的取舍：</p>
+<ul>
+<li><strong>vLLM</strong>：PagedAttention 原生、迭代最快、Python 生态友好、上手最低。多数自建场景的默认起点。</li>
+<li><strong>TGI</strong>（HuggingFace）：生产 ready、和 HF 生态/Endpoints 无缝、支持多后端（含 TRT-LLM）。要稳定运维选它。</li>
+<li><strong>TensorRT-LLM</strong>（NVIDIA）：NVIDIA 卡上的极致性能，但需<strong>针对具体 GPU 架构预编译 engine</strong>，运维最重、灵活性最差。追求每瓦/每卡最高吞吐、且模型/硬件稳定时才值得。</li>
+</ul>
+<p>第二大杠杆是<strong>量化</strong>：把权重从 fp16 压到 int4/fp8。因为 decode 是 memory-bound（§1），<strong>权重更小 = 搬运更快 = decode 直接加速</strong>，同时省显存能放大 batch。<strong>weight-only int4</strong>（AWQ / GPTQ）显存腰斩还提速；<strong>fp8</strong>（权重+激活）需 Hopper 及以上架构，精度损失更小。</p>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-com"># 决策速记</span>
+快速验证 / 自建 / 迭代频繁     → vLLM
+HF 生态 / 要稳定生产运维       → TGI
+NVIDIA 卡榨干性能 / 模型稳定   → TensorRT-LLM
+
+<span class="tag-com"># 量化选型</span>
+显存紧、要塞下大模型           → AWQ int4（weight-only）
+Hopper+、要精度也要速度        → fp8（权重 + KV cache）
+vllm serve <model> --quantization awq   <span class="tag-com"># 一个 flag 开</span></code></pre>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）TensorRT-LLM 编译产物<strong>锁定 GPU 架构 + 配置</strong>——换卡、换 batch/seq 上限都要重编，CI/CD 复杂度陡增，别为了 10% 吞吐过早上它。（2）int4 量化在<strong>推理 / 数学任务掉点</strong>明显大于闲聊，必须跑自己的 eval；只比吞吐不比质量是最常见的自欺。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · vLLM, <a href="https://github.com/vllm-project/vllm" target="_blank">github.com/vllm-project/vllm</a> ·
+TGI, <a href="https://github.com/huggingface/text-generation-inference" target="_blank">github.com/huggingface/text-generation-inference</a> ·
+TensorRT-LLM, <a href="https://github.com/NVIDIA/TensorRT-LLM" target="_blank">github.com/NVIDIA/TensorRT-LLM</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// 综合实战 · 给开源模型搭一个会自我度量的推理服务</h3>
+<p>把四点串成一个周末项目：用 vLLM host 一个 8B 模型，逐个叠优化、量边际收益——这是把「我知道」变成「我做过」的唯一办法。</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>定指标，分开测</strong>：<code>TTFT</code>（首 token 延迟）、<code>TPOT</code>（每 token 延迟）、<code>throughput</code>（总 tokens/s）。用 vLLM 自带 <code>benchmark_serving.py</code> 压测，别用单条请求测吞吐。</li>
+<li><strong>基线</strong>：默认 continuous batching，扫 <code>--max-num-seqs</code> 从 16 到 256，画吞吐-延迟曲线，找到你的「knee」（拐点）。</li>
+<li><strong>加 §2</strong>：开 <code>--enable-prefix-caching</code>，构造共享 system prompt 的请求流，看命中后 TTFT 掉多少。</li>
+<li><strong>加 §3</strong>：低并发场景挂一个 1B draft 模型，量 acceptance rate 与 TPOT 变化——再把并发拉高，亲眼看着投机收益消失（验证 §3 失败模式）。</li>
+<li><strong>加 §4</strong>：换 AWQ int4 版本，对比显存占用、能放大多少 batch、吞吐涨多少——再用 10 道有标准答案的题测<strong>质量是否掉点</strong>。</li>
+</ol>
+<p style="margin-top:12px">做完这一圈，你对任何「我们推理快 N 倍」的宣传都会条件反射地追问：<strong>测的是 TTFT 还是吞吐？什么并发？质量掉了没？</strong>——而不是被一个孤立的吞吐数字带跑。</p>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// ENGLISH GLOSSARY</h3>
+<dl>
+<dt>Prefill</dt><dd>处理输入 prompt 的阶段，可并行算全部 token，compute-bound。</dd>
+<dt>Decode</dt><dd>逐个生成输出 token 的阶段，每步重搬全部权重，memory-bound。</dd>
+<dt>Memory-bound</dt><dd>瓶颈在显存带宽而非算力——LLM 解码的本质特征，下游优化的总纲。</dd>
+<dt>Continuous Batching</dt><dd>iteration-level scheduling：每个 decode step 动态增删请求，GPU 不空转。</dd>
+<dt>KV Cache</dt><dd>缓存历史 token 的 Key/Value，避免重算；长上下文下吃显存的主力。</dd>
+<dt>PagedAttention</dt><dd>把 KV cache 当 OS 虚拟内存分页管理，消除碎片，vLLM 核心。</dd>
+<dt>Prefix Caching</dt><dd>跨请求复用相同前缀的 KV；prompt caching 的服务端原理。</dd>
+<dt>Speculative Decoding</dt><dd>draft 模型猜、target 模型并行验证，无损 2-3× 加速。</dd>
+<dt>TTFT / TPOT</dt><dd>Time-To-First-Token / Time-Per-Output-Token，交互式延迟的两个核心指标。</dd>
+<dt>Weight-only Quantization</dt><dd>只量化权重（如 AWQ int4），省显存且加速 memory-bound 的 decode。</dd>
+</dl>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// 深入思考</h3>
+<details><summary>continuous batching 提吞吐、speculative decoding 也提吞吐，为什么不能简单叠加？</summary><div>因为二者抢的是同一份资源：空闲算力。Continuous batching 用大 batch 把闲置算力填满，此时系统已逼近 compute-bound；speculative decoding 恰恰需要「有空闲算力来并行验证投机 token」才划算。batch 一大，验证 token 没地方算，draft 开销纯亏。所以经验法则：<code>高并发服务</code> 靠 batching，<code>低并发/单用户交互</code>（如本地 coding agent）靠 speculative。生产系统常按当前负载动态切换，而非同时全开。</div></details>
+<details><summary>为什么 prompt caching 能省钱省延迟，但只对「前缀」有效，不能缓存中间或结尾的相同片段？</summary><div>因为 attention 是因果的（causal）：每个 token 的 KV 表示依赖它<strong>之前所有 token</strong>。前缀相同 → 那段 KV 的计算上下文完全一致 → 可直接复用。但若相同片段出现在中间，它前面的 token 不同，KV 会被不同的上文「染色」，无法复用。这就是为什么工程上要把稳定内容（system / 工具定义 / few-shot）严格放最前、变动内容放最后——这是 prefix caching 命中率的物理约束，不是约定俗成。</div></details>
+<details><summary>speculative decoding 号称「无损」——输出分布与原模型完全一致。这怎么可能不牺牲质量来换速度？</summary><div>关键在 rejection sampling 的数学构造：draft 提议分布 q，target 真实分布 p。对每个投机 token，以 min(1, p/q) 概率接受；拒绝时从修正分布 (p−q)⁺ 重采。可以证明最终采样严格服从 p。所以加速来自<strong>把串行的多步压缩成一次并行 forward</strong>，而非近似。draft 猜得越准（q 越接近 p）接受越多、越快——但即使 draft 是个胡猜的模型，输出质量也不变，只是退化到原速。速度是赌注，质量是保底。</div></details>
+<details><summary>都说「decode 是 memory-bound」，那 Mixture-of-Experts（MoE）模型为什么能在不增加激活算力的前提下做大？这和 memory-bound 矛盾吗？</summary><div>不矛盾，反而强化了它。MoE 每个 token 只激活一小部分专家，激活的 FLOPs 不随总参数线性涨——但<strong>所有专家的权重仍要驻留显存、且被搬运的那部分也走 HBM</strong>。于是 MoE 把瓶颈进一步推向「内存容量 + 带宽 + 专家路由的不规则访存」。这就是为什么 MoE 推理的核心难题是显存与专家并行（expert parallelism）/ 调度，而不是算力。memory-bound 的视角恰好解释了 MoE 的工程重心在哪。</div></details>
+<details><summary>如果只能给一个团队一句推理优化建议，且他们 QPS 很低（内部工具，个位数并发），你会说什么？</summary><div>「别碰 batching，先上 speculative decoding + 量化。」低 QPS 下 continuous batching 没请求可拼，吞吐优化几乎无用；用户痛的是单次延迟。此时 GPU 算力大量空闲，正是 speculative decoding 的最佳土壤——直接砍 TPOT。再叠 weight-only int4 量化，既加速 memory-bound 的 decode，又让小卡也能跑。把昂贵的多卡 batching 方案留给真正高并发的生产服务——用错杠杆比不优化更浪费钱。</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://www.anyscale.com/blog/continuous-batching-llm-inference" target="_blank">Anyscale · How continuous batching enables 23x throughput</a> — 吞吐优化的奠基性博客</li>
+<li><a href="https://arxiv.org/abs/2309.06180" target="_blank">Kwon et al. · PagedAttention (vLLM)</a> — KV cache 当虚拟内存管的开山论文</li>
+<li><a href="https://www.usenix.org/conference/osdi22/presentation/yu" target="_blank">Yu et al. · Orca (OSDI'22)</a> — continuous batching / iteration-level scheduling 起源</li>
+<li><a href="https://arxiv.org/abs/2211.17192" target="_blank">Leviathan et al. · Speculative Decoding (ICML'23)</a> — 无损加速的数学构造</li>
+<li><a href="https://github.com/vllm-project/vllm" target="_blank">vLLM 源码</a> — 把这一期所有优化读进代码里</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 14 · 2026-05-28</footer>
+</div>
+<script src="https://cissy0802.github.io/comments.js" defer></script>
+<script src="https://cissy0802.github.io/search.js" defer></script>
+<script src="https://cissy0802.github.io/index-button.js" defer></script>
+<script src="https://cissy0802.github.io/i18n-tts.js" defer></script>
+</body></html>

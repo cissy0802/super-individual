@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 5 · Agent Design Patterns — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 05 / PHASE 1 · ENGINEERING</span>
+<h1>Agent Design Patterns</h1>
+<h2>Workflow vs Agent · ReAct / Plan / Reflexion · Multi-agent Anti-patterns · Failure Mode Handbook</h2>
+<div class="date">2026-05-23 · BigCat</div>
+<p class="pitch">If a workflow can solve it, don't use an agent. If a single agent can solve it, don't use multi-agent.</p>
+</header>
+<div class="cross-ref" style="margin: 24px auto; max-width: 760px; padding: 14px 18px; border-left: 3px solid #00d4ff; background: rgba(0,212,255,0.10); border-radius: 4px; font-size: 0.92rem;">
+  <a href="https://cissy0802.github.io/ai-ml-daily/agent-architectures-day5.html" style="color: #00d4ff; text-decoration: none; font-weight: 500;">
+    Foundation concepts → ai-ml-daily Day 5: Agent 架构（ReAct, Plan-and-Execute, Reflexion）
+  </a>
+</div>
+
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>Over the past year, "agent" has been abused to the point of losing meaning — every script with an LLM call brands itself an agent; every demo wires up three roles to debate each other. But the moment you put these things in production, you meet a brutal curve: <strong>the more "agentic" the system, the worse the reliability, the higher the latency, the more the tokens explode</strong>. Anthropic's <em>Building Effective Agents</em> captured the takeaway people now quote everywhere: "Find the simplest solution possible, and only increase complexity when needed." This issue doesn't argue framework choice (LangGraph vs CrewAI vs AutoGen is pointless). It covers <strong>four things that actually determine reliability</strong>: when <em>not</em> to use an agent, the real difference between ReAct / Plan / Reflexion, why multi-agent is almost always an anti-pattern, and the five typical failure modes that kill agent projects in production — with diagnostic tooling.</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>Workflow vs Agent: Ask Whether You Need an Agent First</h2>
+<div class="claim">Claim: 90% of self-described "agent" projects are actually workflows; running a workflow through an agent loop is slower, more expensive, and less reliable.</div>
+
+<h3>Background &amp; Principles</h3>
+<p>Anthropic's <em>Building Effective Agents</em> gives an underrated dichotomy:</p>
+<ul>
+<li><strong>Workflow</strong>: LLM and tools orchestrated along a <em>predefined code path</em>. You write the code that decides what's next; the LLM only judges or generates at nodes.</li>
+<li><strong>Agent</strong>: the LLM <em>dynamically decides</em> which tool to use and what path to take, looping until it considers the task done.</li>
+</ul>
+<p>The distinction isn't "uses tools or not" — it's <strong>who owns the control flow</strong>. A 5-step RAG prompt chain is a workflow, not an agent. Something that decides for itself whether to search again or switch tools — that's an agent.</p>
+<p>Why does this matter? Because <strong>agent reliability roughly equals "per-step success" raised to the Nth power</strong>. An agent at 95% per step has 60% over 10 steps; 36% over 20. Workflows freeze the unnecessary "self-decisions" into code — turning exponential decay into linear. Same task: write it as a workflow if you can. This isn't aesthetic; it's a physical fact about reliability.</p>
+<p>When <em>should</em> you go agent? Anthropic's single criterion: <strong>the step count and path cannot be enumerated in advance</strong>. "Fix this bug" — you don't know how many files you'll read or edit. "Research this open-source project" — you don't know how many links you'll fetch. The other 90% of scenarios (extract + rewrite + validate + persist; classify + route; translate + polish + back-translate to check) are workflows.</p>
+
+<div class="diagram">  Workflow (path is hardcoded; LLM judges at nodes)
+
+  input ──▶ [classify] ──┬──▶ [extract] ──▶ [validate] ──▶ output
+                         └──▶ [summarize] ──▶ [validate] ──▶ output
+  ✓ fixed steps  ✓ unit-testable  ✓ bounded p99  ✓ predictable cost
+
+  Agent (dynamic path; LLM picks next step)
+
+  input ──▶ ┌─ LLM ─┐ ──tool_use──▶ [tool] ──tool_result──┐
+            │       │ ◀──────────────────────────────────┘
+            └─ stop?─┘ ──end_turn──▶ output
+  ✓ unenumerable path  ✗ unfixed steps  ✗ hard to unit test  ✗ unbounded p99</div>
+
+<h3>Hands-on Example</h3>
+<p>"Generate structured minutes + todos + key decisions from a meeting recording" — workflow, not agent:</p>
+<pre><code><span class="tag-com"># —— This is a workflow (5 lines of business code + 3 LLM calls) ——</span>
+transcript = whisper.transcribe(audio_path)
+summary    = llm(SUMMARY_PROMPT,  transcript)
+todos      = llm(TODO_PROMPT,     transcript)
+decisions  = llm(DECISION_PROMPT, transcript)
+<span class="tag-key">return</span> {<span class="tag-gpt">"summary"</span>:summary, <span class="tag-gpt">"todos"</span>:todos, <span class="tag-gpt">"decisions"</span>:decisions}
+
+<span class="tag-com"># fixed steps = 3; no agent loop / tool selection / state machine needed</span>
+<span class="tag-com"># p99 = 3 × upper-bound of one LLM call; cacheable, batchable, parallelizable</span></code></pre>
+<p>"Fix this issue: user reports the dashboard intermittently white-screens on Safari" — agent:</p>
+<pre><code><span class="tag-com"># —— This is an agent (path is unenumerable) ——</span>
+<span class="tag-com"># Possible steps:</span>
+<span class="tag-com">#   read issue → grep dashboard entry → read entry → check git log →</span>
+<span class="tag-com">#   find Safari-related polyfill → run tests → edit → re-run → write PR</span>
+<span class="tag-com"># But "possible" means the actual route depends on what each step reveals</span>
+agent(task=issue_body, tools=[read,grep,bash,edit,write,fetch])</code></pre>
+<p>Decision heuristic: <strong>if you can draw all possible paths on a whiteboard, it's a workflow; if you can't, it's an agent</strong>.</p>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) turning a fixed pipeline into an agent and asking the model to "decide" extract vs. summarize at each step — success drops from 99% to 80% because you introduced unnecessary selection risk. (2) Using an agent for routing — "greeting / technical / account issue" is fine as a classifier workflow; wrapping it as an agent with tools is over-engineering. (3) Hybrids — the path is fixed but you run it through an agent "for the AI feel"; latency / cost / observability all suffer.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Anthropic <em>Building Effective Agents</em>, <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">anthropic.com/engineering/building-effective-agents</a> ·
+Lilian Weng <em>LLM Powered Autonomous Agents</em>, <a href="https://lilianweng.github.io/posts/2023-06-23-agent/" target="_blank">lilianweng.github.io/.../agent</a> ·
+Simon Willison <em>What are agents?</em>, <a href="https://simonwillison.net/2025/Sep/18/agents/" target="_blank">simonwillison.net/.../agents</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>ReAct vs Plan-and-Execute vs Reflexion: The Real Division of Labor</h2>
+<div class="claim">Claim: default to ReAct. Escalate to Plan only when steps ≥ 8 and per-step cost is high. Only reach for Reflexion when the task is verifiable.</div>
+
+<h3>Background &amp; Principles</h3>
+<p>LangChain / LlamaIndex docs make these three sound like "framework choices". They aren't. They're <strong>three different return curves for three different complexity regimes</strong>. Understanding when each works (and doesn't) matters 100× more than memorizing the names.</p>
+<p><strong>ReAct (Yao et al. 2022, arXiv:2210.03629)</strong> — alternating Thought / Action / Observation, each step looking at the result before deciding the next. Simple, low latency, fault tolerant (mistakes can be corrected next step). The agent loops in Claude Code and Cursor are basically ReAct variants. <strong>This is the default.</strong></p>
+<p><strong>Plan-and-Execute (Wang et al. 2023, arXiv:2305.04091)</strong> — one LLM call produces a complete plan (List[step]), then execute step by step. Pros: steps can run in parallel, the plan stage is human-reviewable, token utilization is high. Cons: <em>the plan is based on incomplete information</em>; surprises during execution force either pushing through or a full replan. Right when: many steps (≥ 8), each step is expensive (money / time), and you have enough up-front info to plan well.</p>
+<p><strong>Reflexion (Shinn et al. 2023, arXiv:2303.11366)</strong> — after a run, have the LLM reflect on what went wrong, write the reflection into memory, redo with the reflection. The paper shows real gains on HumanEval / AlfWorld, <strong>but only because results are verifiable</strong> (code can be run against tests; games have a score). On open-ended tasks ("write an article", "customer chat") <em>without ground truth</em>, reflection becomes self-congratulatory noise — the "next time I should…" the model produces is often wrong.</p>
+
+<div class="diagram">  ReAct (default)
+  ┌─ Thought ─▶ Action ─▶ Observation ─┐
+  └─────────────────◀──────────────────┘
+   look at result before deciding ✓ fault-tolerant ✓ low latency ✗ hard to parallelize
+
+  Plan-and-Execute (many steps + high cost)
+  ┌─ Plan ─▶ [s1,s2,s3,...,s10]
+  │            │ │ │       │
+  │            ▼ ▼ ▼  …    ▼   (parallelizable)
+  └────────── Execute ────── output
+   ✓ plan is reviewable ✗ no dynamic adjustment
+
+  Reflexion (verifiable tasks)
+  ┌─ Trajectory ─▶ Verifier ─▶ pass? ──end
+  │                              │ fail
+  │                              ▼
+  └────── Reflect ──▶ Memory ────┘
+   ✓ lifts HumanEval/AlfWorld ✗ mostly useless without a verifier</div>
+
+<h3>Hands-on Example</h3>
+<pre><code><span class="tag-com"># —— ReAct skeleton (the hot path of your own harness) ——</span>
+<span class="tag-key">while</span> <span class="tag-key">True</span>:
+    r = llm(system=SYS, tools=TOOLS, messages=msgs)
+    msgs.append({<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"assistant"</span>,<span class="tag-gpt">"content"</span>:r.content})
+    <span class="tag-key">if</span> r.stop_reason == <span class="tag-gpt">"end_turn"</span>: <span class="tag-key">break</span>
+    results = [run_tool(b) <span class="tag-key">for</span> b <span class="tag-key">in</span> r.content <span class="tag-key">if</span> b.type==<span class="tag-gpt">"tool_use"</span>]
+    msgs.append({<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,<span class="tag-gpt">"content"</span>:results})
+
+<span class="tag-com"># —— Plan-and-Execute skeleton ——</span>
+plan = llm(PLAN_PROMPT, task)                <span class="tag-com"># List[Step] with inter-step deps</span>
+<span class="tag-key">for</span> wave <span class="tag-key">in</span> topo_sort(plan):              <span class="tag-com"># waves by dependency</span>
+    <span class="tag-key">await</span> asyncio.gather(*[execute(s) <span class="tag-key">for</span> s <span class="tag-key">in</span> wave])
+<span class="tag-key">if</span> not satisfied(plan.goal):
+    plan = llm(REPLAN_PROMPT, task, history)  <span class="tag-com"># full replan, not local patch</span>
+
+<span class="tag-com"># —— Reflexion skeleton (only when a verifier exists) ——</span>
+<span class="tag-key">for</span> attempt <span class="tag-key">in</span> range(MAX_ATTEMPTS):
+    traj   = react_agent(task, memory=reflections)
+    result = verifier(traj)                  <span class="tag-com"># e.g. run tests / validate schema</span>
+    <span class="tag-key">if</span> result.passed: <span class="tag-key">return</span> traj
+    reflections.append(llm(REFLECT_PROMPT, traj, result.errors))</code></pre>
+<p>Selection tree:</p>
+<ol>
+<li>Path unenumerable → use an agent; otherwise workflow (see §1).</li>
+<li>Average steps ≤ 7, per-step cost low → <strong>ReAct</strong>.</li>
+<li>Many steps (10+), high per-step cost (sending email / paid API / production change), enough info to plan → <strong>Plan-and-Execute</strong>.</li>
+<li>Automatic verifiable oracle (tests / schema / score) → wrap <strong>Reflexion</strong> around ReAct.</li>
+<li>No oracle but want reflection? Stop. Build an oracle first, or add an LLM-as-judge (see Day 6).</li>
+</ol>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) defaulting to Plan-and-Execute because it "feels fancier" — the plan is built on wrong info, then needs full replan on the fly; slower and more expensive than ReAct. (2) Slapping Reflexion onto every task — without a verifier, reflection is self-talk; the numbers in the paper come from experiments with oracles. (3) Combining all three — "agent plans, executes with ReAct, then reflects" sounds great and is a debugging nightmare. Stabilize one pattern first.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · ReAct paper, <a href="https://arxiv.org/abs/2210.03629" target="_blank">arXiv:2210.03629</a> ·
+Reflexion paper, <a href="https://arxiv.org/abs/2303.11366" target="_blank">arXiv:2303.11366</a> ·
+Plan-and-Solve paper, <a href="https://arxiv.org/abs/2305.04091" target="_blank">arXiv:2305.04091</a> ·
+Lilian Weng <em>LLM Powered Autonomous Agents</em> (incl. ReAct/Reflexion comparison), <a href="https://lilianweng.github.io/posts/2023-06-23-agent/" target="_blank">lilianweng.github.io</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Multi-agent Is Almost Always an Anti-pattern — Except When It Isn't</h2>
+<div class="claim">Claim: default to a single agent + good prompt + good tools. Multi-agent only wins when "context isolation gain &gt; orchestration cost".</div>
+
+<h3>Background &amp; Principles</h3>
+<p>2023–2024 AutoGen / CrewAI / MetaGPT hyped multi-agent as "the future". The engineering reality in 2025: <strong>most multi-agent systems underperform the same model + a well-written system prompt + a good toolset</strong>. The reasons are physical:</p>
+<ul>
+<li><strong>Token cost explodes</strong>: N agents chatting means every agent reads every other agent's last message each turn — token usage grows roughly N². Anthropic's own number in <em>How we built our multi-agent research system</em>: multi-agent uses <strong>~15× the tokens of single agent</strong>. Which is why they only used it for "research" — a parallelizable, high-value, large-context scenario.</li>
+<li><strong>Error compounding</strong>: every agent carries its own error rate; chaining N agents compounds those errors. The "Manager / Worker / Critic" triangle looks reasonable and often underperforms a single agent.</li>
+<li><strong>Orchestration complexity</strong>: who speaks first? when do we stop? how do we resolve conflicts? Every piece of meta-logic is a bug source.</li>
+</ul>
+<p>When does multi-agent actually pay? Anthropic gives concrete criteria:</p>
+<ol>
+<li><strong>Naturally parallel tasks</strong> — decomposable into independent sub-tasks with near-zero coupling. Example: "research 5 different topics then synthesize".</li>
+<li><strong>Each sub-agent consumes a large context</strong> — splitting means no single agent's window gets swamped; each agent has its own small window.</li>
+<li><strong>Orchestrator-worker, not peer debate</strong> — one clear lead splits, dispatches, aggregates; workers don't talk to each other. Peer debate (multiple agents arguing) almost never wins on real tasks.</li>
+</ol>
+<p>That's why Claude Code's <code>Task</code> tool is orchestrator-worker: the main agent invokes Task to spin up a sub-agent for independent research, the sub-agent returns one summary. Sub-agents do <em>not</em> chat with each other.</p>
+
+<div class="diagram">  ✓ Orchestrator-Worker (recommended)         ✗ Peer Debate (usually anti-pattern)
+
+        ┌─ Lead Agent ─┐                       ┌──▶ Agent A ◀──┐
+        │   plan       │                       │       │       │
+   ┌────┼────┬────┐    │                       │       ▼       │
+   ▼    ▼    ▼    ▼    │                       ▼   Agent B     ▼
+  WkA  WkB  WkC  WkD   │                   Agent C ──▶ ◀── Agent D
+   │    │    │    │    │                       ↑       ↓       │
+   └────┴────┴────┴────┘                       └───────┴───────┘
+   parallel execution → aggregate              everyone talks to everyone
+   isolated context, no peer chat              token N², error compounding, who stops?</div>
+
+<h3>Hands-on Example</h3>
+<p>"Research 5 competitors and produce a comparison report" — this is where multi-agent genuinely wins:</p>
+<pre><code><span class="tag-com"># —— Orchestrator-Worker: lead splits, workers research in parallel, lead synthesizes ——</span>
+<span class="tag-key">async def</span> research_orchestrator(query):
+    plan = lead_agent(<span class="tag-gpt">f"Break this research into 3-6 independent subtopics: {query}"</span>)
+    <span class="tag-com"># plan = [&quot;company A pricing&quot;, &quot;company B product&quot;, ...]</span>
+
+    subreports = <span class="tag-key">await</span> asyncio.gather(*[
+        worker_agent(topic, tools=[web_search, fetch], max_iters=15)
+        <span class="tag-key">for</span> topic <span class="tag-key">in</span> plan
+    ])  <span class="tag-com"># each worker has its own context window; no peer chat</span>
+
+    <span class="tag-key">return</span> lead_agent(<span class="tag-gpt">f"Synthesize into a report: {subreports}"</span>)
+
+<span class="tag-com"># Win: each worker independently processes ~50k tokens of web content</span>
+<span class="tag-com">#      single-agent serial would need ~250k context — slow AND lost-in-the-middle</span>
+<span class="tag-com">#      with 5 workers, lead only sees 5 summaries ~5k tokens → high-quality synthesis</span></code></pre>
+<p>"Write a function" — multi-agent should not appear here:</p>
+<pre><code><span class="tag-com"># BAD: "coder + reviewer + tester" three-agent debate</span>
+<span class="tag-com">#   - 3× token, 3× latency, errors compound</span>
+<span class="tag-com">#   - reviewer can't see context the coder didn't verbalize</span>
+<span class="tag-com">#   - running tests is a tool, not an LLM step</span>
+
+<span class="tag-com"># GOOD: 1 agent + test tool + good system prompt</span>
+agent(task, tools=[read, edit, run_tests],
+      system=<span class="tag-gpt">"Write code, run tests, fix until green."</span>)
+<span class="tag-com">#   1× token, verifier (tests) replaces reviewer/tester agents</span></code></pre>
+<p>Heuristic for whether to go multi-agent: "<strong>can workers avoid talking to each other?</strong>" If yes → orchestrator-worker is on the table. If no (workers must debate / collaborate / depend on each other) → fall back to single agent or split into a workflow.</p>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) "Manager / Engineer / Critic / PM" four roles — agents reviewing each other, tokens explode, nobody actually stops. (2) Using peer debate "for accuracy" — research shows weak gains on objective tasks (math/code) and outright degradation on subjective tasks (writing). (3) Forgetting that a verifier is 10× stronger than another agent — if you can run tests, don't pay another agent to "review code"; if you can validate a schema, don't pay another agent to "check output".
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Anthropic <em>How we built our multi-agent research system</em>, <a href="https://www.anthropic.com/engineering/built-multi-agent-research-system" target="_blank">anthropic.com/.../built-multi-agent-research-system</a> ·
+Cognition AI <em>Don't Build Multi-Agents</em>, <a href="https://cognition.ai/blog/dont-build-multi-agents" target="_blank">cognition.ai/blog/dont-build-multi-agents</a> ·
+<em>Should We Be Going MAD?</em> on multi-agent debate limits, <a href="https://arxiv.org/abs/2402.18272" target="_blank">arXiv:2402.18272</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Agent Failure Mode Handbook: 5 Ways It Dies + How to Diagnose</h2>
+<div class="claim">Claim: every agent that's ever shipped to production has died one of these 5 deaths. Name them first, then defend against them.</div>
+
+<h3>Background &amp; Principles</h3>
+<p>Once you've run a few real agent projects you notice failures rhyme — they show up repeatedly as one of these 5 deaths. Turning them into an internal incident taxonomy doubles your iteration speed.</p>
+<ol>
+<li><strong>Loop Lock</strong>: the agent stalls in read → think → read same file → think; or repeatedly calls the same failing tool expecting a different result. Root cause: no new understanding from the latest result, but the stop condition didn't fire.</li>
+<li><strong>Over-planning</strong>: the agent burns several turns on plan, writes todos, reasons about "what I should do next" — half the token budget gone before it does anything. Root cause: the system prompt rewarded verbosity, or the task is abstract enough to trigger the model's "show your work" habit.</li>
+<li><strong>Tool Thrashing</strong>: ping-ponging across similar tools, or after a tool error switching tools instead of fixing arguments. Root cause: overlapping tool descriptions (W04 §2), or unreadable error messages (W04 combo).</li>
+<li><strong>Context Bloat</strong>: context grows to 80%+ of the window, the model starts forgetting the original task (lost-in-the-middle, W02), misusing early data, drifting further with each turn. Root cause: every tool_result is dumped back verbatim with no compaction.</li>
+<li><strong>Silent Stop / premature end_turn</strong>: agent says "Done!" with the task not actually finished. Root cause: ambiguous completion criteria; the model treats "I did something" as "goal reached".</li>
+</ol>
+<p>Almost none of these surface in dev — engineers run 3 happy paths and ship; production catches all five in the first week. Diagnosis isn't reading logs — it's <strong>trace</strong>: record (tool_name, args_hash, result_hash, token_delta, elapsed) per turn, then scan for anomalous patterns.</p>
+
+<h3>Hands-on Example</h3>
+<p>Add a 30-line failure detector to your harness:</p>
+<pre><code><span class="tag-key">from</span> hashlib <span class="tag-key">import</span> md5
+
+<span class="tag-key">def</span> hash_call(name, args):
+    <span class="tag-key">return</span> md5(<span class="tag-gpt">f"{name}|{sorted(args.items())}"</span>.encode()).hexdigest()[:8]
+
+<span class="tag-key">class</span> AgentMonitor:
+    <span class="tag-key">def</span> __init__(self):
+        self.history = []  <span class="tag-com"># list of (turn, name, args_hash, result_hash)</span>
+        self.token_path = []
+
+    <span class="tag-key">def</span> record(self, turn, name, args, result, tokens):
+        ah, rh = hash_call(name, args), md5(str(result).encode()).hexdigest()[:8]
+        self.history.append((turn, name, ah, rh))
+        self.token_path.append(tokens)
+
+    <span class="tag-key">def</span> check(self):
+        h = self.history
+        <span class="tag-com"># 1. Loop lock: same (name, args_hash) ≥ 3 in a row, result_hash barely changes</span>
+        <span class="tag-key">if</span> len(h) &gt;= 3 <span class="tag-key">and</span> len(set((x[1],x[2]) <span class="tag-key">for</span> x <span class="tag-key">in</span> h[-3:])) == 1:
+            <span class="tag-key">return</span> <span class="tag-gpt">"LOOP_LOCK"</span>
+        <span class="tag-com"># 2. Tool thrashing: 4+ distinct tools in the last 5 turns</span>
+        <span class="tag-key">if</span> len(h) &gt;= 5 <span class="tag-key">and</span> len(set(x[1] <span class="tag-key">for</span> x <span class="tag-key">in</span> h[-5:])) &gt;= 4:
+            <span class="tag-key">return</span> <span class="tag-gpt">"TOOL_THRASHING"</span>
+        <span class="tag-com"># 3. Context bloat: monotonic token growth past 80% of window</span>
+        <span class="tag-key">if</span> self.token_path <span class="tag-key">and</span> self.token_path[-1] &gt; 0.8 * MAX_CTX:
+            <span class="tag-key">return</span> <span class="tag-gpt">"CONTEXT_BLOAT"</span>
+        <span class="tag-key">return</span> <span class="tag-key">None</span>
+
+<span class="tag-com"># Call from the main harness loop</span>
+<span class="tag-key">if</span> (state := monitor.check()):
+    <span class="tag-key">if</span>   state == <span class="tag-gpt">"LOOP_LOCK"</span>:       inject_msg(<span class="tag-gpt">"You're repeating. Try a different approach or ask the user."</span>)
+    <span class="tag-key">elif</span> state == <span class="tag-gpt">"TOOL_THRASHING"</span>:  inject_msg(<span class="tag-gpt">"Stop trying tools. State your hypothesis first."</span>)
+    <span class="tag-key">elif</span> state == <span class="tag-gpt">"CONTEXT_BLOAT"</span>:   compact_history(msgs)</code></pre>
+<p>Corresponding defenses:</p>
+<ul>
+<li><strong>Loop Lock</strong>: harness enforces max_iters; on detection inject "You appear to be stuck, try a different approach or ask the user"; log to trace.</li>
+<li><strong>Over-planning</strong>: system prompt with "Be terse. Don't restate the plan each turn"; cap plan length in plan mode.</li>
+<li><strong>Tool Thrashing</strong>: merge semantically-near tools (W04); error messages tell the model what to do next; harness halts after 3 consecutive identical errors.</li>
+<li><strong>Context Bloat</strong>: summarization every K turns (W02); replace old tool_results with "[summarized: N bytes]". Claude Code does exactly this.</li>
+<li><strong>Silent Stop</strong>: completion is decided by a verifier, not by the LLM — run tests where you can, validate schemas where you can; only allow end_turn after a verifier passes.</li>
+</ul>
+
+<div class="fail">
+<strong>Failure modes (meta)</strong>: (1) shipping after happy-path testing — dev passing ≠ production-ready; agents must be iterated against trace sampling and failure replay. (2) "Switch the model when something breaks" — many "ReAct stuck" failures get blamed on "Claude isn't smart enough"; the real issue is a harness with no max_iters / verifier / compaction. Models don't fix systems problems. (3) "More complex framework will fix it" — swapping LangChain for LangGraph doesn't fix your loop lock; a 30-line monitor does.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Anthropic <em>Effective context engineering for AI agents</em>, <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" target="_blank">anthropic.com/.../effective-context-engineering</a> ·
+Anthropic <em>Building Effective Agents</em> — failure modes section, <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">anthropic.com/.../building-effective-agents</a> ·
+Hamel Husain <em>Your AI Product Needs Evals</em>, <a href="https://hamel.dev/blog/posts/evals/" target="_blank">hamel.dev/blog/posts/evals</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// Putting it together · 7-step decision checklist before starting a new agent project</h3>
+<p>Condense the four sections into a "before you start" checklist. Next time someone says "I want to build an AI agent", run them through this:</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>Can it be a workflow?</strong> If the path is enumerable, don't build an agent. Solve it with code + a few LLM calls (§1).</li>
+<li><strong>Step count and cost?</strong> Avg ≤ 7 steps, low cost → ReAct; &gt; 10 steps and high cost → Plan-and-Execute (§2).</li>
+<li><strong>Is there a verifier?</strong> Yes (tests / schema / score) → consider wrapping Reflexion. No → don't touch Reflexion; build a verifier first.</li>
+<li><strong>Do you actually need multi-agent?</strong> Default single agent + good tools. Only escalate when "naturally parallel + large sub-task context + orchestrator-worker topology" (§3).</li>
+<li><strong>Tool registry ≤ 10?</strong> See W04 §2 — past 15 tools you're already in the degradation zone.</li>
+<li><strong>Harness defends against all 5 deaths?</strong> max_iters, loop detector, context compactor, tool-error ceiling, verifier-based stop — one for each (§4).</li>
+<li><strong>Do you have an eval?</strong> Not a happy-path demo — a 20+ scenario regression suite (Day 6's topic). An agent without an eval is a folk-magic project.</li>
+</ol>
+<p style="margin-top:14px">Being able to answer "we don't need an agent / single agent is enough / no multi-agent" honestly through these 7 steps is senior engineering. The Anthropic / Cognition / Cursor consensus boils down to one line — <strong>complexity is a tax; pay it only when it's worth it</strong>.</p>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// Deep Thinking</h3>
+<details><summary>ReAct is the default, but its core is the Reason-Act-Observe loop. How is that fundamentally different from Chain-of-Thought?</summary><div>CoT is single-shot reasoning (generate the full chain, then the answer). ReAct interleaves (think → act → see result → think again). Core difference: CoT assumes the answer can be derived purely; ReAct assumes external feedback is required. ReAct must pair with tools (without tools it collapses back to CoT). Yao 2022: ReAct beats CoT by ~30% on knowledge-grounded tasks (HotpotQA); they tie on pure reasoning (GSM8K).</div></details>
+<details><summary>Plan-and-Execute looks more systematic than ReAct — why isn't it the default?</summary><div>Three reasons: (1) plan-stage cost — one inference produces a 10-step plan, but if step 3 reveals the plan is wrong, you re-plan everything, burning tokens; (2) static plans don't adapt to dynamic environments (e.g. web content changing); (3) measured: Plan-and-Execute loses 5–10pp to ReAct on short tasks (≤5 steps). It only wins on long tasks (10+) with a stable environment (e.g. code generation).</div></details>
+<details><summary>Multi-agent debate has lots of papers but almost no production use. Beyond orchestration complexity, what's the deeper problem?</summary><div>(1) Inference cost scales with N (number of agents); (2) agents reinforce each other's errors (echo chamber), especially with the same base model; (3) headline metrics rarely move (Anthropic experiments: debate lifts reasoning tasks 2–5%, at 4× the cost). The exception is when context-isolation gain is large: long-doc analysis (each agent reads a chunk, then aggregate) — there multi-agent clearly beats single.</div></details>
+<details><summary>Reflexion makes agents self-improve — but it needs a verifier. Which tasks have a good verifier and which don't?</summary><div>Verifier exists: code (run tests), math (recompute), SQL (execute), search (result count ≥ threshold). No verifier: writing (subjective quality), conversation (no ground truth), design (many right answers). Without a verifier, Reflexion loops on its own hallucinated "scores" and degrades. If you can write a verifier, use Reflexion. If not, skip.</div></details>
+<details><summary>Which failure mode is most common in agents? How do you detect it early?</summary><div>Most common: "tool-selection loop lock" — the model keeps invoking the same tool because it doesn't know why it's failing. Detection: (1) keep a last_N_tools deque (N=3); if it's [A,A,A] force-break; (2) after each tool result, check a progress signal (output changing? closer to goal?) — no progress → escalate. Second most common: context overflow — history too long, the original instruction gets squeezed out.</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// Further Reading</h3>
+<ul>
+<li><a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">Anthropic · Building Effective Agents</a> — the theoretical base for this issue; the official workflow-vs-agent definition</li>
+<li><a href="https://www.anthropic.com/engineering/built-multi-agent-research-system" target="_blank">Anthropic · How we built our multi-agent research system</a> — when multi-agent actually pays, engineering notes</li>
+<li><a href="https://cognition.ai/blog/dont-build-multi-agents" target="_blank">Cognition · Don't Build Multi-Agents</a> — the contrary view from the Devin team</li>
+<li><a href="https://lilianweng.github.io/posts/2023-06-23-agent/" target="_blank">Lilian Weng · LLM Powered Autonomous Agents</a> — systematic survey on agent design</li>
+<li><a href="https://arxiv.org/abs/2210.03629" target="_blank">ReAct paper (arXiv:2210.03629)</a> & <a href="https://arxiv.org/abs/2303.11366" target="_blank">Reflexion paper (arXiv:2303.11366)</a> — two essential primary sources</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 05 · 2026-05-23</footer>
+</div>
+<script src="https://cissy0802.github.io/comments.js" defer></script>
+<script src="https://cissy0802.github.io/search.js" defer></script>
+<script src="https://cissy0802.github.io/index-button.js" defer></script>
+<script src="https://cissy0802.github.io/i18n-tts.js" defer></script>
+</body></html>
