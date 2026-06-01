@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 18 · MCP — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 18 / PHASE 2 · 应用与系统</span>
+<h1>MCP</h1>
+<h2>三层原语 · stdio vs HTTP · 自建 Server · Context 税</h2>
+<div class="date">2026-06-01 · BigCat</div>
+<p class="pitch">MCP 不是又一个 function calling 包装——它把 N×M 集成问题压成 N+M。</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>你已经会写 tool schema、会接 API。MCP 的工程价值不在「又能调工具了」，而在它把<strong>集成的拓扑结构</strong>改了：以前每个 model × 每个数据源要写一份胶水代码（N×M），MCP 让 server 写一次、所有 client 复用（N+M）。但真正决定 MCP 用得好不好的，是三个被多数人忽略的工程点：<strong>三层原语的控制轴</strong>（什么该放 Tool、什么该放 Resource）、<strong>transport 的进程模型</strong>（stdio 的一个隐蔽 bug 能让整条 JSON-RPC 流静默损坏）、以及 MCP 最大的 production 失败模式——<strong>tool-definition 的 context 税</strong>（接 10 个 server 还没开口就烧掉几千 token）。这一期假设你懂 MCP 是什么，直接讲怎么工程化用它、怎么避坑。</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>三层原语：不是命名，是控制权</h2>
+<div class="claim">论断：把一个能力放进 Tool / Resource / Prompt，决定的是「谁来发起调用」——这是 MCP 最被误用的设计点。</div>
+
+<h3>背景与原理</h3>
+<p>MCP server 能暴露三种原语，区别不在功能而在<strong>控制轴</strong>：</p>
+<ul>
+<li><strong>Tools = model-controlled</strong>：模型自己决定何时调用（带副作用的动作：发邮件、写文件、查数据库）。每个 tool 都消耗一次模型决策。</li>
+<li><strong>Resources = application-controlled</strong>：由 client/host 决定把哪些数据塞进 context（只读上下文：文件内容、schema、文档）。模型<strong>不</strong>主动「调用」它。</li>
+<li><strong>Prompts = user-controlled</strong>：用户显式触发的可复用模板，host 通常渲染成 slash command / 快捷动作。</li>
+</ul>
+<p>多数人把一切都做成 Tool，于是把「读一份配置文件」也变成一次模型 tool call——既浪费一次决策，又给 tool selection 增加噪声。正确做法：<strong>只读数据 → Resource，有副作用的动作 → Tool，需要用户显式发起的工作流 → Prompt</strong>。</p>
+<p>这条控制轴同时是<strong>信任轴</strong>：model-controlled 的 Tool 风险最高（模型可能在你没预期时触发副作用），所以 host 普遍对 Tool 加 permission gate；application-controlled 的 Resource 由 host 策展，注入什么、何时注入都可控；user-controlled 的 Prompt 由人主动发起，信任度最高。把动作错放成 Resource，等于绕过了本该有的审批；把数据错放成 Tool，等于把一个本来零风险的读操作丢进了需要审批的高风险通道。原语选择不只是 UX，是权限边界。</p>
+
+<div class="diagram">控制轴：谁发起这次调用？
+
+  MODEL 决定 ──────────▶  TOOLS      （动作 / 有副作用）
+                          例：create_issue, send_email
+
+  APP 决定 ────────────▶  RESOURCES  （只读 / 进 context）
+                          例：file://config.yaml, db://schema
+
+  USER 决定 ───────────▶  PROMPTS    （模板 / slash command）
+                          例：/code-review, /summarize-pr</div>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-com"># 设计 server 前先归类——贴在 server 文件顶部</span>
+<span class="tag-com"># 这个能力会改变外部状态吗？      → 是 → Tool</span>
+<span class="tag-com"># 它只是「让模型看到」某些数据吗？  → 是 → Resource</span>
+<span class="tag-com"># 它需要用户主动点一下才发生吗？    → 是 → Prompt</span>
+<span class="tag-com"># 拿不准：默认 Resource（最便宜，不污染 tool 列表）</span></code></pre>
+
+<div class="fail"><strong>失败模式：</strong>把只读数据暴露成 Tool——模型要先「想到」去调它，常常忘了调，或在不需要时乱调，污染 selection。反过来，把有副作用的动作做成 Resource，host 可能在用户没授权时就自动注入并触发。控制轴选错，权限模型也跟着错。</div>
+
+<div class="res">进阶资源：<a href="https://www.anthropic.com/news/model-context-protocol" target="_blank">Anthropic · Introducing MCP</a>（2024-11 发布，含三层原语动机） · <a href="https://modelcontextprotocol.io/specification/2025-06-18/server/prompts" target="_blank">MCP Spec · Prompts</a></div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>30 行自建 Server：docstring 就是 prompt</h2>
+<div class="claim">论断：MCP server 的 tool 描述会原样进模型 context——写 server 的那一刻你在写 prompt，不是写 API 文档。</div>
+
+<h3>背景与原理</h3>
+<p>官方 Python SDK 的 <code>FastMCP</code> 把 JSON-RPC、schema 生成、transport 全自动化，你只写三个装饰器。关键工程点和 Day 4 Tool Use 一脉相承：<strong>参数描述 &gt; 参数名字，docstring 是给模型读的不是给人读的</strong>。type hint 会自动转成 JSON Schema，docstring 会自动变成 tool description——这两样直接决定模型选不选对、传不传对参数。</p>
+<p>自动化的边界要心里有数：简单 type hint（<code>str</code> / <code>int</code> / <code>list[str]</code>）转 schema 很干净，但复杂参数光靠类型名表达不了约束（取值范围、格式、互斥关系），这些必须写进 docstring 或用 <code>pydantic</code> 的 <code>Field</code> 补描述。换句话说，<strong>schema 自动生成省的是样板代码，省不掉「把约束讲清楚给模型」这件认知工作</strong>——后者恰恰是 server 质量的分水岭。一个把每个参数的边界、单位、示例都写进描述的 server，和一个只有类型名的 server，模型调用成功率能差出一截。</p>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-com"># pip install "mcp[cli]"</span>
+<span class="tag-claude">from</span> mcp.server.fastmcp <span class="tag-claude">import</span> FastMCP
+
+mcp = FastMCP(<span class="tag-gpt">"weather"</span>)
+
+<span class="tag-key">@mcp.tool()</span>
+<span class="tag-claude">def</span> get_forecast(city: str, days: int = 3) -> str:
+    <span class="tag-gpt">"""查询某城市未来天气预报。
+
+    Args:
+        city: 城市名，用英文，如 'Tokyo'
+        days: 预报天数，1-7，默认 3
+    """</span>
+    <span class="tag-claude">return</span> _call_weather_api(city, days)
+
+<span class="tag-key">@mcp.resource(</span><span class="tag-gpt">"config://units"</span><span class="tag-key">)</span>
+<span class="tag-claude">def</span> units() -> str:
+    <span class="tag-gpt">"""当前温度单位偏好（只读，自动进 context）"""</span>
+    <span class="tag-claude">return</span> <span class="tag-gpt">"celsius"</span>
+
+<span class="tag-key">@mcp.prompt()</span>
+<span class="tag-claude">def</span> trip_brief(city: str) -> str:
+    <span class="tag-gpt">"""生成出行天气简报（用户触发的模板）"""</span>
+    <span class="tag-claude">return</span> <span class="tag-gpt">f"用一句话总结 {city} 适不适合户外活动。"</span>
+
+<span class="tag-claude">if</span> __name__ == <span class="tag-gpt">"__main__"</span>:
+    mcp.run(transport=<span class="tag-gpt">"stdio"</span>)</code></pre>
+
+<div class="fail"><strong>失败模式：</strong>docstring 写成「Get forecast」这种给人看的简短描述——模型不知道 city 要英文、days 范围，就会传 'Tokyo, Japan' 或 days=30 报错。tool 数量也别贪多：一个 server 塞 30 个 tool，selection 准确率会塌（同 Day 4 的退化曲线）。</div>
+
+<div class="res">进阶资源：<a href="https://github.com/modelcontextprotocol/python-sdk" target="_blank">modelcontextprotocol/python-sdk</a>（FastMCP quickstart） · <a href="https://modelcontextprotocol.io" target="_blank">modelcontextprotocol.io</a>（官方文档 + SDK 列表）</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>stdio vs Streamable HTTP：transport 决定进程模型</h2>
+<div class="claim">论断：transport 不是部署细节——它决定 server 是本地子进程还是远程服务、能否多租户、认证边界在哪。</div>
+
+<h3>背景与原理</h3>
+<p>MCP 用 <strong>JSON-RPC 2.0</strong>，跑在两种标准 transport 上：</p>
+<ul>
+<li><strong>stdio</strong>：client 把 server 当<strong>子进程</strong>拉起，靠 stdin/stdout 收发、换行分隔。零网络、零认证、延迟最低，但天然 <strong>1:1</strong>——一个 client 一个进程，无法多租户。本地工具（文件、Git、本地 DB）首选。</li>
+<li><strong>Streamable HTTP</strong>：远程 server 暴露单个 <code>/mcp</code> 端点，同时接 POST 和 GET，可选用 SSE 流式推送多条消息。可扩展、可多租户，但要自己处理 auth。<strong>注意：旧的 HTTP+SSE 双端点 transport 已在 2025-03 弃用</strong>，新项目直接用 Streamable HTTP。</li>
+</ul>
+<p>两种 transport 之上跑的是同一套协议生命周期：连接后先 <code>initialize</code> 握手——client 和 server 交换协议版本，并<strong>协商各自支持的能力</strong>（server 声明有没有 tools / resources / prompts、支不支持 list 动态变更通知）。这意味着接同一个 server，不同 client 看到的能力面可能不同；也意味着你的 server 要老实声明 capability，否则 client 不会去拉对应的 list。能力协商是 MCP「N+M 复用」得以成立的根：client 不需要预知 server 长什么样，握手时问一次即可。</p>
+
+<div class="diagram">          stdio                    Streamable HTTP
+        ┌────────┐                 ┌────────┐
+client ─┤subprocess├ stdin/stdout  client ─┤ POST/GET├─▶ https://host/mcp
+        └────────┘                 └────────┘     (可选 SSE 流)
+  本地 · 1:1 · 无 auth          远程 · 多租户 · 需 auth
+  延迟最低 · 进程随 client       可独立扩缩 · 跨网络</div>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-com">// 本地 stdio：Claude Desktop / Claude Code 配置</span>
+{
+  <span class="tag-key">"mcpServers"</span>: {
+    <span class="tag-key">"weather"</span>: {
+      <span class="tag-key">"command"</span>: <span class="tag-gpt">"python"</span>,
+      <span class="tag-key">"args"</span>: [<span class="tag-gpt">"weather_server.py"</span>]
+    }
+  }
+}</code></pre>
+
+<div class="fail"><strong>失败模式（经典 bug）：</strong>stdio 模式下，<strong>任何写到 stdout 的东西都会被当成 JSON-RPC 消息</strong>。一行 <code>print("debug")</code> 或库的进度条就能静默损坏整条协议流，client 报「invalid JSON」却查不到源头。铁律：<strong>stdio server 的日志一律走 stderr</strong>（<code>logging</code> 默认即 stderr，但别手滑 print）。</div>
+
+<div class="res">进阶资源：<a href="https://modelcontextprotocol.io/specification/2025-03-26/basic/transports" target="_blank">MCP Spec · Transports</a>（stdio / Streamable HTTP 规范，含 SSE 弃用说明）</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Context 税：MCP 最大的 production 失败模式</h2>
+<div class="claim">论断：多数 client 把所有 server 的全部 tool 定义在开场就灌进 context——接 10 个 server，用户还没说话就烧掉几千 token。</div>
+
+<h3>背景与原理</h3>
+<p>MCP 的便利有隐藏成本，且这个成本是<strong>双重</strong>的。其一是<strong>前置加载</strong>：client 通常在开场就把每个连接 server 的全部 tool schema 灌进 context，这是固定开销，与用户问什么无关。其二更隐蔽——<strong>中间结果累积</strong>：agentic loop 里每次 tool 调用的返回值都留在 context 供下一轮参考，调一次大返回的工具就把几千行 JSON 永久钉进后续每一轮的输入。两者叠加：tool 越多开场越贵，调用越多过程越胀，到长任务后期 context 塞满了早已用不上的 schema 和中间数据，既烧钱又稀释模型注意力（回到 Day 2 lost-in-the-middle）。Anthropic 2025-11 的工程博客 <em>Code execution with MCP</em> 给了一个反直觉的解法：把 MCP server 暴露成<strong>代码 API</strong>，让 agent 写代码去调，按需 <code>import</code> 用到的工具、在执行环境里处理中间数据再回传。他们报告一个原本约 <strong>150k token</strong> 的工作流降到约 <strong>2k token</strong>（约 98.7% 削减）。核心 insight：<strong>tool 目录不该常驻 context，应该 progressive disclosure（按需发现）</strong>。</p>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-com"># 不做 code execution 也能立刻省的三招：</span>
+<span class="tag-com"># 1. 只接当前任务需要的 server，用完即关</span>
+<span class="tag-com">#    （Claude Code: 别把全部 MCP 写进全局 settings）</span>
+<span class="tag-com"># 2. 一个 server 别堆几十个 tool——按职责拆，或合并同类</span>
+<span class="tag-com"># 3. 大返回值在 server 端先裁剪/摘要，别让原始 JSON</span>
+<span class="tag-com">#    几千行直接穿过 context</span></code></pre>
+
+<div class="fail"><strong>失败模式（反直觉）：</strong>「多接 server = agent 更强」是错的。每多接一个 server，开场 token、选择难度、延迟都涨，而模型在 30+ tool 里反而更容易选错。更多工具到某个点后是<strong>净负</strong>——MCP 的可组合性诱导你过度连接。</div>
+
+<div class="res">进阶资源：<a href="https://www.anthropic.com/engineering/code-execution-with-mcp" target="_blank">Anthropic · Code execution with MCP</a>（context 税量化 + progressive disclosure） · <a href="https://www.anthropic.com/engineering/advanced-tool-use" target="_blank">Anthropic · Advanced tool use</a></div>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// ENGLISH GLOSSARY</h3>
+<dl>
+<dt>MCP (Model Context Protocol)</dt><dd>连接 AI 应用与外部数据/工具的开放协议，Anthropic 2024-11 开源</dd>
+<dt>Host / Client / Server</dt><dd>Host = AI 应用（如 Claude Desktop）；Client = host 内连接单个 server 的连接器；Server = 暴露能力的进程</dd>
+<dt>Tool (model-controlled)</dt><dd>模型自主决定调用的动作，通常有副作用</dd>
+<dt>Resource (application-controlled)</dt><dd>由 client 决定注入 context 的只读数据</dd>
+<dt>Prompt (user-controlled)</dt><dd>用户显式触发的可复用模板，常渲染为 slash command</dd>
+<dt>Transport</dt><dd>承载 JSON-RPC 消息的通道：stdio 或 Streamable HTTP</dd>
+<dt>stdio transport</dt><dd>把 server 作为子进程，经 stdin/stdout 通信，本地 1:1</dd>
+<dt>Streamable HTTP</dt><dd>单端点远程 transport，2025-03 起取代弃用的 HTTP+SSE</dd>
+<dt>JSON-RPC 2.0</dt><dd>MCP 底层的远程过程调用消息格式</dd>
+<dt>Progressive disclosure</dt><dd>按需暴露 tool 定义而非全部前置加载，省 context</dd>
+</dl>
+</div>
+
+<!-- ============ 深入思考 ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// 深入思考</h3>
+<details><summary>MCP 和直接写 function calling 比，什么时候 MCP 是过度工程？</summary><div>当集成是<strong>一次性、单 client、不复用</strong>时，MCP 的协议开销（起进程、JSON-RPC 往返、schema 协商）纯属负担——直接在代码里 def 一个函数当 tool 更快。MCP 的 ROI 来自 N+M 复用：你有多个 host（Claude Desktop + Cursor + 自建 agent）要共享同一批能力，或要把能力分发给别人用。单 agent、单脚本、工具固定的场景，function calling 足够。判据：这个能力会被第二个 client 复用吗？不会 → 别上 MCP。</div></details>
+<details><summary>三层原语里 Resource 最被忽视，为什么几乎所有 server 只暴露 Tool？</summary><div>两个原因：一是 Tool 是 model-controlled，「模型自己会调」符合直觉，开发者不用想注入时机；Resource 是 application-controlled，要 host 主动决定何时塞进 context，但很多 host 的 Resource 支持比 Tool 弱、UI 也不完善。二是把数据做成 Tool「能跑」，开发者就不深究——代价是每次读数据都占一次模型决策、污染 selection。这是协议设计与 host 实现成熟度的错位：规范鼓励三层，生态实际偏向 Tool。</div></details>
+<details><summary>code execution 让 tool 不进 context——这是否意味着 MCP 的「tool 列表」抽象本身要被取代？</summary><div>不是取代，是分层。MCP 依然是能力的<strong>发现与描述</strong>层（server 声明有什么），但「全部前置加载进 context」只是 client 的一种朴素实现。code execution 把 MCP server 投射成文件系统/代码模块，agent 按需 import——协议没变，变的是 client 怎么把协议暴露给模型。趋势是 context 里只放<strong>入口</strong>（如何发现工具），真正的 schema 按需拉取。可以预期未来 client 默认走 progressive disclosure，而非一次灌满。</div></details>
+<details><summary>MCP server 是 untrusted code 与 untrusted 数据的双重入口，怎么 defense in depth？</summary><div>两类风险：server 本身恶意（tool poisoning：描述里藏注入指令骗模型），和 server 返回的数据携带 indirect prompt injection。防御要分层：1) 只接信任来源的 server，本地优先 stdio（无网络面）；2) host 层对敏感动作做 permission gate，不靠模型自觉；3) 把 server 返回值当 untrusted content 隔离，别让它直接改写系统指令；4) 远程 HTTP server 加 auth + 最小权限 scope。这正接 Day 24 Prompt Injection——MCP 扩大了攻击面，隔离与权限不能省。</div></details>
+<details><summary>stdio 的 1:1 进程模型 vs HTTP 的多租户，本地个人 agent 未来走哪条？</summary><div>短期本地 agent 仍偏 stdio：零网络面、零认证、延迟最低，符合「个人工具链」隐私诉求。但当你想在手机、笔电、云端共享同一套能力与状态时，stdio 的进程绑定就成了枷锁——这时 Streamable HTTP + 个人 gateway（见 Day 23 Personal AI Infra）更合适。可能的折中：本地 stdio 跑高频私密工具，远程 HTTP 跑需要跨设备/共享状态的工具，host 同时连两类。transport 选择本质是隐私-可达性的权衡。</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://www.anthropic.com/news/model-context-protocol" target="_blank">Anthropic · Introducing the Model Context Protocol</a> — 2024-11 发布公告，协议动机与架构</li>
+<li><a href="https://modelcontextprotocol.io" target="_blank">modelcontextprotocol.io</a> — 官方规范、SDK（Python/TS/C#/Java）与示例 server</li>
+<li><a href="https://github.com/modelcontextprotocol/python-sdk" target="_blank">modelcontextprotocol/python-sdk</a> — FastMCP，三装饰器最小 server</li>
+<li><a href="https://modelcontextprotocol.io/specification/2025-03-26/basic/transports" target="_blank">MCP Spec · Transports</a> — stdio / Streamable HTTP 规范与 SSE 弃用</li>
+<li><a href="https://www.anthropic.com/engineering/code-execution-with-mcp" target="_blank">Anthropic · Code execution with MCP</a> — context 税量化与 progressive disclosure</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 18 · 2026-06-01</footer>
+</div>
+</body></html>

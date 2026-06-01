@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 18 · MCP — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 18 / PHASE 2 · APPLICATIONS & SYSTEMS</span>
+<h1>MCP</h1>
+<h2>Three Primitives · stdio vs HTTP · Build a Server · Context Tax</h2>
+<div class="date">2026-06-01 · BigCat</div>
+<p class="pitch">MCP isn't another function-calling wrapper — it collapses the N×M integration problem into N+M.</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>You already write tool schemas and wire up APIs. MCP's engineering value isn't "now I can call tools" — it's that it changes the <strong>topology of integration</strong>: instead of writing glue for every model × every data source (N×M), you write a server once and every client reuses it (N+M). But what actually decides whether MCP works for you are three points most people overlook: <strong>the control axis of the three primitives</strong> (what belongs in a Tool vs a Resource), <strong>the process model of the transport</strong> (one obscure stdio bug can silently corrupt your whole JSON-RPC stream), and MCP's biggest production failure mode — <strong>the context tax of tool definitions</strong> (connect 10 servers and you burn thousands of tokens before the user says a word). This issue assumes you know what MCP is; it goes straight to engineering it and avoiding the traps.</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>Three Primitives: Not Naming, but Control</h2>
+<div class="claim">Claim: putting a capability in Tool / Resource / Prompt decides "who initiates the call" — MCP's most misused design point.</div>
+
+<h3>Background & Principle</h3>
+<p>An MCP server can expose three primitives. The difference isn't function but <strong>control axis</strong>:</p>
+<ul>
+<li><strong>Tools = model-controlled</strong>: the model decides when to call (actions with side effects: send email, write file, query DB). Each tool costs one model decision.</li>
+<li><strong>Resources = application-controlled</strong>: the client/host decides what data to inject into context (read-only context: file contents, schema, docs). The model does <strong>not</strong> actively "call" it.</li>
+<li><strong>Prompts = user-controlled</strong>: reusable templates the user explicitly triggers; the host usually renders them as slash commands / quick actions.</li>
+</ul>
+<p>Most people make everything a Tool, turning "read a config file" into a model tool call — wasting a decision and adding noise to tool selection. The right rule: <strong>read-only data → Resource, side-effecting action → Tool, user-initiated workflow → Prompt</strong>.</p>
+<p>This control axis is also a <strong>trust axis</strong>: model-controlled Tools carry the highest risk (the model may fire side effects when you didn't expect it), so hosts broadly put permission gates on Tools; application-controlled Resources are host-curated — what gets injected and when is under control; user-controlled Prompts are human-initiated, the highest trust. Misplacing an action as a Resource bypasses an approval that should exist; misplacing data as a Tool drops a zero-risk read into the high-risk, approval-gated channel. Primitive choice isn't just UX — it's the permission boundary.</p>
+
+<div class="diagram">Control axis: who initiates this call?
+
+  MODEL decides ──────────▶  TOOLS      (actions / side effects)
+                             e.g. create_issue, send_email
+
+  APP decides ────────────▶  RESOURCES  (read-only / into context)
+                             e.g. file://config.yaml, db://schema
+
+  USER decides ───────────▶  PROMPTS    (templates / slash command)
+                             e.g. /code-review, /summarize-pr</div>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># Classify before you design the server — pin to the top of the file</span>
+<span class="tag-com"># Does it change external state?         → yes → Tool</span>
+<span class="tag-com"># Does it just "let the model see" data?  → yes → Resource</span>
+<span class="tag-com"># Does the user have to click to fire it? → yes → Prompt</span>
+<span class="tag-com"># Unsure: default to Resource (cheapest, no tool-list pollution)</span></code></pre>
+
+<div class="fail"><strong>Failure mode:</strong> exposing read-only data as a Tool — the model must "think" to call it, often forgets, or calls it when it shouldn't, polluting selection. Conversely, making a side-effecting action a Resource lets the host auto-inject and trigger it before the user authorized anything. Wrong control axis, wrong permission model.</div>
+
+<div class="res">Further: <a href="https://www.anthropic.com/news/model-context-protocol" target="_blank">Anthropic · Introducing MCP</a> (2024-11 launch, motivation for the three primitives) · <a href="https://modelcontextprotocol.io/specification/2025-06-18/server/prompts" target="_blank">MCP Spec · Prompts</a></div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>A 30-Line Server: the docstring IS the prompt</h2>
+<div class="claim">Claim: an MCP server's tool descriptions go verbatim into model context — the moment you write a server you're writing a prompt, not API docs.</div>
+
+<h3>Background & Principle</h3>
+<p>The official Python SDK's <code>FastMCP</code> automates JSON-RPC, schema generation, and transport; you write three decorators. The key engineering point carries over from Day 4 Tool Use: <strong>parameter descriptions &gt; parameter names, and the docstring is read by the model, not by humans</strong>. Type hints auto-convert to JSON Schema and docstrings auto-become tool descriptions — these two directly decide whether the model picks the right tool and passes the right args.</p>
+<p>Know the limits of the automation: simple type hints (<code>str</code> / <code>int</code> / <code>list[str]</code>) convert to clean schema, but complex parameters can't express their constraints through a type name alone (value ranges, formats, mutual exclusions) — those must go into the docstring or be added via <code>pydantic</code>'s <code>Field</code> descriptions. In other words, <strong>auto-generated schema saves boilerplate, not the cognitive work of spelling out constraints for the model</strong> — and that latter work is exactly the dividing line of server quality. A server that writes each parameter's bounds, units, and examples into its descriptions will have a meaningfully higher call-success rate than one with bare type names.</p>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># pip install "mcp[cli]"</span>
+<span class="tag-claude">from</span> mcp.server.fastmcp <span class="tag-claude">import</span> FastMCP
+
+mcp = FastMCP(<span class="tag-gpt">"weather"</span>)
+
+<span class="tag-key">@mcp.tool()</span>
+<span class="tag-claude">def</span> get_forecast(city: str, days: int = 3) -> str:
+    <span class="tag-gpt">"""Get the weather forecast for a city.
+
+    Args:
+        city: City name in English, e.g. 'Tokyo'
+        days: Number of days, 1-7, default 3
+    """</span>
+    <span class="tag-claude">return</span> _call_weather_api(city, days)
+
+<span class="tag-key">@mcp.resource(</span><span class="tag-gpt">"config://units"</span><span class="tag-key">)</span>
+<span class="tag-claude">def</span> units() -> str:
+    <span class="tag-gpt">"""Current temperature unit preference (read-only, auto into context)"""</span>
+    <span class="tag-claude">return</span> <span class="tag-gpt">"celsius"</span>
+
+<span class="tag-key">@mcp.prompt()</span>
+<span class="tag-claude">def</span> trip_brief(city: str) -> str:
+    <span class="tag-gpt">"""Generate a travel weather brief (user-triggered template)"""</span>
+    <span class="tag-claude">return</span> <span class="tag-gpt">f"In one sentence, is {city} good for outdoor activity?"</span>
+
+<span class="tag-claude">if</span> __name__ == <span class="tag-gpt">"__main__"</span>:
+    mcp.run(transport=<span class="tag-gpt">"stdio"</span>)</code></pre>
+
+<div class="fail"><strong>Failure mode:</strong> writing the docstring as a terse human-facing "Get forecast" — the model won't know city must be English or the days range, so it passes 'Tokyo, Japan' or days=30 and errors. Don't hoard tools either: cram 30 tools into one server and selection accuracy collapses (same degradation curve as Day 4).</div>
+
+<div class="res">Further: <a href="https://github.com/modelcontextprotocol/python-sdk" target="_blank">modelcontextprotocol/python-sdk</a> (FastMCP quickstart) · <a href="https://modelcontextprotocol.io" target="_blank">modelcontextprotocol.io</a> (official docs + SDK list)</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>stdio vs Streamable HTTP: transport decides the process model</h2>
+<div class="claim">Claim: transport isn't a deployment detail — it decides whether the server is a local subprocess or remote service, whether it's multi-tenant, and where the auth boundary sits.</div>
+
+<h3>Background & Principle</h3>
+<p>MCP uses <strong>JSON-RPC 2.0</strong> over two standard transports:</p>
+<ul>
+<li><strong>stdio</strong>: the client launches the server as a <strong>subprocess</strong>, exchanging newline-delimited messages over stdin/stdout. Zero network, zero auth, lowest latency — but inherently <strong>1:1</strong>: one client, one process, no multi-tenancy. First choice for local tools (files, Git, local DB).</li>
+<li><strong>Streamable HTTP</strong>: a remote server exposes a single <code>/mcp</code> endpoint accepting both POST and GET, optionally using SSE to stream multiple server messages. Scalable, multi-tenant — but you handle auth yourself. <strong>Note: the old HTTP+SSE two-endpoint transport was deprecated in 2025-03</strong>; new projects use Streamable HTTP directly.</li>
+</ul>
+<p>Both transports run the same protocol lifecycle: after connecting, an <code>initialize</code> handshake runs — client and server exchange protocol versions and <strong>negotiate the capabilities each supports</strong> (the server declares whether it has tools / resources / prompts, and whether it supports dynamic list-change notifications). This means different clients connecting to the same server may see different capability surfaces; it also means your server must honestly declare its capabilities, or the client won't fetch the corresponding lists. Capability negotiation is the root of MCP's "N+M reuse": the client needn't know in advance what a server looks like — it asks once at handshake.</p>
+
+<div class="diagram">          stdio                    Streamable HTTP
+        ┌────────┐                 ┌────────┐
+client ─┤subprocess├ stdin/stdout  client ─┤ POST/GET├─▶ https://host/mcp
+        └────────┘                 └────────┘    (optional SSE stream)
+  local · 1:1 · no auth         remote · multi-tenant · needs auth
+  lowest latency · ties to client   scales independently · over network</div>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com">// Local stdio: Claude Desktop / Claude Code config</span>
+{
+  <span class="tag-key">"mcpServers"</span>: {
+    <span class="tag-key">"weather"</span>: {
+      <span class="tag-key">"command"</span>: <span class="tag-gpt">"python"</span>,
+      <span class="tag-key">"args"</span>: [<span class="tag-gpt">"weather_server.py"</span>]
+    }
+  }
+}</code></pre>
+
+<div class="fail"><strong>Failure mode (classic bug):</strong> in stdio mode, <strong>anything written to stdout is treated as a JSON-RPC message</strong>. A single <code>print("debug")</code> or a library's progress bar silently corrupts the entire protocol stream — the client reports "invalid JSON" with no traceable source. Iron rule: <strong>stdio server logs always go to stderr</strong> (<code>logging</code> defaults to stderr, but don't slip a print in).</div>
+
+<div class="res">Further: <a href="https://modelcontextprotocol.io/specification/2025-03-26/basic/transports" target="_blank">MCP Spec · Transports</a> (stdio / Streamable HTTP spec, incl. SSE deprecation)</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>The Context Tax: MCP's biggest production failure mode</h2>
+<div class="claim">Claim: most clients dump every server's full tool definitions into context at the start — connect 10 servers and you burn thousands of tokens before the user speaks.</div>
+
+<h3>Background & Principle</h3>
+<p>MCP's convenience has a hidden cost, and the cost is <strong>twofold</strong>. First, <strong>preloading</strong>: clients typically dump the full tool schemas of every connected server into context at the start — a fixed overhead independent of what the user asks. Second, more insidious — <strong>intermediate-result accumulation</strong>: in an agentic loop every tool call's return value stays in context for later turns, so one call to a tool with a large return permanently nails thousands of lines of JSON into every subsequent turn's input. The two compound: more tools makes the opening expensive, more calls makes the process bloat, and by the late stage of a long task the context is packed with schemas and intermediate data no longer relevant — burning money and diluting the model's attention (back to Day 2 lost-in-the-middle). Anthropic's 2025-11 engineering blog <em>Code execution with MCP</em> offers a counterintuitive fix: expose MCP servers as <strong>code APIs</strong>, let the agent write code to call them, <code>import</code> only the tools it needs on demand, and process intermediate data in the execution environment before returning. They report a workflow that previously consumed about <strong>150k tokens</strong> dropping to about <strong>2k tokens</strong> (~98.7% reduction). Core insight: <strong>the tool catalog shouldn't live in context — it should be progressively disclosed (discovered on demand)</strong>.</p>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># Three savings you can make today without code execution:</span>
+<span class="tag-com"># 1. Connect only the servers this task needs; close when done</span>
+<span class="tag-com">#    (Claude Code: don't put all MCP servers in global settings)</span>
+<span class="tag-com"># 2. Don't pile dozens of tools in one server — split by</span>
+<span class="tag-com">#    responsibility, or merge similar ones</span>
+<span class="tag-com"># 3. Trim/summarize large return values server-side; don't let</span>
+<span class="tag-com">#    thousands of lines of raw JSON pass through context</span></code></pre>
+
+<div class="fail"><strong>Failure mode (counterintuitive):</strong> "more servers = stronger agent" is wrong. Every added server raises opening tokens, selection difficulty, and latency, while the model is more likely to mis-pick among 30+ tools. Past a point, more tools is a <strong>net negative</strong> — MCP's composability tempts you into over-connecting.</div>
+
+<div class="res">Further: <a href="https://www.anthropic.com/engineering/code-execution-with-mcp" target="_blank">Anthropic · Code execution with MCP</a> (quantified context tax + progressive disclosure) · <a href="https://www.anthropic.com/engineering/advanced-tool-use" target="_blank">Anthropic · Advanced tool use</a></div>
+</div>
+
+<!-- ============ 深入思考 ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// DEEPER THINKING</h3>
+<details><summary>Compared to writing function calling directly, when is MCP over-engineering?</summary><div>When the integration is <strong>one-off, single-client, non-reusable</strong>, MCP's protocol overhead (spawning a process, JSON-RPC round-trips, schema negotiation) is pure burden — just def a function as a tool in your code. MCP's ROI comes from N+M reuse: you have multiple hosts (Claude Desktop + Cursor + a custom agent) sharing the same capabilities, or you distribute capabilities for others to use. For a single agent, single script, fixed tools, function calling is enough. Test: will a second client reuse this capability? No → skip MCP.</div></details>
+<details><summary>Resource is the most neglected of the three primitives — why do almost all servers only expose Tools?</summary><div>Two reasons. First, Tools are model-controlled; "the model calls it itself" is intuitive, so developers needn't think about injection timing. Resources are application-controlled, requiring the host to decide when to inject into context — but many hosts' Resource support is weaker than Tools and the UI is less polished. Second, making data a Tool "works," so developers don't dig deeper — at the cost of one model decision and selection pollution per read. It's a mismatch between protocol design and host implementation maturity: the spec encourages three layers, the ecosystem leans Tool.</div></details>
+<details><summary>Code execution keeps tools out of context — does that mean MCP's "tool list" abstraction itself gets replaced?</summary><div>Not replaced, layered. MCP remains the <strong>discovery and description</strong> layer (servers declare what exists), but "preload everything into context" was just one naive client implementation. Code execution projects MCP servers as a filesystem/code modules the agent imports on demand — the protocol is unchanged; what changes is how the client exposes the protocol to the model. The trend is to keep only the <strong>entry point</strong> in context (how to discover tools) and fetch real schemas on demand. Expect clients to default to progressive disclosure rather than filling context at once.</div></details>
+<details><summary>An MCP server is a dual entry point for untrusted code and untrusted data — how do you do defense in depth?</summary><div>Two risk classes: the server itself being malicious (tool poisoning: injection instructions hidden in descriptions to fool the model), and server-returned data carrying indirect prompt injection. Defend in layers: 1) only connect trusted-source servers, prefer local stdio (no network surface); 2) permission-gate sensitive actions at the host layer, don't rely on the model's discretion; 3) treat server return values as untrusted content and isolate them — don't let them rewrite system instructions; 4) add auth + least-privilege scope to remote HTTP servers. This connects to Day 24 Prompt Injection — MCP widens the attack surface; isolation and permissions are non-negotiable.</div></details>
+<details><summary>stdio's 1:1 process model vs HTTP's multi-tenancy — which way does the local personal agent go?</summary><div>Short term, local agents lean stdio: zero network surface, zero auth, lowest latency, matching the privacy needs of a "personal toolchain." But once you want to share the same capabilities and state across phone, laptop, and cloud, stdio's process binding becomes a shackle — then Streamable HTTP + a personal gateway (see Day 23 Personal AI Infra) fits better. A likely compromise: run high-frequency private tools over local stdio, run cross-device/shared-state tools over remote HTTP, with the host connecting both. Transport choice is fundamentally a privacy-vs-reachability trade-off.</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://www.anthropic.com/news/model-context-protocol" target="_blank">Anthropic · Introducing the Model Context Protocol</a> — 2024-11 launch, motivation and architecture</li>
+<li><a href="https://modelcontextprotocol.io" target="_blank">modelcontextprotocol.io</a> — official spec, SDKs (Python/TS/C#/Java), example servers</li>
+<li><a href="https://github.com/modelcontextprotocol/python-sdk" target="_blank">modelcontextprotocol/python-sdk</a> — FastMCP, three-decorator minimal server</li>
+<li><a href="https://modelcontextprotocol.io/specification/2025-03-26/basic/transports" target="_blank">MCP Spec · Transports</a> — stdio / Streamable HTTP spec and SSE deprecation</li>
+<li><a href="https://www.anthropic.com/engineering/code-execution-with-mcp" target="_blank">Anthropic · Code execution with MCP</a> — context tax quantified, progressive disclosure</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 18 · 2026-06-01</footer>
+</div>
+</body></html>
