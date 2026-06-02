@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 19 · Coding Agents — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 19 / PHASE 2 · APPLICATIONS & SYSTEMS</span>
+<h1>Coding Agents</h1>
+<h2>Edit Format · Plan Mode · Autonomy Spectrum · Closing the Loop</h2>
+<div class="date">2026-06-02 · BigCat</div>
+<p class="pitch">The same model inside Aider / Cursor / Claude Code is three different creatures — the gap is the harness, not the weights.</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>You use Cursor's tab, Claude Code's agentic loop, and the occasional Aider batch refactor every day — yet few people can articulate how these three actually differ <strong>architecturally</strong>. They all run Claude / GPT underneath, but the gap is so wide they feel like different products. The reason: the real difficulty of a coding agent isn't "make the model write correct code," but two underrated engineering problems — <strong>reliably landing the model's intent onto the filesystem</strong> (edit format), and <strong>controlling its autonomy</strong> (plan / pair / full-auto). This issue isn't a tool tutorial; it dissects the design fault-lines of the three major coding harnesses: the token-vs-success trade-off of edit formats, why plan mode is an engineering necessity rather than UX decoration, how to pick a level on the autonomy spectrum, and why an agent that scores high on SWE-bench can be harder to use in your real repo. By the end you'll see any coding product with "X-ray" eyes.</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>The Architectural Fault-Lines of Three Coding Harnesses</h2>
+<div class="claim">Claim: Aider / Cursor / Claude Code differ not in the model but along two axes — "who holds the control flow" and "how edits land."</div>
+
+<h3>Background & Principles</h3>
+<p>Put all three on one coordinate system and the split is instant. <strong>The horizontal axis is autonomy</strong> (who decides the next step: you or the model); <strong>the vertical axis is how edits land</strong> (how the model changes files):</p>
+<ul>
+<li><strong>Aider</strong>: git-native CLI. You explicitly <code>/add</code> files into context, the model returns changes as <strong>search/replace diff</strong> blocks, and each change is auto-<code>git commit</code>ed. Control flow stays mostly with <em>you</em> — it's a highly controllable "semi-auto pairing," not a free-roaming agent. Wins: git history as audit trail, instant <code>/undo</code>, extremely token-thrifty.</li>
+<li><strong>Cursor</strong>: IDE-native. Its core is <strong>two-stage</strong> — the foreground uses a frontier model for planning (chat / composer), the background uses a specially trained <strong>fast-apply model</strong> (~70B, ~1000 tok/s) to land intent into a file diff. Tab completion is a separate lightweight autonomy track. Wins: zero context-switch inside the editor, blazing apply.</li>
+<li><strong>Claude Code</strong>: terminal-native agent. A full agentic loop — it Greps/Reads to explore on its own, decides which files to change, uses the Edit tool for string replace, runs Bash to verify. Control flow lives with the <em>model</em>; you constrain it via permission gate + plan mode. Wins: highest autonomy for open-ended tasks.</li>
+</ul>
+<p>Key insight: these three aren't "who's stronger," they're <strong>three autonomy levels</strong>. Aider fits batch execution where you already know the exact change; Cursor fits high-frequency small iterations inside the editor; Claude Code fits open-ended tasks of "I'm not sure how to change it, go explore." Picking the wrong level costs more than picking the wrong model.</p>
+
+<div class="diagram">   low autonomy ◀──────────── control flow owner ───────────▶ high autonomy
+         (you drive)                              (model drives)
+
+  Aider ──────────────  Cursor ──────────────  Claude Code
+  /add picks files       tab + composer          Greps/Reads to explore
+  diff blocks + auto      fast-apply model        Edit tool string replace
+  commit                  lands the change        agentic multi-step loop
+  you drive each step     fast editor iterations  "go figure it out"
+  ──────────────────────────────────────────────────────────────────────
+  "I know what to change"  "type as I go"          "you handle it"</div>
+
+<div class="fail">
+<strong>Failure mode</strong>: wrong level. Using Claude Code's full-auto loop for a mechanical replace where you already have a precise diff in mind — it'll "improvise," explore forever, touch things you never told it to. Conversely, using Aider for open-ended debugging — you have to hand-feed every file; it won't go find them. <strong>Autonomy must match the task's "uncertainty."</strong>
+</div>
+
+<div class="res">
+<strong>Resources</strong> · Aider Edit Formats docs, <a href="https://aider.chat/docs/more/edit-formats.html" target="_blank">aider.chat/docs/more/edit-formats</a> ·
+Cursor <em>Instant Apply</em>, <a href="https://cursor.com/blog/instant-apply" target="_blank">cursor.com/blog/instant-apply</a> ·
+Anthropic <em>Claude Code Best Practices</em>, <a href="https://www.anthropic.com/engineering/claude-code-best-practices" target="_blank">anthropic.com/engineering/claude-code-best-practices</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Edit Format: The Coding Agent's Underrated Hidden Bottleneck</h2>
+<div class="claim">Claim: "the model can write correct code" ≠ "it can land the change into the file" — edit format decides half the reliability.</div>
+
+<h3>Background & Principles</h3>
+<p>A counterintuitive fact: many coding-agent failures aren't logic errors, they're <strong>failed edit application</strong> — the model's search block doesn't match the file's actual text (whitespace, quotes, hallucinated old code), so the patch silently drops or errors. Aider's leaderboard quantifies exactly this as a core metric: the model must not only write correct code but <strong>successfully apply every change without human intervention</strong>. The four mainstream edit formats each trade off:</p>
+<ul>
+<li><strong>Whole file</strong>: model emits the entire file. Easiest for the model to "get right," but tokens explode, large files exceed limits, and it tends to mangle unrelated lines.</li>
+<li><strong>Unified diff</strong>: standard <code>@@</code> diff. Token-thrifty, but the model often miscounts line numbers/context, giving a high apply-failure rate.</li>
+<li><strong>Search/replace block</strong> (Aider's mainstay): a precise old-text + new-text pair. More robust than unified diff (matches by text, not line number) — a sweeter spot of token cost vs reliability.</li>
+<li><strong>Apply model</strong> (Cursor's route): the frontier model only emits "intent + rough diff," then hands it to a specially trained small model to <strong>land it precisely</strong>. This decouples "think clearly" from "write accurately" — the core of Cursor's 1000 tok/s instant apply.</li>
+</ul>
+<p>The core trade-off: <strong>whole file is easiest to get right but priciest; diff is cheapest but most prone to apply failure; search/replace splits the difference; apply model buys reliability with a second model</strong>. This is why different harnesses perform so differently on the same base model — the edit contract differs.</p>
+
+<h3>Example</h3>
+<p>The exact shape of a search/replace block (same lineage in Aider / Claude Code) — <strong>the SEARCH segment must match the file character-for-character</strong>:</p>
+<pre><code><span class="tag-com">src/auth.py</span>
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; SEARCH
+<span class="tag-gpt">def verify_token(token):</span>
+<span class="tag-gpt">    return jwt.decode(token, SECRET)</span>
+=======
+<span class="tag-gpt">def verify_token(token):</span>
+<span class="tag-gpt">    try:</span>
+<span class="tag-gpt">        return jwt.decode(token, SECRET, algorithms=["HS256"])</span>
+<span class="tag-gpt">    except jwt.ExpiredSignatureError:</span>
+<span class="tag-gpt">        raise AuthError("token expired")</span>
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; REPLACE</code></pre>
+<p>Practical takeaways: (1) before the agent edits a <strong>large file, make it Read the exact slice first</strong> — hallucinated old code is the #1 cause of apply failure; (2) keep changes <strong>small and local</strong>, one semantic unit per replace — far higher apply success than rewriting a whole function; (3) when the model repeatedly fails to apply, falling back to whole-file mode beats stubbornly forcing diffs.</p>
+
+<div class="fail">
+<strong>Failure mode</strong>: a big search/replace inside a very long file. The longer the file, the more likely the model misremembers some line's exact text (extra spaces, a comment it skipped); a SEARCH mismatch silently drops the change — you think it edited, it didn't. Symptom: the agent says "fixed" but tests are still red. Fix: shrink edit granularity + force a Read before editing.
+</div>
+
+<div class="res">
+<strong>Resources</strong> · Aider Code Editing Leaderboard, <a href="https://aider.chat/docs/leaderboards/edit.html" target="_blank">aider.chat/docs/leaderboards/edit</a> ·
+Fireworks <em>How Cursor built Fast Apply</em>, <a href="https://fireworks.ai/blog/cursor" target="_blank">fireworks.ai/blog/cursor</a> ·
+Cursor <em>Editing at 1000 tok/s</em>, <a href="https://cursor.com/blog/instant-apply" target="_blank">cursor.com/blog/instant-apply</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Plan Mode: Separating Research-Plan-Implement Is Engineering, Not UX</h2>
+<div class="claim">Claim: making a coding agent think before it acts boosts accuracy by "locking the problem," not by "thinking longer."</div>
+
+<h3>Background & Principles</h3>
+<p>Anthropic's Claude Code best practices stress one rule repeatedly: <strong>separate research/planning from implementation</strong>. The biggest risk of letting an agent code straight away isn't sloppy code — it's <strong>solving the wrong problem</strong>: patching the symptom and bypassing the root cause you actually wanted fixed. Plan mode has three layers of engineering value:</p>
+<ul>
+<li><strong>Problem locking</strong>: explore read-only first (Grep / Read), produce a plan, force the agent to articulate "what to change and why" before touching anything. A wrong direction gets caught here — this is the <strong>cheapest verification</strong>, far cheaper than reviewing hundreds of lines of diff after the fact.</li>
+<li><strong>Physical isolation</strong>: Claude Code's plan mode <em>forbids</em> Write/Edit/Bash at the harness layer — not a prompt begging it not to act, but a physical block. No matter how "itchy" the model gets, it can't change files (echoing Day 3's permission gate).</li>
+<li><strong>Auditability</strong>: the plan is text, so on failure you can tell whether the "plan was wrong" or the "execution was wrong" — far clearer than debugging a pile of messy diffs.</li>
+</ul>
+<p>The counterintuitive point: plan mode's payoff <strong>doesn't come from the model thinking more</strong> (that's reasoning's job), it comes from <strong>giving a human a low-cost correction checkpoint</strong>. For open-ended tasks (debugging, cross-file refactors, new features) planning first is almost always worth it; for a one-line change, planning is pure overhead.</p>
+
+<h3>Example</h3>
+<p>Bake "explore → plan → code → commit" into a workflow rather than letting the agent write right away:</p>
+<pre><code><span class="tag-com"># Claude Code: enter plan mode (Shift+Tab), read-only explore + produce a plan</span>
+<span class="tag-claude">&gt;</span> Study how the payment module handles retries. <span class="tag-key">Don't change code yet</span> —
+  give me a plan to fix the double-charge bug: which files, risk points, how to test
+
+<span class="tag-com"># You review the plan, stop wrong directions, then switch back to execute</span>
+<span class="tag-claude">&gt;</span> Plan looks good, but don't touch the webhook handler. Implement it, and <span class="tag-key">run the relevant tests after each file</span>
+
+<span class="tag-com"># Aider equivalent: use /ask to ask-only first, then switch to code mode</span>
+<span class="tag-gpt">/ask</span> Where in this retry logic could it double-charge? How should it be fixed?
+<span class="tag-com"># once satisfied:</span> /code to land it</code></pre>
+<p>Key discipline: <strong>require the agent to explicitly list "what NOT to touch" in the plan</strong>. A coding agent's most common overreach is casually "improving" code you never asked it to change — drawing boundaries at the plan stage beats intercepting at review.</p>
+
+<div class="fail">
+<strong>Failure mode</strong>: forcing plan mode on trivial tasks too — making it produce three paragraphs of plan to fix a typo wastes turns and tokens. Plan's value rises with task <strong>uncertainty</strong>: skip it for a one-line change, always use it for cross-file/debugging/new features. Same criterion as §1: the more uncertain the task, the more you plan first.
+</div>
+
+<div class="res">
+<strong>Resources</strong> · Anthropic <em>Claude Code Best Practices</em> (explore-plan-code), <a href="https://www.anthropic.com/engineering/claude-code-best-practices" target="_blank">anthropic.com/engineering/claude-code-best-practices</a> ·
+Anthropic <em>Building Effective Agents</em>, <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">anthropic.com/engineering/building-effective-agents</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>The Autonomy Spectrum and Closing the Loop</h2>
+<div class="claim">Claim: the core skill of AI pair programming isn't writing prompts — it's "picking the right autonomy level" + "feeding verification back to the agent."</div>
+
+<h3>Background & Principles</h3>
+<p>"AI pair programming" isn't one mode, it's an <strong>autonomy spectrum</strong>. Each step right raises throughput but weakens your ability to review every line and propagates errors further. What decides the level is the task's <strong>verifiability</strong> — can the agent know on its own whether it's right:</p>
+<ul>
+<li><strong>Tab completion</strong>: you write, it continues. You review every token. Good when you have the code in mind and just want to type faster.</li>
+<li><strong>Chat / inline edit</strong>: you describe a local change, it emits a diff, you apply one by one. Good for clear small changes.</li>
+<li><strong>Full-auto agent</strong>: give a goal, it loops explore→edit→test→fix on its own. Good for open-ended tasks, but <strong>only safe when the loop can be closed by verification</strong>.</li>
+</ul>
+<p>Whether the right-end full-auto works depends almost entirely on <strong>closing the loop</strong>: can the agent run tests / lint / type-check after editing and <strong>feed failures back</strong> to itself to fix? If the loop closes (tests exist, errors are clear) → let it iterate autonomously; if it can't close (UI tweaks, scripts with no tests) → drop back to a lower level and be the "test" yourself. This echoes Day 3: feeding errors back is the root cause of an agent's self-repair.</p>
+
+<h3>Example</h3>
+<p>Give the full-auto agent an explicit verification loop, not just a goal then walk away:</p>
+<pre><code><span class="tag-claude">&gt;</span> Fix the race condition in #482. Work discipline:
+  1. First write a <span class="tag-key">failing test that reproduces the bug</span> (red)
+  2. Change code to make it green
+  3. Run <span class="tag-gpt">`pytest tests/ -q`</span> + <span class="tag-gpt">`mypy src/`</span>; <span class="tag-key">done only when all green</span>
+  4. Any step red: paste the full error, analyze, then fix — <span class="tag-key">don't skip</span>
+
+<span class="tag-com"># Key: give it an objective "done" criterion (green) and verification tools,</span>
+<span class="tag-com"># so the agent can close its own loop. Without this it self-declares "fixed" and leaves hidden bugs</span></code></pre>
+<p>This is why <strong>test-first matters more for AI agents than for humans</strong>: tests are the agent's only trustworthy "right/wrong signal." Without them, an agent's self-eval is wildly unreliable — it tends to declare success (backward rationalization, see Day 5). Only with a red test first dare you let full-auto run.</p>
+
+<div class="fail">
+<strong>Failure mode</strong>: being misled by SWE-bench scores. A high-scoring agent has a <strong>clear PASS/FAIL test closing its loop</strong> on that benchmark — your real repo often lacks an equally clear verification signal. Treating "SWE-bench 80%" as "80% reliable in my project" is wrong: the benchmark closed the loop for the agent; your codebase may not. Build a verifiable loop for the agent first, and the score will transfer.
+</div>
+
+<div class="res">
+<strong>Resources</strong> · OpenAI <em>Introducing SWE-bench Verified</em>, <a href="https://openai.com/index/introducing-swe-bench-verified/" target="_blank">openai.com/index/introducing-swe-bench-verified</a> ·
+Anthropic <em>Building Agents with the Claude Agent SDK</em>, <a href="https://www.anthropic.com/engineering/building-agents-with-the-claude-agent-sdk" target="_blank">anthropic.com/engineering/building-agents-with-the-claude-agent-sdk</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// PUTTING IT TOGETHER · Pick the right harness + level for one task</h3>
+<p>Next time you get a coding task, don't open a tool yet — run this decision flow once. It chains this issue's four points into an executable selector:</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>Do I have a precise diff in mind?</strong> Yes → low-autonomy level (Cursor inline / Aider <code>/code</code>), don't let the agent improvise. No → continue.</li>
+<li><strong>Is the task loop-verifiable?</strong> (tests exist / clear errors) Yes → full-auto agent (Claude Code), make it write a red test first then let go. No → drop back to chat level and be the verifier.</li>
+<li><strong>Is uncertainty high?</strong> (cross-file / debugging / new feature) High → <strong>plan mode</strong> first to lock the problem and draw the "don't touch" boundary, then execute. Low → just change it.</li>
+<li><strong>Is the file large?</strong> Large → force the agent to Read the exact slice before editing + small-grained search/replace, to cut apply failures.</li>
+<li><strong>Give a done criterion</strong>: whatever the level, hand it an objective "green" signal (tests/lint/type-check all pass); don't let the agent self-declare success.</li>
+</ol>
+<p style="margin-top:12px">After a few rounds you'll find: the felt improvement from picking the right "level" often beats swapping in a stronger model. That's harness thinking — <strong>the model is the CPU; your workflow is the real lever</strong>.</p>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// KEY TERMS</h3>
+<dl>
+<dt>Edit Format</dt><dd>The contract for landing a change into a file: whole-file / unified-diff / search-replace / apply-model. Determines apply success rate.</dd>
+<dt>Search/Replace Block</dt><dd>A diff format giving exact old-text + new-text (Aider's mainstay). Matches by text, not line number — more robust than unified diff.</dd>
+<dt>Apply Model</dt><dd>A specially trained small model that lands a frontier model's rough intent into a precise file diff. Core of Cursor instant apply.</dd>
+<dt>Fast Apply</dt><dd>Cursor's high-speed edit landing (~1000 tok/s), accelerated by speculative edits.</dd>
+<dt>Plan Mode</dt><dd>Claude Code's read-only exploration level, physically write-forbidden at the harness layer. Separates research/plan from implementation.</dd>
+<dt>Closing the Loop</dt><dd>The agent runs tests/lint after editing and feeds failures back to self-fix. The prerequisite for safe full-auto.</dd>
+<dt>Autonomy Spectrum</dt><dd>The tab → chat → full-auto autonomy range. Pick a level by task verifiability.</dd>
+<dt>SWE-bench Verified</dt><dd>500 human-validated real GitHub issue-fix tasks; resolved rate is the main metric.</dd>
+<dt>Test-first for Agents</dt><dd>Write a red test before letting the agent loose. Tests are the agent's only trustworthy right/wrong signal.</dd>
+</dl>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// DEEP THINKING</h3>
+<details><summary>Cursor uses a second model to apply; Claude Code has the same model emit string-replace directly. What's the cost of each route?</summary><div>Cursor's route: the frontier model only "thinks," the apply model handles "accuracy" — frontier can express intent with a cheaper rough diff, apply is fast and high-success; the cost is maintaining an extra model, plus possible misalignment between the two (apply model misreads intent). Claude Code's route: single model end-to-end, no misalignment, no extra infra; the cost is the frontier model must itself produce character-exact SEARCH blocks, easy to misremember in long files, apply failure rises with length. It's a "reliability vs simplicity" architectural choice, depending on whether you can afford to feed an apply model.</div></details>
+<details><summary>Plan mode's physical write-ban brings safety but also cuts off "discovering mid-work that the plan must change." How to weigh this trade-off?</summary><div>Plan/execute separation assumes "the plan can be basically settled without touching code." For many tasks this fails — the real constraints often surface only once you start changing (an API doesn't exist, dependency conflicts). Clinging to the plan makes the agent ram an outdated one into a wall. Pragmatic move: the plan isn't a one-shot contract, it's a <code>checkpoint</code>. Let the agent <strong>stop and re-plan</strong> when execution reveals the plan is void, rather than plowing through a wrong plan. A good harness supports the "execute→hit wall→back to plan" loop, not a one-way waterfall. This is why feedback-bearing workflows like evaluator-optimizer are more robust than pure linear plan-execute.</div></details>
+<details><summary>If test-first is the prerequisite for agent autonomy, where's the autonomy ceiling for domains you can't test (frontend visuals, prompt tuning, exploratory data analysis)?</summary><div>The ceiling is locked by "the objectivity of the verification signal." In these domains "right/wrong" is either subjective (does it look good) or needs a human to judge, so the agent can't close its own loop → it falls back to low autonomy with a human as oracle. Ways out: (1) build proxy metrics — screenshot diff for visuals, LLM-as-judge + a fixed eval set for prompts, turning the subjective into a runnable signal; (2) human-in-the-loop, reviewing every step; (3) shrink to verifiable sub-problems (frontend logic is testable, styling is human-reviewed). Core: <strong>an agent's autonomy = how objective a verification loop you can build for it</strong>. Can't build one? Don't pretend full-auto.</div></details>
+<details><summary>Why does an agent that scores high on SWE-bench often "drop" when moved to your real repo? Beyond the test loop, what hidden differences exist?</summary><div>Beyond §4's loop difference: (1) SWE-bench tasks are <strong>self-contained, well-scoped</strong> single issues, while real work is often a vague "make it better" — defining the problem itself is hard; (2) benchmark repos have complete docs/tests, your private repo may have bad docs and many implicit conventions, so the agent lacks context; (3) benchmarks allow multiple tries taking the best (pass@k), in production you often see only the first; (4) data contamination — hot issues may appear in training data. So a leaderboard is a "relative ranking of capability ceilings," not an absolute prediction of "how usable in my repo." Read agents for trend, don't worship absolute numbers.</div></details>
+<details><summary>Aider auto-commits each change; Claude Code tends to batch and let you review. How do these "change granularity" philosophies affect human-machine collaboration differently?</summary><div>Aider's fine-grained commits: every step is <code>/undo</code>-able, git history as audit, cheap rollback → encourages "let it try a lot," revert on error; cost is a fragmented history needing later squash. Claude Code's batching: gives you a semantically complete block to review, concentrated cognitive load, coherent diff, but if a middle step is wrong, rollback is costly. Philosophical difference: Aider pushes "reversibility" to the extreme, fit for exploratory, fault-tolerant work; Claude Code bets on "getting one complete unit right at once," fit for when you trust it and want clean history. Good habit either way: control commit boundaries yourself — make each commit an independently reviewable/revertable semantic unit, instead of being dragged by the tool's default granularity.</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://aider.chat/docs/more/edit-formats.html" target="_blank">Aider · Edit Formats</a> — token / reliability trade-offs of four edit formats</li>
+<li><a href="https://aider.chat/docs/leaderboards/edit.html" target="_blank">Aider · Code Editing Leaderboard</a> — a benchmark that treats "successful apply" as a core metric</li>
+<li><a href="https://cursor.com/blog/instant-apply" target="_blank">Cursor · Editing Files at 1000 Tokens/s</a> — apply model + speculative edits architecture</li>
+<li><a href="https://www.anthropic.com/engineering/claude-code-best-practices" target="_blank">Anthropic · Claude Code Best Practices</a> — the explore-plan-code-commit workflow</li>
+<li><a href="https://openai.com/index/introducing-swe-bench-verified/" target="_blank">OpenAI · Introducing SWE-bench Verified</a> — what a coding-agent benchmark actually measures</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 19 · 2026-06-02</footer>
+</div>
+</body></html>

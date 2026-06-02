@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 19 · Coding Agents — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 19 / PHASE 2 · 应用与系统</span>
+<h1>Coding Agents</h1>
+<h2>Edit Format · Plan Mode · 自主度光谱 · Closing the Loop</h2>
+<div class="date">2026-06-02 · BigCat</div>
+<p class="pitch">同一个模型，装进 Aider / Cursor / Claude Code 是三种生物——差别在 harness，不在权重。</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>你每天用 Cursor 的 tab、Claude Code 的 agentic loop、偶尔回 Aider 跑批量重构——但很少有人能说清这三者<strong>架构上到底差在哪</strong>。它们底层都是 Claude / GPT，差距却大到判若两个产品。原因是 coding agent 的真正难点不在「让模型写出对的代码」，而在两件被低估的工程：<strong>怎么把模型意图可靠地落到文件系统</strong>（edit format），以及<strong>怎么控制它的自主度</strong>（plan / pair / full-auto）。这一期不教你用某个工具，而是拆开三大 coding harness 的设计分野：edit format 的 token-成功率权衡、plan mode 为什么是工程必需而非 UX 装饰、自主度光谱怎么选档、以及为什么 SWE-bench 高分 agent 在你的真实仓库里可能更难用。读完你能用「剥皮」的眼光看任何 coding 产品。</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>三大 Coding Harness 的架构分野</h2>
+<div class="claim">论断：Aider / Cursor / Claude Code 的差异不在模型，在「谁掌握控制流」和「edit 怎么落地」两个轴。</div>
+
+<h3>背景与原理</h3>
+<p>把三者放进同一张坐标系，分野立刻清楚。<strong>横轴是自主度</strong>（谁决定下一步：你 or 模型），<strong>纵轴是 edit 落地方式</strong>（模型怎么改文件）：</p>
+<ul>
+<li><strong>Aider</strong>：git-native CLI。你显式 <code>/add</code> 文件进 context，模型用 <strong>search/replace diff</strong> 块返回改动，每次改动自动 <code>git commit</code>。控制流基本在<em>你</em>手里——它是高度可控的「半自动结对」，不是放养 agent。优势：git 历史即审计、可随时 <code>/undo</code>、token 极省。</li>
+<li><strong>Cursor</strong>：IDE-native。核心是<strong>两段式</strong>——前台用 frontier model 做 planning（chat / composer），后台用专训的 <strong>fast-apply 模型</strong>（~70B, ~1000 tok/s）把意图落成文件 diff。tab 补全是另一条轻量自主链。优势：编辑器内零上下文切换、apply 飞快。</li>
+<li><strong>Claude Code</strong>：terminal-native agent。完整 agentic loop——自己 Grep/Read 探索、自己决定改哪些文件、用 Edit 工具做 string replace、跑 Bash 验证。控制流在<em>模型</em>手里，你通过 permission gate + plan mode 约束。优势：开放任务的自主度最高。</li>
+</ul>
+<p>关键 insight：这三者不是「谁更强」，是<strong>三个自主度档位</strong>。Aider 适合你心里有明确改动的批量执行；Cursor 适合编辑器内的高频小迭代；Claude Code 适合「我不确定怎么改、你去探索」的开放任务。选错档比选错模型代价大。</p>
+
+<div class="diagram">      低自主度 ◀───────────── 控制流归属 ─────────────▶ 高自主度
+            (你掌控)                              (模型掌控)
+
+  Aider ──────────────  Cursor ──────────────  Claude Code
+  /add 显式选文件        tab + composer          自己 Grep/Read 探索
+  diff 块 + 自动 commit   fast-apply 模型落地      Edit 工具 string replace
+  你驱动每一步           编辑器内高频小迭代        agentic loop 自主多步
+  ───────────────────────────────────────────────────────────
+  「我知道改哪」          「边写边补」              「你去搞定」</div>
+
+<div class="fail">
+<strong>失败模式</strong>：用错档位。拿 Claude Code 的全自主 loop 去做一个你心里已有精确 diff 的机械替换——它会「自作主张」探索半天、改到你没让它碰的地方。反过来用 Aider 做开放调试——你得手动喂它每个文件，它不会自己找。<strong>自主度要匹配任务的「不确定性」</strong>。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Aider Edit Formats 文档, <a href="https://aider.chat/docs/more/edit-formats.html" target="_blank">aider.chat/docs/more/edit-formats</a> ·
+Cursor <em>Instant Apply</em>, <a href="https://cursor.com/blog/instant-apply" target="_blank">cursor.com/blog/instant-apply</a> ·
+Anthropic <em>Claude Code Best Practices</em>, <a href="https://www.anthropic.com/engineering/claude-code-best-practices" target="_blank">anthropic.com/engineering/claude-code-best-practices</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Edit Format：Coding Agent 被低估的隐藏瓶颈</h2>
+<div class="claim">论断：模型「会写对代码」不等于「能把改动落进文件」——edit format 决定了一半的可靠性。</div>
+
+<h3>背景与原理</h3>
+<p>一个反直觉事实：很多 coding agent 的失败不是逻辑错，是<strong>改动应用失败</strong>——模型生成的 search 块和文件里的实际文本对不上（空格、引号、它脑补的旧代码），patch 静默丢失或报错。Aider 的 leaderboard 把这点量化成核心指标：模型不仅要写对代码，还要<strong>不靠人工干预把所有改动成功 apply</strong>。四种主流 edit format 各有权衡：</p>
+<ul>
+<li><strong>whole file（整文件重写）</strong>：模型吐整个文件。最容易让模型「写对」，但 token 爆炸、大文件直接超限、且容易顺手改坏无关行。</li>
+<li><strong>unified diff</strong>：标准 <code>@@</code> diff 格式。token 省，但模型经常算错行号/上下文，apply 失败率高。</li>
+<li><strong>search/replace block</strong>（Aider 主力）：给一段精确的旧文本 + 新文本。比 unified diff 鲁棒（不靠行号，靠文本匹配），是 token 与可靠性的较优平衡点。</li>
+<li><strong>apply model</strong>（Cursor 路线）：frontier model 只产出「意图 + 粗略 diff」，再交给专训小模型把它<strong>精确落地</strong>。把「想清楚」和「写准确」解耦——这是 Cursor 1000 tok/s instant apply 的核心。</li>
+</ul>
+<p>核心权衡：<strong>whole file 最易写对但最贵；diff 最省但最易 apply 失败；search/replace 取中；apply model 用第二个模型买可靠性</strong>。这就是为什么不同 harness 在同一个 base model 上表现差很多——edit contract 不同。</p>
+
+<h3>实战示例</h3>
+<p>search/replace 块的精确长相（Aider / Claude Code 同源思路）——<strong>SEARCH 段必须和文件逐字符匹配</strong>：</p>
+<pre><code><span class="tag-com">src/auth.py</span>
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; SEARCH
+<span class="tag-gpt">def verify_token(token):</span>
+<span class="tag-gpt">    return jwt.decode(token, SECRET)</span>
+=======
+<span class="tag-gpt">def verify_token(token):</span>
+<span class="tag-gpt">    try:</span>
+<span class="tag-gpt">        return jwt.decode(token, SECRET, algorithms=["HS256"])</span>
+<span class="tag-gpt">    except jwt.ExpiredSignatureError:</span>
+<span class="tag-gpt">        raise AuthError("token expired")</span>
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; REPLACE</code></pre>
+<p>实战启发：（1）让 agent 改<strong>大文件前先让它 Read 精确片段</strong>——它脑补的旧代码是 apply 失败头号原因；（2）改动尽量<strong>小而局部</strong>，一次 replace 一个语义单元，比一次重写整函数 apply 成功率高得多；（3)模型反复 apply 失败时，换 whole-file 模式兜底比硬刚 diff 划算。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：在超长文件里让 agent 做大段 search/replace。文件越长，模型越容易记错某行的精确文本（多个空格、被它忽略的注释），SEARCH 匹配不上就静默丢改动——你以为改了，其实没动。征兆：agent 说「已修复」但测试还红。对策：缩小编辑粒度 + 改前强制 Read。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Aider Code Editing Leaderboard, <a href="https://aider.chat/docs/leaderboards/edit.html" target="_blank">aider.chat/docs/leaderboards/edit</a> ·
+Fireworks <em>How Cursor built Fast Apply</em>, <a href="https://fireworks.ai/blog/cursor" target="_blank">fireworks.ai/blog/cursor</a> ·
+Cursor <em>Editing at 1000 tok/s</em>, <a href="https://cursor.com/blog/instant-apply" target="_blank">cursor.com/blog/instant-apply</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Plan Mode：研究-计划-实现的分离不是 UX，是工程必需</h2>
+<div class="claim">论断：让 coding agent 先想后动，准确率提升来自「锁定问题」，不是「想得更久」。</div>
+
+<h3>背景与原理</h3>
+<p>Anthropic 的 Claude Code 最佳实践里有一条被反复强调：<strong>把研究/计划和实现分开</strong>。让 agent 直接开写，最大风险不是写得烂，是<strong>解错了问题</strong>——它对着症状打补丁，绕过你真正想改的根因。Plan mode 的工程价值有三层：</p>
+<ul>
+<li><strong>问题锁定</strong>：先只读不写地探索（Grep / Read），产出一份计划，强制 agent 在动手前把「要改什么、为什么」讲清楚。错误的方向在这步就能被你截停——这是<strong>最便宜的 verification</strong>，比事后 review 几百行 diff 便宜得多。</li>
+<li><strong>物理隔离</strong>：Claude Code 的 plan mode 在 harness 层<em>禁止</em> Write/Edit/Bash——不是 prompt 求它别动手，是物理拦截。模型再「手痒」也改不了文件（呼应 Day 3 harness 的 permission gate）。</li>
+<li><strong>可审计</strong>：计划是文本，失败时能复盘是「计划错」还是「执行错」，比对着一坨乱改的 diff 调试清晰得多。</li>
+</ul>
+<p>反直觉点：plan mode 的收益<strong>不来自模型多思考</strong>（那是 reasoning 的事），来自<strong>给人一个低成本的纠偏检查点</strong>。对开放任务（调试、跨文件重构、新功能），先 plan 几乎总值得；对一行修改，plan 是纯开销。</p>
+
+<h3>实战示例</h3>
+<p>把「explore → plan → code → commit」固化成工作流，而不是上来就让 agent 写：</p>
+<pre><code><span class="tag-com"># Claude Code：开 plan mode（Shift+Tab 切档），只读探索 + 出计划</span>
+<span class="tag-claude">&gt;</span> 研究 payment 模块怎么处理 retry，<span class="tag-key">先别改代码</span>，
+  给我一份修复 double-charge bug 的计划：要动哪些文件、风险点、测试怎么加
+
+<span class="tag-com"># 你 review 计划，截停错误方向，确认后再切回执行档</span>
+<span class="tag-claude">&gt;</span> 计划 OK，但别碰 webhook handler。按计划实现，<span class="tag-key">每改完一个文件跑一次相关测试</span>
+
+<span class="tag-com"># Aider 等价做法：先用 /ask 只问不改，再切回 code 模式</span>
+<span class="tag-gpt">/ask</span> 这个 retry 逻辑哪里会导致重复扣款？应该怎么改？
+<span class="tag-com"># 满意后</span> /code 让它落地</code></pre>
+<p>关键纪律：<strong>计划里要求 agent 显式列「不碰什么」</strong>。coding agent 最常见的越界是顺手「优化」了你没让它动的代码——在 plan 阶段划好边界，比事后 review 拦截高效。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：对琐碎任务也强上 plan mode——改个 typo 还让它先出三段计划，纯浪费 turn 和 token。Plan 的价值随任务<strong>不确定性</strong>递增：一行改动跳过，跨文件/调试/新功能必上。判据同 §1：任务越不确定，越要先 plan。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Anthropic <em>Claude Code Best Practices</em>（explore-plan-code）, <a href="https://www.anthropic.com/engineering/claude-code-best-practices" target="_blank">anthropic.com/engineering/claude-code-best-practices</a> ·
+Anthropic <em>Building Effective Agents</em>, <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">anthropic.com/engineering/building-effective-agents</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>自主度光谱与 Closing the Loop</h2>
+<div class="claim">论断：AI pair programming 的核心技能不是写 prompt，是「选对自主度档位」+「把验证回灌给 agent」。</div>
+
+<h3>背景与原理</h3>
+<p>「AI pair programming」不是一个模式，是一条<strong>自主度光谱</strong>。每往右一档，吞吐越高、但你审查每行的能力越弱、错误传播越远。选档的依据是<strong>任务的可验证性</strong>——能不能让 agent 自己知道对错：</p>
+<ul>
+<li><strong>Tab 补全</strong>：你写、它续。你 review 每一个 token。适合你心里有代码、只想打字快。</li>
+<li><strong>Chat / inline edit</strong>：你描述局部改动，它出 diff，你逐个 apply。适合明确的小改。</li>
+<li><strong>Full-auto agent</strong>：给目标，它自己 explore→edit→test→fix 多轮。适合开放任务，但<strong>只在能闭环验证时才安全</strong>。</li>
+</ul>
+<p>右端的 full-auto 能不能 work，几乎完全取决于 <strong>closing the loop</strong>：agent 改完能否自己跑 tests / lint / type-check，把<strong>失败信息回灌</strong>给自己再修。能闭环（有测试、报错清晰）→ 放手让它自主迭代；不能闭环（UI 微调、无测试的脚本）→ 退回低自主档，你来当那个「测试」。这也呼应 Day 3：error 回灌是 agent 自我修复的根因。</p>
+
+<h3>实战示例</h3>
+<p>给 full-auto agent 显式的验证闭环，而不是只给目标就撒手：</p>
+<pre><code><span class="tag-claude">&gt;</span> 修复 #482 的 race condition。工作纪律：
+  1. 先写一个能<span class="tag-key">复现 bug 的失败测试</span>（red）
+  2. 改代码让它变绿（green）
+  3. 跑 <span class="tag-gpt">`pytest tests/ -q`</span> + <span class="tag-gpt">`mypy src/`</span>，<span class="tag-key">全绿才算完成</span>
+  4. 任何一步红：把完整报错贴出来，分析后再改，<span class="tag-key">别跳过</span>
+
+<span class="tag-com"># 关键：给它一个客观的「完成」判据（绿）和验证工具，</span>
+<span class="tag-com"># agent 才能自主闭环。没有这条，它会自我宣布「修好了」然后留一堆隐性 bug</span></code></pre>
+<p>这就是为什么 <strong>test-first 对 AI agent 比对人更重要</strong>：测试是 agent 唯一可信的「对错信号」。没有它，agent 的 self-eval 极不可靠——它倾向宣布成功（backward rationalization，Day 5 讲过）。先有红测试，full-auto 才敢放手。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：被 SWE-bench 分数误导。高分 agent 在那个 benchmark 上有<strong>明确的 PASS/FAIL 测试做闭环</strong>——你的真实仓库往往没有同等清晰的验证信号。把「SWE-bench 80%」当成「在我项目里 80% 靠谱」是错的：benchmark 帮 agent 闭了环，你的代码库可能没有。先给 agent 造出可验证闭环，分数才迁移得过来。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · OpenAI <em>Introducing SWE-bench Verified</em>, <a href="https://openai.com/index/introducing-swe-bench-verified/" target="_blank">openai.com/index/introducing-swe-bench-verified</a> ·
+Anthropic <em>Building Agents with the Claude Agent SDK</em>, <a href="https://www.anthropic.com/engineering/building-agents-with-the-claude-agent-sdk" target="_blank">anthropic.com/engineering/building-agents-with-the-claude-agent-sdk</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// 综合实战 · 给同一个任务选对 harness + 档位</h3>
+<p>下次接到一个 coding 任务，先别打开工具，按这张决策流走一遍——它把这一期四点串成一个可执行的选择器：</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>我心里有明确 diff 吗？</strong>有 → 低自主档（Cursor inline / Aider <code>/code</code>），别让 agent 自由发挥。没有 → 往下。</li>
+<li><strong>任务可闭环验证吗？</strong>（有测试 / 报错清晰）有 → full-auto agent（Claude Code），先让它写红测试再放手。没有 → 退回 chat 档，你来当验证。</li>
+<li><strong>不确定性高吗？</strong>（跨文件 / 调试 / 新功能）高 → 先 <strong>plan mode</strong> 锁问题、划「不碰什么」边界，再执行。低 → 直接改。</li>
+<li><strong>文件大吗？</strong>大 → 强制 agent 改前 Read 精确片段 + 小粒度 search/replace，降低 apply 失败。</li>
+<li><strong>给完成判据</strong>：无论哪档，都给一个客观「绿」信号（测试/lint/type-check 全过），别让 agent 自我宣布成功。</li>
+</ol>
+<p style="margin-top:12px">练几次你会发现：选对「档位」带来的体感提升，往往大于换一个更强的模型。这就是 harness 思维——<strong>模型是 CPU，你的工作流才是真正的杠杆</strong>。</p>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// ENGLISH GLOSSARY</h3>
+<dl>
+<dt>Edit Format</dt><dd>模型把改动落进文件的契约：whole-file / unified-diff / search-replace / apply-model。决定 apply 成功率。</dd>
+<dt>Search/Replace Block</dt><dd>给精确旧文本+新文本的 diff 格式（Aider 主力）。靠文本匹配而非行号，比 unified diff 鲁棒。</dd>
+<dt>Apply Model</dt><dd>专训的小模型，把 frontier model 的粗略意图精确落成文件 diff。Cursor instant apply 的核心。</dd>
+<dt>Fast Apply</dt><dd>Cursor 的高速编辑落地（~1000 tok/s），用 speculative edits 加速。</dd>
+<dt>Plan Mode</dt><dd>Claude Code 的只读探索档，harness 层物理禁写。研究/计划与实现分离。</dd>
+<dt>Closing the Loop</dt><dd>agent 改完自跑 tests/lint 并把失败回灌自修的闭环。full-auto 安全的前提。</dd>
+<dt>Autonomy Spectrum</dt><dd>tab → chat → full-auto 的自主度光谱。依任务可验证性选档。</dd>
+<dt>SWE-bench Verified</dt><dd>500 个人工校验的真实 GitHub issue 修复任务，resolved rate 为主指标。</dd>
+<dt>Test-first for Agents</dt><dd>先写红测试再放手 agent。测试是 agent 唯一可信的对错信号。</dd>
+</dl>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// 深入思考</h3>
+<details><summary>Cursor 用第二个模型做 apply，Claude Code 让同一个模型直接产出 string-replace。这两条路线各自的代价是什么？</summary><div>Cursor 路线：frontier 只管「想」、apply model 管「准」——frontier 可用更省的粗 diff 表达意图，apply 飞快且成功率高；代价是多养一个模型，且两个模型的理解可能错位（apply model 误解意图）。Claude Code 路线：单模型端到端，无错位、无额外基础设施；代价是 frontier 要亲自产出逐字符精确的 SEARCH 块，长文件易记错、apply 失败率随长度上升。本质是「可靠性 vs 简洁性」的架构选择，取决于你能否养得起一个 apply model。</div></details>
+<details><summary>plan mode 物理禁写带来安全，但也切断了「边做边发现计划要改」的可能。这个 trade-off 怎么权衡？</summary><div>plan/execute 分离的隐性假设是「计划能在不动手的情况下基本定下来」。对很多任务这不成立——真正的约束往往在你开始改才暴露（某个 API 不存在、依赖冲突）。死守 plan 会让 agent 拿着过时计划硬撞。务实做法：plan 不是一次性合同，是<code>checkpoint</code>。让 agent 执行中发现计划失效时<strong>主动停下来重新 plan</strong>，而不是闷头按错计划做完。好的 harness 支持「执行→撞墙→回 plan」的循环，而非单向瀑布。这也是为什么 evaluator-optimizer 这类带反馈的 workflow 比纯线性 plan-execute 更鲁棒。</div></details>
+<details><summary>如果 test-first 是 agent 自主的前提，那对「无法写测试」的领域（前端视觉、prompt 调优、探索性数据分析），coding agent 的自主上限在哪？</summary><div>上限被「验证信号的客观性」锁死。这些领域的对错要么主观（视觉好不好看）、要么需人判断，agent 无法自己闭环→只能退低自主档，人做 oracle。出路：（1）造代理指标——视觉用 screenshot diff、prompt 用 LLM-as-judge + 固定 eval set，把主观转成可跑信号；（2）人在环高频审查；（3)缩小到可验证子问题（前端逻辑可测、样式人审）。核心：<strong>agent 的自主度 = 你能为它造出多客观的验证闭环</strong>。造不出，就别假装 full-auto。</div></details>
+<details><summary>为什么 SWE-bench 分数高的 agent，迁移到你的真实仓库常常「掉分」？除了测试闭环，还有哪些隐藏差异?</summary><div>除了 §4 的闭环差异，还有：（1）SWE-bench 任务<strong>自包含、范围明确</strong>，真实工作常是模糊的「让它更好」，问题定义本身就难；（2)benchmark 仓库文档/测试齐全，你的私有库可能文档烂、隐性约定多，agent 缺上下文；（3）benchmark 允许多次尝试取最好（pass@k），生产里你常只看第一次；（4）数据污染——热门 issue 可能在训练数据里见过。所以 leaderboard 是「能力上界的相对排序」，不是「在我这能用多少」的绝对预测。选 agent 看趋势，别迷信绝对数字。</div></details>
+<details><summary>Aider 每次改动自动 git commit，Claude Code 倾向攒一批再让你 review。两种「改动粒度」哲学对人机协作有什么不同影响？</summary><div>Aider 的细粒度 commit：每步可 <code>/undo</code>、git 历史即审计、回退便宜→鼓励你「放手让它多试」，错了就退；代价是历史碎、需事后 squash。Claude Code 的攒批：一次给你一个语义完整的块 review，认知负担集中、diff 连贯，但中间某步错了回退成本高。哲学差异：Aider 把「可逆性」做到极致，适合探索容错的工作；Claude Code 赌「一次做对一个完整单元」，适合你信任它、想要干净历史。好习惯：无论哪个都自己控制 commit 边界——让每个 commit 是可独立 review/revert 的语义单元，别被工具默认粒度牵着走。</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://aider.chat/docs/more/edit-formats.html" target="_blank">Aider · Edit Formats</a> — 四种 edit format 的 token / 可靠性权衡</li>
+<li><a href="https://aider.chat/docs/leaderboards/edit.html" target="_blank">Aider · Code Editing Leaderboard</a> — 把「成功 apply」当成核心指标的 benchmark</li>
+<li><a href="https://cursor.com/blog/instant-apply" target="_blank">Cursor · Editing Files at 1000 Tokens/s</a> — apply model + speculative edits 架构</li>
+<li><a href="https://www.anthropic.com/engineering/claude-code-best-practices" target="_blank">Anthropic · Claude Code Best Practices</a> — explore-plan-code-commit 工作流</li>
+<li><a href="https://openai.com/index/introducing-swe-bench-verified/" target="_blank">OpenAI · Introducing SWE-bench Verified</a> — coding agent benchmark 到底测了什么</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 19 · 2026-06-02</footer>
+</div>
+</body></html>
