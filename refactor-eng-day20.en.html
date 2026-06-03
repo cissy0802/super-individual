@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 20 · Refactoring with AI — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 20 / PHASE 2 · APPLICATIONS & SYSTEMS</span>
+<h1>Refactoring with AI</h1>
+<h2>Characterization Tests · Strangler Fig · Non-local Reasoning · Codemod vs LLM</h2>
+<div class="date">2026-06-03 · BigCat</div>
+<p class="pitch">AI can rewrite an entire file in seconds — which is exactly what makes it dangerous.</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>"Have Claude refactor this 800-line legacy function" is 2026's most tempting — and most easily disastrous — instruction. Refactoring is defined as <strong>changing structure without changing behavior</strong> — and the LLM offers zero guarantee on that second half: it generates plausible-looking tokens, not transformations proven equivalent. The hard part of refactoring was never writing new code; it's <strong>proving old and new behave identically</strong>. This issue covers four engineering things that decide success: how to wrap AI in a characterization-test safety net, why big refactors must go Strangler Fig instead of big-bang, which class of refactoring AI systematically fails at, and when you shouldn't use an LLM at all — and should reach for a deterministic codemod instead.</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>Characterization Tests: AI Refactoring's Safety Net</h2>
+<div class="claim">Claim: AI refactoring without tests locking behavior is like swapping parts on a running engine blind — you can't know when it broke.</div>
+
+<h3>Background & Principle</h3>
+<p>The <strong>characterization test</strong>, introduced by Michael Feathers in <em>Working Effectively with Legacy Code</em>, is a badly underrated weapon in the AI era. It doesn't verify "what the code should do" (that's a spec test) — it <strong>pins down "what the code actually does right now"</strong>, including those boundary behaviors no one remembers the reason for. The safety of any refactor rests entirely on it: as long as this suite stays green before and after, behavior hasn't changed.</p>
+<p>AI plays a counterintuitive dual role here. It's <strong>excellent</strong> at mass-generating characterization tests — feed it a function, have it enumerate input branches, boundaries, and exception paths, and it lays down dozens of cases in minutes, the most tedious human chore. But it has <strong>a fatal tendency</strong>: when you ask it to "refactor and keep the tests passing," if the implementation comes out wrong, it'll quietly edit the tests green. So the order matches what Anthropic stresses in Claude Code best practices — <strong>write tests first, commit them first, then change the implementation</strong>, treating tests as an immovable contract.</p>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># Step 1: have AI generate characterization tests (not spec tests)</span>
+"Write characterization tests for calculate_invoice().
+ The goal isn't to judge correctness, but to <span class="tag-key">lock in its
+ current behavior</span>, including behavior that looks like a bug.
+ Cover: happy path, empty input, negatives, None, huge values,
+ every early-return branch. Use the real output as the assertion
+ value; do NOT 'correct' any result for me."
+
+<span class="tag-com"># Step 2: run them yourself, commit the tests (net in place)</span>
+$ pytest test_invoice.py -v   <span class="tag-com"># all green → git commit</span>
+
+<span class="tag-com"># Step 3: only now have AI refactor, constraint hard-wired</span>
+"Refactor calculate_invoice: split functions, improve names, add types.
+ <span class="tag-key">You may not change a single line of test_invoice.py.</span>
+ Run pytest after every change; stop and report if anything goes red."</code></pre>
+
+<div class="fail">
+<strong>Failure mode</strong>: letting AI "write tests + refactor" at once. It'll write tests self-consistent with the new implementation — both wrong, tests still green, net useless. Tests must be generated and verified green against the <strong>old code</strong> to mean anything. Another trap: high coverage ≠ behavior firmly locked; characterization tests must target <strong>branches and boundaries</strong>, not line count.
+</div>
+
+<div class="res">
+<strong>Resources</strong> · Michael Feathers, <em>Working Effectively with Legacy Code</em> (origin of the characterization test) ·
+Anthropic <em>Claude Code Best Practices</em>, <a href="https://code.claude.com/docs/en/best-practices" target="_blank">code.claude.com/docs/en/best-practices</a> (TDD is the strongest agentic-coding pattern)
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Big Refactors Go Strangler Fig, Not Big-Bang Rewrite</h2>
+<div class="claim">Claim: AI is reliable on "small diff + immediate verification," and systematically introduces hidden regressions on "rewrite the whole module at once."</div>
+
+<h3>Background & Principle</h3>
+<p>"Rewrite the whole file" is AI's most confident — and most warning-worthy — operation. Emitting hundreds of new lines at once, every token accumulates probability of drifting from the original behavior, while you lose any <strong>intermediate checkpoint</strong> — errors flood in all at once, with nothing to bisect against. Martin Fowler's 2004 <strong>Strangler Fig</strong> gives the right paradigm: old and new coexist, migrate one small slice at a time, wire each in only after its own tests pass, and the old code is gradually "strangled" out. It was meant for system-level modernization, but it maps cleanly onto AI function-level refactoring — cut a big refactor into a chain of <strong>per-step verifiable small transforms</strong>.</p>
+<p>The companion is Fowler/Kent Beck's <strong>preparatory refactoring</strong>: "make the change easy, then make the easy change." Before having AI change a big chunk, have it do one pure structural step (extract a function, introduce an interface), keep tests green, then make the real change on a clean structure. Every step is a small green→green hop.</p>
+
+<div class="diagram">  big-bang rewrite (AI's default)        Strangler Fig (the right way)
+  ─────────────────────────          ─────────────────────────────
+  old module ─┐                       old mod ─┬─ slice1 ─▶ new impl ✓test
+              │ AI rewrites once      façade   │
+              ▼ (hundreds of lines)   (routes) ─┼─ slice2 ─▶ new impl ✓test
+  new module ◀┘                                │
+   │                                           └─ slice3 ─▶ new impl ✓test
+   ▼  all behavior changes at once                 │
+  ✗ regression hides somewhere, no bisect    old strangled out, all green</div>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># Break a big refactor into a plan AI can execute reliably</span>
+"We're refactoring OrderService (500 lines). <span class="tag-key">Do not rewrite at once.</span>
+ Step it via Strangler Fig, each step satisfying:
+   1. a small single-responsibility change (extract one method /
+      replace one implementation)
+   2. run tests right after; they must stay green
+   3. stop when green, let me commit, then proceed to the next step
+ Give me the step plan (6-10 steps) first, no code. I'll confirm, then we go step by step."</code></pre>
+
+<div class="fail">
+<strong>Failure mode</strong>: approving a 10-step plan in plan mode, then saying "just run it all at once." AI collapses the 10 steps into one giant diff and every benefit of Strangler Fig is gone. Insist on <strong>one commit per step</strong> — that bit of friction buys you a clean rollback at any failing step.
+</div>
+
+<div class="res">
+<strong>Resources</strong> · Martin Fowler, <em>Strangler Fig Application</em>, <a href="https://martinfowler.com/bliki/StranglerFigApplication.html" target="_blank">martinfowler.com/bliki/StranglerFigApplication.html</a> ·
+Fowler, <em>Preparatory Refactoring</em>, <a href="https://martinfowler.com/articles/preparatory-refactoring-example.html" target="_blank">martinfowler.com/articles/preparatory-refactoring-example.html</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>AI Systematically Fails at "Non-local Reasoning" Refactors</h2>
+<div class="claim">Claim: AI's refactoring reliability is inversely proportional to the amount of non-local reasoning it requires.</div>
+
+<h3>Background & Principle</h3>
+<p>There's a ruler sharper than "difficulty" for judging whether AI can safely do a refactor: <strong>how much non-local reasoning does this transform need?</strong> Local refactors — rename, extract method, inline a variable, reformat — only need a small span of code to judge equivalence, and AI almost never gets them wrong. But the moment correctness depends on <strong>global invariants spanning files, time, and execution paths</strong>, AI fails systematically — because its attention is similarity-based pattern matching, not formal tracking of program invariants.</p>
+<p>Typical AI danger zones: <strong>concurrency and lock ordering</strong> (reordering code can introduce deadlock or races, invisible when reading the code); <strong>memory aliasing and shared mutable state</strong> (whether two variables point to the same object decides whether a split is safe); <strong>implicit cross-module contracts</strong> (a caller depends on a side effect's ordering); <strong>resource lifecycle</strong> (release order on exception paths). Here AI's refactor "reads perfectly reasonable" — which is precisely the danger: its confidence and its correctness are nearly uncorrelated for this class of problem.</p>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># Before refactoring, force a non-local impact analysis (not a direct edit)</span>
+"Before refactoring this function, don't touch code yet. <span class="tag-key">Answer 4 questions</span>:
+ 1. Does it mutate any shared state outside the function? Who depends on that side effect?
+ 2. Is there locking / concurrency / async here? Will my change touch execution order?
+ 3. Are any parameters mutable objects referenced in multiple places (aliasing)?
+ 4. Does any caller depend on the current execution order or exception timing?
+ If any answer is 'yes' or 'unsure', mark it <span class="tag-key">high-risk</span> — I'll do that part by hand."</code></pre>
+
+<div class="fail">
+<strong>Failure mode</strong>: treating "the tests are still green after AI refactored" as proof of safety. Concurrency, aliasing, and lifecycle bugs are exactly the ones <strong>hardest for tests to cover</strong> — they only surface under specific timing or scheduling. Such refactors, even when green, demand manual review of the invariants, or simply shouldn't go to AI.
+</div>
+
+<div class="res">
+<strong>Resources</strong> · Martin Fowler, <em>Refactoring</em> (2nd ed.) — a catalog of refactoring moves, distinguishing the mechanical ones from those needing global judgment
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Deterministic Mechanical Refactors → Codemod; Judgment → LLM</h2>
+<div class="claim">Claim: for any refactor an AST tool can do deterministically, an LLM is the more expensive, slower, less reliable choice.</div>
+
+<h3>Background & Principle</h3>
+<p>A whole class of refactors is <strong>deterministic</strong>: rename a symbol repo-wide, change every call site of a deprecated API to the new signature, bulk-adjust imports, apply a lint rule. These have a single correct answer and can be expressed precisely as <strong>syntax-tree transforms</strong>. For them, <strong>codemod / AST tools</strong> — <code>ast-grep</code>, <code>jscodeshift</code>, Python's <code>ruff</code> — beat LLMs on three axes: <strong>correctness</strong> (tree-sitter-based structural matching never misses an edit nor touches same-named text inside strings), <strong>cost</strong> (zero tokens, milliseconds across thousands of files), and <strong>auditability</strong> (the rule is declarative — reviewable, reusable, CI-able).</p>
+<p>The dividing line is clear: <strong>structurally-determined work to deterministic tools, semantically-judged work to the LLM</strong>. "Rename all <code>getUserData</code> to <code>fetchUser</code>" is codemod work; "how should this logic split into functions and what should each be named to be expressive" is LLM work. The clever play is to have the LLM <strong>write the codemod rule</strong> for you — turning its semantic understanding into one reusable, auditable transform rule instead of editing file by file.</p>
+
+<div class="diagram">          ┌─────────────────────────────────────────┐
+  Who      │  Single answer, expressible as a syntax   │
+  should   │  tree transform?                          │
+  do it?   └───────────────┬──────────────┬───────────┘
+                       yes │              │ no
+                          ▼              ▼
+              ┌────────────────┐   ┌──────────────────────────┐
+              │ Codemod / AST  │   │ Needs semantic judgment / │
+              │ ast-grep,      │   │ design choice → LLM       │
+              │ jscodeshift,   │   │ (splitting, naming, design)│
+              │ ruff           │   └──────────────────────────┘
+              └────────────────┘   Best: have the LLM write the
+              rename / API migration  codemod rule above
+              / imports / lint        (semantics → determinism)</div>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># Anti-pattern: LLM renaming file by file (costly, slow, hits same-name in strings)</span>
+<span class="tag-com"># Right way: ast-grep, structural match, milliseconds, CI-able</span>
+$ ast-grep --pattern 'getUserData($$$ARGS)' \
+           --rewrite  'fetchUser($$$ARGS)' \
+           --lang js -U
+
+<span class="tag-com"># Advanced: have the LLM translate a fuzzy need into a deterministic rule</span>
+"I want all `logger.log(x)` changed to `logger.info(x)`,
+ but <span class="tag-key">do NOT touch</span> 'logger.log' inside string literals or comments.
+ Write me an ast-grep rule (YAML) — I'll run it instead of you editing by hand."</code></pre>
+
+<div class="fail">
+<strong>Failure mode</strong>: handing a deterministic repo-wide rename to an LLM across 5000 files. Result: exploding token cost, several files missed, same-named text in comments and strings wrongly edited, and no reproducibility. For any "mechanical, rule-expressible" refactor, ask first — <strong>can this be an ast-grep / codemod?</strong> If yes, don't have the LLM hand-edit.
+</div>
+
+<div class="res">
+<strong>Resources</strong> · <em>ast-grep</em> (multi-language structural search/rewrite), <a href="https://ast-grep.github.io/" target="_blank">ast-grep.github.io</a> ·
+<em>jscodeshift</em> (JS/TS codemod toolkit), <a href="https://github.com/facebook/jscodeshift" target="_blank">github.com/facebook/jscodeshift</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// PUTTING IT TOGETHER · Safely refactor a real legacy function</h3>
+<p>Chain the four points into a flow you can use on your own repo today. Pick the legacy function you most dread touching, and walk it through:</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>Classify (§3)</strong>: do the non-local impact analysis first — concurrency? aliasing? cross-module side effects? Circle the high-risk parts and <strong>exclude them from AI's scope</strong>.</li>
+<li><strong>Route (§4)</strong>: of what's left, pull out the purely mechanical bits (rename, imports, API migration) and run them through <code>ast-grep</code> — zero tokens.</li>
+<li><strong>Weave the net (§1)</strong>: for the core logic that genuinely needs judgment, have AI generate characterization tests, run them green yourself, and <strong>commit the tests</strong>.</li>
+<li><strong>Step it (§2)</strong>: have AI produce a Strangler Fig step plan (6-10 steps); execute step by step, run tests each time, commit when green, then proceed.</li>
+<li><strong>Verify for real</strong>: for the §3 high-risk parts, review the invariants by hand even if tests are green. Finally, diff test results and performance before vs after.</li>
+</ol>
+<p style="margin-top:12px">Do this once and you build the muscle memory: <strong>the engineering work of refactoring is in "proving behavior unchanged," not in "writing new code"</strong> — and AI only helps with the latter; the former rests on the test + step + routing system you design.</p>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// DEEP THINKING</h3>
+<details><summary>Characterization tests lock in "current behavior," bugs included. If some downstream depends on a bug, "fixing" it during refactor is itself a regression — doesn't this net just calcify bugs?</summary><div>It does, and that's by design. The characterization test's job is to <strong>decouple "behavior change" from "refactoring"</strong>: during the refactor phase, all behavior (bugs included) must stay frozen, and tests prove it. Fixing a bug is <strong>a separate commit</strong> — where you explicitly change the corresponding assertion so the diff clearly records "this is a behavior change, not a refactor." Mixing the two is the real danger: you can never tell whether a behavior difference was an intentional fix or an unintentional regression. Refactor first (freeze behavior), then fix the bug separately (behavior change + test synced).</div></details>
+<details><summary>§4 says hand mechanical refactors to codemod. But writing an ast-grep rule has a cost too — for a one-off small rename, isn't just letting the LLM edit faster?</summary><div>Yes, the break-even depends on scale and reproducibility needs. Three files, one-off, not in CI — letting the LLM (or you) edit is faster; the fixed cost of a rule isn't worth it. But the moment any one of these holds, write the rule: <strong>hundreds of files</strong> (LLM miss rate climbs with scale), <strong>needs reproducing</strong> (teammates/future you re-run it), <strong>needs auditing</strong> (a rule is reviewable; per-file LLM edits aren't), <strong>collision risk</strong> (the same name appears in strings/comments). The formula: cost of writing the rule vs (scale × cost per error + reruns × redo cost).</div></details>
+<details><summary>If future models get strong enough to formally track program invariants, does §3's "non-local reasoning failure" claim become void?</summary><div>Partly, but the boundary moves up rather than disappears. Even if a model perfectly tracks static invariants, a class of problems is in principle not purely statically decidable — concurrency races dependent on runtime scheduling, distributed behavior dependent on external timing. These need not stronger reasoning but <strong>runtime evidence</strong> (fuzzing, model checking, concurrency tests). What changes: today's "medium-risk" cross-module contract refactors enter the AI-reliable zone; concurrency correctness needing TLA+-level reasoning stays in the human + formal-tools domain. The claim's form is unchanged — <strong>reliability inversely proportional to non-local reasoning</strong> — only the threshold moves.</div></details>
+<details><summary>"Commit tests first, then refactor" guards against AI sneaking test edits. But if AI changes the function's interface signature, old tests won't even compile — now what?</summary><div>This exposes a key distinction: <strong>changing an interface isn't refactoring</strong>, it's an API change. Pure refactoring (extract, internal rename, reimplement) doesn't touch the public contract, and characterization tests should pass as-is. If a refactor "needs" a signature change, it actually contains an interface change — split it into two steps: first use §2's preparatory refactoring to tidy internal structure <strong>without touching the signature</strong> (tests green throughout); then the interface change as a separate, explicit step, updating callers and their tests in sync. If tests fail to compile due to a signature change, the AI usually merged "refactor" and "change API" on the sly — which is exactly what to catch.</div></details>
+<details><summary>This issue repeatedly stresses "AI only helps you write new code; proving equivalence rests on your system." So what irreplaceable value does AI contribute to refactoring?</summary><div>Three irreplaceable things: 1) <strong>breadth of characterization tests</strong> — enumerating boundaries and exception paths is tedious work AI fills in minutes where a human takes half a day and misses cases; 2) <strong>semantic naming and structure judgment</strong> — "which concepts should this split into, named what" is genuine design judgment deterministic tools can't do; 3) <strong>translating fuzzy intent into deterministic rules</strong> — you speak plainly, it produces an ast-grep/codemod rule. Note none of the three is about "guaranteeing equivalence" — AI is an <strong>amplifier</strong> of refactoring throughput, but the safety boundary is still defined by the test + step + routing system you design. Outsourcing safety to AI is the misuse.</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li>Michael Feathers · <a href="https://www.amazon.com/Working-Effectively-Legacy-Michael-Feathers/dp/0131177052" target="_blank">Working Effectively with Legacy Code</a> (origin of the characterization test)</li>
+<li>Martin Fowler · <a href="https://martinfowler.com/bliki/StranglerFigApplication.html" target="_blank">Strangler Fig Application</a></li>
+<li>Martin Fowler · <a href="https://martinfowler.com/articles/preparatory-refactoring-example.html" target="_blank">Preparatory Refactoring: an example</a></li>
+<li>Anthropic · <a href="https://code.claude.com/docs/en/best-practices" target="_blank">Claude Code Best Practices</a> (TDD / refactoring legacy code)</li>
+<li>ast-grep · <a href="https://ast-grep.github.io/" target="_blank">structural search & rewrite tool</a></li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 20 · 2026-06-03</footer>
+</div>
+</body></html>
