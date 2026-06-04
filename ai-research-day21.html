@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 21 · AI for Research — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 21 / PHASE 2 · SYSTEMS</span>
+<h1>AI for Research</h1>
+<h2>Deep Research Loop · Research Harness · Source Curation · Citation Tracing</h2>
+<div class="date">2026-06-04 · BigCat</div>
+<p class="pitch">研究的深度不来自一次大召回，来自「读完再搜」的迭代。</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>2026 年，"Deep Research" 已经从功能名变成一类系统的统称：OpenAI、Gemini、Perplexity、Anthropic 各有一套。但绝大多数人把它当成「更强的搜索框」，结果是——拿它生成一篇读起来很专业、引用一查一半是错的报告。本期不讲「Deep Research 是什么」，讲<strong>怎么把它当工程系统用、以及怎么自建一个属于你的研究 agent</strong>。四个工程点：（1）为什么 Deep Research 本质是 <strong>search-read-reflect 的 agent loop</strong> 而不是 RAG，何时该用、何时是杀鸡用牛刀；（2）用 orchestrator + fan-out subagents 自建研究 harness，以及它 <strong>15× token</strong> 成本的代价边界；（3）信息源筛选——搜到 ≠ 可信；（4）引用追溯与对抗式验证——研究 agent 最危险的失败是<strong>自信地综合一个没有来源支撑的结论</strong>。</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>Deep Research 是 agent loop，不是 RAG</h2>
+<div class="claim">论断：深度来自「基于已读内容生成下一个 query」的迭代，单次大召回再强也到不了。</div>
+
+<h3>背景与原理</h3>
+<p>普通 RAG 是<em>一次性</em>的：embed query → 召回 top-k → 塞进 context → 生成。它的天花板是「你第一次问对了关键词」。Deep Research 不同——它是一个<strong>多轮 agentic loop</strong>：plan → search → read → 基于读到的新信息<em>再 search</em> → … → synthesize。OpenAI 公开说 Deep Research 是用<strong>端到端 RL</strong> 在浏览 + 推理任务上训出来的，模型学会了 plan、backtrack、对实时信息做反应；Gemini Deep Research 的描述几乎一样——「像你一样浏览：搜索、发现线索、基于学到的东西开启新搜索」。关键区别在于<strong>query 是动态生成的</strong>：第一轮你不知道该搜什么，读完第一批结果才知道第二轮该问什么。这正是 RAG 做不到的——RAG 的 query 在召回那一刻就定死了。</p>
+<p>代价是真实的：一份 Deep Research 报告通常跑 <strong>5–30 分钟</strong>、烧掉远超普通对话的 token。所以决策不是「能不能用」，而是「值不值」。</p>
+
+<div class="diagram">  RAG（一次性）          Deep Research（迭代 agent loop）
+ ┌──────────┐          ┌─────────────────────────────────────┐
+ │ query    │          │ plan ─▶ search ─▶ read ─┐           │
+ │   ▼      │          │   ▲                     │ 学到新东西 │
+ │ retrieve │          │   └──── 生成新 query ◀──┘           │
+ │   ▼      │          │            ▼ (够了?)                 │
+ │ generate │          │        synthesize + cite            │
+ └──────────┘          └─────────────────────────────────────┘
+  深度 = 召回质量         深度 = 迭代轮数 × 每轮筛选质量</div>
+
+<h3>实战示例</h3>
+<p>选型清单——把任务对号入座，别一律上 Deep Research：</p>
+<pre><code><span class="tag-com"># 单次 search 就够（秒级）</span>
+- 事实查询：「X 的最新版本号 / 发布日期」
+- 已知关键词、答案在单个页面
+
+<span class="tag-com"># RAG（你有私有语料库）</span>
+- 在固定文档集里问答（内部 wiki、合同、论文库）
+- query 一次就能命中相关 chunk
+
+<span class="tag-com"># Deep Research（分钟级、值得等）</span>
+- 开放式、需要跨多源综合：「对比 A/B/C 三家方案的 X」
+- 答案需要「读完一批才知道下一步搜什么」
+- 输出价值高到能 justify 15× 成本 + 几十分钟</code></pre>
+<p>判据是<strong>「下一步搜什么取决于上一步读到什么」</strong>——满足才上 Deep Research，否则更便宜的方案准确率不输还快得多。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：把 Deep Research 当事实查询用。问「今天某股价多少」它会跑 10 分钟、综合一堆二手解读，反而不如一次 search 直接拿一手数据。迭代 loop 的价值只在<strong>需要综合</strong>时才兑现；事实查询用它是纯浪费 + 引入二手噪声。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · OpenAI <em>Introducing deep research</em>, <a href="https://openai.com/index/introducing-deep-research/" target="_blank">openai.com/index/introducing-deep-research</a> ·
+Gemini Deep Research, <a href="https://gemini.google/overview/deep-research/" target="_blank">gemini.google/overview/deep-research</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>自建研究 harness：orchestrator + fan-out subagents</h2>
+<div class="claim">论断：研究是「广度优先 + 可并行」的天然多 agent 场景——但 15× token 成本划定了它的适用边界。</div>
+
+<h3>背景与原理</h3>
+<p>Anthropic 在《How we built our multi-agent research system》里给出了可抄的架构：一个 <strong>Lead Researcher（orchestrator）</strong>把问题拆成若干子方向，并行 spawn 多个 <strong>subagent</strong>，每个 subagent 在<em>独立 context window</em> 里搜一个子方向，最后把摘要回收给 lead 综合。他们报告这种结构在内部研究类评测上比单 agent 强 <strong>90%+</strong>，原因是把推理分散到多个独立上下文，绕开了单 agent 的 context 上限。但同一篇也给了冷水：multi-agent 大约消耗 <strong>15× 于普通 chat</strong> 的 token——只有当结果价值远超成本、且任务能<strong>并行拆分</strong>时才划算。这正好接上 Day 13 的「协调税」：研究恰是少数协调收益 &gt; 协调成本的场景，因为子方向之间<strong>弱依赖</strong>（搜 A 公司和搜 B 公司互不阻塞）。</p>
+
+<h3>实战示例</h3>
+<p>最小研究 harness 的骨架——重点是 orchestrator 只发 query、不自己读，subagent 只读一个方向、context 隔离：</p>
+<pre><code><span class="tag-key">def</span> research(question):
+    <span class="tag-com"># 1) ORCHESTRATOR：把问题拆成弱依赖子方向</span>
+    subqs = plan(question)        <span class="tag-com"># LLM 输出 3-5 个正交子问题</span>
+    <span class="tag-com"># 2) FAN-OUT：每个子方向一个隔离 context 的 subagent（可并行）</span>
+    findings = parallel_map(subagent, subqs)
+    <span class="tag-com"># 3) SYNTHESIZE：lead 只看摘要 + 引用，不碰原始网页</span>
+    <span class="tag-key">return</span> synthesize(question, findings)
+
+<span class="tag-key">def</span> subagent(subq, max_iters=<span class="tag-key">8</span>):
+    notes = []
+    <span class="tag-key">for</span> _ <span class="tag-key">in</span> range(max_iters):
+        q = next_query(subq, notes)      <span class="tag-com"># 动态生成下一个 query</span>
+        hits = web_search(q)
+        <span class="tag-key">for</span> h <span class="tag-key">in</span> rank_sources(hits)[:<span class="tag-key">3</span>]:   <span class="tag-com"># 见 §3：先筛源</span>
+            notes.append(extract(fetch(h.url), keep_quote=<span class="tag-key">True</span>))
+        <span class="tag-key">if</span> enough(subq, notes): <span class="tag-key">break</span>     <span class="tag-com"># loop control，别无限搜</span>
+    <span class="tag-key">return</span> compress(notes)   <span class="tag-com"># 压成 {claim, url, quote}，原文丢掉</span></code></pre>
+<p>四个关键：<strong>子问题正交</strong>（重叠 = 浪费并行）、<strong>context 隔离</strong>（subagent 的网页噪声不污染 lead）、<strong>每个 subagent 有 max_iters</strong>（防无限搜）、<strong>回收的是 {claim, url, quote} 不是原文</strong>（为 §4 的引用追溯留锚点）。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：Anthropic 复盘的真实坑——早期 agent 给简单问题 spawn 50 个 subagent、为不存在的源把全网翻烂、互相之间狂发更新把彼此带偏。根因都是 <strong>orchestrator 的 prompt 没给清「拆几个、何时停」的预算</strong>。研究 harness 的主要调优杠杆是 orchestrator prompt，不是模型。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Anthropic <em>How we built our multi-agent research system</em>, <a href="https://www.anthropic.com/engineering/multi-agent-research-system" target="_blank">anthropic.com/engineering/multi-agent-research-system</a> ·
+Simon Willison 的精读笔记, <a href="https://simonwillison.net/2025/Jun/14/multi-agent-research-system/" target="_blank">simonwillison.net/2025/Jun/14</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>信息源筛选：搜到 ≠ 可信</h2>
+<div class="claim">论断：研究 agent 质量的瓶颈往往不是「搜得够不够多」，而是「读之前有没有筛源」。</div>
+
+<h3>背景与原理</h3>
+<p>web_search 返回的是<strong>按相关性排序，不是按可信度排序</strong>。SEO 农场、AI 生成的二手洗稿、过期内容会和一手权威源混在一起排进 top-k。如果 subagent 不加判断地 fetch 前几条，等于把噪声当事实喂给综合层——而 LLM <em>不会</em>自动质疑来源权威性，它默认你给的都可信。所以筛源必须是 harness 层<strong>显式的一步</strong>，发生在 fetch 之前。可用的信号：<strong>一手 vs 二手</strong>（官方文档/原论文 &gt; 博客转述 &gt; 聚合站）、<strong>域名权威度</strong>（官方域、arXiv、知名机构 &gt; 内容农场）、<strong>时效</strong>（对快变主题，旧页面要降权）、<strong>去重</strong>（多个站点抄同一篇稿，本质是单一来源，别当成「多源印证」）。这一步也是把 §4 的「跨源印证」做实的前提——你得先知道哪些是真正独立的源。</p>
+
+<h3>实战示例</h3>
+<p>一个轻量 source ranking，插在 search 和 fetch 之间：</p>
+<pre><code><span class="tag-key">def</span> rank_sources(hits):
+    AUTHORITY = {<span class="tag-gpt">"arxiv.org"</span>:<span class="tag-key">3</span>, <span class="tag-gpt">"*.gov"</span>:<span class="tag-key">3</span>, <span class="tag-gpt">".edu"</span>:<span class="tag-key">2</span>,
+                 <span class="tag-gpt">"official_docs"</span>:<span class="tag-key">3</span>, <span class="tag-gpt">"content_farm"</span>:-<span class="tag-key">2</span>}
+    <span class="tag-key">def</span> score(h):
+        s = AUTHORITY.get(domain_class(h.url), <span class="tag-key">0</span>)
+        s += <span class="tag-key">2</span> <span class="tag-key">if</span> is_primary(h) <span class="tag-key">else</span> <span class="tag-key">0</span>   <span class="tag-com"># 一手来源加权</span>
+        s -= recency_penalty(h.date, topic)        <span class="tag-com"># 快变主题旧页降权</span>
+        <span class="tag-key">return</span> s
+    uniq = dedup_by_content(hits)   <span class="tag-com"># 抄稿合并：别把转载当独立源</span>
+    <span class="tag-key">return</span> sorted(uniq, key=score, reverse=<span class="tag-key">True</span>)</code></pre>
+<p>更省事的版本：直接在 subagent 的 prompt 里写明「<strong>优先一手来源，遇到二手转述要回溯到原始出处</strong>，对单一来源的关键结论标注 [需印证]」——把筛源指令前置，比事后纠错便宜得多。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：把「N 个网站都这么说」当强证据。这些网站很可能都在转同一篇通稿——这是<strong>伪多源</strong>。去重要按内容而非 URL，否则你的「跨源印证」是自欺。另一个坑：对慢变主题（数学、历史）滥用 recency 降权，把经典权威源误杀。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · OpenAI deep research（cite 一手句子段落的设计）, <a href="https://openai.com/index/introducing-deep-research/" target="_blank">openai.com/index/introducing-deep-research</a> ·
+本系列 Day 11 Hallucination（citations/URLs 是高编造 token），<a href="hallucination-day11.html">hallucination-day11</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>引用追溯与对抗式验证</h2>
+<div class="claim">论断：研究 agent 最危险的失败不是「搜不到」，是「自信地综合一个没有来源支撑的结论」。</div>
+
+<h3>背景与原理</h3>
+<p>承接 Day 11：<strong>引用、URL、日期、数字是 LLM 最容易编造的 token</strong>——而这些恰恰是研究报告的主体。一个读起来完美的综述，引用可能一半是模型「脑补」出来的——格式正确、链接 404、或链接真实但内容根本没说那句话。治理靠两件事。其一 <strong>grounded generation</strong>：综合层只允许引用 subagent 实际 fetch 回来的 {claim, url, quote}，不给模型「自由发挥引用」的口子。Anthropic 的 <strong>Citations API</strong> 把这做成原生能力——它把源文档切成句子，让 Claude 引用<em>确实用到的</em>原句，官方称比纯 prompt 方案更可靠（且不对引文 quote 收输出 token 费）。其二 <strong>对抗式验证</strong>：综合完成后，再跑一遍「逐条 claim → 回到 quote 核对 → 标注支撑强度」，这是 evaluator pattern 在研究场景的应用。</p>
+
+<h3>实战示例</h3>
+<p>一个 quote-grounded synthesis + 验证 prompt，直接拷：</p>
+<pre><code><span class="tag-com"># 综合阶段：禁止自由引用</span>
+你只能基于下面提供的 FINDINGS 写综述。每个结论后必须附 [url]。
+若某结论在 FINDINGS 里找不到直接支撑句 → 写「证据不足」，不要补全。
+
+FINDINGS = [{claim, url, quote}, ...]   <span class="tag-com"># 来自 subagent，带原句</span>
+
+<span class="tag-com"># 验证阶段（单独一轮，对抗式）：逐条核对</span>
+逐条检查上面综述里的每个带引用结论：
+1. 这个结论是否被它引用的 quote 直接支撑？(yes/partial/no)
+2. 该结论是否只有单一来源？是 → 标 [单源未印证]
+3. 标 no 的结论 → 删除或降级为「有观点称…」
+输出修订后的综述 + 一份 claim→证据强度对照表。</code></pre>
+<p>核心是<strong>把「生成」和「验证」拆成两轮、用不同视角</strong>。同一轮里让模型边写边自检几乎无效（它会顺着自己刚写的合理化）；独立一轮做对抗核对，才抓得住编造的引用。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）只验证「URL 能不能打开」——链接真实但内容不支撑那句话，是最隐蔽的错；必须核对 <strong>quote 是否真出自该 URL 且真说了那个意思</strong>。（2）让生成和验证在同一轮、同一视角下做，等于让模型给自己打分，必然偏高（backward rationalization）。（3）信任模型自报的 confidence——它和真实正确率不校准。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Anthropic <em>Introducing Citations on the API</em>, <a href="https://claude.com/blog/introducing-citations-api" target="_blank">claude.com/blog/introducing-citations-api</a> ·
+Simon Willison <em>Anthropic's new Citations API</em>, <a href="https://simonwillison.net/2025/Jan/24/anthropics-new-citations-api/" target="_blank">simonwillison.net/2025/Jan/24</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// 综合实战 · 周末造一个 personal research agent</h3>
+<p>把四点串成一个能替你做半小时主题调研的研究 harness。目标不是复刻 Deep Research，是亲手把「迭代 loop + 筛源 + 引用追溯」走通一遍。</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>判型（§1）</strong>：先确认你的问题真需要迭代综合（「下一步搜什么取决于上一步读到什么」）。否则一次 search 就收工，别造 agent。</li>
+<li><strong>Orchestrator（§2）</strong>：把问题拆成 3–5 个<em>正交</em>子方向，在 prompt 里写死预算「最多 N 个 subagent、每个最多 8 轮搜索」。</li>
+<li><strong>Subagent + 筛源（§2/§3）</strong>：每个 subagent 独立 context；fetch 前先 <code>rank_sources</code> 取 top-3；回收 {claim, url, quote}，原文丢掉。</li>
+<li><strong>Grounded synthesis（§4）</strong>：综合层只许引用回收的 quote，找不到支撑就写「证据不足」。</li>
+<li><strong>对抗验证（§4）</strong>：单独一轮逐条核对 claim→quote，标注单源/未印证，删掉编造引用。</li>
+<li><strong>自评</strong>：出 5 个有已知答案的问题，对比「你的 agent」vs「直接问 Deep Research」的引用准确率和 token 成本。你会亲身体会 §1 的论断：值不值，取决于任务该不该用迭代。</li>
+</ol>
+<p style="margin-top:12px">走完一遍，你看任何「AI 研究产品」都会习惯性剥皮——它的迭代 loop 在哪、怎么筛源、引用怎么追溯——而不是被一篇「读起来很专业」的报告唬住。</p>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// ENGLISH GLOSSARY</h3>
+<dl>
+<dt>Deep Research</dt><dd>用迭代 search-read-reflect loop 自主完成开放式调研、产出带引用报告的一类 agent 系统。</dd>
+<dt>Search-Read-Reflect Loop</dt><dd>研究 agent 的核心循环：搜索→阅读→基于所读生成下一个 query，区别于一次性 RAG。</dd>
+<dt>Orchestrator-Worker</dt><dd>Lead agent 拆分子方向、并行派给隔离 context 的 subagent，再回收综合的架构。</dd>
+<dt>Fan-out</dt><dd>把一个研究问题并行展开成多个弱依赖子任务的过程。</dd>
+<dt>Source Curation</dt><dd>fetch 之前对搜索结果按一手性/权威度/时效/去重排序筛选。</dd>
+<dt>Primary vs Secondary Source</dt><dd>一手来源（原论文/官方文档）vs 二手转述；研究 agent 应优先一手并回溯。</dd>
+<dt>Grounded Generation</dt><dd>只允许模型引用确实检索到的内容，禁止「自由发挥」式引用。</dd>
+<dt>Citations API</dt><dd>Anthropic 的原生能力：把源文档切句，让 Claude 引用确实用到的原句。</dd>
+<dt>Citation Tracing</dt><dd>逐条把结论回溯到支撑它的原始 quote 并核对的过程。</dd>
+<dt>Adversarial Verification</dt><dd>用独立一轮、对抗视角核对每条 claim 的证据强度，抓编造引用。</dd>
+</dl>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// 深入思考</h3>
+<details><summary>Deep Research 用 RL 端到端训出「会浏览的推理模型」，和你用现成 API 拼一个研究 harness，能力上限的差距在哪？</summary><div>差在<strong>停止判断和 query 质量</strong>。RL 训练让模型内化了「什么时候该 backtrack、什么时候够了」，这是奖励信号磨出来的隐性策略；harness 只能用 max_iters + 启发式 enough() 粗暴逼近。其次是 query 生成的「品味」——RL 模型见过海量浏览轨迹，知道下一步搜什么更高效。但 harness 的可控性是优势：你能精确插入筛源、引用追溯、domain allowlist。结论是 hosted Deep Research 适合开放探索，自建 harness 适合可审计、可定制、需要私有源接入的场景——两者不是替代，是不同 trade-off。</div></details>
+<details><summary>Anthropic 报告 multi-agent 比单 agent 强 90%+，但烧 15× token。什么情况下单 agent 长上下文反而是更优解？</summary><div>当任务<strong>串行依赖强</strong>或<strong>需要全局一致的判断</strong>时。研究之所以适合 multi-agent，是因为子方向弱依赖、可并行（搜 A 和搜 B 互不阻塞）。反过来，如果每一步都依赖上一步的精确结论（如多步数学推导、需要前后文严格一致的法律分析），拆成 subagent 会让 context 在 agent 间漂移、决策不一致——这正是 Cognition《Don't Build Multi-Agents》的复盘。判据：子任务能否独立完成且结果可拼接？能 → fan-out；不能 → 单 agent 长上下文。</div></details>
+<details><summary>「搜到 N 个网站都这么说」在直觉上是强证据，为什么在 AI 研究里反而危险？</summary><div>因为<strong>独立性是幻觉</strong>。互联网上大量内容是相互转载/洗稿同一篇通稿，甚至现在很多是 AI 生成的二手内容互相引用。表面 N 个 URL，本质是<em>单一来源</em>被放大 N 次——这是伪多源印证。更糟的是 AI 生成内容污染搜索结果后，可能形成「模型编的东西被写进网页，又被下一个模型搜到当事实」的回音壁。所以真正的印证要按<strong>内容去重 + 回溯到一手</strong>，问的是「有几个真正独立的一手来源」，而不是「有几个 URL」。</div></details>
+<details><summary>为什么「让模型边写综述边自检引用」几乎无效，必须拆成独立一轮对抗验证？</summary><div>同一轮里模型处于<strong>生成模式</strong>，会倾向合理化自己刚写的内容（backward rationalization）——它已经 committed 到那个 claim，自检时只会找支持它的理由。这和人「写完立刻自己校对抓不到错」同理。独立一轮、换成<em>挑刺视角</em>（「假设这条是编的，证据真支撑吗？」），打破了生成惯性，才暴露漏洞。这是 evaluator-optimizer pattern 的本质：generator 和 evaluator 必须是不同的「人格」，最好不同 context、不同 prompt 框架，否则评估退化成自我背书。</div></details>
+<details><summary>如果未来 web 上越来越多内容由 AI 生成，研究 agent 的「筛源」会面临什么结构性难题？</summary><div>核心难题是<strong>一手来源的稀释与伪装</strong>。AI 生成内容可以完美模仿权威格式（带假引用、假数据、像模像样的方法论），传统的域名权威度/格式信号会失效。可能的演化方向：依赖<em>可验证溯源</em>（内容签名、出处链、official API 而非网页抓取）、依赖<em>机构信任锚</em>（只信少数可验证的一手发布渠道）、以及把「这条信息能否追到一个负责任的人/机构」作为硬门槛。这会让 §3 的筛源从「排序问题」升级成「溯源问题」——可信不再是搜索结果的属性，而是来源身份的属性。</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://www.anthropic.com/engineering/multi-agent-research-system" target="_blank">Anthropic · How we built our multi-agent research system</a> — orchestrator-worker 研究架构与 15× token 代价</li>
+<li><a href="https://openai.com/index/introducing-deep-research/" target="_blank">OpenAI · Introducing deep research</a> — RL 端到端训练的浏览推理 agent</li>
+<li><a href="https://gemini.google/overview/deep-research/" target="_blank">Gemini Deep Research</a> — 协作式 plan + 迭代浏览 + cited report</li>
+<li><a href="https://claude.com/blog/introducing-citations-api" target="_blank">Anthropic · Introducing Citations API</a> — 原生 grounded 引用，比纯 prompt 更可靠</li>
+<li><a href="https://simonwillison.net/2025/Jun/14/multi-agent-research-system/" target="_blank">Simon Willison · 精读 Anthropic 多 agent 研究系统</a> — 第三方拆解与要点</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 21 · 2026-06-04</footer>
+</div>
+</body></html>

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 21 · AI for Research — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 21 / PHASE 2 · SYSTEMS</span>
+<h1>AI for Research</h1>
+<h2>Deep Research Loop · Research Harness · Source Curation · Citation Tracing</h2>
+<div class="date">2026-06-04 · BigCat</div>
+<p class="pitch">Depth doesn't come from one big retrieval — it comes from "read, then search again".</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>By 2026, "Deep Research" has gone from a feature name to a class of systems: OpenAI, Gemini, Perplexity, and Anthropic each ship one. Yet most people treat it as a "stronger search box" — and get back a report that reads like an expert wrote it, with citations that are half wrong when you check. This issue isn't about "what Deep Research is." It's about <strong>using it as an engineering system, and building your own research agent</strong>. Four points: (1) why Deep Research is fundamentally a <strong>search-read-reflect agent loop</strong>, not RAG, and when it's overkill; (2) building a research harness with an orchestrator + fan-out subagents, and the boundary set by its <strong>15× token</strong> cost; (3) source curation — found ≠ trustworthy; (4) citation tracing and adversarial verification — the most dangerous failure of a research agent is to <strong>confidently synthesize a conclusion with no source backing</strong>.</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>Deep Research is an agent loop, not RAG</h2>
+<div class="claim">Claim: depth comes from iteration — "generate the next query from what you just read" — which no single big retrieval can reach.</div>
+
+<h3>Background & Principle</h3>
+<p>Plain RAG is <em>one-shot</em>: embed query → retrieve top-k → stuff into context → generate. Its ceiling is "did you get the keywords right the first time." Deep Research is different — a <strong>multi-turn agentic loop</strong>: plan → search → read → <em>search again</em> based on what you just learned → … → synthesize. OpenAI states Deep Research was trained with <strong>end-to-end RL</strong> on browsing + reasoning tasks; the model learned to plan, backtrack, and react to real-time information. Gemini Deep Research describes it almost identically — "browses the way you do: searching, finding interesting pieces, then starting a new search based on what it learned." The key difference is that <strong>queries are generated dynamically</strong>: you don't know what to search at first; only after reading the first batch do you know what to ask next. RAG can't do this — its query is frozen the moment it retrieves.</p>
+<p>The cost is real: a Deep Research report typically runs <strong>5–30 minutes</strong> and burns far more tokens than a normal chat. So the decision isn't "can it," it's "is it worth it."</p>
+
+<div class="diagram">  RAG (one-shot)         Deep Research (iterative agent loop)
+ ┌──────────┐          ┌─────────────────────────────────────┐
+ │ query    │          │ plan ─▶ search ─▶ read ─┐           │
+ │   ▼      │          │   ▲                     │ learned    │
+ │ retrieve │          │   └──── new query ◀─────┘ something  │
+ │   ▼      │          │            ▼ (enough?)               │
+ │ generate │          │        synthesize + cite            │
+ └──────────┘          └─────────────────────────────────────┘
+ depth = recall quality   depth = #iterations × per-round curation</div>
+
+<h3>Hands-on</h3>
+<p>A selection checklist — match the task; don't default to Deep Research:</p>
+<pre><code><span class="tag-com"># A single search is enough (seconds)</span>
+- Fact lookups: "latest version / release date of X"
+- Known keywords, answer on a single page
+
+<span class="tag-com"># RAG (you have a private corpus)</span>
+- Q&A over a fixed doc set (internal wiki, contracts, papers)
+- One query hits the relevant chunk
+
+<span class="tag-com"># Deep Research (minutes, worth the wait)</span>
+- Open-ended, needs cross-source synthesis: "compare X across A/B/C"
+- Answer requires "read a batch first to know what to search next"
+- Output valuable enough to justify 15× cost + tens of minutes</code></pre>
+<p>The test is <strong>"what to search next depends on what you just read"</strong> — only then go Deep Research; otherwise a cheaper path is just as accurate and far faster.</p>
+
+<div class="fail">
+<strong>Failure mode</strong>: using Deep Research for fact lookups. Ask "what's stock X right now" and it'll run 10 minutes synthesizing secondhand takes — worse than one search that grabs first-party data. The iterative loop pays off only when <strong>synthesis is needed</strong>; for fact lookups it's pure waste plus secondhand noise.
+</div>
+
+<div class="res">
+<strong>Resources</strong> · OpenAI <em>Introducing deep research</em>, <a href="https://openai.com/index/introducing-deep-research/" target="_blank">openai.com/index/introducing-deep-research</a> ·
+Gemini Deep Research, <a href="https://gemini.google/overview/deep-research/" target="_blank">gemini.google/overview/deep-research</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Build a research harness: orchestrator + fan-out subagents</h2>
+<div class="claim">Claim: research is a natural breadth-first, parallelizable multi-agent case — but 15× token cost draws its boundary.</div>
+
+<h3>Background & Principle</h3>
+<p>Anthropic's <em>How we built our multi-agent research system</em> gives a copyable architecture: a <strong>Lead Researcher (orchestrator)</strong> splits the question into subdirections and spawns multiple <strong>subagents</strong> in parallel, each searching one subdirection in its <em>own context window</em>, then returns summaries to the lead for synthesis. They report this beats a single agent by <strong>90%+</strong> on internal research evals — because spreading reasoning across independent contexts sidesteps a single agent's context ceiling. The same post pours cold water too: multi-agent burns roughly <strong>15× the tokens</strong> of a normal chat — worthwhile only when the outcome's value far exceeds cost <em>and</em> the task splits in parallel. This connects to Day 13's "coordination tax": research is one of the rare cases where coordination gains &gt; coordination cost, because subdirections are <strong>weakly dependent</strong> (searching company A vs B don't block each other).</p>
+
+<h3>Hands-on</h3>
+<p>A minimal research-harness skeleton — the point: the orchestrator only issues queries and never reads; each subagent reads one direction with isolated context:</p>
+<pre><code><span class="tag-key">def</span> research(question):
+    <span class="tag-com"># 1) ORCHESTRATOR: split into weakly-dependent subdirections</span>
+    subqs = plan(question)        <span class="tag-com"># LLM emits 3-5 orthogonal subquestions</span>
+    <span class="tag-com"># 2) FAN-OUT: one isolated-context subagent per direction (parallel)</span>
+    findings = parallel_map(subagent, subqs)
+    <span class="tag-com"># 3) SYNTHESIZE: lead sees only summaries + cites, never raw pages</span>
+    <span class="tag-key">return</span> synthesize(question, findings)
+
+<span class="tag-key">def</span> subagent(subq, max_iters=<span class="tag-key">8</span>):
+    notes = []
+    <span class="tag-key">for</span> _ <span class="tag-key">in</span> range(max_iters):
+        q = next_query(subq, notes)      <span class="tag-com"># dynamically generate next query</span>
+        hits = web_search(q)
+        <span class="tag-key">for</span> h <span class="tag-key">in</span> rank_sources(hits)[:<span class="tag-key">3</span>]:   <span class="tag-com"># see §3: curate first</span>
+            notes.append(extract(fetch(h.url), keep_quote=<span class="tag-key">True</span>))
+        <span class="tag-key">if</span> enough(subq, notes): <span class="tag-key">break</span>     <span class="tag-com"># loop control, don't search forever</span>
+    <span class="tag-key">return</span> compress(notes)   <span class="tag-com"># to {claim, url, quote}, drop raw text</span></code></pre>
+<p>Four keys: <strong>orthogonal subquestions</strong> (overlap = wasted parallelism), <strong>context isolation</strong> (a subagent's web noise doesn't pollute the lead), <strong>a max_iters per subagent</strong> (prevents infinite searching), and <strong>return {claim, url, quote}, not raw text</strong> (leaves anchors for §4's citation tracing).</p>
+
+<div class="fail">
+<strong>Failure mode</strong>: Anthropic's real pitfalls — early agents spawned 50 subagents for a simple query, scoured the web for nonexistent sources, and distracted each other with excessive updates. The root cause was the <strong>orchestrator prompt not giving a clear budget</strong> ("how many, when to stop"). The main tuning lever for a research harness is the orchestrator prompt, not the model.
+</div>
+
+<div class="res">
+<strong>Resources</strong> · Anthropic <em>How we built our multi-agent research system</em>, <a href="https://www.anthropic.com/engineering/multi-agent-research-system" target="_blank">anthropic.com/engineering/multi-agent-research-system</a> ·
+Simon Willison's notes, <a href="https://simonwillison.net/2025/Jun/14/multi-agent-research-system/" target="_blank">simonwillison.net/2025/Jun/14</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Source curation: found ≠ trustworthy</h2>
+<div class="claim">Claim: the bottleneck on research-agent quality is rarely "searched enough" — it's "did you curate sources before reading."</div>
+
+<h3>Background & Principle</h3>
+<p>web_search returns results <strong>ranked by relevance, not credibility</strong>. SEO farms, AI-generated rehashes, and stale content mix in with first-party authoritative sources in the top-k. If a subagent blindly fetches the top few, it feeds noise-as-fact into the synthesis layer — and an LLM <em>won't</em> spontaneously question source authority; it assumes whatever you give it is trustworthy. So curation must be an <strong>explicit harness step</strong> that happens before fetch. Usable signals: <strong>primary vs secondary</strong> (official docs/original papers &gt; blog retellings &gt; aggregators), <strong>domain authority</strong> (official domains, arXiv, known institutions &gt; content farms), <strong>recency</strong> (down-weight old pages for fast-moving topics), and <strong>dedup</strong> (many sites copying one press release is essentially a single source — don't count it as "cross-source confirmation"). This step is also the prerequisite for §4's cross-source corroboration — you must first know which sources are genuinely independent.</p>
+
+<h3>Hands-on</h3>
+<p>A lightweight source ranking, inserted between search and fetch:</p>
+<pre><code><span class="tag-key">def</span> rank_sources(hits):
+    AUTHORITY = {<span class="tag-gpt">"arxiv.org"</span>:<span class="tag-key">3</span>, <span class="tag-gpt">"*.gov"</span>:<span class="tag-key">3</span>, <span class="tag-gpt">".edu"</span>:<span class="tag-key">2</span>,
+                 <span class="tag-gpt">"official_docs"</span>:<span class="tag-key">3</span>, <span class="tag-gpt">"content_farm"</span>:-<span class="tag-key">2</span>}
+    <span class="tag-key">def</span> score(h):
+        s = AUTHORITY.get(domain_class(h.url), <span class="tag-key">0</span>)
+        s += <span class="tag-key">2</span> <span class="tag-key">if</span> is_primary(h) <span class="tag-key">else</span> <span class="tag-key">0</span>   <span class="tag-com"># weight primary sources</span>
+        s -= recency_penalty(h.date, topic)        <span class="tag-com"># down-weight stale for fast topics</span>
+        <span class="tag-key">return</span> s
+    uniq = dedup_by_content(hits)   <span class="tag-com"># merge copies: don't count reprints as independent</span>
+    <span class="tag-key">return</span> sorted(uniq, key=score, reverse=<span class="tag-key">True</span>)</code></pre>
+<p>An even simpler version: state it directly in the subagent's prompt — "<strong>prefer primary sources; trace secondhand retellings back to the original</strong>, and tag single-source key conclusions as [needs corroboration]." Front-loading curation is far cheaper than fixing it afterward.</p>
+
+<div class="fail">
+<strong>Failure mode</strong>: treating "N sites say so" as strong evidence. They're likely all reprinting one press release — that's <strong>pseudo-multi-source</strong>. Dedup by content, not URL, or your "cross-source corroboration" is self-deception. Another trap: over-applying recency penalties on slow-moving topics (math, history), killing the classic authoritative sources.
+</div>
+
+<div class="res">
+<strong>Resources</strong> · OpenAI deep research (designed to cite first-party sentences/passages), <a href="https://openai.com/index/introducing-deep-research/" target="_blank">openai.com/index/introducing-deep-research</a> ·
+This series, Day 11 Hallucination (citations/URLs are high-fabrication tokens), <a href="hallucination-day11.en.html">hallucination-day11</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Citation tracing & adversarial verification</h2>
+<div class="claim">Claim: a research agent's most dangerous failure isn't "can't find it" — it's "confidently synthesizing a conclusion with no source backing."</div>
+
+<h3>Background & Principle</h3>
+<p>Following Day 11: <strong>citations, URLs, dates, and numbers are the tokens LLMs most easily fabricate</strong> — and those are exactly the substance of a research report. A flawless-reading review may have half its citations hallucinated — correct format, 404 link, or a real link whose content never said that. Two fixes. First, <strong>grounded generation</strong>: the synthesis layer may only cite {claim, url, quote} the subagent actually fetched, leaving no room for "free-form citation." Anthropic's <strong>Citations API</strong> makes this native — it chunks source docs into sentences and has Claude cite the exact sentences it <em>actually used</em>, which Anthropic reports is more reliable than prompt-only approaches (and you aren't charged output tokens for the quoted text). Second, <strong>adversarial verification</strong>: after synthesis, run another pass that goes "each claim → back to the quote → grade the support" — the evaluator pattern applied to research.</p>
+
+<h3>Hands-on</h3>
+<p>A quote-grounded synthesis + verification prompt, copy-paste ready:</p>
+<pre><code><span class="tag-com"># Synthesis stage: ban free-form citation</span>
+Write the review using ONLY the FINDINGS below. Each conclusion must end with [url].
+If a conclusion has no directly-supporting sentence in FINDINGS → write
+"insufficient evidence". Do not fill the gap.
+
+FINDINGS = [{claim, url, quote}, ...]   <span class="tag-com"># from subagents, with source sentence</span>
+
+<span class="tag-com"># Verification stage (separate pass, adversarial): check each one</span>
+Check every cited conclusion in the review above:
+1. Is the conclusion directly supported by its quote? (yes/partial/no)
+2. Does it rest on a single source? If so → tag [single-source, unconfirmed]
+3. For "no" → delete it or downgrade to "some claim that...".
+Output the revised review + a claim→evidence-strength table.</code></pre>
+<p>The core is to <strong>split "generate" and "verify" into two passes with different stances</strong>. Letting the model self-check while writing is nearly useless (it rationalizes what it just wrote); an independent adversarial pass is what catches fabricated citations.</p>
+
+<div class="fail">
+<strong>Failure mode</strong>: (1) verifying only "does the URL open" — a real link whose content doesn't support the sentence is the most insidious error; you must check <strong>whether the quote truly comes from that URL and truly says that</strong>. (2) Generating and verifying in one pass, one stance — that's the model grading itself, biased high (backward rationalization). (3) Trusting the model's self-reported confidence — it isn't calibrated to actual correctness.
+</div>
+
+<div class="res">
+<strong>Resources</strong> · Anthropic <em>Introducing Citations on the API</em>, <a href="https://claude.com/blog/introducing-citations-api" target="_blank">claude.com/blog/introducing-citations-api</a> ·
+Simon Willison <em>Anthropic's new Citations API</em>, <a href="https://simonwillison.net/2025/Jan/24/anthropics-new-citations-api/" target="_blank">simonwillison.net/2025/Jan/24</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// Capstone · Build a personal research agent this weekend</h3>
+<p>Thread the four points into a research harness that does a half-hour topic survey for you. The goal isn't to clone Deep Research — it's to walk "iterative loop + curation + citation tracing" end to end yourself.</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>Type check (§1)</strong>: first confirm your question truly needs iterative synthesis ("what to search next depends on what you just read"). Otherwise one search is done — don't build an agent.</li>
+<li><strong>Orchestrator (§2)</strong>: split into 3–5 <em>orthogonal</em> subdirections; hard-code the budget in the prompt — "at most N subagents, at most 8 searches each."</li>
+<li><strong>Subagent + curation (§2/§3)</strong>: isolated context per subagent; <code>rank_sources</code> before fetch, take top-3; return {claim, url, quote}, drop the raw text.</li>
+<li><strong>Grounded synthesis (§4)</strong>: the synthesis layer may only cite the returned quotes; if unsupported, write "insufficient evidence".</li>
+<li><strong>Adversarial verify (§4)</strong>: a separate pass checks each claim→quote, tags single-source/unconfirmed, deletes fabricated citations.</li>
+<li><strong>Self-eval</strong>: write 5 questions with known answers; compare "your agent" vs "just asking Deep Research" on citation accuracy and token cost. You'll feel §1's claim firsthand: whether it's worth it depends on whether the task warrants iteration.</li>
+</ol>
+<p style="margin-top:12px">Once you've done this, you'll instinctively peel back any "AI research product" — where's its iterative loop, how does it curate, how does it trace citations — instead of being fooled by a report that "reads professional."</p>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// GLOSSARY</h3>
+<dl>
+<dt>Deep Research</dt><dd>A class of agent systems that autonomously run open-ended surveys via an iterative search-read-reflect loop and produce cited reports.</dd>
+<dt>Search-Read-Reflect Loop</dt><dd>The core research-agent cycle: search → read → generate the next query from what you read; unlike one-shot RAG.</dd>
+<dt>Orchestrator-Worker</dt><dd>A lead agent splits subdirections, fans them out to isolated-context subagents, then collects and synthesizes.</dd>
+<dt>Fan-out</dt><dd>Expanding one research question into multiple weakly-dependent subtasks in parallel.</dd>
+<dt>Source Curation</dt><dd>Ranking/filtering search results by primacy/authority/recency/dedup before fetching.</dd>
+<dt>Primary vs Secondary Source</dt><dd>First-party (original paper/official docs) vs secondhand retellings; agents should prefer primary and trace back.</dd>
+<dt>Grounded Generation</dt><dd>Allowing the model to cite only retrieved content; no "free-form" citation.</dd>
+<dt>Citations API</dt><dd>Anthropic's native capability: chunk source docs into sentences and have Claude cite the exact sentences used.</dd>
+<dt>Citation Tracing</dt><dd>Tracing each conclusion back to the supporting quote and verifying it.</dd>
+<dt>Adversarial Verification</dt><dd>A separate, adversarial pass that grades each claim's evidence strength to catch fabricated citations.</dd>
+</dl>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// DEEP THINKING</h3>
+<details><summary>Deep Research is an end-to-end RL-trained "browsing reasoner." Where's the capability gap between that and a research harness you wire from off-the-shelf APIs?</summary><div>The gap is in <strong>stopping judgment and query quality</strong>. RL training internalizes "when to backtrack, when it's enough" — an implicit policy ground out by reward signals; a harness can only crudely approximate it with max_iters + a heuristic enough(). Next is query-generation "taste" — the RL model has seen vast browsing trajectories and knows what to search next more efficiently. But the harness's controllability is its edge: you can precisely insert curation, citation tracing, domain allowlists. Conclusion: hosted Deep Research suits open exploration; a self-built harness suits auditable, customizable cases needing private-source access — not substitutes, different trade-offs.</div></details>
+<details><summary>Anthropic reports multi-agent beats single-agent by 90%+ but burns 15× tokens. When is a single long-context agent the better choice?</summary><div>When the task is <strong>strongly serially dependent</strong> or needs <strong>globally consistent judgment</strong>. Research suits multi-agent because subdirections are weakly dependent and parallelizable (searching A and B don't block). Conversely, if every step depends on the previous step's exact conclusion (multi-step math, legal analysis needing strict cross-reference consistency), splitting into subagents lets context drift between agents and decisions diverge — exactly Cognition's <em>Don't Build Multi-Agents</em> retrospective. Test: can subtasks be done independently and stitched together? Yes → fan-out; no → single long-context agent.</div></details>
+<details><summary>"N websites all say so" feels like strong evidence — why is it dangerous in AI research?</summary><div>Because <strong>independence is an illusion</strong>. Vast amounts of web content reprint/rehash one press release, and increasingly much is AI-generated secondhand content citing each other. On the surface N URLs; in essence a <em>single source</em> amplified N times — pseudo-multi-source. Worse, once AI-generated content pollutes search results, you can get an echo chamber where "a model's fabrication gets written into a page, then searched by the next model as fact." So real corroboration must <strong>dedup by content and trace to primary</strong>, asking "how many genuinely independent first-party sources," not "how many URLs."</div></details>
+<details><summary>Why is "let the model verify citations while writing the review" nearly useless, requiring a separate adversarial pass?</summary><div>In the same pass the model is in <strong>generation mode</strong> and tends to rationalize what it just wrote (backward rationalization) — it's already committed to the claim, so self-checking only finds reasons to support it. Same as a person proofreading right after writing and missing errors. A separate pass with a <em>critic's stance</em> ("assume this is fabricated — does the evidence really support it?") breaks the generation inertia and exposes holes. This is the essence of the evaluator-optimizer pattern: generator and evaluator must be different "personas," ideally different context and prompt framing, or evaluation degrades into self-endorsement.</div></details>
+<details><summary>As more of the web becomes AI-generated, what structural problem does a research agent's "curation" face?</summary><div>The core problem is the <strong>dilution and disguise of primary sources</strong>. AI-generated content can perfectly mimic authoritative format (fake citations, fake data, plausible methodology), so traditional domain-authority/format signals fail. Likely evolution: rely on <em>verifiable provenance</em> (content signatures, provenance chains, official APIs rather than web scraping), rely on <em>institutional trust anchors</em> (trust only a few verifiable first-party channels), and make "can this trace to a responsible person/institution" a hard gate. This upgrades §3's curation from a "ranking problem" to a "provenance problem" — trustworthiness is no longer a property of the search result, but of the source's identity.</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://www.anthropic.com/engineering/multi-agent-research-system" target="_blank">Anthropic · How we built our multi-agent research system</a> — orchestrator-worker research architecture & the 15× token cost</li>
+<li><a href="https://openai.com/index/introducing-deep-research/" target="_blank">OpenAI · Introducing deep research</a> — end-to-end RL-trained browsing reasoner</li>
+<li><a href="https://gemini.google/overview/deep-research/" target="_blank">Gemini Deep Research</a> — collaborative plan + iterative browsing + cited report</li>
+<li><a href="https://claude.com/blog/introducing-citations-api" target="_blank">Anthropic · Introducing Citations API</a> — native grounded citations, more reliable than prompt-only</li>
+<li><a href="https://simonwillison.net/2025/Jun/14/multi-agent-research-system/" target="_blank">Simon Willison · on Anthropic's multi-agent research system</a> — third-party breakdown</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 21 · 2026-06-04</footer>
+</div>
+</body></html>
