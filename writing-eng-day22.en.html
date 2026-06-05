@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 22 · Writing Engineering — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.homework{background:linear-gradient(135deg,rgba(255,110,196,0.1),rgba(123,97,255,0.1));border:1px solid rgba(255,110,196,0.3);border-radius:10px;padding:22px 24px;margin:36px 0}
+.homework h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 22 / PHASE 2 · APPLICATIONS</span>
+<h1>Writing Engineering</h1>
+<h2>Voice Spec · Anti-Slop · Hierarchical Prompting · AI as Editor</h2>
+<div class="date">2026-06-05 · BigCat</div>
+<p class="pitch">Put AI on the verification side (critique), not the generation side (ghostwrite).</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>You use AI to write PR descriptions, docs, posts, and weekly reports every day—yet the output often carries that unmistakable "fake" AI smell: over-hedging, formulaic parallelism, boilerplate openings and closings. The problem isn't the model's capability, it's the engineering method: most people cram "writing" into <strong>a single prompt</strong> ("write me an article about X, professional and concise"), and get back the mean of the distribution—the <strong>"safe mediocrity"</strong> that RLHF tuned in. This issue engineers writing: compile your voice into a reusable spec, detect and strip the LLM's fingerprints, drive long-form text with an outline-first hierarchical prompt, and pin AI to the role of editor/critic rather than author. The core counter-intuition: <strong>the ceiling on AI's writing quality is set not by how well it writes, but by whether you place it on the verification side or the generation side</strong>. Judging whether a sentence is weak is easy (critique); writing a great sentence from scratch is hard (generation)—the former is its strength, the latter is where it goes off the rails.</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>Voice Spec: Compile "Your Style" Into a Reusable Spec</h2>
+<div class="claim">Claim: voice isn't described with adjectives—it's "compiled" from samples plus a negative list.</div>
+
+<h3>Background &amp; Principle</h3>
+<p>When people describe the style they want, they write "professional, concise, punchy"—adjectives that carry <strong>almost zero information</strong> for the model, because everyone's notion of "concise" sits near the model's prior mean, so it can only regress to its learned "generic professional tone." The <strong>Examples &gt; Rules</strong> lesson from Day 9 hits its most extreme case with voice: abstract adjectives never beat concrete samples. Anthropic's multishot docs recommend 3-5 examples to anchor output form; voice is the same—feed 3-5 representative passages you wrote, have the model <strong>reverse-extract operable features</strong> (sentence-length distribution, active/passive ratio, paragraph rhythm, punctuation and connective habits, use of lists/emoji), and crystallize them into a <code>voice.md</code> spec that you inject on every write. The point is to turn "style" from a vague feeling into a declarable, reusable, diffable artifact.</p>
+
+<h3>Hands-On</h3>
+<pre><code><span class="tag-com"># Run once: reverse-extract a voice spec from samples (save as voice.md)</span>
+Below are 5 representative passages I wrote (same genre), wrapped
+in &lt;sample&gt;:
+&lt;sample&gt;...paste your real paragraphs...&lt;/sample&gt;
+
+Reverse-analyze my writing style and output an operable style spec.
+Write only <span class="tag-key">executable rules</span>, no adjectives like "professional/vivid". Cover:
+- Sentence length: average words, long/short rhythm (give numbers)
+- Syntax: active vs passive, use of rhetorical questions/dashes/semicolons
+- Structure: paragraph length, conclusion-first or not
+- Diction: preferred connectives, avoided words, jargon density
+- Forbidden zones: expressions I never use (list what you observe)</code></pre>
+<p>Hand-check the output (delete what the model invented, add what it missed) and save it as <code>voice.md</code>. This spec is more precise than any adjective, and you can <strong>version-control</strong> it—keep a separate one per genre (blog / report / technical doc).</p>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) Mixing genres in the samples (report + blog + comment) averages voice into a featureless blur—one spec serves one genre. (2) Too few samples (1-2 paragraphs) and the model can't catch a stable pattern, so it guesses. (3) Treating the generated spec as gospel—it's a starting point, not the end; it must be hand-edited.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Anthropic <em>Multishot prompting</em> docs, <a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/multishot-prompting" target="_blank">docs.anthropic.com/.../multishot-prompting</a> ·
+Paul Graham <em>Write Like You Talk</em>, <a href="https://paulgraham.com/talk.html" target="_blank">paulgraham.com/talk.html</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Anti-Slop: Detect and Strip the LLM's "Smell"</h2>
+<div class="claim">Claim: default LLM output carries a detectable fingerprint—a distribution-level bias that prompts can suppress but not eradicate.</div>
+
+<h3>Background &amp; Principle</h3>
+<p>Kobak et al. (2024) analyzed 14 million PubMed abstracts and found that after ChatGPT appeared, a batch of "flowery words" spiked off a cliff—<strong>"delve" rose ~28×</strong>, with "intricate" and "meticulous" surging in step. These are objective evidence of the AI smell: byproducts of RLHF pushing the model toward "safe mediocrity"—over-hedging ("it's worth noting," "to some extent"), excessive transitions, three-beat parallelism, boilerplate openings ("in today's fast-paced…") and closings ("in conclusion…"). Simon Willison named this mass-produced, low-quality, unwanted AI output <strong>slop</strong> (a 2025 word of the year for several dictionaries). The key realization: this is a <strong>distribution-level bias</strong>, not something a single prompt fully clears—you can lower the frequency, but to cure it you must use §1's real samples to drag the whole output distribution away.</p>
+
+<h3>Hands-On</h3>
+<pre><code><span class="tag-com"># A slop filter to append at the end of any writing prompt</span>
+Hard constraints:
+1. Banned words/phrases: delve, it's worth noting, in today's/in this era,
+   in conclusion, not only...but also, unlock (potential), empower, embrace (change)
+2. No preamble ("Sure, here's...") and no postamble (summary closing)
+3. Every paragraph has at least one <span class="tag-key">concrete anchor</span>: a number,
+   an example, or a proper noun
+4. Cut every transition sentence that adds no information; prefer short over long
+5. Don't stack parallelism for momentum—one concrete example beats three abstract adjectives</code></pre>
+<p>Rule 3 is the most effective—forcing concreteness, because slop is fundamentally <strong>emptiness</strong>: with no information to fill, the model pads with ornate diction and parallelism. Force it to drop numbers and examples and slop has no ground to stand on.</p>
+
+<div class="fail">
+<strong>Failure modes</strong>: the more negations you stack ("don't… don't…"), the stiffer the output—Day 9 noted negative instructions are inherently weak, and the model tends to "think of the pink elephant" and step on the mine anyway. A banned-list treats symptoms; truly dragging the distribution away requires few-shot injection of your real samples (§1). Also update the banned-list periodically—fingerprint words shift as models iterate.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Kobak et al. <em>Delving into ChatGPT usage in academic writing through excess vocabulary</em>, arXiv:2406.07016 ·
+Simon Willison <em>on slop</em>, <a href="https://simonwillison.net/tags/slop/" target="_blank">simonwillison.net/tags/slop</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Hierarchical Prompting: Chapter → Paragraph → Sentence Control</h2>
+<div class="claim">Claim: long-form isn't one prompt—it's an outline-first prompt chain. This is a workflow, not an agent.</div>
+
+<h3>Background &amp; Principle</h3>
+<p>Asking the model to write 3,000 words in one shot almost inevitably hits three traps: <strong>lost-in-the-middle</strong> (diluted mid-section points), structure collapsing midway, and terminology/style drift. The right approach splits it into three layers, each an independent prompt with independent verification (echoing Day 5: use a workflow when you can, not an agent—it's controllable, debuggable, evaluable). Anthropic's chain-prompts docs are explicit: splitting complex tasks into chained subtasks is far steadier than one mega-prompt. The three layers each have a job:</p>
+<ul>
+<li><strong>L1 · Outline</strong>: produce only the structure + one-sentence thesis per section, <em>human-reviewed</em>—the cheapest verification in the whole pipeline; if the skeleton is wrong, everything after is wasted.</li>
+<li><strong>L2 · Per-section expansion</strong>: write one section at a time, but inject the <strong>global outline + the end of the previous section</strong> as anchors to prevent repetition or drift.</li>
+<li><strong>L3 · Sentence-level style pass</strong>: apply §1's voice spec + §2's slop filter for the final polish.</li>
+</ul>
+
+<div class="diagram">┌──────────── writing = outline-first prompt chain ─────────┐
+│                                                           │
+│  your bullet skeleton                                     │
+│        │                                                  │
+│        ▼                                                  │
+│   ┌─────────┐  human ✋  bad structure→redo, don't enter L2 │
+│   │ L1 outln│ ─────────▶ [structure + per-section thesis]  │
+│   └────┬────┘                                             │
+│        │  inject: global outline + prev section end       │
+│        ▼                                                  │
+│   ┌─────────┐  per-sec loop  anti-drift / anti-repeat      │
+│   │ L2 write│ ─────────▶ §1..§N paragraph drafts          │
+│   └────┬────┘                                             │
+│        │  inject: voice.md + slop banned-list             │
+│        ▼                                                  │
+│   ┌─────────┐                                             │
+│   │ L3 polish│ ────────▶ sentence-level style pass → final│
+│   └─────────┘                                             │
+└───────────────────────────────────────────────────────────┘</div>
+
+<h3>Hands-On</h3>
+<pre><code><span class="tag-key">def</span> write_long(topic, voice_md, banned):
+    outline = llm(<span class="tag-gpt">f"Outline for '{topic}': section titles + one-sentence thesis each, "</span>
+                  <span class="tag-gpt">"no body text."</span>)
+    review(outline)                       <span class="tag-com"># human-review the skeleton—cheapest verification</span>
+    sections, prev = [], <span class="tag-gpt">""</span>
+    <span class="tag-key">for</span> sec <span class="tag-key">in</span> outline.sections:
+        draft = llm(<span class="tag-gpt">f"Global outline: {outline}\nPrev section end: {prev[-200:]}\n"</span>
+                    <span class="tag-gpt">f"Write only this section: {sec}. Continue from above, no repeats."</span>)
+        sections.append(draft); prev = draft
+    full = <span class="tag-gpt">"\n\n"</span>.join(sections)
+    <span class="tag-key">return</span> llm(<span class="tag-gpt">f"Polish per this voice spec, run each sentence through the slop list:\n"</span>
+               <span class="tag-gpt">f"{voice_md}\nBanned: {banned}\n\nText: {full}"</span>)</code></pre>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) L2 without the global outline → sections repeat each other, terminology drifts. (2) Skipping L1 and asking for the whole text directly → you get a draft that "looks complete but has no logical skeleton," harder to fix than to rewrite. (3) No human checkpoint between layers → errors amplify all the way to L3 before you notice.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Anthropic <em>Chain complex prompts</em> docs, <a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/chain-prompts" target="_blank">docs.anthropic.com/.../chain-prompts</a> ·
+Anthropic <em>Building Effective Agents</em> (prompt chaining), <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">anthropic.com/engineering/building-effective-agents</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>AI as Editor: Pin AI to Critic, Not Author</h2>
+<div class="claim">Claim: the highest-quality AI writing is "human writes the skeleton, AI does critique / expand / polish," not "AI writes, human edits."</div>
+
+<h3>Background &amp; Principle</h3>
+<p>This applies the <strong>evaluator-optimizer</strong> pattern (Anthropic <em>Building Effective Agents</em>) to writing. Key insight: <strong>critique is a verification problem, generation is an open-ended one</strong>. Judging "which sentence here is weakest, and why" is easy and reliable for the model; generating a great full piece from scratch easily goes off the rails—with sycophancy as a bonus: ask it to evaluate its own draft and it tends to say "looks good." So using it as a critic (point out weaknesses, propose fixes) is far more reliable than as an author (write for you). The crucial side effect: <strong>a human-written skeleton naturally preserves voice</strong>—voice loss is rooted precisely in letting AI generate from scratch. You supply the ideas and structure, it amplifies and polishes; only then is the division of labor right.</p>
+
+<h3>Hands-On</h3>
+<pre><code><span class="tag-com"># self-critique: AI as editor, not ghostwriter; touch only what needs touching</span>
+You are a strict editor, not a ghostwriter. For the passage below:
+1. Point out the <span class="tag-key">3 weakest sentences</span>, with why each is weak
+   (empty / redundant / logical leap)
+2. Give diff-style edits: &lt;del&gt;original&lt;/del&gt; → &lt;ins&gt;revised&lt;/ins&gt;
+3. <span class="tag-key">Change only those 3 sentences, keep the rest verbatim</span>—don't rewrite
+4. Don't praise my writing—give criticism directly
+
+&lt;draft&gt;...your paragraph...&lt;/draft&gt;</code></pre>
+<p>Rules 3 and 4 are the linchpin: without "change only the weak sentences," the model will rewrite everything (erasing your voice along the way); without banning praise, it dilutes criticism with sycophancy. You want a surgical edit, not a ghostwrite.</p>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) Letting AI rewrite a whole paragraph → voice lost + it tacks on "you wrote this really well" (Day 9's sycophancy). (2) Not requiring a diff and not bounding the edit scope → you can't quickly review what changed and must reread the whole block. (3) Putting critique and rewrite in the same turn → its critique self-fulfillingly bends toward the version it wants to write.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Anthropic <em>Building Effective Agents</em> (evaluator-optimizer), <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">anthropic.com/engineering/building-effective-agents</a> ·
+Anthropic <em>Claude's Character</em>, <a href="https://www.anthropic.com/research/claude-character" target="_blank">anthropic.com/research/claude-character</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// INTEGRATED BUILD · Make Yourself a "Writing Harness"</h3>
+<p>Chain the four points into a pipeline you can reuse for weekly reports and blog posts, aiming for output that passes a "Turing test"—others can't guess which piece was AI-assisted:</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>Build the voice spec (§1)</strong>: feed 5 real passages, reverse-extract rules, hand-edit, and save as <code>voice.md</code>; one per genre.</li>
+<li><strong>You write only the bullet skeleton</strong>: ideas and logic come from you (preserving voice + structure)—this is the part you can't outsource.</li>
+<li><strong>L2 expansion script (§3)</strong>: call section by section, injecting <code>voice.md</code> + global outline + slop banned-list.</li>
+<li><strong>L3 auto self-critique (§4)</strong>: output a diff; you only review the changed sentences, not the whole piece.</li>
+<li><strong>Eval</strong>: mix the final draft with your historical hand-written pieces and have another model or a friend <strong>blind-guess which is AI-assisted</strong>. Can't tell = the voice spec passes; spotted at a glance = go back, add §1 samples and update §2's banned words.</li>
+</ol>
+<p style="margin-top:12px">The essence of this flow isn't "let AI write for you"—it's <strong>always keeping AI on the verification side</strong>: you generate the idea skeleton, it does the amplify/critique/polish work where "judging right from wrong is easier than creating from scratch." That way the output has both your voice and AI's throughput.</p>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// DEEP THINKING</h3>
+<details><summary>If the voice spec is precise enough that AI can replicate your style 100%, is "your voice" still yours? Will over-reliance atrophy your own writing?</summary><div>This is the classic cognitive-offloading trade-off. A voice spec replicates your <strong>past</strong> style, while real voice evolves with your thinking. If you only use AI to replicate the old voice, your style gets "frozen" at the sampling moment and stops growing. Healthy use: let the voice spec handle low-value output (reports, template emails) to save energy, and reserve high-value writing (what you truly want to express) for your own hand—that's where voice keeps evolving. Treat AI as a "style snapshot tool," not a "style proxy."</div></details>
+<details><summary>Slop fingerprint words (delve / intricate) shift as models iterate. If future models are trained to remove them, does the AI smell vanish—or just change form?</summary><div>The fingerprint changes form, it doesn't vanish. Surface vocabulary can be tuned out, but the deep source of the AI smell is <strong>distribution collapse</strong>—RLHF pushes output toward the "safe, broadly-liked" center, yielding low individual specificity, low risk appetite, and predictable syntax. This is a byproduct of the alignment objective, not a bug. As long as training optimizes "satisfy the majority," output regresses to the mean; genuine personal voice lives precisely in the <strong>tail</strong>. That's why §1's few-shot injection is the cure—it drags the sampling point from the center to your tail.</div></details>
+<details><summary>This issue argues "AI as critic beats AI as author." But critique can be wrong—the "weak sentence" AI flags may be the gem of your voice. How do you stop AI from flattening you into mediocrity?</summary><div>This is exactly why point 4 stresses "change only flagged weak sentences + output a diff + human has final say." Critique's value is <strong>drawing your attention</strong>, not deciding for you. AI may flag your deliberate transgressions (short sentences, colloquialism, white space) as "weak," because its yardstick is also the mean. Countermeasures: (1) always present as a diff so you accept/reject line by line; (2) state your voice spec in the critique prompt so it judges by your standard, not the generic one; (3) default-reject "stylistic" edits, accept only "fact/logic/redundancy" criticisms.</div></details>
+<details><summary>What does hierarchical prompting (L1→L2→L3) sacrifice for controllability? When is a single long prompt actually better?</summary><div>It sacrifices <strong>global coherence and inspired leaps</strong>. When expanding section by section, the model can't see the not-yet-written later text, making it hard to set up long-range foreshadowing, callbacks, and overall rhythm—the very soul of great long-form. A single long prompt is better when the model's context is ample and you want a "one-breath narrative flow" (short stories, tightly-argued essays). Hierarchy suits <strong>structure &gt; prose</strong> genres (technical docs, reports, tutorials), where value lies in information organization, not cadence. The test: do you fear "structure collapse" or "reads like it was stitched together" more?</div></details>
+<details><summary>"Have a friend blind-guess which is AI-assisted" sounds handy—but what does it actually measure? Does passing it mean the writing is high quality?</summary><div>It measures voice consistency (indistinguishability), not quality. Passing only means "the AI-assisted draft is indistinguishable from your hand-written one"—but if your hand-written level is mediocre, passing just means "mediocre in a way that resembles you." This is the classic eval trap: <strong>the metric aligns with the proxy goal, not the real one</strong>. A better eval has two layers: (1) voice consistency (blind guess); (2) absolute quality (information density, argument strength, value to the reader), which needs a rubric or expert judgment, not a blind guess. Only passing both counts as truly qualified.</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/multishot-prompting" target="_blank">Anthropic · Multishot Prompting</a> — anchor output form with 3-5 examples, the basis of voice extraction</li>
+<li><a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/chain-prompts" target="_blank">Anthropic · Chain Complex Prompts</a> — the official basis for hierarchical prompting</li>
+<li><a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">Anthropic · Building Effective Agents</a> — prompt chaining and evaluator-optimizer patterns</li>
+<li><a href="https://arxiv.org/abs/2406.07016" target="_blank">Kobak et al. · Delving into ChatGPT usage in academic writing</a> — quantifying LLM writing traces via "fingerprint words"</li>
+<li><a href="https://simonwillison.net/tags/slop/" target="_blank">Simon Willison · on slop</a> — the origin and boundaries of the term "slop"</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 22 · 2026-06-05</footer>
+</div>
+</body></html>

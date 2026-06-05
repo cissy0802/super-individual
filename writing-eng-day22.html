@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 22 · Writing Engineering — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.homework{background:linear-gradient(135deg,rgba(255,110,196,0.1),rgba(123,97,255,0.1));border:1px solid rgba(255,110,196,0.3);border-radius:10px;padding:22px 24px;margin:36px 0}
+.homework h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 22 / PHASE 2 · 应用与系统</span>
+<h1>Writing Engineering</h1>
+<h2>Voice Spec · Slop 反检测 · 分层 Prompt · AI as Editor</h2>
+<div class="date">2026-06-05 · BigCat</div>
+<p class="pitch">把 AI 放在 verification 一侧（critique），而不是 generation 一侧（ghostwrite）。</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>你每天用 AI 写 PR description、文档、博客、周报，但产出常有一种「一眼假」的 AI 味——过度 hedging、千篇一律的对仗、套话开头结尾。问题不在模型能力，在工程方法：多数人把「写作」塞进<strong>一个 prompt</strong>（「帮我写篇关于 X 的文章，专业、简洁」），于是拿到的是分布的平均值——RLHF 调出来的<strong>「安全的平庸」</strong>。这一期把写作工程化：把你的 voice 编译成可复用 spec、识别并清除 LLM 指纹、用 outline-first 的分层 prompt 驾驭长文、把 AI 钉在 editor/critic 的位置而非 author。核心反直觉：<strong>AI 写作的质量上限不取决于它写得多好，取决于你把它放在 verification 一侧还是 generation 一侧</strong>。判断一句话弱不弱很容易（critique），从零写出好句子很难（generation）——前者是它的强项，后者是它跑飞的地方。</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>Voice Spec：把「你的风格」编译成可复用规格</h2>
+<div class="claim">论断：voice 不是用形容词描述出来的，是用样本 + 负面清单「编译」出来的。</div>
+
+<h3>背景与原理</h3>
+<p>人们描述自己想要的风格时写「专业、简洁、有力」——这些形容词对模型几乎<strong>零信息量</strong>，因为每个人心里的「简洁」都落在模型先验的均值附近，模型只能回归到它训练出的「通用专业腔」。Day 9 讲过的 <strong>Examples &gt; Rules</strong> 在 voice 这件事上是最极端的案例：抽象形容词永远干不过具体样本。Anthropic 的 multishot 文档建议给 3-5 个 example 来锚定输出形态；voice 同理——喂 3-5 段你自己写的代表性文字，让模型<strong>逆向提取可操作特征</strong>（句长分布、主动/被动比例、段落节奏、标点与连接词习惯、是否用列表/emoji），固化成一份 <code>voice.md</code> spec，之后每次写作都注入它。关键是把「风格」从模糊感觉转成可声明、可复用、可 diff 的工件。</p>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-com"># 一次性运行：从样本逆向提取 voice spec（存成 voice.md 复用）</span>
+下面是我写的 5 段代表性文字（同一体裁），用 &lt;sample&gt; 包裹：
+&lt;sample&gt;...粘贴你的真实段落...&lt;/sample&gt;
+
+请逆向分析我的写作风格，输出一份可操作的 style spec，只写
+<span class="tag-key">可执行的规则</span>，不要用「专业、生动」这类形容词。覆盖：
+- 句长：平均字数、长短句节奏（给数字）
+- 句式：主动 vs 被动、是否用反问/破折号/分号
+- 结构：段落长度、是否先结论后论证
+- 用词：偏好的连接词、回避的词、专业术语密度
+- 禁区：我从不用的表达（列出你观察到的）</code></pre>
+<p>把产出的 spec 人工校一遍（删掉模型臆测的、补上它漏掉的），存成 <code>voice.md</code>。这份 spec 比任何形容词都精确，而且可以<strong>版本管理</strong>——不同体裁（博客 / 周报 / 技术文档）各存一份。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）样本跨体裁混在一起喂（周报 + 博客 + 评论），voice 被平均成四不像——一份 spec 只服务一种体裁。（2）样本太少（1-2 段），模型抓不到稳定模式，只能瞎猜。（3）拿到 spec 就当圣旨——它是起点不是终点，必须人工删改。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Anthropic <em>Multishot prompting</em> 文档, <a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/multishot-prompting" target="_blank">docs.anthropic.com/.../multishot-prompting</a> ·
+Paul Graham <em>Write Like You Talk</em>, <a href="https://paulgraham.com/talk.html" target="_blank">paulgraham.com/talk.html</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Slop 反检测：识别并消除 LLM 的「味道」</h2>
+<div class="claim">论断：LLM 默认输出有可检测的指纹，这是分布层的 bias——prompt 只能压，不能根除。</div>
+
+<h3>背景与原理</h3>
+<p>Kobak 等人 2024 年分析了 1400 万篇 PubMed 摘要，发现 ChatGPT 出现后一批「flowery 词」频率断崖式暴涨——<strong>「delve」涨了约 28 倍</strong>，「intricate」「meticulous」同步激增。这些就是 AI 味的客观证据：它们是 RLHF 把模型推向「安全的平庸」的副产品——over-hedge（「值得注意的是」「在某种程度上」）、过度 transition、三段式排比、套话开头（「在当今快速发展的…」）和套话结尾（「总而言之…」）。Simon Willison 把这类批量低质、没人要的 AI 产出命名为 <strong>slop</strong>（2025 年成了多家词典的年度词）。要紧的是认清：这是<strong>分布层面的 bias</strong>，不是单条 prompt 能彻底清除的——你能压低频率，但根治得靠 §1 的真实样本把输出分布整体拉走。</p>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-com"># 贴在写作 prompt 末尾的 slop filter</span>
+硬约束：
+1. 禁用词/短语：delve, 值得注意的是, 在当今/在这个时代,
+   总而言之, 不仅…而且…, 释放(潜力), 赋能, 拥抱(变化)
+2. 不要 preamble（「好的，这是…」）也不要 postamble（总结性收尾）
+3. 每段至少有一个<span class="tag-key">具体锚点</span>：一个数字、一个例子、或一个专有名词
+4. 删掉所有不增加信息的过渡句；能用短句别用长句
+5. 不要对仗排比凑气势——一个具体例子胜过三个抽象形容词</code></pre>
+<p>第 3 条是最有效的——强制具体性，因为 slop 的本质是<strong>空洞</strong>：模型在没有信息可填时会用华丽辞藻和排比填充。逼它放数字和例子，slop 自然没了立足之地。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：越堆 negation（「不要…不要…」）输出越僵硬——Day 9 讲过否定指令本就低效，模型容易「想着粉红大象」反而踩雷。banned-list 是治标；真正把分布拉走要靠 few-shot 注入你的真实样本（§1）。另外禁用词清单要定期更新——模型迭代后指纹词会变。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Kobak et al. <em>Delving into ChatGPT usage in academic writing through excess vocabulary</em>, arXiv:2406.07016 ·
+Simon Willison <em>on slop</em>, <a href="https://simonwillison.net/tags/slop/" target="_blank">simonwillison.net/tags/slop</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>分层 Prompt：章节 → 段落 → 句子的三级控制</h2>
+<div class="claim">论断：长文不是一个 prompt，是一条 outline-first 的 prompt chain——这是 workflow，不是 agent。</div>
+
+<h3>背景与原理</h3>
+<p>一次性让模型写 3000 字，几乎必然踩三个坑：<strong>lost-in-the-middle</strong>（中段论点稀释）、结构在中途崩、术语/风格漂移。正确做法是拆成三层，每层独立 prompt、独立验证（呼应 Day 5：能用 workflow 就别用 agent，因为可控、可 debug、可 eval）。Anthropic 的 chain-prompts 文档明确推荐：复杂任务拆成串联子任务，比硬塞一个巨型 prompt 稳得多。三层各司其职：</p>
+<ul>
+<li><strong>L1 · Outline</strong>：只产结构 + 每节一句话论点，<em>人审</em>——这是全流程最便宜的 verification，骨架错了后面全白做。</li>
+<li><strong>L2 · 逐节扩写</strong>：每次只写一节，但 prompt 里带上<strong>全局 outline + 前一节末尾</strong>做锚点，防止各节重复或漂移。</li>
+<li><strong>L3 · 句子级 style pass</strong>：套用 §1 的 voice spec + §2 的 slop filter 做最后一遍打磨。</li>
+</ul>
+
+<div class="diagram">┌──────────── 写作 = outline-first prompt chain ────────────┐
+│                                                           │
+│  你的 bullet 骨架                                          │
+│        │                                                  │
+│        ▼                                                  │
+│   ┌─────────┐   人审 ✋   结构错→回退重写，不进 L2          │
+│   │ L1 大纲 │ ─────────▶ [结构 + 每节论点]                 │
+│   └────┬────┘                                             │
+│        │  注入: 全局 outline + 前一节结尾(锚点)            │
+│        ▼                                                  │
+│   ┌─────────┐  逐节循环  防漂移 / 防重复                    │
+│   │ L2 扩写 │ ─────────▶ §1..§N 段落草稿                   │
+│   └────┬────┘                                             │
+│        │  注入: voice.md + slop banned-list               │
+│        ▼                                                  │
+│   ┌─────────┐                                             │
+│   │ L3 打磨 │ ─────────▶ 句子级 style pass → 成稿          │
+│   └─────────┘                                             │
+└───────────────────────────────────────────────────────────┘</div>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-key">def</span> write_long(topic, voice_md, banned):
+    outline = llm(<span class="tag-gpt">f"为「{topic}」写大纲：只给章节标题 + 每节一句论点，"</span>
+                  <span class="tag-gpt">"不要正文。"</span>)
+    review(outline)                       <span class="tag-com"># 人审骨架——最便宜的 verification</span>
+    sections, prev = [], <span class="tag-gpt">""</span>
+    <span class="tag-key">for</span> sec <span class="tag-key">in</span> outline.sections:
+        draft = llm(<span class="tag-gpt">f"全局大纲：{outline}\n上一节结尾：{prev[-200:]}\n"</span>
+                    <span class="tag-gpt">f"只写这一节：{sec}。承接上文，不重复已写内容。"</span>)
+        sections.append(draft); prev = draft
+    full = <span class="tag-gpt">"\n\n"</span>.join(sections)
+    <span class="tag-key">return</span> llm(<span class="tag-gpt">f"按这份 voice spec 打磨，逐句过 slop 清单：\n"</span>
+               <span class="tag-gpt">f"{voice_md}\n禁用：{banned}\n\n原文：{full}"</span>)</code></pre>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）L2 不带全局 outline → 各节互相重复、术语前后不一。（2）跳过 L1 直接让模型写全文 → 拿回来是「看起来完整、其实没逻辑骨架」的稿子，改起来比重写还累。（3）层与层之间不做人审 checkpoint，错误一路放大到 L3 才发现。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Anthropic <em>Chain complex prompts</em> 文档, <a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/chain-prompts" target="_blank">docs.anthropic.com/.../chain-prompts</a> ·
+Anthropic <em>Building Effective Agents</em>（prompt chaining 模式）, <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">anthropic.com/engineering/building-effective-agents</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>AI as Editor：把 AI 钉在 critic 而非 author 的位置</h2>
+<div class="claim">论断：最高质量的 AI 写作是「人写骨架，AI 做 critique / expand / polish」，而不是「AI 写、人改」。</div>
+
+<h3>背景与原理</h3>
+<p>这是把 <strong>evaluator-optimizer</strong> 模式（Anthropic <em>Building Effective Agents</em>）用在写作上。关键洞察：<strong>critique 是 verification 问题，generation 是开放问题</strong>。判断「这段哪句最弱、为什么」对模型很容易且可靠；从零生成一整篇好文却容易跑飞，还附带 sycophancy——你让它评自己的初稿，它倾向说「写得不错」。所以把它当 critic（指出弱点、提改法），比当 author（直接代写）可靠得多。更关键的副作用：<strong>人写骨架天然保住 voice</strong>——voice 丢失的根因，就是让 AI 从零生成。你出思想和结构，它做放大和打磨，分工才对。</p>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-com"># self-critique：让 AI 当编辑，不当枪手；只动该动的句子</span>
+你是严格的编辑，不是枪手。针对下面这段：
+1. 指出<span class="tag-key">最弱的 3 句</span>，每句说明为什么弱（空洞/冗余/逻辑跳跃）
+2. 给出 diff 式修改：&lt;del&gt;原句&lt;/del&gt; → &lt;ins&gt;改句&lt;/ins&gt;
+3. <span class="tag-key">只改这 3 句，其余原文逐字保留</span>——不要顺手重写
+4. 不要夸我写得好，直接上批评
+
+&lt;draft&gt;...你的段落...&lt;/draft&gt;</code></pre>
+<p>第 3、4 条是命门：不限定「只改弱句」，模型会忍不住重写全部（顺带抹掉你的 voice）；不禁止夸奖，它会用 sycophancy 稀释批评。要的是 surgical edit，不是 ghostwrite。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）让 AI 全权改写整段 → voice 丢失 + 它会顺带「夸你写得真好」（Day 9 的 sycophancy）。（2）不要求 diff、不限定改动范围 → 你无法快速 review 它改了什么，只能整段重读。（3）把 critique 和 rewrite 放进同一轮 → 它的批评会自我实现地偏向它想写的版本。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Anthropic <em>Building Effective Agents</em>（evaluator-optimizer）, <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">anthropic.com/engineering/building-effective-agents</a> ·
+Anthropic <em>Claude's Character</em>, <a href="https://www.anthropic.com/research/claude-character" target="_blank">anthropic.com/research/claude-character</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// 综合实战 · 给自己造一个「写作 harness」</h3>
+<p>把四点串成一条你周报/博客都能复用的流水线，目标是让成稿过「图灵测试」——别人猜不出哪篇是 AI 辅助的：</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>建 voice spec（§1）</strong>：喂 5 段你的真实文字，逆向提取规则，人工校改后存成 <code>voice.md</code>；不同体裁各一份。</li>
+<li><strong>你只写 bullet 骨架</strong>：思想和逻辑由你出（保 voice + 保结构），这是你不可外包的部分。</li>
+<li><strong>L2 扩写脚本（§3）</strong>：逐节调用，注入 <code>voice.md</code> + 全局 outline + slop banned-list。</li>
+<li><strong>L3 自动 self-critique（§4）</strong>：输出 diff，你只 review 改动的句子，不整篇重读。</li>
+<li><strong>Eval</strong>：把成稿和你历史的纯人工文章混在一起，让另一个模型或朋友<strong>盲猜哪篇是 AI 辅助</strong>。猜不出 = voice spec 合格；一眼看穿 = 回去补 §1 样本、更新 §2 禁用词。</li>
+</ol>
+<p style="margin-top:12px">这套流程的精髓不是「让 AI 帮你写」，而是<strong>始终让 AI 待在 verification 一侧</strong>：你生成思想骨架，它做放大、批评、打磨这些「判断对错比从零创造更容易」的活。这样产出既有你的 voice，又有 AI 的产能。</p>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// ENGLISH GLOSSARY</h3>
+<dl>
+<dt>Voice Spec</dt><dd>把个人写作风格逆向提取成的可操作规则集（句长/句式/用词/禁区），可复用、可版本管理。本期主角。</dd>
+<dt>Slop</dt><dd>Simon Willison 命名的术语：批量生成、没人要、未经审阅的低质 AI 产出。2025 年多家词典年度词。</dd>
+<dt>Excess Vocabulary</dt><dd>Kobak 研究中 LLM 留下的「指纹词」——delve / intricate / meticulous 等频率异常暴涨的词。</dd>
+<dt>Over-hedging</dt><dd>过度使用模糊限定（「在某种程度上」「值得注意的是」），RLHF 推向「安全平庸」的典型表现。</dd>
+<dt>Hierarchical Prompting</dt><dd>把长文写作拆成 outline → 段落 → 句子三层，每层独立 prompt 独立验证的 prompt chain。</dd>
+<dt>Anchor (锚点)</dt><dd>逐节扩写时注入的全局 outline + 前节结尾，用来防止各节风格/术语漂移。</dd>
+<dt>Evaluator-Optimizer</dt><dd>一个 LLM 生成、另一个评估并反馈的 workflow 模式；写作里体现为 AI 当 critic 而非 author。</dd>
+<dt>Surgical Edit</dt><dd>只修改指定的弱句、其余逐字保留的 diff 式编辑，对抗 AI「顺手重写全部」的倾向。</dd>
+<dt>Sycophancy</dt><dd>模型迎合用户、倾向给正面评价的偏差；在自评初稿时会稀释批评（Day 9 主题）。</dd>
+</dl>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// 深入思考</h3>
+<details><summary>如果 voice spec 足够精确，AI 能 100% 复刻你的风格——那「你的 voice」还是你的吗？过度依赖会不会让你自己的写作能力退化？</summary><div>这是 cognitive offloading 的经典权衡。voice spec 复刻的是你<strong>过去</strong>的风格，而真实的 voice 是会随思考演化的。如果你只用 AI 复刻旧 voice，你的风格会被「冻结」在采样那一刻，失去成长。健康用法：voice spec 处理低价值产出（周报、模板邮件）省下精力，把高价值写作（真正想表达的）留给自己手写——后者才是 voice 继续演化的地方。把 AI 当成「风格的快照工具」，不是「风格的代理人」。</div></details>
+<details><summary>slop 的指纹词（delve / intricate）会随模型迭代变化。如果未来模型被专门训练去掉这些指纹，AI 味就消失了吗？还是会换一种形式？</summary><div>指纹会换形式，不会消失。表层词汇可以微调掉，但 AI 味的深层来源是<strong>分布坍缩</strong>——RLHF 把输出推向「多数人觉得安全好」的中心，导致缺乏个人特异性、风险偏好低、句式可预测。这是 alignment 目标的副产品，不是 bug。只要训练目标是「让多数人满意」，输出就会回归均值；真正的个人 voice 恰恰是分布的<strong>长尾</strong>。所以 §1 的 few-shot 注入才是根治——它把采样点从分布中心拉到你的长尾位置。</div></details>
+<details><summary>本期主张「AI 当 critic 比当 author 可靠」。但 critique 也可能是错的——AI 指出的「弱句」可能恰恰是你 voice 的精华。怎么防止 AI 把你改成平庸？</summary><div>这正是为什么第 4 点强调「只改指定弱句 + 输出 diff + 人最终裁决」。critique 的价值是<strong>提请你注意</strong>，不是替你决定。AI 可能把你刻意的破格（短句、口语、留白）标成「弱」，因为它的评判标准也是均值。对策：(1) 永远以 diff 形式呈现，让你逐条 accept/reject；(2) 在 critique prompt 里声明你的 voice spec，让它按你的标准而非通用标准评判；(3) 对「风格性」改动默认拒绝，只接受「事实/逻辑/冗余」类批评。</div></details>
+<details><summary>分层 prompt（L1→L2→L3）牺牲了什么换来可控性？什么场景下一次性长 prompt 反而更好？</summary><div>牺牲的是<strong>全局连贯性与灵感跳跃</strong>。逐节扩写时模型看不到尚未写出的后文，难以做长程铺垫、前后呼应、整体节奏设计——这些恰是优秀长文的灵魂。一次性长 prompt 在模型 context 足够、且追求「一气呵成的叙事流」时更好（如短故事、强论证的 essay）。分层适合<strong>结构 &gt; 文采</strong>的文体（技术文档、报告、教程），这类文章的价值在信息组织而非行文韵律。判据：你更怕「结构崩」还是更怕「读起来像拼接的」？</div></details>
+<details><summary>「让朋友盲猜哪篇是 AI 辅助」这个 eval 听起来好用，但它测的到底是什么？通过了是否就代表写作质量高？</summary><div>它测的是 voice 一致性（indistinguishability），不是质量。通过只说明「AI 辅助稿和你手写稿无法区分」——但如果你手写水平本就一般，达标也只是「平庸得很像你」。这是 eval 设计的经典陷阱：<strong>指标对齐了代理目标，没对齐真实目标</strong>。更好的 eval 应分两层：(1) voice 一致性（盲猜）；(2) 绝对质量（信息密度、论证强度、对读者有无价值），后者需要 rubric 或专家评判，不能靠盲猜。两个都过才算真合格。</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/multishot-prompting" target="_blank">Anthropic · Multishot Prompting</a> — 用 3-5 个 example 锚定输出形态，voice 提取的基础</li>
+<li><a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/chain-prompts" target="_blank">Anthropic · Chain Complex Prompts</a> — 分层 prompt 的官方依据</li>
+<li><a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">Anthropic · Building Effective Agents</a> — prompt chaining 与 evaluator-optimizer 模式</li>
+<li><a href="https://arxiv.org/abs/2406.07016" target="_blank">Kobak et al. · Delving into ChatGPT usage in academic writing</a> — 用「指纹词」量化 LLM 的写作痕迹</li>
+<li><a href="https://simonwillison.net/tags/slop/" target="_blank">Simon Willison · on slop</a> — slop 一词的来龙去脉与边界</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 22 · 2026-06-05</footer>
+</div>
+</body></html>
