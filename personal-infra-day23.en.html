@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 23 · Personal AI Infra — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 23 / PHASE 2 · APPLICATIONS &amp; SYSTEMS</span>
+<h1>Personal AI Infra</h1>
+<h2>LLM Gateway · Cross-Model Routing · Cache Layer · Observability &amp; Key Management</h2>
+<div class="date">2026-06-06 · BigCat</div>
+<p class="pitch">A super-individual's moat isn't a single prompt—it's the private AI pipeline nobody sees.</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>When you're running Claude Code, Cursor, a few homegrown scripts, and two or three side projects—each doing its own <code>import anthropic</code> / <code>import openai</code>, each hardcoding an API key, each talking straight to a provider—you already own a <strong>distributed system with no hub</strong>, and the worst kind: switching models means editing N places, cost is invisible, one provider hiccup takes everything down, and when something breaks there's no trace. This issue isn't about a single tool; it's about <strong>collapsing that scatter into one private pipeline</strong> with four layers: a unified <strong>gateway</strong>, a <strong>routing + fallback</strong> layer, a <strong>cache</strong> layer, and a <strong>observability + key-governance</strong> layer. At a company this is "the platform team's job"; for a super-individual it's infrastructure you can stand up in a weekend that saves money and sanity every day after. Build it once, every app benefits.</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>LLM Gateway: Funnel Every Call Through One Endpoint</h2>
+<div class="claim">Claim: don't let each script talk to a provider SDK directly—auth / routing / cache / logging belong behind one OpenAI-compatible endpoint.</div>
+
+<h3>Background &amp; Principle</h3>
+<p>The gateway is the <strong>single entry point</strong> to the whole stack. Apps no longer know about "Anthropic," "OpenAI," or "Gemini"—they only know a local endpoint <code>http://localhost:4000/v1</code> speaking the OpenAI ChatCompletions dialect. Behind it, the gateway handles the real provider adaptation, auth, accounting, caching, logging. <strong>LiteLLM Proxy</strong> is the lowest-friction choice for individuals: one <code>config.yaml</code> maps 100+ providers to unified model names, and it runs as an OpenAI-compatible server.</p>
+<p>The key payoff is <strong>decoupling</strong>: switching the underlying model is a one-line change in the gateway, with zero downstream app changes; capping an app, rotating a key, or adding a fallback all happens at the hub. That's exactly what the diagram below shows—all four layers hang behind the gateway, and the app side sees only one endpoint.</p>
+
+<div class="diagram">┌─ Apps ────────────┐
+│ Cursor · scriptA   │   all know only one OpenAI-compatible endpoint
+│ side-proj · cron   │        http://localhost:4000/v1
+└─────────┬──────────┘
+          │  (OpenAI dialect + virtual key)
+          ▼
+┌─────────────────── LLM GATEWAY (LiteLLM) ───────────────────┐
+│  ① Auth     virtual key → budget / model allowlist / expiry │
+│  ② Router   pick model by task/cost + provider fallback     │
+│  ③ Cache    pass-through prompt cache + semantic-cache hit   │
+│  ④ Observ.  every call → trace / token / cost / latency      │
+└───┬───────────────┬───────────────┬───────────────┬─────────┘
+    ▼               ▼               ▼               ▼
+ Anthropic       OpenAI         Gemini         local Ollama
+ (real keys live ONLY at the gateway; apps never see them)</div>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># config.yaml — map unified model names to real providers</span>
+model_list:
+  - model_name: <span class="tag-gpt">smart</span>            <span class="tag-com"># apps only say "smart"</span>
+    litellm_params:
+      model: <span class="tag-gpt">anthropic/claude-opus-4-8</span>
+      api_key: <span class="tag-gpt">os.environ/ANTHROPIC_API_KEY</span>
+  - model_name: <span class="tag-gpt">cheap</span>
+    litellm_params:
+      model: <span class="tag-gpt">anthropic/claude-haiku-4-5</span>
+      api_key: <span class="tag-gpt">os.environ/ANTHROPIC_API_KEY</span>
+
+<span class="tag-com"># Start: litellm --config config.yaml   →  localhost:4000</span>
+<span class="tag-com"># App side is provider-agnostic:</span>
+<span class="tag-key">from</span> openai <span class="tag-key">import</span> OpenAI
+client = OpenAI(base_url=<span class="tag-gpt">"http://localhost:4000/v1"</span>, api_key=<span class="tag-gpt">"sk-my-virtual-key"</span>)
+client.chat.completions.create(model=<span class="tag-gpt">"smart"</span>, messages=[...])  <span class="tag-com"># call Claude via the OpenAI SDK</span></code></pre>
+
+<div class="fail">
+<strong>Failure mode</strong>: turning the gateway into a single point of failure—all apps hit one local process, and if it dies everything dies. Individual fix: keep the gateway stateless (config + env vars), auto-restart it with <code>supervisord</code>/systemd, or keep a direct-to-provider fallback path for any app that can't tolerate interruption, letting the gateway carry only traffic that can absorb the occasional hiccup.
+</div>
+
+<div class="res">
+<strong>Resources</strong> · LiteLLM Proxy docs, <a href="https://docs.litellm.ai/docs/simple_proxy" target="_blank">docs.litellm.ai/docs/simple_proxy</a> ·
+LiteLLM source, <a href="https://github.com/BerriAI/litellm" target="_blank">github.com/BerriAI/litellm</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Cross-Model Routing &amp; Fallback: Pick by Task, Back Up by Availability</h2>
+<div class="claim">Claim: routing has two orthogonal axes—"which tier does this task need" (cost) and "what if this provider is down" (availability). Don't conflate them.</div>
+
+<h3>Background &amp; Principle</h3>
+<p><strong>Axis 1 (cost routing)</strong>: not every call deserves a frontier model. Classification, extraction, formatting, the routing decision itself—Haiku-tier is plenty, an order of magnitude cheaper. Flipping the default from "expensive model" to "cheap by default, expensive on demand" is the fastest way to halve an individual's token bill.</p>
+<p><strong>Axis 2 (availability fallback)</strong>: providers rate-limit, 5xx, and occasionally refuse. A fallback is an <strong>ordered model chain</strong>: if the primary errors, auto-try the next. <strong>OpenRouter</strong> exposes this as a <code>models</code> array—listed by priority, an error on one falls through to the next, and you're <strong>billed for whichever model was actually used</strong>. LiteLLM has an equivalent router fallback.</p>
+<p>The discipline: <strong>keep the two axes separate</strong>. Cost routing is "I proactively pick the cheap one"; fallback is "passively keep me from going down." Mistaking a degraded fallback for a cost optimization will quietly drop your quality during a provider hiccup without you noticing.</p>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># Cost routing: classify in one shot, then pick the tier</span>
+tier = classify(task)                       <span class="tag-com"># judge difficulty with a cheap model</span>
+model = <span class="tag-gpt">"smart"</span> <span class="tag-key">if</span> tier == <span class="tag-gpt">"hard"</span> <span class="tag-key">else</span> <span class="tag-gpt">"cheap"</span>
+
+<span class="tag-com"># Availability fallback: OpenRouter models array, ordered backup</span>
+client.chat.completions.create(
+    model=<span class="tag-gpt">"anthropic/claude-opus-4-8"</span>,
+    extra_body={<span class="tag-gpt">"models"</span>: [          <span class="tag-com"># primary errors → fall through</span>
+        <span class="tag-gpt">"anthropic/claude-sonnet-4-6"</span>,
+        <span class="tag-gpt">"openai/gpt-latest"</span>,
+    ]},
+    messages=[...],
+)
+<span class="tag-com"># The response's model field tells you which was actually used → always log it</span></code></pre>
+
+<div class="fail">
+<strong>Failure mode</strong>: (1) assuming prompts are portable across providers during fallback—a system prompt tuned on Claude may drift on GPT; for cross-vendor links in the chain, either accept quality variance or keep a separate prompt per vendor. (2) Using an expensive model as the routing classifier, so what you save doesn't even cover the classification cost. Classification must use the cheapest tier—or rules/regex first.
+</div>
+
+<div class="res">
+<strong>Resources</strong> · OpenRouter Model Fallbacks, <a href="https://openrouter.ai/docs/guides/routing/model-fallbacks" target="_blank">openrouter.ai/docs/.../model-fallbacks</a> ·
+LiteLLM Router &amp; Fallbacks, <a href="https://docs.litellm.ai/docs/simple_proxy" target="_blank">docs.litellm.ai/docs/simple_proxy</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Two Cache Layers: Provider Prompt Cache + Semantic Cache</h2>
+<div class="claim">Claim: "cache" in LLM-land is two completely different things—don't conflate provider-side prefix reuse with application-layer semantic hits.</div>
+
+<h3>Background &amp; Principle</h3>
+<p><strong>Layer 1 · provider prompt caching</strong>: it caches the <strong>prefix</strong>. Mark the stable, unchanging parts (system prompt, tool definitions, long documents) with <code>cache_control</code>, and the provider caches that KV computation; subsequent hits are charged at a tiny read rate. Anthropic's docs are explicit: <strong>cache read is ~0.1× the base input price</strong>, a 5-minute cache write ~1.25×, and a 1-hour write ~2×. This layer is a money-saver when you <strong>repeatedly call with the same long prefix</strong> (agent loops, multi-turn conversations especially), but it only reuses computation—it doesn't skip inference; the model is still genuinely called each time.</p>
+<p><strong>Layer 2 · semantic cache (GPTCache and similar)</strong>: it caches the <strong>whole Q&amp;A pair</strong>. A new query is first embedded and compared by similarity against past queries; if similar enough, the old answer is returned directly and <strong>the model is not called at all</strong>—both latency and cost drop to ~0. The cost is that the "similar" judgment is risky: a loose threshold returns answers it shouldn't.</p>
+<p>The two layers are orthogonal and stackable: the prefix cache lowers the cost <em>per call</em>; the semantic cache lowers the <em>number of calls</em>. The former is near-zero-risk; the latter saves more but you must manage the threshold.</p>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># Layer 1: Anthropic prompt caching — tag the stable prefix</span>
+client.messages.create(
+  model=<span class="tag-gpt">"claude-opus-4-8"</span>,
+  system=[{
+    <span class="tag-gpt">"type"</span>: <span class="tag-gpt">"text"</span>,
+    <span class="tag-gpt">"text"</span>: LONG_STABLE_INSTRUCTIONS,          <span class="tag-com"># long and identical each time</span>
+    <span class="tag-gpt">"cache_control"</span>: {<span class="tag-gpt">"type"</span>: <span class="tag-gpt">"ephemeral"</span>}  <span class="tag-com"># ← cached, read ≈ 0.1×</span>
+  }],
+  messages=[{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,<span class="tag-gpt">"content"</span>: today_query}],  <span class="tag-com"># variable part goes last</span>
+)
+
+<span class="tag-com"># Layer 2: semantic cache — a hit skips the model (GPTCache idea)</span>
+emb = embed(query)
+hit = vec_store.search(emb, threshold=<span class="tag-key">0.95</span>)   <span class="tag-com"># threshold is the key knob</span>
+<span class="tag-key">if</span> hit: <span class="tag-key">return</span> hit.cached_answer            <span class="tag-com"># 0 tokens, 0 latency</span>
+ans = call_llm(query); vec_store.add(emb, ans)</code></pre>
+<p>One rule: <strong>put volatile content at the end of the prefix</strong>. A prompt-cache hit requires the prefix to be byte-for-byte identical—a dynamic timestamp at the top of the system prompt can invalidate the entire cached block.</p>
+
+<div class="fail">
+<strong>Failure mode</strong>: a semantic-cache threshold too loose returns the old "2023 annual report" answer for a new "2024 annual report" question—the two embeddings are close, but the answer is flat wrong. Don't put high-factuality, time-sensitive queries on semantic cache; it fits FAQs, support, and stable knowledge—the "varied phrasing, stable answer" case.
+</div>
+
+<div class="res">
+<strong>Resources</strong> · Anthropic Prompt Caching, <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching" target="_blank">platform.claude.com/.../prompt-caching</a> ·
+GPTCache, <a href="https://github.com/zilliztech/GPTCache" target="_blank">github.com/zilliztech/GPTCache</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Observability &amp; Key Governance: See What You Spend, Control Who Spends</h2>
+<div class="claim">Claim: an AI pipeline without traces is flying blind—you don't know where the money went, which app is burning it, or how long a key has been leaked.</div>
+
+<h3>Background &amp; Principle</h3>
+<p><strong>Observability</strong>: LLM-call observability differs from ordinary API monitoring—you want to see prompt/completion pairs, token usage, per-call cost, latency, and (for agents) the full call chain. <strong>Langfuse</strong> is the individual's go-to open-source option: self-hostable, natively understands LLM concepts (tokens, cost, traces, nested spans), and integrates with OpenTelemetry and the major SDKs. Once it's in, "which side project quietly burned $40 this month" goes from guesswork to a chart.</p>
+<p><strong>Key governance</strong>—three iron rules: <strong>(1) real keys never enter code or git</strong>, only env vars or a secret manager, and only at the gateway layer. <strong>(2) issue each app a virtual key instead of sharing a real one</strong>: LiteLLM's virtual keys support per-key budgets, rate limits, model allowlists, and expiry—an app that runs away only burns its own quota and can be revoked alone without affecting others. <strong>(3) start budgets small</strong> ($5–50), raise by real usage, and set a hard cap on every key—the individual's only backstop against "a 3 a.m. infinite loop blows up the bill."</p>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># Langfuse: decorator auto-traces, zero intrusion</span>
+<span class="tag-key">from</span> langfuse.openai <span class="tag-key">import</span> OpenAI   <span class="tag-com"># drop-in replacement, auto-records token/cost/latency</span>
+client = OpenAI(base_url=<span class="tag-gpt">"http://localhost:4000/v1"</span>, api_key=<span class="tag-gpt">"sk-my-virtual-key"</span>)
+
+<span class="tag-com"># LiteLLM virtual key: per-app budget + model allowlist + expiry</span>
+<span class="tag-com"># POST /key/generate</span>
+{
+  <span class="tag-claude">"key_alias"</span>: <span class="tag-gpt">"side-project-blog"</span>,
+  <span class="tag-claude">"max_budget"</span>: <span class="tag-key">20</span>,            <span class="tag-com"># this key spends at most $20 ever</span>
+  <span class="tag-claude">"budget_duration"</span>: <span class="tag-gpt">"30d"</span>,     <span class="tag-com"># reset every 30 days</span>
+  <span class="tag-claude">"models"</span>: [<span class="tag-gpt">"cheap"</span>],          <span class="tag-com"># cheap tier only, prevents misuse of opus</span>
+  <span class="tag-claude">"duration"</span>: <span class="tag-gpt">"90d"</span>             <span class="tag-com"># the key itself expires in 90 days</span>
+}</code></pre>
+
+<div class="fail">
+<strong>Failure mode</strong>: (1) watching only "total spend" rather than "spend per app / per key"—the bill rose but you can't pin which project, which is no monitoring at all. Traces must carry app/key dimension tags. (2) Sharing one real key across apps and hardcoding it into multiple repos: one leak exposes everything, and with no per-key separation you can't even tell which app leaked or how big the blast radius is.
+</div>
+
+<div class="res">
+<strong>Resources</strong> · Langfuse docs, <a href="https://langfuse.com/docs" target="_blank">langfuse.com/docs</a> ·
+Langfuse source, <a href="https://github.com/langfuse/langfuse" target="_blank">github.com/langfuse/langfuse</a> ·
+LiteLLM Virtual Keys, <a href="https://docs.litellm.ai/docs/proxy/virtual_keys" target="_blank">docs.litellm.ai/docs/proxy/virtual_keys</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// CAPSTONE · Stand Up Your Private AI Pipeline in One Weekend</h3>
+<p>Wire the four layers into a runnable minimal infra that every app then shares:</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>Run the gateway</strong>: one LiteLLM <code>config.yaml</code> mapping a <code>smart</code>/<code>cheap</code> pair, real keys via env vars. <code>litellm --config config.yaml</code>, endpoint at <code>localhost:4000</code>.</li>
+<li><strong>Add routing + fallback</strong>: give <code>smart</code> a cross-tier fallback chain (opus→sonnet→gpt); new scripts default to <code>cheap</code>, promote to <code>smart</code> only when reasoning depth is confirmed.</li>
+<li><strong>Turn on cache</strong>: tag all stable system prompts with <code>cache_control</code>; for FAQ-style apps add a semantic-cache layer, tuning the threshold from 0.95 up.</li>
+<li><strong>Wire Langfuse + issue virtual keys</strong>: one virtual key per app with <code>max_budget</code> and a model allowlist; self-host Langfuse, and tag every call with the app.</li>
+<li><strong>Acceptance</strong>: point the <code>base_url</code> of your existing 2-3 scripts at <code>localhost:4000</code> and run for a week. Open Langfuse on the weekend—for the first time you <strong>see at a glance</strong> what each app spent, the hit rate, and which provider hiccuped. That chart is the payoff of your private pipeline.</li>
+</ol>
+<p style="margin-top:12px">Once built, "switch models" goes from editing N repos to changing one config line; "how much did AI cost this month" goes from reverse-engineering a credit-card statement to a live dashboard. That's the watershed from "knows how to use AI tools" to "owns AI infrastructure."</p>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// GLOSSARY</h3>
+<dl>
+<dt>LLM Gateway / Proxy</dt><dd>A unified entry layer funneling many providers into one OpenAI-compatible endpoint. Example: LiteLLM Proxy.</dd>
+<dt>OpenAI-compatible</dt><dd>Using the OpenAI ChatCompletions dialect as a universal protocol; any OpenAI SDK client connects with zero changes.</dd>
+<dt>Model Routing</dt><dd>Proactively picking a model tier by task difficulty/cost (e.g. cheap vs smart).</dd>
+<dt>Fallback Chain</dt><dd>An ordered model chain where a primary error auto-falls-through to the next, resisting provider hiccups.</dd>
+<dt>Prompt Caching</dt><dd>Provider-side caching of a stable prefix's KV computation; cache read ≈ 0.1× the base price.</dd>
+<dt>cache_control</dt><dd>The Anthropic API field marking a cache boundary, <code>{"type":"ephemeral"}</code>.</dd>
+<dt>Semantic Cache</dt><dd>Hits a past answer by query-embedding similarity; on a hit the model isn't called at all. Example: GPTCache.</dd>
+<dt>Observability</dt><dd>Full-chain visibility into LLM-call trace/token/cost/latency. Example: Langfuse.</dd>
+<dt>Virtual Key</dt><dd>A proxy key issued by the gateway, carrying per-key budget, rate limit, model allowlist, expiry.</dd>
+<dt>Budget Window</dt><dd>A virtual key's periodic spend cap (e.g. $20 per 30 days), preventing runaway spend.</dd>
+</dl>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// DEEP THINKING</h3>
+<details><summary>The gateway funnels every call, making itself a single point of failure plus an extra hop of latency. For an individual, does centralization's upside really beat the cost?</summary><div>For an individual (low traffic, many apps) the upside is overwhelming. The extra hop is process-local (milliseconds), negligible against multi-second inference; the SPOF is solved by systemd auto-restart plus a direct-connect fallback for critical apps. In return: one place to switch models, one view of cost, one place to manage keys. The cost rises with <em>traffic scale</em> (enterprise needs HA and horizontal scaling), but an individual is nowhere near that inflection—here centralization is nearly pure profit.</div></details>
+<details><summary>Prompt cache saves on "repeated calls with the same prefix"; semantic cache saves on "similar queries." What workload do neither help?</summary><div>The "different prefix every time + new query every time" workload: one-off large-document analysis, reviewing a different codebase each time, exploratory research. The prefix changes → no reusable prefix; the query is always new → semantic hit rate ≈ 0. Such workloads can only be cheapened by model routing (right tier) and the batch API (non-real-time discount). The tell: hit rate stays below 10% yet you force a 1h cache, so the write premium actually loses money.</div></details>
+<details><summary>Cross-provider fallback sounds robust, but it hides a dangerous assumption. What is it, and how do you defend?</summary><div>The assumption: "swap the model, the output quality is equivalent." In reality prompts are tuned to a specific model; cross-vendor fallback drifts behavior—format, tone, tool-call style may all change—and you stay oblivious because "at least it didn't error." Defenses: (1) force-log the model actually used in traces and review the fallback trigger rate; (2) for quality-sensitive paths fall back only <em>within</em> a vendor (opus→sonnet), reserving cross-vendor fallback for "something beats nothing" non-critical paths; (3) tag cross-vendor degraded outputs so downstream can recognize them.</div></details>
+<details><summary>A virtual key's per-key budget is a "hard cap." But an LLM call's cost is only known after the response—does the budget check happen before or after the call? What boundary problem does that create?</summary><div>The budget is checked against <em>recorded cumulative spend</em>, before the call; but a single call's cost is only settled after the response. So there's an "overshoot tail": as cumulative spend nears the cap, several concurrent requests can all pass the pre-check and then together push the account past the limit. The impact is tiny for a single-threaded individual, but agent concurrency or batched cron triggers expose it. Pragmatic move: set the budget below what you can truly absorb, leaving a buffer, and pair it with a provider-side hard spend limit as a second line—don't treat the gateway budget as an absolutely impassable wall.</div></details>
+<details><summary>This infra is the watershed from "uses AI" to "owns AI infra." But could it instead become complexity debt that locks you in? When should you tear it down?</summary><div>It can, if over-engineered. The criterion is <em>pain-driven</em>: you have ≥3 apps, the monthly bill needs allocating, you've switched models ≥2 times—only when these three signals appear is it worth building; otherwise a single <code>config.py</code> centralizing keys is enough. Signs to simplify/tear down: a layer's config hasn't changed in six months (it's not solving a real problem); the time maintaining the gateway exceeds the time it saves. Infra's value is "build once, every app benefits"—once apps converge to one, or all migrate to a hosted IDE, this self-built pipeline should degrade back to a lightweight config file. Don't architect for architecture's sake.</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://docs.litellm.ai/docs/simple_proxy" target="_blank">LiteLLM Proxy (LLM Gateway)</a> — the lowest-friction unified gateway, with routing/fallback/accounting</li>
+<li><a href="https://openrouter.ai/docs/guides/routing/model-fallbacks" target="_blank">OpenRouter · Model Fallbacks</a> — ordered backup via a models array, billed by the model actually used</li>
+<li><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching" target="_blank">Anthropic · Prompt Caching</a> — cache_control usage and the 0.1× read rate</li>
+<li><a href="https://langfuse.com/docs" target="_blank">Langfuse</a> — open-source, self-hostable full-chain LLM observability</li>
+<li><a href="https://github.com/zilliztech/GPTCache" target="_blank">GPTCache</a> — semantic cache returning similar queries without calling the model</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 23 · 2026-06-06</footer>
+</div>
+</body></html>
