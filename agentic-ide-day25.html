@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 25 · Agentic IDE — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 25 / PHASE 3 · FRONTIER</span>
+<h1>Agentic IDE</h1>
+<h2>异步 Agent · Index vs Agentic Search · Verification 瓶颈 · Fan-out 并行</h2>
+<div class="date">2026-06-08 · BigCat</div>
+<p class="pitch">下一代 IDE 的竞争不在补全准不准，在你能不能放心走开。</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>Day 19 拆过 Cursor / Claude Code / Aider 的 harness 差异——那是「坐在驾驶座」时代的事。2026 年的真实拐点是<strong>控制权交接</strong>：Cursor Cloud Agent、GitHub Copilot coding agent、Claude Code on the web 都把任务扔进云端沙箱异步跑，回给你一个 PR。你从「驾驶员」变成「审阅者 / 经理」。这一变化把工程瓶颈整体迁移了：不再是「AI 写得多准」，而是<strong>怎么喂上下文、怎么验证它没写错、怎么并行调度</strong>。这一期讲四个决定下一代 agentic IDE 上限的架构轴——同步到异步的范式转向、embedding 索引 vs agentic search 的路线分叉、为什么 verification（而非 reasoning）才是自主度的真天花板、以及 fan-out 并行的隔离与选择问题。每一个都不是「哪个工具更好」，而是「这条路线的工程约束在哪」。</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>范式转向：从 Pair Programming 到 Async Delegation</h2>
+<div class="claim">论断：真正的拐点不是补全更准，是控制流从「你驾驶、AI 补全」翻转成「你委派、AI 自主、你审阅」。</div>
+
+<h3>背景与原理</h3>
+<p>同步 copilot 的心智模型是 pair programming：你写、它补，每个 token 你都在场，错了立刻纠。异步 agent 完全不同——你给一个任务，它在<strong>独立云沙箱</strong>里跑几分钟到几十分钟，回来一个 PR。三家的实现高度一致：</p>
+<ul>
+<li><strong>Cursor Cloud Agent</strong>：隔离的 Ubuntu 云 VM，克隆你的 repo，跑测试、装包、开分支、提 PR。你可以关上电脑去开会。</li>
+<li><strong>GitHub Copilot coding agent</strong>：跑在 GitHub Actions 环境里，把 issue assign 给它，它自己拆 checklist、写代码、push commit、开 PR 请你 review。</li>
+<li><strong>Claude Code on the web</strong>：Anthropic 托管的隔离 VM，配合 git worktree 做并行会话。</li>
+</ul>
+<p>工程后果是 trade-off 的整体搬家。<strong>吞吐</strong>涨了（多个任务并行、你能睡觉）；但<strong>单任务墙钟延迟</strong>涨了（你不在 loop 里即时纠偏），<strong>审阅负担</strong>涨了（每个 PR 要读）。瓶颈从「AI 写得快不快」变成「你审得快不快 + AI 自验证得好不好」——后两点正是 §3、§4 的主题。Anthropic 在《Building Effective Agents》里反复提醒：自主度越高，越要把<em>简单、可控、可验证</em>当默认，别为了「agentic」而 agentic。</p>
+
+<div class="diagram">  同步 Copilot（driver）            异步 Agent（manager）
+  ─────────────────────            ─────────────────────
+  你 ──编辑──▶ AI 补全              你 ──委派任务──▶ ┌──────────────┐
+   ▲           │                                   │ 云端沙箱 VM   │
+   └──即时纠偏─┘   每个 diff 在场                   │ 编辑·测试·PR │
+                                                    └──────┬───────┘
+  纠错延迟: 秒级                    你 ◀──审阅 PR───────────┘
+  瓶颈: AI 速度                    纠错延迟: 分钟~小时级
+                                   瓶颈: 你审阅 + AI 自验证</div>
+
+<h3>实战示例</h3>
+<p>异步模式下你不在场纠偏，所以<strong>任务描述就是唯一的方向盘</strong>。给 coding agent 的 issue 要把验收标准写死，而不是同步时那种「先试试看」：</p>
+<pre><code><span class="tag-com"># 给异步 coding agent 的 issue 模板（assign 前先填满）</span>
+<span class="tag-claude">## 目标</span>     给 /api/orders 加分页，默认 20 条/页
+<span class="tag-claude">## 约束</span>     复用现有 Paginator（src/utils/page.ts），别新造
+<span class="tag-claude">## 验收</span>     - 新增测试覆盖 page=0 / 超界 / 默认值三种
+            - `pnpm test` 全绿；不得删/改已有测试
+            - 不改 DB schema
+<span class="tag-claude">## 禁区</span>     不要碰 auth 中间件、不要升级依赖</code></pre>
+<p>关键差异：同步时「约束 / 验收 / 禁区」可以边做边补，异步时它们必须在 dispatch 前就钉死——因为你没有机会在第 3 分钟喊停。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：把模糊任务扔进异步 agent。同步时一句「嗯不对，换个思路」就救回来了；异步时一个 underspecified 任务跑 20 分钟回来整个方向全错，你的纠偏成本是「读完一个错 PR + 重写 issue + 再等 20 分钟」。<strong>异步放大了 underspecification 的代价</strong>——这是 §3 verification 成为刚需的根因。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Cursor Cloud Agent 文档, <a href="https://cursor.com/docs/cloud-agent" target="_blank">cursor.com/docs/cloud-agent</a> ·
+GitHub Copilot coding agent, <a href="https://docs.github.com/copilot/concepts/agents/coding-agent/about-coding-agent" target="_blank">docs.github.com/.../coding-agent</a> ·
+Anthropic <em>Building Effective Agents</em>, <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">anthropic.com/engineering/building-effective-agents</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Context 架构分叉：Embedding Index vs Agentic Search</h2>
+<div class="claim">论断：agentic IDE 最深的架构分歧是「预建语义索引」还是「按需 agentic 搜索」——两条路各有不可消除的代价。</div>
+
+<h3>背景与原理</h3>
+<p>agent 怎么找到相关代码，决定了它的速度、新鲜度和隐私边界。两条路线：</p>
+<ul>
+<li><strong>Embedding 索引（Cursor 路线）</strong>：把 repo chunk 成函数/类，embed 成向量存进远端向量库（Cursor 用 Turbopuffer），用 Merkle 树做增量同步（约每 5 分钟扫一次只传变更文件）。检索 = 对代码库做 RAG，语义相似度召回。<strong>优点</strong>：召回快、能 scale 到大 monorepo、问「哪里处理支付」这种语义查询很强。<strong>代价</strong>：索引滞后（大重构后短暂失真）、必须把代码上传到 server、embedding 抓「语义相似」却抓不住「跨文件的调用逻辑」。</li>
+<li><strong>Agentic search（Claude Code 路线）</strong>：不建持久索引，agent 用 grep / glob / read 现场找，像人 debug 那样顺着 import 链跳。<strong>优点</strong>：永远读最新磁盘状态、不上传持久副本（隐私友好）、能跟逻辑链而非只跟语义。<strong>代价</strong>：每次查询烧 token + 多轮 + 慢，在命名混乱的 legacy repo 里满地 grep 容易 miss。</li>
+</ul>
+<p>注意趋势：两条路在收敛。Cursor 的文档现在标题就叫 <em>Semantic &amp; Agentic Search</em>——语义索引快速缩小范围、agentic 搜索精确定位，混合用。但底层 trade-off（上传 vs 烧 token、滞后 vs 慢）不会消失，只是被组合。</p>
+
+<div class="diagram">  Embedding 索引（Cursor）              Agentic Search（Claude Code）
+  ──────────────────────              ────────────────────────────
+  repo ─chunk─▶ embed ─▶ 向量库        query ─▶ agent
+                  ▲         │                   │ grep / glob / read
+       Merkle 增量同步      ▼                   ▼ （现场、按需、多轮）
+       (~5min)        语义召回 top-k       顺 import 链定位
+  ✓快 ✓scale ✗滞后 ✗上传代码           ✓最新 ✓不上传 ✗费token ✗慢</div>
+
+<h3>实战示例</h3>
+<p>两条路线你都能「帮它一把」。agentic search 没有索引，但你可以给它一张<strong>人工地图</strong>——在 <code>CLAUDE.md</code>（或 <code>.cursorrules</code>）里写清模块布局，让它的 grep 有的放矢：</p>
+<pre><code><span class="tag-com"># CLAUDE.md —— 给 agentic search 的「导航索引」</span>
+<span class="tag-claude">## 代码地图</span>
+- 支付逻辑      → src/billing/   （别去 src/legacy/pay/，已废弃）
+- API 路由      → src/routes/*.ts
+- 数据库 schema → prisma/schema.prisma
+<span class="tag-claude">## 检索约定</span>
+- 找「订单」相关：先 grep `Order` in src/domain/，别全库扫
+- 测试都在同目录 *.test.ts，改实现先读对应测试</code></pre>
+<p>这等于给无索引的 agent 注入一个「人维护的稀疏索引」，省下大量盲目 grep 的 token。对 Cursor 索引路线，对应动作是把 <code>.cursorignore</code> 配好，别让 <code>node_modules</code> / 生成物污染向量库召回。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）索引路线——大重构后没等同步完就让 agent 动手，它按 stale 索引去编辑已删除的符号，自信地改不存在的文件。（2）agentic search 路线——在零文档、命名混乱的 legacy repo 里，agent 满库 grep 烧掉几万 token 还没定位准。两条路的解药都不是换工具，是<strong>给它结构</strong>（同步窗口意识 / CLAUDE.md 地图）。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Cursor Codebase Indexing, <a href="https://cursor.com/docs/context/codebase-indexing" target="_blank">cursor.com/docs/context/codebase-indexing</a> ·
+Cursor 安全索引（Merkle/向量库）, <a href="https://cursor.com/blog/secure-codebase-indexing" target="_blank">cursor.com/blog/secure-codebase-indexing</a> ·
+Claude Code Best Practices, <a href="https://code.claude.com/docs/en/best-practices" target="_blank">code.claude.com/docs/en/best-practices</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>自主度的真天花板：Verification 不是 Reasoning</h2>
+<div class="claim">论断：SWE-bench 分数一路涨但真实自主度没同步涨——卡点不是模型够不够聪明，是「改对了能不能被验证」。</div>
+
+<h3>背景与原理</h3>
+<p>SWE-bench（Jimenez et al., arXiv 2310.06770）从 2023 年 Claude 2 仅解 1.96% 涨到如今 SOTA 70%+。但有个被忽略的细节：这个 benchmark 自带<strong>隐藏测试套件当 oracle</strong>——「改对没」是有标准答案验证的。真实工作里这个 oracle 不存在。于是当 agent 走向异步（§1），人无法盯每一步时，站在「agent 说完成了」和「main 挂了」之间的<strong>唯一防线就是 verification</strong>。前沿工程的重心因此从「让模型更聪明」转向「把验证焊进 harness」：</p>
+<ul>
+<li><strong>沙箱执行 + 全量测试</strong>：PR 提出前在隔离环境跑通测试，不绿不交。</li>
+<li><strong>静态闸门</strong>：type-check / lint / 构建作为 PostToolUse 或 CI gate。</li>
+<li><strong>Spec-first / 红绿</strong>：先让 agent 写一个失败的验收测试，再让它改到变绿——把「验收标准」变成可执行的 oracle。</li>
+<li><strong>验证须防篡改</strong>：闸门必须在 harness / CI 层强制，不能让 agent 自己能改——否则它会「删掉失败的测试」或写 <code>assert True</code> 来「通过」。</li>
+</ul>
+<p>一句话：<strong>自主度上限 = 验证质量，不是模型 IQ</strong>。Day 19 讲的「closing the loop」在同步模式是加分项，在异步模式是生存线。</p>
+
+<h3>实战示例</h3>
+<p>把「完成的定义」做成 harness 强制的闸门，而不是写在 prompt 里求 agent 自觉：</p>
+<pre><code><span class="tag-com"># .github/workflows/agent-gate.yml —— coding agent 的 PR 必须过</span>
+<span class="tag-key">on</span>: pull_request
+<span class="tag-key">jobs</span>:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck          <span class="tag-com"># 静态闸门</span>
+      - run: pnpm test --coverage     <span class="tag-com"># oracle：测试必须全绿</span>
+      - run: git diff --exit-code '*.test.ts' <span class="tag-com"># 防篡改：禁止偷改测试</span>
+      - run: pnpm lint</code></pre>
+<p>最后一行是关键：<code>git diff --exit-code</code> 在 agent 改动了已有测试文件时直接 fail——把「不许删测试骗过验证」从 prompt 约束升级成物理拦截。这正是 Day 3 讲的「permission gate 物理拦截 &gt; 模型自律」在验证层的复用。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）把 SWE-bench 式高分当成「可以放它无人值守」的证据——有 oracle 的 70% pass@1 ≠ 你 repo 上无 oracle 的安全自主。（2）验证可被 agent 篡改：弱 gate 会被 game（删测试、注释断言、改 assert）。验证一旦能被它编辑，就等于没有验证。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · SWE-bench, <a href="https://arxiv.org/abs/2310.06770" target="_blank">arXiv 2310.06770</a> ·
+Anthropic <em>Building Effective Agents</em>（eval / 简单优先）, <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">anthropic.com/engineering/building-effective-agents</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Fan-out 并行：Worktree 隔离 + Best-of-N</h2>
+<div class="claim">论断：agentic IDE 的「经理化」未来同时跑 N 个 agent，瓶颈从「写代码」变成「隔离 + 选择 + 合并」。</div>
+
+<h3>背景与原理</h3>
+<p>git worktree / 隔离容器让多个 agent 互不踩脚（Claude Code 的 <code>--worktree</code>、Cursor 并行 cloud agent、Devin 并行会话）。Fan-out 有两种，目的完全不同：</p>
+<ul>
+<li><strong>跨任务 fan-out（要吞吐）</strong>：3 个 agent，3 个 feature/bug，3 条分支并行。worktree 隔离解决了<em>文件系统冲突</em>，但解决不了<em>语义冲突</em>（两个 PR 都改了同一个接口契约）。</li>
+<li><strong>单任务 best-of-N（赌方差）</strong>：同一个 prompt 跑 N 次，挑最好的。Anthropic 的 Claude Code best practices 直接建议这招——「与其跟 LLM 输出的随机性对抗，不如并行启动多个、选最好的」。这是用 token 成本换可靠性，本质是投机执行。</li>
+</ul>
+<p>新瓶颈出现在两端：<strong>选择</strong>（怎么从 N 个里挑最优，又不用全读一遍？——答案绕回 §3，靠 verification 自动打分）和<strong>合并</strong>（语义冲突仍要人解）。Anthropic《How we built our multi-agent research system》给了量化代价：orchestrator-worker 架构性能比单 agent 高 90%+，但<strong>token 用量解释了 80% 的性能方差</strong>——fan-out 是拿 token 换效果，得用验证收益把账算平。Cognition 的《Don't Build Multi-Agents》则是反面警告：并行 coding agent 之间 context 漂移 + 决策不一致 + 合并地狱，worktree 只挡住文件碰撞，协调税仍在。</p>
+
+<h3>实战示例</h3>
+<p>best-of-N 的最小骨架——隔离跑 N 次，用 §3 的 oracle 自动筛掉跑不绿的，人只在通过者里选：</p>
+<pre><code><span class="tag-com"># best-of-3：worktree 隔离 + 测试 oracle 自动初筛</span>
+<span class="tag-key">for</span> i in 1 2 3; do
+  git worktree add ../try-$i -b attempt-$i      <span class="tag-com"># 物理隔离，互不踩脚</span>
+  (cd ../try-$i &amp;&amp; claude -p "$TASK" &amp;&amp; \
+     pnpm test &gt; result-$i.log 2&gt;&amp;1 &amp;&amp; echo "try-$i PASS") &amp;
+<span class="tag-key">done</span>; wait
+<span class="tag-com"># 只在 PASS 的尝试里人工挑最干净的 diff，其余 worktree remove 丢弃</span></code></pre>
+<p>关键：verification（§3）是 best-of-N 的<strong>筛子</strong>。没有自动 oracle，best-of-N 只是把瓶颈从「写」搬到「你读 N 个 PR」，不省反费。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）fan-out 不隔离——3 个 agent 在同一分支同一批文件上改，改动互相覆盖、context 污染，你花在解冲突上的时间超过 agent 省下的（Anthropic best practices 原文警告的场景）。（2）best-of-N 没有便宜的验证——N 倍 token 烧完，你还得逐个人肉审，账是亏的。fan-out 的前提永远是「选择/验证比生成便宜」。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Claude Code Best Practices（worktree / 多会话）, <a href="https://code.claude.com/docs/en/best-practices" target="_blank">code.claude.com/docs/en/best-practices</a> ·
+Anthropic <em>Multi-Agent Research System</em>, <a href="https://www.anthropic.com/engineering/multi-agent-research-system" target="_blank">anthropic.com/engineering/multi-agent-research-system</a> ·
+Cognition <em>Don't Build Multi-Agents</em>, <a href="https://cognition.ai/blog/dont-build-multi-agents" target="_blank">cognition.ai/blog/dont-build-multi-agents</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// 综合实战 · 搭一条「经理工作流」</h3>
+<p>把四点串成一条你能立刻用的流水线——目标不是炫技，是亲手感受「当你走出 loop，verification 变成承重墙」：</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>委派（§1）</strong>：用钉死验收/禁区的 issue 模板，把一个边界清晰的任务 assign 给云端 coding agent。先挑「改错代价低、验收可自动化」的任务练手。</li>
+<li><strong>喂上下文（§2）</strong>：repo 根放一份 <code>CLAUDE.md</code> 代码地图 + 检索约定，让 agentic search 不盲扫；用 Cursor 则配好 <code>.cursorignore</code> 别污染索引召回。</li>
+<li><strong>焊死验证（§3）</strong>：上一道 CI gate——typecheck + test + <code>git diff --exit-code '*.test.ts'</code> 防篡改。这是你能放心走开的唯一前提。</li>
+<li><strong>并行+选择（§4）</strong>：对真正重要的任务跑 best-of-3，用 CI gate 自动筛掉跑不绿的，你只在通过者里挑最干净的 diff。</li>
+<li><strong>复盘账本</strong>：记录 token 成本 vs 你省下的时间。你会发现 fan-out 只在「验证比生成便宜」时划算——这正是 Anthropic「token 解释 80% 方差」的体感版。</li>
+</ol>
+<p style="margin-top:12px">跑完这套，你看任何「全自主 agentic IDE」的宣传都会本能地问三件事：上下文怎么来（索引 or 搜索）、验证在哪一层（能否被 agent 篡改）、并行的选择成本谁付——而不是被「自主」二字唬住。</p>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// ENGLISH GLOSSARY</h3>
+<dl>
+<dt>Async Delegation</dt><dd>把任务委派给在独立沙箱里异步运行的 agent，你从 driver 变 reviewer。本期主线。</dd>
+<dt>Background / Cloud Agent</dt><dd>在云端隔离 VM 里跑、回交 PR 的 agent（Cursor Cloud Agent、Copilot coding agent、Claude Code on web）。</dd>
+<dt>Embedding Index</dt><dd>把代码 chunk 成向量存进向量库，做语义召回。快但有滞后、需上传代码。</dd>
+<dt>Agentic Search</dt><dd>不建索引，agent 用 grep/glob/read 现场找代码。永远最新但费 token、慢。</dd>
+<dt>Merkle Sync</dt><dd>用 Merkle 树哈希增量识别变更文件，只重传改动部分（Cursor 索引同步机制）。</dd>
+<dt>Verification Gate</dt><dd>PR 合入前 harness/CI 层强制的验证（测试/类型/防篡改），决定自主度上限。</dd>
+<dt>Oracle</dt><dd>判定「改对没」的标准答案来源（如 SWE-bench 的隐藏测试）。真实工作常缺。</dd>
+<dt>Best-of-N</dt><dd>同一任务并行跑 N 次取最优，用 token 换可靠性，本质投机执行。</dd>
+<dt>Fan-out</dt><dd>并行启动多个 agent——跨任务（吞吐）或同任务（best-of-N）。</dd>
+<dt>Worktree Isolation</dt><dd>用 git worktree 给每个 agent 独立工作目录/分支，挡住文件冲突。</dd>
+</dl>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// 深入思考</h3>
+<details><summary>SWE-bench 已经 70%+，为什么我们仍不敢让 agent 在自己 repo 上无人值守？</summary><div>因为 benchmark 自带 oracle（隐藏测试集判对错），真实工作没有。70% pass@1 衡量的是「在有标准答案时能解多少」，不是「在没有标准答案时改了不会坏」。你 repo 上的「改对没」往往要人读语义、跑端到端、看副作用——这些 SWE-bench 不考。所以基准分涨不直接转成自主度，缺的那一环正是 verification。要敢放手，得自己把 oracle 造出来（测试覆盖、契约测试、CI gate），而不是等模型分数更高。</div></details>
+<details><summary>Embedding 索引和 agentic search 最终会收敛成一种，还是长期共存？</summary><div>会混合但底层 trade-off 不消失。索引擅长「在百万行里快速缩到 10 个候选」（语义、规模），agentic search 擅长「在 10 个候选里顺逻辑链精确定位」（最新、跨文件）。Cursor 已把两者并列叫 Semantic &amp; Agentic Search。但「上传代码换速度 vs 现场读省隐私」「索引滞后 vs 搜索慢」这两组矛盾是物理性的，只能按场景权衡：大 monorepo + 可上传 → 偏索引；强隐私/频繁大重构 → 偏 agentic。组合 ≠ 消解。</div></details>
+<details><summary>Best-of-N 烧 N 倍 token 买可靠性——什么时候这笔账划算？</summary><div>当「验证/选择的成本」远低于「生成的成本」时划算。如果有便宜的自动 oracle（测试套件），N 个候选自动筛剩 1-2 个再人选，N 倍 token 换显著高的一次通过率，对高价值任务值。反之没有自动验证时，best-of-N 只是把瓶颈从「写一个」搬到「人读 N 个」，不省反费。所以 best-of-N 和 §3 是绑定的：没有 verification 做筛子，并行就是浪费。它本质是投机执行——只有验证比生成便宜时才赚。</div></details>
+<details><summary>当你从 driver 变成 reviewer/manager，你的核心技能从「写代码」变成什么？</summary><div>变成三件人类仍不可替代的事：(1) 把模糊需求压成清晰可验证的 spec——异步放大了 underspecification 的代价，写清边界/验收/禁区成了方向盘；(2) 设计验证体系——决定「什么叫对」并把它做成 agent 改不动的 oracle；(3) 读 diff 的品味——在多个能跑通的方案里判断哪个可维护、哪个埋雷。写代码本身被外包了，但「定义对错」和「判断好坏」反而更稀缺。经理化不是躺平，是上移。</div></details>
+<details><summary>异步 agent 让 underspecification 代价飙升。这是否意味着「写 spec」会比「写代码」更值钱？</summary><div>在异步委派的范式里，是的。同步时 spec 可以含糊，因为你边做边纠；异步时你 dispatch 后失去方向盘，任务描述是唯一的控制信号，一处含糊放大成 20 分钟的错误 PR。这把价值从「实现能力」推向「规约能力」——能把意图、约束、验收标准、边界清晰编码的人，产出被 N 个 agent 并行放大；规约含糊的人则被错误并行放大。但要注意别走极端：过度规约会扼杀 agent 探索更优解的空间。值钱的是「钉死该钉死的、放开该放开的」这种判断力。</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://cursor.com/docs/cloud-agent" target="_blank">Cursor · Cloud Agent 文档</a> — 异步云端 agent 的官方实现</li>
+<li><a href="https://docs.github.com/copilot/concepts/agents/coding-agent/about-coding-agent" target="_blank">GitHub · Copilot coding agent</a> — issue→PR 的自主流程（GitHub Actions 环境）</li>
+<li><a href="https://cursor.com/docs/context/codebase-indexing" target="_blank">Cursor · Semantic &amp; Agentic Search</a> — 索引与搜索两条路线的融合</li>
+<li><a href="https://code.claude.com/docs/en/best-practices" target="_blank">Anthropic · Claude Code Best Practices</a> — worktree 并行 / best-of-N / 验证</li>
+<li><a href="https://arxiv.org/abs/2310.06770" target="_blank">SWE-bench (arXiv 2310.06770)</a> — 真实 GitHub issue 基准与其 oracle 设计</li>
+<li><a href="https://www.anthropic.com/engineering/multi-agent-research-system" target="_blank">Anthropic · Multi-Agent Research System</a> — fan-out 的收益与 token 代价</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 25 · 2026-06-08</footer>
+</div>
+</body></html>

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 25 · Agentic IDE — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 25 / PHASE 3 · FRONTIER</span>
+<h1>Agentic IDE</h1>
+<h2>Async Agents · Index vs Agentic Search · The Verification Ceiling · Fan-out Parallelism</h2>
+<div class="date">2026-06-08 · BigCat</div>
+<p class="pitch">The next-gen IDE race isn't about completion accuracy — it's whether you can safely walk away.</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>Day 19 dissected the harness differences between Cursor / Claude Code / Aider — that was the "hands on the wheel" era. The real 2026 inflection is the <strong>handoff of control</strong>: Cursor Cloud Agent, GitHub Copilot coding agent, and Claude Code on the web all dispatch a task into a cloud sandbox to run asynchronously and hand you back a PR. You shift from <em>driver</em> to <em>reviewer / manager</em>. That shift relocates the whole engineering bottleneck: it's no longer "how accurately does the AI write," but <strong>how do you feed it context, how do you verify it didn't break things, how do you schedule it in parallel</strong>. This issue covers the four architectural axes that decide the ceiling of the next-gen agentic IDE — the sync-to-async paradigm shift, the embedding-index vs agentic-search fork, why verification (not reasoning) is the true autonomy ceiling, and the isolation/selection problem of fan-out. Each is not "which tool is better" but "where this route's engineering constraints lie."</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>Paradigm Shift: From Pair Programming to Async Delegation</h2>
+<div class="claim">Claim: the real inflection isn't better completion — it's the control flow flipping from "you drive, AI completes" to "you delegate, AI runs autonomously, you review."</div>
+
+<h3>Background & Principle</h3>
+<p>The mental model of a synchronous copilot is pair programming: you type, it completes, you're present for every token, you fix errors instantly. An async agent is entirely different — you hand it a task, it runs for minutes to tens of minutes in an <strong>isolated cloud sandbox</strong>, and returns a PR. The three implementations are strikingly aligned:</p>
+<ul>
+<li><strong>Cursor Cloud Agent</strong>: an isolated Ubuntu cloud VM clones your repo, runs tests, installs packages, opens a branch, files a PR. You can close your laptop and go to a meeting.</li>
+<li><strong>GitHub Copilot coding agent</strong>: runs inside a GitHub Actions environment; assign it an issue and it breaks it into a checklist, writes code, pushes commits, and opens a PR for your review.</li>
+<li><strong>Claude Code on the web</strong>: Anthropic-managed isolated VMs, paired with git worktrees for parallel sessions.</li>
+</ul>
+<p>The engineering consequence is a wholesale relocation of trade-offs. <strong>Throughput</strong> goes up (multiple tasks in parallel, you can sleep); but <strong>per-task wall-clock latency</strong> goes up (you're not in the loop to course-correct), and <strong>review burden</strong> goes up (every PR must be read). The bottleneck moves from "how fast does the AI write" to "how fast do you review + how well does the AI self-verify" — the latter two being exactly the subject of §3 and §4. In <em>Building Effective Agents</em>, Anthropic repeatedly warns: the higher the autonomy, the more you should default to <em>simple, controllable, verifiable</em> — don't be agentic for the sake of being agentic.</p>
+
+<div class="diagram">  Sync Copilot (driver)            Async Agent (manager)
+  ─────────────────────            ─────────────────────
+  You ──edit──▶ AI completes       You ──delegate──▶ ┌──────────────┐
+   ▲             │                                   │ cloud sandbox │
+   └─correct now─┘   present per diff                │ edit·test·PR  │
+                                                     └──────┬────────┘
+  fix latency: seconds             You ◀──review PR─────────┘
+  bottleneck: AI speed             fix latency: minutes~hours
+                                   bottleneck: your review + AI self-verify</div>
+
+<h3>Hands-on</h3>
+<p>In async mode you're not present to course-correct, so <strong>the task description is the only steering wheel</strong>. An issue for a coding agent must nail down acceptance criteria, not the "let's try it" you can afford synchronously:</p>
+<pre><code><span class="tag-com"># Issue template for an async coding agent (fill before assigning)</span>
+<span class="tag-claude">## Goal</span>       Add pagination to /api/orders, default 20/page
+<span class="tag-claude">## Constraint</span> Reuse the existing Paginator (src/utils/page.ts), don't reinvent
+<span class="tag-claude">## Accept</span>     - New tests cover page=0 / out-of-range / default
+            - `pnpm test` all green; do NOT delete/modify existing tests
+            - Do NOT change DB schema
+<span class="tag-claude">## Off-limits</span> Don't touch auth middleware, don't bump dependencies</code></pre>
+<p>Key difference: synchronously, "Constraint / Accept / Off-limits" can be added as you go; asynchronously they must be pinned before dispatch — because you have no chance to yell stop at minute 3.</p>
+
+<div class="fail">
+<strong>Failure mode</strong>: tossing an ambiguous task into an async agent. Synchronously, a "hmm, wrong, try another angle" saves it; asynchronously, an underspecified task runs 20 minutes and comes back with the whole direction wrong — your correction cost is "read a wrong PR + rewrite the issue + wait another 20 minutes." <strong>Async amplifies the cost of underspecification</strong> — which is precisely why §3 verification becomes mandatory.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Cursor Cloud Agent docs, <a href="https://cursor.com/docs/cloud-agent" target="_blank">cursor.com/docs/cloud-agent</a> ·
+GitHub Copilot coding agent, <a href="https://docs.github.com/copilot/concepts/agents/coding-agent/about-coding-agent" target="_blank">docs.github.com/.../coding-agent</a> ·
+Anthropic <em>Building Effective Agents</em>, <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">anthropic.com/engineering/building-effective-agents</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Context Fork: Embedding Index vs Agentic Search</h2>
+<div class="claim">Claim: the deepest architectural divide in agentic IDEs is "pre-built semantic index" vs "on-demand agentic search" — each route carries an irreducible cost.</div>
+
+<h3>Background & Principle</h3>
+<p>How an agent finds relevant code determines its speed, freshness, and privacy boundary. Two routes:</p>
+<ul>
+<li><strong>Embedding index (the Cursor route)</strong>: chunk the repo into functions/classes, embed into vectors stored in a remote vector DB (Cursor uses Turbopuffer), with Merkle-tree incremental sync (a scan every ~5 minutes ships only changed files). Retrieval = RAG over the codebase via semantic similarity. <strong>Pro</strong>: fast recall, scales to huge monorepos, great for semantic queries like "where is payment handled." <strong>Cost</strong>: index lag (briefly stale after a big refactor), code must be uploaded to a server, embeddings catch "semantic similarity" but miss "cross-file call logic."</li>
+<li><strong>Agentic search (the Claude Code route)</strong>: no persistent index; the agent uses grep / glob / read to find code live, following the import chain like a human debugging. <strong>Pro</strong>: always reads the latest disk state, no persistent copy uploaded (privacy-friendly), follows logic chains rather than just semantics. <strong>Cost</strong>: each query burns tokens + multiple turns + is slow; in a poorly-named legacy repo, grepping everywhere can miss.</li>
+</ul>
+<p>Note the trend: the two routes are converging. Cursor's docs are now literally titled <em>Semantic &amp; Agentic Search</em> — the semantic index quickly narrows scope, agentic search pins it precisely, used together. But the underlying trade-offs (upload vs burn tokens, lag vs slow) don't vanish; they're just combined.</p>
+
+<div class="diagram">  Embedding Index (Cursor)             Agentic Search (Claude Code)
+  ──────────────────────              ────────────────────────────
+  repo ─chunk─▶ embed ─▶ vector DB     query ─▶ agent
+                  ▲          │                   │ grep / glob / read
+       Merkle incr. sync     ▼                   ▼ (live, on-demand, multi-turn)
+       (~5min)        semantic top-k      follow import chain
+  ✓fast ✓scale ✗lag ✗uploads code      ✓fresh ✓no upload ✗tokens ✗slow</div>
+
+<h3>Hands-on</h3>
+<p>You can "give it a hand" on either route. Agentic search has no index, but you can hand it a <strong>manual map</strong> — in <code>CLAUDE.md</code> (or <code>.cursorrules</code>) spell out the module layout so its grep is targeted:</p>
+<pre><code><span class="tag-com"># CLAUDE.md —— a "navigation index" for agentic search</span>
+<span class="tag-claude">## Code map</span>
+- payment logic  → src/billing/   (NOT src/legacy/pay/, deprecated)
+- API routes     → src/routes/*.ts
+- DB schema      → prisma/schema.prisma
+<span class="tag-claude">## Search conventions</span>
+- For "order" stuff: grep `Order` in src/domain/ first, don't scan whole repo
+- Tests live next to impl as *.test.ts; read the test before changing impl</code></pre>
+<p>This injects a "human-maintained sparse index" into the index-less agent, saving a lot of blind-grep tokens. For the Cursor index route, the parallel move is configuring <code>.cursorignore</code> so <code>node_modules</code> / build artifacts don't pollute vector recall.</p>
+
+<div class="fail">
+<strong>Failure mode</strong>: (1) Index route — letting the agent act before sync completes after a big refactor; it edits deleted symbols per the stale index, confidently changing files that no longer exist. (2) Agentic search route — in a zero-docs, poorly-named legacy repo, the agent greps everywhere, burning tens of thousands of tokens without pinpointing. The cure for both isn't switching tools — it's <strong>giving it structure</strong> (sync-window awareness / a CLAUDE.md map).
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Cursor Codebase Indexing, <a href="https://cursor.com/docs/context/codebase-indexing" target="_blank">cursor.com/docs/context/codebase-indexing</a> ·
+Cursor Secure Indexing (Merkle/vector DB), <a href="https://cursor.com/blog/secure-codebase-indexing" target="_blank">cursor.com/blog/secure-codebase-indexing</a> ·
+Claude Code Best Practices, <a href="https://code.claude.com/docs/en/best-practices" target="_blank">code.claude.com/docs/en/best-practices</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>The True Ceiling of Autonomy: Verification, Not Reasoning</h2>
+<div class="claim">Claim: SWE-bench scores keep climbing but real autonomy hasn't — the bottleneck isn't whether the model is smart enough, it's whether "got it right" can be verified.</div>
+
+<h3>Background & Principle</h3>
+<p>SWE-bench (Jimenez et al., arXiv 2310.06770) went from Claude 2 solving just 1.96% in 2023 to today's SOTA 70%+. But an overlooked detail: this benchmark ships with a <strong>hidden test suite as an oracle</strong> — "did it get it right" has a ground-truth check. In real work that oracle doesn't exist. So as agents go async (§1) and humans can't watch every step, the <strong>only line of defense between "agent says done" and "main is broken" is verification</strong>. The frontier of engineering thus shifts from "make the model smarter" to "weld verification into the harness":</p>
+<ul>
+<li><strong>Sandboxed execution + full test run</strong>: run tests in an isolated environment before opening a PR; no green, no submit.</li>
+<li><strong>Static gates</strong>: type-check / lint / build as a PostToolUse hook or CI gate.</li>
+<li><strong>Spec-first / red-green</strong>: have the agent write a failing acceptance test first, then make it green — turning "acceptance criteria" into an executable oracle.</li>
+<li><strong>Verification must be tamper-resistant</strong>: gates must be enforced at the harness / CI layer, not editable by the agent — otherwise it "deletes the failing test" or writes <code>assert True</code> to "pass."</li>
+</ul>
+<p>In one line: <strong>the autonomy ceiling = verification quality, not model IQ</strong>. The "closing the loop" from Day 19 is a bonus in sync mode; in async mode it's a lifeline.</p>
+
+<h3>Hands-on</h3>
+<p>Make the "definition of done" a harness-enforced gate, not a prompt that begs the agent to behave:</p>
+<pre><code><span class="tag-com"># .github/workflows/agent-gate.yml —— a coding agent's PR must pass</span>
+<span class="tag-key">on</span>: pull_request
+<span class="tag-key">jobs</span>:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck          <span class="tag-com"># static gate</span>
+      - run: pnpm test --coverage     <span class="tag-com"># oracle: tests must be all green</span>
+      - run: git diff --exit-code '*.test.ts' <span class="tag-com"># anti-tamper: no sneaky test edits</span>
+      - run: pnpm lint</code></pre>
+<p>The last line is the key: <code>git diff --exit-code</code> fails outright if the agent touched existing test files — upgrading "don't delete tests to game verification" from a prompt constraint into a physical block. This is exactly Day 3's "permission gate physical interception &gt; model self-discipline," reused at the verification layer.</p>
+
+<div class="fail">
+<strong>Failure mode</strong>: (1) Treating SWE-bench-style high scores as evidence it's "safe to run unattended" — 70% pass@1 with an oracle ≠ safe autonomy on your repo without one. (2) Verification the agent can tamper with: a weak gate gets gamed (delete tests, comment out assertions, change <code>assert</code>). Once verification is editable by the agent, it's no verification at all.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · SWE-bench, <a href="https://arxiv.org/abs/2310.06770" target="_blank">arXiv 2310.06770</a> ·
+Anthropic <em>Building Effective Agents</em> (eval / simplest-first), <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">anthropic.com/engineering/building-effective-agents</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Fan-out Parallelism: Worktree Isolation + Best-of-N</h2>
+<div class="claim">Claim: the "manager-ized" future of agentic IDEs runs N agents at once; the bottleneck moves from "writing code" to "isolation + selection + merge."</div>
+
+<h3>Background & Principle</h3>
+<p>git worktrees / isolated containers let multiple agents avoid stepping on each other (Claude Code's <code>--worktree</code>, Cursor's parallel cloud agents, Devin's parallel sessions). Fan-out comes in two flavors with entirely different goals:</p>
+<ul>
+<li><strong>Fan-out across tasks (for throughput)</strong>: 3 agents, 3 features/bugs, 3 branches in parallel. Worktree isolation solves <em>filesystem collisions</em> but not <em>semantic conflicts</em> (two PRs both changing the same interface contract).</li>
+<li><strong>Best-of-N on one task (betting on variance)</strong>: run the same prompt N times, pick the best. Anthropic's Claude Code best practices explicitly suggests this — "rather than fight the variability inherent in LLM outputs, launch multiple in parallel and select the one that works best." This trades token cost for reliability; it's essentially speculative execution.</li>
+</ul>
+<p>The new bottleneck appears at two ends: <strong>selection</strong> (how to pick the best of N without reading all of them? — the answer loops back to §3, scoring via verification) and <strong>merge</strong> (semantic conflicts still need a human). Anthropic's <em>How we built our multi-agent research system</em> quantifies the cost: an orchestrator-worker architecture outperforms a single agent by 90%+, but <strong>token usage alone explains 80% of the performance variance</strong> — fan-out buys results with tokens, and you need verification gains to make the math work. Cognition's <em>Don't Build Multi-Agents</em> is the counter-warning: parallel coding agents suffer context drift + inconsistent decisions + merge hell; worktrees only block file collisions, the coordination tax remains.</p>
+
+<h3>Hands-on</h3>
+<p>A minimal best-of-N skeleton — run N times in isolation, use the §3 oracle to auto-filter the non-green ones, and only have a human choose among the survivors:</p>
+<pre><code><span class="tag-com"># best-of-3: worktree isolation + test oracle for auto pre-filter</span>
+<span class="tag-key">for</span> i in 1 2 3; do
+  git worktree add ../try-$i -b attempt-$i      <span class="tag-com"># physical isolation, no collisions</span>
+  (cd ../try-$i &amp;&amp; claude -p "$TASK" &amp;&amp; \
+     pnpm test &gt; result-$i.log 2&gt;&amp;1 &amp;&amp; echo "try-$i PASS") &amp;
+<span class="tag-key">done</span>; wait
+<span class="tag-com"># Among PASS attempts, a human picks the cleanest diff; worktree remove the rest</span></code></pre>
+<p>Key: verification (§3) is the <strong>sieve</strong> for best-of-N. Without an automatic oracle, best-of-N just moves the bottleneck from "writing" to "you reading N PRs" — no savings, pure cost.</p>
+
+<div class="fail">
+<strong>Failure mode</strong>: (1) Fan-out without isolation — 3 agents editing the same files on the same branch, overwriting each other, polluting context; you spend more time resolving conflicts than the agents saved (the very scenario Anthropic's best practices warns about). (2) Best-of-N without cheap verification — you burn N× tokens and still have to review each by hand; the math loses. Fan-out's precondition is always "selection/verification is cheaper than generation."
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Claude Code Best Practices (worktree / multi-session), <a href="https://code.claude.com/docs/en/best-practices" target="_blank">code.claude.com/docs/en/best-practices</a> ·
+Anthropic <em>Multi-Agent Research System</em>, <a href="https://www.anthropic.com/engineering/multi-agent-research-system" target="_blank">anthropic.com/engineering/multi-agent-research-system</a> ·
+Cognition <em>Don't Build Multi-Agents</em>, <a href="https://cognition.ai/blog/dont-build-multi-agents" target="_blank">cognition.ai/blog/dont-build-multi-agents</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// Integrated Practice · Build a "manager workflow"</h3>
+<p>Chain the four points into a pipeline you can use today — the goal isn't flash, it's to feel firsthand that "once you step out of the loop, verification becomes the load-bearing wall":</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>Delegate (§1)</strong>: use an issue template with pinned acceptance/off-limits, and assign a cleanly-bounded task to a cloud coding agent. Start with tasks that are "low cost of error, auto-verifiable."</li>
+<li><strong>Feed context (§2)</strong>: drop a <code>CLAUDE.md</code> code map + search conventions at the repo root so agentic search doesn't scan blindly; on Cursor, configure <code>.cursorignore</code> to keep vector recall clean.</li>
+<li><strong>Weld in verification (§3)</strong>: add a CI gate — typecheck + test + <code>git diff --exit-code '*.test.ts'</code> anti-tamper. This is the sole precondition for walking away safely.</li>
+<li><strong>Parallel + select (§4)</strong>: for truly important tasks, run best-of-3, let the CI gate auto-filter the non-green ones, and only pick the cleanest diff among survivors.</li>
+<li><strong>Review the ledger</strong>: track token cost vs the time you saved. You'll find fan-out only pays when "verification is cheaper than generation" — the lived-experience version of Anthropic's "tokens explain 80% of variance."</li>
+</ol>
+<p style="margin-top:12px">Once you've run this, you'll instinctively ask three things of any "fully autonomous agentic IDE" pitch: where does context come from (index or search), at which layer does verification sit (can the agent tamper with it), and who pays the selection cost of parallelism — rather than being dazzled by the word "autonomous."</p>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// KEY TERMS</h3>
+<dl>
+<dt>Async Delegation</dt><dd>Delegating a task to an agent that runs asynchronously in an isolated sandbox; you go from driver to reviewer. The through-line.</dd>
+<dt>Background / Cloud Agent</dt><dd>An agent that runs in an isolated cloud VM and returns a PR (Cursor Cloud Agent, Copilot coding agent, Claude Code on web).</dd>
+<dt>Embedding Index</dt><dd>Chunk code into vectors stored in a vector DB for semantic recall. Fast but lagging, requires uploading code.</dd>
+<dt>Agentic Search</dt><dd>No index; the agent uses grep/glob/read to find code live. Always fresh but token-heavy and slow.</dd>
+<dt>Merkle Sync</dt><dd>Incrementally identify changed files via Merkle-tree hashes, re-shipping only diffs (Cursor's index sync mechanism).</dd>
+<dt>Verification Gate</dt><dd>Verification enforced at the harness/CI layer before merge (tests/types/anti-tamper); it sets the autonomy ceiling.</dd>
+<dt>Oracle</dt><dd>The ground-truth source for "did it get it right" (e.g. SWE-bench's hidden tests). Often absent in real work.</dd>
+<dt>Best-of-N</dt><dd>Run one task N times in parallel and pick the best; trades tokens for reliability — essentially speculative execution.</dd>
+<dt>Fan-out</dt><dd>Launching multiple agents in parallel — across tasks (throughput) or on one task (best-of-N).</dd>
+<dt>Worktree Isolation</dt><dd>Using git worktrees to give each agent its own working directory/branch, blocking file collisions.</dd>
+</dl>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// DEEP THINKING</h3>
+<details><summary>SWE-bench is already 70%+ — why do we still not dare let an agent run unattended on our own repo?</summary><div>Because the benchmark ships an oracle (a hidden test set judging correctness); real work doesn't. 70% pass@1 measures "how much it can solve when a ground truth exists," not "how often its changes don't break things absent a ground truth." On your repo, "got it right" often requires a human reading semantics, running end-to-end, checking side effects — none of which SWE-bench tests. So benchmark scores don't translate directly into autonomy; the missing link is verification. To dare let go, you must build the oracle yourself (test coverage, contract tests, CI gates), not wait for higher model scores.</div></details>
+<details><summary>Will embedding index and agentic search eventually converge into one, or coexist long-term?</summary><div>They'll blend but the underlying trade-offs won't vanish. Indexes excel at "quickly narrowing a million lines to 10 candidates" (semantics, scale); agentic search excels at "pinpointing within those 10 by following logic chains" (fresh, cross-file). Cursor already lists both as Semantic &amp; Agentic Search. But "upload code for speed vs read live for privacy" and "index lag vs search slowness" are physical tensions, only weighable per scenario: large monorepo + uploadable → lean index; strong privacy / frequent big refactors → lean agentic. Combining ≠ dissolving.</div></details>
+<details><summary>Best-of-N burns N× tokens to buy reliability — when does that math pay off?</summary><div>It pays when "the cost of verification/selection" is far below "the cost of generation." If you have a cheap automatic oracle (a test suite), N candidates auto-filtered down to 1-2 for a human to choose, trading N× tokens for a markedly higher first-pass success rate is worth it for high-value tasks. Without automatic verification, best-of-N merely moves the bottleneck from "write one" to "read N" — pure cost, no savings. So best-of-N is bound to §3: without verification as a sieve, parallelism is waste. It's speculative execution — profitable only when verifying is cheaper than generating.</div></details>
+<details><summary>As you go from driver to reviewer/manager, what does your core skill become instead of "writing code"?</summary><div>Three things humans still own: (1) compressing fuzzy needs into clear, verifiable specs — async amplifies the cost of underspecification, making clear bounds/acceptance/off-limits the steering wheel; (2) designing the verification system — deciding "what counts as correct" and turning it into an oracle the agent can't alter; (3) taste in reading diffs — judging which of several working solutions is maintainable and which hides landmines. Writing code itself is outsourced, but "defining right vs wrong" and "judging good vs bad" become scarcer. Manager-ization isn't lying flat — it's moving up.</div></details>
+<details><summary>Async agents make the cost of underspecification spike. Does that mean "writing specs" becomes more valuable than "writing code"?</summary><div>In the async-delegation paradigm, yes. Synchronously a spec can be vague because you correct as you go; asynchronously, once you dispatch you lose the wheel — the task description is the only control signal, and one ambiguity amplifies into a 20-minute wrong PR. This pushes value from "implementation ability" to "specification ability": those who can clearly encode intent, constraints, acceptance, and bounds get amplified by N parallel agents; those who spec vaguely get their errors amplified. But beware the extreme: over-specification kills the agent's room to explore a better solution. What's valuable is the judgment to "pin what should be pinned, free what should be freed."</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://cursor.com/docs/cloud-agent" target="_blank">Cursor · Cloud Agent docs</a> — the official async cloud-agent implementation</li>
+<li><a href="https://docs.github.com/copilot/concepts/agents/coding-agent/about-coding-agent" target="_blank">GitHub · Copilot coding agent</a> — the issue→PR autonomous flow (GitHub Actions env)</li>
+<li><a href="https://cursor.com/docs/context/codebase-indexing" target="_blank">Cursor · Semantic &amp; Agentic Search</a> — the convergence of index and search routes</li>
+<li><a href="https://code.claude.com/docs/en/best-practices" target="_blank">Anthropic · Claude Code Best Practices</a> — worktree parallelism / best-of-N / verification</li>
+<li><a href="https://arxiv.org/abs/2310.06770" target="_blank">SWE-bench (arXiv 2310.06770)</a> — the real-GitHub-issue benchmark and its oracle design</li>
+<li><a href="https://www.anthropic.com/engineering/multi-agent-research-system" target="_blank">Anthropic · Multi-Agent Research System</a> — the gains and token cost of fan-out</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 25 · 2026-06-08</footer>
+</div>
+</body></html>
