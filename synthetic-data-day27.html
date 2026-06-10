@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 27 · Synthetic Data & Self-Improvement — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 27 / PHASE 3 · FRONTIER</span>
+<h1>Synthetic Data & Self-Improvement</h1>
+<h2>Distillation Pipeline · Constitutional/RLAIF · Rejection Sampling · Model Collapse</h2>
+<div class="date">2026-06-10 · BigCat</div>
+<p class="pitch">self-improvement 的天花板不是模型多聪明，是你的 verifier 多可靠。</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>2026 年的现实：高质量人类数据已接近见底，而你要微调的小模型、要 eval 的 agent、要对齐的私有助手，全都缺数据。<strong>合成数据不再是「没钱标注时的妥协」，而是前沿训练的主力</strong>——同时也是最容易翻车的一环。本期不讲「合成数据是什么」，讲四件工程事：怎么用强模型蒸馏出能用的数据集（<strong>过滤才是杠杆，不是生成</strong>）、怎么把 Constitutional AI 的 critique-revise 回路落到你自己的 inference 里、什么任务能靠 rejection sampling 真正自我改进、以及为什么递归吃自己的产出会让模型悄悄塌缩。贯穿全篇的一条主线：<strong>self-improvement 的根基是「验证比生成便宜」这个不对称——不对称在哪里，自改进就只能在哪里发生。</strong></p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>数据蒸馏：生成是廉价的，过滤才是杠杆</h2>
+<div class="claim">论断：合成数据集的质量上限由 filter 决定，不由 generator 决定；多生成 10×、狠删 90% 几乎总是对的。</div>
+
+<h3>背景与原理</h3>
+<p>蒸馏（distillation）的工程形态很朴素：用强 teacher（Opus 级）大批量生成「指令 + 回答」对，喂给 student（小模型 / 你自己微调的模型）做 SFT。Self-Instruct（Wang 2022）证明了模型能 bootstrap 自己的指令数据，但它真正的贡献不是「会生成」，而是那套<strong>过滤管线</strong>：去重（与已有任务 ROUGE 相似度过高就丢）、去退化（太短 / 太长 / 重复 / 含「作为 AI」套话）、去无效（无法验证或自相矛盾）。<strong>生成 token 几乎免费，质量却几乎全部来自删除。</strong>一个反复被验证的经验：1 万条精选样本胜过 10 万条平均样本——后者会把 teacher 的口水话和盲区一起灌进 student。</p>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-com"># 蒸馏 = 过量生成 + 激进过滤。下面是过滤层的骨架</span>
+<span class="tag-claude">from</span> anthropic <span class="tag-claude">import</span> Anthropic
+client = Anthropic()
+
+<span class="tag-claude">def</span> gen(seed):  <span class="tag-com"># teacher 高 temperature 多产</span>
+    r = client.messages.create(model=<span class="tag-key">"claude-opus-4-8"</span>,
+        max_tokens=1024, temperature=1.0,
+        messages=[{<span class="tag-key">"role"</span>:<span class="tag-key">"user"</span>,
+          <span class="tag-key">"content"</span>:f<span class="tag-key">"参考种子任务，造一个新的{{指令,回答}}，回答要可被检验：\n{seed}"</span>}])
+    <span class="tag-claude">return</span> r.content[0].text
+
+<span class="tag-claude">def</span> keep(item, pool):
+    <span class="tag-claude">if</span> len(item.answer) &lt; 40: <span class="tag-claude">return</span> False        <span class="tag-com"># 去退化</span>
+    <span class="tag-claude">if</span> rouge_l(item.instr, pool) &gt; 0.7: <span class="tag-claude">return</span> False  <span class="tag-com"># 去重</span>
+    <span class="tag-claude">if</span> <span class="tag-key">"作为一个AI"</span> <span class="tag-claude">in</span> item.answer: <span class="tag-claude">return</span> False    <span class="tag-com"># 去套话</span>
+    <span class="tag-claude">return</span> llm_judge(item) &gt;= 4               <span class="tag-com"># 1-5 分，&lt;4 全删</span>
+
+raw = [gen(s) <span class="tag-claude">for</span> s <span class="tag-claude">in</span> seeds <span class="tag-claude">for</span> _ <span class="tag-claude">in</span> range(10)]  <span class="tag-com"># 过量 10×</span>
+data = [x <span class="tag-claude">for</span> x <span class="tag-claude">in</span> raw <span class="tag-claude">if</span> keep(x, raw)]            <span class="tag-com"># 常剩 &lt;15%</span></code></pre>
+
+<div class="fail">
+<strong>失败模式</strong>：teacher 的<strong>系统性盲区会被无声继承</strong>——它在某类问题上一贯错，过滤器（同源模型）也判不出来，于是错误被高置信度地写进 student。解法：过滤用<strong>异构信号</strong>（不同家族的 judge 模型、可执行验证、人审抽样），别让 generator 和 filter 是同一个脑子。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Self-Instruct, <a href="https://arxiv.org/abs/2212.10560" target="_blank">arXiv 2212.10560</a> ·
+源码 <a href="https://github.com/yizhongw/self-instruct" target="_blank">github · yizhongw/self-instruct</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Constitutional AI / RLAIF：把人类偏好换成可复用的 critique-revise 回路</h2>
+<div class="claim">论断：CAI 的核心不是「训练」，是一条 critique→revise 的算子；你今天就能在 inference 层用它，不需要任何 RL。</div>
+
+<h3>背景与原理</h3>
+<p>Constitutional AI（Bai 2022）把「人类标注哪个回答更好」换成「让模型按一组成文原则自己批评、自己改」：先让模型产草稿，再让它<strong>对照 constitution 列出违反点</strong>，最后据此 revise——SFT 阶段就用这些 revised 样本，RL 阶段（RLAIF）用 AI 而非人类来标注偏好对。对工程师而言，最值钱的洞见是：<strong>critique-revise 是一个可独立复用的推理算子</strong>，和 Self-Refine（Madaan 2023）同构。你不必训练，就能在调用链里插入一轮自我批评，把「价值观 / 风格 / 安全约束」从 prompt 里的祈使句变成一条<strong>显式的、可审计的检查步</strong>。它的本质是把约束从「希望模型记住」升级为「强制模型逐条核对」。</p>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-com"># inference-time CAI：一条原则 = 一个 critique-revise 算子</span>
+PRINCIPLE = <span class="tag-key">"回答必须给出可执行步骤，禁止空泛建议；涉及风险须显式标注"</span>
+
+draft    = ask(f<span class="tag-key">"{task}"</span>)
+critique = ask(f<span class="tag-key">"按这条原则审查下面回答，只列出违反点（无则写 NONE）：\n"</span>
+               f<span class="tag-key">"原则：{PRINCIPLE}\n回答：{draft}"</span>)
+final    = draft <span class="tag-claude">if</span> <span class="tag-key">"NONE"</span> <span class="tag-claude">in</span> critique <span class="tag-claude">else</span> \
+           ask(f<span class="tag-key">"据批评改写，只输出改后回答：\n回答：{draft}\n批评：{critique}"</span>)</code></pre>
+<p>把多条原则串成 pipeline，就是一个微型 constitution。批量跑过一个数据集，revised 输出还能直接当 SFT 语料——这正是 CAI 的 SL 阶段。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：self-critique 不可靠的根因是 <strong>backward rationalization</strong>（Day 5 讲过）——模型倾向为自己的草稿找理由而非挑错，critique 步可能给出「看起来在批评、实则维持原判」的空转。两个对策：(1) critique 与 generation 用<strong>不同的角色 prompt 甚至不同模型</strong>，制造对抗；(2) 让 critique 输出<strong>结构化逐条勾选</strong>而非自由文本，逼它对每条原则给 yes/no。开放式「你觉得这答案好吗」几乎必然得到 yes。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Constitutional AI, <a href="https://arxiv.org/abs/2212.08073" target="_blank">arXiv 2212.08073</a> /
+<a href="https://www.anthropic.com/research/constitutional-ai-harmlessness-from-ai-feedback" target="_blank">Anthropic blog</a> ·
+RLAIF, <a href="https://arxiv.org/abs/2309.00267" target="_blank">arXiv 2309.00267</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>可验证的自改进：rejection sampling / STaR</h2>
+<div class="claim">论断：模型能不能靠自己变强，只取决于一件事——你有没有一个比 generator 更便宜、更可靠的 verifier。</div>
+
+<h3>背景与原理</h3>
+<p>真正能「自举」的自改进，公式极简：<strong>过量采样 → 用 verifier 筛出对的 → 只在对的上微调 → 重复</strong>。Rejection Sampling Fine-tuning 是一轮版，STaR（Zelikman 2022）是迭代版——还多一招 rationalization：答错的题，把正确答案塞回去让模型补一条「能推到该答案的过程」，再收进训练集。关键不在采样，在 <strong>verifier 的存在与不对称性</strong>：数学有标准答案、代码能跑单测、SQL 能比对结果——这些任务里「判对错」远比「生成解」便宜，于是循环成立、能持续爬坡。<strong>没有这种不对称的任务（开放写作、主观判断），这个循环会原地放大噪声而非信号。</strong>o1 / R1 这代推理模型的训练，本质就是把这条循环工业化。</p>
+
+<div class="diagram">┌──────────── 可验证自改进循环 (STaR / RFT) ────────────┐
+│                                                       │
+│   problems ──▶  ┌─ Generator ─┐  k 个候选 (temp 高)    │
+│        ▲        └──────┬──────┘                        │
+│        │               ▼                               │
+│        │        ┌─ Verifier ─┐  ← 必须便宜 & 可靠      │
+│        │        │ 单测/答案/ │     (这是整个循环的根)  │
+│        │        │ 执行结果   │                         │
+│        │        └─────┬──────┘                         │
+│        │       pass ✓ │ fail ✗                         │
+│        │              ▼        └─▶ rationalize (给答案 │
+│        │      keep & dedup           补过程) ──┐        │
+│        │              ▼                        ▼        │
+│        └──── SFT on 通过的 (q, solution) ◀─────┘        │
+│                  ↑ 模型变强 → 下一轮通过率更高          │
+└───────────────────────────────────────────────────────┘
+   ⚠ 没有可靠 verifier → 循环放大噪声，越练越偏</div>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-com"># 代码任务的一轮 rejection sampling：verifier = 跑单测</span>
+<span class="tag-claude">def</span> harvest(q):
+    cands = [solve(q, temperature=1.0) <span class="tag-claude">for</span> _ <span class="tag-claude">in</span> range(16)]  <span class="tag-com"># 过量</span>
+    good  = [c <span class="tag-claude">for</span> c <span class="tag-claude">in</span> cands <span class="tag-claude">if</span> run_tests(c, q.tests)]  <span class="tag-com"># verifier</span>
+    <span class="tag-claude">return</span> dedup(good)[:2]            <span class="tag-com"># 每题最多留 2 条，防分布失衡</span>
+
+sft_set = [(q, sol) <span class="tag-claude">for</span> q <span class="tag-claude">in</span> tasks <span class="tag-claude">for</span> sol <span class="tag-claude">in</span> harvest(q)]
+<span class="tag-com"># 没通过的题 → rationalize：给出 gold answer 让模型补 reasoning，再验</span></code></pre>
+
+<div class="fail">
+<strong>失败模式</strong>：verifier 有漏洞时，循环会<strong>专门学会钻漏洞（reward hacking）</strong>——单测覆盖不全，模型就生成「恰好过测但实际错」的解，并把这种解越练越多。第二个坑：只留通过的样本会让分布越收越窄（全是模型本就擅长的题），难题永远学不到。对策：单测要含对抗样例，且按难度分层采样，别让简单题淹没数据集。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · STaR: Bootstrapping Reasoning, <a href="https://arxiv.org/abs/2203.14465" target="_blank">arXiv 2203.14465</a> ·
+V-STaR（训练独立 verifier）, <a href="https://arxiv.org/abs/2402.06457" target="_blank">arXiv 2402.06457</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Model Collapse：递归吃自己产出会悄悄塌缩</h2>
+<div class="claim">论断：合成数据的危险不是变笨，是分布尾部无声消失——benchmark 还在涨，多样性已经死了。</div>
+
+<h3>背景与原理</h3>
+<p>Shumailov 等（《The Curse of Recursion》2023；Nature 2024）证明：当一代模型主要用<strong>上一代的产出</strong>训练、如此递归，分布的<strong>尾部会逐代消失</strong>——罕见但真实的模式先丢，最终收敛到平庸的高频中心。可怕之处在于它<strong>隐蔽</strong>：常见任务的 benchmark 分数可能还在涨，而长尾覆盖、风格多样性、罕见知识已经塌掉，等你发现时损失常已不可逆。注意区分两种情形：§3 那种<strong>有 verifier 过滤</strong>的自改进不是 collapse（信号被保留、噪声被删）；collapse 来自<strong>无差别地把生成数据当真实数据递归喂回</strong>。前沿模型大量用合成数据仍变强，靠的正是「真实数据锚定 + 验证过滤 + 累积而非替换」这三道闸。</p>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-com"># 三道防 collapse 的闸门</span>
+<span class="tag-com"># 1) 锚定：真实数据始终占主导，合成只做增量</span>
+mix = 0.7 * real + 0.3 * synthetic
+
+<span class="tag-com"># 2) 累积而非替换：保留历代真实语料，别用新合成覆盖旧真实</span>
+corpus = real_v1 + real_v2 + synthetic_filtered   <span class="tag-com"># append, not replace</span>
+
+<span class="tag-com"># 3) 监控分布而非只看准确率——多样性掉了，准确率可能没掉</span>
+assert distinct_n(outputs, n=3) &gt; THRESH   <span class="tag-com"># n-gram 多样性</span>
+assert tail_coverage(outputs) &gt; THRESH     <span class="tag-com"># 罕见类别召回</span></code></pre>
+<p>「累积而非替换」是 Gerstgrasser 等 2024 的关键结论：只要每轮<strong>叠加</strong>真实数据而非用合成数据顶替，collapse 可被打破。eval 也要换指标——别只盯准确率，盯多样性和长尾覆盖。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：用单一指标（准确率 / 单个 benchmark）监控合成数据训练，是给自己埋雷——它对 collapse 几乎不敏感。等用户开始抱怨「回答越来越千篇一律 / 套路化」，分布坍缩往往已经发生且难逆转。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · AI models collapse…, <a href="https://www.nature.com/articles/s41586-024-07566-y" target="_blank">Nature 2024</a> /
+<a href="https://arxiv.org/abs/2305.17493" target="_blank">arXiv 2305.17493</a> ·
+Is Collapse Inevitable?（累积破解）, <a href="https://arxiv.org/abs/2404.01413" target="_blank">arXiv 2404.01413</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// 综合实战 · 给你的私有任务造一个自改进数据飞轮</h3>
+<p>把四点串成一个周末项目：为某个你真在用的窄任务（如「把会议纪要转成结构化待办」）造一个能自我增益的小数据集，亲手摸一遍每道闸。</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>蒸馏（§1）</strong>：用 Opus 过量生成 200 条「输入→输出」，激进过滤（去重 + 结构校验 + judge≥4），目标只留 ~30 条精品。</li>
+<li><strong>Critique 算子（§2）</strong>：写 2-3 条 constitution（如「待办必须含负责人和截止日」），对每条样本跑 critique-revise，用<strong>异构 judge</strong>避免自我背书。</li>
+<li><strong>Verifier（§3）</strong>：给这个任务定义一个<strong>程序化检验</strong>——输出能否被 JSON schema 解析、字段是否齐全。能写出 verifier 的那部分，才适合自改进；写不出的部分，老实留人审。</li>
+<li><strong>防 collapse（§4）</strong>：第二轮扩充时，真实样本（你手改的）始终占 ≥60%，且<strong>叠加</strong>而非替换；监控 distinct-3 多样性，掉了就停。</li>
+<li><strong>结账</strong>：对比「只蒸馏一轮」vs「蒸馏+verifier 迭代两轮」的 student 效果。你会亲身体会到——<strong>能进步的部分恰好是你能验证的部分，一分不多。</strong></li>
+</ol>
+<p style="margin-top:12px">做完这套，你以后看任何「自改进 / 合成数据」叙事都会先问一句：verifier 在哪？真实数据锚在哪？没有这两样，剩下的都是会塌的空中楼阁。</p>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// ENGLISH GLOSSARY</h3>
+<dl>
+<dt>Distillation</dt><dd>用强 teacher 生成数据训练弱 student，把能力「蒸」进小模型。质量上限由过滤决定。</dd>
+<dt>Self-Instruct</dt><dd>让模型 bootstrap 自己的指令数据，核心在去重 / 去退化 / 去无效的过滤管线。</dd>
+<dt>Constitutional AI (CAI)</dt><dd>用一组成文原则让模型自我批评、自我修改，替代人类偏好标注。</dd>
+<dt>RLAIF</dt><dd>RL from AI Feedback——偏好对由 AI 而非人类标注，与 RLHF 效果相近。</dd>
+<dt>Self-Refine</dt><dd>同一模型自生成→自反馈→自改写的迭代算子，无需训练，与 CAI 的 SL 阶段同构。</dd>
+<dt>Rejection Sampling (RFT)</dt><dd>过量采样后用 verifier 只留正确解做 SFT。一轮版的自改进。</dd>
+<dt>STaR</dt><dd>Self-Taught Reasoner，迭代版 RFT，并对答错题做 rationalization 补回。</dd>
+<dt>Verifier</dt><dd>判定输出对错的检验器（单测 / 标准答案 / 执行结果）。自改进的根基。</dd>
+<dt>Model Collapse</dt><dd>递归用生成数据训练导致分布尾部逐代消失、收敛到平庸中心。</dd>
+<dt>Asymmetry of Verification</dt><dd>验证比生成便宜的性质。不对称在哪，自改进就能在哪发生。</dd>
+</dl>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// 深入思考</h3>
+<details><summary>RLAIF 用 AI 标注偏好，那这些偏好最初从哪来？会不会只是把 base model 的偏见洗成「对齐」的样子？</summary><div>会，这是真实风险。AI 的偏好根源仍是预训练数据 + 那条 constitution 的写法，RLAIF 只是把它放大、固化成奖励信号。如果 base model 在某价值维度上系统性偏斜，RLAIF 会自洽地强化它而非纠正。所以 CAI 的杠杆点其实是 constitution 的文本质量与覆盖面，而非「AI 来标注」本身。实践上需要外部锚（人类红队、异构模型审计）来戳破自洽循环，否则就是用模型的偏见给模型打分。</div></details>
+<details><summary>STaR 只在有 ground-truth verifier 的任务（数学/代码）work。开放式生成（写作、策略）能自改进吗？</summary><div>能，但要把「验证」换形态。开放任务没有唯一答案，却常有可检验的<strong>必要条件</strong>：写作可验「是否含指定要点 / 是否违反风格 spec / 是否自相矛盾」，策略可验「是否满足约束 / 是否被对抗者反驳倒」。把单点 verifier 换成一组 weaker checks 的组合，或用 debate / 对抗者制造可判胜负的信号，循环就能部分成立。但信号越弱越主观，爬坡越慢、越容易 reward hacking——这正是开放任务自改进远难于数学的根因。</div></details>
+<details><summary>前沿模型大量用合成数据却越来越强，和「model collapse」是否矛盾？</summary><div>不矛盾，因为它们做的不是 collapse 实验里的设置。Collapse 来自<strong>无差别递归</strong>：把上一代未过滤的产出当真实数据替换喂回。前沿做法相反——合成数据先过 verifier / reward model 筛选（删噪声、保信号），且真实数据始终锚定、累积而非替换。换句话说，collapse 是「闭环吃自己」，可控自改进是「带外部信号的半开环」。决定走向哪边的，正是有没有那个独立于 generator 的验证/真实锚。</div></details>
+<details><summary>蒸馏出的 student 有可能超过 teacher 吗？什么条件下？</summary><div>能，且已是常态。三种机制：(1) <strong>best-of-N 蒸馏</strong>——teacher 采样 N 次只把最好的留给 student，student 学的是 teacher 的「上界」而非平均；(2) <strong>verifier 过滤</strong>——只蒸正确解，等于让 student 学一个比 teacher 期望更优的分布；(3) <strong>多 teacher / 多源融合</strong>。共同点：student 学的不是 teacher 本身，而是「teacher + 一个筛选/搜索过程」的产物。纯模仿（学 teacher 的平均输出）则超不过 teacher，这也是为什么 §1 强调过滤是杠杆。</div></details>
+<details><summary>「验证比生成便宜」是自改进的根基——哪些重要任务恰恰不满足这个不对称？</summary><div>当验证和生成一样难、甚至更难时不对称消失：(1) <strong>长期后果类</strong>——投资决策、医疗方案，要等很久才知对错，无法即时验；(2) <strong>主观价值类</strong>——什么是好文学、好设计，验证本身就需要同等智能且无共识；(3) <strong>验证需要执行不可逆动作</strong>——只能在现实里跑一次。这些领域里 self-improvement 退化为「自说自话」，必须引入人类、时间、或真实世界反馈作为外部 verifier。识别一个任务属不属于此类，是决定该不该上自改进飞轮的第一道判断。</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://arxiv.org/abs/2212.08073" target="_blank">Bai et al. · Constitutional AI: Harmlessness from AI Feedback</a> — CAI / RLAIF 的奠基论文</li>
+<li><a href="https://arxiv.org/abs/2203.14465" target="_blank">Zelikman et al. · STaR: Bootstrapping Reasoning With Reasoning</a> — 可验证自改进的范式</li>
+<li><a href="https://www.nature.com/articles/s41586-024-07566-y" target="_blank">Shumailov et al. · AI models collapse… (Nature 2024)</a> — model collapse 的权威证据</li>
+<li><a href="https://arxiv.org/abs/2404.01413" target="_blank">Gerstgrasser et al. · Is Model Collapse Inevitable?</a> — 「累积而非替换」破解 collapse</li>
+<li><a href="https://arxiv.org/abs/2303.17651" target="_blank">Madaan et al. · Self-Refine</a> — inference-time critique-revise 算子</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 27 · 2026-06-10</footer>
+</div>
+</body></html>

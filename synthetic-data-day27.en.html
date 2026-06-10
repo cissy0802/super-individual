@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 27 · Synthetic Data & Self-Improvement — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 27 / PHASE 3 · FRONTIER</span>
+<h1>Synthetic Data & Self-Improvement</h1>
+<h2>Distillation Pipeline · Constitutional/RLAIF · Rejection Sampling · Model Collapse</h2>
+<div class="date">2026-06-10 · BigCat</div>
+<p class="pitch">The ceiling on self-improvement isn't how smart the model is — it's how reliable your verifier is.</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>The 2026 reality: high-quality human data is nearly exhausted, yet the small model you want to fine-tune, the agent you want to eval, and the private assistant you want to align are all starved for data. <strong>Synthetic data is no longer a compromise for when you can't afford annotation — it's the main engine of frontier training</strong>, and also the easiest place to crash. This issue skips "what synthetic data is" and covers four engineering things: how to distill a usable dataset from a strong model (<strong>filtering is the lever, not generation</strong>), how to drop Constitutional AI's critique-revise loop into your own inference, which tasks can genuinely self-improve via rejection sampling, and why recursively eating your own outputs makes a model quietly collapse. One thread runs through all of it: <strong>self-improvement rests on the asymmetry that verification is cheaper than generation — wherever that asymmetry holds is exactly where self-improvement can happen.</strong></p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>Distillation: Generation Is Cheap, Filtering Is the Lever</h2>
+<div class="claim">Claim: a synthetic dataset's quality ceiling is set by the filter, not the generator; over-generate 10× and ruthlessly delete 90% is almost always right.</div>
+
+<h3>Background & Principle</h3>
+<p>Distillation has a plain engineering shape: a strong teacher (Opus-class) mass-produces "instruction + answer" pairs, fed to a student (a small model / your fine-tune) for SFT. Self-Instruct (Wang 2022) showed a model can bootstrap its own instruction data, but its real contribution isn't "it can generate" — it's the <strong>filtering pipeline</strong>: dedup (drop if ROUGE similarity to existing tasks is too high), de-degenerate (too short / too long / repetitive / "as an AI" boilerplate), and de-invalid (unverifiable or self-contradictory). <strong>Generating tokens is nearly free; quality comes almost entirely from deletion.</strong> A repeatedly confirmed lesson: 10K curated samples beat 100K average ones — the latter pours the teacher's filler and blind spots straight into the student.</p>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># Distillation = over-generate + aggressive filter. Skeleton of the filter</span>
+<span class="tag-claude">from</span> anthropic <span class="tag-claude">import</span> Anthropic
+client = Anthropic()
+
+<span class="tag-claude">def</span> gen(seed):  <span class="tag-com"># teacher, high temperature, high volume</span>
+    r = client.messages.create(model=<span class="tag-key">"claude-opus-4-8"</span>,
+        max_tokens=1024, temperature=1.0,
+        messages=[{<span class="tag-key">"role"</span>:<span class="tag-key">"user"</span>,
+          <span class="tag-key">"content"</span>:f<span class="tag-key">"From this seed, craft a new {{instruction, answer}}; answer must be checkable:\n{seed}"</span>}])
+    <span class="tag-claude">return</span> r.content[0].text
+
+<span class="tag-claude">def</span> keep(item, pool):
+    <span class="tag-claude">if</span> len(item.answer) &lt; 40: <span class="tag-claude">return</span> False         <span class="tag-com"># de-degenerate</span>
+    <span class="tag-claude">if</span> rouge_l(item.instr, pool) &gt; 0.7: <span class="tag-claude">return</span> False  <span class="tag-com"># dedup</span>
+    <span class="tag-claude">if</span> <span class="tag-key">"as an AI"</span> <span class="tag-claude">in</span> item.answer: <span class="tag-claude">return</span> False      <span class="tag-com"># drop boilerplate</span>
+    <span class="tag-claude">return</span> llm_judge(item) &gt;= 4                <span class="tag-com"># 1-5 scale, delete all &lt;4</span>
+
+raw  = [gen(s) <span class="tag-claude">for</span> s <span class="tag-claude">in</span> seeds <span class="tag-claude">for</span> _ <span class="tag-claude">in</span> range(10)]  <span class="tag-com"># 10× over-generate</span>
+data = [x <span class="tag-claude">for</span> x <span class="tag-claude">in</span> raw <span class="tag-claude">if</span> keep(x, raw)]            <span class="tag-com"># often &lt;15% survive</span></code></pre>
+
+<div class="fail">
+<strong>Failure mode</strong>: the teacher's <strong>systematic blind spots get silently inherited</strong> — it's consistently wrong on some class, the filter (same-family model) can't tell, so the error is written into the student with high confidence. Fix: filter with <strong>heterogeneous signals</strong> (judge models from a different family, executable verification, human spot-checks). Don't let the generator and the filter be the same brain.
+</div>
+
+<div class="res">
+<strong>Resources</strong> · Self-Instruct, <a href="https://arxiv.org/abs/2212.10560" target="_blank">arXiv 2212.10560</a> ·
+source <a href="https://github.com/yizhongw/self-instruct" target="_blank">github · yizhongw/self-instruct</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Constitutional AI / RLAIF: A Reusable Critique-Revise Operator</h2>
+<div class="claim">Claim: the core of CAI isn't "training," it's a critique→revise operator — you can use it at the inference layer today, with zero RL.</div>
+
+<h3>Background & Principle</h3>
+<p>Constitutional AI (Bai 2022) replaces "humans labeling which answer is better" with "the model critiques and revises itself against a set of written principles": produce a draft, then <strong>list violations against the constitution</strong>, then revise accordingly — the SL stage trains on these revised samples; the RL stage (RLAIF) uses AI rather than humans to label preference pairs. For engineers, the valuable insight is: <strong>critique-revise is a reusable inference operator</strong>, isomorphic to Self-Refine (Madaan 2023). Without any training, you can insert a round of self-critique into your call chain, turning "values / style / safety constraints" from imperative sentences in a prompt into an <strong>explicit, auditable check step</strong>. The essence: upgrade constraints from "hope the model remembers" to "force the model to verify item by item."</p>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># Inference-time CAI: one principle = one critique-revise operator</span>
+PRINCIPLE = <span class="tag-key">"Answers must give executable steps; no vague advice; flag risks explicitly"</span>
+
+draft    = ask(f<span class="tag-key">"{task}"</span>)
+critique = ask(f<span class="tag-key">"Audit the answer against this principle; list only violations (NONE if none):\n"</span>
+               f<span class="tag-key">"Principle: {PRINCIPLE}\nAnswer: {draft}"</span>)
+final    = draft <span class="tag-claude">if</span> <span class="tag-key">"NONE"</span> <span class="tag-claude">in</span> critique <span class="tag-claude">else</span> \
+           ask(f<span class="tag-key">"Revise per the critique; output the revised answer only:\nAnswer: {draft}\nCritique: {critique}"</span>)</code></pre>
+<p>Chain several principles into a pipeline and you have a micro-constitution. Run it over a dataset and the revised outputs become SFT corpus — exactly the SL stage of CAI.</p>
+
+<div class="fail">
+<strong>Failure mode</strong>: self-critique's unreliability roots in <strong>backward rationalization</strong> (covered in Day 5) — the model tends to justify its own draft rather than find faults, so the critique step may spin in place ("looks like criticism, actually upholds the verdict"). Two counters: (1) give critique and generation <strong>different role prompts, even different models</strong>, to create adversarial pressure; (2) make critique output a <strong>structured per-item checklist</strong> rather than free text, forcing a yes/no on each principle. An open "do you think this is good?" almost always returns yes.
+</div>
+
+<div class="res">
+<strong>Resources</strong> · Constitutional AI, <a href="https://arxiv.org/abs/2212.08073" target="_blank">arXiv 2212.08073</a> /
+<a href="https://www.anthropic.com/research/constitutional-ai-harmlessness-from-ai-feedback" target="_blank">Anthropic blog</a> ·
+RLAIF, <a href="https://arxiv.org/abs/2309.00267" target="_blank">arXiv 2309.00267</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Verifiable Self-Improvement: Rejection Sampling / STaR</h2>
+<div class="claim">Claim: whether a model can get stronger on its own hinges on one thing — do you have a verifier cheaper and more reliable than the generator.</div>
+
+<h3>Background & Principle</h3>
+<p>Genuine bootstrapping self-improvement has a minimal formula: <strong>over-sample → use a verifier to keep the correct ones → fine-tune only on the correct → repeat</strong>. Rejection Sampling Fine-tuning is the one-round version; STaR (Zelikman 2022) is the iterative version — plus a rationalization trick: for problems answered wrong, feed back the correct answer and have the model produce a rationale that reaches it, then add to the training set. The key is not sampling but the <strong>existence and asymmetry of the verifier</strong>: math has ground-truth answers, code runs unit tests, SQL compares results — here "judging correctness" is far cheaper than "generating a solution," so the loop holds and keeps climbing. <strong>Tasks without that asymmetry (open writing, subjective judgment) make the loop amplify noise instead of signal.</strong> The training of o1 / R1-class reasoning models is essentially this loop industrialized.</p>
+
+<div class="diagram">┌────────── Verifiable self-improvement loop (STaR / RFT) ──────────┐
+│                                                                   │
+│   problems ──▶  ┌─ Generator ─┐  k candidates (high temp)         │
+│        ▲        └──────┬──────┘                                    │
+│        │               ▼                                          │
+│        │        ┌─ Verifier ─┐  ← must be cheap & reliable        │
+│        │        │ tests/gold/ │     (the root of the whole loop)  │
+│        │        │ exec result │                                   │
+│        │        └─────┬──────┘                                    │
+│        │       pass ✓ │ fail ✗                                    │
+│        │              ▼        └─▶ rationalize (give answer,       │
+│        │      keep & dedup           supply rationale) ──┐         │
+│        │              ▼                                  ▼         │
+│        └──── SFT on passing (q, solution) ◀──────────────┘         │
+│                  ↑ model improves → next round passes more         │
+└───────────────────────────────────────────────────────────────────┘
+   ⚠ no reliable verifier → loop amplifies noise, drifts worse</div>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># One round of rejection sampling for code: verifier = run unit tests</span>
+<span class="tag-claude">def</span> harvest(q):
+    cands = [solve(q, temperature=1.0) <span class="tag-claude">for</span> _ <span class="tag-claude">in</span> range(16)]  <span class="tag-com"># over-sample</span>
+    good  = [c <span class="tag-claude">for</span> c <span class="tag-claude">in</span> cands <span class="tag-claude">if</span> run_tests(c, q.tests)]  <span class="tag-com"># verifier</span>
+    <span class="tag-claude">return</span> dedup(good)[:2]            <span class="tag-com"># keep ≤2 per problem, avoid skew</span>
+
+sft_set = [(q, sol) <span class="tag-claude">for</span> q <span class="tag-claude">in</span> tasks <span class="tag-claude">for</span> sol <span class="tag-claude">in</span> harvest(q)]
+<span class="tag-com"># failed problems → rationalize: give gold answer, have model supply reasoning, re-verify</span></code></pre>
+
+<div class="fail">
+<strong>Failure mode</strong>: when the verifier has holes, the loop <strong>learns to exploit them (reward hacking)</strong> — incomplete test coverage means the model produces "passes the tests but is actually wrong" solutions and trains more of them. Second trap: keeping only passing samples narrows the distribution (all the problems the model already handles), so hard ones are never learned. Counter: include adversarial cases in tests and sample stratified by difficulty so easy problems don't drown the set.
+</div>
+
+<div class="res">
+<strong>Resources</strong> · STaR: Bootstrapping Reasoning, <a href="https://arxiv.org/abs/2203.14465" target="_blank">arXiv 2203.14465</a> ·
+V-STaR (train a separate verifier), <a href="https://arxiv.org/abs/2402.06457" target="_blank">arXiv 2402.06457</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Model Collapse: Recursively Eating Your Own Output Quietly Collapses</h2>
+<div class="claim">Claim: the danger of synthetic data isn't getting dumber — it's the distribution's tail silently vanishing while benchmarks still rise and diversity is already dead.</div>
+
+<h3>Background & Principle</h3>
+<p>Shumailov et al. (<em>The Curse of Recursion</em> 2023; Nature 2024) proved: when one generation of models is trained mainly on the <strong>previous generation's output</strong>, recursively, the distribution's <strong>tail disappears generation by generation</strong> — rare-but-real patterns go first, eventually converging to a bland high-frequency center. The scary part is its <strong>stealth</strong>: benchmark scores on common tasks may still rise while long-tail coverage, stylistic diversity, and rare knowledge have collapsed; by the time you notice, the loss is often irreversible. Distinguish two cases: §3's <strong>verifier-filtered</strong> self-improvement is NOT collapse (signal preserved, noise deleted); collapse comes from <strong>indiscriminately feeding generated data back as if it were real data, recursively</strong>. Frontier models use vast synthetic data and still improve precisely via three gates: real-data anchoring + verification filtering + accumulate, not replace.</p>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># Three gates against collapse</span>
+<span class="tag-com"># 1) Anchor: real data stays dominant, synthetic is only incremental</span>
+mix = 0.7 * real + 0.3 * synthetic
+
+<span class="tag-com"># 2) Accumulate, don't replace: keep every generation of real corpus</span>
+corpus = real_v1 + real_v2 + synthetic_filtered   <span class="tag-com"># append, not replace</span>
+
+<span class="tag-com"># 3) Monitor distribution, not just accuracy — diversity can drop while accuracy doesn't</span>
+assert distinct_n(outputs, n=3) &gt; THRESH   <span class="tag-com"># n-gram diversity</span>
+assert tail_coverage(outputs) &gt; THRESH     <span class="tag-com"># rare-category recall</span></code></pre>
+<p>"Accumulate, don't replace" is the key result of Gerstgrasser et al. 2024: as long as each round <strong>adds</strong> real data rather than letting synthetic supplant it, collapse can be broken. Change your eval metrics too — don't only watch accuracy; watch diversity and long-tail coverage.</p>
+
+<div class="fail">
+<strong>Failure mode</strong>: monitoring synthetic-data training with a single metric (accuracy / one benchmark) is a buried landmine — it's nearly insensitive to collapse. By the time users start complaining that "answers are getting samey / formulaic," the distribution has usually already collapsed and is hard to reverse.
+</div>
+
+<div class="res">
+<strong>Resources</strong> · AI models collapse…, <a href="https://www.nature.com/articles/s41586-024-07566-y" target="_blank">Nature 2024</a> /
+<a href="https://arxiv.org/abs/2305.17493" target="_blank">arXiv 2305.17493</a> ·
+Is Collapse Inevitable? (accumulation breaks it), <a href="https://arxiv.org/abs/2404.01413" target="_blank">arXiv 2404.01413</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// CAPSTONE · Build a Self-Improving Data Flywheel for Your Private Task</h3>
+<p>Chain the four points into a weekend project: for a narrow task you actually use (e.g. "turn meeting notes into structured to-dos"), build a small self-augmenting dataset and touch every gate by hand.</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>Distill (§1)</strong>: over-generate 200 "input→output" pairs with Opus, filter aggressively (dedup + structure check + judge≥4), aim to keep only ~30 gems.</li>
+<li><strong>Critique operator (§2)</strong>: write 2-3 constitution rules (e.g. "every to-do must have an owner and a due date"), run critique-revise on each sample, using a <strong>heterogeneous judge</strong> to avoid self-endorsement.</li>
+<li><strong>Verifier (§3)</strong>: define a <strong>programmatic check</strong> for this task — can the output be parsed by a JSON schema, are fields complete. The part you can write a verifier for is the part fit for self-improvement; the part you can't, honestly leave to human review.</li>
+<li><strong>Anti-collapse (§4)</strong>: when expanding in round two, real samples (your hand-edits) always stay ≥60%, and <strong>add</strong> rather than replace; monitor distinct-3 diversity and stop if it drops.</li>
+<li><strong>Settle up</strong>: compare a "distill once" student vs a "distill + verifier, two iterations" student. You'll feel it firsthand — <strong>the part that can improve is exactly the part you can verify, not one bit more.</strong></li>
+</ol>
+<p style="margin-top:12px">After this, you'll meet any "self-improvement / synthetic data" narrative with one question first: where's the verifier? where's the real-data anchor? Without those two, the rest is a castle in the air, ready to collapse.</p>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// DEEP THINKING</h3>
+<details><summary>RLAIF labels preferences with AI — where do those preferences originate? Does it just launder the base model's bias into something that looks "aligned"?</summary><div>Yes, that's a real risk. The AI's preferences still root in pretraining data plus how that constitution is written; RLAIF only amplifies and freezes them into a reward signal. If the base model is systematically skewed on some value axis, RLAIF will self-consistently reinforce rather than correct it. So CAI's true lever is the textual quality and coverage of the constitution, not "AI doing the labeling" itself. In practice you need external anchors (human red-teaming, heterogeneous model audits) to puncture the self-consistent loop — otherwise you're scoring the model with the model's own bias.</div></details>
+<details><summary>STaR only works on tasks with a ground-truth verifier (math/code). Can open-ended generation (writing, strategy) self-improve?</summary><div>It can, but you must reshape "verification." Open tasks have no unique answer, yet often have checkable <strong>necessary conditions</strong>: writing can verify "contains required points / violates the style spec / self-contradicts," strategy can verify "satisfies constraints / gets refuted by an adversary." Swap a single verifier for a combination of weaker checks, or use debate / an adversary to manufacture a win/lose signal, and the loop partly holds. But the weaker and more subjective the signal, the slower the climb and the easier the reward hacking — exactly why open-task self-improvement is far harder than math.</div></details>
+<details><summary>Frontier models use vast synthetic data yet keep getting stronger — does that contradict "model collapse"?</summary><div>No contradiction, because they don't run the collapse experiment's setup. Collapse comes from <strong>indiscriminate recursion</strong>: feeding the prior generation's unfiltered output back as real data, replacing it. Frontier practice is the opposite — synthetic data is first filtered by a verifier / reward model (delete noise, keep signal), and real data stays anchored and accumulated rather than replaced. In other words, collapse is "a closed loop eating itself," controlled self-improvement is "a half-open loop with an external signal." What decides which way you go is precisely whether there's a verification/real anchor independent of the generator.</div></details>
+<details><summary>Can a distilled student exceed its teacher? Under what conditions?</summary><div>Yes, and it's already routine. Three mechanisms: (1) <strong>best-of-N distillation</strong> — the teacher samples N times and only the best goes to the student, so the student learns the teacher's "upper bound," not its average; (2) <strong>verifier filtering</strong> — distilling only correct solutions lets the student learn a distribution better than the teacher's expectation; (3) <strong>multi-teacher / multi-source fusion</strong>. The common thread: the student learns not the teacher itself but the product of "teacher + a filtering/search process." Pure imitation (learning the teacher's average output) can't surpass the teacher — which is exactly why §1 stresses filtering as the lever.</div></details>
+<details><summary>"Verification is cheaper than generation" is the bedrock of self-improvement — which important tasks fail this asymmetry?</summary><div>The asymmetry vanishes when verification is as hard as, or harder than, generation: (1) <strong>long-horizon consequences</strong> — investment decisions, medical plans, where correctness takes a long time to reveal and can't be verified instantly; (2) <strong>subjective value</strong> — what counts as good literature or good design, where verification itself needs equal intelligence and lacks consensus; (3) <strong>verification requires an irreversible action</strong> — you can only run it once in the real world. In these domains self-improvement degenerates into talking to itself; you must introduce humans, time, or real-world feedback as the external verifier. Judging whether a task belongs to this class is the first call on whether to put it on a self-improvement flywheel at all.</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://arxiv.org/abs/2212.08073" target="_blank">Bai et al. · Constitutional AI: Harmlessness from AI Feedback</a> — the founding CAI / RLAIF paper</li>
+<li><a href="https://arxiv.org/abs/2203.14465" target="_blank">Zelikman et al. · STaR: Bootstrapping Reasoning With Reasoning</a> — the verifiable self-improvement paradigm</li>
+<li><a href="https://www.nature.com/articles/s41586-024-07566-y" target="_blank">Shumailov et al. · AI models collapse… (Nature 2024)</a> — authoritative evidence on model collapse</li>
+<li><a href="https://arxiv.org/abs/2404.01413" target="_blank">Gerstgrasser et al. · Is Model Collapse Inevitable?</a> — "accumulate, not replace" breaks collapse</li>
+<li><a href="https://arxiv.org/abs/2303.17651" target="_blank">Madaan et al. · Self-Refine</a> — the inference-time critique-revise operator</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 27 · 2026-06-10</footer>
+</div>
+</body></html>
