@@ -39,3 +39,17 @@
 - Day 30: Open Source Models 实战 — Llama / Qwen / DeepSeek / Mistral
 - Day 31: AI Safety in Personal Use — Model misuse、deceptive AI 早期信号、个人 agent kill switch
 - Day 32: AI Coding 的未来 5 年 — Coding agents 路线图、SWE-bench 局限、个人护城河
+
+## Phase 4 — 非 LLM 模态与生产化工程
+- Day 33: 语音 AI 工程 — STT/TTS pipeline、实时语音 agent、打断处理、语音克隆与伦理
+- Day 34: 图像生成工程 — Diffusion 控制(ControlNet/LoRA)、图像 prompt 工程、图像 agent、水印与版权
+- Day 35: 知识库与 GraphRAG — 文档解析、表格/图表理解、知识图谱构建、GraphRAG
+- Day 36: AI 可观测性 — agent 的 trace/span、prompt 监控、漂移检测、在线评估
+- Day 37: 结构化输出工程 — JSON mode、函数调用可靠性、schema 约束、解析容错
+- Day 38: 模型路由与网关 — 多模型路由策略、fallback、成本-质量路由、LLM gateway 实战
+- Day 39: 数据 pipeline for AI — embedding 的 ETL、增量索引、数据版本、特征存储
+- Day 40: 端侧与边缘 AI — 设备端推理、量化实战、隐私计算、本地够用的场景
+- Day 41: AI 测试与 CI/CD — prompt 回归测试、评估流水线、金丝雀发布、影子测试
+- Day 42: 检索质量工程 — 召回 vs 精度、混合检索调优、reranker 训练、检索评估
+- Day 43: AI 辅助数据分析 — 自然语言查 SQL、图表生成、数据故事、分析 agent
+- Day 44: AI 工程的反模式 — 过度工程化、评估缺失、prompt 脆弱性、供应商锁定
