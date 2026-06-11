@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 28 · Local & Edge LLM — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 28 / PHASE 3 · FRONTIER</span>
+<h1>Local & Edge LLM</h1>
+<h2>Quantization · Memory Math · Runtime Differences · Hybrid Routing</h2>
+<div class="date">2026-06-11 · BigCat</div>
+<p class="pitch">A local model isn't "a cheaper Claude" — it's a component with its own engineering constraints.</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>By 2026, a 32GB Mac can comfortably run open-weight models in the Qwen / Llama / gpt-oss tier. So plenty of people drop a local model into an agent as a "free Claude" — and hit a wall of mysterious regressions: long context suddenly amnesiac, tool calls breaking, the same model behaving differently in Ollama vs MLX. The problem isn't the model — it's that <strong>local inference is a different discipline from calling a cloud API</strong>: you personally carry the quantization decision, the memory budget, the runtime choice, the constrained decoding. This issue doesn't explain "what quantization is" or "how to install Ollama" (that's 101). It covers the four engineering judgments that make or break a local setup: <strong>what quantization actually loses, how to compute whether memory fits, where the four runtimes differ, and the real boundary of small-model agents plus hybrid routing</strong>. The goal: answer "local or cloud for this task?" with numbers behind it.</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>Quantization Is an Engineering Decision, Not a Free Lunch</h2>
+<div class="claim">Claim: barely-changed perplexity ≠ no loss. Quantization hurts reasoning / code / long context far more than PPL shows.</div>
+
+<h3>Background & Principle</h3>
+<p>First-principles memory formula: <strong>weight bytes = param count × bytes per param</strong>. FP16 is 2 bytes/param, so a 7B model is 14GB raw; quantize to 4-bit (~0.5 byte/param incl. scale overhead) and it drops to ~4GB — that's the precondition for running locally at all. GGUF's K-quants (<code>Q4_K_M</code>, <code>Q5_K_M</code>) are today's de-facto standard: they use different precision for different tensors (higher bits for critical attention and <code>feed_forward</code> layers), and <code>Q4_K_M</code> is the recognized size/quality sweet spot. Layer on <strong>imatrix (importance matrix)</strong>: a calibration corpus measures "which weights, when nudged, move the output most," and quantization protects those first — driving perplexity loss lower still.</p>
+<p>But the real trap is the <strong>metric</strong>. The community habitually measures quantization loss with perplexity, and PPL is the average log-likelihood of next-token — it is deeply insensitive to "occasionally picking one critical token wrong." Yet exactly that occasional error is what fails a compile or snaps a reasoning chain. So you'll see "Q4's PPL only rose 1%" while real coding / math tasks drop a whole tier. <strong>The sensitivity of multi-step reasoning and precise generation to quantization is systematically understated by an averaged PPL.</strong></p>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># Don't trust PPL alone — A/B with samples from YOUR task</span>
+<span class="tag-com"># Pull two quant levels of the same model, run your real 20 evals</span>
+ollama pull qwen3:8b              <span class="tag-com"># default is usually Q4_K_M</span>
+ollama pull qwen3:8b-q8_0         <span class="tag-com"># high-precision control</span>
+
+<span class="tag-com"># Quantize with your own imatrix (max fidelity):</span>
+<span class="tag-com"># 1) compute importance matrix on domain-representative text</span>
+./llama-imatrix -m model-f16.gguf -f calib.txt -o imat.dat
+<span class="tag-com"># 2) attach --imatrix at quantize time; critical weights are protected</span>
+./llama-quantize --imatrix imat.dat model-f16.gguf model-Q4_K_M.gguf Q4_K_M</code></pre>
+<p>The discipline: <strong>pick the quant level by task, not by "it runs."</strong> Forgiving tasks like extraction / classification tolerate Q4 or lower; code / math / long-chain reasoning warrant Q5_K_M / Q8, or a smaller-but-full-precision model.</p>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) Aggressive quantization on small models — a 3B has little redundancy to begin with, so Q4's relative damage far exceeds the same quant on a 70B; don't go below Q5 if you want quality from a small model. (2) Quantizing the <strong>KV cache to Q4</strong> to save memory — long-context retrieval degrades noticeably, because KV cache precision directly governs the model's ability to "look back" at early tokens. Q8 is the safe line for KV cache; use Q4 with caution.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · llama.cpp quantize README, <a href="https://github.com/ggml-org/llama.cpp/blob/master/tools/quantize/README.md" target="_blank">github.com/ggml-org/llama.cpp/.../quantize</a> ·
+imatrix discussion, <a href="https://github.com/ggml-org/llama.cpp/discussions/5006" target="_blank">llama.cpp discussion #5006</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Memory Math, and Judging "Good Enough Locally"</h2>
+<div class="claim">Claim: can-it-run = weights + KV cache + overhead ≤ your memory. Most OOMs die on the ignored KV cache.</div>
+
+<h3>Background & Principle</h3>
+<p>"Will this model run on my machine" isn't a lookup, it's arithmetic. The budget has three parts:</p>
+<ul>
+<li><strong>Weights</strong>: param count × bytes per param (see §1). A 70B at Q4 ≈ 40GB.</li>
+<li><strong>KV cache</strong>: grows linearly with context length, roughly <code>2 × layers × kv_heads × head_dim × seq_len × bytes</code>. This is the underestimated chunk — a 70B at 32K context can eat another 10GB+ in FP16 KV cache. GQA (grouped-query attention) shrinks <code>kv_heads</code>, which is why modern models can hold long context at all.</li>
+<li><strong>Overhead</strong>: activations, compute graph, the framework itself — leave 1–2GB headroom.</li>
+</ul>
+<p>Sum these three against your VRAM (or Apple Silicon unified memory) to know "does it fit." More important is the second judgment: <strong>fits ≠ should use.</strong> Local models have a clear "good-enough zone" and a "don't-touch zone":</p>
+
+<div class="diagram">Good-enough locally  ──────────▶  Go cloud
+classify / extract / route / PII     frontier reasoning / hard math
+fixed-format rewrite / summarize     long context (beyond local stability)
+offline / strict-privacy contexts    multi-step agentic (needs reliability)
+high-volume low-cost grunt work      one-off, low-frequency, best quality
+
+Test: task tolerance × privacy need × call volume
+  ↑tolerant ↑private ↑frequent  →  local pays off
+  ↑needs-best ↑rare             →  just go cloud</div>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># 30-second estimate: does the model fit?</span>
+weights_GB = params_B * bytes_per_param   <span class="tag-com"># Q4≈0.5, Q8≈1.0, FP16≈2.0</span>
+kv_GB      = 2 * layers * kv_heads * head_dim * ctx * 2 / 1e9  <span class="tag-com"># FP16 KV</span>
+need_GB    = weights_GB + kv_GB + 1.5     <span class="tag-com"># +overhead headroom</span>
+
+<span class="tag-com"># e.g. Llama-70B Q4, 32K context, GQA(kv_heads=8)</span>
+<span class="tag-com">#  weights ≈ 40GB, kv ≈ 10GB+ → need ≈ 52GB</span>
+<span class="tag-com">#  → a 48GB machine "that runs 70B" can't actually open 32K context</span></code></pre>
+
+<div class="fail">
+<strong>Failure mode</strong>: choosing a machine by weight size only, forgetting KV cache. "48GB runs 70B Q4 (40GB)" holds at 2K context, but open long context and it OOMs or gets silently truncated by the framework. When buying hardware / picking a model, <strong>budget the KV cache at your real context length</strong> — don't look at the model file size alone.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Simon Willison <em>How to run an LLM on your laptop</em>, <a href="https://simonwillison.net/2025/Jul/18/how-to-run-an-llm-on-your-laptop/" target="_blank">simonwillison.net/2025/Jul/18</a> ·
+Apple Silicon runtime study, <a href="https://arxiv.org/abs/2511.05502" target="_blank">arXiv:2511.05502</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Runtimes Aren't Equal: llama.cpp / Ollama / MLX / LM Studio</h2>
+<div class="claim">Claim: the same weights behave differently across runtimes. The worst trap isn't speed — it's Ollama silently truncating context.</div>
+
+<h3>Background & Principle</h3>
+<p>"Running a model locally" is really a layered stack, each layer solving something different:</p>
+<div class="diagram">┌─────────────────────────────────────────────┐
+│ LM Studio   GUI + model store (backend: llama.cpp / MLX) │
+├─────────────────────────────────────────────┤
+│ Ollama      model registry + Modelfile         │
+│             + OpenAI-compatible server (wraps llama.cpp) │
+├──────────────────────┬──────────────────────┤
+│ llama.cpp            │ MLX / mlx-lm           │
+│ cross-platform C++   │ Apple Silicon native   │
+│ GGUF · GBNF grammar  │ unified-mem zero-copy  │
+└──────────────────────┴──────────────────────┘</div>
+<ul>
+<li><strong>llama.cpp</strong>: the core C++ inference engine, origin of the GGUF format, cross-platform (CPU/CUDA/Metal). Constrained decoding (GBNF) and imatrix quantization live here. For fine control, use it directly.</li>
+<li><strong>Ollama</strong>: adds a model registry, <code>Modelfile</code> config, and an <strong>OpenAI-compatible local server</strong> (<code>localhost:11434</code>) on top of llama.cpp — its biggest value, letting you flip cloud code to local by changing one <code>base_url</code>.</li>
+<li><strong>MLX / mlx-lm</strong>: Apple's framework for its own silicon, fully exploiting the unified-memory architecture (CPU/GPU share one physical address space, zero copies). For memory-bandwidth-bound inference on a Mac, throughput typically beats routes that adapt through a Metal layer. Worth a dedicated try for Mac users.</li>
+<li><strong>LM Studio</strong>: a GUI shell with a llama.cpp or MLX backend — good for the exploration phase if you'd rather avoid the command line.</li>
+</ul>
+
+<h3>Hands-on</h3>
+<p>Ollama's most insidious trap: <strong>a small default <code>num_ctx</code></strong> (historically often 2048/4096). You think you're using the model's 128K window, but it only sees a few thousand tokens and silently drops the rest — "unexplained amnesia" on long-context tasks is this nine times out of ten. Raise it explicitly via the Modelfile:</p>
+<pre><code><span class="tag-com"># Modelfile: set context explicitly, don't eat the silent default</span>
+FROM qwen3:8b
+PARAMETER num_ctx 32768
+
+<span class="tag-com"># create and serve</span>
+ollama create qwen3-32k -f Modelfile
+
+<span class="tag-com"># then point the OpenAI SDK straight at local — almost no code change</span>
+<span class="tag-key">from</span> openai <span class="tag-key">import</span> OpenAI
+client = OpenAI(base_url=<span class="tag-gpt">"http://localhost:11434/v1"</span>, api_key=<span class="tag-gpt">"ollama"</span>)
+r = client.chat.completions.create(model=<span class="tag-gpt">"qwen3-32k"</span>,
+        messages=[{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,<span class="tag-gpt">"content"</span>:<span class="tag-gpt">"..."</span>}])</code></pre>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) Inferring local behavior from cloud benchmarks — quant level, runtime, and KV precision all differ; you must re-measure on your runtime. (2) Using a generic GGUF route on a Mac and complaining it's slow — switching to MLX on the same machine often lifts throughput directly; picking the wrong runtime costs more than picking the wrong model. (3) Forgetting <code>num_ctx</code> and blaming "the model's long context is bad."
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Ollama OpenAI compatibility, <a href="https://docs.ollama.com/api/openai-compatibility" target="_blank">docs.ollama.com/api/openai-compatibility</a> ·
+Apple MLX, <a href="https://github.com/ml-explore/mlx" target="_blank">github.com/ml-explore/mlx</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>The Boundary of Small-Model Agents, and Hybrid Routing</h2>
+<div class="claim">Claim: shaky local tool-use is an engineering problem, not a capability one — constrained decoding guarantees syntax, hybrid routing guarantees quality.</div>
+
+<h3>Background & Principle</h3>
+<p>Drop an 8B local model into an agentic loop and the usual collapse is <strong>unstable tool-call format</strong>: a missing bracket, truncated JSON, a misspelled field — one parse error kills the whole loop. Cloud models do this so well you forget how hard it is; small models don't have that luxury. The fix isn't "ask the model to behave," it's <strong>constrained decoding</strong>: llama.cpp's GBNF grammar / JSON Schema zeroes out the probability of any grammar-violating token at the sampling layer, <strong>physically guaranteeing</strong> valid JSON. That's an order of magnitude more reliable than writing "please output JSON" in the prompt.</p>
+<p>But mind the boundary: <strong>it guarantees syntax, not semantics.</strong> The model can still fill in a syntactically valid but factually wrong value. And in llama.cpp's implementation, <strong>the schema only constrains output — it is not injected into the prompt</strong>; the model can't "see" the schema, so if you want it to understand field meanings, you still describe them in the prompt.</p>
+<p>The real engineering answer is usually <strong>hybrid</strong>: the local model does the high-volume, forgiving, privacy-sensitive grunt work (routing classification, PII redaction, first-pass filtering, drafting), and the hard, low-frequency, must-be-best steps go to a cloud frontier model. Local serves as router and fallback, not the full-time lead.</p>
+
+<div class="diagram">                 ┌── simple/frequent/private ──▶ local 8B (constrained)
+request ─▶ local classifier ┤
+                 └── complex/rare/best-quality ─▶ cloud frontier
+        (local can also draft, then cloud verifies)</div>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># Constrain local output with JSON Schema (llama.cpp server / llama-cpp-python)</span>
+<span class="tag-com"># the sampling layer forces valid JSON — even small models can't emit garbage</span>
+schema = {<span class="tag-gpt">"type"</span>:<span class="tag-gpt">"object"</span>,
+  <span class="tag-gpt">"properties"</span>:{<span class="tag-gpt">"intent"</span>:{<span class="tag-gpt">"enum"</span>:[<span class="tag-gpt">"search"</span>,<span class="tag-gpt">"refund"</span>,<span class="tag-gpt">"other"</span>]},
+                <span class="tag-gpt">"urgent"</span>:{<span class="tag-gpt">"type"</span>:<span class="tag-gpt">"boolean"</span>}},
+  <span class="tag-gpt">"required"</span>:[<span class="tag-gpt">"intent"</span>,<span class="tag-gpt">"urgent"</span>]}
+
+r = client.chat.completions.create(model=<span class="tag-gpt">"qwen3-8k"</span>,
+      messages=[{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,<span class="tag-gpt">"content"</span>: ticket}],
+      extra_body={<span class="tag-gpt">"response_format"</span>:{<span class="tag-gpt">"type"</span>:<span class="tag-gpt">"json_schema"</span>,
+                  <span class="tag-gpt">"json_schema"</span>:{<span class="tag-gpt">"schema"</span>: schema}}})
+<span class="tag-com"># intent=search → handle locally; intent=refund & urgent → escalate to cloud</span></code></pre>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) Assuming constrained = correct — it guarantees <code>{"urgent":true}</code> is valid JSON, not that <code>true</code> is the right judgment; semantic errors still happen. (2) Expecting an 8B to run a full multi-tool agentic loop — as steps pile up, accumulated error rate drags success to unusable; those belong in the cloud. (3) A hybrid whose local classifier is itself inaccurate — wrong model at the routing layer poisons everything downstream; the classifier must be accurate enough, or itself a cheap cloud tier.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · llama.cpp GBNF grammars, <a href="https://github.com/ggml-org/llama.cpp/blob/master/grammars/README.md" target="_blank">github.com/ggml-org/llama.cpp/.../grammars</a> ·
+Simon Willison <em>llama.cpp grammars to generate JSON</em>, <a href="https://til.simonwillison.net/llms/llama-cpp-python-grammars" target="_blank">til.simonwillison.net</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// Capstone · Build Yourself a Local-First "Triage" Layer</h3>
+<p>String the four points into a weekend project that saves money and protects privacy: add a local triage layer in front of one of your existing cloud calls.</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>Pick quant & model</strong> (§1): classification is forgiving, so start with an 8B Q4_K_M; A/B Q4 vs Q8 on your 20 real samples first, confirm Q4 doesn't drop quality, then commit.</li>
+<li><strong>Compute the memory budget</strong> (§2): include the KV cache at the context length you need; confirm it runs stably — don't discover the OOM in production.</li>
+<li><strong>Choose a runtime</strong> (§3): try MLX first on a Mac; otherwise spin up Ollama's OpenAI-compatible server with an explicit, large enough <code>num_ctx</code> in the <code>Modelfile</code>.</li>
+<li><strong>Constrain + route</strong> (§4): have the local classifier output <code>{intent, urgent}</code> under JSON Schema; handle the simple/private cases locally, escalate the complex/high-value ones to a cloud frontier model.</li>
+<li><strong>Quantify the gain</strong>: run it for a week, log "share handled locally × token cost saved per call" and "accuracy of escalated cloud cases." Most classification/routing setups find 60%+ of requests never need the cloud — costs halved, privacy protected as a bonus.</li>
+</ol>
+<p style="margin-top:12px">Once you've built this, "local vs cloud" stops being a feeling and becomes a decision line with numbers behind it — exactly the cost intuition a super-individual should carry.</p>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// DEEP THINKING</h3>
+<details><summary>If perplexity systematically understates quantization's harm to reasoning, why does the community still compare quant levels with PPL?</summary><div>Because PPL is cheap, deterministic, and reproducible — one fixed corpus, one pass, a number; no task design, no judge noise. Task-level eval is expensive and subjective. It's the classic compromise between "what's measurable" and "what you want to measure." The right move: use PPL as a coarse filter (a PPL spike eliminates a candidate), but decide the final level via A/B on your own task samples. A metric's convenience shouldn't dictate your engineering decision — a universal rule across all eval work.</div></details>
+<details><summary>Unified memory lets a Mac run big models with "lots of memory," so why does it still lose to a discrete GPU of equal memory under heavy load?</summary><div>The bottleneck is memory bandwidth and compute, not just capacity. A discrete GPU's GDDR/HBM bandwidth far exceeds Mac unified memory, with stronger parallel compute. Unified memory wins on "large capacity, zero copy, energy efficiency" — it fits models others can't and feels great for single-stream low latency; but high-concurrency batch throughput and compute-dense very-large-model work still favor the discrete GPU. Choose by whether you're "single-user low-latency" or "multi-stream high-throughput."</div></details>
+<details><summary>Constrained decoding can 100% guarantee valid JSON — could it actually lower output quality?</summary><div>Yes, and it's a real trade-off. Forcibly masking tokens can cut off the high-probability path the model "wanted" to take, pushing it into a sub-optimal branch and slightly lowering quality on some tasks. Subtler still: if the schema conflicts with the model's natural tendency (it wants to explain then conclude, but you only allow pure JSON), the constraint amplifies the awkwardness. Mitigations: make the schema fit the model's natural output, add a reasoning field to let it "think" first when needed, or split complex structures into two steps (free generation, then extraction).</div></details>
+<details><summary>Hybrid routing sounds great, but adding a local classifier adds a failure point and latency. When is hybrid actually over-engineering?</summary><div>When call volume is too low. Hybrid's payoff comes from "a large share of high-frequency requests are actually simple" — at low volume the cost saved can't cover the complexity of maintaining a local stack (deploy, monitor, the classifier's own errors). Low-frequency cases are simpler all-cloud. The test rhymes with Day 3's "workflow vs agent": start with the simplest (all-cloud), add hybrid only when cost/privacy genuinely becomes the bottleneck. Don't go hybrid just to "use a local model."</div></details>
+<details><summary>The "good-enough zone" keeps expanding as models get stronger. Will it eventually squeeze cloud frontier models into a narrow corner?</summary><div>The zone is indeed expanding — what an 8B does today took GPT-3.5 three years ago. But frontier capability rises too; the two are a race, not a convergence. The likelier steady state: local absorbs the "mature, standardizable, not-quality-sensitive" long tail (classify, extract, rewrite), while cloud holds the frontier needing freshest knowledge, strongest reasoning, longest context. The boundary keeps shifting right but won't vanish — just as local databases never killed cloud databases, they just each found their place. The real leverage is judgment: knowing which side a task falls on right now.</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://simonwillison.net/2025/Jul/18/how-to-run-an-llm-on-your-laptop/" target="_blank">Simon Willison · How to run an LLM on your laptop</a> — local model selection and tooling overview</li>
+<li><a href="https://github.com/ggml-org/llama.cpp/blob/master/tools/quantize/README.md" target="_blank">llama.cpp · Quantize README</a> — K-quants and each quant level explained</li>
+<li><a href="https://github.com/ggml-org/llama.cpp/blob/master/grammars/README.md" target="_blank">llama.cpp · GBNF Grammars</a> — official docs on constrained decoding / structured output</li>
+<li><a href="https://docs.ollama.com/api/openai-compatibility" target="_blank">Ollama · OpenAI Compatibility</a> — local OpenAI-compatible server</li>
+<li><a href="https://arxiv.org/abs/2511.05502" target="_blank">arXiv:2511.05502</a> — MLX/Ollama/llama.cpp runtime comparison on Apple Silicon</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 28 · 2026-06-11</footer>
+</div>
+</body></html>

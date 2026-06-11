@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 28 · Local & Edge LLM — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 28 / PHASE 3 · FRONTIER</span>
+<h1>Local & Edge LLM</h1>
+<h2>Quantization · Memory Math · Runtime 差异 · Hybrid Routing</h2>
+<div class="date">2026-06-11 · BigCat</div>
+<p class="pitch">本地模型不是「更便宜的 Claude」，它是一类有自己工程约束的部件。</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>2026 年，一台 32GB 的 Mac 已经能跑得动 Qwen / Llama / gpt-oss 这一档的开放权重模型。于是很多人把本地模型当成「免费版 Claude」直接塞进 agent——然后撞上一堆莫名其妙的退化：长 context 突然失忆、tool call 格式崩、同一个模型在 Ollama 里和 MLX 里表现不一样。问题不在模型，在于<strong>本地推理是一套和调云端 API 完全不同的工程</strong>：你要自己背负量化决策、显存预算、运行时选择、约束解码。这一期不讲「量化是什么」或「怎么装 Ollama」（那是入门），而是讲四个决定本地方案成败的工程判断：<strong>量化到底损失了什么、显存够不够用怎么算、四个运行时差在哪、以及小模型做 agent 的现实边界与 hybrid 路由</strong>。目标是让你在「这个任务该本地还是上云」这个问题上，给出有数字支撑的答案。</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>量化是工程决策，不是免费午餐</h2>
+<div class="claim">论断：Perplexity 几乎不变 ≠ 没损失。量化对 reasoning / code / 长 context 的伤害远大于 PPL 显示的。</div>
+
+<h3>背景与原理</h3>
+<p>显存占用第一性公式：<strong>权重字节数 = 参数量 × 每参数字节</strong>。FP16 是 2 bytes/param，所以 7B 模型裸权重 14GB；量化到 4-bit（约 0.5 byte/param 含 scale 开销）压到 ~4GB——这就是本地能跑起来的前提。GGUF 的 K-quants（<code>Q4_K_M</code>、<code>Q5_K_M</code>）是现在的实际标准：它们对不同 tensor 用不同精度（attention 和 <code>feed_forward</code> 的关键层给更高 bit），<code>Q4_K_M</code> 被公认为体积/质量的甜点。再叠加 <strong>imatrix（importance matrix）</strong>：用一份校准语料统计「哪些权重一动输出就大变」，量化时优先保护它们，能进一步压低困惑度损失。</p>
+<p>但真正的陷阱是<strong>评估指标</strong>。社区习惯用 perplexity 衡量量化损失，而 PPL 是 next-token 的平均对数似然——它对「偶尔一个关键 token 选错」极不敏感。可恰恰是这种偶发错误，会让一段代码编译不过、让一条 reasoning 链断掉。所以你会看到「Q4 的 PPL 只涨了 1%」但实际跑 coding / 数学任务掉了一个档。<strong>多步推理和精确生成对量化的敏感度，被平均化的 PPL 系统性低估了。</strong></p>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-com"># 别只信 PPL——用你自己任务的样本做 A/B</span>
+<span class="tag-com"># 同一个模型拉两个量化档，跑你真实的 20 条 eval</span>
+ollama pull qwen3:8b              <span class="tag-com"># 默认通常是 Q4_K_M</span>
+ollama pull qwen3:8b-q8_0         <span class="tag-com"># 高精度对照组</span>
+
+<span class="tag-com"># 自己带 imatrix 量化（最大化保真）：</span>
+<span class="tag-com"># 1) 用贴近你领域的语料算 importance matrix</span>
+./llama-imatrix -m model-f16.gguf -f calib.txt -o imat.dat
+<span class="tag-com"># 2) 量化时挂上 --imatrix，关键权重被优先保护</span>
+./llama-quantize --imatrix imat.dat model-f16.gguf model-Q4_K_M.gguf Q4_K_M</code></pre>
+<p>核心纪律：<strong>量化档位是按任务选的，不是按「能跑就行」选的</strong>。抽取 / 分类这类宽容任务，Q4 甚至更低都行；代码 / 数学 / 长链推理，宁可上 Q5_K_M / Q8 或换更小但满血的模型。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）小模型上激进量化——3B 模型本身冗余就少，Q4 的相对伤害远大于同档量化的 70B；小模型要质量就别低于 Q5。（2）顺手把 <strong>KV cache 也量化到 Q4</strong> 省显存——长 context 检索会明显退化，因为 KV cache 的精度直接决定模型「回看」早期 token 的能力。KV cache 一般 Q8 是安全线，Q4 慎用。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · llama.cpp quantize README, <a href="https://github.com/ggml-org/llama.cpp/blob/master/tools/quantize/README.md" target="_blank">github.com/ggml-org/llama.cpp/.../quantize</a> ·
+imatrix 讨论, <a href="https://github.com/ggml-org/llama.cpp/discussions/5006" target="_blank">llama.cpp discussion #5006</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>显存内存数学，与「本地够用」的判定</h2>
+<div class="claim">论断：能不能跑 = 权重 + KV cache + overhead 是否 ≤ 你的显存。大多数 OOM 死在被忽略的 KV cache 上。</div>
+
+<h3>背景与原理</h3>
+<p>「这个模型能不能在我机器上跑」不是查表，是算账。预算由三块组成：</p>
+<ul>
+<li><strong>权重</strong>：参数量 × 每参数字节（见 §1）。70B 的 Q4 ≈ 40GB。</li>
+<li><strong>KV cache</strong>：随 context 长度线性增长，公式约 <code>2 × layers × kv_heads × head_dim × seq_len × bytes</code>。这就是被低估的大头——一个 70B 模型开到 32K context，FP16 的 KV cache 能再吃掉 10GB+。GQA（分组注意力）把 <code>kv_heads</code> 砍小，是现代模型能撑长 context 的关键。</li>
+<li><strong>Overhead</strong>：激活、计算图、框架本身，留 1–2GB 余量。</li>
+</ul>
+<p>把这三块加起来对比你的显存（或 Apple Silicon 的统一内存），才知道「装得下吗」。更重要的是第二个判定：<strong>装得下 ≠ 该用</strong>。本地模型有明确的「够用区」和「别碰区」：</p>
+
+<div class="diagram">本地够用区  ──────────────▶  上云区
+分类 / 抽取 / 路由 / PII 脱敏      前沿 reasoning / 复杂数学
+固定格式改写 / 摘要               长 context（>本地能稳跑的）
+离线 / 隐私强约束场景            多步 agentic 任务（要高可靠）
+高并发低成本的「脏活」           一次性、低频、要最强质量
+
+判据：任务宽容度 × 隐私要求 × 调用量
+  ↑容错 ↑隐私 ↑高频  →  本地划算
+  ↑要最强 ↑低频     →  直接上云更省心</div>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-com"># 30 秒估算：模型装得下吗？</span>
+weights_GB = params_B * bytes_per_param   <span class="tag-com"># Q4≈0.5, Q8≈1.0, FP16≈2.0</span>
+kv_GB      = 2 * layers * kv_heads * head_dim * ctx * 2 / 1e9  <span class="tag-com"># FP16 KV</span>
+need_GB    = weights_GB + kv_GB + 1.5     <span class="tag-com"># +overhead 余量</span>
+
+<span class="tag-com"># 例：Llama-70B Q4, 32K context, GQA(kv_heads=8)</span>
+<span class="tag-com">#  weights ≈ 40GB, kv ≈ 10GB+ → need ≈ 52GB</span>
+<span class="tag-com">#  → 48GB 机器「号称跑得动 70B」其实开不到 32K context</span></code></pre>
+
+<div class="fail">
+<strong>失败模式</strong>：只按权重大小选机器，忘了 KV cache。「48GB 能跑 70B Q4（40GB）」在 2K context 下成立，一开长 context 就 OOM 或被框架悄悄截断。买机器 / 选模型时，<strong>按你真实的 context 长度把 KV cache 一起算进预算</strong>，别只看模型文件大小。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Simon Willison <em>How to run an LLM on your laptop</em>, <a href="https://simonwillison.net/2025/Jul/18/how-to-run-an-llm-on-your-laptop/" target="_blank">simonwillison.net/2025/Jul/18</a> ·
+Apple Silicon 运行时对比研究, <a href="https://arxiv.org/abs/2511.05502" target="_blank">arXiv:2511.05502</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>运行时不是都一样：llama.cpp / Ollama / MLX / LM Studio</h2>
+<div class="claim">论断：同一个权重在不同运行时表现不同。最坑的不是性能差，是 Ollama 默认 context 静默截断。</div>
+
+<h3>背景与原理</h3>
+<p>「本地跑模型」其实是一个分层的栈，每层解决不同的事：</p>
+<div class="diagram">┌─────────────────────────────────────────────┐
+│ LM Studio   GUI + 模型市场（后端挂 llama.cpp / MLX）│
+├─────────────────────────────────────────────┤
+│ Ollama      模型 registry + Modelfile          │
+│             + OpenAI 兼容 server（包 llama.cpp）  │
+├──────────────────────┬──────────────────────┤
+│ llama.cpp            │ MLX / mlx-lm           │
+│ 跨平台 C++ 引擎       │ Apple Silicon 原生      │
+│ GGUF · GBNF 语法     │ 统一内存零拷贝 · 高吞吐    │
+└──────────────────────┴──────────────────────┘</div>
+<ul>
+<li><strong>llama.cpp</strong>：核心 C++ 推理引擎，GGUF 格式的源头，跨平台（CPU/CUDA/Metal）。约束解码（GBNF）、imatrix 量化都在这层。要细控就直接用它。</li>
+<li><strong>Ollama</strong>：在 llama.cpp 之上加了模型 registry、<code>Modelfile</code> 配置、以及一个 <strong>OpenAI 兼容的本地 server</strong>（<code>localhost:11434</code>）——这是它最大的价值，让你一行改 <code>base_url</code> 就把云端代码切到本地。</li>
+<li><strong>MLX / mlx-lm</strong>：Apple 为自家芯片做的框架，吃满统一内存架构（CPU/GPU 同一物理地址、零拷贝）。在 Mac 上做内存带宽瓶颈的推理，吞吐通常优于走 Metal 适配层的方案。Mac 用户值得专门试。</li>
+<li><strong>LM Studio</strong>：GUI 壳，后端可挂 llama.cpp 或 MLX，适合不想碰命令行的探索期。</li>
+</ul>
+
+<h3>实战示例</h3>
+<p>Ollama 最隐蔽的坑：<strong>默认 <code>num_ctx</code> 很小</strong>（历史上常是 2048/4096）。你以为在用模型的 128K 窗口，实际它只看到几千 token，超出部分被静默丢弃——长 context 任务「无故失忆」十有八九是这个。用 Modelfile 显式拉大：</p>
+<pre><code><span class="tag-com"># Modelfile：显式设置 context，别吃默认值的暗亏</span>
+FROM qwen3:8b
+PARAMETER num_ctx 32768
+
+<span class="tag-com"># 创建并起服务</span>
+ollama create qwen3-32k -f Modelfile
+
+<span class="tag-com"># 然后用 OpenAI SDK 直连本地——代码几乎不用改</span>
+<span class="tag-key">from</span> openai <span class="tag-key">import</span> OpenAI
+client = OpenAI(base_url=<span class="tag-gpt">"http://localhost:11434/v1"</span>, api_key=<span class="tag-gpt">"ollama"</span>)
+r = client.chat.completions.create(model=<span class="tag-gpt">"qwen3-32k"</span>,
+        messages=[{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,<span class="tag-gpt">"content"</span>:<span class="tag-gpt">"..."</span>}])</code></pre>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）拿云端的 benchmark 数字推断本地表现——量化档、运行时、KV 精度全不同，必须在你的运行时上重测。（2）在 Mac 上用通用 GGUF 路线却抱怨慢——同机器换 MLX 往往直接提吞吐，运行时选错比模型选错更亏。（3）忘了 <code>num_ctx</code>，把锅甩给「模型长 context 不行」。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Ollama OpenAI 兼容文档, <a href="https://docs.ollama.com/api/openai-compatibility" target="_blank">docs.ollama.com/api/openai-compatibility</a> ·
+Apple MLX, <a href="https://github.com/ml-explore/mlx" target="_blank">github.com/ml-explore/mlx</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>小模型做 Agent 的边界，与 Hybrid 路由</h2>
+<div class="claim">论断：本地小模型 tool-use 不稳，是工程问题不是能力问题——约束解码保语法，hybrid 路由保质量。</div>
+
+<h3>背景与原理</h3>
+<p>把 8B 本地模型塞进 agentic loop，最常见的崩法是 <strong>tool call 格式不稳</strong>：少个括号、JSON 截断、字段名拼错——一个解析错误整个 loop 就死。云端大模型把这件事做得很好让你忘了它有多难，小模型没这福气。解法不是「再求模型守规矩」，而是 <strong>约束解码（constrained decoding）</strong>：llama.cpp 的 GBNF 语法 / JSON Schema 在采样层直接把不合语法的 token 概率清零，<strong>物理保证</strong>输出是合法 JSON。这比 prompt 里写「请输出 JSON」可靠一个量级。</p>
+<p>但要记住约束解码的边界：<strong>它只保语法，不保语义</strong>。模型仍可能填进一个格式合法但内容错误的值。而且 llama.cpp 的实现里，<strong>schema 只用于约束输出、不会被注入进 prompt</strong>——模型「看不到」schema，你想让它理解字段含义，仍要在 prompt 里描述清楚。</p>
+<p>真正的工程答案往往是 <strong>hybrid</strong>：本地模型干高频、宽容、隐私敏感的「脏活」（路由分类、PII 脱敏、初筛、draft），把难的、低频的、要最强质量的步骤交给云端前沿模型。本地作为 router 和 fallback，而不是全程主力。</p>
+
+<div class="diagram">                 ┌── 简单/高频/隐私 ──▶ 本地 8B（约束解码）
+请求 ─▶ 本地分类器 ┤
+                 └── 复杂/低频/要最强 ─▶ 云端前沿模型
+        （本地还可做 draft，再让云端 verify）</div>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-com"># 用 JSON Schema 约束本地输出（llama.cpp server / llama-cpp-python）</span>
+<span class="tag-com"># 采样层强制合法 JSON——小模型也不会再吐坏格式</span>
+schema = {<span class="tag-gpt">"type"</span>:<span class="tag-gpt">"object"</span>,
+  <span class="tag-gpt">"properties"</span>:{<span class="tag-gpt">"intent"</span>:{<span class="tag-gpt">"enum"</span>:[<span class="tag-gpt">"search"</span>,<span class="tag-gpt">"refund"</span>,<span class="tag-gpt">"other"</span>]},
+                <span class="tag-gpt">"urgent"</span>:{<span class="tag-gpt">"type"</span>:<span class="tag-gpt">"boolean"</span>}},
+  <span class="tag-gpt">"required"</span>:[<span class="tag-gpt">"intent"</span>,<span class="tag-gpt">"urgent"</span>]}
+
+r = client.chat.completions.create(model=<span class="tag-gpt">"qwen3-8k"</span>,
+      messages=[{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,<span class="tag-gpt">"content"</span>: ticket}],
+      extra_body={<span class="tag-gpt">"response_format"</span>:{<span class="tag-gpt">"type"</span>:<span class="tag-gpt">"json_schema"</span>,
+                  <span class="tag-gpt">"json_schema"</span>:{<span class="tag-gpt">"schema"</span>: schema}}})
+<span class="tag-com"># intent=search → 本地直接处理；intent=refund 且 urgent → 升级云端</span></code></pre>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）以为约束解码=正确——它保证 <code>{"urgent":true}</code> 是合法 JSON，不保证 <code>true</code> 是对的判断；语义错误照样发生。（2）指望本地 8B 跑完整多 tool 的 agentic loop——步数一多，累积错误率把成功率拖到不可用，这种就该上云。（3）hybrid 里本地分类器自己就不准——路由层用错模型，下游全错，分类器要么够准要么也得是云端便宜档。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · llama.cpp GBNF grammars, <a href="https://github.com/ggml-org/llama.cpp/blob/master/grammars/README.md" target="_blank">github.com/ggml-org/llama.cpp/.../grammars</a> ·
+Simon Willison <em>llama.cpp grammars 生成 JSON</em>, <a href="https://til.simonwillison.net/llms/llama-cpp-python-grammars" target="_blank">til.simonwillison.net</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// 综合实战 · 给自己造一个本地优先的「分诊」层</h3>
+<p>把这四点串成一个能省钱又护隐私的周末项目：在你现有的某个云端调用前面，加一层本地分诊。</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>选量化与模型</strong>（§1）：分类任务宽容，拉一个 8B 的 Q4_K_M 起步；先用你 20 条真实样本 A/B 一下 Q4 vs Q8，确认 Q4 没掉点再定。</li>
+<li><strong>算显存预算</strong>（§2）：按你需要的 context 把 KV cache 一起算进去，确认能稳跑——别等上线才 OOM。</li>
+<li><strong>选运行时</strong>（§3）：Mac 上优先试 MLX，其余用 Ollama 起 OpenAI 兼容 server，<code>Modelfile</code> 里显式写够 <code>num_ctx</code>。</li>
+<li><strong>约束 + 路由</strong>（§4）：本地分类器用 JSON Schema 约束输出 <code>{intent, urgent}</code>；简单/隐私的就地处理，复杂/高价值的才升级云端前沿模型。</li>
+<li><strong>量化收益</strong>：跑一周，记录「本地处理占比 × 单次省下的 token 成本」和「升级到云端的准确率」。绝大多数分类/路由场景会发现：60%+ 的请求根本不需要上云，成本直接砍半还顺带护了隐私。</li>
+</ol>
+<p style="margin-top:12px">做完这一套，你对「本地 vs 云」就不再是感觉，而是一条有数字的判据线——这正是超级个体该有的成本直觉。</p>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// ENGLISH GLOSSARY</h3>
+<dl>
+<dt>GGUF</dt><dd>llama.cpp 的模型权重格式，本地推理的事实标准容器。</dd>
+<dt>Quantization</dt><dd>把权重从 FP16 压到 4/5/8-bit 以省显存，本地能跑的前提。</dd>
+<dt>K-quants (Q4_K_M)</dt><dd>对不同 tensor 用不同精度的混合量化；Q4_K_M 是体积/质量甜点。</dd>
+<dt>imatrix</dt><dd>importance matrix，用校准语料统计关键权重，量化时优先保护以降损失。</dd>
+<dt>KV Cache</dt><dd>缓存历史 token 的 K/V，随 context 线性增长；常被低估的显存大头。</dd>
+<dt>GQA</dt><dd>分组查询注意力，减少 kv_heads，是长 context 显存可控的关键。</dd>
+<dt>Unified Memory</dt><dd>Apple Silicon 的 CPU/GPU 共享物理内存，MLX 借此零拷贝。</dd>
+<dt>MLX / mlx-lm</dt><dd>Apple 为自家芯片的 ML 框架及其 LLM 推理库。</dd>
+<dt>Constrained Decoding</dt><dd>采样层屏蔽非法 token，物理保证输出合法 JSON/语法（GBNF）。</dd>
+<dt>Hybrid Routing</dt><dd>本地干高频脏活、云端干难活的混合架构，省钱护隐私。</dd>
+</dl>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// 深入思考</h3>
+<details><summary>既然 perplexity 系统性低估量化对 reasoning 的伤害，为什么社区还在普遍用 PPL 比较量化档？</summary><div>因为 PPL 便宜、确定、可复现——一份固定语料跑一遍就有数，不需要设计任务、不引入评判噪声。而任务级 eval 贵且主观。这是「能测的 vs 想测的」之间的经典妥协。正确姿势：把 PPL 当粗筛（PPL 暴涨直接淘汰），但定档必须用你自己任务的样本做 A/B。指标的便利性不该决定你的工程决策——这是所有 eval 工程的通则。</div></details>
+<details><summary>统一内存让 Mac 能用「大内存」跑大模型，但为什么它在重负载下仍打不过同等显存的独显？</summary><div>瓶颈在内存带宽与算力，不只是容量。独显的 GDDR/HBM 带宽远高于 Mac 统一内存，且有更强的并行算力。统一内存的胜场是「容量大、零拷贝、能效高」——能装下别人装不下的模型、做单流低延迟很爽；但高并发 batch 吞吐、超大模型的算力密集场景，独显仍占优。选机器要看你是「单人低延迟」还是「多路高吞吐」。</div></details>
+<details><summary>约束解码能 100% 保证合法 JSON，那它会不会反而降低输出质量？</summary><div>会，而且这是真实 trade-off。强行屏蔽 token 可能把模型「本想走的高概率路径」掐断，逼它进入次优分支，某些任务上质量略降。更隐蔽的是：如果 schema 和模型自然倾向冲突（比如它想先解释再给结论，你却只允许纯 JSON），约束会放大这种别扭。缓解：schema 尽量贴合模型自然输出、必要时留一个 reasoning 字段先让它「想」、复杂结构分两步（先自由生成再抽取）。</div></details>
+<details><summary>Hybrid 路由听起来很美，但多引入一个本地分类器就多一个故障点和延迟。什么时候 hybrid 反而是过度工程？</summary><div>当调用量不够大时。Hybrid 的收益来自「高频请求里很大比例其实简单」——量小时省下的成本覆盖不了多维护一套本地栈的复杂度（部署、监控、分类器自身的错误）。低频场景直接全上云更省心。判据和 Day 3「workflow vs agent」同源：先用最简单的（全云），只在成本/隐私真的成为瓶颈时才加 hybrid。别为了「用上本地模型」而 hybrid。</div></details>
+<details><summary>「本地够用区」会随模型变强不断扩大，最终是否会把云端前沿模型挤到很窄的角落？</summary><div>够用区确实在扩大——今天 8B 能干的，三年前要 GPT-3.5。但前沿能力也在涨，二者是赛跑而非收敛。更可能的稳态：本地吃掉「成熟、可标准化、对最强质量不敏感」的长尾任务（分类、抽取、改写），云端守住「需要最新知识、最强推理、最长 context」的前沿。边界持续右移，但不会消失——就像本地数据库没消灭云数据库，只是各占其位。真正的杠杆是判断力：知道哪类任务此刻落在哪边。</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://simonwillison.net/2025/Jul/18/how-to-run-an-llm-on-your-laptop/" target="_blank">Simon Willison · How to run an LLM on your laptop</a> — 本地模型选型与工具全景</li>
+<li><a href="https://github.com/ggml-org/llama.cpp/blob/master/tools/quantize/README.md" target="_blank">llama.cpp · Quantize README</a> — K-quants 与各量化档说明</li>
+<li><a href="https://github.com/ggml-org/llama.cpp/blob/master/grammars/README.md" target="_blank">llama.cpp · GBNF Grammars</a> — 约束解码 / 结构化输出官方文档</li>
+<li><a href="https://docs.ollama.com/api/openai-compatibility" target="_blank">Ollama · OpenAI Compatibility</a> — 本地 OpenAI 兼容 server</li>
+<li><a href="https://arxiv.org/abs/2511.05502" target="_blank">arXiv:2511.05502</a> — Apple Silicon 上 MLX/Ollama/llama.cpp 运行时对比</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 28 · 2026-06-11</footer>
+</div>
+</body></html>
