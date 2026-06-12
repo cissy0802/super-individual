@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 29 · Eval Beyond Benchmark — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.cross-ref{margin:24px auto;max-width:760px;padding:14px 18px;border-left:3px solid #00d4ff;background:rgba(0,212,255,0.06);border-radius:4px;font-size:0.92rem}
+.cross-ref a{color:#00d4ff;text-decoration:none;font-weight:500}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 29 / PHASE 3 · FRONTIER</span>
+<h1>Eval Beyond Benchmark</h1>
+<h2>Contamination · Construct Gap · Slice-Based · Agentic Eval</h2>
+<div class="date">2026-06-12 · BigCat</div>
+<p class="pitch">SOTA 榜单的分数，和你产线上的可靠性，是两个几乎无关的数字。</p>
+</header>
+
+<div class="cross-ref">
+<a href="https://cissy0802.github.io/ai-ml-daily/evaluation-benchmarks-day15.html">前置概念 → ai-ml-daily Day 15：评估与基准（MMLU, HumanEval, MT-Bench）</a>
+</div>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>选型时你盯着 SWE-bench、MMLU、Arena 排名，但上线后 agent 在你的场景里翻车——这不是偶发，是<strong>结构性的</strong>。公开 benchmark 测的是「在一个被无数次刷过、且很可能进过预训练语料的固定集合上的平均分」，而你要的是「在我的真实输入分布上、多轮交互里、连续 10 次都不出错」。这两者之间隔着污染、饱和、construct gap 三道鸿沟。<strong>Day 6 讲的是 eval 的机械工程</strong>（golden set、judge 去偏、回归测试）；这一期讲更上游的判断：为什么公开榜单系统性骗你、怎么从生产 trace 反向造出可信 eval、为什么聚合分数是最危险的指标、以及 agent 时代「评估轨迹而非答案」的范式转移。结论先行：<strong>能用的 eval 一定是你自己场景的、切片的、可被对抗的</strong>。</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>公开 Benchmark 的三宗罪：污染、饱和、Construct Gap</h2>
+<div class="claim">论断：排行榜分数系统性<strong>高估</strong>真实能力——它测的根本不是你部署时面对的那个分布。</div>
+
+<h3>背景与原理</h3>
+<p>三个机制让公开分数和生产可靠性脱钩：</p>
+<ul>
+<li><strong>污染（Contamination）</strong>：MMLU、HumanEval 这种存在多年的公开集，几乎必然以某种形式进过新模型的预训练 / 后训练语料。更隐蔽的是 SWE-bench——对 Verified 子集的分析发现，<strong>约三分之一的 issue 把修复方案直接写在了 issue 描述或评论里</strong>，模型「抄」而不是「解」，分数因此虚高。</li>
+<li><strong>饱和（Saturation）</strong>：顶部模型挤在 88%–92% 这种天花板区间，benchmark 失去<strong>区分度</strong>——分数差落进噪声，你无法据此判断 A 比 B 在你的场景更好。</li>
+<li><strong>Construct Gap</strong>：benchmark 测的是 target 的<em>代理</em>，不是 target 本身。HumanEval 测「补全一个独立函数」，你的活是「在 50 万行 repo 里跨文件改一个 bug」。研究发现，把 SWE-bench 的长 GitHub issue 换成真实用户那种简短模糊的提问，同一模型相对成功率掉 <strong>20–40%</strong>。</li>
+</ul>
+<p>底层是 Goodhart 定律：<strong>一个指标一旦成为优化目标，就不再是好指标</strong>。整个行业在朝公开 benchmark 过拟合，分数涨而真实能力的相关性逐年衰减。</p>
+
+<div class="diagram">  公开 Benchmark 分数  ─────────────────▶  你的生产可靠性
+        88%                                    ?
+
+   ┌──────────────────── 三道泄漏 ────────────────────┐
+   │  ① 污染：答案进过训练语料 / 写在 issue 里         │  −分数虚高
+   │  ② 饱和：顶部挤成一团，落进噪声，无区分度         │  −选型失效
+   │  ③ Construct Gap：测代理任务 ≠ 你的真实任务分布   │  −20~40% 掉幅
+   └──────────────────────────────────────────────────┘
+                          ▼
+            榜单 #1  ≠  你场景里最可靠的那个</div>
+
+<h3>实战示例</h3>
+<p>把「能不能信这个 benchmark」做成一张 30 秒诊断表，贴在选型文档里：</p>
+<pre><code><span class="tag-com"># 看到一个亮眼分数，先问这 4 个问题</span>
+1. 这个集合公开多久了？     &gt; 1 年 → 大概率污染，分数打折
+2. 顶部模型分数差多少？     &lt; 3pp → 落进噪声，别据此选型
+3. 任务形态像我的吗？       单函数/选择题 ≠ 多轮 agent / 长 repo
+4. 评分 oracle 严吗？       弱测试集会放过「看起来对」的错答
+
+<span class="tag-com"># 任何一条不过关 → 这个分数不能用来做生产决策</span></code></pre>
+
+<div class="fail">
+<strong>失败模式</strong>：拿 benchmark 榜单直接拍板选型并上生产。正确顺序是——<strong>用公开榜单做粗筛（排除明显弱的），用你自己的 eval 做终选</strong>。公开分数只回答「这个模型大致在什么段位」，永远回答不了「它在我的任务上够不够可靠」。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · SWE-bench (Jimenez et al. 2024, arXiv:2310.06770), <a href="https://arxiv.org/abs/2310.06770" target="_blank">arxiv.org/abs/2310.06770</a> ·
+HumanEval / Codex (Chen et al. 2021)、MMLU (Hendrycks et al. 2021) 原文
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>从生产 Trace 反向造 Eval Set</h2>
+<div class="claim">论断：唯一可信的 eval 集来自<strong>你自己的真实流量</strong>——不是 benchmark，不是凭空合成的样例。</div>
+
+<h3>背景与原理</h3>
+<p>Hamel Husain 在《Your AI Product Needs Evals》里反复说的一件事：失败的 AI 产品几乎都败在<strong>没有评估体系</strong>，而能用的评估体系起点小得惊人——几十条真实样例 + 一个 scorer 就能跑。关键不是「多」，是<strong>分布匹配</strong>：你的 eval 输入要长得像生产输入，否则分数再高也是自欺。</p>
+<p>方法叫 <strong>error analysis / open coding</strong>：抽一批真实 trace，逐条人工读输出、给失败<em>贴标签</em>（不是先定 rubric，是先看数据再归纳 failure mode）。EvalGen 论文（Shankar et al. 2024）把这种现象命名为 <strong>criteria drift</strong>——你需要标准来打分，但恰恰是打分的过程帮你定义标准。所以 eval 不是写一次的静态文档，是和数据共同演化的。</p>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-com"># 从生产日志反向造 eval set 的最小 pipeline</span>
+<span class="tag-key">import</span> json, random
+
+<span class="tag-com"># 1) 分层采样：别只抽成功的，按 failure 信号过采样</span>
+traces = load_prod_traces(<span class="tag-gpt">"2026-05"</span>)
+hard = [t <span class="tag-key">for</span> t <span class="tag-key">in</span> traces <span class="tag-key">if</span> t.thumbs_down <span class="tag-key">or</span> t.retried <span class="tag-key">or</span> t.fallback]
+sample = random.sample(traces, 60) + random.sample(hard, 40)  <span class="tag-com"># 故意偏向难例</span>
+
+<span class="tag-com"># 2) open coding：人工读 + 贴 failure 标签（先看数据，后定 rubric）</span>
+<span class="tag-com">#    例：wrong_tool / hallucinated_field / ignored_constraint / too_verbose</span>
+
+<span class="tag-com"># 3) 冻结成带 ground-truth 的 eval 集，存进版本库</span>
+<span class="tag-key">for</span> t <span class="tag-key">in</span> sample:
+    eval_set.append({<span class="tag-gpt">"input"</span>: t.input, <span class="tag-gpt">"context"</span>: t.context,
+                     <span class="tag-gpt">"expected"</span>: human_label(t),     <span class="tag-com"># 你标的，不是模型标的</span>
+                     <span class="tag-gpt">"slice"</span>: t.category})           <span class="tag-com"># ← §3 切片要用</span>
+json.dump(eval_set, open(<span class="tag-gpt">"evals/v1.json"</span>, <span class="tag-gpt">"w"</span>))</code></pre>
+<p>注意第 1 步的<strong>过采样难例</strong>：生产里 95% 是简单请求，若按自然分布抽，eval 会被简单样例稀释，掩盖关键失败。eval 集要刻意<strong>偏向你最怕出错的地方</strong>。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：纯靠 LLM 合成 eval 数据。合成集和生产分布有系统性 gap（措辞更规整、歧义更少、长尾缺失），在它上面调到 95% 上线照样崩。合成数据可以补充长尾覆盖，但<strong>骨架必须是真实 trace</strong>。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Hamel Husain <em>Your AI Product Needs Evals</em>, <a href="https://hamel.dev/blog/posts/evals/" target="_blank">hamel.dev/blog/posts/evals</a> ·
+EvalGen <em>Who Validates the Validators?</em> (arXiv:2404.12272), <a href="https://arxiv.org/abs/2404.12272" target="_blank">arxiv.org/abs/2404.12272</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Slice-Based Eval：聚合分数会骗你</h2>
+<div class="claim">论断：整体准确率 90% 可能掩盖一个关键子群体只有 40%——<strong>看聚合分数等于把眼睛蒙上</strong>。</div>
+
+<h3>背景与原理</h3>
+<p>这是真实场景 eval 里最反直觉、也最值钱的一条。一个「90% 通过」的 agent，可能在「退款类请求」上是 95%、在「改地址类请求」上只有 45%——而改地址恰好是你最高频或最高风险的场景。聚合分数把这种<strong>分布内的灾难</strong>平均没了。</p>
+<p>解法是 <strong>slice-based evaluation</strong>：按有业务意义的维度切片，<strong>分别</strong>报告每个切片的分数，盯住最差的那个而不是平均的那个。切片维度通常来自 §2 open coding 出的 failure mode，或者业务类别、输入长度、语言、用户分群。这也是对抗 Goodhart 的天然手段——你优化聚合分时很容易牺牲一个小切片去换大盘，分切片就让这种交易无所遁形。</p>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-key">from</span> collections <span class="tag-key">import</span> defaultdict
+
+<span class="tag-key">def</span> sliced_report(eval_set, run_agent, scorer):
+    buckets = defaultdict(<span class="tag-key">lambda</span>: [0, 0])   <span class="tag-com"># slice -&gt; [pass, total]</span>
+    <span class="tag-key">for</span> ex <span class="tag-key">in</span> eval_set:
+        ok = scorer(run_agent(ex), ex[<span class="tag-gpt">"expected"</span>])
+        b = buckets[ex[<span class="tag-gpt">"slice"</span>]]
+        b[0] += int(ok); b[1] += 1
+    <span class="tag-com"># 关键：按分数升序打印，最差的切片顶在最上面</span>
+    rows = sorted(((s, p/n, n) <span class="tag-key">for</span> s,(p,n) <span class="tag-key">in</span> buckets.items()),
+                  key=<span class="tag-key">lambda</span> r: r[1])
+    <span class="tag-key">for</span> s, acc, n <span class="tag-key">in</span> rows:
+        flag = <span class="tag-gpt">"  ⚠️ 门槛线下"</span> <span class="tag-key">if</span> acc &lt; 0.8 <span class="tag-key">else</span> <span class="tag-gpt">""</span>
+        print(<span class="tag-gpt">f"{s:&lt;22} {acc:5.0%}  (n={n}){flag}"</span>)
+
+<span class="tag-com"># 输出示例：聚合 90%，但最差切片才 45% —— 这才是该修的地方</span>
+<span class="tag-com"># change_address        45%  (n=20)  ⚠️ 门槛线下</span>
+<span class="tag-com"># multi_intent          63%  (n=15)  ⚠️ 门槛线下</span>
+<span class="tag-com"># refund                95%  (n=30)</span>
+<span class="tag-com"># ── aggregate ──       90%</span></code></pre>
+<p>上线门槛应该挂在<strong>最差切片</strong>上（「每个切片 ≥ 80% 才放行」），而不是聚合均值。一个被聚合掩盖的 45% 切片，往往就是上线后用户投诉的源头。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）只追踪聚合分，模型迭代时聚合涨了 2pp，但某个小切片悄悄塌了 20pp，你完全看不见——直到用户来骂。（2）切片切太细，每片 n=3，分数全是噪声。切片粒度要让每片至少有十几条样本才有统计意义。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Eugene Yan <em>Task-Specific LLM Evals that Do &amp; Don't Work</em>, <a href="https://eugeneyan.com/writing/evals/" target="_blank">eugeneyan.com/writing/evals</a> ·
+<em>Product Evals in Three Simple Steps</em>, <a href="https://eugeneyan.com/writing/product-evals/" target="_blank">eugeneyan.com/writing/product-evals</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Agentic Eval：评估轨迹而非答案</h2>
+<div class="claim">论断：单轮 benchmark 测不了 agent。Agent 时代的指标是<strong>多轮一致性</strong>和<strong>轨迹质量</strong>，不是 pass@1 的最终答案。</div>
+
+<h3>背景与原理</h3>
+<p>传统 benchmark 一问一答测一次；真实 agent 是多轮、调工具、和（可能误导的）用户来回交互的<strong>轨迹</strong>。两个范式转移：</p>
+<ul>
+<li><strong>从 outcome 到 trajectory</strong>：只看最终答案对不对，会放过「答案蒙对了但工具调用顺序全错」的脆弱轨迹。要评估中间步骤——调了哪些工具、有没有违反 policy、有没有多余动作。</li>
+<li><strong>从 pass@1 到 pass^k（一致性）</strong>：τ-bench（Yao et al. 2024）提出 <strong>pass^k</strong>——同一任务连续跑 k 次<em>全部</em>成功的概率。论文里 SOTA 函数调用 agent 单任务成功率已不到 50%，而 retail 域 <strong>pass^8 跌破 25%</strong>。这个落差就是「demo 能跑」和「生产可靠」之间的鸿沟。它的评分方式也很硬核：不看对话措辞，<strong>比对最终数据库状态和标注目标状态</strong>是否一致。</li>
+</ul>
+<p>对个人 / 小团队，照搬 τ-bench 的两个思想就够：用 <strong>state-based 评分</strong>（验证副作用，不验证措辞）+ <strong>pass^k 一致性</strong>（同任务多跑几次看稳不稳）。</p>
+
+<div class="diagram">单轮 benchmark            Agentic eval（轨迹）
+┌───────────┐            ┌──────────────────────────────────┐
+│ Q ─▶ A ?  │            │ 多轮：U⇄Agent，调工具，可能被误导  │
+│ pass@1    │            │  ├ 轨迹检查：tool 序列 / policy 合规 │
+└───────────┘            │  ├ 状态检查：最终 DB == 目标 state? │
+   测一次                 │  └ 一致性：pass^k（连跑 k 次全过）  │
+   蒙对也算赢             └──────────────────────────────────┘</div>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-key">def</span> pass_hat_k(task, run_agent, check_final_state, k=8):
+    <span class="tag-com"># pass^k：连续 k 次「全部」成功才算稳；任一次失败即 False</span>
+    <span class="tag-key">return</span> all(check_final_state(run_agent(task)) <span class="tag-key">for</span> _ <span class="tag-key">in</span> range(k))
+
+<span class="tag-key">def</span> check_final_state(result):
+    <span class="tag-com"># state-based：只验证副作用，不在乎它话怎么说</span>
+    <span class="tag-key">return</span> (db.get(<span class="tag-gpt">"order#123"</span>).address == <span class="tag-gpt">"new addr"</span>
+            <span class="tag-key">and</span> <span class="tag-key">not</span> charged_extra_fee())     <span class="tag-com"># 还要验证「没干坏事」</span>
+
+<span class="tag-com"># 轨迹合规检查：流程对不对，不止结果对不对</span>
+<span class="tag-key">def</span> check_trajectory(trace):
+    <span class="tag-key">if</span> <span class="tag-gpt">"refund"</span> <span class="tag-key">in</span> trace.tools_called <span class="tag-key">and not</span> trace.asked_confirmation:
+        <span class="tag-key">return</span> <span class="tag-gpt">"VIOLATION: 退款前没走确认"</span>    <span class="tag-com"># policy 违规</span>
+    <span class="tag-key">return</span> <span class="tag-gpt">"ok"</span></code></pre>
+<p>对 agent，「跑一次成功」毫无意义——<strong>pass^8 才是上线信号</strong>。一个 pass@1=80% 但 pass^8=30% 的 agent，意味着平均每三个用户就有两个会在某一轮撞上失败。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）只判最终答案，不查轨迹——agent「歪打正着」（绕过确认却恰好没出事）被记成成功，上线后必爆。（2）只跑一次。LLM 有随机性，单次成功不代表稳定；不测一致性，等于把 70% 的概率当 100% 报给老板。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · τ-bench (Yao et al. 2024, arXiv:2406.12045), <a href="https://arxiv.org/abs/2406.12045" target="_blank">arxiv.org/abs/2406.12045</a> ·
+代码 sierra-research/tau-bench, <a href="https://github.com/sierra-research/tau-bench" target="_blank">github.com/sierra-research/tau-bench</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// 综合实战 · 给你的 agent 配一套上线门禁</h3>
+<p>把四点串成一个能进 CI 的 eval gate，半天搭完：</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>粗筛</strong>：公开榜单只用来排除明显弱的模型，不做终选（§1）。</li>
+<li><strong>造集</strong>：从近一个月生产 trace 分层采样 100 条，过采样 thumbs-down / retry / fallback 的难例，人工标 ground truth + 切片标签，冻进 <code>evals/v1.json</code>（§2）。</li>
+<li><strong>切片</strong>：scorer 按切片出分，门槛挂在<strong>最差切片 ≥ 80%</strong>，不是聚合均值（§3）。</li>
+<li><strong>一致性</strong>：核心任务跑 pass^5，state-based 验副作用 + 轨迹查 policy 合规（§4）。</li>
+<li><strong>防过拟合</strong>：留一个<strong>从不用于调 prompt 的 held-out 切片</strong>，每月用新 trace 轮换 20%——一旦某个集合被你反复优化，它就被 Goodhart 了，得换血。</li>
+</ol>
+<p style="margin-top:12px">从此「能不能上线」是 <code>pytest evals/</code> 输出的红绿，不是某人拍脑袋说「感觉还行」。这套门禁挡掉的每一次 regression，都是一次本会发生的线上事故。</p>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// ENGLISH GLOSSARY</h3>
+<dl>
+<dt>Contamination</dt><dd>测试集（部分）进过训练语料，导致分数虚高。公开老 benchmark 几乎必有。</dd>
+<dt>Saturation</dt><dd>顶部模型分数挤在天花板，benchmark 失去区分度，无法据此选型。</dd>
+<dt>Construct Validity</dt><dd>指标是否真的测到了你想测的能力。benchmark 测代理任务 ≠ 你的真实任务。</dd>
+<dt>Goodhart's Law</dt><dd>「一个指标一旦成为目标，就不再是好指标」。整个行业对 benchmark 的过拟合。</dd>
+<dt>Slice-Based Eval</dt><dd>按业务维度切片分别报分，盯最差切片而非聚合均值。</dd>
+<dt>Open Coding / Error Analysis</dt><dd>先读真实数据、归纳 failure mode，再定 rubric 的 eval 构建法。</dd>
+<dt>Criteria Drift</dt><dd>EvalGen 提出：打分过程本身会帮你重新定义评分标准，eval 与数据共演化。</dd>
+<dt>Trajectory Eval</dt><dd>评估 agent 的中间步骤（工具序列、policy 合规），而非只看最终答案。</dd>
+<dt>pass^k</dt><dd>τ-bench 指标：同一任务连跑 k 次全部成功的概率，衡量可靠性而非单次能力。</dd>
+<dt>Held-out Set</dt><dd>从不用于调 prompt 的留出集，防止 eval 被过拟合（Goodhart）。</dd>
+</dl>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// 深入思考</h3>
+<details><summary>如果公开 benchmark 系统性高估，为什么整个行业还在拿它打榜、还在涨分？</summary><div>因为它解决的是<strong>协调问题</strong>而非测量问题：行业需要一个可比、可复现、零边际成本的公共坐标系来沟通「谁大概更强」，benchmark 满足这个需求，哪怕它测不准你的场景。问题出在使用方把「公共坐标系」误当「生产决策依据」。正确姿势是二分：benchmark 做行业级粗筛和趋势观察，你自己的 eval 做产品级终选。涨分本身也未必假——可能是真能力提升 + 过拟合各占一半，你无法从分数本身分离这两者，这正是为什么必须有自己的 held-out eval。</div></details>
+<details><summary>§3 说门槛要挂在最差切片。但切片可以无限细分，细到每片 n=1 时人人都「有切片不及格」。这个度怎么把握？</summary><div>切片是<strong>统计单位</strong>，不是放大镜。每片至少要十几到几十条样本，分数才脱离噪声——n=3 的 33% 和 67% 没有区别。原则：切片维度要有<em>业务可操作性</em>（这个切片差，你知道该改什么）且<em>样本量足够</em>。无法同时满足时，合并相近切片。另一个信号：如果某切片只有 1-2 条样本却很重要，那不是 eval 切片问题，是你的 eval 集对该场景<strong>采样不足</strong>，回到 §2 去补样本，而不是在统计噪声上做决策。</div></details>
+<details><summary>pass^k 听起来很硬核，但它把一次 99% + 一次 50% 的任务都算「不稳」。会不会过于严苛、误杀实际可用的 agent？</summary><div>pass^k 严苛是<strong>故意的</strong>——它对齐的是「用户体验的下界」而非平均。一个 pass@1=95% 的 agent，连用 8 次全顺的概率只有 0.95^8≈66%，意味着 1/3 的多步会话里至少撞一次失败。对话型产品里用户感知的是<em>最差那次</em>，不是平均。是否「误杀」取决于失败的代价：高代价场景（支付、医疗）就该用高 k；低代价、失败可廉价重试的场景，可以放宽到 pass@1 或 pass^2。k 是你对失败容忍度的旋钮，不是绝对真理。</div></details>
+<details><summary>用 LLM-as-judge 给轨迹打分，但 judge 本身也是会幻觉的 LLM。这是不是「让小偷看守金库」？</summary><div>是真问题，所以 EvalGen 的核心论点正是「validate the validators」——judge 必须先和人工标注对齐再用。两条防线：1) 能用确定性 scorer 就别用 LLM——§4 的 state-based 检查（验数据库状态、验工具序列）是确定性的，比 LLM-judge 可靠得多，agentic eval 应尽量往这上面靠；2) 必须用 LLM-judge 时（如评「回答是否有帮助」这种主观维度），先在一批人工标注上测 judge 和人的一致率，达标才信，且定期重测。judge 是<strong>需要被 eval 的组件</strong>，不是免检的裁判。</div></details>
+<details><summary>held-out 集每月轮换 20% 防 Goodhart，但新换进来的样本未必和老的等难度，分数波动里混进了「集合难度变化」的噪声。怎么办？</summary><div>这是 eval 工程的经典张力：稳定性（固定集合可比）vs 抗过拟合（轮换防 Goodhart）。实践上分两层:<strong>稳定核</strong>(一个长期不变的 anchor 集，用于看跨版本趋势，接受它会慢慢被过拟合)+<strong>轮换层</strong>(每月换血，用于抓 anchor 集掩盖不了的新 failure)。两个分数分开看：anchor 涨而轮换层不涨 = 在过拟合；两者齐涨 = 真进步。难度漂移可以用<em>分层采样</em>缓解（轮换时保持各切片比例不变），但无法完全消除——所以才需要 anchor 做相对基准，而不是只看绝对分。</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://hamel.dev/blog/posts/evals/" target="_blank">Hamel Husain · Your AI Product Needs Evals</a> — 生产 eval 的奠基性实操指南</li>
+<li><a href="https://arxiv.org/abs/2406.12045" target="_blank">τ-bench (arXiv:2406.12045)</a> — 多轮 tool-agent-user 评估与 pass^k 一致性指标</li>
+<li><a href="https://arxiv.org/abs/2404.12272" target="_blank">Who Validates the Validators? / EvalGen (arXiv:2404.12272)</a> — criteria drift 与 judge 对齐</li>
+<li><a href="https://eugeneyan.com/writing/evals/" target="_blank">Eugene Yan · Task-Specific LLM Evals that Do & Don't Work</a> — 按任务类型设计 eval</li>
+<li><a href="https://arxiv.org/abs/2310.06770" target="_blank">SWE-bench (arXiv:2310.06770)</a> — 真实 GitHub issue 评估及其污染 / construct 局限</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 29 · 2026-06-12</footer>
+</div>
+</body></html>

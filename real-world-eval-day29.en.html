@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 29 · Eval Beyond Benchmark — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.cross-ref{margin:24px auto;max-width:760px;padding:14px 18px;border-left:3px solid #00d4ff;background:rgba(0,212,255,0.06);border-radius:4px;font-size:0.92rem}
+.cross-ref a{color:#00d4ff;text-decoration:none;font-weight:500}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 29 / PHASE 3 · FRONTIER</span>
+<h1>Eval Beyond Benchmark</h1>
+<h2>Contamination · Construct Gap · Slice-Based · Agentic Eval</h2>
+<div class="date">2026-06-12 · BigCat</div>
+<p class="pitch">A model's SOTA leaderboard score and its reliability in your pipeline are two nearly unrelated numbers.</p>
+</header>
+
+<div class="cross-ref">
+<a href="https://cissy0802.github.io/ai-ml-daily/evaluation-benchmarks-day15.en.html">Prerequisite → ai-ml-daily Day 15: Evaluation & Benchmarks (MMLU, HumanEval, MT-Bench)</a>
+</div>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>You pick a model by its SWE-bench, MMLU, and Arena rank — then it falls over in your scenario after launch. That isn't bad luck, it's <strong>structural</strong>. Public benchmarks measure "average score on a fixed set that's been gamed endlessly and very likely leaked into pretraining," while you need "no failures across 10 consecutive multi-turn interactions on my real input distribution." Three chasms sit between them: contamination, saturation, construct gap. <strong>Day 6 covered the mechanics of eval</strong> (golden sets, judge debiasing, regression tests); this issue covers the upstream judgment: why leaderboards systematically mislead, how to build a trustworthy eval set by mining your own production traces, why aggregate scores are the most dangerous metric, and the agent-era paradigm shift of "evaluate the trajectory, not the answer." Bottom line up front: <strong>a usable eval is your own, sliced, and adversarially refreshed</strong>.</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>The Three Sins of Public Benchmarks: Contamination, Saturation, Construct Gap</h2>
+<div class="claim">Claim: leaderboard scores systematically <strong>overestimate</strong> real capability — they don't measure the distribution you face in production.</div>
+
+<h3>Background & Principle</h3>
+<p>Three mechanisms decouple public scores from production reliability:</p>
+<ul>
+<li><strong>Contamination</strong>: long-lived public sets like MMLU and HumanEval have almost certainly entered new models' pre/post-training data in some form. More insidiously, for SWE-bench — analyses of the Verified subset found <strong>roughly one-third of issues describe the fix directly in the issue text or comments</strong>, so models "copy" rather than "solve," inflating scores.</li>
+<li><strong>Saturation</strong>: top models cluster in an 88%–92% ceiling band, so the benchmark loses <strong>discriminative power</strong> — score gaps fall into the noise and can't tell you whether A beats B in your setting.</li>
+<li><strong>Construct Gap</strong>: a benchmark measures a <em>proxy</em> for the target, not the target. HumanEval tests "complete an isolated function," your job is "fix a cross-file bug in a 500k-line repo." Research shows that swapping SWE-bench's long GitHub issues for the terse, vague phrasing real users write drops relative success rates by <strong>20–40%</strong>.</li>
+</ul>
+<p>Underneath it all is Goodhart's law: <strong>when a metric becomes a target, it ceases to be a good metric</strong>. The whole field is overfitting public benchmarks, and the correlation between score and real capability decays year over year.</p>
+
+<div class="diagram">  Public benchmark score  ────────────▶  Your production reliability
+        88%                                    ?
+
+   ┌──────────────────── three leaks ──────────────────────┐
+   │  1) Contamination: answer in training data / issue text │ inflated
+   │  2) Saturation: top cluster, falls into noise           │ useless for picking
+   │  3) Construct gap: proxy task != your real distribution │ −20~40% drop
+   └────────────────────────────────────────────────────────┘
+                          ▼
+            Leaderboard #1  !=  most reliable in YOUR scenario</div>
+
+<h3>Hands-on</h3>
+<p>Turn "can I trust this benchmark" into a 30-second checklist pinned to your model-selection doc:</p>
+<pre><code><span class="tag-com"># See a shiny score? Ask these 4 first</span>
+1. How long public?      &gt; 1 yr   → likely contaminated, discount it
+2. Gap among top models? &lt; 3pp    → it's noise, don't pick on this
+3. Task shape like mine? single-fn/MCQ != multi-turn agent / long repo
+4. Strict oracle?        weak tests pass "looks-right-but-wrong" answers
+
+<span class="tag-com"># Fails any one → that score can't drive a production decision</span></code></pre>
+
+<div class="fail">
+<strong>Failure mode</strong>: picking a model straight off the leaderboard and shipping it. The right order is — <strong>use public leaderboards for coarse filtering (cut the clearly weak), use your own eval for the final pick</strong>. Public scores answer "roughly what tier is this model"; they can never answer "is it reliable enough on my task."
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · SWE-bench (Jimenez et al. 2024, arXiv:2310.06770), <a href="https://arxiv.org/abs/2310.06770" target="_blank">arxiv.org/abs/2310.06770</a> ·
+HumanEval / Codex (Chen et al. 2021), MMLU (Hendrycks et al. 2021) originals
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Build Your Eval Set Backward from Production Traces</h2>
+<div class="claim">Claim: the only trustworthy eval set comes from <strong>your own real traffic</strong> — not benchmarks, not synthetic examples conjured from nothing.</div>
+
+<h3>Background & Principle</h3>
+<p>Hamel Husain hammers one point in <em>Your AI Product Needs Evals</em>: failed AI products almost always failed at having <strong>no evaluation system</strong>, yet a usable one starts shockingly small — a few dozen real examples plus one scorer is enough to run. The key isn't volume, it's <strong>distribution match</strong>: your eval inputs must look like production inputs, or a high score is just self-deception.</p>
+<p>The method is <strong>error analysis / open coding</strong>: pull a batch of real traces, read outputs by hand, and <em>label</em> the failures (don't fix a rubric first — look at the data, then induce failure modes). The EvalGen paper (Shankar et al. 2024) names this phenomenon <strong>criteria drift</strong> — you need criteria to grade outputs, but grading outputs is exactly what helps you define the criteria. So an eval isn't a write-once static doc; it co-evolves with your data.</p>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># Minimal pipeline: build an eval set backward from prod logs</span>
+<span class="tag-key">import</span> json, random
+
+<span class="tag-com"># 1) Stratified sampling: don't only grab successes; oversample failures</span>
+traces = load_prod_traces(<span class="tag-gpt">"2026-05"</span>)
+hard = [t <span class="tag-key">for</span> t <span class="tag-key">in</span> traces <span class="tag-key">if</span> t.thumbs_down <span class="tag-key">or</span> t.retried <span class="tag-key">or</span> t.fallback]
+sample = random.sample(traces, 60) + random.sample(hard, 40)  <span class="tag-com"># deliberately skew to hard cases</span>
+
+<span class="tag-com"># 2) Open coding: read + label failure modes (data first, rubric second)</span>
+<span class="tag-com">#    e.g. wrong_tool / hallucinated_field / ignored_constraint / too_verbose</span>
+
+<span class="tag-com"># 3) Freeze into a ground-truth eval set, commit to the repo</span>
+<span class="tag-key">for</span> t <span class="tag-key">in</span> sample:
+    eval_set.append({<span class="tag-gpt">"input"</span>: t.input, <span class="tag-gpt">"context"</span>: t.context,
+                     <span class="tag-gpt">"expected"</span>: human_label(t),     <span class="tag-com"># you label it, not the model</span>
+                     <span class="tag-gpt">"slice"</span>: t.category})           <span class="tag-com"># ← needed for §3 slicing</span>
+json.dump(eval_set, open(<span class="tag-gpt">"evals/v1.json"</span>, <span class="tag-gpt">"w"</span>))</code></pre>
+<p>Note the <strong>oversampling of hard cases</strong> in step 1: 95% of production is easy requests, so natural-distribution sampling dilutes the eval with easy examples and masks critical failures. The eval set should deliberately <strong>skew toward where you most fear being wrong</strong>.</p>
+
+<div class="fail">
+<strong>Failure mode</strong>: synthesizing eval data purely with an LLM. Synthetic sets have a systematic gap from the production distribution (cleaner phrasing, less ambiguity, missing tails); tuning to 95% on them still crashes on launch. Synthetic data can supplement tail coverage, but <strong>the skeleton must be real traces</strong>.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Hamel Husain <em>Your AI Product Needs Evals</em>, <a href="https://hamel.dev/blog/posts/evals/" target="_blank">hamel.dev/blog/posts/evals</a> ·
+EvalGen <em>Who Validates the Validators?</em> (arXiv:2404.12272), <a href="https://arxiv.org/abs/2404.12272" target="_blank">arxiv.org/abs/2404.12272</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Slice-Based Eval: Aggregate Scores Lie to You</h2>
+<div class="claim">Claim: 90% overall accuracy can hide a critical subgroup sitting at 40% — <strong>watching the aggregate is blindfolding yourself</strong>.</div>
+
+<h3>Background & Principle</h3>
+<p>This is the most counterintuitive — and most valuable — rule in real-world eval. A "90% pass" agent might be 95% on "refund requests" and only 45% on "address-change requests" — and address changes happen to be your highest-volume or highest-risk scenario. The aggregate averages away this <strong>in-distribution catastrophe</strong>.</p>
+<p>The fix is <strong>slice-based evaluation</strong>: cut along business-meaningful dimensions, report each slice's score <strong>separately</strong>, and watch the worst slice rather than the mean. Slice dimensions usually come from the failure modes you open-coded in §2, or business category, input length, language, user segment. It's also a natural defense against Goodhart — when you optimize the aggregate it's easy to sacrifice a small slice for the headline; slicing leaves that trade nowhere to hide.</p>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-key">from</span> collections <span class="tag-key">import</span> defaultdict
+
+<span class="tag-key">def</span> sliced_report(eval_set, run_agent, scorer):
+    buckets = defaultdict(<span class="tag-key">lambda</span>: [0, 0])   <span class="tag-com"># slice -&gt; [pass, total]</span>
+    <span class="tag-key">for</span> ex <span class="tag-key">in</span> eval_set:
+        ok = scorer(run_agent(ex), ex[<span class="tag-gpt">"expected"</span>])
+        b = buckets[ex[<span class="tag-gpt">"slice"</span>]]
+        b[0] += int(ok); b[1] += 1
+    <span class="tag-com"># key: print ascending by score, worst slice on top</span>
+    rows = sorted(((s, p/n, n) <span class="tag-key">for</span> s,(p,n) <span class="tag-key">in</span> buckets.items()),
+                  key=<span class="tag-key">lambda</span> r: r[1])
+    <span class="tag-key">for</span> s, acc, n <span class="tag-key">in</span> rows:
+        flag = <span class="tag-gpt">"  ⚠️ below bar"</span> <span class="tag-key">if</span> acc &lt; 0.8 <span class="tag-key">else</span> <span class="tag-gpt">""</span>
+        print(<span class="tag-gpt">f"{s:&lt;22} {acc:5.0%}  (n={n}){flag}"</span>)
+
+<span class="tag-com"># Example: aggregate 90%, but worst slice only 45% — that's what to fix</span>
+<span class="tag-com"># change_address        45%  (n=20)  ⚠️ below bar</span>
+<span class="tag-com"># multi_intent          63%  (n=15)  ⚠️ below bar</span>
+<span class="tag-com"># refund                95%  (n=30)</span>
+<span class="tag-com"># ── aggregate ──       90%</span></code></pre>
+<p>Your launch gate should hang on the <strong>worst slice</strong> ("every slice ≥ 80% to ship"), not the aggregate mean. A 45% slice masked by the aggregate is exactly where post-launch complaints come from.</p>
+
+<div class="fail">
+<strong>Failure mode</strong>: (1) tracking only the aggregate — on an iteration it rises 2pp while a small slice quietly collapses 20pp, invisible until users complain. (2) slicing too fine, n=3 per slice, scores are all noise. Slice granularity should leave at least a dozen-plus samples per slice to be statistically meaningful.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Eugene Yan <em>Task-Specific LLM Evals that Do &amp; Don't Work</em>, <a href="https://eugeneyan.com/writing/evals/" target="_blank">eugeneyan.com/writing/evals</a> ·
+<em>Product Evals in Three Simple Steps</em>, <a href="https://eugeneyan.com/writing/product-evals/" target="_blank">eugeneyan.com/writing/product-evals</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Agentic Eval: Evaluate the Trajectory, Not the Answer</h2>
+<div class="claim">Claim: single-turn benchmarks can't measure agents. The agent-era metrics are <strong>multi-run consistency</strong> and <strong>trajectory quality</strong>, not pass@1 on the final answer.</div>
+
+<h3>Background & Principle</h3>
+<p>Traditional benchmarks ask once and check once; a real agent is a multi-turn, tool-calling <strong>trajectory</strong> interacting back-and-forth with a (possibly misleading) user. Two paradigm shifts:</p>
+<ul>
+<li><strong>From outcome to trajectory</strong>: only checking whether the final answer is right lets through fragile trajectories that "got lucky but called the wrong tools in the wrong order." Evaluate the intermediate steps — which tools were called, were policies violated, were there redundant actions.</li>
+<li><strong>From pass@1 to pass^k (consistency)</strong>: τ-bench (Yao et al. 2024) proposes <strong>pass^k</strong> — the probability that the <em>same</em> task succeeds on all of k consecutive runs. In the paper, SOTA function-calling agents already fall below 50% single-task success, and in the retail domain <strong>pass^8 drops below 25%</strong>. That gap is the chasm between "the demo works" and "production is reliable." Its scoring is hardcore too: it ignores conversational phrasing and <strong>compares the final database state against the annotated goal state</strong>.</li>
+</ul>
+<p>For individuals and small teams, two ideas from τ-bench are enough: <strong>state-based scoring</strong> (verify side effects, not phrasing) + <strong>pass^k consistency</strong> (run the same task several times to see if it's stable).</p>
+
+<div class="diagram">single-turn benchmark      agentic eval (trajectory)
+┌───────────┐              ┌──────────────────────────────────┐
+│ Q ─▶ A ?  │              │ multi-turn: U⇄Agent, tools, misleads │
+│ pass@1    │              │  ├ trajectory: tool seq / policy ok? │
+└───────────┘              │  ├ state: final DB == goal state?   │
+   check once              │  └ consistency: pass^k (k-in-a-row) │
+   luck counts as win      └──────────────────────────────────┘</div>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-key">def</span> pass_hat_k(task, run_agent, check_final_state, k=8):
+    <span class="tag-com"># pass^k: stable only if all k runs pass; any failure → False</span>
+    <span class="tag-key">return</span> all(check_final_state(run_agent(task)) <span class="tag-key">for</span> _ <span class="tag-key">in</span> range(k))
+
+<span class="tag-key">def</span> check_final_state(result):
+    <span class="tag-com"># state-based: verify side effects, ignore how it phrased things</span>
+    <span class="tag-key">return</span> (db.get(<span class="tag-gpt">"order#123"</span>).address == <span class="tag-gpt">"new addr"</span>
+            <span class="tag-key">and</span> <span class="tag-key">not</span> charged_extra_fee())     <span class="tag-com"># also verify "did no harm"</span>
+
+<span class="tag-com"># Trajectory compliance: is the PROCESS right, not just the result</span>
+<span class="tag-key">def</span> check_trajectory(trace):
+    <span class="tag-key">if</span> <span class="tag-gpt">"refund"</span> <span class="tag-key">in</span> trace.tools_called <span class="tag-key">and not</span> trace.asked_confirmation:
+        <span class="tag-key">return</span> <span class="tag-gpt">"VIOLATION: refunded without confirmation"</span>  <span class="tag-com"># policy breach</span>
+    <span class="tag-key">return</span> <span class="tag-gpt">"ok"</span></code></pre>
+<p>For an agent, "succeeded once" is meaningless — <strong>pass^8 is the launch signal</strong>. An agent with pass@1=80% but pass^8=30% means, on average, two out of every three users will hit a failure on some turn.</p>
+
+<div class="fail">
+<strong>Failure mode</strong>: (1) judging only the final answer, never the trajectory — an agent that "stumbles into the right result" (skips confirmation but happens to do no harm) gets logged as a success and blows up after launch. (2) running only once. LLMs are stochastic; a single success doesn't mean stability — skipping consistency means reporting a 70% probability to your boss as 100%.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · τ-bench (Yao et al. 2024, arXiv:2406.12045), <a href="https://arxiv.org/abs/2406.12045" target="_blank">arxiv.org/abs/2406.12045</a> ·
+Code: sierra-research/tau-bench, <a href="https://github.com/sierra-research/tau-bench" target="_blank">github.com/sierra-research/tau-bench</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// Capstone · Wire a launch gate onto your agent</h3>
+<p>Chain the four points into a CI-ready eval gate in half a day:</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>Coarse filter</strong>: use public leaderboards only to cut clearly weak models, never for the final pick (§1).</li>
+<li><strong>Build the set</strong>: stratified-sample 100 traces from the last month's production, oversample thumbs-down / retry / fallback hard cases, hand-label ground truth + slice tags, freeze into <code>evals/v1.json</code> (§2).</li>
+<li><strong>Slice</strong>: scorer reports per slice; the gate hangs on <strong>worst slice ≥ 80%</strong>, not the aggregate mean (§3).</li>
+<li><strong>Consistency</strong>: run core tasks at pass^5, state-based verify side effects + check trajectory for policy compliance (§4).</li>
+<li><strong>Anti-overfit</strong>: keep one <strong>held-out slice never used to tune prompts</strong>, and rotate 20% with fresh traces monthly — once a set has been optimized against repeatedly, it's been Goodharted and needs new blood.</li>
+</ol>
+<p style="margin-top:12px">From then on, "can we ship" is the red/green of <code>pytest evals/</code>, not someone declaring "feels fine." Every regression this gate blocks is a production incident that would have happened.</p>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// KEY TERMS</h3>
+<dl>
+<dt>Contamination</dt><dd>The test set (partly) entered training data, inflating scores. Almost inevitable for old public benchmarks.</dd>
+<dt>Saturation</dt><dd>Top models cluster at the ceiling; the benchmark loses discriminative power and can't guide selection.</dd>
+<dt>Construct Validity</dt><dd>Whether a metric actually measures the capability you intend. Benchmark proxy task != your real task.</dd>
+<dt>Goodhart's Law</dt><dd>"When a metric becomes a target, it ceases to be a good metric." The field's overfitting of benchmarks.</dd>
+<dt>Slice-Based Eval</dt><dd>Report scores per business dimension, watch the worst slice rather than the aggregate mean.</dd>
+<dt>Open Coding / Error Analysis</dt><dd>Building evals by reading real data and inducing failure modes first, then defining the rubric.</dd>
+<dt>Criteria Drift</dt><dd>From EvalGen: grading outputs itself helps redefine grading criteria; evals co-evolve with data.</dd>
+<dt>Trajectory Eval</dt><dd>Evaluating an agent's intermediate steps (tool sequence, policy compliance), not just the final answer.</dd>
+<dt>pass^k</dt><dd>τ-bench metric: probability the same task passes all k consecutive runs; measures reliability, not one-shot ability.</dd>
+<dt>Held-out Set</dt><dd>A set never used to tune prompts, guarding the eval against overfitting (Goodhart).</dd>
+</dl>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// DEEP THINKING</h3>
+<details><summary>If public benchmarks systematically overestimate, why does the whole industry still chase them and keep climbing?</summary><div>Because they solve a <strong>coordination problem</strong>, not a measurement problem: the field needs a comparable, reproducible, zero-marginal-cost shared coordinate system to communicate "who is roughly stronger," and benchmarks fill that need even when they don't measure your scenario. The error is on the consumer side, mistaking a "shared coordinate" for a "production decision basis." The right stance is a split: benchmarks for industry-level coarse filtering and trend-watching, your own eval for the product-level final pick. Rising scores aren't necessarily fake either — they may be half real gains, half overfitting, and you can't separate the two from the score itself, which is exactly why you need your own held-out eval.</div></details>
+<details><summary>§3 says hang the gate on the worst slice. But slices can be subdivided infinitely; at n=1 per slice everyone "has a failing slice." How do you set the granularity?</summary><div>A slice is a <strong>statistical unit</strong>, not a magnifying glass. Each needs at least a dozen-plus samples for the score to escape noise — 33% vs 67% at n=3 are indistinguishable. Principle: slice dimensions must be <em>business-actionable</em> (when this slice is bad you know what to fix) and <em>sufficiently sampled</em>. When you can't have both, merge adjacent slices. Another signal: if a slice has only 1-2 samples yet matters a lot, that's not a slicing problem but <strong>undersampling</strong> of that scenario in your eval set — go back to §2 and add samples, don't make decisions on statistical noise.</div></details>
+<details><summary>pass^k sounds hardcore, but it lumps a 99%-once task and a 50%-once task both as "unstable." Isn't it too harsh, killing genuinely usable agents?</summary><div>pass^k's harshness is <strong>deliberate</strong> — it aligns with the "lower bound of user experience," not the average. An agent at pass@1=95% has only 0.95^8≈66% chance of eight clean uses in a row, meaning a failure hits at least once in 1/3 of multi-step sessions. In conversational products users perceive the <em>worst</em> turn, not the average. Whether it "over-kills" depends on the cost of failure: high-cost scenarios (payments, medical) warrant high k; low-cost, cheaply-retryable scenarios can relax to pass@1 or pass^2. k is your knob for failure tolerance, not an absolute truth.</div></details>
+<details><summary>Scoring trajectories with an LLM-as-judge — but the judge is itself a hallucinating LLM. Isn't this "letting the fox guard the henhouse"?</summary><div>It's a real problem, which is precisely EvalGen's thesis: "validate the validators" — the judge must be aligned against human labels before use. Two lines of defense: 1) prefer a deterministic scorer whenever possible — §4's state-based checks (verify DB state, verify tool sequence) are deterministic and far more reliable than an LLM judge; agentic eval should lean on these as much as possible. 2) When an LLM judge is unavoidable (e.g. rating "is the answer helpful," a subjective axis), first measure the judge's agreement rate with humans on a labeled batch, only trust it if it passes, and re-measure periodically. The judge is a <strong>component that needs evaluating</strong>, not an exempt referee.</div></details>
+<details><summary>Rotating 20% of the held-out set monthly defends against Goodhart, but new samples aren't necessarily the same difficulty as old ones, so score swings mix in "set difficulty change" noise. What do you do?</summary><div>This is eval engineering's classic tension: stability (fixed set is comparable) vs anti-overfit (rotation defends against Goodhart). In practice, split into two layers: a <strong>stable core</strong> (a long-unchanged anchor set for cross-version trends, accepting it'll slowly get overfit) + a <strong>rotation layer</strong> (monthly fresh blood, to catch new failures the anchor can't). Read the two scores separately: anchor up but rotation flat = overfitting; both up = real progress. Difficulty drift can be mitigated by <em>stratified sampling</em> (keep slice proportions constant when rotating), but not fully eliminated — which is why you need the anchor as a relative baseline rather than reading absolute scores alone.</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://hamel.dev/blog/posts/evals/" target="_blank">Hamel Husain · Your AI Product Needs Evals</a> — the foundational practical guide to production eval</li>
+<li><a href="https://arxiv.org/abs/2406.12045" target="_blank">τ-bench (arXiv:2406.12045)</a> — multi-turn tool-agent-user eval and the pass^k consistency metric</li>
+<li><a href="https://arxiv.org/abs/2404.12272" target="_blank">Who Validates the Validators? / EvalGen (arXiv:2404.12272)</a> — criteria drift and judge alignment</li>
+<li><a href="https://eugeneyan.com/writing/evals/" target="_blank">Eugene Yan · Task-Specific LLM Evals that Do & Don't Work</a> — designing evals by task type</li>
+<li><a href="https://arxiv.org/abs/2310.06770" target="_blank">SWE-bench (arXiv:2310.06770)</a> — real GitHub issue eval and its contamination / construct limits</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 29 · 2026-06-12</footer>
+</div>
+</body></html>
