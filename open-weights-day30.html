@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 30 · Open Source Models 实战 — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 30 / PHASE 3 · FRONTIER</span>
+<h1>Open Source Models 实战</h1>
+<h2>Llama · Qwen · DeepSeek · Mistral — 选型 / 量化 / 移植 / MoE</h2>
+<div class="date">2026-06-13 · BigCat</div>
+<p class="pitch">开源模型不是「省钱版 Claude」，是另一套有自己工程纪律的运行时。</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>2026 年的开源权重已经不是玩具：DeepSeek-V3 / R1、Qwen3、Llama、Mistral 在很多任务上逼近闭源 SOTA。但「能在 leaderboard 上接近」和「能在你的生产线上替代 Claude」之间隔着一整层工程。多数人栽在三个错觉上：以为开源 = 省钱（其实是换来控制权、隐私、可微调，同时背上运维与质量风险）；以为下载下来就能跑（其实卡在显存数学和量化损失）；以为 Claude 的 prompt 直接搬过去就行（其实 chat template、tool use、结构化输出全要重做）。这一期不讲「Llama 是什么」——那是 ai-ml-daily 的活。我们讲四件工程事：<strong>什么任务开源真够用、License 是隐藏约束、量化与显存的真实账、prompt/tool 移植的脆弱性、以及 MoE 与 reasoning 模型的自建现实</strong>。</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>选型与 License：开源在哪类任务真能替代，License 是隐藏约束</h2>
+<div class="claim">论断：选开源是「控制权 / 隐私 / 可微调」决策，不是「省钱」决策；能力上有一条清晰的 task cliff。</div>
+
+<h3>背景与原理</h3>
+<p>先把「该不该上开源」拆成两个独立问题。<strong>能力问题</strong>：开源在「短、闭、可验证」的任务上已经够用——分类、抽取、固定 domain 的 RAG 问答、翻译、改写、中等难度代码补全。它在「长、开、需要连续决策」的任务上仍有明显 cliff——多步 agentic loop、复杂 tool orchestration、前沿 reasoning。原因不是单点能力差，是<strong>误差累积</strong>：闭源模型每步 95% 对、开源每步 88% 对，跑 20 步后差距从 7pp 放大成灾难。</p>
+<p><strong>License 问题</strong>比多数人以为的关键。Llama 用的是 Meta 自家的 community license，不是 OSI 开源协议：它有一条 <strong>700M 月活上限</strong>（超过就得单独找 Meta 授权），还<strong>禁止用 Llama 的输出去训练 / 蒸馏任何非-Llama 模型</strong>——这条直接掐死「拿 Llama 生成合成数据训自己模型」的路。相比之下 Qwen、Mistral 多为 Apache 2.0，DeepSeek 系多为 MIT，干净得多。如果你的计划包含蒸馏、合成数据、或可能做大，License 选型要排在能力评测前面。</p>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-com"># 30 秒选型决策（贴在项目里）</span>
+<span class="tag-com"># 用开源当且仅当 ≥1 条成立：</span>
+- 数据不能出本地/合规要求严     <span class="tag-com"># 隐私是开源最硬的理由</span>
+- 任务固定且高频，值得微调一个专用小模型
+- 调用量大到闭源 API 成本结构不可接受
+- 需要确定性/可复现/锁版本（闭源会悄悄换模型）
+
+<span class="tag-com"># 任务能力 cliff（经验，非绝对）：</span>
+够用:  分类 / 抽取 / 翻译 / 改写 / 固定RAG / 单步代码
+谨慎:  3-8 步 workflow（用 workflow 而非 agent 兜）
+别碰:  长 agentic loop / 复杂多工具编排 / 前沿数学推理
+
+<span class="tag-com"># License 先于能力：</span>
+要蒸馏/合成数据/可能做大 → 避开 Llama，选 Qwen(Apache) / DeepSeek(MIT)</code></pre>
+
+<div class="fail">
+<strong>失败模式</strong>：用开源模型硬扛长 agentic loop，然后归因「开源不行」。真正的解法常常是<strong>降架构</strong>——把 agent 拆回确定性 workflow（Day 3 / Day 5 讲过），让开源只在每个节点做「短任务」，把控制流收回代码层。开源模型 + workflow 往往打得过闭源模型 + 裸 agent。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Llama 3.3 Community License, <a href="https://www.llama.com/llama3_3/license/" target="_blank">llama.com/.../license</a> ·
+DeepSeek-V3 Technical Report, <a href="https://arxiv.org/abs/2412.19437" target="_blank">arXiv:2412.19437</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>量化与显存：跑起来的真实账</h2>
+<div class="claim">论断：开源模型的真实门槛不是下载，是显存数学和量化损失曲线——选错 bit 宽或 runtime，能力凭空蒸发。</div>
+
+<h3>背景与原理</h3>
+<p>显存预算分三块：<strong>权重</strong>（params × bytes/param）+ <strong>KV cache</strong>（随 context 长度和并发线性涨）+ activation/框架开销。一个 32B 模型 FP16 光权重就 64GB，单卡放不下；量化到 4-bit 后权重压到约 16GB，才进消费级双卡甚至单张 24G 卡的范围。所以量化不是「可选优化」，是开源能不能落地的前提。</p>
+<p>量化格式分两条线。<strong>weight-only 低 bit</strong>：GGUF（llama.cpp 生态，CPU/Mac/混合推理首选）、AWQ / GPTQ（4-bit，GPU 推理，AWQ 的思路是只保护约 1% 的 salient 权重就能大幅降误差）。<strong>FP8</strong>：精度损失最小，但要较新 GPU。经验甜点是 <strong>4-bit（如 GGUF 的 Q4_K_M）</strong>：质量损失通常可忽略；低于 4-bit（Q3/Q2）后退化陡峭，尤其打击 reasoning 和长输出。Runtime 也分场景：<strong>llama.cpp / Ollama</strong> 灵活、装得快、适合本地与单用户；<strong>vLLM</strong> 靠 PagedAttention 做高吞吐 continuous batching，是生产并发的默认选择——两者不要混用场景。</p>
+
+<div class="diagram">┌──────── 显存与量化决策图 ────────┐
+│                                          │
+│  bit ▏ 7B    32B    70B  ▏ 质量损失      │
+│  ────┼──────────────────┼──────────      │
+│  FP16▏ 14G   64G    140G ▏ 基线（基本无损）│
+│  8bit▏  7G   32G     70G ▏ 几乎无损       │
+│  4bit▏ ~4G  ~16G    ~35G ▏ 可忽略 ◀ 甜点  │
+│  3bit▏  3G   12G     26G ▏ 明显退化       │
+│  2bit▏  2G    8G     18G ▏ 崩 ✗          │
+│                                          │
+│  + KV cache：随 ctx×并发 线性增长，别漏算 │
+│                                          │
+│  runtime:  本地/Mac/单用户 → llama.cpp/Ollama
+│            生产/高并发/吞吐 → vLLM(PagedAttn)│
+└──────────────────────────────────────────┘
+(权重显存为约数：params × bit/8，含框架开销上浮)</div>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-com"># 显存粗估：能不能在我的卡上跑</span>
+<span class="tag-key">def</span> vram_gb(params_b, bits=4, ctx_k=8, batch=1):
+    weights = params_b * bits / 8                 <span class="tag-com"># 权重</span>
+    kv      = 0.5 * ctx_k * batch                 <span class="tag-com"># KV cache 粗估(GB)，随模型变</span>
+    <span class="tag-key">return</span> round((weights + kv) * 1.2, 1)         <span class="tag-com"># ×1.2 框架开销</span>
+
+vram_gb(32, bits=4, ctx_k=8)   <span class="tag-com"># → ~20.6G：单张 24G 卡勉强够</span>
+vram_gb(70, bits=4, ctx_k=32)  <span class="tag-com"># → ~62G：要双卡或 A100</span>
+
+<span class="tag-com"># 生产部署用 vLLM 而非 Ollama 扛并发</span>
+<span class="tag-com"># vllm serve Qwen/Qwen3-32B-AWQ --quantization awq --max-model-len 16384</span></code></pre>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）为了塞进小卡硬上 Q2/Q3 量化跑 reasoning 任务——思维链会越推越乱，省下的显存换来不可用的输出。（2）拿 Ollama 扛生产并发——它擅长单用户交互，多路并发吞吐远不如 vLLM；反过来在 Mac 上为了「上 vLLM」折腾几小时，也是用错工具。（3）只算权重忘算 KV cache，长 context 一上来就 OOM。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · AWQ (Lin et al., MLSys 2024), <a href="https://arxiv.org/abs/2306.00978" target="_blank">arXiv:2306.00978</a> ·
+vLLM / PagedAttention (Kwon et al., SOSP 2023), <a href="https://arxiv.org/abs/2309.06180" target="_blank">arXiv:2309.06180</a> ·
+llama.cpp, <a href="https://github.com/ggml-org/llama.cpp" target="_blank">github.com/ggml-org/llama.cpp</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>移植的脆弱性：Claude 的 prompt 不能直接搬</h2>
+<div class="claim">论断：把闭源 prompt 原样搬到开源会静默退化；chat template 与受约束解码是开源落地的必修课。</div>
+
+<h3>背景与原理</h3>
+<p>三个最常被低估的坑。<strong>① chat template</strong>：每个开源模型有自己的对话特殊 token（system/user/assistant 边界、tool 段格式）。用错 template——比如套了别的模型的格式、或自己手拼字符串——模型不会报错，只会<strong>悄悄变笨</strong>。务必用官方 tokenizer 的 <code>apply_chat_template</code>，别手写。<strong>② tool use / function calling</strong>：开源模型的工具调用比 Claude 脆得多，JSON 经常少括号、字段名漂移、夹杂解释文字。靠 prompt「请只输出 JSON」远不够。<strong>③ few-shot 权重</strong>：闭源模型 zero-shot 能扛的指令，开源往往要 2-3 个 example 才稳——Examples &gt; Rules 在开源上更极端（Day 9 讲过）。</p>
+<p>对②的工程解法是<strong>受约束解码（constrained decoding）</strong>：在 sampling 时把不合法的 token 概率直接置零，从机制上保证输出合法 JSON / 符合给定 grammar。vLLM 内置 guided decoding，底层常用 XGrammar 这类引擎，能做到近零开销。这把「祈祷模型守格式」变成「物理上不可能违格式」——和 Day 3 讲的 permission gate 同一种思路：能力别交给模型自觉，交给运行时强制。</p>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-key">from</span> openai <span class="tag-key">import</span> OpenAI  <span class="tag-com"># vLLM 暴露 OpenAI 兼容端点</span>
+client = OpenAI(base_url=<span class="tag-gpt">"http://localhost:8000/v1"</span>, api_key=<span class="tag-gpt">"x"</span>)
+
+<span class="tag-com"># ① 永远用官方 chat template（transformers）</span>
+<span class="tag-com"># prompt = tokenizer.apply_chat_template(msgs, tokenize=False,</span>
+<span class="tag-com">#            add_generation_prompt=True)  # 别手拼 &lt;|im_start|&gt; 这类 token</span>
+
+<span class="tag-com"># ② 受约束解码：从机制上保证合法 JSON，而不是靠提示</span>
+schema = {<span class="tag-gpt">"type"</span>:<span class="tag-gpt">"object"</span>,
+  <span class="tag-gpt">"properties"</span>:{<span class="tag-gpt">"sentiment"</span>:{<span class="tag-gpt">"enum"</span>:[<span class="tag-gpt">"pos"</span>,<span class="tag-gpt">"neg"</span>,<span class="tag-gpt">"neutral"</span>]},
+               <span class="tag-gpt">"score"</span>:{<span class="tag-gpt">"type"</span>:<span class="tag-gpt">"number"</span>}},
+  <span class="tag-gpt">"required"</span>:[<span class="tag-gpt">"sentiment"</span>,<span class="tag-gpt">"score"</span>]}
+
+r = client.chat.completions.create(
+    model=<span class="tag-gpt">"Qwen/Qwen3-32B-AWQ"</span>,
+    messages=[{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,<span class="tag-gpt">"content"</span>:<span class="tag-gpt">"这家店服务太慢了"</span>}],
+    extra_body={<span class="tag-gpt">"guided_json"</span>: schema},   <span class="tag-com"># ← vLLM 受约束解码</span>
+)  <span class="tag-com"># 输出保证可 json.loads，无需正则兜底</span></code></pre>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）跨模型复制 prompt 模板时连别的模型的特殊 token 一起搬过来，模型静默退化还查不出原因。（2）用闭源那套「礼貌长 system prompt」喂开源——很多开源模型对超长 system 指令遵循度低，关键约束要靠 few-shot 和受约束解码兜，而非堆字。（3）对 tool use 只做正则解析不做 grammar 约束，上线后被各种畸形 JSON 反复打断。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · XGrammar (Dong et al. 2024), <a href="https://arxiv.org/abs/2411.15100" target="_blank">arXiv:2411.15100</a> ·
+vLLM Structured Outputs 文档, <a href="https://docs.vllm.ai/en/latest/features/structured_outputs.html" target="_blank">docs.vllm.ai/.../structured_outputs</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>MoE 与 Reasoning：DeepSeek 教你的两笔账</h2>
+<div class="claim">论断：MoE 让你用「激活参数」的算力跑「总参数」的能力，但显存按总参数付；自建 reasoning 模型前先算 token 账——多数场景该蒸馏，不该自托管。</div>
+
+<h3>背景与原理</h3>
+<p><strong>MoE 的两笔账要分开</strong>。DeepSeek-V3 是 671B 总参数、每 token 只激活 37B（采用 MLA + auxiliary-loss-free 负载均衡，见技术报告）。这意味着：<strong>算力/吞吐</strong>按激活的 37B 算，便宜；但<strong>显存</strong>得装下全部 671B 专家——哪个专家被路由到无法预知。所以 MoE 是「数据中心友好、单机不友好」：它优化的是规模化吞吐，不是让你在一张卡上跑大模型。本地想跑大 MoE 基本是误区。</p>
+<p><strong>Reasoning 模型的 token 账</strong>。DeepSeek-R1（arXiv:2501.12948）证明纯 RL 能逼出 self-reflection、verification 等推理行为，质量很高——但代价是<strong>思维链 token 爆炸</strong>：一个简单问题可能先吐几千 reasoning token。自托管 R1 级模型，你为每次调用的长思考付全额算力。工程现实是：与其自托管满血 reasoning 模型，不如用官方放出的<strong>蒸馏版</strong>（R1 蒸馏到 Qwen / Llama 的小模型），把推理能力压进能在你卡上跑的尺寸；或者在 prompt 层<strong>控制 reasoning budget</strong>，简单任务直接关掉思考模式（Qwen3 的 hybrid thinking/non-thinking 就是为此设计）。</p>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-com"># MoE：分开算两笔账</span>
+total_params = 671   <span class="tag-com"># → 决定显存（要装下全部专家）</span>
+active_params = 37    <span class="tag-com"># → 决定每 token 算力/吞吐</span>
+<span class="tag-com"># 结论：MoE 适合数据中心规模化，不适合单机自托管大尺寸</span>
+
+<span class="tag-com"># Reasoning：先问「这任务值得思考吗」，再决定开不开 CoT</span>
+<span class="tag-com"># 简单分类/抽取 → 关思考，省 90% token</span>
+<span class="tag-com"># 复杂数学/调试  → 开思考，但设上限防失控</span>
+
+<span class="tag-com"># 自建路线优先级：</span>
+<span class="tag-com"># 蒸馏版小模型(能跑) > 满血自托管(贵) > 按需调云端 reasoning API</span></code></pre>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）看到「37B 激活」就以为能在 40G 卡上跑 DeepSeek-V3——显存按 671B 算，差一个数量级。（2）把 reasoning 模型当通用模型用，简单任务也开满思考，token 成本和延迟双爆。（3）盲目自托管满血模型追求「全部本地」，忽略了蒸馏版在你的具体任务上质量可能已经够、成本低一个量级。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · DeepSeek-R1 (arXiv:2501.12948), <a href="https://arxiv.org/abs/2501.12948" target="_blank">arxiv.org/abs/2501.12948</a> ·
+DeepSeek-V3 (arXiv:2412.19437), <a href="https://arxiv.org/abs/2412.19437" target="_blank">arxiv.org/abs/2412.19437</a> ·
+Qwen3 Technical Report, <a href="https://github.com/QwenLM/Qwen3" target="_blank">github.com/QwenLM/Qwen3</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// 综合实战 · 把一个 Claude 任务搬到开源</h3>
+<p>挑一个你已经在用 Claude 跑的「短闭可验证」任务（如评论情感分类、发票字段抽取），完整搬一遍，亲手摸这一期四个坑：</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>选型 + License</strong>：任务固定高频、值得专用模型？选 Qwen3 或 Mistral（Apache，留蒸馏/合成数据的后路），别选 Llama。</li>
+<li><strong>量化 + runtime</strong>：用 §2 的 <code>vram_gb()</code> 估算尺寸；本地验证用 Ollama 拉 Q4_K_M，确认能跑后再上 vLLM + AWQ 做并发基准。</li>
+<li><strong>移植</strong>：用官方 <code>apply_chat_template</code>，把 Claude 的 system prompt 砍短、补 2-3 个 few-shot example，输出用 <code>guided_json</code> 受约束解码锁死格式。</li>
+<li><strong>Eval 对照</strong>：用 Day 6 / Day 29 的方法，拿同一个 golden set 跑「Claude」vs「开源量化版」，对比准确率、p95 延迟、单位成本。</li>
+<li><strong>决策</strong>：多数情况下你会发现——短闭任务上开源量化版准确率不输、成本低一个量级、数据不出本地。这三点同时成立时，迁移才真正值得。</li>
+</ol>
+<p style="margin-top:12px">跑完这一套，你对「开源能不能替代闭源」的判断会从直觉变成数据：不是信仰之争，是每个具体任务上的 task-cliff + 成本 + 合规三维权衡。</p>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// ENGLISH GLOSSARY</h3>
+<dl>
+<dt>Open Weights</dt><dd>开放权重模型。权重可下载自托管，但 License 未必是 OSI 开源协议（如 Llama）。</dd>
+<dt>Task Cliff</dt><dd>任务能力悬崖。开源在「短闭可验证」任务够用，跨过某复杂度后因误差累积陡然不可用。</dd>
+<dt>GGUF</dt><dd>llama.cpp 生态的量化模型文件格式，CPU/Mac/混合推理首选。Q4_K_M 是常用甜点档。</dd>
+<dt>AWQ / GPTQ</dt><dd>两种 4-bit weight-only 量化方法，GPU 推理用。AWQ 只保护约 1% salient 权重降误差。</dd>
+<dt>PagedAttention</dt><dd>vLLM 的 KV cache 分页管理，近零碎片，吞吐提升 2-4×。生产并发的基石。</dd>
+<dt>Constrained Decoding</dt><dd>受约束解码。sampling 时把不合法 token 概率置零，机制上保证输出合法 JSON/grammar。</dd>
+<dt>Chat Template</dt><dd>模型专属的对话格式（特殊 token 边界）。用错会静默退化，须用官方 tokenizer 套用。</dd>
+<dt>MoE</dt><dd>混合专家。总参数大但每 token 只激活一部分：算力按激活算，显存按总参数算。</dd>
+<dt>MLA</dt><dd>Multi-head Latent Attention，DeepSeek 用于压缩 KV cache 的注意力变体。</dd>
+<dt>Reasoning Budget</dt><dd>思维链 token 预算。reasoning 模型可设上限，简单任务关闭思考省成本。</dd>
+</dl>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// 深入思考</h3>
+<details><summary>「开源每步 88% 对 vs 闭源 95% 对」的误差累积，为什么对 agent 是灾难，对 workflow 不是？</summary><div>因为 agent 的控制流由模型决定，每步错误会改变后续路径——20 步独立成功率从 0.95²⁰≈36% 掉到 0.88²⁰≈8%，且一旦走错分支无法自我纠回。workflow 的控制流在代码里：每个节点是独立短任务，单点失败可被代码层 retry/校验/回退隔离，不会污染全局。这就是为什么「开源 + workflow」常胜「开源 + 裸 agent」——你把误差累积的乘法结构，换成了可在节点处截断的加法结构。</div></details>
+<details><summary>量化是「免费午餐」吗？同样 16GB 显存，跑 4-bit 的 32B 和 FP16 的 7B，哪个更优？</summary><div>不是免费午餐，但 4-bit 的损失通常远小于参数量带来的收益。经验上「大模型重量化」普遍优于「小模型轻量化」：4-bit 32B 在多数任务上明显强过 FP16 7B，因为参数量决定能力上限，4-bit 只削去边际精度。但有例外——对数值精度敏感的任务（长链数学、精确代码）低 bit 退化更明显，且低于 4-bit 后曲线变陡。所以默认「大模型 + 4-bit」，但对 reasoning 密集任务要实测，别想当然。</div></details>
+<details><summary>受约束解码保证了 JSON 合法，但它能保证内容正确吗？两者的边界在哪？</summary><div>不能，且容易让人误判。constrained decoding 只约束<strong>形式</strong>（合法 JSON、字段齐全、enum 在范围内），不约束<strong>语义</strong>（字段值是否真实正确）。更微妙的是：硬约束会强迫模型在「本该说不知道」时也填一个合法值，可能放大幻觉——它把不确定性从「格式错误」这种可见信号，转成了「合法但错」的隐蔽信号。所以受约束解码要配合 eval 验证内容，必要时留一个 <code>"uncertain"</code> 枚举或 confidence 字段给模型逃生，别用格式合法性冒充正确性。</div></details>
+<details><summary>MoE「算力按激活、显存按总参数」——这条非对称性，对个人自托管者意味着什么战略选择？</summary><div>意味着 MoE 的红利你基本吃不到。MoE 优化的是云厂商场景：用同一份显存里的全部专家，服务海量并发请求，把激活的低算力摊薄成高吞吐。个人自托管单用户时，你付了全部专家的显存成本，却享不到规模化吞吐的好处。所以个人路线应反过来：选<strong>稠密小模型</strong>（7B-32B dense）或 MoE 的<strong>蒸馏稠密版</strong>，它们显存可控、单机友好。把 MoE 大模型留给「调云端 API」，自托管只碰能塞进卡的稠密模型——这是被架构非对称性逼出来的理性选择。</div></details>
+<details><summary>如果开源模型在你的具体任务上已经够用，为什么很多团队还是离不开闭源？除了能力，还有什么隐性成本？</summary><div>隐性成本主要在「非模型」的运维面：（1）你要自己扛可用性、扩缩容、GPU 运维、安全补丁——闭源 API 把这些都内化了；（2）模型迭代——闭源持续升级，自托管要自己追新、重测、重新量化；（3）多模态/工具/缓存等周边能力，闭源平台一体提供，自建要逐个拼。所以「单任务够用」常常不等于「总拥有成本更低」。理性结论：用开源做<strong>窄而稳、隐私敏感、高频固定</strong>的任务，用闭源做<strong>宽而变、前沿、低频复杂</strong>的任务——多数成熟团队是混合栈，不是二选一。</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://arxiv.org/abs/2412.19437" target="_blank">DeepSeek-V3 Technical Report</a> — 671B/37B MoE、MLA、auxiliary-loss-free 负载均衡</li>
+<li><a href="https://arxiv.org/abs/2501.12948" target="_blank">DeepSeek-R1</a> — 纯 RL 激发推理 + 向小模型蒸馏的奠基工作</li>
+<li><a href="https://arxiv.org/abs/2309.06180" target="_blank">vLLM · PagedAttention (SOSP 2023)</a> — 生产推理吞吐的工程基石</li>
+<li><a href="https://arxiv.org/abs/2306.00978" target="_blank">AWQ (MLSys 2024)</a> — 保护 1% salient 权重的 4-bit 量化</li>
+<li><a href="https://arxiv.org/abs/2411.15100" target="_blank">XGrammar</a> — 近零开销的受约束解码引擎</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 30 · 2026-06-13</footer>
+</div>
+</body></html>

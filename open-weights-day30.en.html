@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 30 · Open Source Models in Practice — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 30 / PHASE 3 · FRONTIER</span>
+<h1>Open Source Models in Practice</h1>
+<h2>Llama · Qwen · DeepSeek · Mistral — Selection / Quantization / Porting / MoE</h2>
+<div class="date">2026-06-13 · BigCat</div>
+<p class="pitch">Open-weight models aren't a "budget Claude" — they're a different runtime with their own engineering discipline.</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>By 2026, open weights are no longer toys: DeepSeek-V3 / R1, Qwen3, Llama, and Mistral approach closed-source SOTA on many tasks. But "close on a leaderboard" and "able to replace Claude in your production pipeline" are separated by a whole layer of engineering. Most people trip on three illusions: that open = cheap (it actually buys you control, privacy, and the ability to fine-tune, while saddling you with ops and quality risk); that downloading means running (you're actually stuck on VRAM math and quantization loss); and that you can paste your Claude prompt straight over (chat templates, tool use, and structured output all need redoing). This issue does not cover "what Llama is" — that's ai-ml-daily's job. We cover four engineering matters: <strong>which tasks open truly handles, License as a hidden constraint, the real ledger of quantization and VRAM, the fragility of prompt/tool porting, and the build reality of MoE and reasoning models</strong>.</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>Selection & License: Where Open Truly Replaces, and License as Hidden Constraint</h2>
+<div class="claim">Claim: choosing open is a "control / privacy / fine-tunability" decision, not a "save money" one — and there's a sharp task cliff on capability.</div>
+
+<h3>Background & Principle</h3>
+<p>Split "should we go open" into two independent questions. <strong>Capability</strong>: open is already good enough on "short, closed, verifiable" tasks — classification, extraction, fixed-domain RAG Q&A, translation, rewriting, mid-difficulty code completion. It still has a clear cliff on "long, open, sequential-decision" tasks — multi-step agentic loops, complex tool orchestration, frontier reasoning. The cause isn't a single weak skill, it's <strong>error accumulation</strong>: if closed is 95% right per step and open is 88%, after 20 steps that 7pp gap balloons into disaster.</p>
+<p>The <strong>License</strong> question matters more than most assume. Llama ships under Meta's own community license, not an OSI open-source one: it has a <strong>700M monthly-active-user cap</strong> (above which you need a separate grant from Meta) and <strong>forbids using Llama outputs to train or distill any non-Llama model</strong> — which directly kills the "use Llama to generate synthetic data for my own model" path. By contrast Qwen and Mistral are mostly Apache 2.0, and DeepSeek models are mostly MIT — far cleaner. If your plan involves distillation, synthetic data, or possibly going big, License selection belongs ahead of capability benchmarking.</p>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># 30-second selection (pin it in your project)</span>
+<span class="tag-com"># Go open iff ≥1 holds:</span>
+- Data can't leave premises / strict compliance   <span class="tag-com"># privacy = the hardest reason</span>
+- Task is fixed and high-frequency, worth a fine-tuned specialist
+- Volume so high the closed API cost structure is untenable
+- Need determinism/reproducibility/version-locking (closed swaps models silently)
+
+<span class="tag-com"># Task capability cliff (heuristic, not absolute):</span>
+fine:    classification / extraction / translation / rewrite / fixed RAG / single-step code
+careful: 3-8 step workflows (use workflow, not agent, as a net)
+avoid:   long agentic loops / complex multi-tool orchestration / frontier math reasoning
+
+<span class="tag-com"># License before capability:</span>
+distill/synthetic-data/may-scale → avoid Llama, pick Qwen(Apache) / DeepSeek(MIT)</code></pre>
+
+<div class="fail">
+<strong>Failure mode</strong>: forcing an open model through a long agentic loop, then concluding "open can't do it." The real fix is often to <strong>lower the architecture</strong> — fold the agent back into a deterministic workflow (Days 3 / 5), let the open model only do "short tasks" at each node, and pull control flow back into code. Open model + workflow often beats closed model + bare agent.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Llama 3.3 Community License, <a href="https://www.llama.com/llama3_3/license/" target="_blank">llama.com/.../license</a> ·
+DeepSeek-V3 Technical Report, <a href="https://arxiv.org/abs/2412.19437" target="_blank">arXiv:2412.19437</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Quantization & VRAM: The Real Ledger of Running It</h2>
+<div class="claim">Claim: the real barrier to open models isn't downloading — it's VRAM math and the quantization-loss curve. Pick the wrong bit-width or runtime and capability evaporates.</div>
+
+<h3>Background & Principle</h3>
+<p>The VRAM budget has three parts: <strong>weights</strong> (params × bytes/param) + <strong>KV cache</strong> (grows linearly with context length and concurrency) + activation/framework overhead. A 32B model in FP16 is 64GB of weights alone — won't fit one card; quantized to 4-bit, weights drop to about 16GB, into reach of a consumer dual-card or even a single 24G card. So quantization isn't an "optional optimization," it's the precondition for open to be deployable at all.</p>
+<p>Quant formats split into two lines. <strong>Weight-only low-bit</strong>: GGUF (the llama.cpp ecosystem, top pick for CPU/Mac/hybrid inference), AWQ / GPTQ (4-bit, GPU inference; AWQ's idea is that protecting just ~1% of salient weights greatly reduces error). <strong>FP8</strong>: minimal precision loss, but needs newer GPUs. The empirical sweet spot is <strong>4-bit (e.g. GGUF's Q4_K_M)</strong>: quality loss is usually negligible; below 4-bit (Q3/Q2) degradation gets steep, hitting reasoning and long outputs hardest. Runtime also splits by scenario: <strong>llama.cpp / Ollama</strong> are flexible, fast to set up, good for local and single-user; <strong>vLLM</strong> uses PagedAttention for high-throughput continuous batching — the default for production concurrency. Don't mix the two scenarios up.</p>
+
+<div class="diagram">┌──────── VRAM × Quantization Decision Map ────────┐
+│                                                          │
+│  bit ▏ 7B    32B    70B  ▏ quality loss                  │
+│  ────┼──────────────────┼──────────                      │
+│  FP16▏ 14G   64G    140G ▏ baseline (lossless)           │
+│  8bit▏  7G   32G     70G ▏ near-lossless                 │
+│  4bit▏ ~4G  ~16G    ~35G ▏ negligible ◀ sweet spot       │
+│  3bit▏  3G   12G     26G ▏ visible degradation           │
+│  2bit▏  2G    8G     18G ▏ collapses ✗                   │
+│                                                          │
+│  + KV cache: grows linearly with ctx×concurrency, don't skip it
+│                                                          │
+│  runtime:  local/Mac/single-user → llama.cpp/Ollama      │
+│            production/high-concurrency → vLLM(PagedAttn)  │
+└──────────────────────────────────────────────────────────┘
+(weight VRAM approximate: params × bit/8, plus framework overhead)</div>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># Rough VRAM estimate: will it fit my card</span>
+<span class="tag-key">def</span> vram_gb(params_b, bits=4, ctx_k=8, batch=1):
+    weights = params_b * bits / 8                 <span class="tag-com"># weights</span>
+    kv      = 0.5 * ctx_k * batch                 <span class="tag-com"># KV cache rough(GB), varies by model</span>
+    <span class="tag-key">return</span> round((weights + kv) * 1.2, 1)         <span class="tag-com"># ×1.2 framework overhead</span>
+
+vram_gb(32, bits=4, ctx_k=8)   <span class="tag-com"># → ~20.6G: a single 24G card just fits</span>
+vram_gb(70, bits=4, ctx_k=32)  <span class="tag-com"># → ~62G: needs dual cards or an A100</span>
+
+<span class="tag-com"># For production, use vLLM not Ollama for concurrency</span>
+<span class="tag-com"># vllm serve Qwen/Qwen3-32B-AWQ --quantization awq --max-model-len 16384</span></code></pre>
+
+<div class="fail">
+<strong>Failure mode</strong>: (1) cramming into a small card with Q2/Q3 to run reasoning tasks — the chain-of-thought drifts worse the longer it reasons, and the saved VRAM buys unusable output. (2) Using Ollama for production concurrency — it shines at single-user interaction; multi-stream throughput lags vLLM badly. Conversely, burning hours forcing vLLM onto a Mac is also the wrong tool. (3) Counting only weights and forgetting KV cache, then OOM-ing the moment a long context arrives.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · AWQ (Lin et al., MLSys 2024), <a href="https://arxiv.org/abs/2306.00978" target="_blank">arXiv:2306.00978</a> ·
+vLLM / PagedAttention (Kwon et al., SOSP 2023), <a href="https://arxiv.org/abs/2309.06180" target="_blank">arXiv:2309.06180</a> ·
+llama.cpp, <a href="https://github.com/ggml-org/llama.cpp" target="_blank">github.com/ggml-org/llama.cpp</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Porting Fragility: You Can't Paste Claude's Prompt Over</h2>
+<div class="claim">Claim: copying a closed-source prompt onto an open model silently degrades it; chat templates and constrained decoding are required coursework for open deployment.</div>
+
+<h3>Background & Principle</h3>
+<p>Three most-underrated pitfalls. <strong>① Chat template</strong>: each open model has its own conversation special tokens (system/user/assistant boundaries, tool-block format). Use the wrong template — another model's format, or hand-assembled strings — and the model doesn't error; it just <strong>quietly gets dumber</strong>. Always use the official tokenizer's <code>apply_chat_template</code>; never hand-write it. <strong>② Tool use / function calling</strong>: open models' tool calling is far more brittle than Claude's — JSON often drops brackets, drifts field names, or mixes in explanatory prose. Prompting "output only JSON" is nowhere near enough. <strong>③ Few-shot weight</strong>: instructions a closed model handles zero-shot often need 2-3 examples to be stable on open — Examples > Rules (Day 9) is even more extreme here.</p>
+<p>The engineering fix for ② is <strong>constrained decoding</strong>: at sampling time, zero out the probabilities of illegal tokens, mechanically guaranteeing valid JSON / conformance to a given grammar. vLLM has built-in guided decoding, often backed by engines like XGrammar that achieve near-zero overhead. This turns "pray the model keeps format" into "physically impossible to break format" — the same idea as the permission gate in Day 3: don't leave capability to the model's discretion, enforce it in the runtime.</p>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-key">from</span> openai <span class="tag-key">import</span> OpenAI  <span class="tag-com"># vLLM exposes an OpenAI-compatible endpoint</span>
+client = OpenAI(base_url=<span class="tag-gpt">"http://localhost:8000/v1"</span>, api_key=<span class="tag-gpt">"x"</span>)
+
+<span class="tag-com"># ① Always use the official chat template (transformers)</span>
+<span class="tag-com"># prompt = tokenizer.apply_chat_template(msgs, tokenize=False,</span>
+<span class="tag-com">#            add_generation_prompt=True)  # don't hand-assemble &lt;|im_start|&gt; tokens</span>
+
+<span class="tag-com"># ② Constrained decoding: guarantee valid JSON mechanically, not by prompting</span>
+schema = {<span class="tag-gpt">"type"</span>:<span class="tag-gpt">"object"</span>,
+  <span class="tag-gpt">"properties"</span>:{<span class="tag-gpt">"sentiment"</span>:{<span class="tag-gpt">"enum"</span>:[<span class="tag-gpt">"pos"</span>,<span class="tag-gpt">"neg"</span>,<span class="tag-gpt">"neutral"</span>]},
+               <span class="tag-gpt">"score"</span>:{<span class="tag-gpt">"type"</span>:<span class="tag-gpt">"number"</span>}},
+  <span class="tag-gpt">"required"</span>:[<span class="tag-gpt">"sentiment"</span>,<span class="tag-gpt">"score"</span>]}
+
+r = client.chat.completions.create(
+    model=<span class="tag-gpt">"Qwen/Qwen3-32B-AWQ"</span>,
+    messages=[{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,<span class="tag-gpt">"content"</span>:<span class="tag-gpt">"Service here was way too slow"</span>}],
+    extra_body={<span class="tag-gpt">"guided_json"</span>: schema},   <span class="tag-com"># ← vLLM constrained decoding</span>
+)  <span class="tag-com"># output guaranteed json.loads-able, no regex fallback needed</span></code></pre>
+
+<div class="fail">
+<strong>Failure mode</strong>: (1) copying a prompt template across models and dragging the other model's special tokens along — silent degradation you can't diagnose. (2) Feeding open models the closed-source "polite long system prompt" — many open models follow over-long system instructions poorly; key constraints must be carried by few-shot and constrained decoding, not by piling on words. (3) Parsing tool use with only regex and no grammar constraint, then getting repeatedly broken by malformed JSON in production.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · XGrammar (Dong et al. 2024), <a href="https://arxiv.org/abs/2411.15100" target="_blank">arXiv:2411.15100</a> ·
+vLLM Structured Outputs docs, <a href="https://docs.vllm.ai/en/latest/features/structured_outputs.html" target="_blank">docs.vllm.ai/.../structured_outputs</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>MoE & Reasoning: The Two Ledgers DeepSeek Teaches</h2>
+<div class="claim">Claim: MoE lets you run "total-param" capability at "active-param" compute — but you pay VRAM by total params; before self-hosting a reasoning model, do the token math — most cases should distill, not self-host.</div>
+
+<h3>Background & Principle</h3>
+<p><strong>Keep MoE's two ledgers separate</strong>. DeepSeek-V3 has 671B total params but activates only 37B per token (using MLA + auxiliary-loss-free load balancing, per the technical report). Meaning: <strong>compute/throughput</strong> is reckoned on the active 37B — cheap; but <strong>VRAM</strong> must hold all 671B experts — you can't predict which expert gets routed. So MoE is "data-center friendly, single-machine unfriendly": it optimizes throughput at scale, not letting you run a huge model on one card. Trying to run a big MoE locally is basically a category error.</p>
+<p><strong>The reasoning model's token ledger</strong>. DeepSeek-R1 (arXiv:2501.12948) proves pure RL can elicit high-quality reasoning behaviors like self-reflection and verification — but at the cost of a <strong>chain-of-thought token explosion</strong>: a simple question may emit thousands of reasoning tokens first. Self-host an R1-class model and you pay full compute for that long thinking on every call. The engineering reality: rather than self-hosting a full reasoning model, use the officially released <strong>distilled versions</strong> (R1 distilled into smaller Qwen / Llama models), compressing the reasoning ability into a size that fits your card; or <strong>control the reasoning budget</strong> at the prompt layer, turning thinking off for simple tasks (Qwen3's hybrid thinking/non-thinking is designed exactly for this).</p>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># MoE: compute the two ledgers separately</span>
+total_params = 671   <span class="tag-com"># → decides VRAM (must hold all experts)</span>
+active_params = 37    <span class="tag-com"># → decides per-token compute/throughput</span>
+<span class="tag-com"># Takeaway: MoE suits data-center scale, not single-machine self-hosting of big sizes</span>
+
+<span class="tag-com"># Reasoning: ask "is this task worth thinking about" before enabling CoT</span>
+<span class="tag-com"># simple classification/extraction → thinking off, save 90% tokens</span>
+<span class="tag-com"># complex math/debugging          → thinking on, but cap it to prevent runaway</span>
+
+<span class="tag-com"># Build-path priority:</span>
+<span class="tag-com"># distilled small model (fits) > full self-host (expensive) > on-demand cloud reasoning API</span></code></pre>
+
+<div class="fail">
+<strong>Failure mode</strong>: (1) seeing "37B active" and assuming DeepSeek-V3 runs on a 40G card — VRAM is reckoned on 671B, an order of magnitude off. (2) Using a reasoning model as a general model, leaving thinking maxed even on simple tasks — token cost and latency both explode. (3) Blindly self-hosting the full model chasing "all local," ignoring that a distilled version may already be good enough on your specific task at an order-of-magnitude lower cost.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · DeepSeek-R1 (arXiv:2501.12948), <a href="https://arxiv.org/abs/2501.12948" target="_blank">arxiv.org/abs/2501.12948</a> ·
+DeepSeek-V3 (arXiv:2412.19437), <a href="https://arxiv.org/abs/2412.19437" target="_blank">arxiv.org/abs/2412.19437</a> ·
+Qwen3 Technical Report, <a href="https://github.com/QwenLM/Qwen3" target="_blank">github.com/QwenLM/Qwen3</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// Integrated Practice · Port One Claude Task to Open Source</h3>
+<p>Pick a "short, closed, verifiable" task you already run on Claude (e.g. review sentiment classification, invoice field extraction), port it end to end, and feel all four pitfalls firsthand:</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>Selection + License</strong>: fixed, high-frequency, worth a specialist? Pick Qwen3 or Mistral (Apache, keeping the distillation/synthetic-data door open), not Llama.</li>
+<li><strong>Quantization + runtime</strong>: estimate size with §2's <code>vram_gb()</code>; validate locally by pulling Q4_K_M via Ollama, then move to vLLM + AWQ for a concurrency benchmark.</li>
+<li><strong>Porting</strong>: use the official <code>apply_chat_template</code>, trim Claude's system prompt, add 2-3 few-shot examples, and lock output format with <code>guided_json</code> constrained decoding.</li>
+<li><strong>Eval comparison</strong>: using Days 6 / 29 methods, run "Claude" vs "open quantized" on the same golden set, comparing accuracy, p95 latency, and unit cost.</li>
+<li><strong>Decision</strong>: in most cases you'll find — on short, closed tasks the open quantized version matches accuracy, costs an order of magnitude less, and keeps data on premises. Only when all three hold is the migration truly worth it.</li>
+</ol>
+<p style="margin-top:12px">Once you've done this, your judgment on "can open replace closed" shifts from gut to data: not a faith war, but a three-axis tradeoff of task-cliff + cost + compliance on each concrete task.</p>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// Deep Thinking</h3>
+<details><summary>Why is the "open 88% vs closed 95% per step" error accumulation a disaster for agents but not for workflows?</summary><div>Because an agent's control flow is decided by the model — each step's error reshapes the subsequent path. Over 20 independent steps, success drops from 0.95²⁰≈36% to 0.88²⁰≈8%, and once it takes a wrong branch it can't self-correct back. A workflow's control flow lives in code: each node is an independent short task, and a single failure can be isolated by code-layer retry/validation/rollback without polluting the whole. That's why "open + workflow" often beats "open + bare agent" — you swap the multiplicative structure of error accumulation for an additive one that can be cut off at each node.</div></details>
+<details><summary>Is quantization a free lunch? With the same 16GB VRAM, which is better: a 4-bit 32B or an FP16 7B?</summary><div>Not a free lunch, but 4-bit's loss is usually far smaller than the gain from more parameters. Empirically "big model, heavy quant" generally beats "small model, light quant": a 4-bit 32B clearly outperforms an FP16 7B on most tasks, because parameter count sets the capability ceiling and 4-bit only shaves marginal precision. There are exceptions — tasks sensitive to numerical precision (long-chain math, exact code) degrade more visibly at low bits, and the curve steepens below 4-bit. So default to "big model + 4-bit," but measure reasoning-heavy tasks rather than assuming.</div></details>
+<details><summary>Constrained decoding guarantees valid JSON, but can it guarantee correct content? Where's the boundary?</summary><div>No, and it easily misleads. Constrained decoding only constrains <strong>form</strong> (valid JSON, complete fields, enum in range), not <strong>semantics</strong> (whether the value is truly correct). More subtly: a hard constraint forces the model to fill a valid value even when it should say "I don't know," potentially amplifying hallucination — it converts uncertainty from a visible signal (malformed format) into a hidden one (valid but wrong). So pair constrained decoding with content eval, and where needed leave an <code>"uncertain"</code> enum or confidence field as an escape hatch — don't pass format-validity off as correctness.</div></details>
+<details><summary>MoE's "compute by active, VRAM by total" asymmetry — what strategic choice does it imply for an individual self-hoster?</summary><div>It means you basically can't reap MoE's dividend. MoE optimizes the cloud-vendor scenario: serving the full set of experts in shared VRAM to massive concurrent requests, amortizing the low active-compute into high throughput. As a single-user self-hoster you pay the VRAM cost of all experts without the throughput benefit. So the individual path should invert: pick <strong>dense small models</strong> (7B-32B dense) or <strong>distilled dense versions</strong> of MoE — controllable VRAM, single-machine friendly. Leave big MoE to "call a cloud API," and self-host only dense models that fit your card — a rational choice forced by the architectural asymmetry.</div></details>
+<details><summary>If an open model is already good enough on your specific task, why do many teams still can't quit closed source? Beyond capability, what are the hidden costs?</summary><div>The hidden costs are mostly on the "non-model" ops surface: (1) you carry availability, autoscaling, GPU ops, security patches yourself — the closed API internalizes all of these; (2) model iteration — closed source keeps upgrading; self-hosting means chasing new releases, retesting, requantizing; (3) multimodal/tools/caching and other peripherals come bundled on a closed platform, while self-build means stitching each one. So "good enough on one task" often isn't "lower total cost of ownership." Rational conclusion: use open for <strong>narrow, stable, privacy-sensitive, high-frequency fixed</strong> tasks, and closed for <strong>broad, changing, frontier, low-frequency complex</strong> tasks — most mature teams run a hybrid stack, not an either/or.</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// Further Reading</h3>
+<ul>
+<li><a href="https://arxiv.org/abs/2412.19437" target="_blank">DeepSeek-V3 Technical Report</a> — 671B/37B MoE, MLA, auxiliary-loss-free load balancing</li>
+<li><a href="https://arxiv.org/abs/2501.12948" target="_blank">DeepSeek-R1</a> — eliciting reasoning via pure RL, and distillation into small models</li>
+<li><a href="https://arxiv.org/abs/2309.06180" target="_blank">vLLM · PagedAttention (SOSP 2023)</a> — the engineering bedrock of production inference throughput</li>
+<li><a href="https://arxiv.org/abs/2306.00978" target="_blank">AWQ (MLSys 2024)</a> — 4-bit quantization protecting 1% salient weights</li>
+<li><a href="https://arxiv.org/abs/2411.15100" target="_blank">XGrammar</a> — near-zero-overhead constrained decoding engine</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 30 · 2026-06-13</footer>
+</div>
+</body></html>
