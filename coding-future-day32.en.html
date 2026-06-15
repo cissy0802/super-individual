@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 32 · The Next Five Years of AI Coding — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.homework{background:linear-gradient(135deg,rgba(255,110,196,0.1),rgba(123,97,255,0.1));border:1px solid rgba(255,110,196,0.3);border-radius:10px;padding:22px 24px;margin:36px 0}
+.homework h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 32 / PHASE 3 · FRONTIER</span>
+<h1>The Next Five Years of AI Coding</h1>
+<h2>SWE-bench Limits · Time Horizon · Skill Repricing · Agent-Ready Codebase</h2>
+<div class="date">2026-06-15 · BigCat</div>
+<p class="pitch">Don't predict the model. Predict how your own engineering leverage changes.</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>Talk of "the future of AI coding" slides into two traps: the panic ("developers are obsolete") and the arrogance ("it's just better autocomplete"). Both bet on the <strong>model curve</strong>—a variable you don't control. This issue flips the frame. Instead of predicting how strong models get, it asks four questions that cash out into engineering moves: (1) why even OpenAI <strong>deprecated SWE-bench Verified</strong> in 2026, and why leaderboard scores can't be your selection criterion; (2) why the real exponential is <strong>task time horizon</strong>—not "IQ"—and how it decides how long a task you can delegate to an agent; (3) which engineering skills are depreciating and which are appreciating; (4) how to make your codebase <strong>agent-ready</strong> now, turning five-year leverage into compounding moves you can make today. The conclusion up front: what determines your output in five years isn't which model you use—it's how verifiable your environment is to an agent.</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>Don't Select Models by SWE-bench Score: The Death of a Benchmark</h2>
+<div class="claim">Claim: the half-life of coding benchmarks is collapsing. SWE-bench Verified was officially deprecated in 2026—proof that public leaderboards carry near-zero information for your selection.</div>
+
+<h3>Background &amp; Principle</h3>
+<p>SWE-bench (Jimenez et al., ICLR 2024) has been the de facto yardstick for coding agents: pull a bug from a real GitHub issue, have the agent fix the code, judge correctness with the repo's own tests. OpenAI then co-built <strong>SWE-bench Verified</strong>—a 500-task, human-filtered subset. But in February 2026 OpenAI <strong>stopped reporting Verified scores</strong>, for reasons every engineer should memorize, because they are the universal diseases of benchmarks:</p>
+<ul>
+<li><strong>Contamination</strong>: all 500 tasks come from public Python repos predating every model's cutoff. Models can simply "recall" the gold patch and problem-statement specifics—you think you're testing reasoning, but you're testing recitation.</li>
+<li><strong>The tasks themselves are broken</strong>: on review, more than half the remaining problems were flawed—some tests <em>too narrow</em>, rejecting functionally correct submissions; some <em>too wide</em>, demanding features never mentioned. The score ceiling is locked by noise.</li>
+<li><strong>Construct gap</strong>: the distribution—"single repo, existing tests, a few dozen lines of bug-fix"—is far from your daily reality of <em>cross-service changes, vague requirements, writing your own tests</em>. A high score ≠ getting work done in your codebase.</li>
+</ul>
+<p>More subtle: swap the scaffold (harness) on the same model and SWE-bench scores can shift by double digits—<strong>the leaderboard measures the "model + harness" combo, not the model itself</strong>. Scale AI's <em>SWE-bench Pro</em> uses legally-untrainable private codebases as a held-out set to fight contamination, but it's still not <em>your</em> distribution. Bottom line: public benchmarks are vendors' arms-race metric, not your purchase contract.</p>
+
+<h3>Hands-On</h3>
+<p>The only trustworthy coding eval is your own, private, same-distribution-as-your-real-work one. Ten minutes gets you a prototype—pull from your merged PRs:</p>
+<pre><code><span class="tag-com"># Build a held-out coding eval from your git history (private = contamination-proof)</span>
+<span class="tag-com"># Pick 5 changes with "known answer + tests", roll back to the pre-change commit</span>
+<span class="tag-key">for</span> pr <span class="tag-key">in</span> [<span class="tag-gpt">"#412 fix timezone off-by-one"</span>, <span class="tag-gpt">"#455 add pagination"</span>, ...]:
+    checkout(pr.base_commit)              <span class="tag-com"># back to before the change</span>
+    run_agent(task=pr.issue_title)        <span class="tag-com"># have the agent under test redo it</span>
+    passed = run(pr.test_files)           <span class="tag-com"># the real tests as oracle</span>
+    log(model, harness, passed, tokens, wall_time)
+<span class="tag-com"># Key: eval the model+harness combo; keep 5 tasks secret, rotate periodically</span></code></pre>
+<p>Run two or three candidate models / IDEs through it and you get a <strong>cost-and-latency-annotated</strong> comparison that's valid for <em>your</em> work—worth more than any leaderboard. Keep these 5 tasks confidential; the moment they hit any public channel, they're contaminated and void.</p>
+
+<div class="fail">
+<strong>Failure mode</strong>: using a public benchmark directly as your regression set and swapping models by leaderboard. The next model gains 5pp on the board, yet feels dumber in your production—because it didn't gain on <em>your</em> construct (cross-file, weak tests, implicit constraints), and its changed output style may even break your old harness's diff parser.
+</div>
+
+<div class="res">
+<strong>Resources</strong> · OpenAI <em>Why we no longer evaluate SWE-bench Verified</em>, <a href="https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/" target="_blank">openai.com/index/why-we-no-longer-evaluate-swe-bench-verified</a> ·
+SWE-bench Pro, <a href="https://arxiv.org/abs/2509.16941" target="_blank">arXiv:2509.16941</a> ·
+SWE-bench original, <a href="https://arxiv.org/abs/2310.06770" target="_blank">arXiv:2310.06770</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>What's Growing Is "Task Length," Not "IQ": Allocate Autonomy by Time Horizon</h2>
+<div class="claim">Claim: the real exponential is task time horizon—the length of task an agent completes independently, doubling roughly every 7 months. It should drive how long a task you hand to an agent, more than MMLU does.</div>
+
+<h3>Background &amp; Principle</h3>
+<p>METR's 2025 work (<em>Measuring AI Ability to Complete Long Tasks</em>, arXiv 2503.14499) proposes a more engineering-meaningful metric: the <strong>50% time horizon</strong>—the human-time length of tasks the model completes at 50% success. Calibrated on 170 tasks + 800 human baselines, this length has risen exponentially for six years, <strong>doubling about every 7 months</strong>. Crucially, the <em>source</em> of growth: not stronger raw reasoning, but better <strong>reliability, error recovery, and tool use</strong>—exactly what lets an agent survive longer chains without collapsing.</p>
+<p>Engineering implication: <strong>autonomy is not a switch but a continuous curve, and the x-axis is "how long would this take a human"</strong>. Don't ask "should AI do this"; ask "how much human-time is it worth, and is it verifiable," then pick the authority tier. A 50% success rate means <em>the other half fails</em>—so longer tasks need verifiable guardrails, not blind trust.</p>
+
+<div class="diagram">  Task human-time            Recommended authority tier ( rises as curve shifts right )
+  ────────────────────────────────────────────────────────────
+  sec ~ few min   │ ████░░░░░  full auto · glance at the diff
+  few min ~ 1 hr  │ ██████░░░  Plan → approve → execute → review gate
+  1 hr ~ half-day │ ████████░  human splits into verifiable subtasks, delegate piecewise
+  &gt; half-day      │ █████████  human drives architecture, agent fills impl + strong tests
+  ────────────────────────────────────────────────────────────
+  curve shifts one notch right every ~7 months: what you watch today, you may release next year
+  ( but the oracle is never retired )</div>
+
+<h3>Hands-On</h3>
+<p>Turn it into a routing rule: tag each delegated task with an estimated human-time first, then choose autonomy—rather than guessing by "sounds hard or not."</p>
+<pre><code><span class="tag-key">def</span> route(task):
+    h = estimate_human_minutes(task)        <span class="tag-com"># your call: 5 / 30 / 180...</span>
+    verifiable = has_tests(task) <span class="tag-key">or</span> reversible(task)
+    <span class="tag-key">if</span> h &lt;= 5:                 <span class="tag-key">return</span> <span class="tag-gpt">"auto"</span>            <span class="tag-com"># full auto, glance</span>
+    <span class="tag-key">if</span> h &lt;= 60 <span class="tag-key">and</span> verifiable: <span class="tag-key">return</span> <span class="tag-gpt">"plan+review"</span>     <span class="tag-com"># see the plan before go</span>
+    <span class="tag-key">return</span> <span class="tag-gpt">"human-split"</span>      <span class="tag-com"># human splits into verifiable subtasks first</span></code></pre>
+
+<div class="fail">
+<strong>Failure mode</strong>: misreading "the 50% time horizon hit 1 hour" as "tasks under 1 hour are safe to delegate." 50% is a <em>coin flip</em>—running long tasks on full auto without an oracle (tests / reversibility / review) is gambling. The shifting curve lowers <em>supervision frequency</em>; it never cancels <em>verification</em>.
+</div>
+
+<div class="res">
+<strong>Resources</strong> · METR <em>Measuring AI Ability to Complete Long Tasks</em>, <a href="https://metr.org/blog/2025-03-19-measuring-ai-ability-to-complete-long-tasks/" target="_blank">metr.org/blog/2025-03-19</a> ·
+Paper, <a href="https://arxiv.org/abs/2503.14499" target="_blank">arXiv:2503.14499</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Repricing Skills: What's Depreciating, What's Appreciating</h2>
+<div class="claim">Claim: as "producing code" approaches free, the bottleneck moves from writing code to "defining correctness + verifying at scale." The moat shifts from writing fast to judging well.</div>
+
+<h3>Background &amp; Principle</h3>
+<p>This is the issue's most counterintuitive—and most actionable-today—point. When the marginal cost of code generation approaches zero, value moves from the <strong>production end</strong> to two poles: upstream <strong>specification</strong> (turning vague needs into precise, executable intent) and downstream <strong>verification</strong> (judging correctness across a flood of AI output). Day 25 covered how verification is already the real bottleneck of agentic IDEs—scaled to a career, that's a repricing of skills:</p>
+<ul>
+<li><strong>Depreciating</strong>: speed at hand-writing boilerplate, memorized APIs and syntax, single-point debugging tricks, keyboard-shortcut muscle memory. This is "production speed"—the first thing AI eats.</li>
+<li><strong>Appreciating</strong>: turning needs into executable spec / eval; <strong>code review at scale</strong> (reading and judging AI-written code—scarcer than writing it); systems-design taste (architecture errors get amplified by AI at speed); harness and workflow design; decomposing vague problems into verifiable subtasks.</li>
+</ul>
+<p>Counterintuitive corollary: the junior edge built on "speed" gets erased, while the senior premium on "taste / judgment" rises. In Karpathy's Software 3.0 (2025), the human role shifts from "writing instructions" to "gatekeeping within partial autonomy"—your scarcity isn't in output speed, it's in <strong>the bottleneck seat that receives generation and renders the verdict</strong>.</p>
+
+<h3>Hands-On</h3>
+<p>Run an honest time audit to force the migration toward the appreciating zone:</p>
+<pre><code><span class="tag-com"># For one week, tag each block of work; tally the ratios on the weekend</span>
+PROD  = hand-writing impl / boilerplate / API lookup / point debugging  <span class="tag-com"># ← depreciating, ratio↓</span>
+SPEC  = writing requirements / acceptance criteria / evals / decomposing <span class="tag-com"># ← appreciating</span>
+VERIFY= reviewing AI output / reading code / designing tests &amp; guardrails <span class="tag-com"># ← appreciating</span>
+
+<span class="tag-com"># Most senior engineers find PROD still &gt; 50%—that's exactly the transferable dividend</span>
+<span class="tag-com"># Action: each week, actively convert 5% of PROD time into SPEC / VERIFY</span></code></pre>
+
+<div class="fail">
+<strong>Failure mode</strong>: keep investing in the depreciating zone—memorizing more APIs, faster shortcuts, grinding typing speed. That's a head-on collision with AI's core advantage. Equally dangerous: <em>abandoning</em> review ability ("the AI wrote it anyway")—once you can't read AI's output, you degrade from gatekeeper to mere button-pusher.
+</div>
+
+<div class="res">
+<strong>Resources</strong> · Karpathy <em>Software Is Changing (Again) / Software 3.0</em>, <a href="https://www.latent.space/p/s3" target="_blank">latent.space/p/s3</a> ·
+Anthropic <em>Building Effective Agents</em>, <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">anthropic.com/engineering/building-effective-agents</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Make Your Codebase Agent-Ready: Compounding Moves That Invest in Five Years Out</h2>
+<div class="claim">Claim: what determines your AI leverage in five years isn't which model you use—it's how readable and verifiable your codebase and workflow are to an agent.</div>
+
+<h3>Background &amp; Principle</h3>
+<p>An agent's throughput is bounded by its <strong>feedback-loop quality</strong>, not by how smart the model is. Karpathy notes in Software 3.0: to get work done, agents need docs, memory, tests, and clear feedback loops. In other words—<strong>however strong the model, it stalls in an environment with no verification oracle</strong>. So "waiting for a stronger model" is a false strategy; real compounding comes from reshaping the <em>environment</em>—moves that lower your own cost today and become the agent's runway in five years:</p>
+<ul>
+<li><strong>High-coverage, fast test suite</strong>: the agent's most important asset—its self-verification oracle. Without it, the agent can't tell if its change is right and has to wait for you as the human test harness.</li>
+<li><strong>Make tacit knowledge explicit</strong>: use <code>AGENTS.md</code> / <code>CLAUDE.md</code> to write down "how to run tests, what the gotchas are, what the conventions are"—feeding both the agent and new hires.</li>
+<li><strong>Shrink the blast radius</strong>: reversible operations, sandboxes, clear module boundaries. The safer a task is to try-and-fail, the more it can be delegated to higher-autonomy agents (echoing Day 31).</li>
+<li><strong>Decompose vague tasks into verifiable subtasks</strong>: both the output of your spec skill and the prerequisite for agents to run long chains.</li>
+</ul>
+
+<h3>Hands-On</h3>
+<p>A minimal agent-readiness skeleton you can commit into any repo today:</p>
+<pre><code><span class="tag-com"># AGENTS.md  —— turn tacit knowledge into the agent's operating manual</span>
+<span class="tag-claude">## Build &amp; Test</span>
+- install: `pnpm i`   all tests: `pnpm test`   single: `pnpm test &lt;file&gt;`
+- must be green before commit: `pnpm lint &amp;&amp; pnpm test`
+
+<span class="tag-claude">## Architecture boundaries (don't cross)</span>
+- `core/` must not import `web/`; all IO goes through `adapters/`
+
+<span class="tag-claude">## Known gotchas (verification oracle)</span>
+- store all timezones in UTC; money as integer cents, no float
+- changing `schema.sql` requires a matching migration + regression test
+
+<span class="tag-com"># Agent-readiness checklist: each missing item is runway your "stronger model" loses</span>
+<span class="tag-com"># [ ] tests run in one command, &lt;2min   [ ] critical paths covered</span>
+<span class="tag-com"># [ ] dangerous ops reversible / sandboxed   [ ] conventions in AGENTS.md</span></code></pre>
+
+<div class="fail">
+<strong>Failure mode</strong>: betting everything on "the next model" without touching the environment. The model jumps from 50 to 90, but your repo has no fast tests, no docs, and one line takes ten minutes to verify by hand—the agent still inches along, stopping at every step to wait for your confirmation. The model can't pay down the environment's debt.
+</div>
+
+<div class="res">
+<strong>Resources</strong> · Karpathy <em>Software 3.0</em>, on agent infra (docs/memory/tests/feedback), <a href="https://www.latent.space/p/s3" target="_blank">latent.space/p/s3</a> ·
+Anthropic <em>Building Effective Agents</em>, <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">anthropic.com/engineering/building-effective-agents</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// CAPSTONE · Run an "AI Leverage Audit" on Yourself</h3>
+<p>String the four points into one weekend move. The goal isn't to predict the future—it's to measure your <em>current</em> leverage gap and patch the shortest plank.</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>Build a private eval (§1)</strong>: pull 5 changes with "known answer + tests" from git history into a held-out set; run the 2 models/IDEs you use now; log accuracy + tokens + wall-time. Your only trustworthy selection criterion.</li>
+<li><strong>Tag time horizon (§2)</strong>: sort last week's 10 tasks by human-time against the authority ladder; see whether you're "still manual on short tasks, blindly trusting on long ones"—both ends are common mismatches.</li>
+<li><strong>Time audit (§3)</strong>: compute PROD vs SPEC/VERIFY ratio. If PROD &gt; 50%, take one implementation task this week and force yourself to only write spec + review, letting the agent write the impl.</li>
+<li><strong>Patch agent-readiness (§4)</strong>: add an <code>AGENTS.md</code> to the repo you change most and get "one command runs the tests" working. Compounding interest saved for your future self.</li>
+</ol>
+<p style="margin-top:12px">You'll find that "the future of AI coding" isn't a prediction problem for you—it's four <strong>engineering gaps you can act on today</strong>. Leave the model curve to the vendors; hold the leverage curve yourself.</p>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// DEEP THINKING</h3>
+<details><summary>If time horizon doubles every 7 months, that's ~500× in five years—"half-day tasks" become "multi-month tasks." Does that mean §4's agent-readiness investment gets drowned out by general capability and wasted?</summary><div>The opposite. Growth's source is <strong>reliability and error recovery</strong>, both of which depend on external feedback—however good a model is at self-correction, something must first tell it "you're wrong." An agent that can run for three months without a strong test backstop is just compounding errors unsupervised for three months. General capability grows "per-step ability × steps"; agent-readiness grows "verifiability per step"—the latter is a multiplier on the former, not a substitute. Environment investment is one of the few forms of compounding the model curve won't eat.</div></details>
+<details><summary>§1 says public benchmarks carry zero information for personal selection, yet everyone watches SWE-bench at launches. If it's meaningless, why does the whole industry use it?</summary><div>Because it serves a <strong>different decision</strong>. Vendors need a unified, comparable north star that drives iteration—even contaminated, relative ordering within a generation still carries signal. Your decision is "which one in my codebase, on my budget"; the leaderboard's distribution, harness, and cost aren't yours. Analogy: official fuel economy is comparable across cars but won't predict your real mileage in daily traffic.</div></details>
+<details><summary>§3 says speed depreciates, judgment appreciates. But judgment often comes from writing a lot of code by hand. If juniors no longer hand-write, how do they grow the taste to review a PR? Does this generational chain break?</summary><div>A real problem with no clean answer. Taste partly comes from "having written it, hit the pitfalls, debugged it"—exactly what AI erases. Possible compensations: (1) review is itself high-intensity learning—reading lots of good/bad code paired with an AI that explains "why" may not be slower than hand-accumulating; (2) like pilots still practicing manual landings, deliberately keep an "autocomplete off, chew the hard bone" training zone. The risk is real: someone who only hits "accept" never grows taste and degrades into a button-pusher. This demands deliberately designing "intentionally effortful" training rather than sliding down the effort-saving default.</div></details>
+<details><summary>§2's authority ladder tiers by human-time. But some tasks are quick for humans and hard for AI (a one-line change depending on implicit context), and vice versa. Is human-time a good proxy variable?</summary><div>Good-enough but imperfect first-order approximation. It's measurable, comparable, and unified across tasks. But "human–machine difficulty mismatch" is real. That's why §2's routing adds a second axis, <code>verifiable</code>—the real authority decision is a two-dimensional plane of <strong>human-time × verifiability</strong>, not a single axis. Human-time gives you a starting point; calibrate the mismatch cases against your own private eval (§1). That's why the two are used together.</div></details>
+<details><summary>Put the four together: if everyone does agent-readiness and migrates to SPEC/VERIFY, doesn't the moat get erased again? Where's the new scarcity?</summary><div>Scarcity moves up but doesn't vanish, because it's hard to replicate at scale. When everyone can have an agent write code, the bottleneck becomes "<strong>asking the right question</strong>" and "<strong>judging what's worth doing</strong>"—taste, understanding of real needs, anticipating second-order effects—none of which has a benchmark, can be distilled, or learned fast. Another direction is <strong>responsibility and trust</strong>: those willing to put their name on AI output, and those who can design architectures where a swarm of agents collaborates safely. Every prior productivity tool (compilers, frameworks, cloud) failed to make engineers obsolete and instead pushed scarcity to a higher abstraction layer—likely the same here, only the migration is faster and falling behind costs more.</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/" target="_blank">OpenAI · Why we no longer evaluate SWE-bench Verified</a> — a first-hand post-mortem of benchmark contamination and saturation</li>
+<li><a href="https://metr.org/blog/2025-03-19-measuring-ai-ability-to-complete-long-tasks/" target="_blank">METR · Measuring AI Ability to Complete Long Tasks</a> — evidence for time horizon doubling every 7 months</li>
+<li><a href="https://www.latent.space/p/s3" target="_blank">Karpathy · Software Is Changing Again (Software 3.0)</a> — the partial-autonomy and agent-infra framing</li>
+<li><a href="https://arxiv.org/abs/2509.16941" target="_blank">SWE-bench Pro</a> — next-gen coding benchmark using a private held-out set against contamination</li>
+<li><a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">Anthropic · Building Effective Agents</a> — feedback loops and a simplicity-first engineering principle</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 32 · 2026-06-15</footer>
+</div>
+</body></html>

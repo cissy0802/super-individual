@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 32 · AI Coding 的下一个五年 — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.homework{background:linear-gradient(135deg,rgba(255,110,196,0.1),rgba(123,97,255,0.1));border:1px solid rgba(255,110,196,0.3);border-radius:10px;padding:22px 24px;margin:36px 0}
+.homework h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 32 / PHASE 3 · FRONTIER</span>
+<h1>AI Coding 的下一个五年</h1>
+<h2>SWE-bench 局限 · Time Horizon · 能力重定价 · Agent-Ready Codebase</h2>
+<div class="date">2026-06-15 · BigCat</div>
+<p class="pitch">别预测模型，预测你自己的工程杠杆怎么变。</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>谈「AI Coding 的未来」最容易滑进两个坑：「程序员要失业了」的恐慌，和「不过是更好的自动补全」的傲慢。两者都在赌<strong>模型曲线</strong>——而那不是你能控制的变量。这一期换个视角，不预测模型多强，只问四个能落到工程动作的问题：（1）为什么 2026 年连 OpenAI 都<strong>弃用了 SWE-bench Verified</strong>，榜单分数不能当你的选型依据；（2）真正指数增长的指标是 <strong>task time horizon</strong>（任务时长）而非「智商」，它怎么决定你把多长的任务托管给 agent；（3）哪些工程能力在贬值、哪些在升值；（4）怎么现在就把 codebase 改造成 <strong>agent-ready</strong>，把五年后的杠杆变成今天的复利动作。结论先放这里：决定你五年后产出的不是用哪个模型，是你的环境对 agent 的可验证性。</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>别拿 SWE-bench 分数做选型：一个 benchmark 的死亡</h2>
+<div class="claim">论断：coding benchmark 的半衰期正在坍缩；2026 年 SWE-bench Verified 被官方弃用，证明公开榜单对你个人的选型几乎零信息量。</div>
+
+<h3>背景与原理</h3>
+<p>SWE-bench（Jimenez et al., ICLR 2024）是过去两年 coding agent 的事实标尺：从真实 GitHub issue 抽 bug，让 agent 改代码、跑仓库自带测试判对错。后来 OpenAI 联合做了 <strong>SWE-bench Verified</strong>——人工筛过的 500 题子集。但 2026 年 2 月 OpenAI 发文<strong>停止报告 Verified 分数</strong>，理由值得每个工程师记住，因为它们是 benchmark 的通病：</p>
+<ul>
+<li><strong>污染（contamination）</strong>：全部 500 题来自公开 Python 仓库，且早于所有模型的训练截止。模型能直接「回忆」出 gold patch 和问题描述的细节——你以为在测推理，其实在测背诵。</li>
+<li><strong>题目本身是坏的</strong>：OpenAI 复查发现剩余题里超过一半有缺陷——有的测试<em>太窄</em>，把功能正确的提交也判错；有的<em>太宽</em>，要求问题描述里根本没提的额外功能。分数的天花板被噪声锁死。</li>
+<li><strong>construct gap</strong>：「单仓库、有现成测试、几十行 bug-fix」的分布，和你日常的<em>跨服务改动、需求模糊、要自己写测试</em>差很远。榜单高分≠在你的代码库里能干活。</li>
+</ul>
+<p>更隐蔽的：同一个模型换一套 scaffold（harness），SWE-bench 分数能差十几个百分点——<strong>榜单测的是「模型 + harness」的组合，不是模型本身</strong>。Scale AI 的 <em>SWE-bench Pro</em> 用法律上不可被训练的私有代码库做 held-out 集对抗污染，但它仍不是<em>你的</em>分布。结论：公开 benchmark 是厂商的军备竞赛指标，不是你的采购合同。</p>
+
+<h3>实战示例</h3>
+<p>唯一可信的 coding eval 是你自己的、私有的、跟你真实工作同分布的。十分钟就能起一个雏形——从你已合并的 PR 里抽：</p>
+<pre><code><span class="tag-com"># 从自己的 git 历史造 held-out coding eval（私有 = 抗污染）</span>
+<span class="tag-com"># 挑 5 个「已知正解 + 有测试」的历史改动，回滚到改动前的 commit</span>
+<span class="tag-key">for</span> pr <span class="tag-key">in</span> [<span class="tag-gpt">"#412 修复时区 off-by-one"</span>, <span class="tag-gpt">"#455 加分页"</span>, ...]:
+    checkout(pr.base_commit)              <span class="tag-com"># 倒回改动前</span>
+    run_agent(task=pr.issue_title)        <span class="tag-com"># 让被测 agent 重做</span>
+    passed = run(pr.test_files)           <span class="tag-com"># 用当时真实的测试当 oracle</span>
+    log(model, harness, passed, tokens, wall_time)
+<span class="tag-com"># 关键：评 model+harness 组合，且 5 题不外泄、定期换新</span></code></pre>
+<p>跑两三个候选模型 / IDE 各一遍，你得到的是<strong>带成本和耗时</strong>的、对你工作有效的对比——比任何排行榜都值钱。注意把这 5 题当机密，一旦它进了任何公开渠道就被污染作废。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：把公开 benchmark 直接当回归集，按榜单换模型。下一代模型榜单涨 5pp，你在生产里却感觉变笨——因为它在你的 construct（跨文件、弱测试、隐性约束）上根本没涨，甚至因为输出风格变了，旧 harness 的 diff parser 还漏了它。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · OpenAI <em>Why we no longer evaluate SWE-bench Verified</em>, <a href="https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/" target="_blank">openai.com/index/why-we-no-longer-evaluate-swe-bench-verified</a> ·
+SWE-bench Pro, <a href="https://arxiv.org/abs/2509.16941" target="_blank">arXiv:2509.16941</a> ·
+SWE-bench 原始论文, <a href="https://arxiv.org/abs/2310.06770" target="_blank">arXiv:2310.06770</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>在涨的是「任务时长」不是「智商」：按 Time Horizon 分配自主度</h2>
+<div class="claim">论断：真正指数增长的指标是 task time horizon——agent 能独立搞定的任务时长，约每 7 个月翻倍。它比 MMLU 更该决定你把多长的活交给 agent。</div>
+
+<h3>背景与原理</h3>
+<p>METR 在 2025 年的研究（<em>Measuring AI Ability to Complete Long Tasks</em>, arXiv 2503.14499）提出一个更有工程意义的度量：<strong>50% 时间视界</strong>——人类要花多久的任务，模型能以 50% 成功率完成。他们用 170 个任务 + 800 份人类基线标定，发现这个时长过去六年一直指数上升，<strong>约每 7 个月翻一倍</strong>。更关键的是增长的<em>来源</em>：不是 raw reasoning 变强，而是<strong>可靠性、从错误中恢复、工具使用</strong>变好——正是这些让 agent 能撑过更长的链条而不崩。</p>
+<p>工程含义：<strong>自主度不是开关，是一条连续曲线，横轴是「这任务人类要花多久」</strong>。别问「这活该不该交给 AI」，问「它值多少 human-time、可不可验证」，再据此选授权档位。50% 成功率意味着<em>另一半会失败</em>——越长的任务越需要可验证的护栏，而非盲信。</p>
+
+<div class="diagram">  任务的 human-time          推荐授权档位 ( 随曲线右移而升级 )
+  ────────────────────────────────────────────────────────────
+  秒 ~ 几分钟    │ ████░░░░░  全自动 · 事后扫一眼 diff
+  几分钟 ~ 1 小时 │ ██████░░░  Plan → 批准 → 执行 → Review gate
+  1 小时 ~ 半天   │ ████████░  人切分成可验证子任务，逐段托管
+  半天以上       │ █████████  人主导架构，agent 填实现 + 强测试兜底
+  ────────────────────────────────────────────────────────────
+  曲线每 ~7 个月右移一格：今天要盯的，明年可能能放手 ( 但 oracle 不能撤 )</div>
+
+<h3>实战示例</h3>
+<p>把它变成路由规则：给每个委托任务先估一个 human-time 标签，再决定自主度，而不是凭「听起来难不难」拍脑袋。</p>
+<pre><code><span class="tag-key">def</span> route(task):
+    h = estimate_human_minutes(task)        <span class="tag-com"># 你自己来估，5 / 30 / 180...</span>
+    verifiable = has_tests(task) <span class="tag-key">or</span> reversible(task)
+    <span class="tag-key">if</span> h &lt;= 5:                 <span class="tag-key">return</span> <span class="tag-gpt">"auto"</span>            <span class="tag-com"># 全自动，扫一眼</span>
+    <span class="tag-key">if</span> h &lt;= 60 <span class="tag-key">and</span> verifiable: <span class="tag-key">return</span> <span class="tag-gpt">"plan+review"</span>     <span class="tag-com"># 先看计划再放行</span>
+    <span class="tag-key">return</span> <span class="tag-gpt">"human-split"</span>      <span class="tag-com"># 人先拆成可验证子任务</span></code></pre>
+
+<div class="fail">
+<strong>失败模式</strong>：把「50% 时间视界涨到 1 小时」误读成「1 小时内的任务可以放心托管」。50% 是<em>抛硬币</em>——没有 oracle（测试 / 可逆性 / review）兜底就全自动跑长任务，等于在赌。曲线右移降低的是<em>监督频率</em>，从不取消<em>验证</em>。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · METR <em>Measuring AI Ability to Complete Long Tasks</em>, <a href="https://metr.org/blog/2025-03-19-measuring-ai-ability-to-complete-long-tasks/" target="_blank">metr.org/blog/2025-03-19</a> ·
+论文, <a href="https://arxiv.org/abs/2503.14499" target="_blank">arXiv:2503.14499</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>能力的重新定价：哪些在贬值，哪些在升值</h2>
+<div class="claim">论断：当「生产代码」趋近免费，瓶颈从写代码移到「定义正确 + 大规模验证」；护城河从写得快变成判断得准。</div>
+
+<h3>背景与原理</h3>
+<p>这是这一期最反直觉、也最该今天就行动的一点。当 code generation 的边际成本趋近于零，价值就从<strong>生产端</strong>移到两端：上游的 <strong>specification</strong>（把模糊需求变成精确、可执行的意图）和下游的 <strong>verification</strong>（在海量 AI 产出里判断对错）。Day 25 讲过 verification 已是 agentic IDE 的真正瓶颈——放大到职业尺度，就是一次能力重定价：</p>
+<ul>
+<li><strong>正在贬值</strong>：手写样板的速度、背 API 与语法、单点调试小技巧、快捷键肌肉记忆。这些是「生产手速」，AI 最先吃掉的。</li>
+<li><strong>正在升值</strong>：把需求写成可执行 spec / eval；<strong>大规模 code review</strong>（读懂并判断 AI 写的代码，比自己写更稀缺）；系统设计品味（架构错误会被 AI 高速放大）；harness 与工作流设计；把模糊问题分解成可验证子任务。</li>
+</ul>
+<p>反直觉的推论：靠「手速」拉开身位的初级优势被抹平，靠「taste / 判断」的资深溢价反而上升。Karpathy 的 Software 3.0（2025）里，人的角色从「写指令」变成「在 partial autonomy 里把关」——你的稀缺性不在产出速度，在<strong>那个收 generation、做裁决的瓶颈位</strong>。</p>
+
+<h3>实战示例</h3>
+<p>做一次诚实的时间审计，倒逼自己往升值区迁移：</p>
+<pre><code><span class="tag-com"># 连续一周，给每段工作打一个标签，周末算占比</span>
+PROD  = 手写实现 / 样板 / 查 API / 单点调试        <span class="tag-com"># ← 贬值区，目标占比↓</span>
+SPEC  = 写需求 / 定义验收标准 / 写 eval / 拆任务    <span class="tag-com"># ← 升值区</span>
+VERIFY= review AI 产出 / 读代码 / 设计测试与护栏     <span class="tag-com"># ← 升值区</span>
+
+<span class="tag-com"># 多数资深工程师会发现 PROD 仍占 50%+——这正是可迁移的红利</span>
+<span class="tag-com"># 行动：每周把 5% 的 PROD 时间，主动换成 SPEC / VERIFY</span></code></pre>
+
+<div class="fail">
+<strong>失败模式</strong>：继续把精进投在贬值区——背更多 API、练更快的快捷键、卷打字速度。这是在和 AI 的核心优势正面对撞。同样危险的是<em>放弃</em> review 能力（「反正 AI 写的」）——一旦你读不懂 AI 的产出，你就从把关人退化成了纯粹的按钮工。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Karpathy <em>Software Is Changing (Again) / Software 3.0</em>, <a href="https://www.latent.space/p/s3" target="_blank">latent.space/p/s3</a> ·
+Anthropic <em>Building Effective Agents</em>, <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">anthropic.com/engineering/building-effective-agents</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>把 Codebase 改造成 Agent-Ready：为五年后投资的复利动作</h2>
+<div class="claim">论断：决定你五年后 AI 杠杆的，不是用哪个模型，是你的代码库和工作流对 agent 的可读性与可验证性。</div>
+
+<h3>背景与原理</h3>
+<p>agent 的吞吐量受限于 <strong>feedback loop 质量</strong>，而非模型多聪明。Karpathy 在 Software 3.0 里点明：agent 要干活，需要 docs、memory、tests 和清晰的反馈回路。换句话说——<strong>模型再强，也卡在没有 verification oracle 的环境里跑不动</strong>。所以「等更强的模型」是伪策略；真正的复利来自改造<em>环境</em>，这些动作今天就降低你的成本，五年后变成 agent 的 runway：</p>
+<ul>
+<li><strong>高覆盖、快速的测试套件</strong>：agent 最重要的资产，就是它自我验证的 oracle。没有它，agent 无法判断自己改对没有，只能等你当人肉测试。</li>
+<li><strong>把隐性知识显性化</strong>：用 <code>AGENTS.md</code> / <code>CLAUDE.md</code> 写下「怎么跑测试、有哪些坑、约定是什么」——既喂 agent，也喂新人。</li>
+<li><strong>缩小 blast radius</strong>：可逆操作、沙箱、清晰的模块边界。越能安全试错的任务，越能托管给高自主度 agent（呼应 Day 31）。</li>
+<li><strong>把模糊任务拆成可验证的子任务</strong>：这既是你 spec 能力的输出，也是 agent 能跑长链条的前提。</li>
+</ul>
+
+<h3>实战示例</h3>
+<p>一份最小的 agent-readiness 骨架——今天就能 commit 进任何 repo：</p>
+<pre><code><span class="tag-com"># AGENTS.md  —— 把 tacit knowledge 写成 agent 的运行手册</span>
+<span class="tag-claude">## 构建与测试</span>
+- 安装: `pnpm i`   跑全部测试: `pnpm test`   单测: `pnpm test &lt;file&gt;`
+- 提交前必须绿: `pnpm lint &amp;&amp; pnpm test`
+
+<span class="tag-claude">## 架构边界（别跨）</span>
+- `core/` 不许 import `web/`；所有 IO 走 `adapters/`
+
+<span class="tag-claude">## 已知坑（verification oracle）</span>
+- 时区一律用 UTC 存储；钱用整数分，禁用 float
+- 改 `schema.sql` 必须同步加 migration + 回归测试
+
+<span class="tag-com"># Agent-readiness 自检：缺一项，你的「更强模型」就少一截 runway</span>
+<span class="tag-com"># [ ] 测试能在 1 条命令内跑完且 &lt;2min   [ ] 关键路径有测试覆盖</span>
+<span class="tag-com"># [ ] 危险操作可逆 / 有沙箱           [ ] 约定写进了 AGENTS.md</span></code></pre>
+
+<div class="fail">
+<strong>失败模式</strong>：把希望全押在「下一代模型」上而不动环境。模型从 50 分涨到 90 分，可你的 repo 没有快测试、没有文档、改一行要手动验证十分钟——agent 依然只能小步挪，因为它每一步都得停下来等你确认。环境的债，模型还不了。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Karpathy <em>Software 3.0</em> 中关于 agent infra（docs/memory/tests/feedback）的部分, <a href="https://www.latent.space/p/s3" target="_blank">latent.space/p/s3</a> ·
+Anthropic <em>Building Effective Agents</em>, <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">anthropic.com/engineering/building-effective-agents</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// 综合实战 · 给自己做一次「AI 杠杆审计」</h3>
+<p>把这四点串成一个周末动作。目标不是预测未来，是测出你<em>当前</em>的杠杆缺口，再补最短的那块板。</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>建私有 eval（§1）</strong>：从 git 历史抽 5 个「有正解 + 有测试」的改动，做成 held-out 集，跑你现在在用的 2 个模型/IDE，记下准确率 + token + 耗时。这是你唯一可信的选型依据。</li>
+<li><strong>标 time horizon（§2）</strong>：把上周做过的 10 个任务按 human-time 排序，对照授权阶梯，看你是不是在「短任务还在手动、长任务却盲信」——两头都常错配。</li>
+<li><strong>时间审计（§3）</strong>：算 PROD vs SPEC/VERIFY 占比。若 PROD &gt; 50%，挑一件本周的实现活，强迫自己只写 spec + review，让 agent 写实现。</li>
+<li><strong>补 agent-readiness（§4）</strong>：给你最常改的那个 repo 加一份 <code>AGENTS.md</code> + 跑通「一条命令跑测试」。这是给五年后的自己存的复利。</li>
+</ol>
+<p style="margin-top:12px">做完你会发现：「AI Coding 的未来」对你不是一个预测题，是四个<strong>今天就能动的工程缺口</strong>。模型曲线交给厂商,杠杆曲线握在自己手里。</p>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// ENGLISH GLOSSARY</h3>
+<dl>
+<dt>SWE-bench / Verified / Pro</dt><dd>从真实 GitHub issue 构建的 coding agent 基准；Verified 是人工筛过的 500 题子集，2026 年因污染被弃用；Pro 用私有 held-out 集抗污染。</dd>
+<dt>Contamination</dt><dd>测试题进入了训练数据，模型靠背诵而非能力得分，使榜单虚高。公开来源的 benchmark 通病。</dd>
+<dt>Construct Gap</dt><dd>benchmark 测的分布与你真实工作分布的差距。高分≠在你的代码库里能干活。</dd>
+<dt>Time Horizon</dt><dd>METR 度量：模型能以 50% 成功率完成的、以人类耗时计的任务时长。约每 7 个月翻倍。</dd>
+<dt>Verification Oracle</dt><dd>能自动判定产出对错的机制（测试 / 类型 / 可逆性）。agent 自主度的上限由它决定。</dd>
+<dt>Specification</dt><dd>把模糊需求变成精确、可执行意图的能力。生成趋近免费后的升值技能。</dd>
+<dt>Blast Radius</dt><dd>一次操作出错能波及的范围。越小越能安全托管给高自主度 agent。</dd>
+<dt>Agent-Ready</dt><dd>codebase / 工作流对 agent 的可读性与可验证性：快测试、文档、清晰边界、可逆操作。</dd>
+<dt>Partial Autonomy</dt><dd>Karpathy 术语：人留在回路里把关，逐步把任务移交给 agent，而非全自动替换。</dd>
+</dl>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// 深入思考</h3>
+<details><summary>若 time horizon 每 7 月翻倍，五年后约 500 倍，「半天任务」变成「几个月任务」。§4 的 agent-readiness 投资会不会被通用能力淹没、白做？</summary><div>恰恰相反。增长的来源是<strong>可靠性与错误恢复</strong>，这两者都依赖外部反馈——模型再会自我纠错，也要先有 oracle 告诉它「错了」。能跑三个月的 agent 没有强测试兜底，等于无监督地复利错误三个月。通用能力涨的是「单步能力 × 步数」，agent-readiness 涨的是「每步的可验证性」——后者是前者的乘数，不是替代项，是少数不会被模型曲线吃掉的复利。</div></details>
+<details><summary>§1 说公开 benchmark 对个人选型零信息量，但厂商发布会人人都看 SWE-bench。若它无意义，为什么行业还在用？</summary><div>因为它服务的是<strong>不同的决策</strong>。厂商需要一个统一、可比、驱动迭代的北极星——哪怕有污染，同代内的相对排序仍有信号。而你的决策是「在我的代码库、我的预算下选哪个」，公开榜单的分布、harness、成本都不是你的。类比：官方百公里油耗横向可比，却预测不了你每天堵车的真实油耗。</div></details>
+<details><summary>§3 说手速贬值、判断升值。但判断力往往来自大量亲手写代码。新人不再手写，怎么长出 review 的品味？这条代际链会断吗？</summary><div>真问题，没有干净答案。品味部分来自「写过、踩过、debug 过」，而 AI 抹掉的正是这段。可能的代偿：(1) review 本身是高强度学习，大量读好/坏代码配合能解释「为什么」的 AI，未必比慢慢手写慢；(2) 像飞行员仍练手动降落，刻意保留「关掉 autocomplete 啃硬骨头」的训练区。风险真实：只会按「接受」的人品味链会断，退化成按钮工。这要求主动设计「故意吃力」的训练，而非顺省力默认路径滑下去。</div></details>
+<details><summary>§2 按 human-time 分档授权。但有的任务对人快、对 AI 难（依赖隐性上下文的一行改动），反之亦然。human-time 是好的代理变量吗？</summary><div>够用但不完美的一阶近似。它可测、可比、跨任务统一。但「人机难度错位」确实存在。所以 §2 的路由加了第二维 <code>verifiable</code>——真正的授权是 <strong>human-time × 可验证性</strong> 的二维平面，不是单轴。human-time 给你起点，错位案例靠你的私有 eval(§1)去校准，两者配合用。</div></details>
+<details><summary>四点合起来：若人人都做 agent-readiness、都迁移到 SPEC/VERIFY，护城河不就又被抹平？新的稀缺性在哪？</summary><div>稀缺性会上移，但不消失，因为它难以规模化复制。当人人都能让 agent 写代码，瓶颈变成「<strong>问对问题</strong>」和「<strong>判断什么值得做</strong>」——taste、对真实需求的理解、对二阶效应的预判，没有 benchmark、无法蒸馏、无法速成。另一方向是<strong>责任与信任</strong>：愿为 AI 产出署名担责、能设计出让一群 agent 安全协作的架构的人。历次工具普及（编译器、框架、云）都没让工程师失业，而是把稀缺性推向更高抽象层——只是这次迁移更快，慢一步代价更大。</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/" target="_blank">OpenAI · Why we no longer evaluate SWE-bench Verified</a> — benchmark 污染与饱和的一手复盘</li>
+<li><a href="https://metr.org/blog/2025-03-19-measuring-ai-ability-to-complete-long-tasks/" target="_blank">METR · Measuring AI Ability to Complete Long Tasks</a> — time horizon 每 7 月翻倍的实证</li>
+<li><a href="https://www.latent.space/p/s3" target="_blank">Karpathy · Software Is Changing Again (Software 3.0)</a> — partial autonomy 与 agent infra 框架</li>
+<li><a href="https://arxiv.org/abs/2509.16941" target="_blank">SWE-bench Pro</a> — 用私有 held-out 集抗污染的下一代 coding 基准</li>
+<li><a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">Anthropic · Building Effective Agents</a> — feedback loop 与简洁优先的工程原则</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 32 · 2026-06-15</footer>
+</div>
+</body></html>
