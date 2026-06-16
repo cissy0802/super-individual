@@ -46,10 +46,15 @@
 - Day 35: 知识库与 GraphRAG — 文档解析、表格/图表理解、知识图谱构建、GraphRAG
 - Day 36: AI 可观测性 — agent 的 trace/span、prompt 监控、漂移检测、在线评估
 - Day 37: 结构化输出工程 — JSON mode、函数调用可靠性、schema 约束、解析容错
-- Day 38: 模型路由与网关 — 多模型路由策略、fallback、成本-质量路由、LLM gateway 实战
+- Day 38: Agent 错误恢复与韧性 — retry/指数退避、幂等与补偿、checkpoint/断点续跑、超时与熔断、部分失败处理
 - Day 39: 数据 pipeline for AI — embedding 的 ETL、增量索引、数据版本、特征存储
-- Day 40: 端侧与边缘 AI — 设备端推理、量化实战、隐私计算、本地够用的场景
+- Day 40: 流式与中断工程 — streaming UX、增量/部分解析、tool call 流式、中途取消与回滚、首 token 延迟
 - Day 41: AI 测试与 CI/CD — prompt 回归测试、评估流水线、金丝雀发布、影子测试
 - Day 42: 检索质量工程 — 召回 vs 精度、混合检索调优、reranker 训练、检索评估
 - Day 43: AI 辅助数据分析 — 自然语言查 SQL、图表生成、数据故事、分析 agent
 - Day 44: AI 工程的反模式 — 过度工程化、评估缺失、prompt 脆弱性、供应商锁定
+
+## Phase 5 — 生产 agent 的安全与人机协作（明显缺口补齐）
+- Day 45: Agent 权限与数据安全 — 最小权限 tool 边界、数据外泄(exfiltration)防护、沙箱与凭证隔离、审计日志、能力越界检测（区别于 Day 24 的 prompt injection）
+- Day 46: Human-in-the-loop 工程 — 审批门/确认步、可中断与可回退 agent、风险分级 gating、人工接管与交接
+- Day 47: Prompt 即代码 / 版本治理 — prompt registry、git 化管理、A/B 与灰度、回滚、跨模型 prompt 漂移监控
