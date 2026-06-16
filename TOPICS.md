@@ -54,7 +54,7 @@
 - Day 43: AI 辅助数据分析 — 自然语言查 SQL、图表生成、数据故事、分析 agent
 - Day 44: AI 工程的反模式 — 过度工程化、评估缺失、prompt 脆弱性、供应商锁定
 
-## Phase 5 — 生产 agent 的安全与人机协作（明显缺口补齐）
-- Day 45: Agent 权限与数据安全 — 最小权限 tool 边界、数据外泄(exfiltration)防护、沙箱与凭证隔离、审计日志、能力越界检测（区别于 Day 24 的 prompt injection）
-- Day 46: Human-in-the-loop 工程 — 审批门/确认步、可中断与可回退 agent、风险分级 gating、人工接管与交接
-- Day 47: Prompt 即代码 / 版本治理 — prompt registry、git 化管理、A/B 与灰度、回滚、跨模型 prompt 漂移监控
+## Phase 5 — 人机协作与生产化（明显缺口补齐）
+# 注：「Agent 权限与数据安全」（最小权限/数据外泄/沙箱/lethal trifecta）已被 Day 31 personal-ai-safety 覆盖，不再单列。
+- Day 45: Human-in-the-loop 工程 — 异步审批队列、agent 暂停/通知/恢复、置信度路由(auto/ask/deny 阈值)、风险分级、升级与委派、可中断 checkpoint、审批审计（区别于 Day 31 的不可逆动作 gate：这里讲编排与工作流）
+- Day 46: Prompt 即代码 / 版本治理 — prompt registry、git 化管理、A/B 与灰度、回滚、跨模型 prompt 漂移监控
