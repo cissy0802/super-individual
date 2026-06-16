@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 37 · AI Observability — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 37 / PHASE 4 · PRODUCTION</span>
+<h1>AI Observability</h1>
+<h2>Trace / Span · Cost Attribution · Drift Detection · Online Eval</h2>
+<div class="date">2026-06-16 · BigCat</div>
+<p class="pitch">Offline eval tells you whether the model passes a test set; observability tells you what it is doing on live traffic right now.</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>When a traditional service breaks, logs + metrics + error codes pin it down. LLM agents are different: they <strong>can be wrong without erroring</strong> — 200 OK, normal tokens, normal latency, yet the answer is fabricated, the wrong tool was picked, or it took 8 turns to do a 2-turn job. None of that hits an error log. Worse, LLM systems have two failure sources traditional systems don't: <strong>non-determinism</strong> (same input, different output) and <strong>silent provider updates</strong> (you changed no code, the model's behavior changed). Observability turns that invisible internal state into data you can query, alert on, and attribute. This issue covers four things: modeling an agent run as a <strong>trace + span tree</strong>, attributing token cost to each step, detecting <strong>drift</strong> in both inputs and outputs, and running <strong>online evaluation</strong> on live traffic — instead of learning something broke only when users complain.</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>Trace / Span: An Agent's Debug Unit Isn't a Log Line</h2>
+<div class="claim">Claim: an agent run is a span tree, not a stream of logs. Without the tree shape, you can only guess what happened in the middle.</div>
+
+<h3>Background</h3>
+<p>An agent call chain is nested: a top-level user request (trace) wraps multiple LLM calls, each wrapping tool calls, each possibly wrapping sub-agents. Recording this with flat log lines flattens a tree into a column — you can never reconstruct "which tool's output caused the wrong decision next turn." <strong>Distributed tracing</strong>'s span model fits natively: each operation is a <strong>span</strong> (with start/end/attributes), spans link by parent_id into a tree, and the whole tree is a <strong>trace</strong>.</p>
+<p>Since 2024 OpenTelemetry's <strong>GenAI semantic conventions</strong> standardized this: they specify which attributes an LLM call records (model, input/output tokens, prompt, tool calls, provider), so a LangChain agent's span looks identical to a raw OpenAI call — comparable across frameworks and vendors. So don't invent your own field names; align with the <code>gen_ai.*</code> conventions. Langfuse and Arize Phoenix are both built on OTel.</p>
+
+<div class="diagram">trace: "user: refund my order from last week"   (2.4s, 11.2K tok, $0.04)
+│
+├─ span LLM:plan          0.6s  in 1.1K  out 180   [stop=tool_use]
+│
+├─ span tool:search_order 0.3s  → order_id=A123
+│   └─ span db.query      0.2s  SELECT ... WHERE ...
+│
+├─ span LLM:decide        0.5s  in 2.4K  out 90    [stop=tool_use]
+│
+├─ span tool:refund       0.4s  ✗ ERROR: past refund window
+│
+└─ span LLM:respond       0.6s  in 3.0K  out 220   [stop=end_turn]
+        ↑ model reads the tool error, pivots to tell user no refund ✓
+
+      ← without this tree you only see "request OK, 220 tokens",
+        invisible: the refund failure AND the model's self-recovery</div>
+
+<h3>Example</h3>
+<p>Add spans to a homemade harness with the OTel SDK, aligning attribute names to the GenAI conventions:</p>
+<pre><code><span class="tag-key">from</span> opentelemetry <span class="tag-key">import</span> trace
+tracer = trace.get_tracer(<span class="tag-gpt">"my-agent"</span>)
+
+<span class="tag-key">def</span> llm_call(msgs, tools):
+    <span class="tag-key">with</span> tracer.start_as_current_span(<span class="tag-gpt">"llm.generate"</span>) <span class="tag-key">as</span> sp:
+        r = client.messages.create(model=MODEL, messages=msgs, tools=tools, max_tokens=2048)
+        <span class="tag-com"># align to OTel gen_ai.*, don't invent fields</span>
+        sp.set_attribute(<span class="tag-gpt">"gen_ai.request.model"</span>, MODEL)
+        sp.set_attribute(<span class="tag-gpt">"gen_ai.usage.input_tokens"</span>,  r.usage.input_tokens)
+        sp.set_attribute(<span class="tag-gpt">"gen_ai.usage.output_tokens"</span>, r.usage.output_tokens)
+        sp.set_attribute(<span class="tag-gpt">"gen_ai.response.finish_reason"</span>, r.stop_reason)
+        sp.set_attribute(<span class="tag-claude">"app.prompt_version"</span>, PROMPT_VERSION)  <span class="tag-com"># custom: which prompt</span>
+        <span class="tag-key">return</span> r</code></pre>
+<p>The key is that <strong>span nesting must follow the agent's logical structure</strong>: is a tool call a sibling or a child of the llm span? Should a sub-agent's whole tree link back to the parent trace? Get these parent relationships right and the UI shows at a glance "7K of the 11.2K tokens went to a repeated search on turn three."</p>
+
+<div class="fail">
+<strong>Failure mode</strong>: (1) Stuffing whole prompts/completions into span attributes — at high volume your trace storage explodes and you may leak user PII into the observability backend. In the OTel conventions, content capture is <em>opt-in</em>; by default record token counts and metadata only, and sample raw content. (2) Wrapping only the outermost layer in one span — that degenerates into a single log line, i.e. nothing.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · OpenTelemetry <em>GenAI Observability</em>, <a href="https://opentelemetry.io/blog/2026/genai-observability/" target="_blank">opentelemetry.io/blog · genai-observability</a> ·
+Langfuse Tracing data model, <a href="https://langfuse.com/docs/observability/data-model" target="_blank">langfuse.com/docs · data-model</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Cost &amp; Token Attribution: Every Span Keeps a Ledger</h2>
+<div class="claim">Claim: "API cost was $4000 this month" is useless; "the refund agent's third-turn re-search ate 40% of cost" is actionable.</div>
+
+<h3>Background</h3>
+<p>LLM cost isn't uniform like CPU — it concentrates in a few expensive paths: a feature whose prompt missed cache, a query class that triggers an 8-turn agent loop, a long doc re-stuffed into context every time. Aggregate billing hides these; you need to <strong>attribute</strong> cost down the span tree onto dimensions: which feature, which user, which prompt version, which step. The span attributes from §1 feed this directly — each LLM span already records input/output tokens and model; add <code>cache_read</code> tokens plus business dimensions and you can slice cost any way you like.</p>
+<p>Three derived metrics to watch most: <strong>cache hit rate</strong> (higher prefix-caching hits = more saved on repeated prefixes — see Day 15/16), <strong>turns per task</strong> (a spike usually means degraded tool descriptions or the model going in circles), and <strong>p95 of per-task cost</strong> (averages get dragged down by cheap requests; the long tail is what burns money).</p>
+
+<h3>Example</h3>
+<p>Record full cost fields on the span so the backend can aggregate by dimension:</p>
+<pre><code><span class="tag-com"># record enough to reconstruct cost (incl. cache hits)</span>
+u = r.usage
+sp.set_attribute(<span class="tag-gpt">"gen_ai.usage.input_tokens"</span>,  u.input_tokens)
+sp.set_attribute(<span class="tag-gpt">"gen_ai.usage.output_tokens"</span>, u.output_tokens)
+sp.set_attribute(<span class="tag-claude">"gen_ai.usage.cache_read_tokens"</span>,  getattr(u, <span class="tag-gpt">"cache_read_input_tokens"</span>, 0))
+sp.set_attribute(<span class="tag-claude">"gen_ai.usage.cache_write_tokens"</span>, getattr(u, <span class="tag-gpt">"cache_creation_input_tokens"</span>, 0))
+<span class="tag-com"># business dims: the group-by keys for attribution</span>
+sp.set_attribute(<span class="tag-claude">"app.feature"</span>, <span class="tag-gpt">"refund_agent"</span>)
+sp.set_attribute(<span class="tag-claude">"app.user_tier"</span>, user.tier)
+
+<span class="tag-com"># backend query (pseudo-SQL): find the money sinks</span>
+<span class="tag-com"># SELECT app.feature, SUM(cost), AVG(turns), PERCENTILE(cost, 0.95)</span>
+<span class="tag-com"># FROM spans WHERE day = today GROUP BY app.feature ORDER BY 2 DESC</span></code></pre>
+<p>With that table, optimization has targets: low-cache-hit features get a fixed prompt prefix; high-turn features get their tool descriptions checked; p95-tail features get context trimming or model routing. Without attribution, all of this is guesswork.</p>
+
+<div class="fail">
+<strong>Failure mode</strong>: monitoring only total tokens / total spend, with no business dimension. When the bill doubles you know it's "expensive" but not <em>where</em> — and LLM cost anomalies are often a single feature's regression (someone removed a cache breakpoint, or turned a workflow into an agent), drowned out in the total.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Langfuse <em>LLM Observability Overview</em> (cost/usage tracking), <a href="https://langfuse.com/docs/observability/overview" target="_blank">langfuse.com/docs · observability</a> ·
+This series Day 16 Cost Engineering (token economics &amp; caching)
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Drift Detection: Did the Input Change, or the Model?</h2>
+<div class="claim">Claim: an LLM system can degrade without you changing a single line. Drift detection watches "something quietly changed" before users do.</div>
+
+<h3>Background</h3>
+<p>Offline eval is a one-time snapshot: test before release, ship if it passes. But production is alive and drifts in two directions:</p>
+<ul>
+<li><strong>Input / data drift</strong>: phrasing, topics, language distribution shift. Your prompt and few-shots were tuned for the old distribution; accuracy drops on the new one, but the inputs themselves throw no error. Detection borrows from classic ML: embed production inputs, compare to a reference period, compute <strong>PSI</strong> (Population Stability Index) or KS / Jensen-Shannon divergence. Evidently's rule of thumb: <strong>PSI &gt; 0.25</strong> means significant drift.</li>
+<li><strong>Output / behavior drift</strong>: input distribution is stable but output changed — the most insidious kind, usually from a <strong>silent provider model update</strong>, or you changing the prompt/temperature. Monitor structural features of outputs (length, format-compliance rate, refusal rate, tool-selection distribution, JSON parse-failure rate); any sudden shift is a signal.</li>
+</ul>
+<p>Keep the two axes separate: input drift tells you "time to add few-shots / re-test"; output drift while input is stable almost always means <strong>the model or config changed</strong> — the most dangerous failure mode of a hosted API you can't pin.</p>
+
+<div class="diagram">          output stable          output drifted
+        ┌──────────────┬──────────────────────┐
+input    │   ✓ healthy   │  ⚠ model/config moved │
+stable   │              │  (silent provider     │
+         │              │   update? prompt/temp │
+         │              │   changed?)           │
+         ├──────────────┼──────────────────────┤
+input    │ ⚠ new topics/ │  ⚠⚠ double drift      │
+drifted  │  usage flood, │  attribute input      │
+         │  re-test+     │  first, then residual │
+         │  add examples │  output drift         │
+         └──────────────┴──────────────────────┘</div>
+
+<h3>Example</h3>
+<pre><code><span class="tag-key">import</span> numpy <span class="tag-key">as</span> np
+<span class="tag-key">def</span> psi(ref, cur, bins=10):
+    <span class="tag-com"># ref/cur: a scalar distribution for reference vs current period</span>
+    <span class="tag-com"># (e.g. an embedding component, or answer length)</span>
+    q = np.quantile(ref, np.linspace(0, 1, bins+1))
+    q[0], q[-1] = -np.inf, np.inf
+    r = np.histogram(ref, q)[0] / len(ref) + 1e-6
+    c = np.histogram(cur, q)[0] / len(cur) + 1e-6
+    <span class="tag-key">return</span> float(np.sum((c - r) * np.log(c / r)))
+
+<span class="tag-com"># daily compare: embedding projection / answer length / refusal rate</span>
+score = psi(ref_lengths, today_lengths)
+<span class="tag-key">if</span> score &gt; 0.25:                       <span class="tag-com"># Evidently rule of thumb</span>
+    alert(<span class="tag-gpt">f"output length drift PSI={score:.2f}, check model version / prompt change"</span>)</code></pre>
+<p>The cheapest practical "canary": maintain a set of <strong>fixed probe prompts</strong> (20–50 with inputs that never change), run them on a daily schedule, log the outputs. Inputs are constant, so any output change points straight at the model or config — the cheapest sentinel for detecting silent provider updates.</p>
+
+<div class="fail">
+<strong>Failure mode</strong>: (1) Computing drift only in embedding space without tying it to business metrics — PSI fires but quality didn't drop, just noise; drift signals are only meaningful when coupled with downstream quality (online eval scores, user feedback). (2) Wrong reference period: using an anomalous distribution (a promo day) as baseline, then false-alarming forever. Pick a "known healthy," representative window.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Evidently <em>5 methods to detect embedding drift</em>, <a href="https://www.evidentlyai.com/blog/embedding-drift-detection" target="_blank">evidentlyai.com/blog · embedding-drift</a> ·
+Evidently open-source library, <a href="https://github.com/evidentlyai/evidently" target="_blank">github.com/evidentlyai/evidently</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Online Eval: Scoring Real Traffic Continuously</h2>
+<div class="claim">Claim: an offline golden set measures "representative past samples"; online eval measures "live traffic right now" — complementary, neither sufficient alone.</div>
+
+<h3>Background</h3>
+<p>Day 6 / Day 29 covered offline eval: golden set + LLM-as-judge, run before release. The problem: a golden set always lags the real distribution and can't cover production's long-tail cases. <strong>Online evaluation</strong> fills that gap: sample production traces, score them with evaluators in (near-)real-time, and write the scores back as a metric you can alert on, dashboard, and slice. Arize Phoenix calls this online evals — attach an evaluator to incoming traces so each live execution gets scored as it runs.</p>
+<p>Three evaluator types, stacked by increasing cost and decreasing coverage:</p>
+<ul>
+<li><strong>Rules / heuristics</strong> (cheapest, full traffic): is the JSON parseable, are required fields present, did it hit a refusal template, is the length anomalous. Sub-millisecond, run on 100% of traffic.</li>
+<li><strong>LLM-as-judge</strong> (expensive, sampled): relevance, faithfulness (is the answer supported by the retrieved evidence), is it off-topic. Run only on a sampled X% of traffic to control cost.</li>
+<li><strong>Human labels / user feedback</strong> (most expensive, sparsest): 👍/👎, manual spot review. Serves as the calibration baseline for the LLM judge — the judge itself drifts and must be re-aligned with humans periodically.</li>
+</ul>
+<p>The key engineering constraint: online eval must be <strong>async and off the hot path</strong> — never in the user's response critical path. Scoring runs in a background worker after the trace lands; it can be slow, but it must not slow the product.</p>
+
+<h3>Example</h3>
+<pre><code><span class="tag-com"># off-path worker: consume from trace queue, tier-score, write metrics</span>
+<span class="tag-key">def</span> score_trace(trace):
+    out = trace.final_output
+    <span class="tag-com"># 1) rule tier: full traffic, sub-ms</span>
+    emit_metric(<span class="tag-gpt">"eval.json_valid"</span>, is_valid_json(out), trace.id)
+    emit_metric(<span class="tag-gpt">"eval.refused"</span>,   hit_refusal(out),    trace.id)
+    <span class="tag-com"># 2) LLM-judge tier: sample 5% to control cost</span>
+    <span class="tag-key">if</span> sample(0.05):
+        s = judge(question=trace.input, answer=out,
+                  context=trace.retrieved_docs,
+                  rubric=<span class="tag-gpt">"Is the answer fully supported by context? 1-5"</span>)
+        emit_metric(<span class="tag-gpt">"eval.faithfulness"</span>, s, trace.id)
+        <span class="tag-key">if</span> s &lt;= 2: alert(<span class="tag-gpt">f"low-faithfulness answer trace={trace.id}"</span>)</code></pre>
+<p>Put the p50 of <code>eval.faithfulness</code> on a time-series dashboard; a drop is the earliest signal of a quality regression — days before users complain. Overlay the drift axes from §3: if faithfulness drops while the input distribution is stable, the finger points at a model or retrieval change.</p>
+
+<div class="fail">
+<strong>Failure mode</strong>: (1) Treating the LLM judge as ground truth — judges are biased (prefer longer answers, their own model family, position bias, see Day 6), and must be calibrated against human labels periodically, or you're measuring drift with a ruler that drifts. (2) Running the LLM judge on full traffic — eval cost can exceed inference cost itself; sampling is mandatory.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Arize Phoenix <em>Evaluation / Online Evals</em>, <a href="https://arize.com/docs/phoenix/evaluation/llm-evals" target="_blank">arize.com/docs/phoenix · llm-evals</a> ·
+This series Day 6 Eval Engineering (LLM-as-judge debiasing) · Day 29 Eval Beyond Benchmark
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// PUTTING IT TOGETHER · Bolt observability onto your agent (one weekend)</h3>
+<p>Wire the four points into a minimal but complete observability chain on your own agent:</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>Trace it (§1)</strong>: wrap the agent loop with the OpenTelemetry SDK, one span per LLM call / tool call, attributes aligned to <code>gen_ai.*</code>. Self-host Langfuse or Phoenix as the backend (one Docker line to start).</li>
+<li><strong>Attribute cost (§2)</strong>: record input/output/cache tokens + <code>app.feature</code> + <code>app.user_tier</code> on each LLM span. Build a "cost + avg turns + p95 by feature" dashboard.</li>
+<li><strong>Probe drift (§3)</strong>: pick 30 fixed probe prompts, run them daily, log output length / format-compliance / refusal rate, compute PSI, alert at &gt;0.25. This is your sentinel for silent provider updates.</li>
+<li><strong>Online eval (§4)</strong>: an off-path worker runs the rule tier on full traffic and an LLM-judge faithfulness check on 5% sampled traffic; scores go back to the backend. Put faithfulness p50 on a time series.</li>
+<li><strong>One linked board</strong>: cost, turns, drift PSI, faithfulness on one chart. After a week you'll "see" your agent's real running state for the first time — before this it was a black box.</li>
+</ol>
+<p style="margin-top:12px">Doing this builds an instinct: <strong>LLM observability isn't adding monitoring to an LLM, it's turning the three previously-invisible quantities — what the model is thinking, how much it cost, and whether it got worse — into data.</strong> Without it, every judgment about a production agent is a guess.</p>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// GLOSSARY</h3>
+<dl>
+<dt>Span</dt><dd>A single operation unit in a trace (with start/end/attributes). One LLM call or tool call = one span.</dd>
+<dt>Trace</dt><dd>A span tree linked by parent_id, representing one full request's execution path. The agent's debug unit.</dd>
+<dt>OTel GenAI Semantic Conventions</dt><dd>OpenTelemetry's standard attribute set (gen_ai.*) for LLMs/agents, comparable across frameworks and vendors.</dd>
+<dt>Cost Attribution</dt><dd>Attributing token cost down the span tree onto dimensions (feature / user / step) to locate money sinks.</dd>
+<dt>Input / Data Drift</dt><dd>Production input distribution shifting from the reference period. Detected with PSI / KS / JS divergence.</dd>
+<dt>Output / Behavior Drift</dt><dd>Input stable but output changed, often from a silent provider model update or prompt/config change.</dd>
+<dt>PSI</dt><dd>Population Stability Index, measuring distribution shift between two periods. Rule of thumb: 0.25 = significant drift.</dd>
+<dt>Probe Prompt</dt><dd>A fixed-input probe set run daily to isolate model/config-side change (a canary sentinel).</dd>
+<dt>Online Eval</dt><dd>Sampling and scoring production traffic in real time, distinct from a pre-release offline golden set.</dd>
+<dt>Faithfulness</dt><dd>Whether an answer is supported by the retrieved evidence — a core metric of RAG online eval.</dd>
+</dl>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// DEEP THINKING</h3>
+<details><summary>Is the traditional APM (Datadog/Prometheus) metric-log-trace triad enough for LLM systems straight away? What's missing?</summary><div>The skeleton is enough — the trace model already fits agent nesting, which is why OTel could extend into GenAI conventions. But three LLM-specific things are missing: (1) <strong>semantic quality</strong> — APM only tracks "success/failure/latency," LLMs need "is the answer correct," which requires online eval APM doesn't have; (2) <strong>non-determinism</strong> — same input, different output; a single trace can't characterize it, you must look at distributions; (3) <strong>content dimension</strong> — prompt/completion are core signals but also PII risk, needing sampling + redaction. So it's "APM as foundation + an LLM-specific layer on top."</div></details>
+<details><summary>Output drift's likeliest root cause is a silent provider update. But even if you pin the model version it can drift — why?</summary><div>Because pinning a version number doesn't pin many things: (1) under the same version, the provider may tweak system-level safety/format post-processing; (2) your own RAG retrieval corpus keeps updating, so the context fed to the model changes; (3) temperature, max_tokens etc. get changed; (4) the dynamic content embedded in your prompt template (dates, user profile) shifts distribution. This is exactly why probe prompts must <strong>fix the parameters and retrieval too</strong>, to collapse the variable down to "pure model side." The value of observability is helping you do this attribution bisection.</div></details>
+<details><summary>Online eval scores with an LLM-as-judge, but the judge is itself a drifting LLM. Isn't this turtles-all-the-way-down unreliability?</summary><div>It's a real problem but not an infinite loop. The fix is <strong>layered anchoring</strong>: the judge isn't ground truth, it's an amplifier — it scales sparse human labels onto large traffic. So (1) periodically calibrate the judge against a small batch of human labels (compute judge-vs-human agreement; if it drops, redo the judge prompt); (2) use a stronger or at least different-family model for the judge to reduce same-source bias; (3) critical decisions (e.g. retiring a prompt version) can't rest on the judge alone — go back to humans / offline golden set. The judge is good for "trend alerts," not "final verdicts."</div></details>
+<details><summary>The finer cost attribution gets (per-user / per-request), the higher the observability backend's own storage/compute cost. How to weigh this trade-off?</summary><div>Use <strong>tiered sampling + tiered retention</strong>. Metrics (token counts, turns, cost) are low-cardinality aggregates — keep them all, cheap; full traces (prompt/completion) are high-cardinality and bulky — keep a sampled fraction (all error traces + 1% of normal), with a short retention. Tier the attribution dimensions too: low-cardinality dims like feature/tier go onto metrics in full; high-cardinality dims like user_id stay only on sampled traces. Core principle: <strong>aggregate metrics complete, raw content sampled</strong> — 95% of insight comes from aggregates, raw content only matters when debugging a single trace.</div></details>
+<details><summary>If an agent's observability data shows it "took 8 turns to do a 2-turn job" but the final result was correct — is that a bug? Should it alert?</summary><div>It's an "efficiency bug," belongs on a dashboard but not necessarily a real-time alert. Correct result means it isn't broken, but 8 turns means 4× cost and latency, and it exposes fragility (a few more turns and it could hit max_iters and fail). Handling: make "turns per task" a distribution monitor, alert when p95 spikes (usually pointing at degraded tool descriptions, context pollution, or a model update). Don't alert per-instance, alert on the trend. This is exactly the extra dimension observability has over error logs — it catches "didn't error but got dumber," a degradation traditional monitoring is blind to.</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://opentelemetry.io/blog/2026/genai-observability/" target="_blank">OpenTelemetry · GenAI Observability</a> — standard span semantics for LLMs/agents</li>
+<li><a href="https://langfuse.com/docs/observability/data-model" target="_blank">Langfuse · Tracing data model</a> — open-source LLM observability built on OTel</li>
+<li><a href="https://arize.com/docs/phoenix/evaluation/llm-evals" target="_blank">Arize Phoenix · Evaluation</a> — online eval and quality scoring on production traces</li>
+<li><a href="https://www.evidentlyai.com/blog/embedding-drift-detection" target="_blank">Evidently · Embedding Drift Detection</a> — 5 methods for embedding drift, and PSI</li>
+<li><a href="https://github.com/evidentlyai/evidently" target="_blank">evidentlyai/evidently</a> — open-source ML / LLM monitoring framework, 100+ metrics</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 37 · 2026-06-16</footer>
+</div>
+</body></html>

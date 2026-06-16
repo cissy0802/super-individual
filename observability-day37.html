@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 37 · AI 可观测性 — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 37 / PHASE 4 · PRODUCTION</span>
+<h1>AI 可观测性</h1>
+<h2>Trace / Span · Cost Attribution · Drift Detection · Online Eval</h2>
+<div class="date">2026-06-16 · BigCat</div>
+<p class="pitch">offline eval 告诉你模型在测试集上行不行；可观测性告诉你它此刻在生产流量上正在发生什么。</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>传统服务挂了，看 log + metric + 错误码就能定位。LLM agent 不一样：它<strong>不报错也可能错</strong>——返回 200、token 正常、延迟正常，但答案是编的、工具选错了、绕了 8 轮才完成本该 2 轮的事。这些都不会进 error log。更糟的是 LLM 系统有两个传统系统没有的失败源：<strong>非确定性</strong>（同样输入不同输出）和<strong>供应商静默更新</strong>（你没改一行代码，模型行为变了）。可观测性就是把这层「看不见的内部状态」变成可查询、可告警、可归因的数据。这一期讲四件事：怎么把一次 agent run 建模成 <strong>trace + span 树</strong>、怎么把 token 成本归因到每个步骤、怎么检测输入和输出的<strong>漂移</strong>、以及怎么在生产流量上跑<strong>在线评估</strong>——而不是等用户投诉才知道出了事。</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>Trace / Span：agent 的调试单位不是 log 行</h2>
+<div class="claim">论断：一次 agent run 是一棵 span 树，不是一串 log。看不到树形结构，你就只能猜它中间发生了什么。</div>
+
+<h3>背景与原理</h3>
+<p>一个 agent 调用链是嵌套的：顶层一次 user request（trace），里面套着多轮 LLM call、每轮里又套着 tool call、tool 里可能再套子 agent。用扁平的 log 行记录这种结构，等于把一棵树拍扁成一列——你永远拼不回「哪个 tool 的输出导致了下一轮的错误决策」。<strong>分布式追踪</strong>的 span 模型天生适配：每个操作是一个 <strong>span</strong>（带 start/end/属性），span 之间用 parent_id 串成树，整棵树是一个 <strong>trace</strong>。</p>
+<p>2024 年起 OpenTelemetry 的 <strong>GenAI semantic conventions</strong> 把这件事标准化：它规定了 LLM call 该记哪些属性（model、input/output token、prompt、tool call、provider），让一个 LangChain agent 的 span 和一次裸 OpenAI 调用长得一样，跨框架跨厂商可比。这意味着你不该自己发明字段名，而是对齐 <code>gen_ai.*</code> 这套约定——Langfuse、Arize Phoenix 都建在 OTel 之上。</p>
+
+<div class="diagram">trace: "用户问：帮我退掉上周的订单"   (2.4s, 11.2K tok, $0.04)
+│
+├─ span LLM:plan          0.6s  in 1.1K  out 180   [stop=tool_use]
+│
+├─ span tool:search_order 0.3s  → order_id=A123
+│   └─ span db.query      0.2s  SELECT ... WHERE ...
+│
+├─ span LLM:decide        0.5s  in 2.4K  out 90    [stop=tool_use]
+│
+├─ span tool:refund       0.4s  ✗ ERROR: 超过退款窗口
+│
+└─ span LLM:respond       0.6s  in 3.0K  out 220   [stop=end_turn]
+        ↑ 模型读到 tool 的 error，改口告知用户无法退款 ✓
+
+      ← 没有这棵树，你只看到「请求成功、220 token」，
+        完全看不到 refund 失败、也看不到模型如何自我修复</div>
+
+<h3>实战示例</h3>
+<p>用 OTel SDK 给自建 harness 加 span，对齐 GenAI 语义约定的属性名：</p>
+<pre><code><span class="tag-key">from</span> opentelemetry <span class="tag-key">import</span> trace
+tracer = trace.get_tracer(<span class="tag-gpt">"my-agent"</span>)
+
+<span class="tag-key">def</span> llm_call(msgs, tools):
+    <span class="tag-key">with</span> tracer.start_as_current_span(<span class="tag-gpt">"llm.generate"</span>) <span class="tag-key">as</span> sp:
+        r = client.messages.create(model=MODEL, messages=msgs, tools=tools, max_tokens=2048)
+        <span class="tag-com"># 对齐 OTel gen_ai.* 约定，别自创字段名</span>
+        sp.set_attribute(<span class="tag-gpt">"gen_ai.request.model"</span>, MODEL)
+        sp.set_attribute(<span class="tag-gpt">"gen_ai.usage.input_tokens"</span>,  r.usage.input_tokens)
+        sp.set_attribute(<span class="tag-gpt">"gen_ai.usage.output_tokens"</span>, r.usage.output_tokens)
+        sp.set_attribute(<span class="tag-gpt">"gen_ai.response.finish_reason"</span>, r.stop_reason)
+        sp.set_attribute(<span class="tag-claude">"app.prompt_version"</span>, PROMPT_VERSION)  <span class="tag-com"># 自定义：哪版 prompt</span>
+        <span class="tag-key">return</span> r</code></pre>
+<p>关键是 <strong>span 嵌套要跟着 agent 的逻辑结构走</strong>：tool call 是 llm span 的兄弟还是子节点？子 agent 的整棵树要不要 link 回主 trace？把这些 parent 关系建对，你才能在 UI 里一眼看到「11.2K token 里 7K 花在第三轮的重复搜索上」。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）把整个 prompt/completion 原文塞进 span 属性——高流量下追踪存储爆炸，且可能把用户 PII 泄进可观测后端。OTel 约定里 content 记录是<em>可选 opt-in</em> 的，默认应只记 token 数与元数据，原文按比例采样。（2）只在最外层包一个 span——退化成一行 log，等于没做。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · OpenTelemetry <em>GenAI Observability</em>, <a href="https://opentelemetry.io/blog/2026/genai-observability/" target="_blank">opentelemetry.io/blog · genai-observability</a> ·
+Langfuse Tracing 数据模型, <a href="https://langfuse.com/docs/observability/data-model" target="_blank">langfuse.com/docs · data-model</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>成本与 Token 归因：每个 span 都要记账</h2>
+<div class="claim">论断：「这个月 API 花了 $4000」是没用的数字；「退款 agent 的第三轮重搜占了 40% 成本」才是能行动的数字。</div>
+
+<h3>背景与原理</h3>
+<p>LLM 系统的成本不像 CPU 那样均匀——它高度集中在少数昂贵路径上：某个 feature 的 prompt 没用 cache、某类查询触发了 8 轮 agent loop、某个长文档每次都全量塞进 context。聚合账单看不出这些，你需要把成本沿着 span 树<strong>归因（attribution）</strong>到维度上：哪个 feature、哪个 user、哪版 prompt、哪个 step。这正是 §1 的 span 属性能直接喂出来的——每个 LLM span 已经记了 input/output token 和 model，再带上 <code>cache_read</code> token 和业务维度，就能按任意维度切分成本。</p>
+<p>三个最该盯的派生指标：<strong>cache hit 率</strong>（prefix caching 命中越高，重复前缀越省钱——Day 15/16 讲过）、<strong>每任务轮数</strong>（agent loop 轮数突增通常是工具描述退化或模型在绕圈）、<strong>每任务成本分布的 p95</strong>（平均值会被便宜请求拉低，长尾才是烧钱的）。</p>
+
+<h3>实战示例</h3>
+<p>在 span 上记全成本字段，后端就能按维度聚合：</p>
+<pre><code><span class="tag-com"># 记录足以还原成本的字段（含 cache 命中）</span>
+u = r.usage
+sp.set_attribute(<span class="tag-gpt">"gen_ai.usage.input_tokens"</span>,  u.input_tokens)
+sp.set_attribute(<span class="tag-gpt">"gen_ai.usage.output_tokens"</span>, u.output_tokens)
+sp.set_attribute(<span class="tag-claude">"gen_ai.usage.cache_read_tokens"</span>,  getattr(u, <span class="tag-gpt">"cache_read_input_tokens"</span>, 0))
+sp.set_attribute(<span class="tag-claude">"gen_ai.usage.cache_write_tokens"</span>, getattr(u, <span class="tag-gpt">"cache_creation_input_tokens"</span>, 0))
+<span class="tag-com"># 业务维度：成本归因的 group-by 键</span>
+sp.set_attribute(<span class="tag-claude">"app.feature"</span>, <span class="tag-gpt">"refund_agent"</span>)
+sp.set_attribute(<span class="tag-claude">"app.user_tier"</span>, user.tier)
+
+<span class="tag-com"># 后端查询（伪 SQL）：找出烧钱的 feature</span>
+<span class="tag-com"># SELECT app.feature, SUM(cost), AVG(turns), PERCENTILE(cost, 0.95)</span>
+<span class="tag-com"># FROM spans WHERE day = today GROUP BY app.feature ORDER BY 2 DESC</span></code></pre>
+<p>有了这张表，优化就有靶子：cache hit 低的 feature 去固定 prompt 前缀；轮数高的去查工具描述；p95 长尾的去做 context 裁剪或 model routing。没有归因时，这些优化全靠拍脑袋。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：只监控总 token / 总花费，不带业务维度。等账单翻倍时你知道「贵了」，但不知道<em>哪里</em>贵——而 LLM 成本异常往往是单一 feature 的一次回归（比如有人去掉了 cache 断点、或把一个 workflow 误改成 agent），淹没在总量里根本看不见。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Langfuse <em>LLM Observability Overview</em>（含 cost/usage 追踪）, <a href="https://langfuse.com/docs/observability/overview" target="_blank">langfuse.com/docs · observability</a> ·
+本系列 Day 16 Cost Engineering（token 经济学与 caching）
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>漂移检测：输入变了，还是模型变了？</h2>
+<div class="claim">论断：LLM 系统会在你没改任何代码的情况下变差。漂移检测就是在用户发现之前替你盯住「悄悄变了」。</div>
+
+<h3>背景与原理</h3>
+<p>线下 eval 是一次性快照：发版前测一遍，过了就上。但生产环境是活的，会从两个方向漂移：</p>
+<ul>
+<li><strong>输入漂移（input/data drift）</strong>：用户问法、话题、语言分布变了。你的 prompt 和 few-shot 是针对旧分布调的，新分布上准确率下降，但输入本身没报错。检测方法借用经典 ML：把生产输入 embedding 后，和参考期分布比，算 <strong>PSI</strong>（Population Stability Index）或 KS / Jensen-Shannon 散度。Evidently 的经验阈值是 <strong>PSI &gt; 0.25</strong> 视为显著漂移。</li>
+<li><strong>输出漂移（output/behavior drift）</strong>：输入分布没变，输出却变了——最隐蔽的一种，通常源于<strong>供应商静默更新模型</strong>，或你改了 prompt/温度。监控输出的结构特征（长度、格式合规率、拒答率、工具选择分布、JSON 解析失败率），任一突变都是信号。</li>
+</ul>
+<p>两个轴要分开看：输入漂移提示你「该补 few-shot / 重测了」；输出漂移在输入稳定时出现，几乎一定是<strong>模型侧或配置侧变了</strong>——这是 pin 不住版本的托管 API 最危险的失败模式。</p>
+
+<div class="diagram">          输出稳定                输出漂移
+        ┌──────────────┬──────────────────────┐
+输入稳定 │   ✓ 健康      │  ⚠ 模型/配置变了      │
+        │              │  （供应商静默更新?    │
+        │              │   prompt/温度被改?）  │
+        ├──────────────┼──────────────────────┤
+输入漂移 │ ⚠ 新话题/新   │  ⚠⚠ 双重漂移          │
+        │  用法涌入，   │  先归因输入，再看      │
+        │  该重测+补例  │  残余输出漂移          │
+        └──────────────┴──────────────────────┘</div>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-key">import</span> numpy <span class="tag-key">as</span> np
+<span class="tag-key">def</span> psi(ref, cur, bins=10):
+    <span class="tag-com"># ref/cur：参考期 vs 当前期的某个标量分布（如 embedding 某主成分、回答长度）</span>
+    q = np.quantile(ref, np.linspace(0, 1, bins+1))
+    q[0], q[-1] = -np.inf, np.inf
+    r = np.histogram(ref, q)[0] / len(ref) + 1e-6
+    c = np.histogram(cur, q)[0] / len(cur) + 1e-6
+    <span class="tag-key">return</span> float(np.sum((c - r) * np.log(c / r)))
+
+<span class="tag-com"># 每天对比：embedding 投影 / 回答长度 / 拒答率</span>
+score = psi(ref_lengths, today_lengths)
+<span class="tag-key">if</span> score &gt; 0.25:                       <span class="tag-com"># Evidently 经验阈值</span>
+    alert(<span class="tag-gpt">f"输出长度漂移 PSI={score:.2f}，排查模型版本/prompt 变更"</span>)</code></pre>
+<p>实战里最省事的「金丝雀」：维护一组 <strong>固定探针 prompt</strong>（输入永远不变的 20~50 条），每天定时跑、记录输出。输入恒定，所以任何输出变化都直接指向模型或配置——这是检测供应商静默更新最便宜的哨兵。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）只在 embedding 空间算漂移却不接业务指标——PSI 报警了但质量没掉，徒增噪音；漂移信号要和下游质量（在线 eval 分数、用户反馈）联动才有意义。（2）参考期选错：拿促销日的异常分布当 baseline，之后天天误报。参考期要选一段「已知健康」的代表性窗口。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Evidently <em>5 methods to detect embedding drift</em>, <a href="https://www.evidentlyai.com/blog/embedding-drift-detection" target="_blank">evidentlyai.com/blog · embedding-drift</a> ·
+Evidently 开源库, <a href="https://github.com/evidentlyai/evidently" target="_blank">github.com/evidentlyai/evidently</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>在线评估：在真实流量上持续打分</h2>
+<div class="claim">论断：offline golden set 测的是「过去的代表性样本」；online eval 测的是「此刻真实流量」——两者互补，缺一不可。</div>
+
+<h3>背景与原理</h3>
+<p>Day 6 / Day 29 讲过线下 eval：golden set + LLM-as-judge，发版前跑。问题是 golden set 永远滞后于真实分布，且覆盖不到生产里的长尾 case。<strong>在线评估</strong>补上这一段：对生产 trace 采样，实时（或近实时）用 evaluator 打分，把分数作为一条 metric 写回可观测后端，能告警、能 dashboard、能切分。Arize Phoenix 把这能力叫 online evals——evaluator 挂到 incoming trace 上，每条 live execution 边跑边被打分。</p>
+<p>三种 evaluator，按成本递增、覆盖率递减叠加用：</p>
+<ul>
+<li><strong>规则 / 启发式</strong>（最便宜，全量）：JSON 是否可解析、是否含必填字段、是否命中拒答模板、长度是否异常。亚毫秒，100% 流量都能跑。</li>
+<li><strong>LLM-as-judge</strong>（贵，采样）：相关性、忠实度（faithfulness，答案是否被检索证据支撑）、是否答非所问。只对采样的 X% 流量跑，控成本。</li>
+<li><strong>人工标注 / 用户反馈</strong>（最贵，最稀疏）：👍/👎、人工抽审。作为 LLM-judge 的校准基准——judge 自己也会漂，得定期和人工对齐。</li>
+</ul>
+<p>关键工程约束：在线 eval 必须<strong>异步、旁路</strong>，绝不能挡在用户响应的关键路径上。打分跑在 trace 落库之后的后台 worker 里，慢一点没关系，但不能让评估拖慢产品。</p>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-com"># 旁路 worker：从 trace 队列消费，分层打分后写回 metric</span>
+<span class="tag-key">def</span> score_trace(trace):
+    out = trace.final_output
+    <span class="tag-com"># 1) 规则层：全量、亚毫秒</span>
+    emit_metric(<span class="tag-gpt">"eval.json_valid"</span>, is_valid_json(out), trace.id)
+    emit_metric(<span class="tag-gpt">"eval.refused"</span>,   hit_refusal(out),    trace.id)
+    <span class="tag-com"># 2) LLM-judge 层：采样 5%，控成本</span>
+    <span class="tag-key">if</span> sample(0.05):
+        s = judge(question=trace.input, answer=out,
+                  context=trace.retrieved_docs,
+                  rubric=<span class="tag-gpt">"答案是否完全被 context 支撑？1-5"</span>)
+        emit_metric(<span class="tag-gpt">"eval.faithfulness"</span>, s, trace.id)
+        <span class="tag-key">if</span> s &lt;= 2: alert(<span class="tag-gpt">f"低忠实度回答 trace={trace.id}"</span>)</code></pre>
+<p>把 <code>eval.faithfulness</code> 的 p50 做成时间序列 dashboard，它跌了就是质量回归的最早信号——比等用户投诉早几天。再叠加 §3 的漂移轴：如果忠实度跌、同时输入分布稳定，矛头直指模型或检索侧变更。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）把 LLM-judge 当 ground truth——judge 有偏（偏好长答案、自家模型、位置偏置，Day 6 讲过），必须定期用人工标注校准，否则你在用一个会漂的尺子量漂移。（2）全量跑 LLM-judge——评估成本可能反超推理成本本身，采样是必须的。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Arize Phoenix <em>Evaluation / Online Evals</em>, <a href="https://arize.com/docs/phoenix/evaluation/llm-evals" target="_blank">arize.com/docs/phoenix · llm-evals</a> ·
+本系列 Day 6 Eval 工程（LLM-as-judge 去偏）· Day 29 Eval Beyond Benchmark
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// 综合实战 · 给你的 agent 装一层可观测性（一个周末）</h3>
+<p>把四点串成一条最小但完整的可观测链路，装到自己的 agent 上：</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>Trace 化（§1）</strong>：用 OpenTelemetry SDK 包住 agent loop，每个 LLM call / tool call 一个 span，属性对齐 <code>gen_ai.*</code> 约定。后端先用 Langfuse 或 Phoenix 自托管（Docker 一行起）。</li>
+<li><strong>成本归因（§2）</strong>：每个 LLM span 记 input/output/cache token + <code>app.feature</code> + <code>app.user_tier</code>。做一个「按 feature 的成本 + 平均轮数 + p95」dashboard。</li>
+<li><strong>探针漂移（§3）</strong>：选 30 条固定探针 prompt，每天定时跑，记录输出长度 / 格式合规 / 拒答率，算 PSI，&gt;0.25 告警。这是供应商静默更新的哨兵。</li>
+<li><strong>在线 eval（§4）</strong>：旁路 worker 对全量跑规则层、对 5% 采样跑 LLM-judge 忠实度，分数写回后端。把 faithfulness p50 做成时间序列。</li>
+<li><strong>联动看板</strong>：把成本、轮数、漂移 PSI、faithfulness 放一张图。一周后你会第一次「看见」自己 agent 的真实运行状态——而这之前它一直是个黑盒。</li>
+</ol>
+<p style="margin-top:12px">做完你会建立一个直觉：<strong>LLM 系统的可观测性不是给 LLM 加监控，是把「模型在想什么、花了多少、有没有变差」这三个原本不可见的量变成数据。</strong>没有它，你对生产 agent 的所有判断都是猜的。</p>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// ENGLISH GLOSSARY</h3>
+<dl>
+<dt>Span</dt><dd>追踪中的一个操作单元（带 start/end/属性）。一次 LLM call 或 tool call 即一个 span。</dd>
+<dt>Trace</dt><dd>由 parent_id 串成的 span 树，代表一次完整请求的执行路径。agent 的调试单位。</dd>
+<dt>OTel GenAI Semantic Conventions</dt><dd>OpenTelemetry 为 LLM/agent 定义的标准属性集（gen_ai.*），跨框架跨厂商可比。</dd>
+<dt>Cost Attribution</dt><dd>把 token 成本沿 span 树归因到 feature / user / step 等维度，定位烧钱路径。</dd>
+<dt>Input / Data Drift</dt><dd>生产输入分布相对参考期发生偏移。用 PSI / KS / JS 散度检测。</dd>
+<dt>Output / Behavior Drift</dt><dd>输入稳定但输出变了，常因供应商静默更新模型或 prompt/配置变更。</dd>
+<dt>PSI</dt><dd>Population Stability Index，衡量两个分布偏移程度。经验阈值 0.25 视为显著漂移。</dd>
+<dt>Probe Prompt</dt><dd>输入恒定的固定探针集，每天跑以隔离模型/配置侧变化（金丝雀哨兵）。</dd>
+<dt>Online Eval</dt><dd>对生产流量采样并实时打分的评估，区别于发版前的 offline golden set。</dd>
+<dt>Faithfulness</dt><dd>答案是否被检索证据支撑的评估维度，RAG 在线 eval 的核心指标之一。</dd>
+</dl>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// 深入思考</h3>
+<details><summary>传统 APM（Datadog/Prometheus）那套 metric-log-trace 三件套，直接搬到 LLM 系统够用吗？缺了什么？</summary><div>骨架够用——trace 模型本来就适配 agent 的嵌套结构，这也是 OTel 能扩展出 GenAI conventions 的原因。但缺三样 LLM 特有的：(1) <strong>语义质量</strong>——传统 APM 只看「成功/失败/延迟」，LLM 要看「答得对不对」，这需要在线 eval，APM 没有；(2) <strong>非确定性</strong>——同输入不同输出，单条 trace 不能定性，必须看分布；(3) <strong>内容维度</strong>——prompt/completion 是核心信号但又是 PII 风险，需要采样+脱敏策略。所以是「APM 打底 + LLM 专用层叠加」。</div></details>
+<details><summary>输出漂移最可能的根因是供应商静默更新模型。但你 pin 了模型版本号也可能漂——为什么？</summary><div>因为 pin 版本号 pin 不住的东西很多：(1) 同一个版本号下，供应商可能调了 system-level 的安全/格式后处理；(2) 你自己的 RAG 检索库在持续更新，喂给模型的 context 变了；(3) 温度、max_tokens 等参数被改；(4) prompt 模板里嵌的动态内容（日期、用户画像）分布变了。这正是为什么探针 prompt 要<strong>连参数和检索都固定</strong>，才能把变量收敛到「纯模型侧」。可观测性的价值就是帮你做这种归因二分。</div></details>
+<details><summary>在线 eval 用 LLM-as-judge 打分，但 judge 本身也是会漂的 LLM。这是不是套娃式的不可靠？怎么破？</summary><div>是真问题，但不是死循环。破法是<strong>分层锚定</strong>：judge 不是 ground truth，而是放大器——它把稀疏的人工标注放大到大流量上。所以要 (1) 定期用一小批人工标注校准 judge（算 judge 和人的一致率，掉了就重做 judge prompt）；(2) judge 用比被测系统更强或至少不同族的模型，降低同源偏置；(3) 关键决策（比如下线一个 prompt 版本）不能只靠 judge，要回到人工/离线 golden set 复核。judge 适合做「趋势告警」，不适合做「终审判决」。</div></details>
+<details><summary>成本归因做得越细（per-user / per-request），可观测后端自己的存储和计算成本也越高。这个 trade-off 怎么权衡？</summary><div>用<strong>分层采样 + 分层保留</strong>。metric（token 数、轮数、cost）是低基数聚合，全量留、便宜；trace 全文（prompt/completion）是高基数大体积，按比例采样留（如全量错误 trace + 1% 正常 trace），并设短保留期。归因维度也分层：feature/tier 这种低基数维度可全量打在 metric 上；user_id 这种高基数维度只在采样的 trace 上保留。核心原则：<strong>聚合指标要完整,原文要采样</strong>——95% 的洞察来自聚合,原文只在 debug 单条时才需要。</div></details>
+<details><summary>如果一个 agent 的可观测性数据显示它「绕了 8 轮才完成 2 轮的事」,但最终结果是对的。这算 bug 吗?该告警吗?</summary><div>算「效率 bug」,该进 dashboard 但未必实时告警。结果对说明它没坏,但 8 轮意味着 4× 成本和延迟,且暴露了脆弱性(多绕几轮可能就超 max_iters 失败了)。处理:把「每任务轮数」做成分布监控,p95 突增时告警(通常指向工具描述退化、context 污染或模型更新)。单条不告警,趋势告警。这正体现可观测性比 error log 高的维度——它能抓住「没报错但变笨」这类传统监控完全看不见的退化。</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://opentelemetry.io/blog/2026/genai-observability/" target="_blank">OpenTelemetry · GenAI Observability</a> — LLM/agent span 的标准语义约定</li>
+<li><a href="https://langfuse.com/docs/observability/data-model" target="_blank">Langfuse · Tracing 数据模型</a> — 开源 LLM 可观测平台,建于 OTel 之上</li>
+<li><a href="https://arize.com/docs/phoenix/evaluation/llm-evals" target="_blank">Arize Phoenix · Evaluation</a> — 生产 trace 上的在线 eval 与质量打分</li>
+<li><a href="https://www.evidentlyai.com/blog/embedding-drift-detection" target="_blank">Evidently · Embedding Drift Detection</a> — 嵌入漂移的 5 种检测法与 PSI</li>
+<li><a href="https://github.com/evidentlyai/evidently" target="_blank">evidentlyai/evidently</a> — 开源 ML / LLM 监控框架,100+ 指标</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 37 · 2026-06-16</footer>
+</div>
+</body></html>
