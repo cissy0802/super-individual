@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 36 · 大型组织的 Skills Library 治理 — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 36 / PHASE 4 · SKILLS GOVERNANCE</span>
+<h1>大型组织的 Skills Library 治理</h1>
+<h2>准入契约 · 去重 · 安全门 · 度量淘汰</h2>
+<div class="date">2026-06-15 · BigCat</div>
+<p class="pitch">一个共享 skill 库最大的成本不是存储，是每多一个重叠 skill，agent 选错的概率就上升一点。</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>当 agent 从「一个人玩」走到「全组织用」，每个团队都在往一个共享 library 里塞 skill（可复用的能力模块：一段封装好的 prompt + 工具 + 流程）。半年后你会得到一个典型的失败态：300 个 skill，没人知道哪个能用、哪个是僵尸；3 个功能重叠的「发邮件」让 agent 不知道选哪个；某个没人审过的 skill 偷偷能读生产库。这不是「文档太多」，是一个<strong>平台治理</strong>问题叠加一个<strong>AI 特有</strong>问题——Day 4 讲过「工具太多 → agent 选择退化」，组织级 skill 库把这个退化放大成系统性成本。Skill 库本质是一个<strong>内部的能力包注册中心</strong>（像 npm + 服务目录），但它比代码库多两个麻烦：里面的东西<strong>可执行、能触达数据</strong>（是攻击面），而且<strong>消费者是 agent 不是人</strong>（选择由 description 驱动，不是由人读文档）。本期四件工程：准入契约、去重、质量与安全门、度量驱动淘汰。<strong>核心心法：治理的北极星不是「库里有多少 skill」，是「agent 在任一任务上面对的候选集有多小而准」。</strong></p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>准入与目录：skill 是有契约的产品，不是谁都能往里扔</h2>
+<div class="claim">论断：没有准入门，人人乱塞，半年后是一堆无 owner 的孤儿 skill。每个 skill 进库要有<strong>契约</strong>：写给 agent 的 description、owner、schema、安全分级、关联 eval。</div>
+
+<h3>背景与原理</h3>
+<p>把 skill 当一个<strong>有契约的内部产品</strong>，而不是一段随手分享的脚本。进库要过 <strong>intake review</strong>，核心是一份标准化 <strong>manifest</strong>：清晰的 <code>description</code>——注意它是<strong>写给 agent 看、用来做选择的</strong>，不是给人读的文档（回到 Day 4：参数描述 &gt; 名字，描述质量直接决定 agent 选不选对它）；明确的 <code>owner</code>（无主即孤儿）；输入 / 输出 schema；安全分级；以及一个关联的 eval。整个库有<strong>单一事实源(SOT)</strong>的目录：每个 skill 一条记录，带状态（experimental / active / deprecated）。这是 Day 35 prompt registry、Day 33 provenance 的思想上移到「能力」这一层。</p>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-com"># skill manifest：进库的契约（进 git，可 review / diff / 回滚）</span>
+id: send-invoice-email
+description: <span class="tag-gpt">"给客户发带 PDF 发票附件的邮件。用于财务催收场景。"</span>  <span class="tag-com"># 写给 agent 选择</span>
+owner: finance-platform
+inputs:  { to: email, invoice_id: str }
+outputs: { message_id: str }
+risk: high                     <span class="tag-com"># 触达外发 + 客户数据</span>
+permissions: [email.send, invoice.read]   <span class="tag-com"># 最小权限，见 Day 31</span>
+eval_set: invoice-email-golden-30
+status: active                 <span class="tag-com"># experimental / active / deprecated</span></code></pre>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）无准入，人人往共享库塞——半年后没人敢动、没人敢删。（2）description 写给人看而非给 agent 选——agent 选错 skill 的根源往往在这。（3）无 owner——一旦出问题 / 需升级，找不到人，沦为僵尸。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Anthropic <em>Agent Skills</em>, <a href="https://www.anthropic.com/news/agent-skills" target="_blank">anthropic.com/news/agent-skills</a> ·
+本站 Day 4 <em>Tool Use</em>（description &gt; 名字）· Day 35 <em>Prompt 即代码</em>（registry 同源）
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>去重：skill sprawl 会毒化 agent 的工具选择</h2>
+<div class="claim">论断：库越大不是越好，反而越糟。每多一个重叠 skill，agent 面对的候选集变长一点、选错概率高一点。北极星是<strong>候选集小而准</strong>，不是 skill 总数多。</div>
+
+<h3>背景与原理</h3>
+<p>这是 skill 库最反直觉、也最 AI 特有的成本。Day 4 讲过「工具过多 → 选择退化」：3 个都叫「发邮件」的 skill，agent 不知道用哪个，可能选了不带附件的那个把任务搞砸。所以治理的核心动作不是「鼓励多贡献」，是<strong>主动控制重叠</strong>：新 skill 进库时用 embedding 算它和现有 skill 的<strong>语义相似度</strong>，超阈值就告警「疑似重复，请合并或说明差异」；定期扫描全库的能力重叠，合并冗余。更关键的是<strong>暴露给 agent 的不是全库</strong>——而是按当前任务上下文检索出的一个小候选集（skill 的 RAG / 分层 / 命名空间）。<strong>衡量库健康的指标是「平均候选集大小」，不是「skill 数量」。</strong></p>
+
+<div class="diagram">      ┌──────── 全库 300 skills ────────┐
+任务 ─▶│  语义检索 / 命名空间 / 分类过滤   │─▶ 候选集 5–8 个
+      └──────────────────────────────────┘   （小而准，agent 才选得对）
+  新 skill 进库 ──▶ embedding 相似度 vs 现有
+        > 0.9 ? ──▶ 告警「疑似重复」→ 合并 / 说明差异
+  健康指标 = 平均候选集大小 ↓，不是 skill 总数 ↑</div>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）以「库里 skill 多」为荣——KPI 设成贡献数量，直接催生 sprawl。（2）把全库一股脑塞给 agent 的 context——候选集爆炸，选择质量崩塌（Day 4）。（3）重叠 skill 从不合并——三个发邮件长期共存，agent 持续抽卡。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Anthropic <em>Building Effective Agents</em>（工具集设计）, <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">anthropic.com/engineering/building-effective-agents</a> ·
+本站 Day 4 <em>Tool Use</em>（过多 tool 退化）
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>质量与安全门：skill 能跑代码、能读数据，库就是攻击面</h2>
+<div class="claim">论断：skill 不是文档，是<strong>可执行能力</strong>——能调 API、跑代码、读数据。一个坏 skill = 全组织用它的 agent 一起遭殃。这是供应链问题。</div>
+
+<h3>背景与原理</h3>
+<p>共享 skill 库的风险被严重低估：它是个<strong>能力供应链</strong>，一个 skill 被攻陷 / 写错 / 权限过宽，所有引用它的 agent 都被波及（呼应 Day 24 注入、Day 31 lethal trifecta）。三道门。其一，<strong>质量门</strong>：进库 / 升级必须过 eval（在金标任务上证明它真能干活）+ 版本化（改动不能悄悄影响所有调用者，见 Day 35）。其二，<strong>安全门</strong>：manifest 声明所需权限并强制<strong>最小权限</strong>（Day 31），扫描它触达哪些敏感数据、外发面、注入面；高危 skill（能转账 / 删数据 / 外发客户信息）打 <code>risk: high</code>。其三，<strong>权限与可见性</strong>：高危 skill 默认不对全员可见，被 agent 调用前需额外审批（接 Day 34 HITL）。再加 provenance：谁发布、哪版，出事能定位 + 召回（Day 33）。</p>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-key">def</span> promotion_gate(skill):                 <span class="tag-com"># experimental → active 的晋级门</span>
+    <span class="tag-key">assert</span> run_eval(skill) &gt;= skill.baseline      <span class="tag-com"># 质量：金标任务不退步</span>
+    <span class="tag-key">assert</span> declared(skill.permissions)            <span class="tag-com"># 安全：权限必须显式声明</span>
+    <span class="tag-key">assert</span> minimal(skill.permissions)             <span class="tag-com"># 最小权限，拒绝「万能 skill」</span>
+    <span class="tag-key">if</span> skill.risk == <span class="tag-gpt">"high"</span>:
+        skill.visibility = <span class="tag-gpt">"restricted"</span>          <span class="tag-com"># 高危默认限可见 + 调用需审批</span>
+    record_provenance(skill.author, skill.version)   <span class="tag-com"># 出事可召回</span></code></pre>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）skill 无安全分级随便发——一个过宽权限的 skill 成全组织的后门。（2）无版本，改了悄悄影响所有调用者——一次「优化」让几十个 agent 集体行为漂移。（3）高危 skill 默认全员可见——任何 agent 一句话就能触发转账 / 删库。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Anthropic <em>Model Context Protocol</em>（工具/能力的协议层）, <a href="https://modelcontextprotocol.io" target="_blank">modelcontextprotocol.io</a> ·
+本站 Day 31 <em>Personal AI Safety</em>（最小权限 / trifecta）· Day 24 <em>Prompt Injection</em>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>生命周期与可发现性：用度量淘汰僵尸，让对的 skill 被找到</h2>
+<div class="claim">论断：库会无限膨胀，必须有淘汰机制。用<strong>使用度量</strong>驱动废弃，靠数据而非人记得清理——让库只能变健康（Day 33 棘轮思想的延伸）。</div>
+
+<h3>背景与原理</h3>
+<p>没有淘汰，库只增不减，僵尸越堆越多，sprawl 反噬选择质量。<strong>度量驱动淘汰</strong>：每个 skill 记调用量、成功率、最近使用时间；长期零调用 / 成功率持续低 → 自动标 <code>deprecated</code> → 归档。但废弃要<strong>优雅</strong>：给 deprecation 周期 + 迁移指引，别硬删（可能还有 agent 在用，硬删=线上故障）。另一面是<strong>可发现性</strong>——好 skill 没被发现，团队就重复造轮子，又喂回 §2 的 sprawl。所以要有命名规范、标签、语义检索、以及「这个任务该用哪个 skill」的推荐。最后建一个<strong>健康度仪表盘</strong>：活跃 / 僵尸比、重复率、平均候选集大小、高危 skill 数——让库的健康可被一眼看见、可被治理。</p>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-key">def</span> lifecycle_sweep(skill):                <span class="tag-com"># 定期跑，度量驱动淘汰</span>
+    <span class="tag-key">if</span> skill.calls_90d == 0 <span class="tag-key">or</span> skill.success_rate &lt; 0.6:
+        skill.status = <span class="tag-gpt">"deprecated"</span>           <span class="tag-com"># 标记，不硬删</span>
+        notify(skill.owner, <span class="tag-gpt">"migrate_within: 30d"</span>)   <span class="tag-com"># 给迁移周期</span>
+
+<span class="tag-com"># 可发现性：别让团队因找不到而重复造</span>
+suggest = search_skills(task_ctx)            <span class="tag-com"># 语义检索 + 「该用哪个」推荐</span>
+dashboard = { <span class="tag-gpt">"active/zombie"</span>: <span class="tag-gpt">"180/120"</span>, <span class="tag-gpt">"dup_rate"</span>: 0.18, <span class="tag-gpt">"avg_candidates"</span>: 6 }</code></pre>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）只增不减——僵尸堆积，sprawl 反噬，回到 §2 的选择退化。（2）硬删除在用的 skill——破坏线上 agent，引发故障。（3）没有发现机制——团队找不到现成的就自己再造一个，sprawl 的根因之一。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Spotify <em>Backstage</em>（软件目录 / 所有权治理的范式）, <a href="https://backstage.io" target="_blank">backstage.io</a> ·
+本站 Day 33 <em>Legacy 治理</em>（ratchet / 度量驱动）
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// 综合实战 · 给组织的 skill 库装一套治理底盘</h3>
+<p>把四点串成一个落地清单：哪怕你只是个带几个 agent 的小团队，这套也能防止半年后变成「300 个没人敢动的 skill」。</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>Manifest 契约</strong>：每个 skill 标准化 manifest——写给 agent 的 description / owner / schema / 权限 / risk / eval。</li>
+<li><strong>准入门</strong>：新 skill 过 intake——契约完整 + 安全扫描 + 去重检查，三缺一不进库。</li>
+<li><strong>去重哨兵</strong>：embedding 扫语义重叠，超阈值告警合并；盯「平均候选集大小」而非 skill 总数。</li>
+<li><strong>质量 / 安全门</strong>：晋级过 eval + 强制最小权限 + 版本化 + provenance。</li>
+<li><strong>可见性分级</strong>：高危 skill 限可见，被调用前接 HITL 审批（Day 34）。</li>
+<li><strong>度量淘汰</strong>：零调用 / 低成功率 → deprecated → 归档，走迁移周期，别硬删。</li>
+<li><strong>健康仪表盘</strong>：活跃/僵尸比、重复率、平均候选集、高危数——让库健康可见。</li>
+</ol>
+<p style="margin-top:12px">做完这套，你评估任何「我们建了个 agent skill 平台」时会本能地先问：新 skill 怎么准入、重叠怎么防、高危 skill 谁能调、僵尸怎么淘汰——而不是被「我们有 300 个 skill」这种伪指标唬住。<strong>skill 库的价值不在大，在于 agent 每次都能从一个小而准的候选集里选对那一个。</strong></p>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// ENGLISH GLOSSARY</h3>
+<dl>
+<dt>Skill Library / Capability Catalog</dt><dd>组织共享的可复用 agent 能力库，本质是内部能力包注册中心。</dd>
+<dt>Intake Review</dt><dd>skill 进库的准入评审，校验契约完整、安全、无重复。</dd>
+<dt>Skill Manifest</dt><dd>skill 的契约：description（写给 agent）、owner、schema、权限、risk、eval。</dd>
+<dt>Skill Sprawl</dt><dd>skill 无序膨胀，重叠与僵尸堆积，毒化 agent 的工具选择。</dd>
+<dt>Semantic Dedup</dt><dd>用 embedding 相似度检测能力重叠，提示合并。</dd>
+<dt>Candidate Set</dt><dd>某任务下暴露给 agent 的 skill 子集——越小越准，选择质量越高。</dd>
+<dt>Promotion Gate</dt><dd>experimental → active 的晋级门，含 eval + 权限 + 安全校验。</dd>
+<dt>Least-privilege Manifest</dt><dd>skill 显式声明并被强制限制在最小权限内。</dd>
+<dt>Usage-driven Deprecation</dt><dd>按调用量 / 成功率自动标记废弃、归档僵尸 skill。</dd>
+<dt>Discoverability</dt><dd>让对的 skill 被找到（命名 / 标签 / 语义检索 / 推荐），防重复造轮子。</dd>
+</dl>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// 深入思考</h3>
+<details><summary>去重要合并重叠 skill，但「3 个发邮件」可能各有细微差异（一个带附件、一个纯文本、一个 HTML）。盲目合并会丢能力。怎么分「冗余」vs「正当变体」？</summary><div>判据不是「看起来像不像」，是「<strong>agent 能不能从 description 可靠地区分该用哪个</strong>」。如果三个 skill 的差异能在 description 里讲清、且对应真实不同的任务意图（带附件 vs 纯文本是真实场景差异）——那是正当变体，但<strong>应合并成一个带参数的 skill</strong>（<code>send_email(format=...)</code>），而不是三个并列项，这样 agent 选「发邮件」这一个、再填参数，候选集不膨胀。如果差异只是实现细节、agent 根本分不清（两个都叫「发邮件」描述雷同）——那是冗余，留一个。原则：<strong>用户可感知的能力差异 → 参数；实现差异 → 合并。</strong>永远别让 agent 在「语义重叠的并列项」之间抽卡。</div></details>
+<details><summary>准入门会不会扼杀 bottom-up 创新？平台治理的经典张力：管太严没人贡献，管太松就 sprawl。甜点在哪？</summary><div>用<strong>分层准入</strong>化解，而不是一刀切严或松。设 <code>experimental</code> 区：贡献门槛极低（有 manifest 就能进），但<strong>默认不进 agent 的候选集</strong>、不对全员可见、不保证维护——让创新自由发生。只有当一个 experimental skill 攒够使用量 / 过了质量+安全门，才晋级 <code>active</code> 进入主候选集。这样底层创新不被卡，而<strong>「能被 agent 默认调用」这个特权是挣来的</strong>。甜点不是某个严格度数值，是<strong>把「贡献」和「晋升为默认能力」解耦</strong>：前者宽，后者严。Backstage 这类目录、npm 的 experimental tag 都是这个思路。</div></details>
+<details><summary>使用度量淘汰僵尸——但低频不等于无价值（一年用一次但关键的合规 skill）。纯频率淘汰会误杀，怎么办？</summary><div>纯频率确实是坏指标，会砍掉「低频高价值」的长尾。修法是给淘汰加<strong>价值维度</strong>，不只看频率：（1）owner 可给 skill 打 <code>critical: true</code> 豁免自动淘汰（年度合规 skill 显式保留）；（2）淘汰是<strong>提议而非自动执行</strong>——<code>lifecycle_sweep</code> 只标记 + 通知 owner，由人确认（同 Day 34：让回归提议、人决策）；（3）区分「零调用」和「低调用」——真正零调用 90 天大概率是僵尸，一年一次的 skill 至少有调用记录、不会触发。核心是：<strong>度量驱动的是「引起注意」，不是「自动删除」。</strong>删除这种不可逆动作永远留人确认（Day 31 可逆性）。</div></details>
+<details><summary>候选集要小而准给 agent，但你事先不知道下一个任务需要哪个 skill。怎么动态选子集而不漏掉关键 skill？</summary><div>这本质是个检索问题，和 RAG 同构（Day 10）：用任务上下文对 skill 库做语义检索，取 top-k 进候选集。漏召回的风险用几招压：（1）<strong>分层</strong>——先按命名空间 / 分类粗筛（财务任务不必看到图像 skill），再在域内语义检索，既缩集又降漏召。（2）<strong>高价值 skill 加权 / 常驻</strong>——核心通用 skill 不靠检索碰运气，固定在候选集里。（3）<strong>留升级路径</strong>——agent 在小候选集里找不到合适的，可以触发一次「扩大检索」而非直接失败。和 RAG 一样，这是<strong>召回 vs 精度</strong>的权衡（Day 44 检索质量）：候选集太大伤选择质量，太小伤覆盖，要用真实任务流量去调 k 和分层粒度。</div></details>
+<details><summary>这套 skill 治理，和 Day 4 tool use、Day 33/35 治理、Day 18 MCP 是什么关系？是不是就是「内部 package registry」？</summary><div>它确实是「<strong>包注册中心 / 服务目录</strong>」范式（npm + Backstage）迁移到 agent 能力上，但有两处 AI 特有、不能照搬。和 <strong>Day 4</strong>：Day 4 教你设计<strong>单个</strong>工具（description、schema），本期治理的是<strong>一整个库</strong>的规模问题——单个工具再好，300 个堆一起也会退化。和 <strong>Day 18 MCP</strong>：MCP 是 skill / 工具的<strong>协议与运行载体</strong>，本期是它之上的<strong>治理层</strong>（谁能进、怎么选、何时淘汰）。和 <strong>Day 33/35</strong>：同是工件治理，ratchet / provenance / 风险分级 / eval 门全共用——区别只在对象（代码 / prompt / 能力）。两处不能照搬传统 registry 的地方：<strong>消费者是 agent</strong>（选择由 description + 候选集大小驱动，这是 npm 没有的失败模式），以及<strong>条目可执行且触达数据</strong>（是供应链攻击面，比普通依赖风险更高）。抓住这两点，你就不会把 skill 库当普通代码仓库管。</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://www.anthropic.com/news/agent-skills" target="_blank">Anthropic · Agent Skills</a> — 可复用 agent 能力模块的设计理念</li>
+<li><a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">Anthropic · Building Effective Agents</a> — 工具集设计与 agent-computer interface</li>
+<li><a href="https://modelcontextprotocol.io" target="_blank">Model Context Protocol</a> — skill / 工具的协议与运行载体</li>
+<li><a href="https://backstage.io" target="_blank">Spotify · Backstage</a> — 软件目录 / 所有权治理的成熟范式，skill 库治理的直接类比</li>
+<li><a href="https://abseil.io/resources/swe-book" target="_blank">Software Engineering at Google</a> — 大规模代码所有权与生命周期治理（Ownership 一章）</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 36 · 2026-06-15</footer>
+</div>
+</body></html>

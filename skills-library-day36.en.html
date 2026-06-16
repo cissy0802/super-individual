@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 36 · Governing an Org's Skills Library — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 36 / PHASE 4 · SKILLS GOVERNANCE</span>
+<h1>Governing an Org's Skills Library</h1>
+<h2>Intake Contract · Dedup · Security Gate · Usage-driven Retirement</h2>
+<div class="date">2026-06-15 · BigCat</div>
+<p class="pitch">A shared skill library's biggest cost isn't storage — it's that each overlapping skill nudges up the odds the agent picks the wrong one.</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>When agents move from "one person playing" to "the whole org uses them," every team starts shoving skills into a shared library (reusable capability modules: a packaged prompt + tools + flow). Six months later you get a classic failure state: 300 skills, nobody knows which work or which are zombies; three overlapping "send email" skills leave the agent unsure which to pick; some unreviewed skill quietly reads the production DB. This isn't "too many docs" — it's a <strong>platform-governance</strong> problem stacked on an <strong>AI-specific</strong> one. Day 4 covered "too many tools → agent selection degrades"; an org-scale skill library amplifies that degradation into a systemic cost. A skill library is essentially an <strong>internal capability-package registry</strong> (like npm + a service catalog), but with two extra headaches over a code repo: its contents are <strong>executable and touch data</strong> (an attack surface), and <strong>the consumer is an agent, not a human</strong> (selection is description-driven, not human-reads-docs). Today, four pieces: intake contracts, dedup, quality &amp; security gates, usage-driven retirement. <strong>Core mantra: the north star isn't "how many skills are in the library" — it's "how small and precise is the candidate set the agent faces on any given task."</strong></p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>Intake &amp; Catalog: a skill is a product with a contract, not something anyone dumps in</h2>
+<div class="claim">Claim: with no intake gate, everyone dumps in, and six months on it's a pile of owner-less orphan skills. Each skill needs a <strong>contract</strong>: an agent-facing description, an owner, a schema, a security tier, a linked eval.</div>
+
+<h3>Background &amp; principle</h3>
+<p>Treat a skill as an <strong>internal product with a contract</strong>, not a casually-shared script. Entry passes an <strong>intake review</strong>, centered on a standardized <strong>manifest</strong>: a clear <code>description</code> — note it's <strong>written for the agent to make a choice</strong>, not human docs (back to Day 4: description &gt; name; description quality directly decides whether the agent picks it correctly); an explicit <code>owner</code> (owner-less = orphan); input / output schema; a security tier; and a linked eval. The whole library has a <strong>single source of truth (SOT)</strong> catalog: one record per skill with status (experimental / active / deprecated). This is Day 35's prompt registry and Day 33's provenance, lifted up to the "capability" layer.</p>
+
+<h3>In practice</h3>
+<pre><code><span class="tag-com"># skill manifest: the intake contract (in git: reviewable / diffable / rollbackable)</span>
+id: send-invoice-email
+description: <span class="tag-gpt">"Email a customer with a PDF invoice attached. For AR collections."</span>  <span class="tag-com"># for agent selection</span>
+owner: finance-platform
+inputs:  { to: email, invoice_id: str }
+outputs: { message_id: str }
+risk: high                     <span class="tag-com"># external send + customer data</span>
+permissions: [email.send, invoice.read]   <span class="tag-com"># least privilege, see Day 31</span>
+eval_set: invoice-email-golden-30
+status: active                 <span class="tag-com"># experimental / active / deprecated</span></code></pre>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) No intake, everyone dumps into the shared library — six months on nobody dares touch or delete anything. (2) Description written for humans, not for agent selection — the root cause of the agent picking the wrong skill. (3) No owner — when it breaks / needs an upgrade, nobody's there, and it rots into a zombie.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Anthropic <em>Agent Skills</em>, <a href="https://www.anthropic.com/news/agent-skills" target="_blank">anthropic.com/news/agent-skills</a> ·
+This site, Day 4 <em>Tool Use</em> (description &gt; name) · Day 35 <em>Prompt-as-Code</em> (same registry root)
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Dedup: skill sprawl poisons the agent's tool selection</h2>
+<div class="claim">Claim: bigger isn't better — it's worse. Each overlapping skill lengthens the candidate set the agent faces and raises the odds of a wrong pick. The north star is a <strong>small, precise candidate set</strong>, not total skill count.</div>
+
+<h3>Background &amp; principle</h3>
+<p>This is a skill library's most counterintuitive and most AI-specific cost. Day 4 covered "too many tools → selection degrades": three skills all named "send email," and the agent doesn't know which, maybe picking the one without attachments and botching the task. So the core governance move isn't "encourage more contributions" — it's <strong>actively controlling overlap</strong>: when a new skill enters, compute its <strong>semantic similarity</strong> against existing ones via embeddings; over threshold, warn "likely duplicate — merge or state the difference"; periodically scan the whole library for capability overlap and merge redundancy. More importantly, <strong>don't expose the whole library to the agent</strong> — expose a small candidate set retrieved by the current task context (skill RAG / tiering / namespaces). <strong>The health metric is "average candidate-set size," not "skill count."</strong></p>
+
+<div class="diagram">      ┌──────── full library: 300 skills ────────┐
+task ─▶│  semantic retrieval / namespace / filter   │─▶ candidate set: 5–8
+      └────────────────────────────────────────────┘   (small &amp; precise → right pick)
+  new skill intake ──▶ embedding similarity vs existing
+        > 0.9 ? ──▶ warn "likely dup" → merge / state difference
+  health metric = avg candidate-set size ↓, not total count ↑</div>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) Taking pride in "many skills" — a KPI of contribution count directly breeds sprawl. (2) Dumping the whole library into the agent's context — the candidate set explodes and selection quality collapses (Day 4). (3) Never merging overlapping skills — three email skills coexist forever and the agent keeps gambling.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Anthropic <em>Building Effective Agents</em> (tool-set design), <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">anthropic.com/engineering/building-effective-agents</a> ·
+This site, Day 4 <em>Tool Use</em> (too-many-tools degradation)
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Quality &amp; Security Gates: skills run code &amp; read data — the library is an attack surface</h2>
+<div class="claim">Claim: a skill isn't a doc, it's an <strong>executable capability</strong> — it calls APIs, runs code, reads data. One bad skill = every agent in the org that uses it is hit. This is a supply-chain problem.</div>
+
+<h3>Background &amp; principle</h3>
+<p>The risk of a shared skill library is badly underrated: it's a <strong>capability supply chain</strong>; one skill compromised / miswritten / over-privileged hits every agent that references it (echoing Day 24 injection, Day 31 lethal trifecta). Three gates. One, the <strong>quality gate</strong>: intake / upgrade must pass an eval (proving it actually does the job on golden tasks) + versioning (changes can't silently affect all callers, see Day 35). Two, the <strong>security gate</strong>: the manifest declares required permissions and enforces <strong>least privilege</strong> (Day 31); scan which sensitive data it touches, its egress surface, its injection surface; tag high-risk skills (can transfer money / delete data / send customer info) as <code>risk: high</code>. Three, <strong>permissions &amp; visibility</strong>: high-risk skills aren't visible to everyone by default, and need extra approval before an agent can call them (into Day 34 HITL). Plus provenance: who published, which version — locate &amp; recall on incident (Day 33).</p>
+
+<h3>In practice</h3>
+<pre><code><span class="tag-key">def</span> promotion_gate(skill):                 <span class="tag-com"># experimental → active promotion gate</span>
+    <span class="tag-key">assert</span> run_eval(skill) &gt;= skill.baseline      <span class="tag-com"># quality: no regress on golden tasks</span>
+    <span class="tag-key">assert</span> declared(skill.permissions)            <span class="tag-com"># security: permissions explicit</span>
+    <span class="tag-key">assert</span> minimal(skill.permissions)             <span class="tag-com"># least privilege, reject "do-everything skill"</span>
+    <span class="tag-key">if</span> skill.risk == <span class="tag-gpt">"high"</span>:
+        skill.visibility = <span class="tag-gpt">"restricted"</span>          <span class="tag-com"># high-risk: restricted + call needs approval</span>
+    record_provenance(skill.author, skill.version)   <span class="tag-com"># recallable on incident</span></code></pre>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) Skills shipped with no security tier — one over-privileged skill becomes the org's backdoor. (2) No versioning, a change silently affects all callers — one "optimization" drifts the behavior of dozens of agents at once. (3) High-risk skills visible to everyone by default — any agent can trigger a transfer / DB-drop with one sentence.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Anthropic <em>Model Context Protocol</em> (the protocol layer for tools/capabilities), <a href="https://modelcontextprotocol.io" target="_blank">modelcontextprotocol.io</a> ·
+This site, Day 31 <em>Personal AI Safety</em> (least privilege / trifecta) · Day 24 <em>Prompt Injection</em>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Lifecycle &amp; Discoverability: retire zombies by metrics, let the right skill be found</h2>
+<div class="claim">Claim: a library grows without bound — you need a retirement mechanism. Drive deprecation by <strong>usage metrics</strong>, by data not human memory — so the library can only get healthier (an extension of Day 33's ratchet).</div>
+
+<h3>Background &amp; principle</h3>
+<p>Without retirement, a library only grows; zombies pile up and sprawl bites selection quality. <strong>Usage-driven retirement</strong>: each skill records call count, success rate, last-used time; long-term zero calls / persistently low success → auto-mark <code>deprecated</code> → archive. But deprecation must be <strong>graceful</strong>: a deprecation window + migration guidance, no hard delete (an agent may still use it; hard-delete = production incident). The other side is <strong>discoverability</strong> — if a good skill isn't found, teams reinvent the wheel, feeding §2's sprawl. So you need naming conventions, tags, semantic search, and "which skill for this task" recommendations. Finally, a <strong>health dashboard</strong>: active/zombie ratio, duplication rate, average candidate-set size, high-risk count — making library health visible at a glance and governable.</p>
+
+<h3>In practice</h3>
+<pre><code><span class="tag-key">def</span> lifecycle_sweep(skill):                <span class="tag-com"># run periodically, usage-driven retirement</span>
+    <span class="tag-key">if</span> skill.calls_90d == 0 <span class="tag-key">or</span> skill.success_rate &lt; 0.6:
+        skill.status = <span class="tag-gpt">"deprecated"</span>           <span class="tag-com"># mark, don't hard-delete</span>
+        notify(skill.owner, <span class="tag-gpt">"migrate_within: 30d"</span>)   <span class="tag-com"># give a migration window</span>
+
+<span class="tag-com"># discoverability: don't let teams rebuild because they can't find it</span>
+suggest = search_skills(task_ctx)            <span class="tag-com"># semantic search + "which to use" recommendation</span>
+dashboard = { <span class="tag-gpt">"active/zombie"</span>: <span class="tag-gpt">"180/120"</span>, <span class="tag-gpt">"dup_rate"</span>: 0.18, <span class="tag-gpt">"avg_candidates"</span>: 6 }</code></pre>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) Only grows, never shrinks — zombies pile up, sprawl bites back, returning to §2's selection degradation. (2) Hard-deleting a skill still in use — breaks live agents, causes incidents. (3) No discovery mechanism — teams that can't find an existing skill build another, a root cause of sprawl.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Spotify <em>Backstage</em> (the software-catalog / ownership-governance paradigm), <a href="https://backstage.io" target="_blank">backstage.io</a> ·
+This site, Day 33 <em>Legacy Governance</em> (ratchet / metric-driven)
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// Hands-on · install a governance chassis for your org's skill library</h3>
+<p>Chain the four into a checklist: even if you're just a small team with a few agents, this prevents "300 skills nobody dares touch" six months from now.</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>Manifest contract</strong>: standardize each skill's manifest — agent-facing description / owner / schema / permissions / risk / eval.</li>
+<li><strong>Intake gate</strong>: new skills pass intake — complete contract + security scan + dedup check; miss one and it's out.</li>
+<li><strong>Dedup sentinel</strong>: embeddings scan semantic overlap, warn-and-merge over threshold; watch "average candidate-set size," not total count.</li>
+<li><strong>Quality / security gates</strong>: promotion passes eval + enforced least privilege + versioning + provenance.</li>
+<li><strong>Visibility tiers</strong>: high-risk skills restricted, with HITL approval before invocation (Day 34).</li>
+<li><strong>Usage retirement</strong>: zero calls / low success → deprecated → archive, with a migration window, never hard-delete.</li>
+<li><strong>Health dashboard</strong>: active/zombie ratio, duplication rate, average candidate set, high-risk count — make health visible.</li>
+</ol>
+<p style="margin-top:12px">Once you've built this, evaluating any "we built an agent skill platform" makes you instinctively ask: how do new skills get in, how is overlap prevented, who can call high-risk skills, how are zombies retired — instead of being dazzled by a vanity metric like "we have 300 skills." <strong>A skill library's value isn't in being big — it's that the agent can, every time, pick the right one from a small, precise candidate set.</strong></p>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// ENGLISH GLOSSARY</h3>
+<dl>
+<dt>Skill Library / Capability Catalog</dt><dd>An org-shared library of reusable agent capabilities — essentially an internal capability-package registry.</dd>
+<dt>Intake Review</dt><dd>The admission review for a skill, checking contract completeness, security, and non-duplication.</dd>
+<dt>Skill Manifest</dt><dd>A skill's contract: description (agent-facing), owner, schema, permissions, risk, eval.</dd>
+<dt>Skill Sprawl</dt><dd>Unmanaged skill growth — overlap and zombies pile up, poisoning the agent's tool selection.</dd>
+<dt>Semantic Dedup</dt><dd>Detecting capability overlap via embedding similarity, prompting a merge.</dd>
+<dt>Candidate Set</dt><dd>The subset of skills exposed to the agent for a task — smaller &amp; more precise = higher selection quality.</dd>
+<dt>Promotion Gate</dt><dd>The experimental → active gate, with eval + permission + security checks.</dd>
+<dt>Least-privilege Manifest</dt><dd>A skill explicitly declares and is enforced to the minimum permissions.</dd>
+<dt>Usage-driven Deprecation</dt><dd>Auto-marking and archiving zombie skills by call count / success rate.</dd>
+<dt>Discoverability</dt><dd>Letting the right skill be found (naming / tags / semantic search / recommendation), preventing reinvention.</dd>
+</dl>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// Deeper Thinking</h3>
+<details><summary>Dedup merges overlapping skills, but "three email skills" may have subtle differences (one with attachments, one plain-text, one HTML). Blind merging loses capability. How do you tell "redundant" from "legitimate variant"?</summary><div>The test isn't "do they look alike," it's "<strong>can the agent reliably tell from the description which to use</strong>." If the three differences can be stated clearly in the description and map to genuinely different task intents (attachments vs plain-text is a real scenario difference) — that's a legitimate variant, but it <strong>should merge into one parameterized skill</strong> (<code>send_email(format=...)</code>), not three parallel entries, so the agent picks the single "send email" then fills params, and the candidate set doesn't bloat. If the difference is mere implementation detail the agent can't distinguish (two "send email" with near-identical descriptions) — that's redundancy, keep one. Principle: <strong>user-perceivable capability difference → a parameter; implementation difference → merge.</strong> Never make the agent gamble among "semantically overlapping parallel entries."</div></details>
+<details><summary>Won't an intake gate stifle bottom-up innovation? The classic platform tension: too strict and nobody contributes, too loose and you get sprawl. Where's the sweet spot?</summary><div>Resolve it with <strong>tiered intake</strong>, not a blanket strict-or-loose. Have an <code>experimental</code> zone: extremely low contribution bar (a manifest is enough to enter), but <strong>not in the agent's default candidate set</strong>, not visible to everyone, no maintenance guarantee — let innovation happen freely. Only when an experimental skill accrues enough usage / passes the quality + security gates does it get promoted to <code>active</code> and into the main candidate set. So grassroots innovation isn't blocked, and <strong>"being callable by the agent by default" is a privilege that's earned</strong>. The sweet spot isn't a strictness number, it's <strong>decoupling "contributing" from "being promoted to a default capability"</strong>: lenient on the former, strict on the latter. Catalogs like Backstage and npm's experimental tag follow this.</div></details>
+<details><summary>Usage metrics retire zombies — but low-frequency ≠ no-value (a once-a-year but critical compliance skill). Pure frequency-based retirement causes false kills. What then?</summary><div>Pure frequency is a bad metric that'd cut the "low-frequency high-value" tail. The fix adds a <strong>value dimension</strong>, not just frequency: (1) owners can tag a skill <code>critical: true</code> to exempt it from auto-retirement (an annual compliance skill kept explicitly); (2) retirement is a <strong>proposal, not auto-execution</strong> — <code>lifecycle_sweep</code> only marks + notifies the owner, with a human confirming (same as Day 34: let regression propose, humans decide); (3) distinguish "zero calls" from "low calls" — truly zero in 90 days is likely a zombie, while a once-a-year skill at least has call records and won't trip. The core: <strong>metrics drive "draw attention," not "auto-delete."</strong> A deletion — an irreversible action — always keeps a human in the loop (Day 31 reversibility).</div></details>
+<details><summary>The candidate set should be small &amp; precise for the agent, but you don't know in advance which skill the next task needs. How do you pick the subset dynamically without dropping a critical one?</summary><div>This is fundamentally a retrieval problem, isomorphic to RAG (Day 10): semantically retrieve the library against the task context and take top-k into the candidate set. Suppress missed-recall risk with a few moves: (1) <strong>tiering</strong> — coarse-filter by namespace / category first (a finance task needn't see image skills), then semantic-retrieve within the domain, both shrinking the set and cutting misses. (2) <strong>weight / pin high-value skills</strong> — core general skills don't gamble on retrieval, they're fixed in the candidate set. (3) <strong>keep an escalation path</strong> — if the agent can't find a fit in the small set, it can trigger a "broaden retrieval" instead of failing outright. As with RAG, this is a <strong>recall vs precision</strong> trade-off (Day 44 retrieval quality): too large a candidate set hurts selection, too small hurts coverage — tune k and tier granularity with real task traffic.</div></details>
+<details><summary>How does this skill governance relate to Day 4 tool use, Day 33/35 governance, Day 18 MCP? Isn't it just an "internal package registry"?</summary><div>It is indeed the "<strong>package registry / service catalog</strong>" paradigm (npm + Backstage) migrated onto agent capabilities, but with two AI-specific things that can't be copy-pasted. Re <strong>Day 4</strong>: Day 4 teaches designing a <strong>single</strong> tool (description, schema); this issue governs the <strong>scale problem of a whole library</strong> — however good a single tool, pile up 300 and selection degrades. Re <strong>Day 18 MCP</strong>: MCP is the <strong>protocol &amp; runtime carrier</strong> for skills / tools; this issue is the <strong>governance layer</strong> above it (who gets in, how to select, when to retire). Re <strong>Day 33/35</strong>: all are artifact governance — ratchet / provenance / risk-tiering / eval gate are shared; the only difference is the object (code / prompt / capability). Two things you can't copy from a classic registry: <strong>the consumer is an agent</strong> (selection driven by description + candidate-set size, a failure mode npm doesn't have), and <strong>entries are executable and touch data</strong> (a supply-chain attack surface, riskier than ordinary dependencies). Hold these two and you won't manage a skill library like a plain code repo.</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// Further Reading</h3>
+<ul>
+<li><a href="https://www.anthropic.com/news/agent-skills" target="_blank">Anthropic · Agent Skills</a> — the design philosophy of reusable agent capability modules</li>
+<li><a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">Anthropic · Building Effective Agents</a> — tool-set design and the agent-computer interface</li>
+<li><a href="https://modelcontextprotocol.io" target="_blank">Model Context Protocol</a> — the protocol &amp; runtime carrier for skills / tools</li>
+<li><a href="https://backstage.io" target="_blank">Spotify · Backstage</a> — the mature software-catalog / ownership-governance paradigm, a direct analog for skill-library governance</li>
+<li><a href="https://abseil.io/resources/swe-book" target="_blank">Software Engineering at Google</a> — large-scale code ownership &amp; lifecycle governance (the Ownership chapter)</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 36 · 2026-06-15</footer>
+</div>
+</body></html>
