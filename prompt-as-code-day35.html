@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 35 · Prompt 即代码 / 版本治理 — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 35 / PHASE 4 · PROMPT-AS-CODE</span>
+<h1>Prompt 即代码 / 版本治理</h1>
+<h2>Registry · Eval 门 · 灰度与回滚 · 跨模型漂移</h2>
+<div class="date">2026-06-15 · BigCat</div>
+<p class="pitch">Prompt 是你写给某个特定模型的程序——只是它没有版本号、没有测试、没有回滚。这一期把它补上。</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>大多数人的 prompt 是这样活着的：硬编码在某个 <code>f"""..."""</code> 里，散落在十几个文件，谁改的、改了啥、上线哪版全凭记忆；模型一升级，行为悄悄变了也没人知道。这在 demo 阶段没事，一旦 prompt 进了生产、有真实用户依赖它，它就是<strong>系统里最脆弱、却最没被工程化的那块</strong>——一个逗号的改动可能让格式遵从崩掉，而你没有任何 CI 拦得住。本期把软件工程那套「版本 → 测试 → 发布 → 回滚 → 监控」搬到 prompt 上，但要时刻记住一个本质区别：<strong>prompt 不是确定性代码</strong>。它的「正确」是分布性的（同一输入不同输出）、是<strong>对特定模型的</strong>（换模型就变）、退化是<strong>无声的</strong>（不报错，只是质量悄悄掉）。所以照搬 CI/CD 不够，得为这三个特性专门设计。<strong>核心心法：把 prompt 当成有版本、有 eval、能一键回滚的工件，而不是一段字符串。</strong></p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>Prompt 即工件：从散落的字符串到 registry</h2>
+<div class="claim">论断：内联硬编码的 prompt 没有版本、不可追溯、和代码强耦合。第一步是把它抽成有 <code>id@version</code> 的<strong>工件</strong>，代码只引用，不内联。</div>
+
+<h3>背景与原理</h3>
+<p>把 prompt 从代码里抽出来，做成 <strong>prompt registry</strong> 里的一等工件：每条有 <code>id</code>、<code>version</code>、metadata（用途、目标模型、负责人、关联 eval set）。代码里写 <code>get("triage", "v7")</code>，而不是把 600 字的 system prompt 内联进 <code>f-string</code>。三个直接收益：<strong>可追溯</strong>（生产此刻跑的是哪版，一查即知）、<strong>可独立迭代</strong>（改 prompt 不必改代码、不必重发版）、<strong>可被非工程同事编辑</strong>（产品 / 运营改文案，走 registry 而不是提 PR 动源码）。registry 本身进 git——拿到代码评审、diff、历史。但要正视一个 §4 会展开的难点：<strong>prompt 的 diff 不像代码 diff 那样「逻辑对错一眼可判」</strong>，所以 git 只解决「留痕」，「改得好不好」要靠 §2 的 eval。</p>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-com"># registry：prompt 是带版本的工件，不是内联字符串</span>
+<span class="tag-key">from</span> registry <span class="tag-key">import</span> prompts
+
+p = prompts.get(<span class="tag-gpt">"ticket-triage"</span>, version=<span class="tag-gpt">"v7"</span>)   <span class="tag-com"># 钉版本，不取 latest</span>
+msg = p.render(ticket=text, lang=<span class="tag-gpt">"zh"</span>)              <span class="tag-com"># 模板 + 变量</span>
+
+<span class="tag-com"># registry 条目（进 git，可 review / diff / 回滚）</span>
+<span class="tag-com"># id: ticket-triage   version: v7   model: claude-opus-4-8</span>
+<span class="tag-com"># owner: bigcat       eval_set: triage-golden-120   created: 2026-06-15</span></code></pre>
+<p>核心 mental model：<strong>prompt 是代码引用的「外部资源」，不是代码的一部分。</strong>就像你不会把数据库 schema 内联进业务逻辑——prompt 同理，它有自己的生命周期。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）prompt 内联硬编码、散落各处——「改了但说不清改了哪、上线哪版」。（2）无版本号，只有「最新的那个」——回滚时无从找回上一版。（3）prompt 和代码强绑死一起发版——改一个字也要走完整发布流程，迭代被拖死。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Langfuse <em>Prompt Management</em>（版本化 / 部署）, <a href="https://langfuse.com/docs/prompts" target="_blank">langfuse.com/docs/prompts</a> ·
+本站 Day 33 <em>Legacy 代码治理</em>（provenance / 工件溯源同源）
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>测试与发布：prompt 的 CI（但它不确定）</h2>
+<div class="claim">论断：prompt 改动要像代码一样过门——但不能用 <code>assert ==</code>。在 <strong>eval set</strong> 上看聚合，新版不得比 baseline 差；上线走灰度，不全量替换。</div>
+
+<h3>背景与原理</h3>
+<p>LLM 非确定性，单条 case「试了一下 OK」毫无统计意义。正确做法是<strong>回归门</strong>：维护一个 eval set（黄金样本 + LLM-judge + 规则断言，见 Day 6），新 prompt 必须在整个 eval set 上的聚合指标<strong>不低于</strong>当前生产版（这是 Day 33 棘轮思想在 prompt 上的投影——只准变好）。发布同样不能「直接换」：<strong>shadow</strong>（影子运行，不影响用户，只离线比对新旧输出）→ <strong>canary / 灰度</strong>（先切 5% 真实流量，盯指标）→ 全量，任一环节指标掉就停。关键认知：<strong>prompt 的「正确」是分布性的</strong>——一两条 case 过不代表整体好，必须在 eval set 上看聚合分布。</p>
+
+<div class="diagram">新 prompt v8 ──▶ ┌─── EVAL 门（离线，对 baseline v7）───┐
+                 │  golden set · LLM-judge · 规则断言    │
+                 │  聚合指标 &lt; v7 ? ──▶ 拒绝，不发        │
+                 └──────────────┬───────────────────────┘
+                       通过 ──▶ SHADOW：影子跑，只比对不影响用户
+                              ──▶ CANARY：5% 真实流量，盯线上指标
+                                    指标掉 ──▶ 自动停 + 回滚 v7
+                              ──▶ 全量切到 v8（v7 仍可一键回滚）
+  prompt 的「对」是分布性的：看 eval set 聚合，不看单条 case</div>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-key">def</span> eval_gate(new, baseline, eval_set):
+    s_new  = run_eval(new,      eval_set)   <span class="tag-com"># LLM-judge + 规则断言的聚合分</span>
+    s_base = run_eval(baseline, eval_set)
+    <span class="tag-key">if</span> s_new.score &lt; s_base.score:          <span class="tag-com"># 棘轮：不得比生产版差</span>
+        <span class="tag-key">raise</span> Reject(<span class="tag-gpt">f"{s_new.score} &lt; baseline {s_base.score}"</span>)
+    <span class="tag-key">return</span> <span class="tag-gpt">"shadow"</span>                          <span class="tag-com"># 过门 → 进影子，不是直接全量</span>
+
+deploy = { <span class="tag-gpt">"stage"</span>: <span class="tag-gpt">"canary"</span>, <span class="tag-gpt">"traffic"</span>: 0.05, <span class="tag-gpt">"rollback_to"</span>: <span class="tag-gpt">"v7"</span> }</code></pre>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）拿一两条 case 试着 OK 就全量上线——分布性效果被单点蒙蔽。（2）无 baseline 对比，凭「感觉变好了」发布——没有 ratchet 就会悄悄退化。（3）直接全量替换、无灰度无回滚路径——出问题时全体用户一起中招。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Martin Fowler <em>Canary Release</em>, <a href="https://martinfowler.com/bliki/CanaryRelease.html" target="_blank">martinfowler.com/bliki/CanaryRelease</a> ·
+本站 Day 6 <em>Eval 工程</em>（LLM-judge / 回归测试）
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>回滚与可观测：prompt 会「无声退化」</h2>
+<div class="claim">论断：prompt 的退化通常<strong>不报错</strong>——只是质量悄悄掉（更啰嗦、漏 edge case、tone 漂移）。所以必须：生产钉版本、一键回滚、线上指标盯着。</div>
+
+<h3>背景与原理</h3>
+<p>代码 bug 会抛异常，prompt 退化只是「答得差了一点」，没有红灯——这是它最危险的地方。两道防线。其一，<strong>版本钉死 + 一键回滚</strong>：生产引用具体 <code>v7</code>，绝不引用 <code>latest</code>；像 feature flag 一样，发现不对秒回上一版，而不是现场改 prompt 救火。其二，<strong>线上指标</strong>：每个 prompt version 关联一组可量化信号——下游任务成功率、格式 / schema 合规率、用户反馈（点踩 / 重试率）、长度、cost、latency——指标掉到阈值下就告警、必要时自动回滚。这和 Day 34 HITL 的「从生产数据回归阈值」是同一套思路：<strong>让 prompt 的质量变成可监控、可回归的量，而不是凭感觉。</strong></p>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-com"># 生产钉版本 + 指标守门 + 自动回滚</span>
+LIVE = <span class="tag-gpt">"v7"</span>                              <span class="tag-com"># 永远钉具体版本，不要 latest</span>
+
+<span class="tag-key">def</span> on_metrics(ver, m):
+    <span class="tag-key">if</span> m.schema_ok &lt; 0.95 <span class="tag-key">or</span> m.thumbs_down &gt; 0.08:   <span class="tag-com"># 无声退化的可见代理</span>
+        alert(<span class="tag-gpt">f"{ver} 质量掉了"</span>); rollback(to=prev(ver))   <span class="tag-com"># 秒回上一版</span>
+
+<span class="tag-com"># 每版留指标，供对比与回归（呼应 Day 34 审计回归）</span>
+<span class="tag-com"># v6: schema 0.97 / 👎 0.04   v7: schema 0.93 / 👎 0.09 ← 退化</span></code></pre>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）生产引用 <code>latest</code>——上游一改，你的系统跟着无声变，且无法回滚到「改之前」。（2）从没演练过回滚——真出事时手忙脚乱现场改 prompt，越救越乱。（3）只看离线 eval、不看线上指标——eval set 过了不等于真实流量上没退化。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Chip Huyen <em>Building LLM Applications for Production</em>, <a href="https://huyenchip.com/2023/04/11/llm-engineering.html" target="_blank">huyenchip.com/2023/04/11/llm-engineering</a> ·
+本站 Day 34 <em>HITL</em>（指标回归阈值同源）
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>跨模型漂移：同一个 prompt 在不同模型上不是同一个 prompt</h2>
+<div class="claim">论断：prompt 是写给<strong>特定模型</strong>的程序。换模型、甚至模型小版本升级，等于运行时变了——同一 prompt 行为可能漂移。prompt × model 是个矩阵，每格独立 eval。</div>
+
+<h3>背景与原理</h3>
+<p>最反直觉、也最常踩的坑：把 prompt 当成可移植的。但「在 Opus 上调到完美的 prompt」搬到另一个模型（或同模型的下个版本）上，格式遵从、CoT 深度、拒答边界、tone 都可能变——因为你换掉的是<strong>解释这段 prompt 的运行时</strong>。治理上有三条。其一，<strong>把模型升级当依赖升级</strong>：上游出新版，跑一遍回归 eval 再切，别「省事直接升」。其二，<strong>多模型路由场景</strong>（你有 fallback / 成本路由，见 Day 23）——每条路由路径上的 prompt 都要在对应模型上测，别假设 A 上好的 B 上也行。其三，<strong>漂移哨兵</strong>：定期用固定 eval set 跑生产模型，检测「同 prompt 同输入、输出分布是否漂移」——抓上游静默更新（provider 不通知你就换了权重）。</p>
+
+<div class="diagram">          claude-opus-4-8   gpt-class   本地 8B
+triage        eval ✓          eval ?      eval ✗     ← 每格独立测
+summarize     eval ✓          eval ✓      eval ?
+extract       eval ✓          eval ✗      eval ✗
+  · 模型升级 = 依赖升级：整列重跑回归再切
+  · 固定 eval set 定期跑 → 抓「上游静默漂移」</div>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）换模型 / 升版本不重测——「省事直接切」，行为漂移到生产才发现。（2）假设 prompt 可移植——在 A 上的调优默认搬到 B。（3）上游模型静默更新无监控——provider 换了权重，你的输出分布悄悄变了却毫无察觉。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Anthropic <em>Prompt engineering overview</em>（针对模型调优）, <a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview" target="_blank">docs.anthropic.com</a> ·
+本站 Day 23 <em>Personal AI Infra</em>（多模型路由）
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// 综合实战 · 给你的 prompt 资产建一条 prompt-as-code 流水线</h3>
+<p>一周计划：把你最关键的那个生产 prompt，从「埋在代码里的字符串」升级成「有版本、有门、能回滚、被监控」的工件。</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>抽 registry</strong>：把硬编码 prompt 抽成 <code>id@version</code> 工件，代码改成 <code>get(id, version)</code> 引用。</li>
+<li><strong>建 eval set</strong>：攒 50–100 条黄金样本 + LLM-judge + 规则断言，作为回归基线。</li>
+<li><strong>Eval 门</strong>：新版必须在 eval set 上聚合分不低于生产版（棘轮），否则不发。</li>
+<li><strong>灰度发布</strong>：shadow 影子比对 → canary 5% → 全量，每步盯指标。</li>
+<li><strong>Pin + 回滚</strong>：生产钉具体版本，<strong>真演练一次</strong>一键回滚（别等出事才第一次用）。</li>
+<li><strong>线上指标</strong>：每版关联 schema 合规 / 点踩率 / cost / latency，掉了告警。</li>
+<li><strong>跨模型矩阵</strong>：列出 prompt × model，把下次模型升级当依赖升级跑回归；加一个定期 drift 哨兵。</li>
+</ol>
+<p style="margin-top:12px">做完这套，你再看到「我们调了个更好的 prompt」会本能地问：对比的 baseline 是什么、在多大的 eval set 上、灰度了吗、能回滚吗、换模型测了吗——而不是相信「感觉变好了」。<strong>Prompt 是软件的一部分，就该有软件的纪律——只是要为它的「不确定、依赖模型、无声退化」额外设防。</strong></p>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// ENGLISH GLOSSARY</h3>
+<dl>
+<dt>Prompt Registry</dt><dd>集中管理 prompt 工件的库，每条带 id / version / metadata，代码按版本引用。</dd>
+<dt>Prompt-as-Code</dt><dd>把 prompt 当成需版本、测试、发布、回滚的工程工件来治理。</dd>
+<dt>Eval Set / Golden Set</dt><dd>用于回归的黄金样本集，配 LLM-judge + 规则断言衡量聚合质量。</dd>
+<dt>Regression Gate</dt><dd>新版本必须在 eval set 上不低于 baseline 才放行的门（棘轮）。</dd>
+<dt>Shadow Run</dt><dd>影子运行新版，不影响用户，仅离线比对新旧输出。</dd>
+<dt>Canary Release</dt><dd>先切一小部分真实流量验证指标，再全量。</dd>
+<dt>Pinning</dt><dd>生产引用具体版本号而非 latest，避免上游变更无声传导。</dd>
+<dt>Rollback</dt><dd>一键退回上一已知良好版本，像 feature flag。</dd>
+<dt>Prompt Drift</dt><dd>同一 prompt 因模型变更 / 上游静默更新而行为漂移。</dd>
+<dt>Prompt × Model Matrix</dt><dd>prompt 与模型的组合矩阵，每格独立 eval，模型升级当依赖升级。</dd>
+</dl>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// 深入思考</h3>
+<details><summary>prompt 进 git 像代码一样 review——但 reviewer 怎么判断一个 prompt 改动「更好」？代码有逻辑对错，prompt 只有分布性效果。</summary><div>这正是 prompt-as-code 和真·代码的根本分歧：<strong>prompt 的 diff 不可靠地人工判优</strong>。所以 review 的重心要转移——人审 prompt diff 主要看「有没有引入明显风险」（注入面、越权指令、PII、与 policy 冲突），<strong>「改得好不好」不交给人眼，交给 eval 门</strong>。换句话说，代码 review 里「正确性」那部分，在 prompt 这边被 §2 的 eval set 接管了；人只保留「安全 / 合规 / 风格」的判断。如果你发现自己在 PR 里争论「这个措辞是不是更好」，那是该让 eval 数据说话的信号，不是该靠 reviewer 直觉的。</div></details>
+<details><summary>eval set 是整套治理的根基，但它会过拟合——你对着它调 prompt，它就不再代表真实分布。怎么防 eval set 腐化？</summary><div>真实且严重，机制等同 ML 的训练/测试集泄漏。三个对策：（1）<strong>eval set 持续从生产采样补充</strong>，尤其把线上出问题的 case 回流进来——让它跟着真实分布走，而不是一个静态化石。（2）<strong>留一个 holdout</strong>：日常调优用的 dev set 和最终把关的 test set 分开，test set 不参与迭代、只在发布前看一次。（3）<strong>定期审视 eval set 的覆盖</strong>：它是否还代表当前用户在问的东西？过拟合的根因往往是 eval set 太小太旧——它该像数据集一样有自己的版本和更新节奏，而不是建一次用一年。</div></details>
+<details><summary>灰度 / 回滚是从代码部署借来的，但 prompt 的「指标掉了」常常滞后且嘈杂，等你发现已经服务了很多用户。怎么更快发现退化？</summary><div>关键是把检测<strong>前移到上线之前 + 用更快的代理信号</strong>。前移：shadow 阶段就能离线发现大部分退化（不影响用户、立刻可比对），别等 canary 的线上反馈。代理信号：用户点踩 / 留存这类「真指标」滞后又嘈杂，但<strong>可机器即时算的代理</strong>不滞后——schema/格式合规率、输出长度分布、拒答率、是否调用了预期 tool、与旧版输出的语义距离。这些能在请求级实时告警。真指标用来「确认」，代理信号用来「抢跑」。canary 的流量也该按风险调——高风险场景 1% 起、设更紧的自动回滚阈值。</div></details>
+<details><summary>跨模型矩阵 prompt × model，模型一多组合爆炸。个人 / 小团队负担得起吗？哪里该省？</summary><div>负担不起全矩阵，也不需要。省的办法是<strong>按风险和流量裁剪</strong>：只对「高流量 × 高风险」的 prompt 做全模型矩阵；长尾 prompt 只测主力模型，fallback 模型留一个小 smoke set 兜底即可。另一个省法：<strong>别养太多模型</strong>——prompt×model 爆炸的根因常是模型选型太散，收敛到 1 主 1 备能砍掉大半组合。真正不能省的是<strong>主力模型的升级回归</strong>：那一列每次 provider 出新版都必须重跑，因为它覆盖你绝大多数流量。把预算花在「高流量列 + 升级回归」上，其余抽样。</div></details>
+<details><summary>这套和 Day 33 代码治理、Day 34 HITL、Day 6 eval 是什么关系？prompt-as-code 是不是就是把软件工程搬到 prompt？</summary><div>它确实是「软件工程纪律 → prompt」的迁移，但有三处<strong>不能照搬</strong>，正是本期的存在理由。和 <strong>Day 6 eval</strong> 的关系：eval 是这里的「测试框架」，本期是围绕它的<strong>版本 / 发布 / 回滚</strong>外壳。和 <strong>Day 33</strong>：同是治理工件（代码 vs prompt），ratchet / provenance / 风险分级的思想共用，但对象的「正确性可判定性」不同——代码能静态分析，prompt 只能统计 eval。和 <strong>Day 34</strong>：HITL 的「指标回归阈值」和这里的「prompt 指标回归」是同一引擎。三处本质不同：<strong>非确定性</strong>（用分布而非断言）、<strong>模型依赖</strong>（prompt×model 矩阵，代码没有这维度）、<strong>无声退化</strong>（要主动监控，不像 bug 自己冒出来）。把握住这三点，你就不会把 prompt 当普通配置文件糊弄过去。</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://langfuse.com/docs/prompts" target="_blank">Langfuse · Prompt Management</a> — prompt 版本化 / 部署 / 回滚的开源参考实现</li>
+<li><a href="https://martinfowler.com/bliki/CanaryRelease.html" target="_blank">Martin Fowler · Canary Release</a> — 灰度发布的奠基性定义，prompt 上线同理</li>
+<li><a href="https://huyenchip.com/2023/04/11/llm-engineering.html" target="_blank">Chip Huyen · Building LLM Applications for Production</a> — prompt 漂移、监控与生产化的系统讨论</li>
+<li><a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview" target="_blank">Anthropic · Prompt Engineering Overview</a> — prompt 是对特定模型的程序这一视角的官方依据</li>
+<li><a href="https://google.github.io/eng-practices/review/" target="_blank">Google · Code Review Developer Guide</a> — 把「该审什么」的纪律迁移到 prompt review</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 35 · 2026-06-15</footer>
+</div>
+</body></html>

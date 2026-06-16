@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 35 · Prompt-as-Code / Version Governance — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 35 / PHASE 4 · PROMPT-AS-CODE</span>
+<h1>Prompt-as-Code / Version Governance</h1>
+<h2>Registry · Eval Gate · Canary &amp; Rollback · Cross-Model Drift</h2>
+<div class="date">2026-06-15 · BigCat</div>
+<p class="pitch">A prompt is a program you wrote for one specific model — it just has no version number, no tests, no rollback. This issue adds them.</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>For most people a prompt lives like this: hardcoded in some <code>f"""..."""</code>, scattered across a dozen files; who changed it, what changed, which version is live — all from memory; the model upgrades and the behavior quietly shifts with nobody noticing. Fine in the demo stage. But once a prompt is in production with real users depending on it, it's <strong>the most fragile yet least engineered part of the system</strong> — a one-comma change can break format adherence and no CI catches it. This issue ports the software-engineering loop — version → test → release → rollback → monitor — onto prompts, while keeping one essential difference in view: <strong>a prompt is not deterministic code</strong>. Its "correct" is distributional (same input, different outputs), it's <strong>model-specific</strong> (swap the model, it changes), and its decay is <strong>silent</strong> (no error, quality just slips). So copy-pasting CI/CD isn't enough — you must design for those three traits. <strong>Core mantra: treat a prompt as a versioned, eval-gated, one-click-rollbackable artifact, not a string.</strong></p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>Prompt as Artifact: from scattered strings to a registry</h2>
+<div class="claim">Claim: inline-hardcoded prompts have no version, no traceability, and are tightly coupled to code. Step one is extracting them into <code>id@version</code> <strong>artifacts</strong> that code references, not inlines.</div>
+
+<h3>Background &amp; principle</h3>
+<p>Pull prompts out of code into a <strong>prompt registry</strong> as first-class artifacts: each has an <code>id</code>, a <code>version</code>, and metadata (purpose, target model, owner, linked eval set). Code calls <code>get("triage", "v7")</code> instead of inlining a 600-word system prompt into an <code>f-string</code>. Three immediate wins: <strong>traceability</strong> (which version is live right now — one lookup), <strong>independent iteration</strong> (change a prompt without changing code or cutting a release), and <strong>non-engineer editing</strong> (product / ops edit copy via the registry, not a source PR). The registry itself goes into git — getting review, diff, history. But face a difficulty §4 expands on: <strong>a prompt diff isn't "logically right or wrong at a glance" like a code diff</strong> — so git only solves "keep a trail"; "is it better" is settled by §2's eval.</p>
+
+<h3>In practice</h3>
+<pre><code><span class="tag-com"># registry: a prompt is a versioned artifact, not an inline string</span>
+<span class="tag-key">from</span> registry <span class="tag-key">import</span> prompts
+
+p = prompts.get(<span class="tag-gpt">"ticket-triage"</span>, version=<span class="tag-gpt">"v7"</span>)   <span class="tag-com"># pin the version, not latest</span>
+msg = p.render(ticket=text, lang=<span class="tag-gpt">"en"</span>)              <span class="tag-com"># template + variables</span>
+
+<span class="tag-com"># registry entry (in git: reviewable / diffable / rollbackable)</span>
+<span class="tag-com"># id: ticket-triage   version: v7   model: claude-opus-4-8</span>
+<span class="tag-com"># owner: bigcat       eval_set: triage-golden-120   created: 2026-06-15</span></code></pre>
+<p>Core mental model: <strong>a prompt is an "external resource" code references, not part of the code.</strong> Just as you wouldn't inline a database schema into business logic — same for a prompt; it has its own lifecycle.</p>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) Prompts inline-hardcoded and scattered — "changed it, but can't say what changed or which version shipped." (2) No version number, only "the latest one" — no way to recover the prior version on rollback. (3) Prompt tightly bound to code releases — changing one word requires the full release pipeline, killing iteration speed.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Langfuse <em>Prompt Management</em> (versioning / deployment), <a href="https://langfuse.com/docs/prompts" target="_blank">langfuse.com/docs/prompts</a> ·
+This site, Day 33 <em>Legacy Code Governance</em> (provenance / artifact tracing, same root)
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Test &amp; Release: a prompt's CI (but it's non-deterministic)</h2>
+<div class="claim">Claim: a prompt change should pass a gate like code — but not via <code>assert ==</code>. Judge aggregates on an <strong>eval set</strong>, the new version must not be worse than baseline; ship by canary, never a wholesale swap.</div>
+
+<h3>Background &amp; principle</h3>
+<p>LLMs are non-deterministic; "tried one case, looked OK" has no statistical meaning. The right move is a <strong>regression gate</strong>: maintain an eval set (golden samples + LLM-judge + rule assertions, see Day 6), and the new prompt must score <strong>no lower</strong> than the live version on the whole set's aggregate (this is Day 33's ratchet projected onto prompts — only get better). Release likewise can't be "just swap it": <strong>shadow</strong> (run alongside, no user impact, compare old vs new offline) → <strong>canary</strong> (cut 5% of real traffic, watch metrics) → full; stop at any step where metrics drop. Key realization: <strong>a prompt's "correct" is distributional</strong> — one or two cases passing doesn't mean the whole is good; look at the aggregate over the eval set.</p>
+
+<div class="diagram">new prompt v8 ──▶ ┌─── EVAL GATE (offline, vs baseline v7) ───┐
+                  │  golden set · LLM-judge · rule assertions  │
+                  │  aggregate &lt; v7 ? ──▶ reject, don't ship    │
+                  └──────────────┬─────────────────────────────┘
+                        pass ──▶ SHADOW: run alongside, compare only
+                             ──▶ CANARY: 5% real traffic, watch metrics
+                                   metric drop ──▶ auto-stop + rollback v7
+                             ──▶ full cutover to v8 (v7 still 1-click back)
+  a prompt's "right" is distributional: aggregate over the eval set</div>
+
+<h3>In practice</h3>
+<pre><code><span class="tag-key">def</span> eval_gate(new, baseline, eval_set):
+    s_new  = run_eval(new,      eval_set)   <span class="tag-com"># aggregate of LLM-judge + rule asserts</span>
+    s_base = run_eval(baseline, eval_set)
+    <span class="tag-key">if</span> s_new.score &lt; s_base.score:          <span class="tag-com"># ratchet: not worse than live</span>
+        <span class="tag-key">raise</span> Reject(<span class="tag-gpt">f"{s_new.score} &lt; baseline {s_base.score}"</span>)
+    <span class="tag-key">return</span> <span class="tag-gpt">"shadow"</span>                          <span class="tag-com"># passed → shadow, not straight to full</span>
+
+deploy = { <span class="tag-gpt">"stage"</span>: <span class="tag-gpt">"canary"</span>, <span class="tag-gpt">"traffic"</span>: 0.05, <span class="tag-gpt">"rollback_to"</span>: <span class="tag-gpt">"v7"</span> }</code></pre>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) Ship to 100% after one or two cases looked OK — blinded by single points to a distributional effect. (2) No baseline comparison, ship on "feels better" — without a ratchet it quietly regresses. (3) Wholesale swap, no canary, no rollback path — when it breaks, all users break together.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Martin Fowler <em>Canary Release</em>, <a href="https://martinfowler.com/bliki/CanaryRelease.html" target="_blank">martinfowler.com/bliki/CanaryRelease</a> ·
+This site, Day 6 <em>Eval Engineering</em> (LLM-judge / regression tests)
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Rollback &amp; Observability: prompts decay silently</h2>
+<div class="claim">Claim: prompt decay usually <strong>throws no error</strong> — quality just slips (more verbose, missed edge cases, tone drift). So: pin versions in prod, one-click rollback, watch live metrics.</div>
+
+<h3>Background &amp; principle</h3>
+<p>A code bug throws; prompt decay just "answers a bit worse," with no red light — that's what makes it dangerous. Two lines of defense. One, <strong>pin + one-click rollback</strong>: production references a concrete <code>v7</code>, never <code>latest</code>; like a feature flag, on trouble snap back to the prior version instead of editing the prompt live to firefight. Two, <strong>live metrics</strong>: each prompt version is tied to quantifiable signals — downstream task success rate, format / schema compliance, user feedback (thumbs-down / retry rate), length, cost, latency — and dropping below threshold alerts and, if needed, auto-rolls back. This mirrors Day 34 HITL's "retune thresholds from production data": <strong>make prompt quality a monitorable, regressable quantity, not a vibe.</strong></p>
+
+<h3>In practice</h3>
+<pre><code><span class="tag-com"># pinned prod version + metric guard + auto rollback</span>
+LIVE = <span class="tag-gpt">"v7"</span>                              <span class="tag-com"># always pin a concrete version, never latest</span>
+
+<span class="tag-key">def</span> on_metrics(ver, m):
+    <span class="tag-key">if</span> m.schema_ok &lt; 0.95 <span class="tag-key">or</span> m.thumbs_down &gt; 0.08:   <span class="tag-com"># visible proxies for silent decay</span>
+        alert(<span class="tag-gpt">f"{ver} quality dropped"</span>); rollback(to=prev(ver))   <span class="tag-com"># snap back</span>
+
+<span class="tag-com"># keep per-version metrics for comparison &amp; regression (cf. Day 34 audit)</span>
+<span class="tag-com"># v6: schema 0.97 / 👎 0.04   v7: schema 0.93 / 👎 0.09 ← regressed</span></code></pre>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) Production references <code>latest</code> — an upstream change silently shifts your system, with no "before" to roll back to. (2) Never rehearsed a rollback — at incident time you firefight by editing the prompt live, making it worse. (3) Watching only offline eval, not live metrics — passing the eval set doesn't mean no regression on real traffic.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Chip Huyen <em>Building LLM Applications for Production</em>, <a href="https://huyenchip.com/2023/04/11/llm-engineering.html" target="_blank">huyenchip.com/2023/04/11/llm-engineering</a> ·
+This site, Day 34 <em>HITL</em> (same metric-retuning engine)
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Cross-Model Drift: the same prompt on a different model isn't the same prompt</h2>
+<div class="claim">Claim: a prompt is a program for a <strong>specific model</strong>. Swapping models — even a minor model-version bump — changes the runtime, so the same prompt's behavior can drift. Prompt × model is a matrix; eval each cell independently.</div>
+
+<h3>Background &amp; principle</h3>
+<p>The most counterintuitive, most-stepped-on trap: treating a prompt as portable. But "a prompt tuned to perfection on Opus" moved to another model (or the same model's next version) can shift in format adherence, CoT depth, refusal boundaries, tone — because what you swapped is <strong>the runtime that interprets the prompt</strong>. Three governance rules. One, <strong>treat a model upgrade as a dependency upgrade</strong>: when the provider ships a new version, run the regression eval before cutting over, don't "just upgrade." Two, in <strong>multi-model routing</strong> (you have fallback / cost routing, see Day 23) — test each route's prompt on its model; don't assume good-on-A means good-on-B. Three, a <strong>drift sentinel</strong>: periodically run a fixed eval set against the production model to detect "same prompt, same input — has the output distribution drifted?" — catching silent upstream updates (the provider swaps weights without telling you).</p>
+
+<div class="diagram">          claude-opus-4-8   gpt-class   local 8B
+triage        eval ✓          eval ?      eval ✗     ← each cell tested
+summarize     eval ✓          eval ✓      eval ?
+extract       eval ✓          eval ✗      eval ✗
+  · model upgrade = dependency upgrade: re-run the whole column
+  · run a fixed eval set periodically → catch "silent upstream drift"</div>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) Swapping models / bumping versions without re-testing — "just cut over," and behavior drift surfaces in production. (2) Assuming prompts are portable — tuning on A is defaulted onto B. (3) No monitoring of silent upstream updates — the provider swaps weights and your output distribution quietly shifts, unnoticed.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Anthropic <em>Prompt Engineering Overview</em> (tuning to a model), <a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview" target="_blank">docs.anthropic.com</a> ·
+This site, Day 23 <em>Personal AI Infra</em> (multi-model routing)
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// Hands-on · build a prompt-as-code pipeline for your prompt assets</h3>
+<p>A one-week plan: take your most critical production prompt and upgrade it from "a string buried in code" to "a versioned, gated, rollbackable, monitored artifact."</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>Extract a registry</strong>: pull hardcoded prompts into <code>id@version</code> artifacts; change code to <code>get(id, version)</code>.</li>
+<li><strong>Build an eval set</strong>: gather 50–100 golden samples + LLM-judge + rule assertions as the regression baseline.</li>
+<li><strong>Eval gate</strong>: a new version must score no lower than the live one on the eval set (ratchet), or it doesn't ship.</li>
+<li><strong>Canary release</strong>: shadow compare → canary 5% → full, watching metrics at each step.</li>
+<li><strong>Pin + rollback</strong>: pin a concrete version in prod, and <strong>actually rehearse</strong> a one-click rollback (don't let an incident be the first time).</li>
+<li><strong>Live metrics</strong>: tie each version to schema compliance / thumbs-down / cost / latency, alert on drops.</li>
+<li><strong>Cross-model matrix</strong>: list prompt × model, treat the next model upgrade as a dependency upgrade with regression; add a periodic drift sentinel.</li>
+</ol>
+<p style="margin-top:12px">Once you've built this, hearing "we tuned a better prompt" will make you instinctively ask: against what baseline, on how large an eval set, was it canaried, can it roll back, was it tested on the model swap — instead of trusting "feels better." <strong>A prompt is part of the software and deserves software's discipline — you just have to add extra defenses for its "non-determinism, model-dependence, silent decay."</strong></p>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// ENGLISH GLOSSARY</h3>
+<dl>
+<dt>Prompt Registry</dt><dd>A central store of prompt artifacts, each with id / version / metadata, referenced by version from code.</dd>
+<dt>Prompt-as-Code</dt><dd>Governing prompts as engineering artifacts that need versioning, testing, release, and rollback.</dd>
+<dt>Eval Set / Golden Set</dt><dd>A golden-sample set for regression, with LLM-judge + rule assertions measuring aggregate quality.</dd>
+<dt>Regression Gate</dt><dd>A gate that admits a new version only if it scores no lower than baseline on the eval set (ratchet).</dd>
+<dt>Shadow Run</dt><dd>Run the new version alongside, with no user impact, comparing old vs new outputs offline.</dd>
+<dt>Canary Release</dt><dd>Cut a small slice of real traffic to validate metrics before going full.</dd>
+<dt>Pinning</dt><dd>Production references a concrete version, not latest, avoiding silent upstream propagation.</dd>
+<dt>Rollback</dt><dd>One-click revert to the last known-good version, like a feature flag.</dd>
+<dt>Prompt Drift</dt><dd>The same prompt's behavior drifting due to a model change / silent upstream update.</dd>
+<dt>Prompt × Model Matrix</dt><dd>The grid of prompts and models, each cell eval'd independently; a model upgrade is a dependency upgrade.</dd>
+</dl>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// Deeper Thinking</h3>
+<details><summary>Prompts go into git and get reviewed like code — but how does a reviewer judge a prompt change is "better"? Code has right/wrong logic; a prompt has only distributional effects.</summary><div>This is the root divergence between prompt-as-code and real code: <strong>a prompt diff can't be reliably judged by eye</strong>. So review shifts focus — humans reviewing a prompt diff mainly check "did this introduce obvious risk" (injection surface, over-privileged instructions, PII, policy conflicts); <strong>"is it better" goes not to human eyes but to the eval gate</strong>. In other words, the "correctness" part of code review is taken over here by §2's eval set; humans keep only "safety / compliance / style" judgment. If you find yourself arguing in a PR over "is this wording better," that's a signal the eval data should decide, not reviewer intuition.</div></details>
+<details><summary>The eval set is the foundation of this whole governance — but it overfits: tune the prompt against it and it stops representing the real distribution. How do you keep it from rotting?</summary><div>Real and serious — the mechanism is identical to ML train/test leakage. Three countermeasures: (1) <strong>continuously top up the eval set from production</strong>, especially folding back cases that broke live — keep it tracking the real distribution, not a static fossil. (2) <strong>Hold out a set</strong>: separate the dev set you tune against from the test set you gate on; the test set doesn't take part in iteration, seen once before release. (3) <strong>Periodically audit coverage</strong>: does it still represent what users are actually asking? Overfitting's root cause is often an eval set too small and too old — it should have its own version and refresh cadence, like a dataset, not built-once-used-for-a-year.</div></details>
+<details><summary>Canary / rollback are borrowed from code deploys, but a prompt's "metrics dropped" is often lagging and noisy — by the time you notice, many users were served. How do you catch decay faster?</summary><div>The key is moving detection <strong>earlier than release + using faster proxies</strong>. Earlier: the shadow stage already catches most decay offline (no user impact, instantly comparable) — don't wait for canary's live feedback. Proxies: "real" metrics like thumbs-down / retention lag and are noisy, but <strong>machine-instant proxies</strong> don't lag — schema/format compliance, output-length distribution, refusal rate, whether the expected tool was called, semantic distance from the old version's output. These alert at request level in real time. Real metrics "confirm," proxies "front-run." Canary traffic should also scale by risk — high-risk scenarios start at 1% with tighter auto-rollback thresholds.</div></details>
+<details><summary>The cross-model matrix prompt × model explodes combinatorially as models multiply. Can an individual / small team afford it? Where should you cut?</summary><div>You can't afford the full matrix, and don't need it. Cut by <strong>risk and traffic</strong>: only "high-traffic × high-risk" prompts get the full model matrix; long-tail prompts test only the primary model, with a small smoke set on the fallback as a backstop. Another cut: <strong>don't keep too many models</strong> — the prompt×model explosion is often rooted in scattered model choices; converging to 1 primary + 1 backup kills most combinations. What you can't cut is <strong>the primary model's upgrade regression</strong>: that column must re-run every time the provider ships, because it covers most of your traffic. Spend the budget on "high-traffic columns + upgrade regression," sample the rest.</div></details>
+<details><summary>How does this relate to Day 33 code governance, Day 34 HITL, Day 6 eval? Is prompt-as-code just software engineering ported to prompts?</summary><div>It is indeed a "software-engineering discipline → prompt" migration, but with three things that <strong>can't be copy-pasted</strong> — which is exactly why this issue exists. Re <strong>Day 6 eval</strong>: eval is the "test framework" here; this issue is the <strong>version / release / rollback</strong> shell around it. Re <strong>Day 33</strong>: both govern artifacts (code vs prompt), sharing ratchet / provenance / risk-tiering, but the objects differ in "decidability of correctness" — code allows static analysis, a prompt only statistical eval. Re <strong>Day 34</strong>: HITL's "metric-retuned thresholds" and this issue's "prompt-metric regression" are the same engine. The three essential differences: <strong>non-determinism</strong> (use distributions, not assertions), <strong>model-dependence</strong> (the prompt×model matrix, a dimension code lacks), <strong>silent decay</strong> (must actively monitor, unlike a bug that surfaces itself). Hold those three and you won't treat a prompt like a throwaway config file.</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// Further Reading</h3>
+<ul>
+<li><a href="https://langfuse.com/docs/prompts" target="_blank">Langfuse · Prompt Management</a> — an open-source reference for prompt versioning / deployment / rollback</li>
+<li><a href="https://martinfowler.com/bliki/CanaryRelease.html" target="_blank">Martin Fowler · Canary Release</a> — the foundational definition of canary releases, same logic for shipping prompts</li>
+<li><a href="https://huyenchip.com/2023/04/11/llm-engineering.html" target="_blank">Chip Huyen · Building LLM Applications for Production</a> — a systematic take on prompt drift, monitoring, and productionization</li>
+<li><a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview" target="_blank">Anthropic · Prompt Engineering Overview</a> — the official basis for "a prompt is a program for a specific model"</li>
+<li><a href="https://google.github.io/eng-practices/review/" target="_blank">Google · Code Review Developer Guide</a> — porting "what to look for" discipline to prompt review</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 35 · 2026-06-15</footer>
+</div>
+</body></html>
