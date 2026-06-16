@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 33 · AI Governance for Large Legacy Codebases — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 33 / PHASE 4 · GOVERNANCE</span>
+<h1>AI Governance for Large Legacy Codebases</h1>
+<h2>Strangler Rollout · The Ratchet · Guardrails-as-Code · Review Without the Bottleneck</h2>
+<div class="date">2026-06-15 · BigCat</div>
+<p class="pitch">AI maxed out the throughput of writing code, so the bottleneck moved wholesale to review. The fix isn't more reviewers — it's letting machines filter the noise first.</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>Two realities hit at once. One: you inherit / maintain a 300k-line legacy codebase with no tests, no standards, left by a previous generation, and you want to introduce new governance (types, architecture rules, test gates) — but "enforce across the whole repo on day one" instantly surfaces thousands of violations. Nobody reads them, and the whole ruleset gets switched off. Two: AI has exploded the throughput of <strong>writing</strong> code; PR count multiplies, while <strong>review is still human, still line-by-line</strong>, so the bottleneck shifts from "writing" to "reviewing." Reviewers fatigue into rubber-stamping, and the hallucinated APIs, sneakily-edited tests, and missed edge cases in AI-generated code slip into main. These are <strong>the same engineering problem</strong>: how to introduce sustainable quality constraints into a large messy system <em>without</em> relying on "more people." Today, four shippable pieces: roll in gradually with strangler / codemod, make the repo only-get-better with a ratchet, turn rules into CI red/green with guardrails-as-code, and tier review so humans only see what machines can't judge. <strong>Core mantra: governance isn't "write it in the wiki so everyone notices" — it's turning constraints into automated gates on the diff.</strong></p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>Gradual Rollout: Strangler &amp; codemod, no big bang</h2>
+<div class="claim">Claim: "enforce a new rule across the whole legacy repo at once" is doomed — thousands of warnings nobody reads = the rule gets turned off. New governance should apply only to <strong>new code + the files this change touches</strong>.</div>
+
+<h3>Background &amp; principle</h3>
+<p>Martin Fowler's <strong>Strangler Fig</strong>: don't rewrite — grow new structure at the boundary and gradually "strangle" the old until it can be removed. Two concrete tactics for governance. First, <strong>changed-files-only gating</strong>: new rules (type checks, lint, complexity limits) enforce only on the files <strong>actually modified</strong> in a PR — existing code is exempt but frozen — so the rule seeps in as developers "fix what they touch," instead of detonating overnight. Second, hand mechanical legacy conversion to <strong>codemods</strong> (jscodeshift / OpenRewrite / ast-grep) — AST-level scripts do bulk edits instead of humans hand-editing file by file. AI's role is clear: the long tail a codemod can't handle (irregular semantics, needs judgment) goes to an agent for bulk edits — but every change still passes the §3/§4 gates.</p>
+
+<h3>In practice</h3>
+<pre><code><span class="tag-com"># strict checks only on files changed in this PR; legacy untouched</span>
+CHANGED=$(git diff --name-only origin/main... | grep <span class="tag-gpt">'\.ts$'</span>)
+<span class="tag-key">if</span> [ -n <span class="tag-gpt">"$CHANGED"</span> ]; <span class="tag-key">then</span>
+  npx tsc --noEmit --strict $CHANGED      <span class="tag-com"># new/changed files must pass strict</span>
+  npx eslint --max-warnings 0 $CHANGED    <span class="tag-com"># legacy files not in the list → exempt</span>
+<span class="tag-key">fi</span>
+<span class="tag-com"># mechanical migration via codemod, not by hand:</span>
+<span class="tag-com"># npx jscodeshift -t rename-api.js src/   ·   ast-grep --pattern '...' --rewrite '...'</span></code></pre>
+<p>Core mental model: <strong>wire governance to the diff, not to a whole-repo scan.</strong> A whole-repo scan produces thousands of violations you won't fix today — it only trains the team to "ignore red," which is how governance dies.</p>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) Big-bang rewrite / whole-repo enforcement at once — a violation tsunami, and the team learns to ignore the red CI. (2) Hand-editing mechanical changes a codemod could do — slow and error-prone. (3) Touching a legacy file without "upgrading" it to the new standard — files you've touched should be folded into governance, or the strangling never finishes.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Martin Fowler <em>Strangler Fig Application</em>, <a href="https://martinfowler.com/bliki/StranglerFigApplication.html" target="_blank">martinfowler.com/bliki/StranglerFigApplication</a> ·
+<em>Software Engineering at Google</em> (Large-Scale Changes / codemod), <a href="https://abseil.io/resources/swe-book" target="_blank">abseil.io/resources/swe-book</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>The Ratchet &amp; Guardrails-as-Code: make the repo only get better</h2>
+<div class="claim">Claim: governance's goal isn't "zero violations now" — it's <strong>monotonic improvement</strong>: tolerate existing debt, forbid new debt, and let debt only decrease.</div>
+
+<h3>Background &amp; principle</h3>
+<p><strong>Ratchet</strong>: record the current violation count as a baseline; CI fails only when it's <strong>worse than baseline</strong>. Existing debt is tolerated, new debt is blocked; each fix lowers the baseline, and it <strong>can't ratchet back up</strong> — one direction only. Tools like <code>betterer</code> make this a general mechanism. The companion is <strong>guardrails-as-code / fitness functions</strong> (<em>Building Evolutionary Architectures</em>): write architecture constraints as <strong>executable tests</strong> — dependency direction, layer boundaries, forbidden imports, complexity limits — run via ArchUnit / dependency-cruiser / import-linter. Governance shifts from "docs + people watching" to "CI red/green," depending on no one's memory. AI's place: have an agent shave the baseline a little per PR (fix one or two legacy items), so the long-tail debt gets ground down inside normal work — not deferred to a "refactor sprint" no one ever has time for.</p>
+
+<h3>In practice</h3>
+<pre><code><span class="tag-com"># fitness function: "UI layer must not import the DB directly" as a test</span>
+<span class="tag-key">import</span> { dependencyCruiser } <span class="tag-key">from</span> <span class="tag-gpt">"dependency-cruiser"</span>
+forbidden = [{
+  name: <span class="tag-gpt">"ui-not-to-db"</span>,
+  from: { path: <span class="tag-gpt">"^src/ui"</span> },
+  to:   { path: <span class="tag-gpt">"^src/db"</span> },          <span class="tag-com"># violation = CI red, not caught by review</span>
+}]
+
+<span class="tag-com"># ratchet: only block "worse than yesterday"</span>
+BASE=$(cat .debt-baseline)               <span class="tag-com"># e.g. 412</span>
+NOW=$(count_violations)
+<span class="tag-key">if</span> [ <span class="tag-gpt">"$NOW"</span> -gt <span class="tag-gpt">"$BASE"</span> ]; <span class="tag-key">then</span> echo <span class="tag-gpt">"debt rose: $BASE→$NOW"</span>; exit 1; <span class="tag-key">fi</span>
+[ <span class="tag-gpt">"$NOW"</span> -lt <span class="tag-gpt">"$BASE"</span> ] &amp;&amp; echo <span class="tag-gpt">"$NOW"</span> &gt; .debt-baseline   <span class="tag-com"># lock the new low</span></code></pre>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) Rules only in the wiki / CONTRIBUTING, not in CI — they effectively don't exist; governance run by human memory inevitably decays. (2) The ratchet lets the baseline rise again — debt climbs back, the ratchet is pointless. (3) A fitness function set too strict at once turns all legacy red — back to §1's tsunami; pair it with a ratchet to tighten gradually.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Ford/Parsons/Kua <em>Building Evolutionary Architectures</em> (fitness functions), <a href="https://www.thoughtworks.com/insights/books/building-evolutionary-architectures" target="_blank">thoughtworks.com</a> ·
+<em>betterer</em> (general ratchet tool), <a href="https://phenomnomnominal.github.io/betterer/" target="_blank">betterer docs</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Review Without the Bottleneck (I): machines filter first</h2>
+<div class="claim">Claim: AI makes "writing" 5× faster while review stays human and line-by-line → the bottleneck moves to review. The fix isn't more reviewers — it's letting <strong>machines filter first</strong>, so humans only see what machines can't judge.</div>
+
+<h3>Background &amp; principle</h3>
+<p>Think of code review as Day 34 HITL's <strong>confidence routing</strong> applied to code: each PR first passes a row of <strong>pre-human gates</strong> — tests, types, lint, coverage delta, SAST/secret scan, dependency audit, change-impact analysis. <strong>A gate not passed = deny; it never enters the human queue.</strong> Only when all gates pass does a human decide whether to review closely. This is especially valuable for AI-generated code: AI's most frequent failures — hallucinated APIs, turning a failing test into <code>assert True</code> to make CI green (see Day 31's test tampering), missed null / concurrency edge cases — are <strong>largely machine-detectable</strong>. Let sanitizers, the type system, mutation tests, and secret scanners catch that layer, so human attention isn't wasted on "what a machine could have found." The inverse holds too: <strong>don't make a human do what a machine does better</strong> (humans can't read out a race condition, but ThreadSanitizer can).</p>
+
+<div class="diagram">PR ──▶ ┌─────────── PRE-HUMAN GATES (fully automated) ───────┐
+       │  tests · types · lint · coverageΔ · SAST            │
+       │  secret-scan · dep-audit · change-impact analysis    │
+       └───────────────┬──────────────────────────────────────┘
+            any fail ──▶ DENY: back to author, no human slot
+            all pass ─▶ enter §4 risk tiering
+                        ├─ high risk → human full review
+                        ├─ low risk  → sampling + post-merge audit
+                        └─ mechanical/low → auto-merge
+  don't give humans what machines can judge · humans see only
+  "passed the machine but still needs judgment"</div>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) Leaving machine-checkable things to human eyes as the line of defense — fatigue + misses, lose-lose. (2) No coverage / secret / SAST gate, hoping a reviewer spots a leaked key or uncovered branch by eye. (3) Gates too slow (30-min CI) — devs bypass and batch-merge, the gate is theater; gates must be fast enough that "didn't pass" is known instantly.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Google <em>Code Review Developer Guide</em> (what to look for / speed), <a href="https://google.github.io/eng-practices/review/" target="_blank">google.github.io/eng-practices/review</a> ·
+This site, Day 34 <em>Human-in-the-Loop</em> (the general form of confidence routing)
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Review Without the Bottleneck (II): risk tiers · sampling · provenance</h2>
+<div class="claim">Claim: for code that passed the automated gates, let <strong>risk</strong> decide review intensity — high-risk full review, low-risk sampling + post-merge audit. A flat "review every PR closely" is both slow and fake.</div>
+
+<h3>Background &amp; principle</h3>
+<p>Three things compress human attention to a level that can actually review carefully. <strong>① Risk scoring</strong>: tier by the paths touched — payment / auth / data migration / crypto = high; copy / tests / comments = low — layered with diff size and blast radius (see Day 31). High-risk forces full review + a CODEOWNERS owner; low-risk gets sampled human review + full post-merge audit. <strong>② Trust tiering</strong>: give "AI authors" and "human authors" different default review intensity, adjusted by track record (same as Day 34's audit-driven retuning) — a newly wired agent is reviewed strictly, then relaxed once it's proven. <strong>③ Provenance / attestation</strong>: mark which code was AI-generated, with which model / prompt (SLSA-style). When something breaks you can pinpoint it and bulk-recall "all code from one bad prompt" — a necessity at AI scale, not a compliance ornament.</p>
+
+<h3>In practice</h3>
+<pre><code><span class="tag-key">def</span> review_policy(pr):
+    paths = pr.changed_paths
+    high = any(p.startswith((<span class="tag-gpt">"src/payment"</span>,<span class="tag-gpt">"src/auth"</span>,<span class="tag-gpt">"migrations/"</span>)) <span class="tag-key">for</span> p <span class="tag-key">in</span> paths)
+    risk = <span class="tag-gpt">"high"</span> <span class="tag-key">if</span> high <span class="tag-key">or</span> pr.diff_lines &gt; 400 <span class="tag-key">else</span> <span class="tag-gpt">"low"</span>
+    trust = author_trust(pr.author)         <span class="tag-com"># new AI &lt; senior human, adjusts with record</span>
+    <span class="tag-key">if</span> risk == <span class="tag-gpt">"high"</span>: <span class="tag-key">return</span> <span class="tag-gpt">"full_review + CODEOWNERS"</span>
+    <span class="tag-key">if</span> trust &lt; 0.7:      <span class="tag-key">return</span> <span class="tag-gpt">"full_review"</span>
+    <span class="tag-key">return</span> <span class="tag-gpt">"sample_5pct + post_merge_audit"</span>   <span class="tag-com"># low risk, high trust → sample</span>
+
+<span class="tag-com"># carry origin metadata on the PR for tracing / recall</span>
+provenance = { <span class="tag-gpt">"ai_generated"</span>: <span class="tag-key">True</span>, <span class="tag-gpt">"model"</span>: <span class="tag-gpt">"claude-opus-4-8"</span>, <span class="tag-gpt">"prompt_id"</span>: <span class="tag-gpt">"refactor-v3"</span> }</code></pre>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) One review intensity for all PRs — high-risk under-reviewed, low-risk wastes human effort. (2) Trusting AI code as much as human code — AI's error distribution differs (more "confidently wrong"), so its default trust should be lower. (3) No provenance — one bad prompt mass-produces 200 risky PRs and you can't locate which batch or bulk-recall it afterward.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · SLSA <em>Supply-chain provenance / attestation</em>, <a href="https://slsa.dev" target="_blank">slsa.dev</a> ·
+This site, Day 31 <em>Personal AI Safety</em> (blast radius / reversibility) · Day 34 <em>HITL</em> (audit-driven retuning)
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// Hands-on · give a legacy repo an "AI-ready governance chassis"</h3>
+<p>A one-week plan: pick a messy large repo you maintain, install — in this order — a governance layer that doesn't lean on more people, and verify it actually frees review from being the bottleneck.</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>Ratchet</strong>: baseline your most painful rule (e.g. <code>any</code> count / cyclomatic complexity); CI blocks new debt, locks the low when it improves.</li>
+<li><strong>Changed-files gate</strong>: enforce new rules only on files the PR touches; legacy exempt and frozen.</li>
+<li><strong>Fitness function</strong>: encode one architecture constraint (dependency direction / forbidden import) as a CI test.</li>
+<li><strong>Pre-human gates</strong>: tests + types + secret scan + coverageΔ fully automated; failing them never enters the human queue.</li>
+<li><strong>Risk routing</strong>: write <code>review_policy()</code> — high-risk full, low-risk sampling + post-merge audit, AI authors stricter by default.</li>
+<li><strong>Provenance</strong>: add "AI-generated? / model / prompt_id" fields to the PR template; build trace &amp; recall capability.</li>
+<li><strong>Retro</strong>: a week later, see where reviewers spent their time — if it's still on "what a machine could have caught," your §3 gates are insufficient; add gates, don't add people.</li>
+</ol>
+<p style="margin-top:12px">Once you've built this, you'll instinctively ask of any "AI writes code" workflow: how much noise did the machine gates filter, is human review risk-tiered or flat, can an incident be traced to a specific prompt — instead of agonizing over the wrong question, "should I trust AI-written code." <strong>The right question is always: which layer holds the trust, and what backs it up.</strong></p>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// ENGLISH GLOSSARY</h3>
+<dl>
+<dt>Strangler Fig</dt><dd>Gradual migration that grows new structure at the old system's boundary and replaces it incrementally instead of rewriting. Named by Martin Fowler.</dd>
+<dt>Codemod</dt><dd>AST-level scripted bulk code change (jscodeshift / OpenRewrite / ast-grep), replacing hand-editing file by file.</dd>
+<dt>Ratchet</dt><dd>Baseline the current violation count; block only new debt, lock in improvements, so debt decreases monotonically.</dd>
+<dt>Fitness Function</dt><dd>Architecture / quality constraints written as executable tests, turning governance into CI red/green.</dd>
+<dt>Guardrails-as-Code</dt><dd>Rules live in CI, not the wiki — independent of anyone's memory.</dd>
+<dt>Pre-human Gate</dt><dd>Fully automated gates before human review (tests / types / scans); failing them never enters the human queue.</dd>
+<dt>Risk-based Review</dt><dd>Review intensity set by change risk: high-risk full review, low-risk sampling.</dd>
+<dt>Sampling Review</dt><dd>Sample human review of low-risk changes + full post-merge audit, instead of inspecting each.</dd>
+<dt>Provenance / Attestation</dt><dd>Record who / which model / which prompt generated code, enabling tracing and bulk recall. SLSA.</dd>
+<dt>CODEOWNERS</dt><dd>A review mechanism binding high-risk paths to designated owners.</dd>
+</dl>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// Deeper Thinking</h3>
+<details><summary>A ratchet tolerates existing violations and only blocks new ones — won't tech debt stay stuck at a high baseline and never get paid down?</summary><div>It will, if you only block and never repay. The ratchet's discipline is "never get worse," but "get better" needs a separate driver. Two common approaches: (a) make lowering the baseline a <strong>soft norm of every PR</strong> (fix one or two items in files you touch), grinding debt down in normal traffic; (b) the AI era has a stronger lever — dispatch an agent to bulk-clear legacy (small batches, each through the full §3/§4 gates), turning the "refactor sprint no one has time for" into hundreds of low-risk small PRs. The ratchet guarantees no regression; agent traffic drives progress. Miss either and you stall (ratchet-only) or get offset by new debt (refactor-only).</div></details>
+<details><summary>Automated gates catch AI's crude errors, but AI's most dangerous output is the "looks-totally-correct subtle logic error" — machines miss it and sampling misses it too. What then?</summary><div>This is the system's real boundary: gates + sampling only lower the cost of <strong>detectable errors</strong> and <strong>low-risk paths</strong>; they <strong>cannot</strong> handle "subtle logic errors on high-risk paths" via sampling. That's why §4's risk tiering is the key valve — high-risk paths are <strong>not sampled, fully reviewed</strong>, and precisely because machines filtered out the low-risk noise, humans have the bandwidth to slow down and really read high-risk PRs. In other words, this isn't "review less" — it's "<strong>redeploy the saved attention to where a human brain is genuinely needed</strong>." Subtle logic errors are still guarded by humans; you've just made sure humans aren't drowning in trivia. Strong property-based / mutation tests add another layer, but don't replace full review of high-risk paths.</div></details>
+<details><summary>Sampling review = accepting that some fraction of AI code reaches main without close human inspection. Doesn't that contradict "AI code needs more review"? How is the risk math not self-deception?</summary><div>No contradiction, provided sampling is used <strong>only in the low-risk × high-trust</strong> quadrant and is <strong>backstopped by post-merge audit</strong>. The logic: on low-risk paths (copy / tests / internal tools), even an error has a small blast radius and is reversible (see Day 31), so "sampling + full post-merge audit + fast rollback" has lower expected cost than full review of each. Two places it becomes self-deception: one, <strong>distorted risk tiering</strong> (mislabeling a truly high-risk path as low) — so keep the risk table conservative, defaulting unclassified to high; two, <strong>audit in name only</strong> (you sampled but nobody actually audits) — then it degrades into "no review." Sampling's legitimacy rests entirely on "audits actually run and rollback is actually fast," else it's an excuse to cut corners.</div></details>
+<details><summary>Provenance marking code as "AI-generated" — won't it become a blame tool (blame the AI when things break) rather than a driver of improvement?</summary><div>Depends what you do with it. Used as "evidence" = blame ("the AI wrote it, not me"); used as an <strong>observability signal</strong> = improvement. The concrete improvement move: aggregate <strong>defect rates by model / prompt_id</strong> — if one prompt template's output has a markedly higher defect rate, go fix that prompt (back to Day 34's audit-driven retuning, and the future Day 47 prompt-as-code); if a high-risk path's AI defect rate is high, tighten its trust threshold and force full review. Provenance's value isn't "assigning fault" — it's "<strong>making AI output quality a measurable, regressable quantity</strong>." Incident recall is the floor use; driving prompt / routing improvement is its real leverage.</div></details>
+<details><summary>How does this code governance relate to Day 34 HITL and Day 31 safety? When do you use which?</summary><div>All three are the same "tiered trust" idea projected onto different objects. <strong>Day 31</strong> governs an agent's <strong>runtime</strong> actions (kill switch / sandbox / irreversible gate) — defending against harm while the agent <strong>executes</strong>. <strong>Day 34 HITL</strong> is the general <strong>approval orchestration</strong> (when to ask, how to go async, how to take over) — the mechanism layer. <strong>Today</strong> instantiates that mechanism onto one specific scenario: "code entering the repo." Pre-human gate = confidence routing, risk tiering = the impact axis, provenance = the audit. Which to use depends on the object: constraining an agent's running actions → Day 31; building a general human-review workflow → Day 34; governing the specific flood of "lots of AI code into a legacy repo" → today. They stack; they're not mutually exclusive.</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// Further Reading</h3>
+<ul>
+<li><a href="https://martinfowler.com/bliki/StranglerFigApplication.html" target="_blank">Martin Fowler · Strangler Fig Application</a> — the foundational pattern for incremental replacement over rewrite</li>
+<li><a href="https://abseil.io/resources/swe-book" target="_blank">Software Engineering at Google</a> — Large-Scale Changes, codemod, code review &amp; ownership in practice (free online)</li>
+<li><a href="https://www.thoughtworks.com/insights/books/building-evolutionary-architectures" target="_blank">Building Evolutionary Architectures</a> — the systematic treatment of fitness functions / guardrails-as-code</li>
+<li><a href="https://google.github.io/eng-practices/review/" target="_blank">Google · Code Review Developer Guide</a> — what to look for, how fast, treating review as engineering not ritual</li>
+<li><a href="https://slsa.dev" target="_blank">SLSA · Supply-chain Levels for Software Artifacts</a> — the de facto standard for provenance / attestation, the substrate for AI-code tracing</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 33 · 2026-06-15</footer>
+</div>
+</body></html>
