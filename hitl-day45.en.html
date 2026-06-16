@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 45 · Human-in-the-Loop Engineering — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 45 / PHASE 5 · HUMAN-IN-THE-LOOP</span>
+<h1>Human-in-the-Loop Engineering</h1>
+<h2>Confidence Routing · Async Approval · Interruptible Resume · Approval Audit</h2>
+<div class="date">2026-06-15 · BigCat</div>
+<p class="pitch">Real HITL isn't "pop a dialog and wait for you to click yes" — it's teaching the agent to pause gracefully, hand the decision back to you, and pick up seamlessly afterward.</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>Day 31 covered "put a human gate before irreversible actions" — but that was one line of <code>input()</code>. Once the agent runs in the background, runs hundreds of turns, and you're not watching the terminal, synchronous blocking breaks: the agent freezes waiting on a terminal nobody's at; or you get annoyed and just set everything to <code>auto</code>. Production HITL isn't a dialog box, it's an <strong>orchestration discipline</strong>: when is it worth interrupting a human (confidence routing), how do you ask without blocking (async approval + state persistence), how does a human take over and hand back (interruptible checkpoints), and how does all of it stay auditable (approval audit). Today we upgrade <code>require_human</code> from one line of <code>input()</code> into a system that can suspend while you sleep and resume from a tap on your phone. <strong>The hard part of HITL was never "should we ask a human" — it's "what does the agent do while it asks."</strong></p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>Confidence Routing: deciding when it's worth interrupting a human</h2>
+<div class="claim">Claim: ask on every action → approval fatigue until you rubber-stamp blindly; ask on nothing → you automated what shouldn't be. The first piece of HITL engineering is <strong>routing</strong>, not a gate.</div>
+
+<h3>Background &amp; principle</h3>
+<p>Day 31 sorted by reversibility (reversible runs free, irreversible gets a gate). Add a second axis here: <strong>confidence × impact</strong>. The cross yields three tiers — <code>auto</code> (high confidence + low impact, run free), <code>ask</code> (low confidence or medium-high impact, ask a human), <code>deny</code> (over-budget / unauthorized, just refuse — <strong>it never enters the human queue</strong>). The key trap: <strong>confidence can't be self-reported by the model</strong> — it systematically overestimates. Use <strong>verifiable proxy signals</strong> instead: retrieval hit count, whether a tool errored, self-consistency across samples, whether output matches the schema. "I'm confident" doesn't count; the evidence does.</p>
+
+<h3>In practice</h3>
+<pre><code><span class="tag-key">def</span> confidence(ctx):                  <span class="tag-com"># verifiable signals, not "how sure are you?"</span>
+    sigs = [ctx.retrieval_hits &gt;= 2,
+            <span class="tag-key">not</span> ctx.tool_errored,
+            ctx.self_consistency &gt;= 0.8,    <span class="tag-com"># agreement across samples</span>
+            ctx.schema_ok]
+    <span class="tag-key">return</span> sum(sigs) / len(sigs)
+
+<span class="tag-key">def</span> route(action, ctx):
+    <span class="tag-key">if</span> action.over_budget <span class="tag-key">or</span> action.unauthorized:
+        <span class="tag-key">return</span> <span class="tag-gpt">"deny"</span>                     <span class="tag-com"># unauthorized isn't "ask" — it's a bug</span>
+    c, impact = confidence(ctx), action.impact
+    <span class="tag-key">if</span> c &gt;= 0.8 <span class="tag-key">and</span> impact == <span class="tag-gpt">"low"</span>:  <span class="tag-key">return</span> <span class="tag-gpt">"auto"</span>
+    <span class="tag-key">return</span> <span class="tag-gpt">"ask"</span>                          <span class="tag-com"># low confidence or high impact → ask</span></code></pre>
+<p>Core mental model: <strong>HITL's cost is human attention</strong>, and attention is a scarce, depletable resource. Routing's goal isn't "safer" — it's "spend each human intervention where it counts."</p>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) Confidence self-reported by the model — under pressure to finish, it overestimates; you have no routing. (2) Thresholds picked by gut and frozen forever (see §4). (3) Dumping <code>deny</code> into the human queue too — unauthorized actions don't belong there; mixing them in just buries the <code>ask</code> items that genuinely need judgment.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Anthropic <em>Building Effective Agents</em> (human oversight &amp; the agent-computer interface), <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">anthropic.com/engineering/building-effective-agents</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Async Approval: let the agent pause, notify, and resume</h2>
+<div class="claim">Claim: <code>input()</code> is synchronous blocking — a background agent that uses it will die. The core of production HITL is turning "wait for a human" from <strong>blocking</strong> into <strong>suspend + callback</strong>.</div>
+
+<h3>Background &amp; principle</h3>
+<p>When the agent hits the <code>ask</code> tier, <code>input()</code> freezes the whole worker, idling on a terminal that may have nobody at it for hours. The fix follows <strong>durable execution</strong>: <strong>checkpoint state outside the process</strong> (not in memory) → send a request to an approval channel (Slack / phone push / queue) → <strong>yield resources and exit</strong> → once the human decides, resume <strong>from the checkpoint</strong> via callback or polling. Two iron rules: state must live outside the process (a crash mustn't lose the approval); resume must be <strong>idempotent</strong> (replaying the same approval can't execute the action twice). Attach an <strong>SLA timeout</strong> to each approval: hung too long → default-deny or escalate, never wait forever.</p>
+
+<div class="diagram">┌──────────────── async approval loop (non-blocking) ────────────┐
+│  agent loop ──▶ route()==ask                                    │
+│        │                                                         │
+│        ▼  ① checkpoint state OUT of process (DB / file)          │
+│        ▼  ② send request to Slack / phone + approval_id          │
+│        ▼  ③ yield the worker, exit ── no idle CPU spin           │
+│        ·         ·         ·  (human taps on their phone)         │
+│        ▼  ④ callback wakes up with approval_id                   │
+│        ▼  ⑤ idempotency check: seen this id? → ignore            │
+│        ▼  ⑥ resume_from(checkpoint), continue                   │
+│  unresolved ─▶ SLA fires: default-deny / escalate to backup     │
+└─────────────────────────────────────────────────────────────────┘</div>
+
+<h3>In practice</h3>
+<pre><code><span class="tag-key">async def</span> step(ctx):
+    action = plan(ctx)
+    <span class="tag-key">if</span> route(action, ctx) == <span class="tag-gpt">"ask"</span>:
+        aid = save_checkpoint(ctx)              <span class="tag-com"># ① state out of process, with approval_id</span>
+        notify(<span class="tag-gpt">"slack"</span>, action, aid)         <span class="tag-com"># ② fire request, don't await</span>
+        <span class="tag-key">raise</span> Suspend(aid)                      <span class="tag-com"># ③ yield worker, exit</span>
+    <span class="tag-key">return</span> execute(action)
+
+<span class="tag-key">def</span> on_approval(aid, decision):               <span class="tag-com"># triggered by callback after the human acts</span>
+    <span class="tag-key">if</span> seen(aid): <span class="tag-key">return</span>                     <span class="tag-com"># ⑤ idempotent: replays don't re-execute</span>
+    mark_seen(aid); ctx = load_checkpoint(aid)
+    <span class="tag-key">if</span> decision == <span class="tag-gpt">"approve"</span>: resume_from(ctx)  <span class="tag-com"># ⑥ continue from checkpoint</span>
+    <span class="tag-key">else</span>: resume_from(ctx, denied=<span class="tag-key">True</span>)        <span class="tag-com"># feed denial back to the agent too</span></code></pre>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) Synchronous <code>input()</code> blocks the whole worker — one pending approval drags down every concurrent task. (2) State only in memory — a restart / crash loses the approval and all progress. (3) No idempotency — a replayed callback or a double-tap executes the transfer twice. (4) No timeout — one unattended <code>ask</code> suspends the task forever.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Temporal <em>Durable Execution</em> (state persistence &amp; replay for long workflows), <a href="https://temporal.io" target="_blank">temporal.io</a> ·
+LangGraph <em>Human-in-the-loop</em> (interrupt / resume), <a href="https://langchain-ai.github.io/langgraph/concepts/human_in_the_loop/" target="_blank">langchain-ai.github.io</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Interruptible &amp; Takeover: not just "approve / reject," but "edit"</h2>
+<div class="claim">Claim: HITL's high value isn't the binary approval — it's a human <strong>stepping in to modify</strong> the agent's intermediate work, then letting it continue.</div>
+
+<h3>Background &amp; principle</h3>
+<p>Thinking of human intervention as only approve / reject wastes it. Real workflows have two more valuable moves: <strong>edit</strong> (fix its plan / draft / params and continue) and <strong>takeover</strong> (a human does a few steps, then hands back). To support both, the agent loop needs three things: <strong>interruptible</strong> (not a <code>while True</code> running to the death), <strong>serializable state</strong>, and <strong>resumable from any checkpoint</strong>. The commonly-missed part: after a human edits, you must <strong>feed the change back into the agent's context</strong> — otherwise its next step overwrites your edit with the old plan. So "plan" and "draft" must be <strong>explicit, human-overwritable state</strong>, not buried in prompt history.</p>
+
+<h3>In practice</h3>
+<pre><code><span class="tag-key">def</span> loop(state):
+    <span class="tag-key">while</span> <span class="tag-key">not</span> state.done:
+        <span class="tag-key">if</span> stop_requested(): <span class="tag-key">return</span> snapshot(state)  <span class="tag-com"># interruptible: save &amp; exit anytime</span>
+        proposal = plan(state)
+        decision = await_human(proposal)        <span class="tag-com"># approve / edit / takeover</span>
+        <span class="tag-key">if</span>   decision.kind == <span class="tag-gpt">"approve"</span>:  state = execute(proposal, state)
+        <span class="tag-key">elif</span> decision.kind == <span class="tag-gpt">"edit"</span>:
+            state.plan = decision.edited         <span class="tag-com"># human-edited plan</span>
+            state.ctx += <span class="tag-gpt">f"[human edited plan: {decision.note}]"</span>  <span class="tag-com"># feed back! or it's overwritten</span>
+        <span class="tag-key">elif</span> decision.kind == <span class="tag-gpt">"takeover"</span>:
+            state = decision.human_steps         <span class="tag-com"># human does steps, then resume</span>
+    <span class="tag-key">return</span> state</code></pre>
+<p>A counterintuitive but important point: <strong>edit is cheaper than reject</strong>. Reject sends the agent back to square one (it may repeat the same mistake); edit nudges it straight onto the right track — one correction beats ten rejections.</p>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) A non-interruptible <code>while True</code> — to step in you can only kill it, losing all progress and restarting from scratch. (2) The human edits the draft but it isn't fed back into context — the agent ignores your change next turn. (3) Incomplete checkpoint state — on resume a key variable is missing and the agent runs "amnesiac."
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · LangGraph <em>Breakpoints &amp; state editing</em>, <a href="https://langchain-ai.github.io/langgraph/concepts/human_in_the_loop/" target="_blank">langchain-ai.github.io</a> ·
+Microsoft <em>Guidelines for Human-AI Interaction</em> (G9–G11: correctable / takeover), <a href="https://www.microsoft.com/en-us/research/publication/guidelines-for-human-ai-interaction/" target="_blank">microsoft.com</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Approval Observability &amp; Audit: who approved what, and was it right</h2>
+<div class="claim">Claim: approvals are first-class data. Without a trail you can't learn "which asks were redundant," nor trace "who approved this action."</div>
+
+<h3>Background &amp; principle</h3>
+<p>Each approval should record at least: <strong>the action, the agent's reason, the confidence, who approved, how long it took, the outcome</strong>. This log has two uses. First, <strong>retune routing thresholds</strong> — an <code>ask</code> class you approve 95% of the time → demote to <code>auto</code>; an <code>auto</code> class that caused an incident → promote to <code>ask</code>. The §1 thresholds aren't set once; they grow out of audit data. Second, <strong>escalation &amp; delegation</strong> — high-impact actions require more than one approver / a specific role (lightweight RBAC); an approval hung too long auto-escalates to a backup. Finally, the single best move against approval fatigue: <strong>batch</strong> similar low-risk actions (approve 10 on one screen) rather than popping 10 dialogs.</p>
+
+<h3>In practice</h3>
+<pre><code><span class="tag-key">def</span> log_approval(rec):                    <span class="tag-com"># every approval to the store: retune + accountability</span>
+    db.insert(action=rec.action, reason=rec.agent_reason,
+              conf=rec.confidence, approver=rec.who,
+              latency=rec.decided_at - rec.asked_at, outcome=rec.result)
+
+<span class="tag-key">def</span> retune(action_type):                  <span class="tag-com"># regress thresholds from history</span>
+    rows = db.query(action_type, last_days=14)
+    rate = mean(r.outcome == <span class="tag-gpt">"approved"</span> <span class="tag-key">for</span> r <span class="tag-key">in</span> rows)
+    <span class="tag-key">if</span> rate &gt; 0.95 <span class="tag-key">and</span> no_incidents(rows): suggest(<span class="tag-gpt">"ask→auto"</span>)  <span class="tag-com"># always approved = redundant ask</span>
+    <span class="tag-key">if</span> any(r.outcome == <span class="tag-gpt">"incident"</span> <span class="tag-key">for</span> r <span class="tag-key">in</span> rows): suggest(<span class="tag-gpt">"auto→ask"</span>)</code></pre>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) No audit trail — no post-mortem, no accountability, thresholds stay guesswork forever. (2) Frozen thresholds, never retuned — neither redundant asks (fatigue) nor leaked autos (incidents) get fixed. (3) One granularity for all approvals — high- and low-risk in one queue, and the truly important gets drowned in noise.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Anthropic <em>Agentic Misalignment</em> (reduce autonomy / add oversight on sensitive actions), <a href="https://www.anthropic.com/research/agentic-misalignment" target="_blank">anthropic.com/research/agentic-misalignment</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// Hands-on · add an async HITL layer to a background agent</h3>
+<p>Chain the four into a weekend project: give a background agent you run a layer that "suspends while you sleep, resumes from a tap on your phone," then red-team it yourself.</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>Routing</strong>: write a <code>(confidence, impact) → {auto, ask, deny}</code> table; proxy confidence with verifiable signals (retrieval hits / tool errors / self-consistency), never the model.</li>
+<li><strong>Async</strong>: turn the <code>ask</code> tier from <code>input()</code> into checkpoint-to-store + Slack/push + suspend-exit; don't block the worker.</li>
+<li><strong>Takeover</strong>: support approve / edit / takeover in the response, and <strong>always feed edits back into context</strong>.</li>
+<li><strong>Idempotency</strong>: dedupe by approval_id; callback replays / double-taps must not re-execute.</li>
+<li><strong>Audit</strong>: log every approval; after a week, use <code>retune()</code> to see which asks to demote and which autos to promote.</li>
+<li><strong>Red-team</strong>: deliberately leave an approval pending for 12 hours; verify the SLA timeout fires (default-deny / escalate) <strong>and the approval survives a process restart</strong>. If it doesn't, your state is still in memory.</li>
+</ol>
+<p style="margin-top:12px">Once you've built this, you'll instinctively ask of any "autonomous agent product": what does it do while it asks a human (block or suspend), can I edit its intermediate work, does it keep an approval trail — instead of being dazzled by the "one-click full-auto" in the demo.</p>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// ENGLISH GLOSSARY</h3>
+<dl>
+<dt>Human-in-the-Loop (HITL)</dt><dd>Engineering that embeds human judgment into the agent's execution loop, not as after-the-fact review.</dd>
+<dt>Confidence Routing</dt><dd>Routing actions to auto / ask / deny by (confidence × impact) to decide whether to interrupt a human.</dd>
+<dt>Durable Execution</dt><dd>An execution model where state persists outside the process and resumes from a checkpoint after a crash / restart.</dd>
+<dt>Checkpoint</dt><dd>A serializable snapshot of agent state — the vehicle for suspend and resume.</dd>
+<dt>Idempotent Resume</dt><dd>Replaying the same approval runs the resume logic once, with no duplicate side effects.</dd>
+<dt>Human Takeover</dt><dd>A human executes several steps, then hands control back to the agent.</dd>
+<dt>Trajectory Editing</dt><dd>A human edits the agent's intermediate plan / draft and feeds it back into context before continuing.</dd>
+<dt>Approval Queue</dt><dd>The queue of ask-tier actions awaiting human judgment; supports batching, timeout, escalation.</dd>
+<dt>Escalation / SLA</dt><dd>On approval timeout, auto-escalate to a backup approver or decide by default policy.</dd>
+<dt>Approval Fatigue</dt><dd>Too many approvals lead to blind clicking, degrading HITL into a rubber stamp.</dd>
+</dl>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// Deeper Thinking</h3>
+<details><summary>§1 proxies confidence with "verifiable signals." But many open tasks (writing a strategy memo) have no verifiable signal — how do you set auto / ask there?</summary><div>With no verifiable signal, <strong>fall back to impact</strong> (back to Day 31's reversibility axis): if the open task's output is just "a draft for you to read," impact is low → auto-produce but default into review; if it auto-sends (email / tweet), impact is high → force ask. In other words, confidence routing and reversibility gating are <strong>two complementary axes</strong>, not either/or: use confidence when you have a verifiable signal, fall back to impact / reversibility when you don't. When neither is strong, fail-safe to ask. The real danger is "no signal and default auto."</div></details>
+<details><summary>Async approval needs durable execution, state in a store, idempotent callbacks — isn't that over-engineering for a personal project? When is input() enough?</summary><div>There's a clean line: <strong>does the agent run outside your attention</strong>. If you're at the terminal watching it step through, <code>input()</code> is plenty — don't add a queue. The moment it (a) runs in the background / on cron, (b) a single run spans beyond your attention window (tens of minutes+), or (c) multiple instances run concurrently — synchronous blocking bites: workers freeze, a crash loses all progress. The criterion isn't "project size," it's "are you present when it breaks." If not, you need durable. If you are, the machinery is just overhead.</div></details>
+<details><summary>edit / takeover let a human change the agent's intermediate work. But what if the human edits worse than the agent, or is unsure too? Is HITL just shifting blame to a tired person?</summary><div>A real concern. HITL doesn't create judgment, it only <strong>places</strong> it — place it wrong and it's just blame-shifting. Two principles avoid that: (1) Only require human intervention where <strong>the human is genuinely better</strong> (domain knowledge, value trade-offs, your private context); leave pure compute / retrieval to the agent. (2) Give the human <strong>the context to decide</strong>, not just a yes/no — attach the agent's reason, confidence, alternatives. If the human can only rubber-stamp, that's not HITL, it's a ritual of liability transfer. When the human is also unsure, the right move is usually escalate or abstain, not force an approval.</div></details>
+<details><summary>§4 retunes thresholds from history = using the past to decide the future. If you approved lazily in the past, won't the regressed auto threshold cement bad habits into automation?</summary><div>Yes — this is the core trap of HITL audit: <strong>it amplifies your approval bias</strong>. That <code>no_incidents</code> guard in <code>retune()</code> is the defense — only suggest demotion when "always approved <strong>and</strong> no incidents," not on "always approved" alone. But the sturdier practice is to never let the regression <strong>auto-change</strong> thresholds — only <strong>propose</strong> (<code>suggest()</code>, not <code>apply()</code>), with your periodic review. Feeding your bias into a system that then automates the bias is HITL's most insidious failure — so the audit itself must be audited.</div></details>
+<details><summary>How does this confidence routing relate to Day 31's reversibility gate? When do you use which? Do they conflict?</summary><div>No conflict — they're <strong>two layers of depth</strong>. Day 31's reversibility gate is the <strong>safety floor</strong>: an irreversible action passes the gate no matter how high the confidence — a hard constraint routing can't bypass. Today's confidence routing is <strong>upper-layer efficiency</strong>: in the gray zone of "should we ask," it uses confidence to set interruption frequency and save attention. Compose them: pass reversibility first (irreversible → always ask, no confidence overrides it), then hand reversible actions to confidence routing for auto / ask. In one line: <strong>reversibility decides "may it be automated," confidence decides "is it worth asking."</strong> The former governs the safety floor, the latter the efficiency ceiling.</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// Further Reading</h3>
+<ul>
+<li><a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">Anthropic · Building Effective Agents</a> — engineering principles for the agent-computer interface and human oversight</li>
+<li><a href="https://langchain-ai.github.io/langgraph/concepts/human_in_the_loop/" target="_blank">LangGraph · Human-in-the-loop</a> — reference implementation of interrupt / resume / breakpoints / state editing</li>
+<li><a href="https://temporal.io" target="_blank">Temporal · Durable Execution</a> — state persistence &amp; replay for long workflows, the substrate for async approval</li>
+<li><a href="https://www.microsoft.com/en-us/research/publication/guidelines-for-human-ai-interaction/" target="_blank">Microsoft · Guidelines for Human-AI Interaction</a> (Amershi et al., CHI 2019) — 18 HCI guidelines, the basis for correctable / takeover design</li>
+<li><a href="https://www.anthropic.com/research/agentic-misalignment" target="_blank">Anthropic · Agentic Misalignment</a> — why high-impact actions warrant lower autonomy and human oversight</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 45 · 2026-06-15</footer>
+</div>
+</body></html>
