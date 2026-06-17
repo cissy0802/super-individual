@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 38 · 结构化输出 — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 38 / PHASE 4 · ENGINEERING</span>
+<h1>结构化输出</h1>
+<h2>JSON Mode · Constrained Decoding · Schema 设计 · 解析容错</h2>
+<div class="date">2026-06-17 · BigCat</div>
+<p class="pitch">让模型「吐出合法 JSON」是入门；让它在不掉智商的前提下吐出你要的 schema 才是工程。</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>结构化输出是 agent 与外部系统之间的<strong>类型边界</strong>——tool call 的参数、抽取的字段、路由的标签，全是结构化输出在兜底。很多人以为加一句「请返回 JSON」就解决了，结果在生产里被三件事反复教育：模型偶尔返回带 markdown 围栏的「几乎合法」JSON、强制 schema 之后推理质量莫名下滑、以及 <code>max_tokens</code> 截断时拿到半截 JSON 直接 <code>json.loads</code> 崩溃。这一期不讲「JSON 是什么」，讲四件决定可靠性的工程事：<strong>四种拿 JSON 的机制为何不等价</strong>、<strong>约束解码对推理的隐性税以及怎么躲</strong>、<strong>schema 本身就是一段 prompt 该怎么设计</strong>、以及<strong>当 100% schema 保证依然失败时的容错栈</strong>。每一条都假设你已经在 API 里调过 tool use。</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>四种拿 JSON 的机制：可靠性不在一个量级</h2>
+<div class="claim">论断：「prompt 求 JSON / JSON mode / tool use / 约束解码」是四种不同强度的保证，混用是大多数解析崩溃的根因。</div>
+
+<h3>背景与原理</h3>
+<p>同样是「让模型输出 JSON」，底层机制天差地别，保证强度从弱到强：</p>
+<ul>
+<li><strong>Prompt 求 + prefill</strong>：system 里写「只返回 JSON」，再 prefill 一个 <code>{</code> 逼模型跳过寒暄。零保证——模型仍可能加围栏、加注释、字段拼错。</li>
+<li><strong>JSON mode</strong>：API 保证输出是<em>合法 JSON</em>，但<strong>不保证符合你的 schema</strong>。能解析，不代表字段对。</li>
+<li><strong>Tool use / function calling</strong>：用 tool 的 <code>input_schema</code> 描述结构，模型按 schema 填参。比 JSON mode 强，但实测仍非 100%——OpenAI 自己给的数据是 function calling 约 <strong>86%</strong> schema 合规。</li>
+<li><strong>约束解码（Structured Outputs）</strong>：在<em>解码层</em>把 schema 编译成语法，每步只允许采样合法 token。OpenAI 和 Anthropic 现在都提供严格模式（Anthropic 已对 Claude Sonnet 4.5 / Opus 4.1 开放 Structured Outputs），宣称 <strong>100%</strong> schema 合规、零解析错误。</li>
+</ul>
+<p>关键的工程直觉：前两种是「<strong>事后祈祷</strong>」，后两种是「<strong>事前约束</strong>」。约束解码的原理是把 JSON Schema 转成 CFG/FSM，在每个生成步用语法 mask 掉所有非法 token——所以它在物理上不可能产出违反结构的 token。这也是为什么它比 retry-until-valid 更省钱：不是生成完再校验，而是根本不让错误 token 出生。</p>
+
+<div class="diagram">拿 JSON 的四档机制 · 保证强度 / 成本
+
+弱保证 ───────────────────────────────────▶ 强保证
+┌───────────┬───────────┬───────────┬──────────────┐
+│ prompt+   │ JSON mode │ tool use  │ 约束解码      │
+│ prefill { │           │           │(structured   │
+│           │           │           │ outputs)     │
+├───────────┼───────────┼───────────┼──────────────┤
+│合法JSON?  │ 不保证    │  ✅       │  ✅          │  ✅
+│符合schema?│ 不保证    │  ✗        │ ~86%        │  ✅ 100%
+│机制       │ 文本祈祷  │ 文本祈祷  │ 训练偏好     │ 解码层mask
+└───────────┴───────────┴───────────┴──────────────┘
+                                      每步: schema→语法→
+                                      mask非法token→采样</div>
+
+<h3>实战示例</h3>
+<p>同一个抽取任务，用 Anthropic 严格结构化输出（解码层保证），而不是 prompt 求 JSON：</p>
+<pre><code><span class="tag-key">import</span> anthropic
+client = anthropic.Anthropic()
+
+schema = {
+  <span class="tag-gpt">"type"</span>:<span class="tag-gpt">"object"</span>,
+  <span class="tag-gpt">"properties"</span>:{
+    <span class="tag-gpt">"sentiment"</span>:{<span class="tag-gpt">"type"</span>:<span class="tag-gpt">"string"</span>,<span class="tag-gpt">"enum"</span>:[<span class="tag-gpt">"pos"</span>,<span class="tag-gpt">"neg"</span>,<span class="tag-gpt">"neutral"</span>]},
+    <span class="tag-gpt">"key_entities"</span>:{<span class="tag-gpt">"type"</span>:<span class="tag-gpt">"array"</span>,<span class="tag-gpt">"items"</span>:{<span class="tag-gpt">"type"</span>:<span class="tag-gpt">"string"</span>}}
+  },
+  <span class="tag-gpt">"required"</span>:[<span class="tag-gpt">"sentiment"</span>,<span class="tag-gpt">"key_entities"</span>],
+  <span class="tag-gpt">"additionalProperties"</span>:<span class="tag-key">False</span>
+}
+r = client.messages.create(
+  model=<span class="tag-gpt">"claude-sonnet-4-5"</span>, max_tokens=1024,
+  messages=[{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,<span class="tag-gpt">"content"</span>: review_text}],
+  output_format={<span class="tag-gpt">"type"</span>:<span class="tag-gpt">"json_schema"</span>,<span class="tag-gpt">"schema"</span>: schema}  <span class="tag-com"># 解码层强约束</span>
+)
+data = r.content[0].input  <span class="tag-com"># 已是 dict，不用 json.loads + try/except</span></code></pre>
+<p>注意 <code>additionalProperties:false</code>——严格模式通常要求它，否则模型会自作主张加字段。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：用 JSON mode 却以为它管 schema。JSON mode 只承诺「能 parse」，模型把 <code>sentiment</code> 拼成 <code>sentyment</code>、或返回 <code>{"result": {...}}</code> 多包一层，全是合法 JSON——你的 <code>data["sentiment"]</code> 直接 KeyError。要 schema 级保证就上约束解码，别指望 JSON mode。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Anthropic Structured Outputs 文档, <a href="https://platform.claude.com/docs/en/build-with-claude/structured-outputs" target="_blank">platform.claude.com/.../structured-outputs</a> ·
+OpenAI <em>Introducing Structured Outputs</em>, <a href="https://openai.com/index/introducing-structured-outputs-in-the-api/" target="_blank">openai.com/.../structured-outputs</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>约束解码的隐性税：先想，再约束</h2>
+<div class="claim">论断：把强 schema 直接套在需要推理的输出上会压低准确率；解法不是放弃结构，是把「推理」和「结构」分两段。</div>
+
+<h3>背景与原理</h3>
+<p>2024 年 EMNLP 那篇 <em>Let Me Speak Freely?</em>（Tam 等）扔下一枚炸弹：在多个推理基准上，强制模型用 JSON/XML 格式作答，<strong>推理准确率显著下降</strong>，约束越严降得越多。直觉解释：约束解码 mask 掉了模型本想用来「边写边想」的 token 空间，等于变相剥夺了 chain-of-thought。</p>
+<p>但故事没完。Outlines 团队（.txt）发了 <em>Say What You Mean</em> 反驳：他们复现后发现，只要 <strong>schema 设计得当、给好 few-shot 结构示例</strong>，结构化生成不仅不掉分，还能略升。两边其实不矛盾，合起来给了一条可落地的工程结论：<strong>不是结构本身有害，是「把推理字段挤掉」有害</strong>。</p>
+<p>所以真正的 tactic 是<strong>字段顺序工程</strong>：JSON 是自回归生成的，模型写后面字段时能看到前面已写的。把 <code>reasoning</code> 字段放在 <code>answer</code> 之前，模型就在结构内完成了 CoT，再产出答案；反过来把 <code>answer</code> 放最前面，等于逼它没想就先答。需要更彻底时就两段式：第一段自由 CoT 不加约束，第二段只做「把结论抽成 schema」的轻任务。</p>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-com"># ❌ answer 在前：模型还没推理就被迫先填答案</span>
+{<span class="tag-gpt">"answer"</span>: ..., <span class="tag-gpt">"reasoning"</span>: ...}
+
+<span class="tag-com"># ✅ reasoning 在前：结构内嵌 CoT，answer 基于它生成</span>
+schema = {<span class="tag-gpt">"type"</span>:<span class="tag-gpt">"object"</span>,
+  <span class="tag-gpt">"properties"</span>:{
+    <span class="tag-gpt">"reasoning"</span>:{<span class="tag-gpt">"type"</span>:<span class="tag-gpt">"string"</span>,
+      <span class="tag-gpt">"description"</span>:<span class="tag-gpt">"Think step by step before answering."</span>},
+    <span class="tag-gpt">"answer"</span>:{<span class="tag-gpt">"type"</span>:<span class="tag-gpt">"number"</span>}
+  },
+  <span class="tag-gpt">"required"</span>:[<span class="tag-gpt">"reasoning"</span>,<span class="tag-gpt">"answer"</span>]}  <span class="tag-com"># required 顺序 = 生成顺序</span>
+
+<span class="tag-com"># ✅✅ 推理重的任务：两段式，CoT 段不加约束</span>
+cot = ask(prompt)                       <span class="tag-com"># 自由文本，full reasoning</span>
+out = ask(<span class="tag-gpt">f"基于以下分析抽成 JSON：\n{cot}"</span>, schema=schema)</code></pre>
+
+<div class="fail">
+<strong>失败模式</strong>：在 reasoning 模型（带 thinking 的）上又套整段强约束 JSON，等于双重剥夺——thinking 已经在结构外了，正文又被 mask。这类模型用「thinking 自由 + 最终 answer 走 structured output」最稳，别让语法约束伸进 thinking 段。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Tam 等 <em>Let Me Speak Freely?</em> (EMNLP 2024), <a href="https://arxiv.org/abs/2408.02442" target="_blank">arXiv:2408.02442</a> ·
+.txt <em>Say What You Mean: A Response</em>, <a href="https://blog.dottxt.ai/say-what-you-mean.html" target="_blank">blog.dottxt.ai/say-what-you-mean</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Schema 即 Prompt：字段设计决定填充质量</h2>
+<div class="claim">论断：schema 不只是给解析器的约束，它同时是模型读的指令——字段名、描述、enum、嵌套深度都在改变输出质量。</div>
+
+<h3>背景与原理</h3>
+<p>约束解码保证「结构合法」，但<strong>填进去的内容对不对，仍取决于 schema 怎么写</strong>。这和 Day 4 tool use 的结论同源：<em>description 比 field name 更重要</em>。几条经过反复验证的设计纪律：</p>
+<ul>
+<li><strong>每个字段写 description</strong>：模型把它当字段级 instruction。<code>"due_date"</code> 配上「ISO 8601，无则填 null」比裸字段名靠谱得多。</li>
+<li><strong>用 enum 收敛分类</strong>：分类字段一律 enum，别用自由 string——约束解码会物理保证落在枚举内，比「请从以下选一个」强。</li>
+<li><strong>扁平优于深嵌套</strong>：三层以上嵌套对象会显著拉低填充准确率，也让部分约束引擎变慢甚至不支持。能拍平就拍平。</li>
+<li><strong>慎用 optional / union</strong>：严格模式里 OpenAI 要求所有字段进 <code>required</code>，可选语义靠「类型 union null」表达；大量 <code>anyOf</code> 联合类型在多数约束引擎里支持有限。「缺值就显式填 null」比一堆可选字段更稳。</li>
+<li><strong>给注入留缝</strong>：抽取不可信文本时，别让模型把原文塞进决定控制流的字段——这是 Day 24 prompt injection 的边界。</li>
+</ul>
+
+<h3>实战示例</h3>
+<p>用 Pydantic 定义带描述与 enum 的扁平 schema（OpenAI/Anthropic SDK 都能直接吃）：</p>
+<pre><code><span class="tag-key">from</span> pydantic <span class="tag-key">import</span> BaseModel, Field
+<span class="tag-key">from</span> enum <span class="tag-key">import</span> Enum
+
+<span class="tag-key">class</span> Priority(str, Enum):
+    low=<span class="tag-gpt">"low"</span>; med=<span class="tag-gpt">"med"</span>; high=<span class="tag-gpt">"high"</span>
+
+<span class="tag-key">class</span> Ticket(BaseModel):
+    <span class="tag-gpt">"""Extract a support ticket from a user message."""</span>
+    summary: str = Field(description=<span class="tag-gpt">"One-line problem, &lt;=80 chars"</span>)
+    priority: Priority = Field(description=<span class="tag-gpt">"high only if blocking/data-loss"</span>)
+    due_date: str | <span class="tag-key">None</span> = Field(description=<span class="tag-gpt">"ISO 8601 or null"</span>)
+    <span class="tag-com"># 扁平 + 每字段 description + enum 收敛 + 显式 null</span></code></pre>
+<p>这份 schema 同时干了三件事：约束结构、用 description 做字段级指令、用 enum 把 <code>priority</code> 物理钉死在三个值上。读它的不只是 parser，是模型本身。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）把决策逻辑全堆进字段名（<code>shouldEscalateToTier2BecauseSLA</code>）却不写 description——模型只能猜语义。（2）深度嵌套 + 满屏 optional：模型乱填、约束引擎变慢，调试时根本分不清是模型错还是 schema 太刁钻。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Anthropic Cookbook <em>extracting structured json</em>, <a href="https://github.com/anthropics/anthropic-cookbook/blob/main/tool_use/extracting_structured_json.ipynb" target="_blank">github.com/anthropics/anthropic-cookbook</a> ·
+OpenAI Structured Outputs 指南, <a href="https://developers.openai.com/api/docs/guides/structured-outputs" target="_blank">developers.openai.com/.../structured-outputs</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>容错栈：当「100% schema」依然失败时</h2>
+<div class="claim">论断：约束解码保证结构合法，但保证不了语义对、不被截断、不被拒答——生产可靠性来自外层的 validate-repair-fallback 栈。</div>
+
+<h3>背景与原理</h3>
+<p>「100% schema 合规」是个容易被误读的承诺。它保证产出的 token 满足语法，但下面这些它管不了：</p>
+<ul>
+<li><strong>截断</strong>：撞到 <code>max_tokens</code>，<code>stop_reason == "max_tokens"</code>，你拿到的是<em>结构上还没闭合</em>的半截输出。务必先查 stop_reason，别盲目 parse。</li>
+<li><strong>拒答 / refusal</strong>：模型可能走 refusal 分支，此时结构化通道返回的不是你的 schema。要单独处理这条路径。</li>
+<li><strong>语义错</strong>：schema 说 <code>email: string</code>，模型填 <code>"无"</code>——合法字符串，但不是邮箱。结构对、语义错。</li>
+<li><strong>流式半结构</strong>：streaming 时中途的 JSON 是不完整的，需要增量/容错解析器，不能等到结尾才 parse。</li>
+</ul>
+<p>所以生产里真正的形态不是「调一次拿 dict」，而是一条<strong>校验-修复-降级</strong>链——和 Day 3 harness 里「错误回给模型」是同一套韧性思想：把 validation error 喂回模型让它自修，比直接抛异常强得多。</p>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-key">from</span> pydantic <span class="tag-key">import</span> ValidationError
+
+<span class="tag-key">def</span> extract(text, max_repair=2):
+    msgs = [{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,<span class="tag-gpt">"content"</span>: text}]
+    <span class="tag-key">for</span> _ <span class="tag-key">in</span> range(max_repair+1):
+        r = call(msgs, schema=Ticket)
+        <span class="tag-key">if</span> r.stop_reason == <span class="tag-gpt">"max_tokens"</span>:      <span class="tag-com"># 1) 截断: 不 parse, 扩 budget</span>
+            <span class="tag-key">raise</span> Truncated(<span class="tag-gpt">"raise max_tokens / 切小任务"</span>)
+        <span class="tag-key">try</span>:
+            <span class="tag-key">return</span> Ticket.model_validate(r.data)  <span class="tag-com"># 2) 语义层校验</span>
+        <span class="tag-key">except</span> ValidationError <span class="tag-key">as</span> e:
+            msgs += [{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"assistant"</span>,<span class="tag-gpt">"content"</span>: str(r.data)},
+                     {<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,
+                      <span class="tag-gpt">"content"</span>: <span class="tag-gpt">f"校验失败，修正后重发：{e}"</span>}]  <span class="tag-com"># 3) 错误回喂自修</span>
+    <span class="tag-key">raise</span> Unrepairable()                          <span class="tag-com"># 4) 降级: 人工/默认值</span></code></pre>
+<p>四层依次兜底：截断检测 → 语义校验（Pydantic 的 validator 管邮箱、范围、跨字段约束这些 schema 表达不了的）→ 把错误回喂让模型自修 → 修不动则降级。约束解码只覆盖了「结构」这一层，其余三层得你自己搭。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：盲信「structured output 不会错」，省掉校验和截断检测，直接把 <code>r.data</code> 灌进下游。某天一条超长输入触发截断，半截 JSON 进了数据库，或 <code>"无"</code> 被当邮箱发了告警——结构合法掩盖了语义垃圾，故障还特别难追。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Outlines（FSM 约束解码，Willard &amp; Louf 2023）, <a href="https://github.com/dottxt-ai/outlines" target="_blank">github.com/dottxt-ai/outlines</a> ·
+Anthropic Prefill 文档, <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prefill-claudes-response" target="_blank">platform.claude.com/.../prefill</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// 综合实战 · 把一个脆弱抽取器升级成生产级</h3>
+<p>拿你手里任何一个「让模型返回 JSON」的脚本，按本期四点逐层加固，半小时就能从 demo 级提到生产级：</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>换机制</strong>（§1）：从 prompt 求 JSON / JSON mode 升到约束解码（output_format / response_format），删掉那段 <code>json.loads</code> + 正则剥围栏的祖传代码。</li>
+<li><strong>排字段</strong>（§2）：若任务带推理，把 <code>reasoning</code> 字段放进 schema 且排在答案前；纯推理重任务改两段式，CoT 段不约束。</li>
+<li><strong>修 schema</strong>（§3）：每个字段补 description、分类字段换 enum、拍平嵌套、可选字段改「显式 null」。</li>
+<li><strong>加容错</strong>（§4）：包一层 stop_reason 检测 + Pydantic 语义校验 + 错误回喂自修 + 降级。</li>
+<li><strong>建 eval</strong>：出 20 条带 ground truth 的输入，对比加固前后的「结构合规率 × 语义正确率」两个指标——你会发现结构合规早就 100% 了，真正提升的是语义正确率。</li>
+</ol>
+<p style="margin-top:12px">做完这套，你对「结构化输出」的心智模型会从「求模型给 JSON」变成「在解码层钉死结构、在 schema 里下指令、在外层兜语义」——这正是 demo 和生产的分界线。</p>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// ENGLISH GLOSSARY</h3>
+<dl>
+<dt>Structured Output</dt><dd>让模型产出符合预定义 schema 的输出（而非自由文本）。本期主角。</dd>
+<dt>JSON Mode</dt><dd>API 保证输出是合法 JSON，但不保证符合你的 schema 的弱模式。</dd>
+<dt>Constrained Decoding</dt><dd>解码层按语法 mask 非法 token，物理保证结构合法。又称 guided/grammar-constrained decoding。</dd>
+<dt>Schema Compliance</dt><dd>输出符合给定 JSON Schema 的比例。约束解码可达 100%，function calling 实测约 86%。</dd>
+<dt>CFG / FSM</dt><dd>上下文无关文法 / 有限状态机。约束解码把 schema 编译成它们来生成 token mask。</dd>
+<dt>Prefill</dt><dd>预填 assistant 开头（如 <code>{</code>）逼模型直接进入 JSON，弱保证手段。</dd>
+<dt>Field Ordering</dt><dd>schema 字段的生成顺序；把 reasoning 排在 answer 前可在结构内保留 CoT。</dd>
+<dt>Refusal Path</dt><dd>模型拒答时走的分支，此时不返回目标 schema，需单独处理。</dd>
+<dt>Validate-Repair Loop</dt><dd>校验失败时把错误回喂模型令其自修的容错环，呼应 harness 的 recovery。</dd>
+<dt>additionalProperties</dt><dd>JSON Schema 字段，设 false 禁止模型自加字段；严格模式常要求。</dd>
+</dl>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// 深入思考</h3>
+<details><summary>既然约束解码能 100% 保证结构合法，为什么 tool use / function calling 不直接全用约束解码，还容忍 86% 的合规率？</summary><div>历史与权衡。早期 function calling 靠训练让模型「倾向」输出 schema，是文本层偏好而非解码层硬约束，所以有漏网。约束解码需要在推理引擎里编译 schema 成语法、维护 token mask，有工程成本和延迟开销，且对动态/递归 schema 支持有限。如今主流平台已把严格约束作为可选模式叠加在 tool use 之上（OpenAI 的 strict、Anthropic 的 structured outputs），方向就是让二者合一;但默认不强制，是为了兼容老接口和复杂 schema 场景。</div></details>
+<details><summary>《Let Me Speak Freely》和 .txt 的反驳看似对立。如果让你设计一个实验一锤定音，你会怎么控制变量？</summary><div>核心混淆变量是「约束本身」vs「约束附带的 prompt/字段顺序变化」。我会固定模型与温度，构造三臂对照：(A) 自由 CoT + 自由答案；(B) 自由 CoT 字段在前 + 约束答案字段在后；(C) 答案字段在前的纯约束。若 B≈A>C，说明伤害来自挤掉 reasoning 而非约束本身（支持 .txt）；若 A>B≈C，说明约束本身有损（支持原论文）。再加一臂控制 few-shot 结构示例的有无，分离「模型没见过该结构」这个因素。多数复现指向：是字段编排和示例质量在主导，不是约束的存在与否。</div></details>
+<details><summary>约束解码在每步 mask 非法 token。这会不会把模型本来高概率但「暂时不合法」的 token 抹掉，反而逼它走进低质量路径？</summary><div>会，这是约束解码的真实代价,叫 distribution distortion。FSM 只看「语法是否合法」,不看「语义是否更优」。若最优 token 此刻不合法,它被 mask,模型被迫在剩下的合法 token 里采样,可能滑向低概率分支并「滚雪球」越走越偏。缓解：schema 别过度限制（少用窄 pattern/超长 enum）、给足结构示例让模型的高概率分布天然落在合法区、以及把推理放到约束之外。这也解释了为什么「schema 越严越好」是错觉——过严会放大这种扭曲。</div></details>
+<details><summary>如果下游系统能接受两种格式，你会让 agent 在 tool call 里返回结构化结果，还是在最终消息里返回 structured output？二者工程含义有何不同？</summary><div>tool call 是「agent 想调用外部能力」的语义，结果会回灌进 loop 让 agent 继续；最终 structured output 是「这一轮的交付物」。若结果要被 agent 自己消费、参与后续决策，用 tool call 更自然（也天然带 schema 校验）;若结果是给外部消费者的终态交付（API 响应、写库），用最终 structured output 更直接,少一次绕回模型的开销。混用的坑：把终态交付硬塞进 tool call,会让 loop 多转一圈、还要额外逻辑判断「这次 tool call 是真要调用还是只是返回结果」。</div></details>
+<details><summary>结构化输出把 LLM 变成了「类型安全的函数」。这对系统架构意味着什么——它会改变我们在哪里画 AI 与确定性代码的边界吗?</summary><div>意味着 LLM 可以被当成一个有类型签名的不纯函数嵌进传统类型系统：输入文本、输出经 schema 校验的 typed object。边界因此可以画得更细——不再是「AI 模块 vs 代码模块」的粗粒度隔离,而是在每个函数调用点做类型契约。但要清醒：类型安全≠语义安全,schema 挡得住 KeyError,挡不住「类型对、值是幻觉」。所以新边界是:用 structured output 把「形状不确定性」消灭在解码层,把省下的精力集中投到「值正确性」的校验与 eval 上。架构上这会推动 AI 调用越来越像 RPC——有 schema、有重试、有降级、有 SLA。</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://platform.claude.com/docs/en/build-with-claude/structured-outputs" target="_blank">Anthropic · Structured Outputs 文档</a> — Claude 严格 schema 约束与零解析错误</li>
+<li><a href="https://openai.com/index/introducing-structured-outputs-in-the-api/" target="_blank">OpenAI · Introducing Structured Outputs</a> — 约束解码、CFG vs FSM、100% vs 86%</li>
+<li><a href="https://arxiv.org/abs/2408.02442" target="_blank">Tam et al. · Let Me Speak Freely? (EMNLP 2024)</a> — 格式约束损伤推理的实证</li>
+<li><a href="https://blog.dottxt.ai/say-what-you-mean.html" target="_blank">.txt · Say What You Mean</a> — 上文的反驳：schema 设计才是变量</li>
+<li><a href="https://github.com/dottxt-ai/outlines" target="_blank">Outlines</a> — FSM 约束解码的开源实现（Willard &amp; Louf）</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 38 · 2026-06-17</footer>
+</div>
+</body></html>
