@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 39 · Agent Error Recovery & Resilience — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 39 / PHASE 4 · PRODUCTION</span>
+<h1>Agent Error Recovery &amp; Resilience</h1>
+<h2>Retry · Idempotency · Checkpoint · Circuit Breaker</h2>
+<div class="date">2026-06-18 · BigCat</div>
+<p class="pitch">In the demo your agent always succeeds; in production it spends most of its time handling failure.</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>Anyone can write an agent's happy path: a <code>while</code> loop, a tool call, the model decides when to stop. But in production, 90% of the engineering lives <em>outside</em> the happy path — networks flake, rate limits hit, tools time out, the model emits half a JSON, step 38 crashes and the prior 37 are wasted, a retry sends the same email three times. None of this is fixable by prompting; it's the harness's <strong>resilience design</strong>. Seasoned distributed-systems engineers know this toolkit (retry / idempotency / saga / circuit breaker / checkpoint), but agents re-scramble it, because they add a <strong>non-deterministic decision layer</strong>: the model itself will "try once more," and the model itself will give up over a single error. Today covers the four things most likely to cause an incident: the two-layer structure of retry, idempotency and compensation for side-effecting tools, checkpoint/resume for long tasks, and timeout/circuit-breaker/partial-failure degradation.</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>The Two Layers of Retry: don't mix transport errors and semantic errors</h2>
+<div class="claim">Claim: an agent's retry must be layered — transport (deterministic, program retries) vs semantic (non-deterministic, fed back to the model). Mixing them is the #1 bug.</div>
+
+<h3>Background &amp; Principle</h3>
+<p>There are two kinds of "failure" in an agent, handled in opposite ways.</p>
+<ul>
+<li><strong>Transport failure</strong>: HTTP 429 / 503, connection timeout, ECONNRESET — deterministic transient faults. The right move is a <strong>program-level retry with exponential backoff + jitter</strong>; the model should never even hear about it. Marc Brooker's classic AWS post shows that fixed backoff makes clients "synchronize" and hammer the same instant; <strong>full jitter</strong> (randomizing the whole backoff window) sharply cuts contention.</li>
+<li><strong>Semantic failure</strong>: the tool ran but the result is wrong — file not found, command errored, invalid argument. This is information the model needs to <em>see and self-correct</em>; feed the error back as a <code>tool_result</code> and let it try another way. Never retry it in program code — the same arguments fail the same way a hundred times.</li>
+</ul>
+<p>The #1 bug is swapping the layers: treating a 429 as semantic and feeding it to the model (which won't back off and keeps hammering the dependency), or treating "file not found" as transport and retrying in code (infinite loop). The test is one sentence: <strong>is the error input-independent and merely transient?</strong> Yes → program backoff; No → feed back to the model.</p>
+
+<div class="diagram">         A tool call failed — which way?
+                      │
+            ┌─────────┴──────────┐
+            ▼                    ▼
+   ┌─────────────────┐   ┌──────────────────┐
+   │ transport/transient │ semantic/determ.  │
+   │ 429·503·timeout │   │ bad arg·not found │
+   └────────┬────────┘   └────────┬─────────┘
+            ▼                     ▼
+   backoff + full jitter   error → tool_result
+   fail-fast after N       feed to model, retry there
+   (model never sees it)   (no program retry)</div>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-key">import</span> time, random, anthropic
+
+TRANSIENT = (anthropic.RateLimitError, anthropic.APITimeoutError,
+             anthropic.InternalServerError)
+
+<span class="tag-key">def</span> call_with_backoff(fn, max_retries=5):
+    <span class="tag-key">for</span> attempt <span class="tag-key">in</span> range(max_retries):
+        <span class="tag-key">try</span>:
+            <span class="tag-key">return</span> fn()
+        <span class="tag-key">except</span> TRANSIENT <span class="tag-key">as</span> e:        <span class="tag-com"># transport: deterministic transient → program backoff</span>
+            <span class="tag-key">if</span> attempt == max_retries - 1: <span class="tag-key">raise</span>
+            <span class="tag-com"># full jitter: randomize the whole window, avoid thundering herd</span>
+            time.sleep(random.uniform(0, min(60, 2 ** attempt)))
+        <span class="tag-com"># note: semantic errors (tool failures) are NOT caught here —</span>
+        <span class="tag-com"># they go back as tool_result; the model decides what's next</span></code></pre>
+
+<div class="fail">
+<strong>Failure mode</strong>: catch-all <code>except</code> + retry. A permanent error (401 Unauthorized, invalid argument) gets backed off and retried 5 times, failing each time — you've only delayed surfacing the fault by 60 seconds and burned quota. Retry only makes sense for "transient and deterministic" faults; a <strong>permanent error must fail-fast</strong>.
+</div>
+
+<div class="res">
+<strong>More</strong> · Marc Brooker / AWS <em>Exponential Backoff And Jitter</em>, <a href="https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/" target="_blank">aws.amazon.com/blogs/architecture</a> ·
+AWS Builders' Library <em>Timeouts, retries, and backoff with jitter</em>, <a href="https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/" target="_blank">aws.amazon.com/builders-library</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Idempotency &amp; Compensation: agents <em>will</em> repeat, so side-effecting tools must be idempotent</h2>
+<div class="claim">Claim: an agent's retry/resume safety depends 100% on tool idempotency, not on how elegant your retry logic is.</div>
+
+<h3>Background &amp; Principle</h3>
+<p>Retry and resume share a hidden premise: <strong>the operation being retried can be run multiple times safely</strong>. Reads are naturally idempotent (reading a file twice is fine), but writes are not: <code>create_order</code> / <code>send_email</code> / <code>charge_card</code> run once more = the customer charged twice. Agents are more dangerous than traditional systems because "retry" has <strong>two sources</strong>: program-level backoff, and the <em>model</em> — when a <code>tool_result</code> is ambiguous (a timeout, did it succeed?) the model "calls it again just to be safe." That's exactly the riskiest moment, because the first call may already have succeeded.</p>
+<p>Two engineering tools:</p>
+<ul>
+<li><strong>Idempotency key</strong>: every side-effecting tool call carries a client-generated unique key; the server dedupes on it — a second call with the same key returns the first result without re-executing. Standard practice in payment APIs like Stripe. The key must be <strong>derived from the task</strong> (deterministic), not random per call, or a retry's changed key defeats dedup.</li>
+<li><strong>Compensation (Saga)</strong>: agents have no DB transaction to roll back with one call. If step 3 fails, the side effects of steps 1–2 (booked, charged) must be undone by explicit <strong>compensating actions</strong> (cancel, refund). Pair every side-effecting step with a compensating action, run them in reverse on failure.</li>
+</ul>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># 1) idempotency key: makes retry safe. derive from task, not random</span>
+<span class="tag-key">def</span> book_flight(args):
+    key = <span class="tag-gpt">f"book:{args['trip_id']}:{args['flight_no']}"</span>   <span class="tag-com"># deterministic key</span>
+    <span class="tag-key">return</span> api.post(<span class="tag-gpt">"/bookings"</span>, json=args,
+                    headers={<span class="tag-gpt">"Idempotency-Key"</span>: key})       <span class="tag-com"># server dedupes</span>
+
+<span class="tag-com"># 2) compensation: register an undo per side-effect; reverse on failure</span>
+saga = []
+<span class="tag-key">try</span>:
+    r1 = book_flight(...);  saga.append(<span class="tag-key">lambda</span>: cancel_flight(r1.id))
+    r2 = charge_card(...);  saga.append(<span class="tag-key">lambda</span>: refund(r2.id))
+    r3 = book_hotel(...)                  <span class="tag-com"># ← this step fails</span>
+<span class="tag-key">except</span> Exception:
+    <span class="tag-key">for</span> undo <span class="tag-key">in</span> reversed(saga):     <span class="tag-com"># reverse: refund first, then cancel</span>
+        undo()
+    <span class="tag-key">raise</span></code></pre>
+
+<div class="fail">
+<strong>Failure mode</strong>: relying on "the model won't call it twice." When a <code>tool_result</code> is a network timeout (you genuinely don't know if the server ran it), the model often calls again — and the idempotency key is the only reliable defense. <strong>You cannot prompt the model "don't repeat"</strong>; that builds safety on the non-deterministic decision layer.
+</div>
+
+<div class="res">
+<strong>More</strong> · Stripe <em>Idempotent requests</em>, <a href="https://docs.stripe.com/api/idempotent_requests" target="_blank">docs.stripe.com/api/idempotent_requests</a> ·
+Stripe <em>Designing robust APIs with idempotency</em>, <a href="https://stripe.com/blog/idempotency" target="_blank">stripe.com/blog/idempotency</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Checkpoint &amp; Resume: agent state must live outside the process — an in-memory loop is a toy</h2>
+<div class="claim">Claim: long tasks must resume from a checkpoint, not restart from scratch — which requires externalized, persistent agent state.</div>
+
+<h3>Background &amp; Principle</h3>
+<p>An agent runs 40 steps over half an hour and crashes at step 38 (OOM, deploy restart, a spot machine reclaimed). If state lives only in the in-memory messages array, the prior 37 steps are <strong>wasted</strong> — and their tokens and side effects are already spent. A production agent must persist state outside the process: <strong>checkpoint</strong> after each step, and on crash resume from the last checkpoint. This is the core of <strong>durable execution</strong>. Two ways to land it:</p>
+<ul>
+<li><strong>Library level</strong>: LangGraph's checkpointer snapshots state to SQLite/Postgres after each node and resumes by <code>thread_id</code> — "loads the last snapshot and resumes exactly where it left off."</li>
+<li><strong>Platform level</strong>: a durable execution engine like Temporal turns the whole agent workflow into something crash-recoverable — on crash it replays history and skips completed activities, "survive a crash and resume exactly where it left off."</li>
+</ul>
+<p>The key is checkpoint <strong>granularity</strong>: too fine (every token) is costly, too coarse (only at the end) is useless. In practice, checkpoint per model call or per side-effecting step. And it must pair with idempotency (§2) — on resume, that last step may have run only halfway.</p>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-key">import</span> json, os
+<span class="tag-key">def</span> agent(task, ckpt_path):
+    <span class="tag-key">if</span> os.path.exists(ckpt_path):                    <span class="tag-com"># resume: restore from checkpoint</span>
+        s = json.load(open(ckpt_path)); msgs, step = s[<span class="tag-gpt">"msgs"</span>], s[<span class="tag-gpt">"step"</span>]
+    <span class="tag-key">else</span>:
+        msgs, step = [{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,<span class="tag-gpt">"content"</span>:task}], 0
+    <span class="tag-key">while</span> step &lt; MAX_STEPS:
+        r = client.messages.create(model=MODEL, messages=msgs,
+                                   tools=SCHEMAS, max_tokens=4096)
+        msgs.append({<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"assistant"</span>,<span class="tag-gpt">"content"</span>:r.content})
+        <span class="tag-key">if</span> r.stop_reason == <span class="tag-gpt">"end_turn"</span>: <span class="tag-key">break</span>
+        results = run_tools(r.content)               <span class="tag-com"># run tools (must be idempotent!)</span>
+        msgs.append({<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,<span class="tag-gpt">"content"</span>:results}); step += 1
+        json.dump({<span class="tag-gpt">"msgs"</span>:msgs,<span class="tag-gpt">"step"</span>:step}, open(ckpt_path,<span class="tag-gpt">"w"</span>))  <span class="tag-com"># persist per step</span></code></pre>
+
+<div class="fail">
+<strong>Failure mode</strong>: you checkpoint state but the tool isn't idempotent — the crash lands between "tool executed" and "checkpoint written," so on resume the tool reruns and the side effect happens twice. <strong>Checkpoint and idempotency are a pair; neither works alone</strong>. Another trap: stuffing non-serializable objects (file handles, sockets) into state, which blow up on restore.
+</div>
+
+<div class="res">
+<strong>More</strong> · LangChain <em>Persistence / Checkpointers</em>, <a href="https://docs.langchain.com/oss/javascript/langgraph/persistence" target="_blank">docs.langchain.com/.../persistence</a> ·
+Temporal <em>Durable Execution meets AI</em>, <a href="https://temporal.io/blog/durable-execution-meets-ai-why-temporal-is-the-perfect-foundation-for-ai" target="_blank">temporal.io/blog</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Timeout, Circuit Breaker &amp; Partial Failure: distinguish "degradable" from "must stop"</h2>
+<div class="claim">Claim: failing the whole task on any tool failure is an anti-pattern; a mature agent has an explicit degradation policy per failure class.</div>
+
+<h3>Background &amp; Principle</h3>
+<p>Three related mechanisms:</p>
+<ul>
+<li><strong>Timeout</strong>: every tool call needs an upper bound, or one hung HTTP request stalls the whole agent forever. Timeouts should be <strong>layered</strong>: per-tool &lt; per-step &lt; a top-level task deadline.</li>
+<li><strong>Circuit breaker</strong>: when a downstream (an API, an MCP server) fails N times in a row, it "trips" — subsequent calls fail fast instead of waiting on timeouts, then "half-open" lets one probe through after a cooldown. This stops the agent from repeatedly hammering a dead dependency, saving tokens and avoiding cascading slowdowns. The classic three states: <code>closed → open → half-open</code>.</li>
+<li><strong>Partial failure</strong>: in a parallel fan-out (Day 13's orchestrator-worker), 5 workers run and 1 dies. The anti-pattern is failing the whole batch; the mature move is to collect the 4 successes and hand "1 failed" to the orchestrator as information — degrade and continue with 4, or treat the subtask as critical and stop.</li>
+</ul>
+
+<div class="diagram">      Circuit Breaker three-state machine
+  ┌────────┐  ≥N fails    ┌────────┐
+  │ CLOSED │ ───────────▶ │  OPEN  │
+  │ pass all │            │fail fast │
+  └────────┘ ◀───────────  └───┬────┘
+       ▲      probe ok          │ cooldown reset_after
+       │                        ▼
+       │     ┌──────────────────────┐
+       └──── │ HALF-OPEN: one probe  │
+   probe fail→OPEN └──────────────────────┘</div>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-key">class</span> CircuitBreaker:
+    <span class="tag-key">def</span> __init__(self, fail_max=5, reset_after=30):
+        self.fail_max, self.reset_after = fail_max, reset_after
+        self.fails, self.opened_at = 0, <span class="tag-key">None</span>
+    <span class="tag-key">def</span> call(self, fn):
+        <span class="tag-key">if</span> self.opened_at:                          <span class="tag-com"># OPEN</span>
+            <span class="tag-key">if</span> time.time() - self.opened_at &lt; self.reset_after:
+                <span class="tag-key">raise</span> CircuitOpen(<span class="tag-gpt">"dependency tripped, fail fast"</span>)
+            self.opened_at = <span class="tag-key">None</span>                   <span class="tag-com"># → HALF-OPEN: let one probe through</span>
+        <span class="tag-key">try</span>:
+            out = fn(); self.fails = 0              <span class="tag-com"># success → CLOSED</span>
+            <span class="tag-key">return</span> out
+        <span class="tag-key">except</span> Exception:
+            self.fails += 1
+            <span class="tag-key">if</span> self.fails &gt;= self.fail_max:
+                self.opened_at = time.time()       <span class="tag-com"># → OPEN: trip</span>
+            <span class="tag-key">raise</span></code></pre>
+
+<div class="fail">
+<strong>Failure mode</strong>: (1) only per-tool timeouts, no task-level deadline — the agent never times out on any single step in a loop yet never finishes, until it burns the whole budget. You need a top-level deadline. (2) Hard-coding partial failure as "any worker fails = whole task fails," letting one flaky edge worker drag down an entire high-value task. The degradation policy should be decided by the orchestrator per subtask importance, not one-size-fits-all.
+</div>
+
+<div class="res">
+<strong>More</strong> · Martin Fowler <em>CircuitBreaker</em>, <a href="https://martinfowler.com/bliki/CircuitBreaker.html" target="_blank">martinfowler.com/bliki/CircuitBreaker</a> ·
+HumanLayer <em>12-Factor Agents</em> (own your control flow / errors), <a href="https://github.com/humanlayer/12-factor-agents" target="_blank">github.com/humanlayer/12-factor-agents</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// PUTTING IT TOGETHER · Harden a toy agent into a recoverable one</h3>
+<p>Take any 100-line demo agent and harden it down this checklist — each item maps to a failure mode above:</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>Layered retry</strong>: wrap <code>messages.create</code> and network-type tools in <code>call_with_backoff</code> (full jitter); do <strong>not</strong> wrap semantic errors — feed them back to the model verbatim.</li>
+<li><strong>Idempotency keys on side-effecting tools</strong>: list every "write" tool, give each an <code>Idempotency-Key</code> derived from the task; if you can't change the server, keep your own "executed keys" table to dedupe.</li>
+<li><strong>Checkpoint per step</strong>: persist <code>{msgs, step}</code> each round (or use a LangGraph checkpointer); try to resume on startup. Test: <code>kill -9</code> mid-run; restart should continue from the breakpoint, not from scratch.</li>
+<li><strong>Three-layer timeout + one breaker</strong>: per-tool timeout, a top-level task deadline, and a <code>CircuitBreaker</code> around the external dependency that flakes most.</li>
+<li><strong>Partial-failure degradation</strong>: if you fan out in parallel, turn <code>gather</code> into "collect successes + annotate failures," letting the upper layer decide continue vs stop.</li>
+<li><strong>Add one line of telemetry</strong>: count retries, breaker trips, and checkpoint resumes — without these metrics you simply can't see resilience problems when they happen.</li>
+</ol>
+<p style="margin-top:12px">When you're done the code goes from 100 to 300+ lines, and not one of the extra 200 lines is a "feature" — it's all <strong>resilience</strong>. That's the real gap between a demo agent and a production agent.</p>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// DEEP THINKING</h3>
+<details><summary>Hiding transport retries entirely from the model — could that give it a wrong picture of how fragile the environment is? When should you tell it?</summary><div>Mostly hide it — the model shouldn't be responsible for backing off a 429, and exposing it pollutes reasoning. But two exceptions are worth surfacing: one, when <strong>backoff still ends in permanent failure</strong> (the dependency is truly down), so the model knows "this path is closed" and can switch tools or plans; two, when <strong>backoff causes significant latency</strong> and the model is making a time-sensitive decision. Principle: hide the transport fault's <em>process</em>, but the <em>conclusion</em> (success / permanent failure) must reach the model as a tool_result, or it keeps planning on a false premise.</div></details>
+<details><summary>Idempotency keys should be "derived from the task." But an agent's task is natural language with different wording each time — how do you derive a stable key?</summary><div>Don't key on the natural-language task; key on the <strong>structured operation semantics</strong>. The key should come from the tool call's <strong>normalized parameters</strong>, not the upper instruction: <code>charge:{user_id}:{order_id}:{amount}</code>, built from deterministic fields, is identical no matter how the model phrases it or how many retries. If the operation lacks a natural unique identifier ("send an encouraging message"), have the harness generate a key when the agent enters that step and write it into the checkpoint — reuse it on resume. Essence: key stability comes from deterministic derivation in the harness, not from model output.</div></details>
+<details><summary>Checkpoint + idempotency let an agent resume after a crash. But if the crash was caused by a model-driven infinite loop, resuming just faithfully re-runs the loop. How do you break it?</summary><div>This is durable execution's blind spot: it guarantees "faithful recovery," but faithfully recovering a bad state is worthless. Add <strong>loop detection</strong> on top of checkpoints: fingerprint the last K steps' (tool, normalized args); break or escalate to a human on repeats. Deeper, resume shouldn't blindly replay — inject a <strong>meta note</strong> at the recovery point: "you crashed/looped here, try a different strategy." Distinguishing two crash classes matters — infrastructure crashes (OOM/restart) should resume verbatim; logic crashes (loops/repeated failures) should resume with reflection.</div></details>
+<details><summary>A breaker protects the downstream, but has a side effect on the agent: once tripped, the tool "vanishes." How does the model react, and what does that imply for tool registry design?</summary><div>The model gets confused — a tool it used last turn now throws CircuitOpen. If you just return a bare exception, it may retry repeatedly (hitting the breaker) or abandon the task. Better: <strong>translate the breaker state into model-usable semantics</strong>: "X is temporarily unavailable, expected back in ~30s; use Y or do other steps first." This points to a design principle: a tool's <strong>availability is dynamic state</strong>, and the harness should surface it as part of context proactively, not only as a failure on call. The breaker essentially promotes "infrastructure health" into a model-visible decision input.</div></details>
+<details><summary>This whole issue is problems distributed systems solved twenty years ago. Do agents really bring "new" resilience challenges, or just repackage old solutions?</summary><div>Eighty percent is old solutions, but ten percent is genuinely new — and it's the hardest ten. The old part: retry/idempotency/saga/breaker/checkpoint, lifted wholesale. The new part comes from the <strong>non-deterministic decision layer</strong>: traditional control flow is coded and statically analyzable, even formally verifiable; an agent's control flow is generated by the model on the fly, so you can't know what it calls next. "Is retry safe" degrades from a provable property into a probability problem — the model may repeat an operation at the worst moment. That turns idempotency from "best practice" into a "lifeline." Another new problem: a traditional saga's steps are known, an agent's steps are emergent, so you must design compensation for side effects "not yet done but the model might do."</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/" target="_blank">AWS Builders' Library · Timeouts, Retries, and Backoff with Jitter</a> — foundational engineering on retry resilience</li>
+<li><a href="https://docs.stripe.com/api/idempotent_requests" target="_blank">Stripe · Idempotent Requests</a> — the de facto standard for industrial idempotency keys</li>
+<li><a href="https://docs.langchain.com/oss/javascript/langgraph/persistence" target="_blank">LangGraph · Persistence &amp; Checkpointers</a> — library-level checkpoint / resume</li>
+<li><a href="https://temporal.io/blog/durable-execution-meets-ai-why-temporal-is-the-perfect-foundation-for-ai" target="_blank">Temporal · Durable Execution meets AI</a> — platform-level durable execution for agents</li>
+<li><a href="https://martinfowler.com/bliki/CircuitBreaker.html" target="_blank">Martin Fowler · CircuitBreaker</a> — the classic on the three-state breaker</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 39 · 2026-06-18</footer>
+</div>
+</body></html>

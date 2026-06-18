@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 39 · Agent 错误恢复与韧性 — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 39 / PHASE 4 · PRODUCTION</span>
+<h1>Agent 错误恢复与韧性</h1>
+<h2>Retry · Idempotency · Checkpoint · Circuit Breaker</h2>
+<div class="date">2026-06-18 · BigCat</div>
+<p class="pitch">Demo 里的 agent 永远成功；production 里的 agent 大部分时间在处理失败。</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>Agent 的 happy path 谁都会写：<code>while</code> 循环 + tool call + 模型决定停。但生产环境里，90% 的工程量在 happy path 之外——网络抖、rate limit、tool 超时、模型吐半个 JSON、第 38 步崩了前 37 步白跑、retry 把同一封邮件发了三遍。这些不是 prompt 能解决的，是 harness 的<strong>韧性设计</strong>。资深分布式工程师对这套东西很熟（retry / 幂等 / saga / 熔断 / checkpoint），但 agent 把它们重新搅在一起：因为多了一个<strong>非确定性的决策层</strong>，很多传统 retry 直觉会失效——模型自己会"再调一次"，模型自己会因为一个错误而放弃。这一期讲四件最容易出线上事故的事：retry 的两层结构、副作用工具的幂等与补偿、长任务的 checkpoint 续跑、超时熔断与部分失败的降级。</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>Retry 的两层结构：别把传输错误和语义错误混在一个 retry 里</h2>
+<div class="claim">论断：agent 的 retry 必须分层——传输层（确定性、程序重试）和语义层（非确定性、喂回模型）混在一起是头号 bug。</div>
+
+<h3>背景与原理</h3>
+<p>agent 里有两种"失败"，处理方式完全相反。</p>
+<ul>
+<li><strong>传输层失败</strong>：HTTP 429 / 503、连接超时、ECONNRESET——确定性的瞬时故障。正确做法是<strong>程序层 retry，指数退避 + jitter</strong>，根本不该惊动模型。Marc Brooker 在 AWS 那篇经典里证明：固定 backoff 会让客户端"同步化"反复撞击同一时刻，<strong>full jitter</strong>（随机化整个退避窗口）显著降低竞争。</li>
+<li><strong>语义层失败</strong>：tool 执行了但结果是错的——文件不存在、命令报错、参数非法。这是模型需要"看到并自我修正"的信息，正确做法是把 error message 当 <code>tool_result</code> <strong>喂回模型</strong>，让它换个方法。绝不能在程序层 retry——同样的参数重试一百次还是错。</li>
+</ul>
+<p>头号 bug 是把两层搞反：把 429 当语义错误喂回模型（模型不会退避，继续猛打依赖），或把"文件不存在"当传输错误程序重试（死循环）。判别只有一句话：<strong>错误是否与输入无关、且只是瞬时的？</strong>是→程序退避；否→喂回模型。</p>
+
+<div class="diagram">          一次 tool 调用失败了，往哪走？
+                      │
+            ┌─────────┴──────────┐
+            ▼                    ▼
+   ┌─────────────────┐   ┌──────────────────┐
+   │ 传输层 / 瞬时    │   │ 语义层 / 确定     │
+   │ 429·503·timeout │   │ 参数错·文件不存在 │
+   └────────┬────────┘   └────────┬─────────┘
+            ▼                     ▼
+   程序退避 + full jitter   error → tool_result
+   重试 N 次后 fail-fast    喂回模型，让它换法子
+   (模型看不到)            (程序不重试)</div>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-key">import</span> time, random, anthropic
+
+TRANSIENT = (anthropic.RateLimitError, anthropic.APITimeoutError,
+             anthropic.InternalServerError)
+
+<span class="tag-key">def</span> call_with_backoff(fn, max_retries=5):
+    <span class="tag-key">for</span> attempt <span class="tag-key">in</span> range(max_retries):
+        <span class="tag-key">try</span>:
+            <span class="tag-key">return</span> fn()
+        <span class="tag-key">except</span> TRANSIENT <span class="tag-key">as</span> e:        <span class="tag-com"># 传输层:确定性瞬时故障 → 程序退避</span>
+            <span class="tag-key">if</span> attempt == max_retries - 1: <span class="tag-key">raise</span>
+            <span class="tag-com"># full jitter:随机化整个退避窗口,避免 thundering herd</span>
+            time.sleep(random.uniform(0, min(60, 2 ** attempt)))
+        <span class="tag-com"># 注意:语义错误(tool 报错)不在这里 catch——</span>
+        <span class="tag-com"># 它们走 tool_result 喂回模型,由模型决定下一步</span></code></pre>
+
+<div class="fail">
+<strong>失败模式</strong>：把所有 exception 一把 catch + retry。结果：一个永久错误（401 Unauthorized、参数非法）被退避重试 5 次，每次都失败，只是把故障延迟 60 秒才暴露，还白烧了配额。retry 只对"瞬时且确定"的故障有意义；<strong>permanent error 必须 fail-fast</strong>。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Marc Brooker / AWS <em>Exponential Backoff And Jitter</em>, <a href="https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/" target="_blank">aws.amazon.com/blogs/architecture</a> ·
+AWS Builders' Library <em>Timeouts, retries, and backoff with jitter</em>, <a href="https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/" target="_blank">aws.amazon.com/builders-library</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>幂等与补偿：agent 一定会重复执行，副作用工具必须幂等</h2>
+<div class="claim">论断：agent 的 retry / 续跑安全性 100% 取决于 tool 的幂等性，而不是 retry 逻辑写得多漂亮。</div>
+
+<h3>背景与原理</h3>
+<p>retry 和断点续跑有个隐藏前提：<strong>被重试的操作可以安全地执行多次</strong>。读操作天然幂等（读两遍文件没事），但写操作不是：<code>create_order</code> / <code>send_email</code> / <code>charge_card</code> 重试一次 = 客户被扣两次款。agent 比传统系统更危险，因为它的"重试"有<strong>两个来源</strong>：程序层 backoff，和模型层——模型看到 <code>tool_result</code> 含糊（超时，不知道成没成功）时，会"保险起见再调一次"。这恰恰是最危险的时刻，因为首次可能已经成功了。</p>
+<p>两个工程手段：</p>
+<ul>
+<li><strong>幂等键（idempotency key）</strong>：每个有副作用的 tool call 带一个客户端生成的唯一 key，服务端用它去重——同一个 key 第二次调用直接返回首次结果，不重复执行。Stripe 等支付 API 的标准做法。关键：key 要<strong>从任务派生</strong>（确定性），而非每次随机，否则重试时 key 变了就失去去重意义。</li>
+<li><strong>补偿事务（Saga）</strong>：agent 没有数据库事务可以一键回滚。若第 3 步失败，前两步的副作用（已订票、已扣款）要靠<strong>补偿动作</strong>（退票、退款）显式撤销。给每个有副作用的 step 配一个 compensating action，失败时逆序执行。</li>
+</ul>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-com"># 1) 幂等键:让重试安全。key 由 task 派生,而非随机</span>
+<span class="tag-key">def</span> book_flight(args):
+    key = <span class="tag-gpt">f"book:{args['trip_id']}:{args['flight_no']}"</span>   <span class="tag-com"># 确定性 key</span>
+    <span class="tag-key">return</span> api.post(<span class="tag-gpt">"/bookings"</span>, json=args,
+                    headers={<span class="tag-gpt">"Idempotency-Key"</span>: key})       <span class="tag-com"># 服务端去重</span>
+
+<span class="tag-com"># 2) 补偿:每个副作用 step 登记一个 undo,失败时逆序回滚</span>
+saga = []
+<span class="tag-key">try</span>:
+    r1 = book_flight(...);  saga.append(<span class="tag-key">lambda</span>: cancel_flight(r1.id))
+    r2 = charge_card(...);  saga.append(<span class="tag-key">lambda</span>: refund(r2.id))
+    r3 = book_hotel(...)                  <span class="tag-com"># ← 这一步失败</span>
+<span class="tag-key">except</span> Exception:
+    <span class="tag-key">for</span> undo <span class="tag-key">in</span> reversed(saga):     <span class="tag-com"># 逆序补偿:先退款,再退票</span>
+        undo()
+    <span class="tag-key">raise</span></code></pre>
+
+<div class="fail">
+<strong>失败模式</strong>：依赖"模型不会重复调用"。当 <code>tool_result</code> 是 network timeout（真不知道服务端执行了没）时，模型经常会再调一次——而幂等键是唯一可靠防线。<strong>不能靠 prompt 叮嘱模型"不要重复"</strong>，那是把安全性建在非确定性的决策层上。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Stripe <em>Idempotent requests</em>, <a href="https://docs.stripe.com/api/idempotent_requests" target="_blank">docs.stripe.com/api/idempotent_requests</a> ·
+Stripe <em>Designing robust APIs with idempotency</em>, <a href="https://stripe.com/blog/idempotency" target="_blank">stripe.com/blog/idempotency</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Checkpoint 与断点续跑：agent state 必须外置，内存 loop 是玩具</h2>
+<div class="claim">论断：长任务必须能从 checkpoint 续跑而非从头重来；前提是 agent state 外置可持久化。</div>
+
+<h3>背景与原理</h3>
+<p>一个跑 40 步、半小时的 agent，在第 38 步进程崩了（OOM、部署重启、抢占式机器被回收）。如果 state 只活在内存的 messages 数组里，前 37 步<strong>全部白跑</strong>——而那 37 步的 token 和副作用已经花掉了。生产 agent 必须把 state 持久化到进程外：每完成一步就 <strong>checkpoint</strong> 一次，崩溃后从最后一个 checkpoint 恢复。这就是 <strong>durable execution</strong> 的核心。两种落地：</p>
+<ul>
+<li><strong>库层</strong>：LangGraph 的 checkpointer——每个 node 执行后把 state 快照到 SQLite / Postgres，用 <code>thread_id</code> 恢复，"loads the last snapshot and resumes exactly where it left off"。</li>
+<li><strong>平台层</strong>：Temporal 这类 durable execution engine，把整个 agent workflow 变成可崩溃恢复的——崩溃后 replay 历史、跳过已完成的 activity，"survive a crash and resume exactly where it left off"。</li>
+</ul>
+<p>关键是 checkpoint 的<strong>粒度</strong>：太细（每个 token）开销大，太粗（只在结束）等于没有。实践上以"完成一次模型调用或一个有副作用的 step"为单位。且 checkpoint 必须配合幂等（§2）——恢复时最后那个 step 可能只执行了一半。</p>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-key">import</span> json, os
+<span class="tag-key">def</span> agent(task, ckpt_path):
+    <span class="tag-key">if</span> os.path.exists(ckpt_path):                    <span class="tag-com"># 续跑:从 checkpoint 恢复</span>
+        s = json.load(open(ckpt_path)); msgs, step = s[<span class="tag-gpt">"msgs"</span>], s[<span class="tag-gpt">"step"</span>]
+    <span class="tag-key">else</span>:
+        msgs, step = [{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,<span class="tag-gpt">"content"</span>:task}], 0
+    <span class="tag-key">while</span> step &lt; MAX_STEPS:
+        r = client.messages.create(model=MODEL, messages=msgs,
+                                   tools=SCHEMAS, max_tokens=4096)
+        msgs.append({<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"assistant"</span>,<span class="tag-gpt">"content"</span>:r.content})
+        <span class="tag-key">if</span> r.stop_reason == <span class="tag-gpt">"end_turn"</span>: <span class="tag-key">break</span>
+        results = run_tools(r.content)               <span class="tag-com"># 执行工具(须幂等!)</span>
+        msgs.append({<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,<span class="tag-gpt">"content"</span>:results}); step += 1
+        json.dump({<span class="tag-gpt">"msgs"</span>:msgs,<span class="tag-gpt">"step"</span>:step}, open(ckpt_path,<span class="tag-gpt">"w"</span>))  <span class="tag-com"># 每步落盘</span></code></pre>
+
+<div class="fail">
+<strong>失败模式</strong>：checkpoint 了 state 但 tool 不幂等——崩溃发生在"tool 已执行、checkpoint 未写"之间，恢复后重跑该 tool，副作用执行两遍。<strong>checkpoint 和幂等是一对，缺一不可</strong>。另一个坑：把不可序列化的对象（file handle、socket）塞进 state，恢复时直接炸。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · LangChain <em>Persistence / Checkpointers</em>, <a href="https://docs.langchain.com/oss/javascript/langgraph/persistence" target="_blank">docs.langchain.com/.../persistence</a> ·
+Temporal <em>Durable Execution meets AI</em>, <a href="https://temporal.io/blog/durable-execution-meets-ai-why-temporal-is-the-perfect-foundation-for-ai" target="_blank">temporal.io/blog</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>超时、熔断与部分失败：区分"可降级"和"必须停"</h2>
+<div class="claim">论断：默认让任何 tool 失败就整体 fail 是反模式；成熟 agent 对每类失败有明确的降级策略。</div>
+
+<h3>背景与原理</h3>
+<p>三个相关机制：</p>
+<ul>
+<li><strong>超时（timeout）</strong>：每个 tool call 必须有上限，否则一个挂起的 HTTP 请求会让整个 agent 永久卡死。超时要<strong>分层</strong>：单个 tool 超时 &lt; 单个 step 超时 &lt; 整个 task 的顶层 deadline。</li>
+<li><strong>熔断（circuit breaker）</strong>：某个下游依赖（一个 API、一个 MCP server）连续失败 N 次就"跳闸"——后续调用直接快速失败，不再傻等超时，过一段时间再"半开"放一个试探。这防止 agent 把已经挂掉的依赖反复打，既省 token 又防止级联拖慢。经典三态：<code>closed → open → half-open</code>。</li>
+<li><strong>部分失败（partial failure）</strong>：并行 fan-out（Day 13 的 orchestrator-worker）里 5 个 worker，1 个挂了。反模式是整批 fail；成熟做法是收集成功的 4 个，把"1 个失败"作为信息交给 orchestrator 决策——降级用 4 个结果继续，还是这个子任务关键、必须停。</li>
+</ul>
+
+<div class="diagram">      Circuit Breaker 三态机
+  ┌────────┐  连续失败≥N   ┌────────┐
+  │ CLOSED │ ───────────▶ │  OPEN  │
+  │ 正常放行│              │ 快速失败│
+  └────────┘ ◀───────────  └───┬────┘
+       ▲      试探成功          │ 冷却 reset_after
+       │                       ▼
+       │     ┌──────────────────────┐
+       └──── │ HALF-OPEN 放一个试探  │
+   试探失败→OPEN └──────────────────────┘</div>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-key">class</span> CircuitBreaker:
+    <span class="tag-key">def</span> __init__(self, fail_max=5, reset_after=30):
+        self.fail_max, self.reset_after = fail_max, reset_after
+        self.fails, self.opened_at = 0, <span class="tag-key">None</span>
+    <span class="tag-key">def</span> call(self, fn):
+        <span class="tag-key">if</span> self.opened_at:                          <span class="tag-com"># OPEN</span>
+            <span class="tag-key">if</span> time.time() - self.opened_at &lt; self.reset_after:
+                <span class="tag-key">raise</span> CircuitOpen(<span class="tag-gpt">"依赖熔断中,快速失败"</span>)
+            self.opened_at = <span class="tag-key">None</span>                   <span class="tag-com"># → HALF-OPEN:放一个试探</span>
+        <span class="tag-key">try</span>:
+            out = fn(); self.fails = 0              <span class="tag-com"># 成功 → CLOSED</span>
+            <span class="tag-key">return</span> out
+        <span class="tag-key">except</span> Exception:
+            self.fails += 1
+            <span class="tag-key">if</span> self.fails &gt;= self.fail_max:
+                self.opened_at = time.time()       <span class="tag-com"># → OPEN:跳闸</span>
+            <span class="tag-key">raise</span></code></pre>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）只有单 tool 超时、没有 task 级总 deadline——agent 在死循环里每步都不超时，却永远跑不完，直到烧光预算。必须有顶层时限。（2）把部分失败硬编码成"任何 worker 失败 = 整体失败"，让一个 flaky 的边缘 worker 拖垮整个高价值任务。降级策略应由 orchestrator 按子任务重要性决定，而非一刀切。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Martin Fowler <em>CircuitBreaker</em>, <a href="https://martinfowler.com/bliki/CircuitBreaker.html" target="_blank">martinfowler.com/bliki/CircuitBreaker</a> ·
+HumanLayer <em>12-Factor Agents</em>（own your control flow / errors）, <a href="https://github.com/humanlayer/12-factor-agents" target="_blank">github.com/humanlayer/12-factor-agents</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// 综合实战 · 把玩具 agent 改造成可恢复 agent</h3>
+<p>拿你手上任何一个 100 行的 demo agent，按这张 checklist 逐项加固——每一项都对应上面一个失败模式：</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>分层 retry</strong>：给 <code>messages.create</code> 和网络型 tool 套 <code>call_with_backoff</code>（full jitter）；语义错误<strong>不</strong>包进去，原样喂回模型。</li>
+<li><strong>给副作用工具加幂等键</strong>：列出所有"写"类 tool，每个带一个从任务派生的 <code>Idempotency-Key</code>；不能改服务端的，就自己存一张"已执行 key"表去重。</li>
+<li><strong>每步 checkpoint</strong>：把 <code>{msgs, step}</code> 每轮落盘（或 LangGraph checkpointer）；启动时先尝试恢复。验证：跑到一半 <code>kill -9</code>，重启应从断点继续而非从头。</li>
+<li><strong>三层超时 + 一个熔断</strong>：单 tool 超时、task 顶层 deadline、对最常挂的那个外部依赖包一个 <code>CircuitBreaker</code>。</li>
+<li><strong>部分失败降级</strong>：若有并行 fan-out，把 <code>gather</code> 改成"收集成功 + 标注失败"，让上层决定继续还是停。</li>
+<li><strong>注一行账</strong>：retry 次数、熔断跳闸、checkpoint 恢复都打点——韧性出问题时，没有这几个指标你根本看不见。</li>
+</ol>
+<p style="margin-top:12px">做完你会发现：代码从 100 行涨到 300+ 行，多出来的 200 行没有一行是"功能"，全是<strong>韧性</strong>——这正是 demo agent 和 production agent 的真实差距。</p>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// ENGLISH GLOSSARY</h3>
+<dl>
+<dt>Transient vs Permanent Error</dt><dd>瞬时故障（429/超时，可退避重试）vs 永久故障（401/参数错，应 fail-fast）。判别是 retry 设计的起点。</dd>
+<dt>Full Jitter</dt><dd>把退避时间随机化到整个 [0, backoff] 窗口，避免客户端同步化反复撞击。AWS Marc Brooker 推荐。</dd>
+<dt>Idempotency Key</dt><dd>客户端生成的唯一键，让服务端识别重试、对同一操作只执行一次。副作用工具的安全前提。</dd>
+<dt>Saga / Compensation</dt><dd>无全局事务时，用显式"补偿动作"逆序撤销已成功步骤的副作用。</dd>
+<dt>Checkpoint</dt><dd>把 agent state 持久化到进程外的快照，崩溃后从此处续跑而非重来。</dd>
+<dt>Durable Execution</dt><dd>让长任务可崩溃恢复的执行模型（LangGraph checkpointer、Temporal）。</dd>
+<dt>Circuit Breaker</dt><dd>下游连续失败即"跳闸"快速失败的三态机：closed / open / half-open。</dd>
+<dt>Partial Failure</dt><dd>并行子任务中部分失败。成熟做法是降级而非整批 fail。</dd>
+<dt>Deadline</dt><dd>任务顶层时限。防止"每步都不超时却永远跑不完"的隐性死循环。</dd>
+</dl>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// 深入思考</h3>
+<details><summary>把传输层 retry 完全藏在程序里、不让模型知道，会不会让模型对"环境有多脆"形成错误认知？什么时候反而该告诉它？</summary><div>多数时候该藏——模型不需要也不该为 429 退避负责，把它暴露反而污染推理。但有两个例外值得告诉模型：一是<strong>退避后仍永久失败</strong>（依赖真挂了），此时让模型知道"这条路堵死了"，它能换一个工具或方案；二是<strong>退避导致显著延迟</strong>且模型在做时间敏感决策时。原则：传输层故障的"过程"对模型隐藏，但"最终结论"（成功/永久失败）必须作为 tool_result 让模型看到，否则它会在错误前提上继续规划。</div></details>
+<details><summary>幂等键要"从任务派生"。但 agent 的任务描述是自然语言、每次措辞不同，怎么派生出稳定的 key？</summary><div>不要用自然语言任务做 key，用<strong>结构化的操作语义</strong>做。key 应来自工具调用的<strong>规范化参数</strong>，而非上层指令：<code>charge:{user_id}:{order_id}:{amount}</code> 这种由确定字段拼出的 key，无论模型怎么措辞、重试几次都一样。如果操作本身缺乏天然唯一标识（如"发一条鼓励消息"），就在 agent 进入该 step 时由 harness 生成一个 key 并写进 checkpoint——续跑时复用 checkpoint 里的 key。本质：幂等键的稳定性来自 harness 层的确定性派生，而不是模型输出。</div></details>
+<details><summary>checkpoint + 幂等能让 agent 崩溃后续跑。但如果崩溃本身是模型决策导致的死循环，续跑只会忠实地重演死循环。怎么破？</summary><div>这是 durable execution 的盲区：它保证"忠实恢复"，但忠实恢复一个坏状态毫无价值。需要在 checkpoint 之上加<strong>循环检测</strong>：记录最近 K 步的 (tool, 规范化参数) 指纹，连续重复就强制 break 或升级给人。更深一层，续跑时不该盲目 replay，而应在恢复点<strong>注入一条 meta 信息</strong>："你在此处崩溃过/循环过，换个策略"。区分两类崩溃很关键——基础设施崩溃（OOM/重启）该原样续跑，逻辑崩溃（死循环/反复失败）该带反思续跑。</div></details>
+<details><summary>熔断保护下游，但对 agent 有个副作用：跳闸后那个工具"消失"了。模型会怎么反应？这对 tool registry 设计有什么启示？</summary><div>模型会困惑——它上一轮还在用的工具，这轮突然报 CircuitOpen。如果只回一个干巴巴的异常，模型可能反复重试（撞在熔断上）或直接放弃任务。更好的做法是把熔断状态<strong>翻译成模型能用的语义</strong>："X 服务暂时不可用，预计 30s 后恢复，请改用 Y 或先做其它步骤"。这指向一个设计原则：tool 的<strong>可用性也是一种动态状态</strong>，harness 应把它作为 context 的一部分主动告知模型，而不是只在调用失败时被动报错。熔断本质是把"基础设施健康度"提升为"模型可见的决策输入"。</div></details>
+<details><summary>这一期全是分布式系统二十年前就解决的老问题。agent 真的带来了"新"的韧性挑战，还是只是把旧方案换个壳？</summary><div>八成是旧方案，但有一成是真新的，且恰恰是最难的那一成。旧的部分：retry/幂等/saga/熔断/checkpoint 完全照搬。新的部分来自<strong>非确定性决策层</strong>：传统系统的控制流是程序写死的，可以静态分析、形式化验证；agent 的控制流由模型即时生成，你无法预知它下一步调什么。于是"重试是否安全"从一个可证明的属性，退化成一个概率问题——模型可能在最坏的时刻重复操作。这让幂等从"最佳实践"变成"生死线"。另一个新问题：传统补偿事务的步骤是已知的，agent 的步骤是涌现的，你得为"还没发生、但模型可能做"的副作用预先设计补偿。</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/" target="_blank">AWS Builders' Library · Timeouts, Retries, and Backoff with Jitter</a> — retry 韧性的奠基性工程文献</li>
+<li><a href="https://docs.stripe.com/api/idempotent_requests" target="_blank">Stripe · Idempotent Requests</a> — 幂等键工业级实现的事实标准</li>
+<li><a href="https://docs.langchain.com/oss/javascript/langgraph/persistence" target="_blank">LangGraph · Persistence & Checkpointers</a> — 库层 checkpoint / 断点续跑</li>
+<li><a href="https://temporal.io/blog/durable-execution-meets-ai-why-temporal-is-the-perfect-foundation-for-ai" target="_blank">Temporal · Durable Execution meets AI</a> — 平台层 durable execution 用于 agent</li>
+<li><a href="https://martinfowler.com/bliki/CircuitBreaker.html" target="_blank">Martin Fowler · CircuitBreaker</a> — 熔断三态机的经典论述</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 39 · 2026-06-18</footer>
+</div>
+</body></html>
