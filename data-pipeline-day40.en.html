@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 40 · Data Pipeline for AI — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.homework{background:linear-gradient(135deg,rgba(255,110,196,0.1),rgba(123,97,255,0.1));border:1px solid rgba(255,110,196,0.3);border-radius:10px;padding:22px 24px;margin:36px 0}
+.homework h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 40 / PHASE 4 · ENGINEERING</span>
+<h1>Data Pipeline for AI</h1>
+<h2>Embedding ETL · Incremental Index · Index Versioning · Feature Store</h2>
+<div class="date">2026-06-19 · BigCat</div>
+<p class="pitch">Every model upgrade makes things better — but the vector store you feed it may still live in last quarter's coordinate system. The data pipeline is the real infrastructure that keeps RAG from decaying over time.</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>Most RAG demos die at "it works once": embed all docs in one shot, load into a vector store, ship. The real pain starts on day two. A doc changes one line — do you re-embed the whole store or just that chunk? Will a deleted page still get retrieved? You found a better embedding model — what happens to the old vectors? The "clicks in the last 7 days" feature you feed the reranker — is training computing the same value as serving? None of these are model problems; they are <strong>data-pipeline engineering</strong> problems, and every one of them silently corrodes production quality without throwing an error. This issue dissects the AI data pipeline into its four most collapse-prone load-bearing points: <strong>the cost structure of embedding ETL</strong>, <strong>incremental indexing's diff and delete</strong>, <strong>index migration on embedding-model upgrade</strong>, and <strong>offline/online consistency in the feature store</strong>. Each comes with a copy-pasteable skeleton and its failure mode.</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>Embedding ETL: Content-Hash Dedup Is the Pipeline's Choke Point</h2>
+<div class="claim">Claim: the embedding call is the most expensive, slowest step in the pipeline. Cache it as a pure function instead of recomputing every time.</div>
+
+<h3>Background & Principle</h3>
+<p>An AI data pipeline is essentially <code>extract → chunk → embed → load</code>. Of the first three, extract and chunk are nearly free (CPU, milliseconds); <strong>embed is the bottleneck</strong>: it crosses the network, bills per token, and hits rate limits. So the first engineering principle is to treat <code>embed(chunk)</code> as a <strong>pure function</strong>: identical text yields identical vectors, which means you can cache on <code>hash(model_id + chunk_text)</code>. The moment the same chunk appears in multiple docs, or one doc gets re-ingested repeatedly, cache hits cut cost and latency by an order of magnitude. The second principle is <strong>batching</strong>: embedding APIs take a batch per call, and one call of 100 chunks far outthroughputs 100 single calls. The third is to decouple chunk from embed — chunking strategy gets retuned constantly, but as long as the text is unchanged you should not pay to re-embed it.</p>
+
+<div class="diagram">┌──────── Embedding ETL: hash cache is the core valve ────────┐
+│                                                             │
+│  raw docs ─▶ extract ─▶ chunk ─▶ ┌──────────────┐           │
+│  (ms-level, ~free)               │ hash(model+   │           │
+│                                  │   chunk_text) │           │
+│                                  └──────┬───────┘           │
+│                                  hit? ──┤                   │
+│                            ┌── yes ─────┘── no ──┐          │
+│                            ▼                     ▼          │
+│                      cached vector        ┌──────────┐      │
+│                      (0 cost/latency)      │ embed()  │  ◀ only paid/
+│                            │              │ batch 100 │    rate-limited
+│                            │              └────┬─────┘      │
+│                            └──────┬────────────┘            │
+│                                   ▼                         │
+│                            upsert → vector DB               │
+└─────────────────────────────────────────────────────────────┘</div>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># Embedding as pure function: content hash as cache key + batching</span>
+<span class="tag-claude">import</span> hashlib, json
+
+MODEL = <span class="tag-gpt">"voyage-3"</span>  <span class="tag-com"># bake model_id into the key; swapping models auto-misses</span>
+
+<span class="tag-claude">def</span> key(text): <span class="tag-claude">return</span> hashlib.sha256(<span class="tag-gpt">f"{MODEL}:{text}"</span>.encode()).hexdigest()
+
+<span class="tag-claude">def</span> embed_batch(chunks, cache):
+    todo = [c <span class="tag-claude">for</span> c <span class="tag-claude">in</span> chunks <span class="tag-claude">if</span> key(c) <span class="tag-claude">not in</span> cache]
+    <span class="tag-claude">if</span> todo:                                  <span class="tag-com"># pay only for misses</span>
+        vecs = client.embed(todo, model=MODEL).embeddings
+        <span class="tag-claude">for</span> c, v <span class="tag-claude">in</span> zip(todo, vecs): cache[key(c)] = v
+    <span class="tag-claude">return</span> [cache[key(c)] <span class="tag-claude">for</span> c <span class="tag-claude">in</span> chunks]</code></pre>
+<p>Baking <code>model_id</code> into the cache key is the setup for the next section on swapping models — a model change auto-invalidates every key, forcing a re-embed instead of silently mixing vectors from two coordinate systems.</p>
+
+<div class="fail">
+<strong>Failure mode</strong>: using "doc ID + chunk index" as the cache key. Edit the doc content and the chunk's text changes but its ID/index doesn't — the cache hits and returns the stale vector. <strong>A silently returned stale embedding</strong> is harder to catch than an error. The cache key must include a hash of <strong>the content itself</strong>, not just position.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Anthropic <em>Contextual Retrieval</em> (prepend per-chunk context before embedding; −35% retrieval failures), <a href="https://www.anthropic.com/news/contextual-retrieval" target="_blank">anthropic.com/news/contextual-retrieval</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Incremental Indexing: Diff-Driven Upsert — Don't Forget the Delete Tombstone</h2>
+<div class="claim">Claim: full re-embedding every time is a beginner's tax. The right way is to diff by content hash and touch only changed chunks — and handle deletes explicitly.</div>
+
+<h3>Background & Principle</h3>
+<p>A document corpus is alive: adds, edits, deletes happen daily. Full rebuilds are tolerable while docs are few, but past ten thousand they become hours of daily compute plus a multiplied API bill. The core of incremental indexing is maintaining a <strong>"chunk fingerprint table"</strong> (<code>chunk_id → content_hash</code>). Each ingest is compared to the last to derive three operations: <strong>add</strong> (new hash), <strong>change</strong> (same id, different hash → re-embed + upsert), and <strong>delete</strong> (present last time, gone now → remove from the vector store). Most people do the first two; <strong>deletes are almost always missed</strong> — because they "don't error." The consequence of a missed delete is <strong>ghost recall</strong>: the doc is long gone but its vector still sits in the store getting retrieved, and the model generates from stale or wrong content. Deletes must go through a <strong>tombstone</strong> flow that guarantees the vector truly disappears from the store.</p>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># Three diff states: add / change / delete (delete is the easy miss)</span>
+<span class="tag-claude">def</span> reindex(new_chunks, fingerprint_store, vdb):
+    old = fingerprint_store.load()        <span class="tag-com"># {chunk_id: hash}</span>
+    new = {c.id: c.hash <span class="tag-claude">for</span> c <span class="tag-claude">in</span> new_chunks}
+
+    changed = [c <span class="tag-claude">for</span> c <span class="tag-claude">in</span> new_chunks
+               <span class="tag-claude">if</span> old.get(c.id) != c.hash]      <span class="tag-com"># add + change</span>
+    deleted = old.keys() - new.keys()     <span class="tag-com"># ← key: was there, now gone</span>
+
+    <span class="tag-claude">if</span> changed: vdb.upsert(embed_batch([c.text <span class="tag-claude">for</span> c <span class="tag-claude">in</span> changed]))
+    <span class="tag-claude">if</span> deleted: vdb.delete(ids=list(deleted))  <span class="tag-com"># tombstone, kills ghost recall</span>
+    fingerprint_store.save(new)</code></pre>
+<p>The fingerprint table is itself a cheap "data version snapshot" — when something breaks you can reconcile it against the vector store to find exactly which entries drifted between index and source.</p>
+
+<div class="fail">
+<strong>Failure mode</strong>: incremental does upsert only, never delete. Six months later the store is full of residue from deleted docs, recall quality slowly degrades, and the cause is untraceable. Second trap: re-embedding the whole doc as one unit — fix one typo and you re-embed all of its dozens of chunks. <strong>Diff granularity must be chunk, not document.</strong>
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · DVC (git-for-data; version and reproduce datasets and pipeline stages), <a href="https://doc.dvc.org/user-guide/pipelines" target="_blank">doc.dvc.org/user-guide/pipelines</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Embedding Versioning: Swapping the Model = Swapping the Coordinate System — Blue-Green Rebuild</h2>
+<div class="claim">Claim: vectors from different embedding models do not live in the same space. Mixing them is computing distances across two coordinate systems — the result is noise.</div>
+
+<h3>Background & Principle</h3>
+<p>This is the most insidious and costliest class of incident. Every embedding-model upgrade (even a minor version of the same model) changes the geometry of the vector space: <strong>the cosine similarity between the same sentence embedded by model A and model B is meaningless</strong>. If "to save money" you re-embed only new docs and keep old vectors from the old model, the whole index now mixes two incomparable coordinate systems and recall degrades randomly from then on — without erroring. The right approach borrows <strong>blue-green</strong> from deployment: rebuild the new model fully into a <strong>separate new index</strong>, dual-write during the transition, A/B the recall quality, and only after confirming no regression atomically switch traffic, keeping the old index for rollback. Key discipline: <strong>write the <code>embedding_model</code> version into each vector's metadata</strong>, so mixing can be asserted away at the query layer.</p>
+
+<div class="diagram">┌──── Swapping embedding model: blue-green index migration ────┐
+│                                                              │
+│  write ──┬──▶ [Blue index]  model v1  ◀─ live queries        │
+│          │     (old, full)                                   │
+│          └──▶ [Green index] model v2                         │
+│                (new, full re-embed in background)            │
+│                      │                                       │
+│               A/B recall quality                            │
+│               (offline eval set)                            │
+│                      │ no regression?                       │
+│                      ▼ atomic swap                          │
+│  write ──┬──▶ [Green index] model v2  ◀─ live queries        │
+│          └──▶ [Blue index]  kept → rollback                  │
+│                                                              │
+│  ✗ anti-pattern: mixing v1+v2 vectors in one index → distort │
+└──────────────────────────────────────────────────────────────┘</div>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># Bind model version into vector metadata; assert same source at query time</span>
+vdb.upsert(id=cid, vector=v, metadata={
+    <span class="tag-gpt">"embedding_model"</span>: <span class="tag-gpt">"voyage-3"</span>,   <span class="tag-com"># ← version fingerprint</span>
+    <span class="tag-gpt">"indexed_at"</span>: ts, <span class="tag-gpt">"doc_id"</span>: doc})
+
+<span class="tag-claude">def</span> search(q, vdb, model):
+    <span class="tag-claude">assert</span> vdb.meta(<span class="tag-gpt">"embedding_model"</span>) == model, \
+        <span class="tag-gpt">"query model != index model — coordinate systems differ!"</span>
+    <span class="tag-claude">return</span> vdb.query(embed(q, model=model), top_k=<span class="tag-key">10</span>)</code></pre>
+
+<div class="fail">
+<strong>Failure mode</strong>: assuming equal dimensions mean compatibility. <code>text-embedding-3</code> and some open model both output 1024 dims — shapes line up, code doesn't error — but the semantic spaces are entirely different and recall is pure random. <strong>Dimension compatibility ≠ space compatibility.</strong> There is no "incremental upgrade" for swapping models, only a full rebuild.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Chip Huyen, <em>Designing Machine Learning Systems</em> — the chapters on data/model versioning and iteration are the standard reference for data-pipeline version governance.
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Feature Store: Offline/Online Consistency to Prevent Training-Serving Skew</h2>
+<div class="claim">Claim: the features you feed a reranker / personalization must be the same value, computed as of the same point in time, in training and serving — otherwise offline metrics look great while production collapses.</div>
+
+<h3>Background & Principle</h3>
+<p>RAG is not only vectors. Reranker ordering, personalized recall, and filter rules often need <strong>structured features</strong>: a user's clicks in the last 7 days, doc popularity, author authority. Two classic traps live here. First, <strong>training-serving skew</strong>: training computes features with offline batch SQL while serving uses a different real-time code path — the two logics inevitably drift, so offline eval rises while production drops. Second, <strong>data leakage</strong>: when building training samples, feature values must be taken as of <strong>the prediction's point in time</strong>, not "now" — otherwise the model peeks at the future during training, offline scores inflate, and reality bites on launch. A <strong>feature store</strong> (e.g., Feast) exists for exactly these two: an offline store for training and an online store for low-latency serving, with the <strong>same feature definition written once</strong> and point-in-time-correct joins implemented on the offline side.</p>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># point-in-time join: take features as of the prediction time, no future leak</span>
+<span class="tag-com"># training sample = (entity, event_timestamp of prediction, label)</span>
+training_df = store.get_historical_features(
+    entity_df=labels,                  <span class="tag-com"># has an event_timestamp column</span>
+    features=[<span class="tag-gpt">"user:clicks_7d"</span>, <span class="tag-gpt">"doc:popularity"</span>],
+).to_df()   <span class="tag-com"># Feast takes values ≤ event_timestamp, not "now"</span>
+
+<span class="tag-com"># Online serving: same feature definition, low-latency online store</span>
+feats = store.get_online_features(
+    features=[<span class="tag-gpt">"user:clicks_7d"</span>, <span class="tag-gpt">"doc:popularity"</span>],
+    entity_rows=[{<span class="tag-gpt">"user_id"</span>: u, <span class="tag-gpt">"doc_id"</span>: d}],
+).to_dict()   <span class="tag-com"># training/serving reuse one definition → no skew</span></code></pre>
+
+<div class="fail">
+<strong>Failure mode</strong>: backfilling features for historical samples with one <code>SELECT ... WHERE now()</code>. That stamps three-month-old samples with today's click counts — textbook point-in-time leakage, an absurdly beautiful offline AUC, and a production score of zero. For any time-dependent feature, when backfilling always ask: <strong>did this value actually exist at the moment the prediction happened?</strong>
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Feast docs (open-source feature store; offline/online dual store + point-in-time), <a href="https://docs.feast.dev" target="_blank">docs.feast.dev</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// Combined Drill · Give Your RAG a "Maintainable" Data Pipeline</h3>
+<p>String the four points into one refactor: evolve your "one-off script" RAG into a pipeline that can update daily, swap models, and not decay.</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>Hash cache layer</strong> (§1): add a <code>hash(model_id + chunk_text)</code> cache before embed. Run today's full ingest twice; confirm the second pass hits near 100% at near-zero cost.</li>
+<li><strong>Fingerprint table + diff</strong> (§2): build a <code>chunk_id → content_hash</code> table and turn ingest into a three-state diff. <strong>Test delete specifically</strong>: remove a doc and confirm its vector truly leaves the store and is no longer recalled.</li>
+<li><strong>Version metadata</strong> (§3): write <code>embedding_model</code> on every vector and add a query-layer assertion. Simulate a model swap: build a green index with a full re-embed, A/B blue/green recall on a fixed eval set, and switch only after confirming no regression.</li>
+<li><strong>Point-in-time features</strong> (§4): if you have reranker features, change backfill SQL to take values by event_timestamp. Deliberately write a "backfill with now()" control and see how much it inflates offline metrics — feel firsthand how tempting the leak is.</li>
+</ol>
+<p style="margin-top:12px">After these four steps, your RAG graduates from "the demo runs" to "production can sustain it." From then on, looking at any vector-retrieval system, you'll instinctively ask four questions: is embedding cached, are incremental deletes clean, how do model swaps migrate, can features leak — instead of just tuning top_k.</p>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// GLOSSARY</h3>
+<dl>
+<dt>Embedding ETL</dt><dd>The pipeline that extracts, chunks, embeds, and loads raw content into a vector store. Embed is its only paid/rate-limited step.</dd>
+<dt>Content Hash</dt><dd>A hash of the content itself (not position/ID), used as cache key and diff basis. Content changes, hash changes.</dd>
+<dt>Incremental Indexing</dt><dd>Re-embedding only changed chunks instead of a full rebuild, driven by fingerprint-table diff.</dd>
+<dt>Tombstone</dt><dd>Explicitly removing a deleted item's vector from the store to prevent ghost recall.</dd>
+<dt>Ghost Recall</dt><dd>Vectors of deleted/stale docs still getting retrieved, polluting generation.</dd>
+<dt>Blue-Green Index</dt><dd>A migration strategy: old and new indexes coexist, A/B compared, then atomically swapped. Essential when swapping embedding models.</dd>
+<dt>Embedding Space</dt><dd>The vector geometry defined by an embedding model. Spaces from different models are incomparable.</dd>
+<dt>Feature Store</dt><dd>A system that manages ML features uniformly — offline for training, online for serving, defined once (e.g., Feast).</dd>
+<dt>Training-Serving Skew</dt><dd>Drift between training and serving feature logic, making offline look good while production breaks.</dd>
+<dt>Point-in-Time Correctness</dt><dd>Taking feature values as of the prediction time when building training samples, preventing future-data leakage.</dd>
+</dl>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// DEEP THINKING</h3>
+<details><summary>Contextual Retrieval prepends context to each chunk before embedding. Does this break §1's content-hash cache?</summary><div>It does — and that's exactly the design point. The "context + original chunk" after augmentation is the text actually embedded, so the hash must be computed over the <strong>augmented</strong> string. The cost: the source chunk is unchanged, but if the context-generating LLM or prompt changes, the cache should invalidate. The practical move is to treat "context generation" as a versioned pipeline stage too and bake its version number into the hash key — the same idea as baking <code>model_id</code> into the key: any input that changes the final vector must enter the cache key.</div></details>
+<details><summary>Are §2's fingerprint table, §3's blue-green index, and §1's hash cache three independent mechanisms or one?</summary><div>They are the same "content-addressing" idea unfolded at three scales. The hash cache decides "does this chunk need to be re-embedded for pay" (chunk-level, reused across time); the fingerprint table decides "which chunks changed this ingest" (corpus-level, comparing adjacent runs); blue-green decides "the whole space changed, how to migrate safely" (index-level, model upgrade). All three share one invariant: <strong>use the fingerprint of content/version, not position or time, to decide identity and invalidation</strong>. Grasp this thread and you won't memorize them as three isolated tricks.</div></details>
+<details><summary>"Swapping the embedding model requires a full rebuild" is very expensive. Is there a shortcut to migrate without rebuilding?</summary><div>Research has tried "vector space alignment" (learn a linear/small network mapping the old space to the new), but it's nearly untrustworthy in practice: the mapping is lossy, errors amplify in recall, and you can't verify the alignment quality is uniform. The reliable way to save money is not avoiding re-embedding but lowering its unit price — §1's cache makes unchanged chunks free, batching cuts per-unit cost, and off-peak batch APIs earn discounts. Conclusion: <strong>the rebuild can't be bypassed, but it can be made cheap and gradual</strong>. Spending on the safety of the blue-green swap beats betting on an alignment model.</div></details>
+<details><summary>Are §4's point-in-time leakage and §2's missed-delete ghost recall the same class of error?</summary><div>Yes — both break <strong>temporal consistency</strong>. Ghost recall is "deleted in the past, the current index hasn't caught up" (index lags reality); point-in-time leakage is "a current value stamped onto a past sample" (the feature runs ahead of reality). One lags, one leads, but the root cause is the same: the <strong>valid-time</strong> of data wasn't taken seriously. Treat every datum as a timestamped event and make every read explicit about "as of which point," and both bug classes disappear together. This is why feature-store and CDC/event-sourcing thinking transfers to RAG.</div></details>
+<details><summary>For a solo developer doing RAG, are these four engineering layers necessary or over-design?</summary><div>It's staged. Static docs, a few hundred, model never changing — skip all four; a full script suffices, and forcing the layers is over-engineering. But hit any single signal and add the matching layer: docs change daily → §2 incremental; want to try a better embedding → §3 version metadata (even one line of metadata saves a future incident); wired up reranker features → §4 point-in-time. The criterion isn't "project size" but "<strong>will data change, will the model change</strong>." For a system that changes, the earlier you bury fingerprints and versions, the later it bites back.</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://www.anthropic.com/news/contextual-retrieval" target="_blank">Anthropic · Contextual Retrieval</a> — prepend context before embedding, sharply cutting retrieval failures</li>
+<li><a href="https://docs.feast.dev" target="_blank">Feast · Feature Store docs</a> — offline/online dual store and point-in-time correctness</li>
+<li><a href="https://doc.dvc.org/user-guide/pipelines" target="_blank">DVC · Data Pipelines</a> — git-for-data, versioned reproducible data and pipeline stages</li>
+<li><a href="https://platform.claude.com/cookbook/capabilities-contextual-embeddings-guide" target="_blank">Claude Cookbook · Contextual Embeddings</a> — a runnable contextual-embeddings implementation</li>
+<li><a href="https://docs.feast.dev/getting-started/quickstart" target="_blank">Feast · Quickstart</a> — a minimal runnable feature store</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 40 · 2026-06-19</footer>
+</div>
+</body></html>

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 40 · Data Pipeline for AI — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.homework{background:linear-gradient(135deg,rgba(255,110,196,0.1),rgba(123,97,255,0.1));border:1px solid rgba(255,110,196,0.3);border-radius:10px;padding:22px 24px;margin:36px 0}
+.homework h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 40 / PHASE 4 · ENGINEERING</span>
+<h1>Data Pipeline for AI</h1>
+<h2>Embedding ETL · Incremental Index · Index Versioning · Feature Store</h2>
+<div class="date">2026-06-19 · BigCat</div>
+<p class="pitch">模型每次升级都在变好，但喂给它的向量库可能还停在上一个坐标系——数据 pipeline 才是 RAG 不随时间退化的真正基础设施。</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>大多数 RAG demo 死在「跑通即终点」：一次性把文档全量嵌入、塞进向量库、上线。真正的痛苦在第二天才开始——文档改了一行，你是重嵌整库还是只补那一块？删掉的页面还会不会被召回？换个更好的 embedding model，旧向量怎么办？你给 reranker 喂的「用户近 7 天点击」特征，训练和线上算的是不是同一个值？这些都不是模型问题，是 <strong>数据 pipeline 工程</strong>问题，且每一个都会悄悄腐蚀线上质量而不报错。这一期把 AI 数据流水线拆成四个最容易塌方的承重点：<strong>嵌入 ETL 的成本结构</strong>、<strong>增量索引的 diff 与删除</strong>、<strong>嵌入模型升级的索引迁移</strong>、<strong>特征存储的离线/在线一致性</strong>。每一点都给可直接抄的实现骨架与失败模式。</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>嵌入 ETL：内容哈希去重是流水线的命门</h2>
+<div class="claim">论断：embedding 调用是 pipeline 里最贵最慢的一步，把它当成纯函数缓存，而不是每次重算。</div>
+
+<h3>背景与原理</h3>
+<p>一条 AI 数据流水线本质是 <code>extract → chunk → embed → load</code>。前三步里，extract 和 chunk 几乎免费（CPU、毫秒级），<strong>embed 才是瓶颈</strong>：它要走网络、按 token 计费、有 rate limit。所以工程上的第一原则是——把 <code>embed(chunk)</code> 当成<strong>纯函数</strong>：相同文本必出相同向量，于是可以按 <code>hash(model_id + chunk_text)</code> 做缓存键。一旦同一块内容出现在多个文档、或同一文档被反复 ingest，缓存命中就把成本与延迟砍掉一个数量级。第二原则是<strong>批处理</strong>：embedding API 支持一次传一批，单条调用 100 个 chunk 的吞吐远高于 100 次单条。第三是 chunk 与 embed 解耦——chunk 策略会反复调，但只要文本没变就不该重新付费嵌入。</p>
+
+<div class="diagram">┌────────── Embedding ETL：哈希缓存是核心阀门 ──────────┐
+│                                                       │
+│  raw docs ─▶ extract ─▶ chunk ─▶ ┌──────────────┐     │
+│  (毫秒级,几乎免费)               │ hash(model+   │     │
+│                                  │   chunk_text) │     │
+│                                  └──────┬───────┘     │
+│                                  hit? ──┤             │
+│                            ┌── yes ─────┘── no ──┐    │
+│                            ▼                     ▼    │
+│                      cached vector        ┌──────────┐│
+│                      (0 成本/延迟)         │ embed()  ││  ◀ 唯一付费/限流步
+│                            │              │  批 100   ││
+│                            │              └────┬─────┘│
+│                            └──────┬────────────┘      │
+│                                   ▼                   │
+│                            upsert → vector DB         │
+└───────────────────────────────────────────────────────┘</div>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-com"># 嵌入即纯函数：内容哈希做缓存键 + 批处理</span>
+<span class="tag-claude">import</span> hashlib, json
+
+MODEL = <span class="tag-gpt">"voyage-3"</span>  <span class="tag-com"># 把 model_id 写进 key，换模型自动 miss</span>
+
+<span class="tag-claude">def</span> key(text): <span class="tag-claude">return</span> hashlib.sha256(<span class="tag-gpt">f"{MODEL}:{text}"</span>.encode()).hexdigest()
+
+<span class="tag-claude">def</span> embed_batch(chunks, cache):
+    todo = [c <span class="tag-claude">for</span> c <span class="tag-claude">in</span> chunks <span class="tag-claude">if</span> key(c) <span class="tag-claude">not in</span> cache]
+    <span class="tag-claude">if</span> todo:                                  <span class="tag-com"># 只为未命中的付费</span>
+        vecs = client.embed(todo, model=MODEL).embeddings
+        <span class="tag-claude">for</span> c, v <span class="tag-claude">in</span> zip(todo, vecs): cache[key(c)] = v
+    <span class="tag-claude">return</span> [cache[key(c)] <span class="tag-claude">for</span> c <span class="tag-claude">in</span> chunks]</code></pre>
+<p>把 <code>model_id</code> 编进缓存键这一行，是为下一节「换模型」埋的伏笔——换 model 会让所有 key 自动失效，逼你重嵌，而不是悄悄混用两个坐标系的向量。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：用「文档 ID + 第几块」当缓存键。文档内容一改，块的内容变了但 ID/序号没变，缓存命中拿到旧向量——<strong>静默返回过期嵌入</strong>，比报错更难查。缓存键必须含<strong>内容本身</strong>的哈希，不能只含位置。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Anthropic <em>Contextual Retrieval</em>（嵌入前给每块补全上下文，召回失败率 -35%），<a href="https://www.anthropic.com/news/contextual-retrieval" target="_blank">anthropic.com/news/contextual-retrieval</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>增量索引：diff 驱动 upsert，别忘了删除墓碑</h2>
+<div class="claim">论断：每次全量重嵌是新手税；正确做法是按内容哈希算 diff，只动变化的块——并显式处理删除。</div>
+
+<h3>背景与原理</h3>
+<p>文档库是活的：新增、修改、删除每天都在发生。全量重建在文档少时能忍，过万就成了每日数小时 + 成倍 API 账单的负担。增量索引的核心是维护一张<strong>「块指纹表」</strong>（<code>chunk_id → content_hash</code>），每次 ingest 与上一次对比，得出三类操作：<strong>新增</strong>（新 hash）、<strong>变更</strong>（同 id 不同 hash → 重嵌 + upsert）、<strong>删除</strong>（上次有这次没有 → 从向量库删）。前两类大多数人会做，<strong>删除几乎总被漏掉</strong>——因为「不报错」。漏删的后果是<strong>幽灵召回</strong>：文档早已下架，它的向量还躺在库里被检索到，模型据此生成已经过时甚至错误的答案。删除要走<strong>tombstone</strong>（墓碑标记）流程，确保向量库里那条真的消失。</p>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-com"># diff 三态：新增 / 变更 / 删除（删除最容易漏）</span>
+<span class="tag-claude">def</span> reindex(new_chunks, fingerprint_store, vdb):
+    old = fingerprint_store.load()        <span class="tag-com"># {chunk_id: hash}</span>
+    new = {c.id: c.hash <span class="tag-claude">for</span> c <span class="tag-claude">in</span> new_chunks}
+
+    changed = [c <span class="tag-claude">for</span> c <span class="tag-claude">in</span> new_chunks
+               <span class="tag-claude">if</span> old.get(c.id) != c.hash]      <span class="tag-com"># 新增 + 变更</span>
+    deleted = old.keys() - new.keys()     <span class="tag-com"># ← 关键：上次有这次无</span>
+
+    <span class="tag-claude">if</span> changed: vdb.upsert(embed_batch([c.text <span class="tag-claude">for</span> c <span class="tag-claude">in</span> changed]))
+    <span class="tag-claude">if</span> deleted: vdb.delete(ids=list(deleted))  <span class="tag-com"># tombstone，杜绝幽灵召回</span>
+    fingerprint_store.save(new)</code></pre>
+<p>指纹表本身就是一份廉价的「数据版本快照」——出问题时可以拿它和向量库对账，找出索引与源数据漂移的那几条。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：增量只做 upsert，不做 delete。半年后向量库里堆满已删文档的残影，召回质量缓慢下降却查不出原因。第二个坑：把整篇文档当一个单位重嵌——只要改一个错别字就重嵌全文几十块。<strong>diff 粒度要到 chunk，不是 document</strong>。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · DVC（git-for-data，把数据集与 pipeline 阶段版本化、可复现），<a href="https://doc.dvc.org/user-guide/pipelines" target="_blank">doc.dvc.org/user-guide/pipelines</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>嵌入版本：换 model = 换坐标系，必须蓝绿重建</h2>
+<div class="claim">论断：不同 embedding model 产出的向量不在同一空间，混用就是拿两套坐标算距离——结果是噪声。</div>
+
+<h3>背景与原理</h3>
+<p>这是最隐蔽、代价最大的一类事故。embedding model 每次升级（甚至同名模型的小版本），向量空间的几何都变了：<strong>同一句话被 model A 和 model B 嵌出的两个向量，余弦相似度毫无意义</strong>。如果你「为了省钱」只重嵌新文档、旧文档保留旧向量，整个索引就混进了两套不可比的坐标系，召回从此随机退化——而且不报错。正确做法借用部署里的<strong>蓝绿（blue-green）</strong>思路：新模型在一个<strong>独立的新索引</strong>里全量重建，期间双写、灰度对比召回质量，确认不退化后再原子切换流量，旧索引留作回滚。关键纪律：<strong>每条向量的元数据里写死它的 <code>embedding_model</code> 版本</strong>，让混用在查询层就能被断言拦下。</p>
+
+<div class="diagram">┌────── 换 embedding model：蓝绿索引迁移 ──────┐
+│                                              │
+│  写入 ──┬──▶ [Blue index]  model v1  ◀─ 线上查询
+│         │     (旧, 全量)                      │
+│         └──▶ [Green index] model v2          │
+│               (新, 后台全量重嵌)              │
+│                     │                        │
+│              灰度对比召回质量                 │
+│              (offline eval 集)               │
+│                     │ 不退化?                 │
+│                     ▼ atomic swap            │
+│  写入 ──┬──▶ [Green index] model v2  ◀─ 线上查询
+│         └──▶ [Blue index]  保留 → 可回滚      │
+│                                              │
+│  ✗ 反模式：同一索引里混 v1+v2 向量 → 距离失真 │
+└──────────────────────────────────────────────┘</div>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-com"># 向量元数据绑定模型版本，查询层断言同源</span>
+vdb.upsert(id=cid, vector=v, metadata={
+    <span class="tag-gpt">"embedding_model"</span>: <span class="tag-gpt">"voyage-3"</span>,   <span class="tag-com"># ← 版本指纹</span>
+    <span class="tag-gpt">"indexed_at"</span>: ts, <span class="tag-gpt">"doc_id"</span>: doc})
+
+<span class="tag-claude">def</span> search(q, vdb, model):
+    <span class="tag-claude">assert</span> vdb.meta(<span class="tag-gpt">"embedding_model"</span>) == model, \
+        <span class="tag-gpt">"query model != index model — 坐标系不一致！"</span>
+    <span class="tag-claude">return</span> vdb.query(embed(q, model=model), top_k=<span class="tag-key">10</span>)</code></pre>
+
+<div class="fail">
+<strong>失败模式</strong>：维度相同就以为能混用。<code>text-embedding-3</code> 和某开源模型都输出 1024 维，shape 对得上、代码不报错——但语义空间完全不同，召回纯随机。<strong>维度兼容 ≠ 空间兼容</strong>。换模型没有「增量升级」，只有全量重建。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Chip Huyen《Designing Machine Learning Systems》中关于 data/model 版本与迭代的章节，是数据 pipeline 版本治理的标准参考。
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>特征存储：离线/在线一致，防 training-serving skew</h2>
+<div class="claim">论断：给 reranker / 个性化喂的特征，训练时和线上必须是同一个值、同一个时点算出来的——否则离线指标好、线上崩。</div>
+
+<h3>背景与原理</h3>
+<p>RAG 不只有向量。reranker 排序、个性化召回、过滤规则往往要用<strong>结构化特征</strong>：用户近 7 天点击、文档热度、作者权威度。这里有两个经典陷阱。其一 <strong>training-serving skew</strong>：训练用离线批处理 SQL 算特征，线上用另一套实时代码算——两套逻辑必然漂移，于是离线评估涨、线上掉。其二 <strong>数据泄漏</strong>：构造训练样本时，特征值要按<strong>当时那个预测时点</strong>（point-in-time）取，而不是「现在」——否则等于让模型在训练时偷看了未来，离线分虚高、上线打回原形。<strong>特征存储</strong>（feature store，如 Feast）就是为这两件事而生：离线 store 供训练、在线 store 供低延迟服务，<strong>同一份特征定义只写一次</strong>，并在离线侧实现 point-in-time 正确 join。</p>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-com"># point-in-time join：按预测时点取特征，杜绝未来泄漏</span>
+<span class="tag-com"># 训练样本 = (entity, 预测发生的 event_timestamp, label)</span>
+training_df = store.get_historical_features(
+    entity_df=labels,                  <span class="tag-com"># 含 event_timestamp 列</span>
+    features=[<span class="tag-gpt">"user:clicks_7d"</span>, <span class="tag-gpt">"doc:popularity"</span>],
+).to_df()   <span class="tag-com"># Feast 只取 ≤ event_timestamp 的特征值，不取"现在"</span>
+
+<span class="tag-com"># 线上服务：同一份特征定义，低延迟在线 store</span>
+feats = store.get_online_features(
+    features=[<span class="tag-gpt">"user:clicks_7d"</span>, <span class="tag-gpt">"doc:popularity"</span>],
+    entity_rows=[{<span class="tag-gpt">"user_id"</span>: u, <span class="tag-gpt">"doc_id"</span>: d}],
+).to_dict()   <span class="tag-com"># 训练/服务复用同一定义 → 无 skew</span></code></pre>
+
+<div class="fail">
+<strong>失败模式</strong>：用一条 <code>SELECT ... WHERE now()</code> 给历史样本回填特征。这等于给三个月前的样本贴上今天的点击数——典型 point-in-time 泄漏，离线 AUC 漂亮得离谱，上线归零。任何带时间属性的特征，回填时都要问：<strong>这个值在预测发生那一刻真的存在吗？</strong>
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Feast 官方文档（开源 feature store，离线/在线双 store + point-in-time），<a href="https://docs.feast.dev" target="_blank">docs.feast.dev</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// 综合实战 · 给你的 RAG 装一条「可维护」的数据 pipeline</h3>
+<p>把四点串成一次重构：让你那个「一次性脚本」的 RAG 进化成能日更、能换模型、不退化的流水线。</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>哈希缓存层</strong>（§1）：在 embed 前加 <code>hash(model_id + chunk_text)</code> 缓存。把今天的全量 ingest 跑两遍，确认第二遍命中率接近 100%、几乎零成本。</li>
+<li><strong>指纹表 + diff</strong>（§2）：建 <code>chunk_id → content_hash</code> 表，ingest 改成三态 diff。<strong>专门测一次删除</strong>：删掉一篇文档，确认它的向量真的从库里消失、不再被召回。</li>
+<li><strong>版本元数据</strong>（§3）：给每条向量写 <code>embedding_model</code>，查询层加断言。模拟一次换模型：建 green 索引全量重嵌，用一个固定 eval 集对比 blue/green 召回，确认不退化再切。</li>
+<li><strong>特征 point-in-time</strong>（§4）：若有 reranker 特征，把回填 SQL 改成按 event_timestamp 取值。故意写一版「用 now() 回填」的对照，看离线指标虚高多少——亲手感受泄漏的诱惑有多大。</li>
+</ol>
+<p style="margin-top:12px">做完这四步，你的 RAG 从「demo 能跑」升级到「线上能养」。以后看任何向量检索系统，你会本能地问四个问题：嵌入有没有缓存、增量删没删干净、换模型怎么迁、特征会不会泄漏——而不是只盯着 top_k 调参。</p>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// ENGLISH GLOSSARY</h3>
+<dl>
+<dt>Embedding ETL</dt><dd>把原始内容抽取、切块、嵌入、写入向量库的数据流水线。embed 是其中唯一付费/限流步。</dd>
+<dt>Content Hash</dt><dd>对内容本身（非位置/ID）取哈希，作缓存键与 diff 依据。内容变则 hash 变。</dd>
+<dt>Incremental Indexing</dt><dd>只重嵌发生变化的块，而非全量重建。靠指纹表 diff 驱动。</dd>
+<dt>Tombstone</dt><dd>删除墓碑：显式把已删内容的向量从库中移除，防幽灵召回。</dd>
+<dt>Ghost Recall</dt><dd>幽灵召回：已删除/过期文档的向量仍被检索命中，污染生成。</dd>
+<dt>Blue-Green Index</dt><dd>新旧两套索引并存、灰度对比后原子切换的迁移策略。换 embedding model 必用。</dd>
+<dt>Embedding Space</dt><dd>某个 embedding model 定义的向量几何空间。不同模型的空间不可比。</dd>
+<dt>Feature Store</dt><dd>统一管理 ML 特征的系统，离线供训练、在线供服务，定义只写一次（如 Feast）。</dd>
+<dt>Training-Serving Skew</dt><dd>训练与线上特征计算逻辑漂移，导致离线好、线上崩。</dd>
+<dt>Point-in-Time Correctness</dt><dd>构造训练样本时按预测时点取特征值，杜绝未来数据泄漏。</dd>
+</dl>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// 深入思考</h3>
+<details><summary>Contextual Retrieval 要在嵌入前给每块补上下文，这会让 §1 的内容哈希缓存失效吗？</summary><div>会，而且这恰恰是设计要点。补全后的「上下文 + 原块」才是真正被嵌入的文本，所以哈希必须算在<strong>补全后</strong>的字符串上。代价是：源块没变、但生成上下文的 LLM 或 prompt 一变，缓存就该失效。实务做法是把「上下文生成」也看作 pipeline 的一个版本化阶段，把它的版本号一并编进哈希键——和把 <code>model_id</code> 编进键是同一个思路：任何会改变最终向量的输入，都必须进缓存键。</div></details>
+<details><summary>§2 的指纹表和 §3 的蓝绿索引、§1 的哈希缓存，是三套独立机制还是一套？</summary><div>本质是同一个「内容寻址」思想在三个尺度上的展开。哈希缓存解决「这块要不要重新付费嵌入」（块级、跨时间复用）；指纹表解决「这次 ingest 哪些块变了」（库级、相邻两次对比）；蓝绿解决「整个空间换了，怎么安全迁移」（索引级、模型升级）。三者共享一个不变式：<strong>用内容/版本的指纹，而非位置或时间，来判定身份与失效</strong>。理解这条主线，就不会把它们当成三个孤立 trick 去记。</div></details>
+<details><summary>「换 embedding model 必须全量重建」成本极高。有没有不重建就迁移的捷径？</summary><div>研究上有「向量空间对齐」（学一个线性/小网络把旧空间映射到新空间）的尝试，但工程上几乎不可信赖：映射有损、误差会在召回里放大，且无法验证对齐质量是否均匀。靠谱的省钱方向不是避免重嵌，而是降低重嵌单价——§1 的缓存让没变的块免费、batch 降低单位成本、错峰用 batch API 拿折扣。结论：<strong>重建无法绕过，但可以让它便宜且可灰度</strong>。把钱花在蓝绿切换的安全性上，比赌一个对齐模型划算。</div></details>
+<details><summary>§4 的 point-in-time 泄漏，和 §2 漏删导致的幽灵召回，本质是同一类错误吗？</summary><div>是——都是<strong>时间一致性</strong>被破坏。幽灵召回是「过去删了，现在的索引没跟上」（索引落后于现实）；point-in-time 泄漏是「现在的值，被贴到了过去的样本上」（特征超前于现实）。一个滞后、一个超前，但根因相同：数据的<strong>有效时间（valid-time）</strong>没有被严肃对待。把每条数据都当成带时间戳的事件、任何读取都明确「以哪个时点为准」，两类 bug 会一起消失。这也是 feature store 和 CDC/事件溯源思想能迁移到 RAG 的原因。</div></details>
+<details><summary>个人开发者做 RAG，这四层工程是必要的还是过度设计？</summary><div>分阶段。文档静态、几百篇、模型不换——四层都可省，一个全量脚本足矣，强上反而是过度工程。但只要命中任一信号就该补对应层：文档每天变 → §2 增量；想试更好的 embedding → §3 版本元数据（哪怕只写一行 metadata，未来省一场事故）；接了 reranker 特征 → §4 point-in-time。判据不是「项目大小」，而是「<strong>数据会不会变、模型会不会换</strong>」。会变的系统，越早埋指纹与版本，越晚被它反噬。</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://www.anthropic.com/news/contextual-retrieval" target="_blank">Anthropic · Contextual Retrieval</a> — 嵌入前补上下文，召回失败率大幅下降</li>
+<li><a href="https://docs.feast.dev" target="_blank">Feast · Feature Store 文档</a> — 离线/在线双 store 与 point-in-time 正确性</li>
+<li><a href="https://doc.dvc.org/user-guide/pipelines" target="_blank">DVC · Data Pipelines</a> — git-for-data，数据与流水线阶段的版本化复现</li>
+<li><a href="https://platform.claude.com/cookbook/capabilities-contextual-embeddings-guide" target="_blank">Claude Cookbook · Contextual Embeddings</a> — 可运行的上下文嵌入实现</li>
+<li><a href="https://docs.feast.dev/getting-started/quickstart" target="_blank">Feast · Quickstart</a> — 最小可跑的特征存储上手</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 40 · 2026-06-19</footer>
+</div>
+</body></html>
