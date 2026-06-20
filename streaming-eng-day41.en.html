@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 41 · Streaming & Interruption Engineering — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 41 / PHASE 4 · PRODUCTION</span>
+<h1>Streaming & Interruption Engineering</h1>
+<h2>TTFT · Partial Parsing · Streaming Tool Use · Cancellation</h2>
+<div class="date">2026-06-20 · BigCat</div>
+<p class="pitch">Streaming isn't about showing the answer earlier — it's about turning a half-formed, ever-shifting, possibly-cut-off intermediate state into an engineerable object.</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>Almost every LLM product ships streaming, but most people use only its shallowest layer: typing tokens onto the screen one by one. The real engineering difficulty lies beyond the typewriter effect — <strong>every frame that arrives is incomplete</strong>: a half-rendered Markdown table, JSON cut off mid-quote, a tool call whose arguments aren't fully collected, and a "Stop" button the user can hit at any moment. None of these are prompt problems; they're state-management problems in the harness layer. Treating streaming as "show it sooner" buries three classes of production incidents: feeding half a JSON to <code>parse</code> and crashing, executing a tool input that hasn't finished generating, and the user closing the tab while the server keeps burning tokens and firing side effects. This issue nails down four things: <strong>streaming is a perception optimization, not a throughput one</strong>; incremental parsing must tolerate the partial; the buffering trade-off in streaming tool calls; and rolling back side effects on cancellation.</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>The Essence of Streaming: It Optimizes TTFT, Not Total Time</h2>
+<div class="claim">Claim: streaming shaves off zero total generation time; it swaps a stretch of "nothing happening" for "continuous feedback" — what it fools is perception.</div>
+
+<h3>Background & Principle</h3>
+<p>An LLM call's latency splits into two parts: <strong>TTFT</strong> (time to first token, from request to the first token landing) and <strong>per-token generation</strong> (inter-token latency × token count). Streaming changes neither sum — wall-clock is nearly identical — it just lets the user start seeing text right after TTFT instead of waiting for the whole thing. Research and product experience converge: <strong>for the same total time, a streaming interface is perceived as far faster</strong>, because it eliminates the worst stretch — staring at a blank screen.</p>
+<p>This essence yields two counterintuitive decisions. First: monitor and optimize <strong>p95 of TTFT, not total latency</strong> — an endpoint that takes 10s total but emits the first token in 200ms feels far better than one that takes 4s total but stalls 3s before moving. Second: streaming does <strong>not</strong> raise throughput; turning it on for a pure backend batch job is pointless and only adds parsing complexity.</p>
+
+<div class="diagram">Same total time, wildly different feel — optimize TTFT, not total
+
+No-stream  [████████ blank 8s wait ████████]→ dumped at once
+           user: "Did it freeze?"
+
+Stream     [▌200ms]→ char▌char▌char▌char▌char▌char (over 8s)
+           user: "It's moving, feels fast" — same 8s</div>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-key">import</span> time, anthropic
+client = anthropic.Anthropic()
+
+t0 = time.time(); ttft = <span class="tag-key">None</span>
+<span class="tag-key">with</span> client.messages.stream(model=<span class="tag-gpt">"claude-opus-4-8"</span>,
+        max_tokens=1024,
+        messages=[{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,<span class="tag-gpt">"content"</span>:<span class="tag-gpt">"Write..."</span>}]) <span class="tag-key">as</span> stream:
+    <span class="tag-key">for</span> text <span class="tag-key">in</span> stream.text_stream:
+        <span class="tag-key">if</span> ttft <span class="tag-key">is</span> <span class="tag-key">None</span>:
+            ttft = time.time() - t0          <span class="tag-com"># ← the metric to actually watch</span>
+            print(<span class="tag-gpt">f"TTFT={ttft*1000:.0f}ms"</span>)
+        render(text)                          <span class="tag-com"># incremental paint</span>
+total = time.time() - t0                       <span class="tag-com"># total time: streaming can't save it</span></code></pre>
+
+<div class="fail">
+<strong>Failure mode</strong>: reporting streaming as a perf win — "latency dropped." Total latency didn't drop at all; you optimized perception. If TTFT itself is high (prompt too long, no prompt caching, model deep in CoT), streaming won't save you — the user still stares at a blank. The fix is to cut TTFT first (cache the prefix, shorten the system prompt, stream a placeholder/skeleton), not to bet on the typewriter.
+</div>
+
+<div class="res">
+<strong>Resources</strong> · Redis <em>Streaming LLM Responses: Make Your AI App Feel Fast</em>, <a href="https://redis.io/blog/streaming-llm-responses/" target="_blank">redis.io/blog/streaming-llm-responses</a> ·
+DeepInfra <em>LLM Provider KPIs 101: TTFT, Throughput, E2E</em>, <a href="https://deepinfra.com/blog/llm-api-provider-performance-kpis-101" target="_blank">deepinfra.com/blog</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Incremental Parsing: Treat Every Frame as Partial; a Strict Parser Kills Streaming</h2>
+<div class="claim">Claim: feeding stream chunks to a parser that demands complete input degrades streaming back to buffering — with added crash risk.</div>
+
+<h3>Background & Principle</h3>
+<p>Plain-text streaming is easy (just append). The moment output has <strong>structure</strong>, it gets hard. Standard Markdown renderers, <code>JSON.parse</code>, XML parsers all assume input is <strong>complete and valid</strong> — but in a stream you always hold an intermediate state: an unclosed code block, a half-written table, a string cut off at <code>"add</code>. Hand that to a strict parser and you get one of two outcomes: it throws and crashes, or it waits for completeness before rendering — and the latter erases streaming's entire value.</p>
+<p>The fix is <strong>progressive parsing designed for the partial</strong>: render an open container the instant a code block starts, draw a table row as each arrives, show a temporary closing quote for an unclosed string. Vercel's Streamdown packages this as a streaming replacement for react-markdown — it <strong>assumes input is never complete</strong> and "remends" unterminated syntax before rendering. Structured data is the same: use a <strong>tolerant JSON parser</strong> (partial JSON / trailing-strings mode) that turns <code>{"city":"Bei</code> into a partial object like <code>{"city":"Bei"}</code>, letting the UI fill fields as they stream.</p>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># Tolerant parsing: partial-json turns half JSON into a partial object</span>
+<span class="tag-key">from</span> partial_json_parser <span class="tag-key">import</span> loads
+
+buf = <span class="tag-gpt">""</span>
+<span class="tag-key">for</span> chunk <span class="tag-key">in</span> stream:            <span class="tag-com"># chunks don't respect JSON boundaries</span>
+    buf += chunk
+    <span class="tag-key">try</span>:
+        obj = loads(buf)            <span class="tag-com"># even half-formed yields a partial object</span>
+        render_partial(obj)         <span class="tag-com"># render each field as it lands</span>
+    <span class="tag-key">except</span> Exception:
+        <span class="tag-key">continue</span>                    <span class="tag-com"># this frame isn't enough; wait for the next</span>
+<span class="tag-com"># Key: only the obj after the stream ends is the "final state"; mid-stream is preview</span></code></pre>
+
+<div class="fail">
+<strong>Failure mode</strong>: (1) running <code>strict JSON.parse</code> on every frame and swallowing the throw with try/catch — it runs, but you re-parse for nothing each frame and risk mistaking a momentarily-valid intermediate for the final. (2) Worse: <strong>treating a partially parsed result as final and firing a side effect</strong> — e.g. executing a delete the instant you stream <code>{"action":"delete"</code>, when the full intent was <code>{"action":"delete_draft","confirm":false}</code>. An intermediate state is for <strong>rendering preview only</strong> — never to drive decisions or side effects.
+</div>
+
+<div class="res">
+<strong>Resources</strong> · Vercel <em>Streamdown — Markdown for AI streaming</em>, <a href="https://streamdown.ai/" target="_blank">streamdown.ai</a> / <a href="https://github.com/vercel/streamdown" target="_blank">github.com/vercel/streamdown</a> ·
+Vercel AI SDK <em>streamObject / partial object</em>, <a href="https://ai-sdk.dev/docs/ai-sdk-core/generating-structured-data" target="_blank">ai-sdk.dev/docs</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Streaming Tool Calls: Accumulating input_json_delta, and the Fine-grained Trade-off</h2>
+<div class="claim">Claim: tool-argument streaming defaults to "buffer until you get valid JSON"; to get large arguments sooner, enable fine-grained — and own the risk of broken JSON yourself.</div>
+
+<h3>Background & Principle</h3>
+<p>In Anthropic's SSE stream, a response is a series of content blocks, each shaped <code>content_block_start → many content_block_delta → content_block_stop</code>. Text flows as <code>text_delta</code>; <strong>tool arguments flow as <code>input_json_delta</code></strong>, in a <code>partial_json</code> field — you must <strong>concatenate the <code>partial_json</code> fragments in arrival order</strong> to reconstruct the argument JSON, and these fragments <strong>don't respect JSON boundaries</strong> (they can break at any character). By default the SDK buffers to <code>content_block_stop</code>, where you finally get <strong>validated, complete JSON</strong> — safe but latent: large arguments (say, having the model write a big chunk of file content) wait until the whole thing is accumulated.</p>
+<p>To remove that wait, Anthropic offers <strong>fine-grained tool streaming</strong> (beta header <code>fine-grained-tool-streaming-2025-05-14</code>): arguments stream out <strong>without buffering or JSON validation</strong>, sharply cutting first-byte latency for large parameters. The cost is in the docs: <strong>no guarantee the stream is valid JSON</strong> — if <code>max_tokens</code> is reached, the stream may stop mid-parameter, leaving you broken JSON that can never be completed. It's a clean trade: <strong>lower latency ⇄ handle the partial yourself</strong>.</p>
+
+<div class="diagram">A streaming response with a tool call — how events rebuild the args
+
+message_start
+ └ content_block_start   (type=tool_use, name=edit_file)
+     ├ delta: partial_json = '{"path":"a.'
+     ├ delta: partial_json = 'py","content":"def '
+     ├ delta: partial_json = 'main():..."}'      ← fragments unaligned
+     └ content_block_stop  ← default: validate + deliver full JSON here
+message_delta (stop_reason)
+message_stop
+
+Default:      parse only at stop  → safe, slow
+Fine-grained: use each delta now  → fast, may be broken (max_tokens cut)</div>
+
+<h3>Hands-on</h3>
+<pre><code>acc = <span class="tag-gpt">""</span>
+<span class="tag-key">for</span> ev <span class="tag-key">in</span> stream:
+    <span class="tag-key">if</span> ev.type == <span class="tag-gpt">"content_block_delta"</span> \
+       <span class="tag-key">and</span> ev.delta.type == <span class="tag-gpt">"input_json_delta"</span>:
+        acc += ev.delta.partial_json          <span class="tag-com"># concat in order; don't parse early</span>
+    <span class="tag-key">elif</span> ev.type == <span class="tag-gpt">"content_block_stop"</span>:
+        args = json.loads(acc)                <span class="tag-com"># default mode: valid here</span>
+        run_tool(name, args)                  <span class="tag-com"># ← the only safe execution point</span>
+<span class="tag-com"># Under fine-grained beta, acc may still be broken JSON at stop;</span>
+<span class="tag-com"># use a tolerant parser + validation, and on failure treat the call</span>
+<span class="tag-com"># as incomplete and DO NOT execute</span></code></pre>
+
+<div class="fail">
+<strong>Failure mode</strong>: (1) parsing and executing the accumulated <code>partial_json</code> before <code>content_block_stop</code> — arguments aren't collected, so you act on half an intent. (2) Enabling fine-grained yet still assuming the end is valid JSON, skipping the broken-input check — once <code>max_tokens</code> truncates, <code>json.loads</code> throws, or worse, a tolerant parser fabricates a <strong>semantically corrupted</strong> argument that gets executed. Fine-grained presumes you <strong>can safely handle a half-formed parameter</strong>.
+</div>
+
+<div class="res">
+<strong>Resources</strong> · Anthropic <em>Streaming Messages</em>, <a href="https://docs.claude.com/en/docs/build-with-claude/streaming" target="_blank">docs.claude.com/.../streaming</a> ·
+Anthropic <em>Fine-grained tool streaming</em>, <a href="https://docs.claude.com/en/docs/agents-and-tools/tool-use/fine-grained-tool-streaming" target="_blank">docs.claude.com/.../fine-grained-tool-streaming</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Cancellation & Rollback: Disconnect ≠ Stop; Side Effects Already Fired Must Be Compensated</h2>
+<div class="claim">Claim: a user hitting "Stop" or closing the tab only severs your receiving end; the server may keep generating, keep billing, and a tool may already have committed its side effect.</div>
+
+<h3>Background & Principle</h3>
+<p>Cancellation hides a truth: client disconnect ≠ generation stop. To actually stop the bleeding, you must use an <strong><code>AbortController</code></strong> (or the SDK's cancel) to explicitly abort that HTTP/SSE connection so the server gets the disconnect and stops generating — closing the UI and discarding later chunks isn't enough; that just means you stopped looking while tokens still burn. This is the <strong>first layer</strong>: stop the bleed.</p>
+<p>The second layer is harder, in streaming agents: at the moment of cancellation, a tool <strong>may already have executed a side effect</strong> (order created, email sent, file half-written). Streaming sharpens this because output <strong>lands as it generates</strong> — where the cancel point falls is uncertain. Three principles: (a) explicitly mark the <strong>already-streamed partial output</strong> as <code>partial/aborted</code> — never persist it as a complete result; (b) side-effecting tools must be <strong>idempotent</strong>, and already-fired effects go through <strong>compensation/rollback</strong> (see Day 39); (c) pair a long stream with a <strong>checkpoint</strong>, so "cancel" means "stop at a clean breakpoint" rather than "freeze at an arbitrary half-state."</p>
+
+<div class="diagram">After "Stop" is hit, the three things to actually do
+
+User cancels
+   │
+   ├─① abort connection → server stops generating (else still billing/running)
+   ├─② mark output      → tokens received = partial; don't persist or trust
+   └─③ handle effects   → compensate executed tools; discard unexecuted ones
+                          plus idempotency keys to avoid a "resend" second hit</div>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com">// Frontend: truly abort generation, not just drop chunks</span>
+<span class="tag-key">const</span> ctrl = <span class="tag-key">new</span> AbortController();
+<span class="tag-key">const</span> stream = <span class="tag-key">await</span> client.messages.stream(
+    { model: <span class="tag-gpt">"claude-opus-4-8"</span>, max_tokens: 2048, messages },
+    { signal: ctrl.signal });                  <span class="tag-com">// ← bind the cancel signal</span>
+
+stopBtn.onclick = () => ctrl.abort();          <span class="tag-com">// disconnect; server stops generating</span>
+
+<span class="tag-key">let</span> acc = <span class="tag-gpt">""</span>;
+<span class="tag-key">try</span> {
+    <span class="tag-key">for</span> <span class="tag-key">await</span> (<span class="tag-key">const</span> ev <span class="tag-key">of</span> stream) acc += ev.text ?? <span class="tag-gpt">""</span>;
+    commit(acc);                               <span class="tag-com">// only a normal finish is the complete state</span>
+} <span class="tag-key">catch</span> (e) {
+    <span class="tag-key">if</span> (e.name === <span class="tag-gpt">"AbortError"</span>)
+        save_as_partial(acc);                  <span class="tag-com">// mark partial; trigger effect compensation</span>
+}</code></pre>
+
+<div class="fail">
+<strong>Failure mode</strong>: (1) assuming "close the tab / drop chunks" stops it — without an abort signal the server often runs the whole generation to completion, the bill stands, subscription-style tool side effects fire anyway. (2) After cancel, persisting or returning the half-streamed output as the final answer, corrupting data. (3) Cancel lands right after a <strong>non-idempotent</strong> side-effecting tool with no compensation — the user thinks "I hit Stop, so it didn't happen," but the email already went out.
+</div>
+
+<div class="res">
+<strong>Resources</strong> · MDN <em>AbortController</em>, <a href="https://developer.mozilla.org/en-US/docs/Web/API/AbortController" target="_blank">developer.mozilla.org/.../AbortController</a> ·
+This series Day 39 <em>Agent Error Recovery & Resilience</em> (idempotency / compensation / checkpoint)
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// PUTTING IT TOGETHER · Harden a streaming endpoint for "partial safety"</h3>
+<p>Take any streaming chat/agent you run and check it against this list — each item maps to a failure mode above:</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>Instrument TTFT</strong>: timestamp at the first delta; monitor p50/p95 of TTFT, not just total latency. High TTFT → cut the prefix (cache, shorten the system prompt), don't bet on the typewriter.</li>
+<li><strong>Swap in tolerant rendering</strong>: Markdown via a streaming renderer like Streamdown; structured fields via partial-json parsing — half-formed is preview only.</li>
+<li><strong>Execute tool args only after stop</strong>: accumulate <code>input_json_delta</code>, parse + run at <code>content_block_stop</code>; enable fine-grained only if you truly need it and can safely handle the partial.</li>
+<li><strong>Wire a real cancel</strong>: bind the Stop button to <code>AbortController</code> to actually disconnect, not just stop rendering; verify the server logs show generation actually halting.</li>
+<li><strong>Tag intermediate state</strong>: any output left incomplete by cancel/truncation is marked <code>partial</code> — not persisted, not trusted, not driving downstream.</li>
+<li><strong>Backstop side effects</strong>: every "write" tool in a streaming agent gets an idempotency key + compensation; on cancel, roll back fired effects in reverse.</li>
+</ol>
+<p style="margin-top:12px">Do this and you'll see: making streaming "look like it's moving" takes ten lines; making it survive all three forms of partial — half-formed, truncated, cut off — is the real line between demo and production.</p>
+</div>
+
+<!-- ============ Glossary (zh page only — kept minimal here) ============ -->
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// DEEP THINKING</h3>
+<details><summary>If streaming optimizes perception, not total time, why not just hide the process behind a polished loading animation and "pretend to think," then present the finished result at once?</summary><div>Because streaming provides more than "feedback" — it provides <strong>falsifiable progress</strong> and a <strong>chance to intervene early</strong>. A loading spinner is unfalsifiable — ten seconds and one second convey the same information; the user can't tell whether the system is really working or heading the right way. Streaming lets the user <strong>judge as it generates</strong>: if the first sentence goes off the rails, they hit Stop immediately, saving the next 9 seconds of wasted generation and tokens. This is exactly the premise of point 4's cancellation — streaming turns "waiting" into "interruptible collaboration." It matters most for long agent tasks: the streamed intermediate steps let the user catch, at step 3, that the agent misread the intent, instead of waiting for all 40 steps. Hiding the process forfeits this human-in-the-loop layer.</div></details>
+<details><summary>Point 2 says intermediate state "may render but must not drive side effects." But isn't the whole value of a streaming agent to think-and-act in stride? Doesn't this red line neuter it into "think first, then act"?</summary><div>The red line sits <strong>inside a single unfinished structure</strong>, not across the agent's whole lifecycle. A tool call's argument JSON is untrustworthy half-formed until <code>content_block_stop</code> — that can't be broken; acting on half an argument is a pure bug. But an agent's "think-and-act" happens at a <strong>coarser granularity</strong>: once one tool call fully completes, the agent immediately issues the next, without waiting for the whole reply. So the correct boundary is: <strong>a structure (a single tool input) must be complete to be used, but a sequence (multiple tool calls) can advance in a stream</strong>. Fine-grained streaming tries to push the line inward a bit — letting huge arguments be consumed as they stream — but it explicitly requires you to prove you can safely handle the partial, shifting completeness validation from platform to you.</div></details>
+<details><summary>Cancellation relies on AbortController to truly disconnect. But many LLM gateways/proxies sit in the middle — does the client's abort really propagate all the way to the upstream inference engine and stop decoding? And if it doesn't?</summary><div>This is a real architectural hole. To stop billing and generation, the abort signal must <strong>propagate hop by hop</strong>: browser → your backend → gateway → model provider → inference engine. Any hop that swallows the disconnect lets upstream run the whole decode to completion. In reality, multi-tier proxies, connection pools, and buffering often eat this signal. The pragmatic move is to <strong>not bet all your loss-stopping on disconnect</strong>: (1) ensure abort passthrough at the topmost hop you control; (2) set a tight <code>max_tokens</code> and server-side timeout as a hard upper bound, so the worst case of "cancel failed" is bounded; (3) build cancellation semantics on <strong>idempotency + compensation</strong> rather than on "stopped successfully" — i.e. assume generation may still be running and rely on a rollback-able side-effect layer. In short: cancel is best-effort bleeding control; correctness rests on the Day 39 resilience stack, not on disconnect always landing.</div></details>
+<details><summary>Fine-grained tool streaming trades "lower latency" for "possibly broken JSON." In which concrete scenarios is this trade worth it? In which should you never enable it?</summary><div>Worthwhile scenarios share one trait: <strong>the parameter is huge, and its half-formed content already has display value</strong>. The classic case is the model streaming a large file body, long document, or big code block — the user wants to watch it appear line by line rather than wait for the whole file to accumulate and pop out at once; even if the tail is cut by <code>max_tokens</code>, the already-streamed portion is usable (just mark it incomplete). Never enable it when the parameter is a <strong>small control structure</strong>, e.g. <code>{"action":..., "target_id":..., "confirm":...}</code> — small, so the buffer latency is negligible, yet its fields are tightly coupled, so a missing field corrupts semantics or turns dangerous. The test: <strong>is the parameter "content" (large, incrementally consumable, partial-usable) or an "instruction" (small, tightly coupled, must be complete)?</strong> Content: enable. Instruction: don't.</div></details>
+<details><summary>All four of this issue's topics (perception/parsing/tool/cancel) are about fighting the "intermediate state." Does that hint at a more general engineering principle?</summary><div>The implied principle: <strong>the moment you turn a "result" into a "process," you must define a legal state for every instant of that process</strong>. The non-streaming world has only two states: no result, has result — simple. Streaming shatters it into infinitely many intermediate states, each frame forced to answer "what can this half-thing be used for right now?" This is isomorphic to distributed systems moving from "transactions" to "eventual consistency": you trade a latency/perception gain for the obligation to explicitly handle a pile of intermediate states that didn't exist before. The deeper lesson: <strong>the real cost of any "real-time / incremental" rework is not making it stream, but supplying semantics and a safety boundary for every partial instant in flight</strong>. Streaming is just this universal trade-off projected onto the LLM interface.</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://docs.claude.com/en/docs/build-with-claude/streaming" target="_blank">Anthropic · Streaming Messages</a> — authoritative definition of SSE event structure, text_delta and input_json_delta</li>
+<li><a href="https://docs.claude.com/en/docs/agents-and-tools/tool-use/fine-grained-tool-streaming" target="_blank">Anthropic · Fine-grained Tool Streaming</a> — the low-latency ⇄ broken-JSON trade-off and how to enable it</li>
+<li><a href="https://github.com/vercel/streamdown" target="_blank">Vercel · Streamdown</a> — a streaming Markdown renderer that assumes input is never complete</li>
+<li><a href="https://redis.io/blog/streaming-llm-responses/" target="_blank">Redis · Streaming LLM Responses</a> — a systematic take on TTFT, perceived latency, and streaming UX</li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/AbortController" target="_blank">MDN · AbortController</a> — the standard mechanism to truly abort a connection / cancel a request</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 41 · 2026-06-20</footer>
+</div>
+</body></html>
