@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 43 · 检索质量工程 — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.homework{background:linear-gradient(135deg,rgba(255,110,196,0.1),rgba(123,97,255,0.1));border:1px solid rgba(255,110,196,0.3);border-radius:10px;padding:22px 24px;margin:36px 0}
+.homework h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 43 / PHASE 4 · ENGINEERING</span>
+<h1>检索质量工程</h1>
+<h2>Recall vs Precision · Hybrid Fusion · Reranker · Retrieval Eval</h2>
+<div class="date">2026-06-22 · BigCat</div>
+<p class="pitch">RAG 的天花板不是 LLM，是检索召回率——LLM 看不到的文档，再聪明也答不出。</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>chunk 怎么切、embedding 用哪家，Day 10 / 11 已讲透。这一期换一个更狠的视角：<strong>检索质量本身怎么量化、怎么调、怎么不被自己骗</strong>。现实是大多数 RAG 系统的瓶颈根本不在生成端——LLM 拿到对的文档几乎都能答对，拿不到就只能编。所以 RAG 工程的真正战场在<strong>「对的文档有没有进 top-k」</strong>这件事上。但绝大多数人从不量化它：上线时拍脑袋调 top_k=5，效果差就怪「模型不行」，从没建过一个能跑数字的 golden set。本期讲四件能立刻拉开差距的事：为什么<strong>召回要优先于精度</strong>、混合检索为什么必须用 <strong>RRF 而非加权求和</strong>、reranker 的真实价值与成本边界、以及怎么<strong>把检索失败和生成失败拆开归因</strong>——附 Anthropic Contextual Retrieval 的实测数字和可直接跑的评估代码。</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>召回优先于精度：两阶段检索的根本权衡</h2>
+<div class="claim">论断：第一阶段的唯一 KPI 是 recall@k——宁可多召回噪声，绝不能漏掉正确文档。精度交给后面的 reranker 和 LLM。</div>
+
+<h3>背景与原理</h3>
+<p>检索质量是 recall 和 precision 的拉锯，但两者在 pipeline 的<strong>不同阶段地位完全不对称</strong>。关键在于：<strong>漏召回的错误不可恢复，多召回的错误可以补救</strong>。正确文档没进第一阶段候选集，后面 reranker 再强、LLM 再聪明都救不回来——它根本看不到；反过来候选集里混进无关文档，只是给下游加一点筛选负担，代价小得多。</p>
+<p>所以工业级 RAG 几乎都是<strong>两阶段</strong>：第一阶段(recall)用便宜快速的检索器(BM25 + 向量)<strong>过召回</strong>到 top-100~200,把正确文档「圈进来」;第二阶段(rerank)用昂贵精准的 cross-encoder 压到 top-5~8,把候选「排对序」。这直接决定调参方向:第一阶段 <code>k</code> 往大了调、宁错杀不放过;第二阶段才追求 precision。</p>
+
+<div class="diagram">┌────────── 两阶段检索：召回宽进、精排准出 ──────────┐
+│                                                       │
+│  query                                                │
+│    │                                                  │
+│    ├─▶ STAGE 1 · RECALL  (要 recall@k 高·快·便宜)     │
+│    │     BM25(lexical) ─┐                             │
+│    │                    ├─▶ RRF 融合 ─▶ top-100~200   │
+│    │     dense(vector) ─┘            候选(过召回)      │
+│    │                                     │            │
+│    └─▶ STAGE 2 · RERANK  (要 precision·慢·贵)         │
+│          cross-encoder 重排 ◀────────────┘            │
+│             │                                         │
+│             ▼  top-5~8                                │
+│        ┌──────────────┐                               │
+│        │  LLM context │  ← 只有进到这里的才可能被引用  │
+│        └──────────────┘                               │
+│                                                       │
+│  漏召回 = 不可恢复的错  ·  多召回 = 可补救的小代价     │
+└───────────────────────────────────────────────────────┘</div>
+
+<h3>实战示例</h3>
+<p>先量化你当前系统的「召回天花板」——这是 RAG 调优的第一个数字,绝大多数人从没测过:</p>
+<pre><code><span class="tag-com"># 给定一批 (query, 正确 chunk_id) 标注，测 recall@k 随 k 变化</span>
+<span class="tag-key">def</span> recall_at_k(retriever, eval_set, ks=(5,10,20,50,100,200)):
+    hits = {k: 0 <span class="tag-key">for</span> k <span class="tag-key">in</span> ks}
+    <span class="tag-key">for</span> q, gold_ids <span class="tag-key">in</span> eval_set:        <span class="tag-com"># gold_ids: 该 query 的正确 chunk 集合</span>
+        ranked = retriever.search(q, top_k=max(ks))   <span class="tag-com"># 返回 chunk_id 列表</span>
+        <span class="tag-key">for</span> k <span class="tag-key">in</span> ks:
+            <span class="tag-key">if</span> set(ranked[:k]) &amp; gold_ids:   <span class="tag-com"># top-k 命中任一正确文档</span>
+                hits[k] += 1
+    <span class="tag-key">return</span> {k: hits[k]/len(eval_set) <span class="tag-key">for</span> k <span class="tag-key">in</span> ks}
+
+<span class="tag-com"># 典型输出：recall@5=0.71  @20=0.88  @100=0.96  @200=0.97</span>
+<span class="tag-com"># 解读：@5 只有 0.71 → 29% 的 query 正确文档没进 LLM。</span>
+<span class="tag-com">#       @100 到 0.96 → 召回器本身够好，瓶颈在「排序」不在「检索」</span>
+<span class="tag-com">#       → 该上 reranker，把 @100 的好东西排进 top-5，而不是换 embedding</span></code></pre>
+<p>曲线形状直接告诉你下一步:recall@200 都上不去(比如 &lt;0.85)→ 问题在<strong>检索器/chunk 策略</strong>,换 embedding 或上混合检索;recall@100 高但 recall@5 低 → 问题在<strong>排序</strong>,该上 reranker。<strong>不先画这条曲线就调参,等于闭眼开车。</strong></p>
+
+<div class="fail">
+<strong>失败模式</strong>：把 top_k 设得太小(比如直接 5)然后抱怨 RAG 不准。小 k 在第一阶段会直接把正确文档挡在门外,而你<em>永远不会知道</em>——因为没有标注集,你看不到 recall。第一阶段的 k 应该由 reranker 能吃下的候选数(通常 50~200)决定,不是由最终塞进 LLM 的数量决定。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Pinecone <em>Rerankers and Two-Stage Retrieval</em>, <a href="https://www.pinecone.io/learn/series/rag/rerankers/" target="_blank">pinecone.io/learn/series/rag/rerankers</a> ·
+BEIR benchmark(IR 指标体系), <a href="https://arxiv.org/abs/2104.08663" target="_blank">arXiv:2104.08663</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>混合检索：BM25 + 向量用 RRF 融合，而不是加权求和</h2>
+<div class="claim">论断：lexical 和 semantic 召回的是不同的「错」，融合能补盲区——但融合方式必须用 rank-based 的 RRF，不能直接加分数。</div>
+
+<h3>背景与原理</h3>
+<p>向量检索(dense)擅长语义匹配,但对<strong>精确字面量</strong>是盲的:产品型号 <code>X-42B</code>、错误码 <code>ERR_TIMEOUT</code>、人名、罕见专有名词——这些 embedding 会糊成一片相近向量。BM25(lexical/sparse)正相反:精确词命中极强,但完全不懂同义和语义。两者召回的是<strong>互补的失败集合</strong>,所以混合检索几乎总是 strict 优于任一单路。Anthropic 的 <strong>Contextual Retrieval</strong>(2024)给了硬数字:仅 Contextual Embeddings 把 top-20 检索失败率降 <strong>35%</strong>(5.7%→3.7%),叠加 Contextual BM25 后降 <strong>49%</strong>(→2.9%),再叠 reranking 降 <strong>67%</strong>(→1.9%)——三层每一层都在切实补盲。</p>
+<p>但融合不能粗暴地把两个检索器的相似度分数加起来:BM25 分数无界(可以是 8.3 也可以是 41.2),cosine 在 [-1,1],<strong>量纲不可比</strong>,直接加权等于让 BM25 的尺度碾压向量分。正确做法是 <strong>RRF(Reciprocal Rank Fusion,Cormack 2009)</strong>:只用<strong>排名</strong>不用<strong>分数</strong>,天然免疫量纲问题。每个文档融合分 = Σ 1/(k+rank),k 通常取 60。</p>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-com"># RRF：只看每个检索器里的「名次」，不看原始分数 → 免归一化</span>
+<span class="tag-key">def</span> rrf(rank_lists, k=60, top_n=100):
+    <span class="tag-com"># rank_lists: [[doc_id 按名次排序], ...] 来自 BM25 / dense / ...</span>
+    scores = {}
+    <span class="tag-key">for</span> ranking <span class="tag-key">in</span> rank_lists:
+        <span class="tag-key">for</span> rank, doc_id <span class="tag-key">in</span> enumerate(ranking):   <span class="tag-com"># rank 从 0 起</span>
+            scores[doc_id] = scores.get(doc_id, 0) + 1/(k + rank + 1)
+    <span class="tag-key">return</span> sorted(scores, key=scores.get, reverse=<span class="tag-key">True</span>)[:top_n]
+
+bm25_hits  = bm25.search(q,  top_k=100)     <span class="tag-com"># 字面精确</span>
+dense_hits = vector.search(q, top_k=100)    <span class="tag-com"># 语义相近</span>
+fused = rrf([bm25_hits, dense_hits])        <span class="tag-com"># 两路名次互补叠加</span>
+<span class="tag-com"># 一个文档若两路都排前面 → 分数叠加冲到最顶；只一路命中 → 仍有机会进候选</span></code></pre>
+<p>RRF 的工程优势是<strong>零调参、零训练、加新检索器只是多传一个 list</strong>。k=60 是论文给的稳健默认,几乎不用动。要更进一步再考虑学习型融合,但 90% 场景 RRF 就是性价比最高的终点。</p>
+
+<div class="fail">
+<strong>失败模式</strong>:(1)用加权求和 <code>α·dense + (1-α)·bm25</code> 并花一周调 α——量纲不可比,α 在不同 query 上最优值飘忽,本质是在拟合噪声;换 RRF 直接消掉这个问题。(2)以为「上了向量检索就不需要 BM25」——对 exact-match 重的领域(代码、法律条款号、SKU),纯向量召回会系统性漏掉关键字面命中,这类 query 恰恰是用户最不能容忍出错的。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Anthropic <em>Introducing Contextual Retrieval</em>(含混合检索实测), <a href="https://www.anthropic.com/engineering/contextual-retrieval" target="_blank">anthropic.com/engineering/contextual-retrieval</a> ·
+Cormack et al. <em>Reciprocal Rank Fusion</em>(SIGIR 2009), <a href="https://dl.acm.org/doi/10.1145/1571941.1572114" target="_blank">dl.acm.org/.../1572114</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Reranker：cross-encoder 的真实价值与成本边界</h2>
+<div class="claim">论断：reranker 是性价比最高的单点质量提升,但它的代价是 latency——它只该处理几十个候选,不该当检索器用。</div>
+
+<h3>背景与原理</h3>
+<p>第一阶段的向量检索用的是 <strong>bi-encoder</strong>:query 和 doc <em>各自独立</em>编码成向量再算相似度。独立编码意味着可以离线把全库向量算好、查询时只算一次 query 向量——快,但 query 和 doc 之间<strong>没有任何 token 级交互</strong>,语义匹配是粗粒度的。<strong>Reranker 是 cross-encoder</strong>:把 (query, doc) <em>拼成一条</em>喂进模型,做完整的 cross-attention,query 的每个 token 都能「看到」doc 的每个 token——匹配精度高一个量级。</p>
+<p>代价是 cross-encoder <strong>不能预计算</strong>:每个 (query, doc) 对都要现场跑一次完整 forward,100 个候选就是 100 次推理,latency 和成本随候选数线性涨。所以它天然是<strong>第二阶段精排</strong>:只处理过召回的几十~一两百个候选,排对序、砍到 top-5。<strong>绝不能拿 reranker 当检索器扫全库</strong>——百万文档 × 每条 forward,延迟和账单都会爆炸。</p>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-com"># 两阶段：bi-encoder 召回(快) → cross-encoder 精排(准但只吃候选)</span>
+<span class="tag-key">import</span> cohere
+co = cohere.Client()
+
+candidates = rrf([bm25_hits, dense_hits])[:100]   <span class="tag-com"># 阶段1：过召回 100</span>
+docs = [chunk_text[c] <span class="tag-key">for</span> c <span class="tag-key">in</span> candidates]
+
+reranked = co.rerank(                              <span class="tag-com"># 阶段2：cross-encoder 精排</span>
+    model=<span class="tag-gpt">"rerank-v3.5"</span>, query=q, documents=docs, top_n=5)
+final = [candidates[r.index] <span class="tag-key">for</span> r <span class="tag-key">in</span> reranked.results]
+<span class="tag-com"># 100 → 5：只有这 5 条进 LLM。reranker 把 recall@100 的好东西</span>
+<span class="tag-com"># 「翻译」成 precision@5。这是 §1 召回曲线里最划算的一跳。</span></code></pre>
+<p>什么时候 reranker 值得?看 §1 那条召回曲线:<strong>recall@100 高、recall@5 低</strong>的缺口,就是 reranker 的收益空间——正确文档已经在候选里,只是没排进前列。Anthropic 实测里 reranking 那一层把失败率从 2.9% 再降到 1.9%,印证它是叠加在混合检索之上的有效一层。开源选 <code>bge-reranker-v2</code> 自托管,托管选 Cohere Rerank / Pinecone Rerank。</p>
+
+<div class="fail">
+<strong>失败模式</strong>:(1)候选数给太大(比如 rerank 500 条)——latency 线性飙升,而 recall@500 vs @100 的边际增益极小,纯亏延迟;先用召回曲线定候选数。(2)<strong>盲目上 reranker 而不先看召回曲线</strong>:如果 recall@100 本身就低(检索器漏召回),reranker 排的是一堆错的,排得再准也没用——这种情况该先修第一阶段。reranker 提升 precision,救不了 recall。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Pinecone <em>Rerankers and Two-Stage Retrieval</em>(bi- vs cross-encoder), <a href="https://www.pinecone.io/learn/series/rag/rerankers/" target="_blank">pinecone.io/learn/series/rag/rerankers</a> ·
+Anthropic Contextual Retrieval(reranking 实测层), <a href="https://www.anthropic.com/engineering/contextual-retrieval" target="_blank">anthropic.com/engineering/contextual-retrieval</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>检索评估：建 golden set，把检索失败和生成失败拆开归因</h2>
+<div class="claim">论断:RAG 答错时,99% 的人去调 prompt——但你根本不知道是检索没给对文档,还是 LLM 拿到对文档也答错了。不拆开,就是瞎调。</div>
+
+<h3>背景与原理</h3>
+<p>RAG 是<strong>检索 + 生成</strong>两段串联,任一段失败都表现为「答错」,但修复方向南辕北辙。<strong>检索失败</strong>(正确文档没进 top-k)要修 chunk/embedding/混合检索/reranker;<strong>生成失败</strong>(文档在 context 里 LLM 却没用对)要修 prompt/模型。混在一起调,你会在错的那一半上浪费所有时间。所以 RAG 评估第一原则是<strong>分层归因</strong>:</p>
+<ul>
+<li><strong>检索层指标(component eval)</strong>:recall@k(正确文档进没进候选)、nDCG@k / MRR(排序质量)。需要 (query → 正确 chunk_id) 标注。</li>
+<li><strong>生成层指标(end-to-end)</strong>:在「检索正确」的子集上,看 faithfulness(答案有没有忠于给定文档、有没有编)、answer relevance。</li>
+</ul>
+<p>关键工程动作是先建一个 <strong>golden set</strong>:50~200 条 (query, 正确 chunk_id, 理想答案) 标注。这是 RAG 工程里 ROI 最高的一次性投入——有了它,每次改 chunk 策略、换 embedding、调 reranker 都能跑出 recall 数字对比,而不是凭「感觉好像准了点」上线。Pinecone 那句话很到位:<em>RAG evaluation —— don't let customers tell you first</em>。</p>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-com"># 分层归因：先判检索对不对，再判生成对不对 —— 同一个错落到不同桶</span>
+<span class="tag-key">def</span> diagnose(sample, retriever, llm):
+    q, gold_ids, gold_answer = sample
+    retrieved = retriever.search(q, top_k=5)
+    retrieval_ok = bool(set(retrieved) &amp; gold_ids)   <span class="tag-com"># 正确文档进了 top-5？</span>
+
+    answer = llm.generate(q, context=[chunk_text[c] <span class="tag-key">for</span> c <span class="tag-key">in</span> retrieved])
+    answer_ok = judge_faithful(answer, gold_answer)  <span class="tag-com"># LLM-judge 判忠实度</span>
+
+    <span class="tag-key">if not</span> retrieval_ok:
+        <span class="tag-key">return</span> <span class="tag-gpt">"RETRIEVAL_FAIL"</span>    <span class="tag-com"># → 修 chunk/embedding/hybrid/rerank</span>
+    <span class="tag-key">if not</span> answer_ok:
+        <span class="tag-key">return</span> <span class="tag-gpt">"GENERATION_FAIL"</span>   <span class="tag-com"># → 修 prompt/模型（文档在 context 里却没答对）</span>
+    <span class="tag-key">return</span> <span class="tag-gpt">"OK"</span>
+
+<span class="tag-com"># 跑完 golden set 统计两类占比：</span>
+<span class="tag-com"># RETRIEVAL_FAIL 60% / GENERATION_FAIL 40% → 主战场在检索，别再调 prompt</span></code></pre>
+<p>这张归因表跑一次就知道你的工程时间该投哪。多数团队拍脑袋以为是「prompt 不行」,跑出来发现一大半是 <code>RETRIEVAL_FAIL</code>——文档压根没进 context,prompt 调到天荒地老也没用。</p>
+
+<div class="fail">
+<strong>失败模式</strong>:(1)只看端到端答案对错、不分层——答错了不知道修哪;分层归因是这一整套的核心。(2)golden set 全是简单 query,线上真实分布是长尾难 query,离线 recall 漂亮线上崩;标注要覆盖真实 query 分布(尤其 exact-match、多跳、否定这些硬 case)。(3)<strong>用同一个 LLM 既生成又当 judge 评 faithfulness</strong>——self-eval 有 backward rationalization 偏差,judge 最好换一个模型或加 reference 锚定。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Pinecone <em>RAG Evaluation: Don't let customers tell you first</em>, <a href="https://www.pinecone.io/learn/series/vector-databases-in-production-for-busy-engineers/rag-evaluation/" target="_blank">pinecone.io/.../rag-evaluation</a> ·
+BEIR(nDCG/MRR/recall 标准指标), <a href="https://arxiv.org/abs/2104.08663" target="_blank">arXiv:2104.08663</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// 综合实战 · 一条命令量化你的 RAG 检索质量</h3>
+<p>把四点串成一个能跑的诊断流水线——周末花两小时,从此告别「凭感觉调 RAG」:</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>标 golden set</strong>:从线上日志抽 100 条真实 query,人工标 (query, 正确 chunk_id)。覆盖长尾:exact-match(型号/错误码)、多跳、否定各留几条。这是唯一一次性人工成本。</li>
+<li><strong>画召回曲线(§1)</strong>:跑 <code>recall_at_k</code>,看 @5/@20/@100/@200。判断瓶颈是「检索」(@200 低)还是「排序」(@100 高 @5 低)。</li>
+<li><strong>加混合检索(§2)</strong>:在纯 dense 上叠 BM25,RRF 融合,重画曲线。看 recall@100 涨多少——exact-match query 应明显改善。</li>
+<li><strong>加 reranker(§3)</strong>:对 top-100 候选上 cross-encoder 精排,看 recall@5 / nDCG@5 跳多少。这一跳通常是最划算的。</li>
+<li><strong>分层归因(§4)</strong>:跑 <code>diagnose</code>,统计 RETRIEVAL_FAIL vs GENERATION_FAIL 占比,锁定下一步主战场。</li>
+<li><strong>固化成 CI</strong>:把这套挂进 Day 42 讲的 eval 门——以后每次改 chunk/embedding/prompt,recall@5 掉了就红灯,杜绝「改一个修一个、坏三个不知道」。</li>
+</ol>
+<p style="margin-top:12px">做完这一套,你对自己 RAG 的认知会从「感觉还行」变成「recall@5=0.84,瓶颈在 exact-match 召回,下一步上 BM25」——这是工程和玄学的分界线。</p>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// ENGLISH GLOSSARY</h3>
+<dl>
+<dt>Recall@k</dt><dd>正确文档落入 top-k 候选的 query 占比。两阶段检索第一阶段的核心 KPI。</dd>
+<dt>Precision</dt><dd>返回结果中相关文档的占比。第二阶段(reranker / LLM)负责的指标。</dd>
+<dt>Two-Stage Retrieval</dt><dd>先用便宜检索器过召回,再用昂贵 reranker 精排的标准架构。</dd>
+<dt>Bi-Encoder</dt><dd>query 与 doc 各自独立编码成向量,可预计算、快,但无 token 级交互。向量检索用。</dd>
+<dt>Cross-Encoder</dt><dd>把 (query, doc) 拼成一条做完整 cross-attention,精度高但不能预计算。reranker 用。</dd>
+<dt>BM25</dt><dd>经典 lexical/sparse 检索,精确词命中强、不懂语义。混合检索的 lexical 半边。</dd>
+<dt>RRF</dt><dd>Reciprocal Rank Fusion。只用排名不用分数融合多路检索,免归一化、零调参。</dd>
+<dt>nDCG / MRR</dt><dd>带位置权重的排序质量指标。评估「排得对不对」,不只是「召没召回」。</dd>
+<dt>Contextual Retrieval</dt><dd>Anthropic 2024 方法:embed 前给 chunk 补全文档上下文,显著降低检索失败率。</dd>
+<dt>Faithfulness</dt><dd>生成答案是否忠于检索到的文档(无幻觉)。生成层评估的核心指标。</dd>
+</dl>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// 深入思考</h3>
+<details><summary>「召回优先于精度」是普适原则,还是有反例?什么场景下你反而该牺牲 recall 换 precision?</summary><div>不普适。它成立的前提是「下游有 reranker + LLM 能消化噪声」。反例:(1)<strong>无 reranker 且 context 极贵</strong>——把噪声直接塞进小窗口 LLM,会触发 lost-in-the-middle,正确文档被无关文档稀释,这时高 precision 比高 recall 更重要。(2)<strong>直接面向用户展示检索结果</strong>(如搜索框),用户不会翻 100 条,top-3 的 precision 就是体验本身。原则的本质是「错误可恢复性」:只要下游能补救多召回,就优先 recall;一旦多召回的代价不可恢复(污染 context / 直接呈现),就反转。</div></details>
+<details><summary>RRF 完全丢弃了原始相似度分数,只用排名。这种「信息损失」难道不会丢掉有用信号吗?</summary><div>会丢,但丢的是<strong>不可比的信号</strong>。原始分数跨检索器不可比(BM25 无界 vs cosine 有界),强行用反而引入尺度偏差。RRF 的设计哲学是:与其用一个污染的强信号,不如用一个干净的弱信号(排名)。代价是它对「第 1 名比第 2 名强很多」这种<strong>组内分数差</strong>不敏感——两个检索器都把某文档排第一,RRF 看不出谁更自信。需要这种细粒度时才上学习型融合(如用分数做特征训一个 LTR 模型),但那要标注、要训练、会过拟合。RRF 是「够好且零成本」,90% 场景的理性终点。</div></details>
+<details><summary>Anthropic Contextual Retrieval 在 embed 前给每个 chunk 补全文档上下文。这跟单纯把 chunk 切大有什么本质区别?</summary><div>本质不同。切大 chunk 是把更多<em>原始相邻文本</em>塞进同一向量,会稀释主题、增加噪声、还是会丢全局上下文(chunk 仍只看到自己周围)。Contextual Retrieval 是用 LLM 给每个 chunk<strong>生成一段专门解释「这段在全文里讲什么、属于哪个实体/章节」的上下文</strong>再拼接 embed——补的是<em>跨 chunk 的全局指代</em>。典型例子:一个 chunk 写「该公司 Q3 收入增长 3%」,单独 embed 时「该公司」无指代,语义模糊;补上「这段出自 ACME 2023 年报」后,query「ACME 第三季度业绩」才能召回它。代价是预处理要对每个 chunk 跑一次 LLM(成本靠 prompt caching 摊薄)。</div></details>
+<details><summary>为什么检索失败和生成失败必须用「不同模型」当 judge?同一个 LLM 既答又评有什么具体偏差?</summary><div>核心是 <strong>backward rationalization(事后合理化)</strong>:模型评估自己刚生成的答案时,倾向为自己的输出找理由、给高分,因为生成路径和评估路径共享同样的先验和盲区——它编造的「事实」在自评时仍然「看起来对」。具体偏差:(1)self-preference,系统性高估自己的答案;(2)共享幻觉,生成时编的内容评估时检测不出。缓解:judge 换一个不同家族的模型(打破共享先验)、给 judge 提供 reference answer 做锚定(把开放评分变成对比评分)、或用 pairwise 比较替代绝对打分。Day 6 的 LLM-as-judge 去偏讲过这套,检索评估里 faithfulness 判定同样适用。</div></details>
+<details><summary>如果未来 context window 涨到 1000 万 token、且便宜到可以塞全库,检索质量工程还有意义吗?</summary><div>仍有意义,但重心转移。即使能塞全库,三个问题不消失:(1)<strong>lost-in-the-middle</strong>——长 context 中段信息利用率系统性下降,塞得越多,关键文档被「淹没」的风险越大,排序/筛选反而更重要;(2)<strong>成本与延迟</strong>——每 query 处理千万 token 的账单和 TTFT 不可接受,检索是必要的预过滤;(3)<strong>归因与可控</strong>——检索给出明确的引用来源,全塞进去则无法溯源、无法做 access control。所以检索不会消失,但会从「因为塞不下所以必须选」转向「为了精度、成本、可溯源而主动选」。质量工程的 recall/precision 权衡依然成立,只是 k 的取值空间变大了。</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://www.anthropic.com/engineering/contextual-retrieval" target="_blank">Anthropic · Introducing Contextual Retrieval</a> — 混合检索 + 上下文 + rerank 三层失败率实测(35%/49%/67%)</li>
+<li><a href="https://www.pinecone.io/learn/series/rag/rerankers/" target="_blank">Pinecone · Rerankers and Two-Stage Retrieval</a> — bi-encoder vs cross-encoder 与两阶段架构</li>
+<li><a href="https://www.pinecone.io/learn/series/vector-databases-in-production-for-busy-engineers/rag-evaluation/" target="_blank">Pinecone · RAG Evaluation</a> — 检索/生成分层评估的工程方法</li>
+<li><a href="https://dl.acm.org/doi/10.1145/1571941.1572114" target="_blank">Cormack et al. · Reciprocal Rank Fusion (SIGIR 2009)</a> — RRF 原始论文,融合的奠基方法</li>
+<li><a href="https://arxiv.org/abs/2104.08663" target="_blank">Thakur et al. · BEIR (NeurIPS 2021)</a> — 异构零样本检索基准与标准 IR 指标体系</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 43 · 2026-06-22</footer>
+</div>
+</body></html>

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 43 · Retrieval Quality Engineering — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.homework{background:linear-gradient(135deg,rgba(255,110,196,0.1),rgba(123,97,255,0.1));border:1px solid rgba(255,110,196,0.3);border-radius:10px;padding:22px 24px;margin:36px 0}
+.homework h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 43 / PHASE 4 · ENGINEERING</span>
+<h1>Retrieval Quality Engineering</h1>
+<h2>Recall vs Precision · Hybrid Fusion · Reranker · Retrieval Eval</h2>
+<div class="date">2026-06-22 · BigCat</div>
+<p class="pitch">A RAG system's ceiling isn't the LLM — it's retrieval recall. The model can't answer from a document it never sees.</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>How to chunk, which embedding to use — Day 10 / 11 covered that. This issue takes a sharper angle: <strong>how to quantify, tune, and avoid fooling yourself about retrieval quality itself</strong>. The reality is that most RAG systems are bottlenecked not at generation — an LLM handed the right document almost always answers correctly, and fabricates when it isn't. So the real battleground of RAG engineering is one thing: <strong>did the right document make it into top-k?</strong> Yet almost nobody quantifies it: they ship with top_k=5 picked from a hunch, blame "the model" when it's bad, and never build a golden set that produces numbers. This issue covers four things that immediately separate you from the pack: why <strong>recall must come before precision</strong>, why hybrid search must use <strong>RRF rather than weighted sum</strong>, the real value and cost boundary of rerankers, and how to <strong>split retrieval failures from generation failures</strong> — with Anthropic's measured Contextual Retrieval numbers and runnable eval code.</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>Recall Before Precision: The Core Trade-off of Two-Stage Retrieval</h2>
+<div class="claim">Claim: the only KPI of stage one is recall@k — over-retrieve noise rather than ever drop the correct document. Leave precision to the reranker and the LLM.</div>
+
+<h3>Background &amp; Principle</h3>
+<p>Retrieval quality is a tug-of-war between recall and precision, but the two have <strong>completely asymmetric status at different stages</strong> of the pipeline. The key asymmetry: <strong>a missed-recall error is unrecoverable; an over-recall error is fixable</strong>. If the correct document never enters the stage-one candidate set, no reranker — however strong — and no LLM — however smart — can recover it: it simply never sees it. Conversely, an irrelevant document in the candidate set merely adds a little filtering load to the reranker and LLM — a far cheaper cost.</p>
+<p>So industrial RAG is almost always <strong>two-stage</strong>: the recall stage uses a cheap, fast retriever (BM25 + vector) to <strong>over-retrieve</strong> to top-100~200 candidates, aiming to "fence in" the correct document; the rerank stage uses an expensive, precise cross-encoder to squeeze candidates down to top-5~8, aiming to "order them right." This structure directly dictates how you tune: in stage one push <code>k</code> larger, err on the side of over-inclusion; only in stage two chase precision.</p>
+
+<div class="diagram">┌──── Two-stage retrieval: wide recall in, precise rank out ────┐
+│                                                               │
+│  query                                                        │
+│    │                                                          │
+│    ├─▶ STAGE 1 · RECALL  (need high recall@k · fast · cheap)  │
+│    │     BM25(lexical) ─┐                                     │
+│    │                    ├─▶ RRF fuse ─▶ top-100~200           │
+│    │     dense(vector) ─┘            candidates(over-recall)  │
+│    │                                     │                    │
+│    └─▶ STAGE 2 · RERANK  (need precision · slow · costly)     │
+│          cross-encoder re-rank ◀─────────┘                    │
+│             │                                                 │
+│             ▼  top-5~8                                        │
+│        ┌──────────────┐                                       │
+│        │  LLM context │  ← only what reaches here can be cited│
+│        └──────────────┘                                       │
+│                                                               │
+│  missed recall = unrecoverable  ·  over-recall = small fixable│
+└───────────────────────────────────────────────────────────────┘</div>
+
+<h3>Hands-on</h3>
+<p>First quantify your system's "recall ceiling" — the first number in RAG tuning, one almost nobody has ever measured:</p>
+<pre><code><span class="tag-com"># Given (query, correct chunk_id) labels, measure recall@k vs k</span>
+<span class="tag-key">def</span> recall_at_k(retriever, eval_set, ks=(5,10,20,50,100,200)):
+    hits = {k: 0 <span class="tag-key">for</span> k <span class="tag-key">in</span> ks}
+    <span class="tag-key">for</span> q, gold_ids <span class="tag-key">in</span> eval_set:        <span class="tag-com"># gold_ids: correct chunks for this query</span>
+        ranked = retriever.search(q, top_k=max(ks))   <span class="tag-com"># returns list of chunk_id</span>
+        <span class="tag-key">for</span> k <span class="tag-key">in</span> ks:
+            <span class="tag-key">if</span> set(ranked[:k]) &amp; gold_ids:   <span class="tag-com"># top-k hits any correct doc</span>
+                hits[k] += 1
+    <span class="tag-key">return</span> {k: hits[k]/len(eval_set) <span class="tag-key">for</span> k <span class="tag-key">in</span> ks}
+
+<span class="tag-com"># Typical output: recall@5=0.71  @20=0.88  @100=0.96  @200=0.97</span>
+<span class="tag-com"># Reading: @5 only 0.71 -> 29% of queries never get the right doc into the LLM.</span>
+<span class="tag-com">#          @100 reaches 0.96 -> the retriever itself is good; the bottleneck</span>
+<span class="tag-com">#          is ORDERING, not retrieval -> add a reranker, don't swap embeddings.</span></code></pre>
+<p>The shape of this curve tells you exactly what to do next: if recall@200 won't climb (say &lt;0.85), the problem is the <strong>retriever / chunking</strong> — swap embeddings or go hybrid; if recall@100 is high but recall@5 is low, the problem is <strong>ordering</strong> — add a reranker. <strong>Tuning before drawing this curve is driving with your eyes closed.</strong></p>
+
+<div class="fail">
+<strong>Failure mode</strong>: setting top_k too small (e.g. straight to 5) and then complaining RAG is inaccurate. A small k blocks the correct document at the door in stage one — and you'll <em>never know</em>, because without a labeled set you can't see recall. The stage-one k should be set by how many candidates the reranker can chew (typically 50~200), not by the final count fed to the LLM.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Pinecone <em>Rerankers and Two-Stage Retrieval</em>, <a href="https://www.pinecone.io/learn/series/rag/rerankers/" target="_blank">pinecone.io/learn/series/rag/rerankers</a> ·
+BEIR benchmark (IR metrics), <a href="https://arxiv.org/abs/2104.08663" target="_blank">arXiv:2104.08663</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Hybrid Search: Fuse BM25 + Vector with RRF, Not a Weighted Sum</h2>
+<div class="claim">Claim: lexical and semantic retrieval make different kinds of mistakes — fusion patches the blind spots — but the fusion method must be rank-based RRF, never a direct sum of scores.</div>
+
+<h3>Background &amp; Principle</h3>
+<p>Vector (dense) retrieval excels at semantic matching but is blind to <strong>exact literals</strong>: product codes like <code>X-42B</code>, error codes like <code>ERR_TIMEOUT</code>, names, rare proper nouns — embeddings blur these into nearby vectors. BM25 (lexical/sparse) is the opposite: brutal at exact-term hits, but understands no synonymy or semantics. The two recall <strong>complementary failure sets</strong>, so hybrid search almost always strictly beats either path alone. Anthropic's <strong>Contextual Retrieval</strong> (2024) gives hard numbers: Contextual Embeddings alone cut the top-20 retrieval failure rate by <strong>35%</strong> (5.7%→3.7%); adding Contextual BM25 cut it by <strong>49%</strong> (→2.9%); adding reranking on top cut it by <strong>67%</strong> (→1.9%) — each of the three layers genuinely patching blind spots.</p>
+<p>But fusion can't crudely add the two retrievers' similarity scores: BM25 scores are unbounded (could be 8.3 or 41.2), cosine similarity is in [-1,1] — <strong>the units are simply incomparable</strong>, and a weighted sum lets BM25's scale crush the vector score. The right approach is <strong>RRF (Reciprocal Rank Fusion, Cormack 2009)</strong>: it uses only <strong>rank</strong>, never <strong>score</strong>, and is naturally immune to the units problem. Each doc's fused score = Σ 1/(k+rank), with k typically 60.</p>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># RRF: use each retriever's "place", not its raw score -> no normalization</span>
+<span class="tag-key">def</span> rrf(rank_lists, k=60, top_n=100):
+    <span class="tag-com"># rank_lists: [[doc_id ordered by rank], ...] from BM25 / dense / ...</span>
+    scores = {}
+    <span class="tag-key">for</span> ranking <span class="tag-key">in</span> rank_lists:
+        <span class="tag-key">for</span> rank, doc_id <span class="tag-key">in</span> enumerate(ranking):   <span class="tag-com"># rank starts at 0</span>
+            scores[doc_id] = scores.get(doc_id, 0) + 1/(k + rank + 1)
+    <span class="tag-key">return</span> sorted(scores, key=scores.get, reverse=<span class="tag-key">True</span>)[:top_n]
+
+bm25_hits  = bm25.search(q,  top_k=100)     <span class="tag-com"># literal-exact</span>
+dense_hits = vector.search(q, top_k=100)    <span class="tag-com"># semantically near</span>
+fused = rrf([bm25_hits, dense_hits])        <span class="tag-com"># complementary ranks stack up</span>
+<span class="tag-com"># A doc ranked high by both paths -> scores stack to the very top;</span>
+<span class="tag-com"># hit by only one path -> still gets a shot at the candidate set.</span></code></pre>
+<p>RRF's engineering advantage: <strong>zero tuning, zero training, and adding a new retriever is just passing one more list</strong>. k=60 is the paper's robust default and rarely needs touching. Only consider learned fusion to go further, but for 90% of cases RRF is the best-value endpoint.</p>
+
+<div class="fail">
+<strong>Failure mode</strong>: (1) using a weighted sum <code>α·dense + (1-α)·bm25</code> and spending a week tuning α — the units are incomparable, the optimal α drifts across queries, and you're essentially fitting noise; switching to RRF eliminates the problem outright. (2) believing "once we have vector search we don't need BM25" — for exact-match-heavy domains (code, legal clause numbers, SKUs), pure-vector recall systematically misses key literal hits, and those are exactly the queries users least tolerate getting wrong.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Anthropic <em>Introducing Contextual Retrieval</em> (hybrid measured), <a href="https://www.anthropic.com/engineering/contextual-retrieval" target="_blank">anthropic.com/engineering/contextual-retrieval</a> ·
+Cormack et al. <em>Reciprocal Rank Fusion</em> (SIGIR 2009), <a href="https://dl.acm.org/doi/10.1145/1571941.1572114" target="_blank">dl.acm.org/.../1572114</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Reranker: The Real Value and Cost Boundary of Cross-Encoders</h2>
+<div class="claim">Claim: a reranker is the highest-value single-point quality gain — but its cost is latency, so it should process only dozens of candidates and never be used as a retriever.</div>
+
+<h3>Background &amp; Principle</h3>
+<p>Stage-one vector retrieval uses a <strong>bi-encoder</strong>: query and doc are encoded <em>independently</em> into vectors, then scored by similarity. Independent encoding means you can precompute all corpus vectors offline and only encode the query once at query time — fast, but there is <strong>no token-level interaction</strong> between query and doc, so the semantic match is coarse-grained. <strong>A reranker is a cross-encoder</strong>: it concatenates (query, doc) <em>into one sequence</em>, runs full cross-attention, and every query token can "see" every doc token — an order of magnitude more precise.</p>
+<p>The cost is that a cross-encoder <strong>cannot be precomputed</strong>: each (query, doc) pair requires a fresh full forward pass at runtime. 100 candidates means 100 inferences, with latency and cost scaling linearly in candidate count. So its natural role is <strong>stage-two reranking</strong>: process only the dozens-to-~hundred over-retrieved candidates, order them right, and cut to top-5. <strong>Never use a reranker as a retriever scanning the whole corpus</strong> — a million docs × a forward pass each would blow up both latency and the bill.</p>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># Two stages: bi-encoder recall (fast) -> cross-encoder rerank (precise, candidates only)</span>
+<span class="tag-key">import</span> cohere
+co = cohere.Client()
+
+candidates = rrf([bm25_hits, dense_hits])[:100]   <span class="tag-com"># Stage 1: over-recall 100</span>
+docs = [chunk_text[c] <span class="tag-key">for</span> c <span class="tag-key">in</span> candidates]
+
+reranked = co.rerank(                              <span class="tag-com"># Stage 2: cross-encoder rerank</span>
+    model=<span class="tag-gpt">"rerank-v3.5"</span>, query=q, documents=docs, top_n=5)
+final = [candidates[r.index] <span class="tag-key">for</span> r <span class="tag-key">in</span> reranked.results]
+<span class="tag-com"># 100 -> 5: only these 5 reach the LLM. The reranker "translates"</span>
+<span class="tag-com"># recall@100 into precision@5 -- the best-value jump on the §1 curve.</span></code></pre>
+<p>When is a reranker worth it? Look at the §1 recall curve: the gap where <strong>recall@100 is high but recall@5 is low</strong> is exactly the reranker's payoff zone — the correct doc is already in the candidates, just not ranked up front. In Anthropic's measurements, the reranking layer pushed the failure rate from 2.9% further down to 1.9%, confirming it as an effective layer stacked on top of hybrid search. For open source pick self-hosted <code>bge-reranker-v2</code>; for managed pick Cohere Rerank / Pinecone Rerank.</p>
+
+<div class="fail">
+<strong>Failure mode</strong>: (1) giving too many candidates (e.g. reranking 500) — latency climbs linearly while the marginal recall@500 vs @100 gain is tiny, a pure latency loss; set candidate count from the recall curve. (2) <strong>blindly adding a reranker without checking the recall curve first</strong>: if recall@100 is itself low (the retriever missed recall), the reranker is ordering a pile of wrong docs — no matter how well it ranks them, it's useless; fix stage one first. A reranker lifts precision; it cannot rescue recall.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Pinecone <em>Rerankers and Two-Stage Retrieval</em> (bi- vs cross-encoder), <a href="https://www.pinecone.io/learn/series/rag/rerankers/" target="_blank">pinecone.io/learn/series/rag/rerankers</a> ·
+Anthropic Contextual Retrieval (reranking layer measured), <a href="https://www.anthropic.com/engineering/contextual-retrieval" target="_blank">anthropic.com/engineering/contextual-retrieval</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Retrieval Eval: Build a Golden Set, Split Retrieval Failures from Generation Failures</h2>
+<div class="claim">Claim: when RAG answers wrong, 99% of people go tune the prompt — but you have no idea whether retrieval failed to surface the right doc, or the LLM got the right doc and still answered wrong. Without splitting, you're tuning blind.</div>
+
+<h3>Background &amp; Principle</h3>
+<p>RAG chains two stages — <strong>retrieval + generation</strong> — and a failure in either shows up as a "wrong answer," but the fixes point in opposite directions. A <strong>retrieval failure</strong> (correct doc never in top-k) calls for fixing chunking/embedding/hybrid/reranker; a <strong>generation failure</strong> (the doc is right there in context, yet the LLM misused it or answered wrong) calls for fixing prompt/model. Tune them mixed together and you'll waste all your time on the wrong half. So the first principle of RAG eval is <strong>layered attribution</strong>:</p>
+<ul>
+<li><strong>Retrieval-layer metrics (component eval)</strong>: recall@k (did the right doc enter candidates), nDCG@k / MRR (ordering quality). Requires (query → correct chunk_id) labels.</li>
+<li><strong>Generation-layer metrics (end-to-end)</strong>: on the "retrieval-correct" subset, measure faithfulness (does the answer stay true to the given docs, no fabrication) and answer relevance.</li>
+</ul>
+<p>The key engineering move is to first build a <strong>golden set</strong>: 50~200 labels of (query, correct chunk_id, ideal answer). This is the highest-ROI one-time investment in RAG engineering — with it, every chunk-strategy change, embedding swap, or reranker tweak produces a recall number to compare, instead of "it feels a bit more accurate" before shipping. Pinecone puts it well: <em>RAG evaluation — don't let customers tell you first</em>.</p>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># Layered attribution: judge retrieval first, then generation -> same error, different bucket</span>
+<span class="tag-key">def</span> diagnose(sample, retriever, llm):
+    q, gold_ids, gold_answer = sample
+    retrieved = retriever.search(q, top_k=5)
+    retrieval_ok = bool(set(retrieved) &amp; gold_ids)   <span class="tag-com"># right doc in top-5?</span>
+
+    answer = llm.generate(q, context=[chunk_text[c] <span class="tag-key">for</span> c <span class="tag-key">in</span> retrieved])
+    answer_ok = judge_faithful(answer, gold_answer)  <span class="tag-com"># LLM-judge on faithfulness</span>
+
+    <span class="tag-key">if not</span> retrieval_ok:
+        <span class="tag-key">return</span> <span class="tag-gpt">"RETRIEVAL_FAIL"</span>    <span class="tag-com"># -> fix chunk/embedding/hybrid/rerank</span>
+    <span class="tag-key">if not</span> answer_ok:
+        <span class="tag-key">return</span> <span class="tag-gpt">"GENERATION_FAIL"</span>   <span class="tag-com"># -> fix prompt/model (doc was in context, still wrong)</span>
+    <span class="tag-key">return</span> <span class="tag-gpt">"OK"</span>
+
+<span class="tag-com"># Run the golden set, tally the two shares:</span>
+<span class="tag-com"># RETRIEVAL_FAIL 60% / GENERATION_FAIL 40% -> battleground is retrieval, stop tuning prompts</span></code></pre>
+<p>Run this attribution table once and you know exactly where your engineering hours should go. Most teams assume "the prompt is off," then find a large half is <code>RETRIEVAL_FAIL</code> — the doc never reached context, and no amount of prompt tuning will ever help.</p>
+
+<div class="fail">
+<strong>Failure mode</strong>: (1) only looking at end-to-end answer correctness without layering — when it's wrong you don't know what to fix; layered attribution is the core of this whole setup. (2) a golden set of only easy queries while the real distribution is a long tail of hard queries — offline recall looks great, production collapses; labels must cover the real query distribution (especially exact-match, multi-hop, and negation hard cases). (3) <strong>using the same LLM to both generate and judge faithfulness</strong> — self-eval has a backward-rationalization bias; the judge is best as a different model or anchored with a reference.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Pinecone <em>RAG Evaluation: Don't let customers tell you first</em>, <a href="https://www.pinecone.io/learn/series/vector-databases-in-production-for-busy-engineers/rag-evaluation/" target="_blank">pinecone.io/.../rag-evaluation</a> ·
+BEIR (nDCG/MRR/recall standard metrics), <a href="https://arxiv.org/abs/2104.08663" target="_blank">arXiv:2104.08663</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// Capstone · Quantify Your RAG Retrieval Quality in One Run</h3>
+<p>Chain the four points into a runnable diagnostic pipeline — spend two hours over a weekend and never "tune RAG by feel" again:</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>Label a golden set</strong>: pull 100 real queries from production logs, manually label (query, correct chunk_id). Cover the long tail: a few each of exact-match (codes/error codes), multi-hop, negation. This is the only one-time human cost.</li>
+<li><strong>Draw the recall curve (§1)</strong>: run <code>recall_at_k</code>, inspect @5/@20/@100/@200. Decide whether the bottleneck is "retrieval" (@200 low) or "ordering" (@100 high, @5 low).</li>
+<li><strong>Add hybrid search (§2)</strong>: stack BM25 on pure dense, fuse with RRF, redraw the curve. See how much recall@100 rises — exact-match queries should clearly improve.</li>
+<li><strong>Add a reranker (§3)</strong>: cross-encoder rerank the top-100 candidates, see how much recall@5 / nDCG@5 jumps. This jump is usually the best value.</li>
+<li><strong>Layered attribution (§4)</strong>: run <code>diagnose</code>, tally RETRIEVAL_FAIL vs GENERATION_FAIL, lock in the next battleground.</li>
+<li><strong>Freeze it into CI</strong>: hang this on the eval gate from Day 42 — from now on every chunk/embedding/prompt change flips red if recall@5 drops, ending "fix one, break three."</li>
+</ol>
+<p style="margin-top:12px">Once this is done, your understanding of your own RAG shifts from "feels okay" to "recall@5=0.84, bottleneck is exact-match recall, next step is BM25" — that's the line between engineering and superstition.</p>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// KEY TERMS</h3>
+<dl>
+<dt>Recall@k</dt><dd>Share of queries whose correct document lands in the top-k candidates. The core KPI of stage one.</dd>
+<dt>Precision</dt><dd>Share of returned results that are relevant. The metric owned by stage two (reranker / LLM).</dd>
+<dt>Two-Stage Retrieval</dt><dd>Standard architecture: over-recall with a cheap retriever, then rerank precisely with an expensive one.</dd>
+<dt>Bi-Encoder</dt><dd>Query and doc encoded independently into vectors; precomputable and fast, but no token-level interaction. Used for vector search.</dd>
+<dt>Cross-Encoder</dt><dd>Concatenates (query, doc) for full cross-attention; high precision but cannot be precomputed. Used for reranking.</dd>
+<dt>BM25</dt><dd>Classic lexical/sparse retrieval; strong exact-term hits, no semantics. The lexical half of hybrid search.</dd>
+<dt>RRF</dt><dd>Reciprocal Rank Fusion. Fuses multiple retrievers using only rank, not score — normalization-free, zero tuning.</dd>
+<dt>nDCG / MRR</dt><dd>Position-weighted ordering-quality metrics. Evaluate "ordered right," not just "recalled."</dd>
+<dt>Contextual Retrieval</dt><dd>Anthropic 2024 method: prepend whole-document context to each chunk before embedding, cutting retrieval failure rate.</dd>
+<dt>Faithfulness</dt><dd>Whether the generated answer stays true to the retrieved docs (no hallucination). The core generation-layer metric.</dd>
+</dl>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// DEEPER THINKING</h3>
+<details><summary>Is "recall before precision" universal, or are there counterexamples? When should you sacrifice recall for precision?</summary><div>Not universal. It holds on the premise that "a downstream reranker + LLM can digest noise." Counterexamples: (1) <strong>no reranker and context is expensive</strong> — stuffing noise straight into a small-window LLM triggers lost-in-the-middle, diluting the correct doc with irrelevant ones; here high precision matters more than high recall. (2) <strong>directly showing retrieval results to users</strong> (e.g. a search box) — users won't scroll 100 results; top-3 precision is the experience itself. The essence is "error recoverability": as long as downstream can repair over-recall, prioritize recall; once over-recall's cost is unrecoverable (polluting context / direct display), it flips.</div></details>
+<details><summary>RRF discards raw similarity scores entirely, using only rank. Doesn't that "information loss" throw away useful signal?</summary><div>It does, but what it throws away is <strong>incomparable signal</strong>. Raw scores are incomparable across retrievers (unbounded BM25 vs bounded cosine), and forcing their use introduces scale bias. RRF's philosophy: rather than a polluted strong signal, use a clean weak signal (rank). The cost is insensitivity to <strong>within-group score gaps</strong> like "rank 1 is far stronger than rank 2" — if both retrievers rank a doc first, RRF can't tell which is more confident. Only when you need that granularity do you reach for learned fusion (e.g. an LTR model with scores as features), but that needs labels, training, and risks overfitting. RRF is "good enough at zero cost," the rational endpoint for 90% of cases.</div></details>
+<details><summary>Anthropic Contextual Retrieval prepends whole-document context to each chunk before embedding. How is that fundamentally different from just chunking larger?</summary><div>Fundamentally different. Larger chunks pack more <em>raw adjacent text</em> into one vector, diluting the topic, adding noise, and still losing global context (the chunk still only sees its neighbors). Contextual Retrieval uses an LLM to <strong>generate a passage specifically explaining "what this chunk is about in the full document, which entity/section it belongs to"</strong> and concatenates that before embedding — it patches <em>cross-chunk global reference</em>. Classic example: a chunk says "the company's Q3 revenue grew 3%"; embedded alone, "the company" has no referent and is semantically vague; prepend "this is from ACME's 2023 annual report" and the query "ACME third-quarter results" can finally recall it. The cost is running an LLM per chunk at preprocessing (amortized via prompt caching).</div></details>
+<details><summary>Why must retrieval and generation failures use a "different model" as judge? What concrete bias does the same LLM answering and judging introduce?</summary><div>The core is <strong>backward rationalization</strong>: a model evaluating an answer it just generated tends to find reasons to favor its own output and give high marks, because the generation and evaluation paths share the same priors and blind spots — the "facts" it fabricated still "look right" on self-eval. Concrete biases: (1) self-preference, systematically overrating its own answers; (2) shared hallucination, content fabricated at generation is undetectable at evaluation. Mitigations: use a judge from a different model family (breaking shared priors), give the judge a reference answer to anchor on (turning open scoring into comparative scoring), or use pairwise comparison instead of absolute scores. Day 6's LLM-as-judge debiasing covered this; faithfulness judgment in retrieval eval applies the same playbook.</div></details>
+<details><summary>If context windows grow to 10M tokens and become cheap enough to stuff the whole corpus, does retrieval quality engineering still matter?</summary><div>Still matters, but the emphasis shifts. Even if you can stuff the whole corpus, three problems don't vanish: (1) <strong>lost-in-the-middle</strong> — info utilization in long-context middles systematically drops, so the more you stuff, the greater the risk of "drowning" the key doc, making ordering/filtering more important; (2) <strong>cost and latency</strong> — processing 10M tokens per query has an unacceptable bill and TTFT, so retrieval is a necessary pre-filter; (3) <strong>attribution and control</strong> — retrieval gives explicit citation sources, while stuffing everything makes tracing impossible and breaks access control. So retrieval won't disappear, but it shifts from "we must select because it won't fit" to "we actively select for precision, cost, and traceability." The recall/precision trade-off still holds; the value space of k just grows larger.</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://www.anthropic.com/engineering/contextual-retrieval" target="_blank">Anthropic · Introducing Contextual Retrieval</a> — hybrid + context + rerank, three layers of measured failure-rate cuts (35%/49%/67%)</li>
+<li><a href="https://www.pinecone.io/learn/series/rag/rerankers/" target="_blank">Pinecone · Rerankers and Two-Stage Retrieval</a> — bi-encoder vs cross-encoder and the two-stage architecture</li>
+<li><a href="https://www.pinecone.io/learn/series/vector-databases-in-production-for-busy-engineers/rag-evaluation/" target="_blank">Pinecone · RAG Evaluation</a> — the engineering method of layered retrieval/generation eval</li>
+<li><a href="https://dl.acm.org/doi/10.1145/1571941.1572114" target="_blank">Cormack et al. · Reciprocal Rank Fusion (SIGIR 2009)</a> — the original RRF paper, the foundational fusion method</li>
+<li><a href="https://arxiv.org/abs/2104.08663" target="_blank">Thakur et al. · BEIR (NeurIPS 2021)</a> — heterogeneous zero-shot retrieval benchmark and standard IR metrics</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 43 · 2026-06-22</footer>
+</div>
+</body></html>
