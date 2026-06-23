@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 44 · AI 辅助数据分析 — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 44 / PHASE 4 · ENGINEERING</span>
+<h1>AI 辅助数据分析</h1>
+<h2>NL2SQL · Code Interpreter · 统计陷阱 · 分析 Agent 闭环</h2>
+<div class="date">2026-06-23 · BigCat</div>
+<p class="pitch">让模型「查到数」很容易；让它查对、算对、说清楚，是一整套工程。</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>「用自然语言问数据库」是 demo 里最惊艳、生产里最容易翻车的场景。原因是它把三种难题叠在一起：<strong>把模糊问题落到精确 schema（NL2SQL）、把计算交给可执行代码而非模型幻觉、把结果讲成可信的结论而不踩统计陷阱</strong>。这一期不讲「什么是 text-to-SQL」，假设你已经让 Claude 写过 SQL、用过 Code Interpreter。我们讲的是工程实战：为什么大 schema 一定要先检索再生成、为什么「让模型写代码跑」远比「让模型直接给数」可靠、数据 agent 怎么对账自己的数字才不会自信地算错。BIRD/Spider 2.0 的残酷数字会贯穿全文——它们告诉你：从 demo 到生产，差的不是模型聪明度，是这套围绕模型的验证脚手架。</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>NL2SQL 的瓶颈是 Schema Linking，不是 SQL 语法</h2>
+<div class="claim">论断：模型早就会写 SQL；它不会的是「在你那 3000 列的真实库里，找到该用哪几张表哪几列」。</div>
+
+<h3>背景与原理</h3>
+<p>学术 Spider 上 SOTA 早已超 90% 执行准确率，但换到 <strong>BIRD</strong>（贴近真实业务的大库，arXiv 2305.03111），当年最强模型执行准确率只有 40% 出头、人类 93%；换到 <strong>Spider 2.0</strong>（企业级，单库常 >1000 列、多方言，arXiv 2411.07763、ICLR 2025 Oral），连 o1-preview 也只有约 21%。差距几乎全来自 <strong>schema linking</strong>：把问题里的「活跃用户」「上月营收」对应到具体表、列、join 路径和过滤条件。真实库里列名是 <code>usr_st</code>、状态码是魔法数字、同义列散在多表——这不是语法问题，是语义对齐问题。</p>
+<p>工程上正确的姿势是<strong>别把整个 schema 塞进 context</strong>。大库的 DDL 几万 token，既爆预算又稀释注意力。正解是把 schema linking 当成一个检索问题：用问题去召回最相关的表/列子集，再带<strong>真实列值样例</strong>（让模型知道 status 取值是 'A'/'C' 而不是猜 'active'）喂给生成。</p>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-com"># 不要：把整库 DDL 全塞进 prompt（爆 token + 注意力稀释）</span>
+<span class="tag-com"># 要：检索相关表 → 带样例值 → 再生成</span>
+
+<span class="tag-key">def</span> build_schema_context(question, db):
+    tables = retrieve_tables(question, db, top_k=<span class="tag-key">8</span>)   <span class="tag-com"># 向量召回相关表</span>
+    ctx = []
+    <span class="tag-key">for</span> t <span class="tag-key">in</span> tables:
+        cols = t.columns
+        samples = db.query(f<span class="tag-gpt">"SELECT * FROM {t} LIMIT 3"</span>)  <span class="tag-com"># 真实值锚定语义</span>
+        ctx.append(f<span class="tag-gpt">"{t.ddl}\n-- 样例: {samples}"</span>)
+    <span class="tag-key">return</span> <span class="tag-gpt">"\n\n"</span>.join(ctx)
+
+<span class="tag-com"># prompt 里再加一行业务词典，治标列名/魔法数字歧义</span>
+GLOSSARY = <span class="tag-gpt">"活跃用户 = users.status='A' 且 last_login &gt; now()-30d"</span></code></pre>
+<p>那一行业务词典（metric definition）往往比换更强的模型收益更大——它把组织内「活跃」「营收」的口径固化，模型不再自由发挥。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）召回漏掉关键表 → 生成的 SQL 语法正确但语义全错，且静默返回一个看似合理的数；这比报错更危险。（2）只给 DDL 不给样例值，模型按字面猜枚举值 / 日期格式，跑出来是空集。务必对「返回 0 行」单独告警——空集常是 schema linking 失败的信号，不是「真的没数据」。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · BIRD <em>Can LLM Already Serve as a Database Interface?</em>, <a href="https://arxiv.org/abs/2305.03111" target="_blank">arXiv 2305.03111</a> ·
+Spider 2.0 <em>Real-World Enterprise Text-to-SQL</em>, <a href="https://arxiv.org/abs/2411.07763" target="_blank">arXiv 2411.07763</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Code Interpreter 范式：让模型写可执行代码，而不是直接出数</h2>
+<div class="claim">论断：模型算 12 位数加权平均会幻觉；让它写 pandas 跑出来，错就报错——把计算外包给确定性运行时。</div>
+
+<h3>背景与原理</h3>
+<p>LLM 是概率文本机，不是算术机。让它「心算」聚合、相关系数、同比，结果不可信也不可复现。<strong>Code Interpreter 范式</strong>把分析重写成：模型生成 Python/SQL → 在沙箱执行 → 拿真实输出（数字 + 图）回模型。好处有三：计算交给确定性运行时、错误可被执行反馈捕获并自我纠错、整段代码就是可审计的分析过程。Anthropic 的 <strong>code execution tool</strong> 与 OpenAI Code Interpreter 都是服务端沙箱：脚本结果由代码消费，模型只看最终产物——这同时省 token。Anthropic 的 advanced tool use 工程博客提到，把工具调用编排进代码执行（programmatic tool calling），在一个多工具基准上把计费输入 token 砍掉约 38% 且准确率不变。</p>
+<p>关键工程点：<strong>图表也别让模型「描述」，让它画</strong>。模型直接输出图表 JSON/SVG 极易幻觉坐标和数值；正确做法是生成 matplotlib/plotly 代码执行出真图。</p>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-key">import</span> anthropic
+client = anthropic.Anthropic()
+
+resp = client.beta.messages.create(
+    model=<span class="tag-gpt">"claude-sonnet-4-6"</span>,
+    betas=[<span class="tag-gpt">"code-execution-2025-05-22"</span>],
+    max_tokens=<span class="tag-key">4096</span>,
+    tools=[{<span class="tag-gpt">"type"</span>: <span class="tag-gpt">"code_execution_20250522"</span>, <span class="tag-gpt">"name"</span>: <span class="tag-gpt">"code_execution"</span>}],
+    messages=[{<span class="tag-gpt">"role"</span>: <span class="tag-gpt">"user"</span>, <span class="tag-gpt">"content"</span>:
+        <span class="tag-gpt">"用 sales.csv 算各区月环比，并画折线图。"</span>
+        <span class="tag-gpt">"用 pandas 读，断言无空值再算，把结果数字也打印出来。"</span>}],
+)
+<span class="tag-com"># 模型写代码 → 沙箱执行 → 数字与图来自真实运行，可复现</span>
+<span class="tag-com"># 出错时执行反馈回流，模型自我修正下一轮代码</span></code></pre>
+<p>prompt 里那句「断言无空值再算」「把结果数字打印出来」是工程纪律：强制模型把假设写进代码、把中间值暴露出来，便于你复核。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）沙箱无网络/缺包 → 模型反复试错耗轮次；先把环境和可用包说清。（2）大数据集直接 <code>read_csv</code> 进内存 OOM；对大表应推到数据库做聚合，只把结果拉回沙箱。（3）盲信图——模型可能因 dropna 静默丢了半数行还画出「漂亮」趋势。永远要求它同时打印 <code>len(df)</code> 和处理前后行数差。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Anthropic <em>Code Execution Tool</em>, <a href="https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/code-execution-tool" target="_blank">docs.anthropic.com/.../code-execution-tool</a> ·
+Anthropic <em>Advanced Tool Use</em>, <a href="https://www.anthropic.com/engineering/advanced-tool-use" target="_blank">anthropic.com/engineering/advanced-tool-use</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>统计陷阱的工程防御：数据故事 ≠ 把数字串成话</h2>
+<div class="claim">论断：分析 agent 最危险的不是算错，是用流畅的叙述把一个统计错误包装成「洞察」。</div>
+
+<h3>背景与原理</h3>
+<p>「数据故事」是这类工具的卖点，也是最大的陷阱：模型天然擅长把任意数字编成因果叙事。常见翻车点：<strong>Simpson 悖论</strong>（分组后趋势反转）、<strong>幸存者偏差</strong>（只看留存用户算满意度）、<strong>类型/NULL 静默错误</strong>（字符串 '100' 求和、NULL 被当 0 拉低均值）、<strong>p-hacking</strong>（agent 自动跑几十个切片，挑出「显著」的那个讲故事）。模型不会主动质疑数据生成过程——它只会让你的数听起来更可信。</p>
+<p>工程防御不是「让模型更小心」（没用），而是<strong>把怀疑固化成强制步骤</strong>：先 EDA（缺失率、分布、异常值、基数）再下结论；让模型把每个论断的假设和口径显式写出来；对自动切片做多重比较校正或干脆限制切片数。最有效的一招：要求叙述里每个数字都附上产生它的查询/代码，可一键回溯。</p>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-com"># 系统提示里把统计纪律写成硬约束（节选）</span>
+你是数据分析师，输出前必须：
+<span class="tag-key">1.</span> 先做 EDA：报告行数、各列缺失率、关键列的分布与异常值
+<span class="tag-key">2.</span> 任何聚合前，显式说明：如何处理 NULL、用什么粒度、排除了谁
+<span class="tag-key">3.</span> 给结论时区分【相关】与【因果】，不得用未验证的因果措辞
+<span class="tag-key">4.</span> 若按维度下钻，检查整体趋势与分组趋势是否一致（Simpson 检查）
+<span class="tag-key">5.</span> 每个关键数字后附 [来源: 第N段代码]，便于回溯
+<span class="tag-com"># 反例：「华东转化率最高,应加大投放」</span>
+<span class="tag-com"># 正确：「华东转化率最高(12%),但其样本量仅占3%且新客占比异常,</span>
+<span class="tag-com">#        建议先确认样本代表性再决策」</span></code></pre>
+
+<div class="fail">
+<strong>失败模式</strong>：把「让 agent 自由探索数据找洞察」当成功能。开放式探索 = 自动 p-hacking 机器：跑足够多切片总能找到「显著」结果，agent 还会自信地讲成故事。开放探索可以，但产出必须标记为「待验证假设」，不能直接当结论；真正的结论要走预先声明的指标和验证。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Simon Willison <em>Datasette Agent</em>（NL 查 SQLite + 画图的实战工具与边界）, <a href="https://simonwillison.net/2026/May/21/datasette-agent/" target="_blank">simonwillison.net/2026/May/21/datasette-agent</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>分析 Agent 的闭环：数字必须可对账</h2>
+<div class="claim">论断：能验证最终输出，才配做 agent；分析 agent 的「可验证性」就是给数字对账。</div>
+
+<h3>背景与原理</h3>
+<p>把单次查询升级成<strong>分析 agent</strong>（plan → query → inspect → refine 多轮），收益是能处理「先看分布再决定怎么切」这种依赖中间结果的开放任务；代价是它会跑飞而不自知。区别一个玩具和一个可信 agent 的，是有没有<strong>对账层（reconciliation）</strong>：把 agent 算出的数字与独立的 ground truth 交叉验证。便宜且有效的对账手段——总量校验（各分组之和 = 总表行数/总额）、跨路径验证（同一指标用两种 SQL 算应相等）、量级 sanity（结果是否在历史区间内）。这些不交给模型判断，写死在 harness 里。</p>
+
+<div class="diagram">┌──────────── 分析 Agent 闭环（带对账层）────────────┐
+│                                                       │
+│  问题 ──▶ ① Schema 检索(召回表/列+样例值)              │
+│            │                                          │
+│            ▼                                          │
+│         ② 生成 SQL/代码 ──▶ ③ 沙箱执行 ──┐            │
+│            ▲                              │           │
+│            │  执行报错/空集               ▼           │
+│            └──────────────────  ④ 检视结果           │
+│                                  (行数/分布/类型)     │
+│                                       │              │
+│                          ┌────────────┴───────────┐ │
+│                          ▼ 通过                未过 ▼ │
+│              ⑤ 对账层(harness 硬校验)        回 ②修正 │
+│              · 分组和 = 总量?                         │
+│              · 两种算法一致?                          │
+│              · 量级在历史区间?                        │
+│                          │ 通过                       │
+│                          ▼                            │
+│              ⑥ 叙述+图(每个数字带来源)                 │
+└───────────────────────────────────────────────────────┘</div>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-com"># 对账作为硬门：agent 给的数过不了校验就打回重算</span>
+<span class="tag-key">def</span> reconcile(result, db):
+    checks = []
+    <span class="tag-com"># 1) 分组之和 == 全表总量</span>
+    grp_sum = sum(r.value <span class="tag-key">for</span> r <span class="tag-key">in</span> result.rows)
+    total   = db.query(<span class="tag-gpt">"SELECT SUM(amount) FROM orders"</span>)[<span class="tag-key">0</span>]
+    checks.append((<span class="tag-gpt">"分组和=总量"</span>, abs(grp_sum-total) &lt; <span class="tag-key">1e-6</span>))
+    <span class="tag-com"># 2) 量级 sanity：在历史 ±3σ 内</span>
+    checks.append((<span class="tag-gpt">"量级合理"</span>, in_historical_range(result)))
+    failed = [name <span class="tag-key">for</span> name, ok <span class="tag-key">in</span> checks <span class="tag-key">if</span> <span class="tag-key">not</span> ok]
+    <span class="tag-key">if</span> failed:
+        <span class="tag-key">return</span> {<span class="tag-gpt">"pass"</span>: <span class="tag-key">False</span>, <span class="tag-gpt">"retry_hint"</span>: f<span class="tag-gpt">"对账失败:{failed},检查join是否重复计数"</span>}
+    <span class="tag-key">return</span> {<span class="tag-gpt">"pass"</span>: <span class="tag-key">True</span>}</code></pre>
+<p>对账失败最常见的根因是 <strong>join 导致的重复计数</strong>（一对多 join 让金额翻倍）——「分组和 ≠ 总量」能一眼抓出它，而模型自己几乎永远发现不了。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：把 LLM-as-judge 当对账。让另一个模型「检查这个分析对不对」只能抓逻辑表述问题，抓不了数值错误——它同样不会算。数值对账必须用确定性校验（SQL/代码），不是再叠一层模型。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Spider 2.0（企业级 workflow 为何需要多步 + 验证）, <a href="https://github.com/xlang-ai/Spider2" target="_blank">github.com/xlang-ai/Spider2</a> ·
+Anthropic <em>Building Effective Agents</em>（何时该升级到 agent）, <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">anthropic.com/engineering/building-effective-agents</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// 综合实战 · 给自己造一个「可对账的分析 agent」</h3>
+<p>把四点串成一个周末项目：对一个你熟的真实数据集（订单 / 健身 / 记账皆可），造一个能问答 + 画图 + 自我对账的分析 agent。</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>Schema 层</strong>：写一份业务词典（指标口径 + 魔法数字含义），检索相关表时带 <code>LIMIT 3</code> 样例值。先验证：换更弱模型 + 好词典 vs 强模型无词典，哪个准。</li>
+<li><strong>执行层</strong>：所有计算走 code execution / 沙箱，禁止模型「心算」。大表聚合推到 DB，只拉结果回沙箱。</li>
+<li><strong>统计纪律</strong>：把 §3 那 5 条硬约束写进 system prompt，结论必须带来源回溯。</li>
+<li><strong>对账层</strong>：实现 <code>reconcile()</code>，至少含「分组和=总量」「量级 sanity」两条，过不了就回流重算。</li>
+<li><strong>Eval</strong>：自出 10 个有 ground truth 的问题（你手算/手查过答案），跑「无对账」vs「有对账」两版，统计错误率。多数人会发现对账层抓出的错里，一大半是 join 重复计数和 NULL 处理——而这些错单看叙述完全看不出来。</li>
+</ol>
+<p style="margin-top:12px">做完这套，你以后看任何「AI 数据分析」产品都会先找它的对账层在哪——没有对账层的，本质是个会编故事的随机数生成器。</p>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// ENGLISH GLOSSARY</h3>
+<dl>
+<dt>Schema Linking</dt><dd>把自然语言里的实体/指标对应到具体表、列、join 的过程。NL2SQL 真正的瓶颈。</dd>
+<dt>NL2SQL / Text-to-SQL</dt><dd>把自然语言问题翻译成可执行 SQL。学术库已饱和，企业库仍是难题。</dd>
+<dt>Code Interpreter</dt><dd>让模型写代码并在沙箱执行、拿真实结果回流的范式。把计算外包给确定性运行时。</dd>
+<dt>Reconciliation</dt><dd>对账：用独立 ground truth 交叉验证 agent 算出的数字（如分组和=总量）。</dd>
+<dt>Simpson's Paradox</dt><dd>整体趋势与分组后趋势相反的统计现象。分析 agent 必须显式检查。</dd>
+<dt>p-hacking</dt><dd>跑大量切片直到找到「显著」结果。agent 自动探索时极易触发。</dd>
+<dt>BIRD</dt><dd>贴近真实业务的大规模 text-to-SQL 基准，揭示学术 SOTA 在真实库的崩塌。</dd>
+<dt>Spider 2.0</dt><dd>企业级 text-to-SQL 基准（千列、多方言、多步），顶级模型成功率仍极低。</dd>
+<dt>Metric Definition</dt><dd>业务指标的统一口径（如「活跃用户」=？）。固化它比换模型更有效。</dd>
+<dt>Programmatic Tool Calling</dt><dd>把多次工具调用编排进一段代码执行，省 token 且减少模型来回。</dd>
+</dl>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// 深入思考</h3>
+<details><summary>BIRD 上 40%、Spider 2.0 上 21% 的执行准确率，意味着 NL2SQL 在生产里根本不可用吗？</summary><div>不是不可用，是不能当「全自动」用。这些数字是「一次成功、无人介入」的硬指标。生产里的正确形态是 human-in-the-loop：agent 给出 SQL + 它的假设 + 样例结果，让懂业务的人审一眼再执行；或限定在已验证的指标/模板内做参数化。把 NL2SQL 当「草稿生成器 + 必审」而非「自动答数机」，21% 的一次准确率配上人工复核，整体可用性远高于 21%。关键是 UI 要让审核成本足够低。</div></details>
+<details><summary>既然计算要外包给代码、对账要用确定性校验，那 LLM 在数据分析里到底贡献了什么不可替代的价值？</summary><div>LLM 的价值在「翻译」与「叙述」两端，不在中间的计算。前端：把模糊的业务问题翻译成精确的查询/代码（schema linking + 意图理解），这是规则系统做不好的。后端：把一堆数字翻译成人能读懂、带上下文的结论。中间的算术、聚合、统计检验，本就该交给确定性运行时——让 LLM 做它擅长的语义工作，让代码做它擅长的精确计算,这正是 code interpreter 范式的分工哲学。</div></details>
+<details><summary>「让 agent 自由探索数据找洞察」听起来是杀手级功能，为什么本文把它列为反模式？</summary><div>因为开放探索在统计上等价于自动多重比较。数据维度足够多时，纯随机数据里也能找到「显著」的切片——这是数学必然，不是模型缺陷。agent 还会用流畅叙述把噪声包装成洞察，比人类分析师的 p-hacking 更快更自信。不是说不能探索，而是探索的产出必须被严格降级为「待验证假设」，再走预注册的指标 + 独立样本验证才能升格为结论。混淆「探索」与「验证」是这类工具最隐蔽的危险。</div></details>
+<details><summary>对账层能抓数值错误，但「问错了问题」——比如指标口径本身就不对——它抓得到吗？</summary><div>抓不到。对账只能保证「按这个口径算，数是对的」，保证不了「这个口径是业务想要的」。口径错误是更上游的问题，只能靠业务词典（metric definition）前置固化 + 人工确认口径。这也是为什么本文反复强调业务词典：它把「活跃用户怎么定义」这种价值判断从模型手里拿走，交给组织共识。对账保正确性，词典保相关性，两者缺一不可——这恰是纯技术手段的边界。</div></details>
+<details><summary>分析 agent 的 plan→query→inspect→refine 循环，和 coding agent 的循环本质一样吗？差异在哪？</summary><div>骨架一样（都是 agentic loop + 可验证输出），但「验证」的性质不同。coding agent 的验证是离散的：测试通过/不通过、编译报错/不报错，信号清晰。分析 agent 的验证是连续且部分的：数字「看起来合理」不等于对，对账只能覆盖能形式化的部分（总量、量级），覆盖不了「这个相关性是不是因果」。所以分析 agent 比 coding agent 更依赖人工把关那些无法形式化的语义正确性——验证信号越弱的领域，自主度天花板越低。</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://arxiv.org/abs/2305.03111" target="_blank">BIRD · Can LLM Already Serve as a Database Interface?</a> — 真实库 text-to-SQL 的残酷基线</li>
+<li><a href="https://arxiv.org/abs/2411.07763" target="_blank">Spider 2.0 · Real-World Enterprise Text-to-SQL</a> — 千列多方言企业级基准（ICLR 2025 Oral）</li>
+<li><a href="https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/code-execution-tool" target="_blank">Anthropic · Code Execution Tool</a> — 服务端沙箱执行代码的官方文档</li>
+<li><a href="https://www.anthropic.com/engineering/advanced-tool-use" target="_blank">Anthropic · Advanced Tool Use</a> — programmatic tool calling 省 token 的工程实证</li>
+<li><a href="https://simonwillison.net/2026/May/21/datasette-agent/" target="_blank">Simon Willison · Datasette Agent</a> — NL 查数据 + 画图的实战工具与边界</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 44 · 2026-06-23</footer>
+</div>
+</body></html>

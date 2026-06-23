@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 44 · AI-Assisted Data Analysis — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 44 / PHASE 4 · ENGINEERING</span>
+<h1>AI-Assisted Data Analysis</h1>
+<h2>NL2SQL · Code Interpreter · Statistical Traps · Analysis-Agent Loop</h2>
+<div class="date">2026-06-23 · BigCat</div>
+<p class="pitch">Getting the model to "fetch a number" is easy; getting it to fetch right, compute right, and explain right is a whole engineering stack.</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>"Query your database in natural language" is the most dazzling demo and the most fragile in production—because it stacks three hard problems: <strong>grounding a vague question onto a precise schema (NL2SQL), handing computation to executable code instead of model hallucination, and turning results into trustworthy conclusions without falling into statistical traps</strong>. This issue does not explain "what text-to-SQL is"—it assumes you've already had Claude write SQL and used a Code Interpreter. We cover the engineering: why a large schema must be retrieved before generation, why "let the model write code and run it" beats "let the model just give a number," and how a data agent reconciles its own numbers so it doesn't confidently compute the wrong thing. The brutal BIRD/Spider 2.0 numbers run through the whole piece—they tell you the gap from demo to production isn't model intelligence, it's the verification scaffolding around the model.</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>The NL2SQL Bottleneck Is Schema Linking, Not SQL Syntax</h2>
+<div class="claim">Claim: the model has long known how to write SQL; what it can't do is figure out "which tables and columns to use in your real 3,000-column database."</div>
+
+<h3>Background & Principle</h3>
+<p>On academic Spider, SOTA execution accuracy passed 90% long ago. But on <strong>BIRD</strong> (large databases close to real business, arXiv 2305.03111), the strongest model of the day hit only ~40% execution accuracy vs. 93% for humans; on <strong>Spider 2.0</strong> (enterprise-grade, single databases often >1,000 columns, multiple dialects, arXiv 2411.07763, ICLR 2025 Oral), even o1-preview reached only ~21%. Nearly all the gap comes from <strong>schema linking</strong>: mapping "active users" or "last month's revenue" to concrete tables, columns, join paths and filters. In real databases column names are <code>usr_st</code>, status codes are magic numbers, and synonymous columns are scattered across tables—this is a semantic-alignment problem, not a syntax one.</p>
+<p>The right engineering posture: <strong>don't stuff the whole schema into context</strong>. A large database's DDL is tens of thousands of tokens, which both blows the budget and dilutes attention. The fix is to treat schema linking as retrieval: pull the most relevant subset of tables/columns for the question, then feed it with <strong>real sample values</strong> (so the model knows <code>status</code> takes 'A'/'C', not the guessed 'active').</p>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># Don't: stuff the full DDL into the prompt (token blowup + attention dilution)</span>
+<span class="tag-com"># Do: retrieve relevant tables -> attach sample values -> then generate</span>
+
+<span class="tag-key">def</span> build_schema_context(question, db):
+    tables = retrieve_tables(question, db, top_k=<span class="tag-key">8</span>)   <span class="tag-com"># vector recall of relevant tables</span>
+    ctx = []
+    <span class="tag-key">for</span> t <span class="tag-key">in</span> tables:
+        samples = db.query(f<span class="tag-gpt">"SELECT * FROM {t} LIMIT 3"</span>)  <span class="tag-com"># anchor semantics with real values</span>
+        ctx.append(f<span class="tag-gpt">"{t.ddl}\n-- samples: {samples}"</span>)
+    <span class="tag-key">return</span> <span class="tag-gpt">"\n\n"</span>.join(ctx)
+
+<span class="tag-com"># Add a one-line business glossary to fix column-name / magic-number ambiguity</span>
+GLOSSARY = <span class="tag-gpt">"active user = users.status='A' AND last_login &gt; now()-30d"</span></code></pre>
+<p>That single line of business glossary (metric definition) often pays off more than upgrading the model—it fixes the organization's definition of "active" and "revenue" so the model stops improvising.</p>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) recall misses a key table → the generated SQL is syntactically valid but semantically wrong, and silently returns a plausible-looking number; this is more dangerous than an error. (2) Giving DDL without sample values → the model guesses enum values / date formats literally and returns an empty set. Always alert on "returned 0 rows" separately—an empty set is often a sign of schema-linking failure, not "no data exists."
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · BIRD <em>Can LLM Already Serve as a Database Interface?</em>, <a href="https://arxiv.org/abs/2305.03111" target="_blank">arXiv 2305.03111</a> ·
+Spider 2.0 <em>Real-World Enterprise Text-to-SQL</em>, <a href="https://arxiv.org/abs/2411.07763" target="_blank">arXiv 2411.07763</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>The Code-Interpreter Paradigm: Have the Model Write Executable Code, Not Emit Numbers</h2>
+<div class="claim">Claim: a model computing a 12-digit weighted average will hallucinate; have it write pandas and run it—if it's wrong, it errors. Outsource computation to a deterministic runtime.</div>
+
+<h3>Background & Principle</h3>
+<p>An LLM is a probabilistic text machine, not an arithmetic engine. Letting it "do mental math" on aggregates, correlations, or year-over-year deltas yields results that are neither trustworthy nor reproducible. The <strong>Code-Interpreter paradigm</strong> rewrites analysis as: model generates Python/SQL → execute in a sandbox → feed the real output (numbers + charts) back to the model. Three wins: computation goes to a deterministic runtime, errors get caught by execution feedback and self-corrected, and the code itself is an auditable record of the analysis. Anthropic's <strong>code execution tool</strong> and OpenAI's Code Interpreter are both server-side sandboxes: the script consumes the tool results and the model only sees the final output—which also saves tokens. Anthropic's advanced-tool-use engineering blog notes that orchestrating tool calls inside code execution (programmatic tool calling) cut billed input tokens by roughly 38% on a multi-tool benchmark with no change in accuracy.</p>
+<p>Key engineering point: <strong>don't have the model "describe" charts either—have it draw them</strong>. Emitting chart JSON/SVG directly invites hallucinated coordinates and values; the right move is generating matplotlib/plotly code that executes into a real figure.</p>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-key">import</span> anthropic
+client = anthropic.Anthropic()
+
+resp = client.beta.messages.create(
+    model=<span class="tag-gpt">"claude-sonnet-4-6"</span>,
+    betas=[<span class="tag-gpt">"code-execution-2025-05-22"</span>],
+    max_tokens=<span class="tag-key">4096</span>,
+    tools=[{<span class="tag-gpt">"type"</span>: <span class="tag-gpt">"code_execution_20250522"</span>, <span class="tag-gpt">"name"</span>: <span class="tag-gpt">"code_execution"</span>}],
+    messages=[{<span class="tag-gpt">"role"</span>: <span class="tag-gpt">"user"</span>, <span class="tag-gpt">"content"</span>:
+        <span class="tag-gpt">"From sales.csv, compute month-over-month by region and plot a line chart. "</span>
+        <span class="tag-gpt">"Read with pandas, assert no nulls before computing, and print the numbers too."</span>}],
+)
+<span class="tag-com"># Model writes code -> sandbox runs it -> numbers & chart come from a real run, reproducible</span>
+<span class="tag-com"># On error, execution feedback flows back; the model self-corrects the next round of code</span></code></pre>
+<p>The phrases "assert no nulls before computing" and "print the numbers too" are engineering discipline: force the model to write assumptions into the code and expose intermediate values, so you can verify.</p>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) sandbox has no network / missing packages → the model burns turns on trial and error; spell out the environment and available packages up front. (2) Loading a huge dataset straight into memory with <code>read_csv</code> → OOM; for big tables, push the aggregation down to the database and only pull results back into the sandbox. (3) Blindly trusting the chart—the model may silently drop half the rows via <code>dropna</code> and still draw a "beautiful" trend. Always require it to print <code>len(df)</code> and the before/after row-count delta.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Anthropic <em>Code Execution Tool</em>, <a href="https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/code-execution-tool" target="_blank">docs.anthropic.com/.../code-execution-tool</a> ·
+Anthropic <em>Advanced Tool Use</em>, <a href="https://www.anthropic.com/engineering/advanced-tool-use" target="_blank">anthropic.com/engineering/advanced-tool-use</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Engineering Defense Against Statistical Traps: A Data Story ≠ Stringing Numbers Into Prose</h2>
+<div class="claim">Claim: the most dangerous thing about an analysis agent isn't miscalculating—it's wrapping a statistical error in fluent narrative and selling it as "insight."</div>
+
+<h3>Background & Principle</h3>
+<p>The "data story" is the selling point of these tools and also the biggest trap: models are naturally gifted at spinning any numbers into causal narrative. Common crashes: <strong>Simpson's paradox</strong> (trend reverses after grouping), <strong>survivorship bias</strong> (computing satisfaction only over retained users), <strong>type/NULL silent errors</strong> (summing the string '100', NULL treated as 0 dragging down the mean), and <strong>p-hacking</strong> (the agent auto-runs dozens of slices and picks the "significant" one to tell a story about). The model won't spontaneously question the data-generating process—it'll only make your numbers sound more convincing.</p>
+<p>Engineering defense isn't "tell the model to be careful" (useless)—it's <strong>hardening skepticism into mandatory steps</strong>: EDA first (missingness, distributions, outliers, cardinality) before any conclusion; make the model state the assumptions and definitions behind every claim explicitly; apply multiple-comparison correction to auto-slicing or simply cap the slice count. The single most effective move: require every number in the narrative to carry the query/code that produced it, traceable in one click.</p>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># Bake statistical discipline into the system prompt as hard constraints (excerpt)</span>
+You are a data analyst. Before any output you MUST:
+<span class="tag-key">1.</span> Do EDA first: report row count, per-column missingness, distribution & outliers
+<span class="tag-key">2.</span> Before any aggregation, state explicitly: NULL handling, grain, who's excluded
+<span class="tag-key">3.</span> Distinguish [correlation] from [causation]; no unverified causal wording
+<span class="tag-key">4.</span> If drilling down by dimension, check overall vs. grouped trend (Simpson check)
+<span class="tag-key">5.</span> Append [source: code block N] after every key number for traceability
+<span class="tag-com"># Bad: "East region has the highest conversion, so increase spend"</span>
+<span class="tag-com"># Good: "East has the highest conversion (12%), but its sample is only 3% of</span>
+<span class="tag-com">#        total with an abnormal new-customer ratio; confirm representativeness first"</span></code></pre>
+
+<div class="fail">
+<strong>Failure mode</strong>: treating "let the agent freely explore the data to find insights" as a feature. Open-ended exploration = an automated p-hacking machine: run enough slices and you'll always find a "significant" result, and the agent will confidently narrate it as a story. Exploration is fine, but its output must be tagged "hypothesis to verify"—never taken directly as a conclusion; real conclusions go through pre-declared metrics and verification.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Simon Willison <em>Datasette Agent</em> (a real tool—and its limits—for NL querying SQLite + charting), <a href="https://simonwillison.net/2026/May/21/datasette-agent/" target="_blank">simonwillison.net/2026/May/21/datasette-agent</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>The Analysis-Agent Loop: Numbers Must Reconcile</h2>
+<div class="claim">Claim: only what you can verify deserves to be an agent; an analysis agent's "verifiability" is reconciling its numbers.</div>
+
+<h3>Background & Principle</h3>
+<p>Upgrading a single query into an <strong>analysis agent</strong> (multi-round plan → query → inspect → refine) lets you handle open tasks that depend on intermediate results ("look at the distribution first, then decide how to slice"); the cost is it can go off the rails without noticing. What separates a toy from a trustworthy agent is a <strong>reconciliation layer</strong>: cross-validating the agent's numbers against an independent ground truth. Cheap, effective reconciliation: total checks (sum of all groups = total table rows/amount), cross-path validation (the same metric computed two different ways should match), and magnitude sanity (is the result within the historical range). These are hardwired into the harness, not left to the model to judge.</p>
+
+<div class="diagram">┌──────── Analysis-Agent Loop (with reconciliation) ────────┐
+│                                                            │
+│  Question ─▶ (1) Schema retrieval (tables/cols + samples)  │
+│              │                                             │
+│              ▼                                             │
+│           (2) Generate SQL/code ─▶ (3) Sandbox run ─┐      │
+│              ▲                                       │      │
+│              │  error / empty set                    ▼      │
+│              └──────────────────────  (4) Inspect result   │
+│                                       (rows/dist/types)    │
+│                                            │              │
+│                              ┌─────────────┴───────────┐  │
+│                              ▼ pass               fail ▼   │
+│                  (5) Reconcile (hard checks)   back to (2) │
+│                  · group sum = total?                      │
+│                  · two methods agree?                      │
+│                  · magnitude in historical range?         │
+│                              │ pass                        │
+│                              ▼                             │
+│                  (6) Narrative + chart (each number sourced)│
+└────────────────────────────────────────────────────────────┘</div>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># Reconciliation as a hard gate: numbers that fail checks are bounced back</span>
+<span class="tag-key">def</span> reconcile(result, db):
+    checks = []
+    <span class="tag-com"># 1) sum of groups == full-table total</span>
+    grp_sum = sum(r.value <span class="tag-key">for</span> r <span class="tag-key">in</span> result.rows)
+    total   = db.query(<span class="tag-gpt">"SELECT SUM(amount) FROM orders"</span>)[<span class="tag-key">0</span>]
+    checks.append((<span class="tag-gpt">"group_sum==total"</span>, abs(grp_sum-total) &lt; <span class="tag-key">1e-6</span>))
+    <span class="tag-com"># 2) magnitude sanity: within historical ±3σ</span>
+    checks.append((<span class="tag-gpt">"magnitude_ok"</span>, in_historical_range(result)))
+    failed = [name <span class="tag-key">for</span> name, ok <span class="tag-key">in</span> checks <span class="tag-key">if</span> <span class="tag-key">not</span> ok]
+    <span class="tag-key">if</span> failed:
+        <span class="tag-key">return</span> {<span class="tag-gpt">"pass"</span>: <span class="tag-key">False</span>, <span class="tag-gpt">"retry_hint"</span>: f<span class="tag-gpt">"reconcile failed:{failed}, check join double-counting"</span>}
+    <span class="tag-key">return</span> {<span class="tag-gpt">"pass"</span>: <span class="tag-key">True</span>}</code></pre>
+<p>The most common root cause of failed reconciliation is <strong>join-induced double counting</strong> (a one-to-many join doubles the amount)—"group sum ≠ total" catches it at a glance, while the model itself almost never will.</p>
+
+<div class="fail">
+<strong>Failure mode</strong>: using LLM-as-judge for reconciliation. Having another model "check whether this analysis is right" only catches logical-phrasing issues, not numeric errors—it can't do the math either. Numeric reconciliation must be deterministic (SQL/code), not another model layer on top.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Spider 2.0 (why enterprise workflows need multi-step + verification), <a href="https://github.com/xlang-ai/Spider2" target="_blank">github.com/xlang-ai/Spider2</a> ·
+Anthropic <em>Building Effective Agents</em> (when to escalate to an agent), <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">anthropic.com/engineering/building-effective-agents</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// CAPSTONE · Build Yourself a "Reconcilable Analysis Agent"</h3>
+<p>String the four points into a weekend project: pick a real dataset you know well (orders / fitness / personal finance) and build an analysis agent that can Q&amp;A + chart + self-reconcile.</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>Schema layer</strong>: write a business glossary (metric definitions + magic-number meanings) and attach <code>LIMIT 3</code> sample values when retrieving relevant tables. First verify: a weaker model + good glossary vs. a strong model with no glossary—which is more accurate?</li>
+<li><strong>Execution layer</strong>: route all computation through code execution / a sandbox; forbid the model from "mental math." Push big-table aggregation to the DB, pull only results back.</li>
+<li><strong>Statistical discipline</strong>: bake the 5 hard constraints from §3 into the system prompt; conclusions must carry source traceability.</li>
+<li><strong>Reconciliation layer</strong>: implement <code>reconcile()</code> with at least "group sum = total" and "magnitude sanity"; bounce back to recompute on failure.</li>
+<li><strong>Eval</strong>: write 10 questions with ground truth (answers you computed/checked by hand), run a "no-reconcile" vs. "with-reconcile" version, and tally error rate. Most people find that a large share of the errors the reconciliation layer catches are join double-counting and NULL handling—errors completely invisible from the narrative alone.</li>
+</ol>
+<p style="margin-top:12px">Once you've built this, you'll look at any "AI data analysis" product and first hunt for its reconciliation layer—anything without one is, at bottom, a random-number generator that tells stories.</p>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// DEEP THINKING</h3>
+<details><summary>40% on BIRD, 21% on Spider 2.0—does that mean NL2SQL is simply unusable in production?</summary><div>Not unusable—just not usable as "fully automatic." Those numbers are the hard metric for "one shot, no human in the loop." The right production shape is human-in-the-loop: the agent proposes SQL + its assumptions + sample results, and someone with domain knowledge reviews before execution; or you constrain it to parameterized, pre-validated metrics/templates. Treat NL2SQL as a "draft generator that must be reviewed" rather than an "automatic answer machine," and 21% one-shot accuracy plus human review yields overall usability far above 21%. The key is a UI that makes review cheap.</div></details>
+<details><summary>If computation is outsourced to code and reconciliation to deterministic checks, what irreplaceable value does the LLM actually add in data analysis?</summary><div>The LLM's value is at the two ends—"translation" and "narrative"—not the computation in the middle. Front end: translating a vague business question into precise queries/code (schema linking + intent understanding), which rule systems do poorly. Back end: translating a pile of numbers into human-readable, contextualized conclusions. The arithmetic, aggregation, and statistical tests in the middle should go to a deterministic runtime—let the LLM do the semantic work it's good at and let code do the precise computation it's good at. That division of labor is exactly the philosophy of the code-interpreter paradigm.</div></details>
+<details><summary>"Let the agent freely explore the data for insights" sounds like a killer feature—why does this piece list it as an anti-pattern?</summary><div>Because open exploration is statistically equivalent to automated multiple comparisons. With enough dimensions, you can find "significant" slices even in purely random data—a mathematical inevitability, not a model flaw. The agent will also wrap noise in fluent narrative as insight, faster and more confidently than a human's p-hacking. It's not that you can't explore—it's that exploration's output must be strictly demoted to "hypothesis to verify," and only promoted to a conclusion after pre-registered metrics + independent-sample validation. Conflating "explore" with "verify" is the most insidious danger of these tools.</div></details>
+<details><summary>Reconciliation catches numeric errors, but can it catch "asking the wrong question"—e.g., a metric definition that's wrong to begin with?</summary><div>No. Reconciliation only guarantees "given this definition, the number is correct"—it can't guarantee "this definition is what the business wants." Definition errors are an upstream problem, addressed only by fixing the business glossary (metric definitions) up front + human confirmation of the definition. That's why this piece keeps stressing the glossary: it takes value judgments like "how do we define an active user?" out of the model's hands and gives them to organizational consensus. Reconciliation guarantees correctness; the glossary guarantees relevance—you need both. That's precisely the boundary of purely technical means.</div></details>
+<details><summary>Is the analysis agent's plan→query→inspect→refine loop fundamentally the same as a coding agent's loop? Where do they differ?</summary><div>Same skeleton (agentic loop + verifiable output), but the nature of "verification" differs. A coding agent's verification is discrete: tests pass/fail, compiles or errors—clear signals. An analysis agent's verification is continuous and partial: a number "looking reasonable" doesn't mean it's right, and reconciliation only covers the formalizable parts (totals, magnitudes), not "is this correlation causal." So analysis agents rely more on humans to gate the un-formalizable semantic correctness—the weaker the verification signal in a domain, the lower the ceiling on autonomy.</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://arxiv.org/abs/2305.03111" target="_blank">BIRD · Can LLM Already Serve as a Database Interface?</a> — the brutal text-to-SQL baseline on real databases</li>
+<li><a href="https://arxiv.org/abs/2411.07763" target="_blank">Spider 2.0 · Real-World Enterprise Text-to-SQL</a> — thousand-column, multi-dialect enterprise benchmark (ICLR 2025 Oral)</li>
+<li><a href="https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/code-execution-tool" target="_blank">Anthropic · Code Execution Tool</a> — official docs for server-side sandboxed code execution</li>
+<li><a href="https://www.anthropic.com/engineering/advanced-tool-use" target="_blank">Anthropic · Advanced Tool Use</a> — engineering evidence that programmatic tool calling saves tokens</li>
+<li><a href="https://simonwillison.net/2026/May/21/datasette-agent/" target="_blank">Simon Willison · Datasette Agent</a> — a real tool, and its limits, for NL data querying + charting</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 44 · 2026-06-23</footer>
+</div>
+</body></html>
