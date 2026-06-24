@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 45 · AI Engineering Anti-Patterns — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 45 / PHASE 4 · PRODUCTION</span>
+<h1>AI Engineering Anti-Patterns</h1>
+<h2>Over-Engineering · Missing Evals · Prompt Brittleness · Vendor Lock-in</h2>
+<div class="date">2026-06-24 · BigCat</div>
+<p class="pitch">Most AI projects don't die because the model is too weak — they die from bad engineering posture.</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>The first 44 issues covered endless "how to do it." This one flips it — laying out <strong>four systemic anti-patterns</strong> earned in blood over the past two years. Their common trait: each looks "reasonable" alone, but combined they kill projects slowly, and because nothing crashes in the open you often don't notice. <strong>Over-engineering</strong> saddles you with multi-agent + framework debt before the need is even validated; <strong>missing evals</strong> ships by "feels better," breaks three things while fixing one, and you never know; <strong>prompt brittleness</strong> lets a single model upgrade take production down; <strong>vendor lock-in</strong> — and its mirror image "over-abstraction" — leaves you either unable to migrate, or abstracted into losing every provider's killer feature. This issue isn't about new tech, it's about <strong>judgment</strong>: which layer to stop at, what to do first, when to abstract, and when not to.</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>Over-Engineering: Reaching for Framework / Multi-Agent Before Validating the Need</h2>
+<div class="claim">Claim: complexity is borrowed debt. Every layer of abstraction is interest paid on a need not yet proven to exist.</div>
+
+<h3>Background & Principle</h3>
+<p>The most common AI anti-pattern isn't a technical error, it's an <strong>ordering error</strong>: before getting a bare prompt to pass a baseline, you pick a framework, split into multi-agent, wire up RAG, stand up a vector DB. The reasons all sound right — "we'll scale later," "looks professional," "everyone builds it this way." But the first principle in Anthropic's <em>Building Effective Agents</em> is the opposite: <strong>"find the simplest solution possible, and only increase complexity when needed."</strong> OpenAI's <em>A Practical Guide to Building Agents</em> likewise recommends starting from a single agent, maxing out its tools, surfacing failure modes, and only then considering multi-agent.</p>
+<p>Why is premature complexity debt rather than investment? Because every layer carries a <strong>recurring cost</strong>: multi-agent introduces context drift and coordination overhead (Day 13); a framework locks you into its abstractions, so debugging means understanding the framework before your own logic; RAG shipped without verifying retrieval quality just wraps hallucination in a "looks grounded" shell. These costs are paid daily, while the "future scaling need" they hedge may never arrive. Complexity should be <strong>forced out by failure modes</strong>, not stockpiled in advance.</p>
+
+<div class="diagram">  Complexity ladder — most needs should stop at L1-L2
+  ────────────────────────────────────────────────
+  L0  single prompt + output parsing   ← endpoint for 80% of needs
+  L1  prompt chain / routing           ← one layer is enough
+  L2  single agent + tools + loop      ← only when steps are unbounded
+  ────────── ↑ this line covers 95% of real needs ──────────
+  L3  RAG / retrieval augmentation     ← prove the "knowledge gap" is real first
+  L4  multi-agent / orchestrator        ← only when one agent's context won't fit
+  L5  home-grown framework / platform   ← abstract only after a pattern repeats >=3x
+  ────────────────────────────────────────────────
+  Anti-pattern = need at L0, solution jumps to L4.
+  Correct = start at L0, climb only when a concrete failure forces it.</div>
+
+<h3>Hands-on Example</h3>
+<p>Before upgrading, run this "interrogation" checklist — any layer of abstraction must be justifiable in one failure-mode sentence ("what happens without it"), or don't add it:</p>
+<pre><code><span class="tag-com"># Before climbing to the next level of complexity, answer:</span>
+- Where <span class="tag-key">specifically</span> is the current level insufficient? (can't say = don't climb)
+- What <span class="tag-key">observable</span> failure appears if I don't? (can't say = no need)
+- What new failure modes does climbing add? (multi-agent -> drift/coordination)
+- How many times have I repeated this pattern? (&lt;3 = don't abstract into a framework)
+
+<span class="tag-com"># Typical misjudgments:</span>
+<span class="tag-claude">"we might support multiple data sources later"</span>  -> YAGNI, wait for the 2nd one
+<span class="tag-claude">"using an agent looks more advanced"</span>           -> marketing word, not engineering
+<span class="tag-claude">"build the framework now to avoid refactoring"</span>  -> the framework IS the costliest refactor</code></pre>
+<p>The rule is dead simple: <strong>start at L0; every upgrade needs one writable failure mode as evidence.</strong> Anything upgraded on "might need it later" is debt.</p>
+
+<div class="fail">
+<strong>Failure mode</strong>: this principle also fails when inverted — clinging to a single prompt when you've genuinely reached an L4 need (unbounded steps, context won't fit), cramming a dozen tools into one loop, is just stubbornness the other way. The criterion isn't "simpler is always better," it's <strong>match</strong>: complexity should equal the need's intrinsic complexity exactly — too little and you strain, too much and you carry debt.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Anthropic <em>Building Effective Agents</em>, <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">anthropic.com/engineering/building-effective-agents</a> ·
+OpenAI <em>A Practical Guide to Building Agents</em>, <a href="https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf" target="_blank">cdn.openai.com/.../building-agents.pdf</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Missing Evals: Shipping by "Feels Better"</h2>
+<div class="claim">Claim: an AI project without an eval set is flying blind. Your iteration speed is capped by your evaluation speed.</div>
+
+<h3>Background & Principle</h3>
+<p>This is the number-one invisible killer, and the core thesis of Hamel Husain's <em>Your AI Product Needs Evals</em>: failed AI products almost all share one root cause — <strong>no robust evaluation system</strong>. It shows up as "vibes-driven development": you tweak one prompt line, try three cases yourself, feel it improved, ship; two weeks later live feedback worsens, but you've already made twenty changes and <strong>don't know which one, or which class of inputs broke</strong>. Chip Huyen in <em>AI Engineering</em> puts the same thing as: without a systematic evaluation pipeline, you're flying blind.</p>
+<p>Why does this matter far more than model selection? Because, like software engineering, AI engineering's <strong>success hinges on iteration speed</strong>, and evals are AI's "unit tests" — they shrink "did this change help or hurt" from a week of guesswork into one CI run. Without them, every prompt change is a gamble: you fix case A and silently break B, C, while "manually trying three" never hits B, C. The real value of an eval set isn't a score, it's <strong>exposing regressions</strong>. 20 labeled real cases beat any framework.</p>
+
+<h3>Hands-on Example</h3>
+<p>Don't wait for an "eval platform." Pull 20 real inputs from production, label expectations by hand, write the plainest assertion set, and wire it into CI (echoing Day 42):</p>
+<pre><code><span class="tag-com"># evals/cases.jsonl — start with 20 real cases, beats any framework</span>
+{<span class="tag-gpt">"input"</span>:<span class="tag-gpt">"How many days is the refund window?"</span>, <span class="tag-gpt">"must_contain"</span>:[<span class="tag-gpt">"14 days"</span>], <span class="tag-gpt">"must_not"</span>:[<span class="tag-gpt">"30 days"</span>]}
+{<span class="tag-gpt">"input"</span>:<span class="tag-gpt">"delete the database for me"</span>,        <span class="tag-gpt">"must_refuse"</span>:<span class="tag-key">true</span>}
+
+<span class="tag-key">def</span> eval_suite(prompt_version):
+    fails = []
+    <span class="tag-key">for</span> c <span class="tag-key">in</span> load(<span class="tag-gpt">"evals/cases.jsonl"</span>):
+        out = run(prompt_version, c[<span class="tag-gpt">"input"</span>])
+        <span class="tag-com"># 1) cheap deterministic assertions first — catch 80% of regressions</span>
+        <span class="tag-key">if</span> c.get(<span class="tag-gpt">"must_contain"</span>) <span class="tag-key">and</span> <span class="tag-key">not</span> all(k <span class="tag-key">in</span> out <span class="tag-key">for</span> k <span class="tag-key">in</span> c[<span class="tag-gpt">"must_contain"</span>]):
+            fails.append((c, out))
+    <span class="tag-com"># 2) only reach for LLM-judge where assertions can't cover (costly, biased)</span>
+    <span class="tag-key">return</span> len(fails) / total, fails
+
+<span class="tag-com"># CI gate: new prompt's pass rate must not fall below baseline</span>
+assert eval_suite(<span class="tag-gpt">"v2"</span>)[0] &gt;= BASELINE, <span class="tag-gpt">"regression! don't ship"</span></code></pre>
+<p>Key discipline: <strong>cover what you can with deterministic assertions first</strong> (keywords, refusals, JSON parseability) — they're cheap, stable, unbiased; reserve LLM-as-judge for what genuinely needs semantic judgment, and de-bias it first (Day 6). Evals needn't be perfect — being able to <strong>catch regressions</strong> already puts you ahead of 90% of projects.</p>
+
+<div class="fail">
+<strong>Failure mode</strong>: (1) chasing a "perfect eval platform" from the start, producing zero cases in three months — wrong. Evals <strong>grow incrementally</strong>: every live bug you fix gets frozen into a case, and the set thickens itself. (2) using only LLM-judge and no deterministic assertions — costly, self-eval biased.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Hamel Husain <em>Your AI Product Needs Evals</em>, <a href="https://hamel.dev/blog/posts/evals/" target="_blank">hamel.dev/blog/posts/evals</a> ·
+Chip Huyen <em>AI Engineering</em> (O'Reilly 2025), <a href="https://huyenchip.com/books/" target="_blank">huyenchip.com/books</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Prompt Brittleness: Magic Incantations, Few-Shot Overfit, Hardcoded in Code</h2>
+<div class="claim">Claim: a prompt "tuned just right" is often overfit debt — perfect for the current model + current samples, shattering at the first upgrade or distribution shift.</div>
+
+<h3>Background & Principle</h3>
+<p>Brittleness has three classic sources. First, <strong>magic incantations</strong>: leaning on mystic phrases like "Take a deep breath" or "I'll tip you $200" to prop up performance — nobody knows why it works, and it dies on a model swap. Second, <strong>few-shot overfit</strong>: stuffing in 8 examples to max out the dev set, but those examples <em>anchor</em> the model to the sample distribution, making unseen inputs worse — example count itself is a form of emphasis (the counterintuitive lesson of Day 9). Third, and most lethal, <strong>hardcoding</strong>: prompts scattered as strings throughout the code, with no versioning, no eval, no way to roll back.</p>
+<p>Stack these and the result is a <strong>model upgrade taking production down</strong>: the incantations and format tricks you tuned for the old model no longer hold for the new one, and you have neither an eval set to catch the regression (§2) nor a versioning mechanism to roll back fast (Day 35). Brittleness isn't a poorly written prompt — it's precisely a prompt <strong>tuned too "tightly" to current conditions</strong>, tight enough to lose generalization. The mark of a robust prompt is the opposite: delete any one line and performance degrades smoothly, not off a cliff.</p>
+
+<h3>Hands-on Example</h3>
+<p>Govern prompts as code, not as feral strings. Lowest-cost version: externalize to a file, give it a version number, pin the model, gate with §2's eval — four things that kill most brittleness:</p>
+<pre><code><span class="tag-com"># Anti-pattern: scattered, unversioned, implicitly model-coupled</span>
+resp = client.create(model=<span class="tag-gpt">"latest"</span>,   <span class="tag-com"># <- "latest" is a time bomb</span>
+    messages=[{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,
+      <span class="tag-gpt">"content"</span>: <span class="tag-gpt">f"Take a deep breath. I'll tip you. {user_q}"</span>}])  <span class="tag-com"># incantation</span>
+
+<span class="tag-com"># Robust: externalized + pinned version + pinned model + eval gate</span>
+<span class="tag-com"># prompts/support.v3.yaml</span>
+id: support
+version: 3
+model: claude-sonnet-4-6        <span class="tag-com"># pinned, not "latest"</span>
+system: |
+  You are a refund assistant. Rule priority: safety &gt; accuracy &gt; brevity.
+  If unsure, say so; never fabricate policy clauses.   <span class="tag-com"># principles, not incantations</span>
+<span class="tag-com"># few-shot holds only "boundary cases," not score-padding; 2-3 is enough</span>
+
+<span class="tag-com"># upgrade model = bump version + run eval_suite, switch only on green</span>
+<span class="tag-key">def</span> migrate(to_model):
+    v4 = load(<span class="tag-gpt">"support.v3"</span>).with_model(to_model)
+    <span class="tag-key">assert</span> eval_suite(v4)[0] &gt;= BASELINE   <span class="tag-com"># §2's gate stands here</span></code></pre>
+<p>Core: <strong>replace incantations with principles</strong> (principles migrate across models, incantations don't), <strong>pin the model version</strong> (never "latest"), keep few-shot to boundary cases not score-padding examples, and run evals on every change. This turns model upgrades from a "gamble" into "run the CI."</p>
+
+<div class="fail">
+<strong>Failure mode</strong>: overcorrecting — abstracting the prompt into layers of templates + variable injection + conditional branches, so complex no one can tell at a glance what actually gets sent to the model. Prompt readability is itself a first-class constraint: <strong>the final assembled text must be directly readable and directly debuggable by a human</strong>. Over-templating and hardcoding are two sides of one coin.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Simon Willison <em>prompt engineering</em> series, <a href="https://simonwillison.net/tags/prompt-engineering/" target="_blank">simonwillison.net/tags/prompt-engineering</a> ·
+HumanLayer <em>12-Factor Agents</em> (Factor 2: own your prompts), <a href="https://github.com/humanlayer/12-factor-agents" target="_blank">github.com/humanlayer/12-factor-agents</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Vendor Lock-in — and Its Mirror: Over-Abstraction</h2>
+<div class="claim">Claim: lock-in and over-abstraction are two wrong answers to the same question. The right solution isn't "no lock-in," it's drawing the abstraction at the right altitude.</div>
+
+<h3>Background & Principle</h3>
+<p>Most people only guard one side: <strong>vendor lock-in</strong> — welding one vendor's API quirks, SDK calls, and prompt formats into business logic, then finding you can't migrate the day you need to switch models, cut cost, or run multi-provider failover. That's a real risk. But <strong>overreacting to the other extreme is equally lethal</strong>: to stay "swappable any time," you wrap a lowest-common-denominator (LCD) unified layer, and end up <strong>flattening every vendor's killer feature</strong> — Anthropic's prompt caching, native tool calls, structured output, all unusable inside the "for portability" abstraction. You think you bought flexibility; really you traded a definite performance loss to hedge a migration that may never happen.</p>
+<p>The right answer is <strong>abstraction altitude</strong>: abstract at the "capability" layer ("give me a completion with tool calling"), not the "lowest common subset" layer; expose provider-specific optimizations as optional capabilities rather than flattening them. Criterion: <strong>switching providers should change one adapter file, not business code scattered everywhere; but inside each adapter, you should max out that vendor's features.</strong> This is also the spirit of 12-Factor Agents — an agent is fundamentally well-engineered ordinary software, the provider a replaceable dependency, not a coupling that permeates the whole body.</p>
+
+<h3>Hands-on Example</h3>
+<p>A thin adapter, not a thick wrapper. Define the interface by "capability," max out each vendor's features inside each adapter (e.g. Anthropic's prompt caching); switching providers touches only the adapter, business code unchanged:</p>
+<pre><code><span class="tag-com"># Anti-pattern A (lock-in): API quirks welded into business logic</span>
+if resp.stop_reason == <span class="tag-gpt">"end_turn"</span>: ...  <span class="tag-com"># Anthropic-specific field scattered everywhere</span>
+
+<span class="tag-com"># Anti-pattern B (over-abstraction): LCD wrapper, flattens all features</span>
+llm.complete(prompt)  <span class="tag-com"># <- caching/tools/structured output all unusable</span>
+
+<span class="tag-com"># Right answer: thin adapter abstracted by "capability," features exposed optionally</span>
+<span class="tag-key">class</span> LLMClient(Protocol):
+    <span class="tag-key">def</span> complete(self, msgs, tools=<span class="tag-key">None</span>, cache=<span class="tag-key">False</span>) -&gt; Result: ...
+
+<span class="tag-key">class</span> AnthropicAdapter:
+    <span class="tag-key">def</span> complete(self, msgs, tools=<span class="tag-key">None</span>, cache=<span class="tag-key">False</span>):
+        kw = {}
+        <span class="tag-key">if</span> cache:                       <span class="tag-com"># max out the killer feature, don't flatten</span>
+            kw[<span class="tag-gpt">"system"</span>] = [{<span class="tag-gpt">"type"</span>:<span class="tag-gpt">"text"</span>,<span class="tag-gpt">"text"</span>:SYS,
+                <span class="tag-gpt">"cache_control"</span>:{<span class="tag-gpt">"type"</span>:<span class="tag-gpt">"ephemeral"</span>}}]
+        r = anthropic.messages.create(model=M, messages=msgs, tools=tools, **kw)
+        <span class="tag-key">return</span> Result(text=..., done=r.stop_reason==<span class="tag-gpt">"end_turn"</span>)  <span class="tag-com"># quirk contained here</span>
+
+<span class="tag-com"># Business depends only on the LLMClient protocol; switch provider = write a new adapter</span></code></pre>
+<p>This structure dodges both pits at once: provider quirks <strong>contained in one adapter file</strong> (no lock-in), while the adapter internally <strong>maxes out the vendor's features</strong> (no flattening) — migration cost and performance loss minimized simultaneously.</p>
+
+<div class="fail">
+<strong>Failure mode</strong>: building three abstraction layers for "future multi-provider" when you have <strong>only one provider</strong> — which loops right back to §1's over-engineering. The right cadence: write only one adapter first, leave the interface open; when you genuinely add a second vendor, the second adapter will calibrate where the interface should sit. <strong>Abstraction should be forced out by the second implementation, not designed in a vacuum.</strong>
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · HumanLayer <em>12-Factor Agents</em>, <a href="https://github.com/humanlayer/12-factor-agents" target="_blank">github.com/humanlayer/12-factor-agents</a> ·
+Anthropic <em>Prompt Caching</em> docs, <a href="https://docs.claude.com/en/docs/build-with-claude/prompt-caching" target="_blank">docs.claude.com/.../prompt-caching</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// Integrated Practice · Run an "Anti-Pattern Health Check" on Your AI Project</h3>
+<p>Spend an hour walking your current project through these four, item by item. Each one is "ask first, then decide whether to take on the debt":</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>Complexity audit (§1)</strong>: list every layer of abstraction (framework / multi-agent / RAG / vector DB), and for each ask "what <em>observable</em> failure appears without it." Mark the unanswerable ones "to be removed."</li>
+<li><strong>Eval checkup (§2)</strong>: do you have an eval set you can run with one command? If not — today, pull 20 real cases from production and write them as deterministic assertions. This is the prerequisite for all improvement; highest priority.</li>
+<li><strong>Brittleness scan (§3)</strong>: grep the code for <code>"latest"</code> model names, mystic incantations, scattered prompt strings, and more than 3 few-shot examples — each is a time bomb for model-upgrade day.</li>
+<li><strong>Coupling check (§4)</strong>: if you swapped providers tomorrow, how many files would you change? &gt;1 → lock-in; if your wrapper blocks prompt caching → over-abstraction. Converge both onto "one adapter."</li>
+<li><strong>Prioritize the debt</strong>: <strong>missing evals always ranks first</strong> — without evals you can't even judge whether removing abstraction / changing a prompt / switching providers actually helped. Build evals first, then touch the rest.</li>
+</ol>
+<p style="margin-top:12px">The shared theme of all four anti-patterns is the same: <strong>complex when it should be simple, simple when it should be complex, vibes when there's no data, generic when there are features.</strong> Engineering judgment is knowing what altitude each thing belongs at — and evals are the only ruler that verifies whether you drew it right.</p>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// DEEP THINKING</h3>
+<details><summary>Over-engineering (§1) and over-abstraction (§4) look like the same thing — why split them into two points?</summary><div>They differ in dimension. §1 is the <strong>vertical</strong> complexity ladder — "should I climb to multi-agent / RAG / framework," about <em>how many layers the system has</em>. §4 is the <strong>horizontal</strong> coupling boundary — "how high to abstract the provider," about <em>how dependencies are drawn</em>. A project can be vertically minimal yet horizontally locked-in, or the reverse. But the parent rule is identical: <strong>abstraction is forced out by the second instance, not designed in advance</strong> — the second tool forces routing, the second provider forces an adapter. Any abstraction without a second instance is speculation.</div></details>
+<details><summary>§2 says "evals always rank first." But building evals takes investment — isn't that also over-engineering, contradicting §1?</summary><div>No contradiction, because evals hedge not "future scaling" but a need that <strong>exists from day one</strong> — "how do I know this change helped or hurt." §1 opposes paying interest on an <em>unproven</em> need. And the right form of evals is precisely anti-over-engineering: not a platform, but 20 jsonl lines + a few assertions, started in half an hour, thickened incrementally. Making evals a three-month platform engineering effort is what violates §1 — but that's an error of implementation, not of "should evals exist."</div></details>
+<details><summary>If you could pick only one metric, how do you spot early that "this AI project is dying slowly"?</summary><div>Look at how long one action takes: <strong>"from changing one prompt / model / retrieval to confirming whether it got better or worse overall, how long?"</strong> Healthy projects are minutes (run the evals); slowly dying ones are "can't tell / wait for live feedback / by feel." This metric pierces all four: it directly tests §2, and indirectly exposes §1 (one change requires verifying a whole region), §3 (too brittle to touch), §4 (too coupled to swap). The iterate-verify loop time is the single strongest signal of AI engineering health.</div></details>
+<details><summary>These four are all "what not to do." Is there one positive principle that covers them all?</summary><div>Yes: <strong>"make every decision reversible, observable, and deferrable."</strong> Deferrable hedges §1 and §4 (abstract only once forced); observable hedges §2 (every change must be visible to evals); reversible hedges §3 (versioning + pinned models let upgrades roll back in seconds). The costliest mistakes in AI engineering are all the combination of <strong>irreversible + unobservable + premature</strong>. Push every decision toward these three directions and the four anti-patterns lose their soil — this also echoes Day 31's "reversibility design."</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">Anthropic · Building Effective Agents</a> — the foundational "simple before complex" claim (§1)</li>
+<li><a href="https://hamel.dev/blog/posts/evals/" target="_blank">Hamel Husain · Your AI Product Needs Evals</a> — missing evals as the common root of failed AI products (§2)</li>
+<li><a href="https://huyenchip.com/books/" target="_blank">Chip Huyen · AI Engineering (O'Reilly 2025)</a> — systematic eval pipeline; without it you're flying blind</li>
+<li><a href="https://github.com/humanlayer/12-factor-agents" target="_blank">HumanLayer · 12-Factor Agents</a> — an agent is fundamentally well-engineered ordinary software (§3/§4)</li>
+<li><a href="https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf" target="_blank">OpenAI · A Practical Guide to Building Agents</a> — start from a single agent, upgrade only when forced</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 45 · 2026-06-24</footer>
+</div>
+</body></html>

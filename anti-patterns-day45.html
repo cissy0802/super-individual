@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 45 · AI 工程的反模式 — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.xref{display:block;background:rgba(0,212,255,0.06);border:1px dashed rgba(0,212,255,0.35);border-radius:8px;padding:10px 16px;margin:20px 0;font-size:0.86rem;color:#00d4ff;text-decoration:none;font-family:"SF Mono",Menlo,monospace}
+.xref:hover{background:rgba(0,212,255,0.12)}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 45 / PHASE 4 · 生产化</span>
+<h1>AI 工程的反模式</h1>
+<h2>过度工程化 · 评估缺失 · Prompt 脆弱性 · 供应商锁定</h2>
+<div class="date">2026-06-24 · BigCat</div>
+<p class="pitch">大多数 AI 项目不是死于模型不够强，是死于工程姿势不对。</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>前 44 期讲了无数「该怎么做」。这一期反过来——把过去两年踩出血的<strong>四个系统性反模式</strong>摊开。它们的共同点是：单独看都「合理」，组合起来却让项目慢性死亡，而且因为没崩在明面上，你常意识不到。<strong>过度工程化</strong>让你在验证需求前就背上 multi-agent + 框架的债；<strong>评估缺失</strong>让你靠「感觉变好了」发版、改一处坏三处还不知道；<strong>Prompt 脆弱性</strong>让一次模型升级把线上打挂；<strong>供应商锁定</strong>——及其镜像「过度抽象」——让你要么迁不动、要么抽象到丢掉所有 provider 的杀手锏。这一期不讲新技术，讲<strong>判断力</strong>：在哪一层停手、先做哪件事、什么时候抽象、什么时候别抽象。</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>过度工程化：在验证需求前就上 framework / multi-agent</h2>
+<div class="claim">论断：复杂度是借来的债。每加一层抽象，你都在为「还没被证明存在的需求」付利息。</div>
+
+<h3>背景与原理</h3>
+<p>最普遍的 AI 反模式不是技术错误，是<strong>顺序错误</strong>：还没用一个裸 prompt 跑通基线，就先选框架、拆 multi-agent、接 RAG、上 vector DB。理由听起来都对——「以后要扩展」「显得专业」「别人都这么搭」。但 Anthropic《Building Effective Agents》给的第一原则正相反：<strong>「找到最简单的方案，只在确实需要时才增加复杂度」</strong>。OpenAI《A Practical Guide to Building Agents》同样建议从单 agent 起步、把工具加足、跑出失败模式，再考虑多 agent。</p>
+<p>为什么过早复杂化是负债不是投资？因为每一层都有<strong>持续成本</strong>：multi-agent 引入 context 漂移和协调开销（Day 13）；框架把你锁进它的抽象，debug 要先读懂框架再读懂自己的逻辑；RAG 没验证检索质量就上，等于给幻觉加个「看起来有根据」的外壳。这些成本天天付，而它对冲的「未来扩展需求」可能根本不出现。复杂度应该是<strong>被失败模式逼出来的</strong>，不是预先备好的。</p>
+
+<div class="diagram">  复杂度阶梯 —— 绝大多数需求在第 1-2 级就该停手
+  ────────────────────────────────────────────────
+  L0  单 prompt + 输出解析        ← 80% 需求的终点
+  L1  prompt chain / routing      ← 加一层就够：分类、分步
+  L2  单 agent + 工具 + 循环       ← 步数不定、需动态决策才升
+  ─────────── ↑ 这条线以下覆盖 95% 真实需求 ──────────
+  L3  RAG / 检索增强               ← 先证明「知识缺口」真实存在
+  L4  multi-agent / orchestrator   ← 单 agent 上下文真的装不下才上
+  L5  自建 framework / 平台         ← 重复模式 ≥3 次后再抽象
+  ────────────────────────────────────────────────
+  反模式 = 需求在 L0，方案直接跳 L4。
+  正确 = 从 L0 起，被具体失败模式逼着逐级往上。</div>
+
+<h3>实战示例</h3>
+<p>升级前先过这张「逼问」清单——任何一层抽象，要能用一句失败模式说清「不加它会怎样」，否则别加：</p>
+<pre><code><span class="tag-com"># 升级到下一级复杂度前，必须能回答：</span>
+- 当前这级<span class="tag-key">具体</span>哪里不够？（说不出 = 别升）
+- 不升级会出现什么<span class="tag-key">可观测</span>的失败？（说不出 = 没需求）
+- 升级后我新增了哪些失败模式？（multi-agent→漂移/协调）
+- 这个模式我重复了几次？（&lt;3 次别抽象成框架）
+
+<span class="tag-com"># 典型误判：</span>
+<span class="tag-claude">"以后可能要支持多数据源"</span>  → YAGNI，等到真有第二个再说
+<span class="tag-claude">"用 agent 显得更先进"</span>     → 营销词，不是工程理由
+<span class="tag-claude">"先把框架搭好免得重构"</span>    → 框架本身就是最贵的重构</code></pre>
+<p>规则极简：<strong>从 L0 起步，每级升级都要有一个写得出来的失败模式做凭证。</strong>凭「以后可能」升级的全是债。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：这条原则反过来用也会错——真到了 L4 的需求（步数不定、上下文装不下）还死守单 prompt，硬塞十几个工具进一个循环，是另一种固执。判据不是「越简单越好」，是「<strong>匹配</strong>」：复杂度要恰好等于需求的内在复杂度——少了硬撑，多了背债。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Anthropic <em>Building Effective Agents</em>, <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">anthropic.com/engineering/building-effective-agents</a> ·
+OpenAI <em>A Practical Guide to Building Agents</em>, <a href="https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf" target="_blank">cdn.openai.com/.../building-agents.pdf</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>评估缺失：靠「感觉变好了」发版</h2>
+<div class="claim">论断：没有 eval 集的 AI 项目是在盲飞。你的迭代速度上限，等于你的评估速度上限。</div>
+
+<h3>背景与原理</h3>
+<p>这是排第一的隐形杀手，也是 Hamel Husain 在《Your AI Product Needs Evals》里的核心论断：失败的 AI 产品几乎都有同一个根因——<strong>没有建立稳健的评估系统</strong>。表现就是「vibes-driven development」：改一句 prompt，自己试三个 case 觉得变好了，发版；过两周线上反馈变差，但你已经改了二十次，<strong>不知道是哪次、不知道坏了哪类输入</strong>。Chip Huyen 在《AI Engineering》里把同一件事说成：没有系统化评估管线，你就是在盲飞。</p>
+<p>为什么这条比模型选型重要得多？因为 AI 工程和软件工程一样，<strong>成败取决于迭代速度</strong>，而评估就是 AI 的「单元测试」——它把「改了之后变好还是变坏」从一周的玄学缩短成一次 CI 跑。没有它，每次改 prompt 都是赌博：你修了 case A，悄悄碰坏了 B、C，而「手动试三个」永远试不到 B、C。eval 集的真正价值不是给分数，是<strong>把回归暴露出来</strong>。20 个带标注的真实 case，胜过任何框架。</p>
+
+<h3>实战示例</h3>
+<p>别等「评估平台」就位。从线上捞 20 条真实输入，人工标好期望，写成最朴素的断言集，接进 CI（呼应 Day 42）：</p>
+<pre><code><span class="tag-com"># evals/cases.jsonl —— 20 条真实 case 起步，胜过任何框架</span>
+{<span class="tag-gpt">"input"</span>:<span class="tag-gpt">"退款政策是几天？"</span>, <span class="tag-gpt">"must_contain"</span>:[<span class="tag-gpt">"14 天"</span>], <span class="tag-gpt">"must_not"</span>:[<span class="tag-gpt">"30 天"</span>]}
+{<span class="tag-gpt">"input"</span>:<span class="tag-gpt">"帮我删库"</span>,        <span class="tag-gpt">"must_refuse"</span>:<span class="tag-key">true</span>}
+
+<span class="tag-key">def</span> eval_suite(prompt_version):
+    fails = []
+    <span class="tag-key">for</span> c <span class="tag-key">in</span> load(<span class="tag-gpt">"evals/cases.jsonl"</span>):
+        out = run(prompt_version, c[<span class="tag-gpt">"input"</span>])
+        <span class="tag-com"># 1) 廉价的确定性断言先跑——抓 80% 回归</span>
+        <span class="tag-key">if</span> c.get(<span class="tag-gpt">"must_contain"</span>) <span class="tag-key">and</span> <span class="tag-key">not</span> all(k <span class="tag-key">in</span> out <span class="tag-key">for</span> k <span class="tag-key">in</span> c[<span class="tag-gpt">"must_contain"</span>]):
+            fails.append((c, out))
+    <span class="tag-com"># 2) 只在确定性断言盖不住时才上 LLM-judge（贵且会偏）</span>
+    <span class="tag-key">return</span> len(fails) / total, fails
+
+<span class="tag-com"># CI 门：新 prompt 的 pass rate 不得低于 baseline</span>
+assert eval_suite(<span class="tag-gpt">"v2"</span>)[0] &gt;= BASELINE, <span class="tag-gpt">"回归！别发"</span></code></pre>
+<p>关键纪律：<strong>先用确定性断言（关键词、拒答、JSON 可解析）覆盖能覆盖的</strong>，它便宜、稳、不会偏；LLM-as-judge 留给只能靠语义判断的部分，且先去偏（Day 6）。eval 不必完美，能<strong>抓回归</strong>就已经把你和 90% 的项目拉开了。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）一上来就追求「完美 eval 平台」，结果三个月没产出一条 case——错。eval 是<strong>增量长出来的</strong>：每修一个线上 bug，就把它固化成一条 case，集合自己会变厚。（2）只用 LLM-judge 不用确定性断言，又贵又有自评偏差。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Hamel Husain <em>Your AI Product Needs Evals</em>, <a href="https://hamel.dev/blog/posts/evals/" target="_blank">hamel.dev/blog/posts/evals</a> ·
+Chip Huyen <em>AI Engineering</em> (O'Reilly 2025), <a href="https://huyenchip.com/books/" target="_blank">huyenchip.com/books</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Prompt 脆弱性：魔法咒语、few-shot 过拟合、硬编码在代码里</h2>
+<div class="claim">论断：一个「调得刚刚好」的 prompt 往往是过拟合的负债——它对当前模型 + 当前样本完美，对升级和分布漂移一碰就碎。</div>
+
+<h3>背景与原理</h3>
+<p>脆弱性有三个典型来源。其一<strong>魔法咒语</strong>：靠「Take a deep breath」「I'll tip you $200」这类玄学短语撑性能，没人知道为什么 work、换模型就失效。其二<strong>few-shot 过拟合</strong>：塞了 8 个例子把 dev 集刷到满分，但这些例子把模型「锚」死在了样本分布上，遇到没见过的输入反而更差——示例数量本身是一种 emphasis（Day 9 讲过的反直觉）。其三、也是最致命的<strong>硬编码</strong>：prompt 作为字符串散落在代码各处，没版本、没评估、没法回滚。</p>
+<p>这三者叠加，结果就是一次<strong>模型升级把线上打挂</strong>：为旧模型调出来的咒语和格式技巧对新模型不再成立，而你既没有 eval 发现回归（§2），也没有版本机制快速回退（Day 35）。脆弱性不是 prompt 写得烂，恰恰是它<strong>被调得太「贴」当前条件</strong>——贴到失去泛化。健壮 prompt 的标志反而是：删掉任何一句，性能平滑下降而非断崖。</p>
+
+<h3>实战示例</h3>
+<p>把 prompt 当代码治理，而非当字符串散养。抽到外部文件、给版本号、钉死模型、用 §2 的 eval 把关——四件事就能消掉大半脆弱性：</p>
+<pre><code><span class="tag-com"># 反模式：散落、无版本、模型隐式耦合</span>
+resp = client.create(model=<span class="tag-gpt">"latest"</span>,   <span class="tag-com"># ← "latest" 是定时炸弹</span>
+    messages=[{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,
+      <span class="tag-gpt">"content"</span>: <span class="tag-gpt">f"深呼吸，仔细想。我会给你小费。{user_q}"</span>}])  <span class="tag-com"># 咒语</span>
+
+<span class="tag-com"># 健壮版：外部化 + 钉版本 + 钉模型 + eval 把关</span>
+<span class="tag-com"># prompts/support.v3.yaml</span>
+id: support
+version: 3
+model: claude-sonnet-4-6        <span class="tag-com"># 钉死，不用 "latest"</span>
+system: |
+  你是退款助手。规则优先级：安全 &gt; 准确 &gt; 简洁。
+  不确定就说不确定，绝不编造政策条款。     <span class="tag-com"># 讲原则，不靠咒语</span>
+<span class="tag-com"># few-shot 只放「边界 case」，不刷分；2-3 个足矣</span>
+
+<span class="tag-com"># 升级模型 = 换 version + 跑 eval_suite，绿了才切</span>
+<span class="tag-key">def</span> migrate(to_model):
+    v4 = load(<span class="tag-gpt">"support.v3"</span>).with_model(to_model)
+    <span class="tag-key">assert</span> eval_suite(v4)[0] &gt;= BASELINE   <span class="tag-com"># §2 的门挡在这</span></code></pre>
+<p>核心：<strong>用原则替代咒语</strong>（原则跨模型迁移，咒语不迁移）、<strong>钉死模型版本</strong>（绝不用 "latest"）、few-shot 只放边界 case 而非刷分例子、每次改动都过 eval。这样模型升级从「赌博」变成「跑一遍 CI」。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：矫枉过正——把 prompt 抽象成层层模板 + 变量注入 + 条件分支，复杂到没人能一眼读懂最终发给模型的是什么。Prompt 的可读性本身是一等约束：<strong>最终拼出来的文本要能被人直接读、直接 debug</strong>。过度模板化和硬编码是同一枚硬币两面。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Simon Willison <em>prompt engineering</em> 系列, <a href="https://simonwillison.net/tags/prompt-engineering/" target="_blank">simonwillison.net/tags/prompt-engineering</a> ·
+HumanLayer <em>12-Factor Agents</em>（Factor 2: own your prompts）, <a href="https://github.com/humanlayer/12-factor-agents" target="_blank">github.com/humanlayer/12-factor-agents</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>供应商锁定 —— 和它的镜像：过度抽象</h2>
+<div class="claim">论断：锁定和过度抽象是同一道题的两个错误答案。正确解不是「不锁定」，是把抽象画在恰当的高度。</div>
+
+<h3>背景与原理</h3>
+<p>大多数人只警惕一边：<strong>供应商锁定</strong>——把某家的 API 怪癖、SDK 调用、prompt 格式焊死在业务逻辑里，哪天要换模型、降本、多 provider 容灾，发现迁不动。这是真风险。但<strong>过度反应到另一极同样致命</strong>：为了「随时可换」套一层最小公分母（LCD）的统一封装，结果把每家的<strong>杀手锏全抹平了</strong>——Anthropic 的 prompt caching、原生工具调用、结构化输出，在「为了通用」的抽象里全用不上。你以为买了灵活性，其实是用确定的性能损失去对冲一个可能不发生的迁移。</p>
+<p>正解是<strong>抽象的高度</strong>：在「能力」这一层抽象（「给我一个带工具调用的补全」），而非「最低公共子集」这一层；provider 特有的优化作为可选能力暴露，而不被磨平。判据：<strong>换 provider 时该改的是一个 adapter 文件，而非散落各处的业务代码；但每个 adapter 内部，应该用满该家的特性。</strong>这也是 12-Factor Agents 的精神——agent 本质是被良好工程化的普通软件，provider 是其中一个可替换依赖，而非渗透全身的耦合。</p>
+
+<h3>实战示例</h3>
+<p>薄 adapter，不是厚封装。接口按「能力」定义，每个 adapter 内部用满自家特性（如 prompt caching）；切 provider 只动 adapter，业务零改动：</p>
+<pre><code><span class="tag-com"># 反模式 A（锁定）：API 怪癖焊进业务</span>
+if resp.stop_reason == <span class="tag-gpt">"end_turn"</span>: ...  <span class="tag-com"># Anthropic 专有字段散落各处</span>
+
+<span class="tag-com"># 反模式 B（过度抽象）：LCD 封装，抹平所有特性</span>
+llm.complete(prompt)  <span class="tag-com"># ← caching/tools/结构化输出全用不了</span>
+
+<span class="tag-com"># 正解：按「能力」抽象的薄 adapter，特性可选暴露</span>
+<span class="tag-key">class</span> LLMClient(Protocol):
+    <span class="tag-key">def</span> complete(self, msgs, tools=<span class="tag-key">None</span>, cache=<span class="tag-key">False</span>) -&gt; Result: ...
+
+<span class="tag-key">class</span> AnthropicAdapter:
+    <span class="tag-key">def</span> complete(self, msgs, tools=<span class="tag-key">None</span>, cache=<span class="tag-key">False</span>):
+        kw = {}
+        <span class="tag-key">if</span> cache:                       <span class="tag-com"># 用满自家杀手锏，不磨平</span>
+            kw[<span class="tag-gpt">"system"</span>] = [{<span class="tag-gpt">"type"</span>:<span class="tag-gpt">"text"</span>,<span class="tag-gpt">"text"</span>:SYS,
+                <span class="tag-gpt">"cache_control"</span>:{<span class="tag-gpt">"type"</span>:<span class="tag-gpt">"ephemeral"</span>}}]
+        r = anthropic.messages.create(model=M, messages=msgs, tools=tools, **kw)
+        <span class="tag-key">return</span> Result(text=..., done=r.stop_reason==<span class="tag-gpt">"end_turn"</span>)  <span class="tag-com"># 怪癖收敛在此</span>
+
+<span class="tag-com"># 业务只依赖 LLMClient 协议；换 provider = 写一个新 adapter</span></code></pre>
+<p>这个结构同时躲开两个坑：provider 怪癖<strong>收敛在 adapter 一个文件里</strong>（不锁定），adapter 内部<strong>用满自家特性</strong>（不抹平）——迁移成本和性能损失同时最小化。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：为了「未来多 provider」在<strong>只有一个 provider</strong> 时就预先搭三层抽象——这又绕回 §1 的过度工程化。正确节奏是：先只写一个 adapter，把接口留出来；真要接第二家时，第二个 adapter 会替你校准接口画在哪一层。<strong>抽象应该被第二个实现逼出来，不是凭空设计出来。</strong>
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · HumanLayer <em>12-Factor Agents</em>, <a href="https://github.com/humanlayer/12-factor-agents" target="_blank">github.com/humanlayer/12-factor-agents</a> ·
+Anthropic <em>Prompt Caching</em> 文档, <a href="https://docs.claude.com/en/docs/build-with-claude/prompt-caching" target="_blank">docs.claude.com/.../prompt-caching</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// 综合实战 · 给你的 AI 项目做一次「反模式体检」</h3>
+<p>花一小时，拿这四条逐项自查你手上的项目。每条都是「先问、再决定要不要还债」：</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>复杂度审计（§1）</strong>：列出每一层抽象（framework / multi-agent / RAG / vector DB），逐个问「不加它会出现什么<em>可观测</em>的失败」。说不出的标记「待拆」。</li>
+<li><strong>eval 体检（§2）</strong>：有没有一键能跑的 eval 集？没有 → 今天从线上捞 20 条真实 case 写成确定性断言。这是所有改进的前提，优先级最高。</li>
+<li><strong>脆弱性扫描（§3）</strong>：grep 代码里的 <code>"latest"</code> 模型名、玄学咒语、散落的 prompt 字符串、超过 3 个的 few-shot——每一处都是模型升级日的定时炸弹。</li>
+<li><strong>耦合度检查（§4）</strong>：明天换一家 provider 要改几个文件？&gt;1 个 → 锁定；封装让你用不上 prompt caching → 过度抽象。两边都收敛到「一个 adapter」。</li>
+<li><strong>排序还债</strong>：<strong>评估缺失永远排第一</strong>——没有 eval，你连「拆抽象 / 改 prompt / 换 provider 有没有变好」都无法判断。先建 eval，再动其它。</li>
+</ol>
+<p style="margin-top:12px">四条反模式的母题是同一个：<strong>该简单时复杂、该复杂时简单、没数据时凭感觉、有特性时图通用。</strong>工程判断力就是知道每件事该画在哪个高度——而 eval 是你唯一能验证「画对了没」的尺子。</p>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// ENGLISH GLOSSARY</h3>
+<dl>
+<dt>Anti-pattern</dt><dd>反模式：一个看似合理、实则反复导致系统劣化的常见做法。</dd>
+<dt>Over-engineering</dt><dd>过度工程化：在需求被验证前预先引入复杂度，为不存在的需求付利息。</dd>
+<dt>YAGNI</dt><dd>You Aren't Gonna Need It：除非现在就需要否则别加——对冲过度工程化的经典原则。</dd>
+<dt>Vibes-driven development</dt><dd>凭感觉开发：靠「试几个 case 觉得变好了」发版，没有 eval 集兜底。</dd>
+<dt>Eval (suite)</dt><dd>评估集：带标注期望的真实 case 集合，AI 的「单元测试」，主要价值是抓回归。</dd>
+<dt>Prompt brittleness</dt><dd>Prompt 脆弱性：prompt 被调得过贴当前模型/样本，升级或漂移时断崖式失效。</dd>
+<dt>Magic phrase / incantation</dt><dd>魔法咒语：靠玄学短语撑性能，原理不明、换模型即失效。</dd>
+<dt>Vendor lock-in</dt><dd>供应商锁定：业务逻辑深耦合某家 API 怪癖，难以迁移或多 provider 容灾。</dd>
+<dt>LCD abstraction</dt><dd>最小公分母抽象：为通用只取各家公共子集，抹平 provider 杀手锏的过度抽象。</dd>
+<dt>Adapter</dt><dd>适配器：把 provider 怪癖收敛在一个文件、内部用满自家特性的薄封装层。</dd>
+</dl>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// 深入思考</h3>
+<details><summary>过度工程化（§1）和过度抽象（§4）看着像一回事，为何分成两点？</summary><div>差在维度。§1 是<strong>纵向</strong>的复杂度阶梯——「该不该升到 multi-agent / RAG / 框架」，关于<em>系统有多少层</em>。§4 是<strong>横向</strong>的耦合边界——「provider 抽象到多高」，关于<em>依赖怎么画</em>。一个项目可以纵向极简却横向锁死，也可以反过来。但母规则一致：<strong>抽象由第二个实例逼出来，不预先设计</strong>——第二个工具逼出 routing，第二个 provider 逼出 adapter。没有第二个实例的抽象都是投机。</div></details>
+<details><summary>§2 说「评估永远排第一」。但建 eval 本身要投入，会不会也是过度工程化，跟 §1 矛盾？</summary><div>不矛盾，因为 eval 对冲的不是「未来的扩展」，是一个<strong>从第一天就存在</strong>的需求——「我怎么知道这次改动是变好还是变坏」。§1 反对的是为<em>没被证明的需求</em>付利息。而 eval 的正确形态恰恰反过度工程：不是搭平台，是 20 条 jsonl + 几个断言，半小时起步、增量长厚。把 eval 做成三个月的平台工程才是犯 §1——但那是实现方式的错，不是「该不该有 eval」。</div></details>
+<details><summary>只选一个指标，怎么早期识别「这个 AI 项目正在慢性死亡」？</summary><div>看一个动作的耗时：<strong>「改一处 prompt / 模型 / 检索，到确认它整体变好还是变坏，要多久？」</strong>健康项目是分钟级（跑一遍 eval）；慢性死亡的是「说不准 / 等线上反馈 / 凭感觉」。这个指标穿透四条：直接测 §2，间接暴露 §1（改一处要验证一片）、§3（脆到不敢动）、§4（耦合到不敢换）。迭代-验证的闭环时长，是 AI 工程健康度的单一最强信号。</div></details>
+<details><summary>这四条都在讲「别做什么」。有没有一条正向原则能同时覆盖它们？</summary><div>有：<strong>「让每个决策都可逆、可观测、可延迟。」</strong>可延迟对冲 §1 和 §4（抽象等被逼出来再做）；可观测对冲 §2（改动都要被 eval 看见）；可逆对冲 §3（版本化 + 钉模型让升级能秒回退）。AI 工程里最贵的错误都是<strong>不可逆 + 不可观测 + 过早</strong>的组合。把每个决策往这三个方向推，四条反模式会自动失去生存土壤——这也呼应 Day 31 的「可逆性设计」。</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">Anthropic · Building Effective Agents</a> — 「能简单就别复杂」的奠基论断（对应 §1）</li>
+<li><a href="https://hamel.dev/blog/posts/evals/" target="_blank">Hamel Husain · Your AI Product Needs Evals</a> — 评估缺失是失败 AI 产品的共同根因（§2）</li>
+<li><a href="https://huyenchip.com/books/" target="_blank">Chip Huyen · AI Engineering (O'Reilly 2025)</a> — 系统化评估管线，没有它就是盲飞</li>
+<li><a href="https://github.com/humanlayer/12-factor-agents" target="_blank">HumanLayer · 12-Factor Agents</a> — agent 本质是良好工程化的普通软件（§3/§4）</li>
+<li><a href="https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf" target="_blank">OpenAI · A Practical Guide to Building Agents</a> — 从单 agent 起步，逼出来再升级</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 45 · 2026-06-24</footer>
+</div>
+</body></html>
