@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 47 · Image Generation Engineering — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 47 / PHASE 5 · NON-LLM MODALITIES</span>
+<h1>Image Generation Engineering</h1>
+<h2>Control Stack · Counter-intuitive Prompting · Generation Agent · Provenance</h2>
+<div class="date">2026-06-26 · BigCat</div>
+<p class="pitch">Text prompt is the weakest control knob; controllable, reproducible, compliant is what makes it engineering.</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>Most people's mental model of image generation stops at "type an incantation into Midjourney and gacha." But the moment you put generated images into a <strong>product pipeline</strong>—brand-consistent characters, fixed-composition e-commerce shots, reproducible batch assets—gacha collapses. Image models and LLMs are two different disciplines of engineering: a diffusion model doesn't "follow instructions," it <strong>samples from a conditional distribution</strong>; the text prompt is only the coarsest of many control signals. This issue isn't "what is diffusion" (that's a concept class). For people who already use the tools, it's about <strong>turning the uncontrollable into the controllable</strong>: layering spatial and style control with ControlNet/LoRA/IP-Adapter, prompting by the diffusion model's own rules, upgrading single-shot gacha into a generate–critique–repaint agentic loop, and the watermark + copyright provenance layer you can't skip in production.</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>The Control Stack: ControlNet / LoRA / IP-Adapter</h2>
+<div class="claim">Claim: text prompts can't control composition or identity. Hand spatial structure to ControlNet, style and subject to LoRA, reference images to IP-Adapter—stacked orthogonally.</div>
+
+<h3>Background &amp; principle</h3>
+<p>These three tools act on <strong>different facets</strong> of the diffusion process—not substitutes, but layers:</p>
+<ul>
+<li><strong>ControlNet</strong> (Zhang 2023): clones the UNet encoder and injects <strong>spatial conditions</strong> (canny edges, depth, openpose skeleton, segmentation) via <code>zero-conv</code>. Pixel-level composition/pose lock, at ~30%+ extra inference cost.</li>
+<li><strong>LoRA</strong> (Hu 2021): low-rank weight deltas (rank ~4–128); fine-tunes a <strong>style or character</strong> from dozens of images, a few-MB file activated by a trigger word. The workhorse for subject consistency.</li>
+<li><strong>IP-Adapter</strong>: encodes a <strong>reference image</strong> into an image prompt injected into cross-attention—zero training to transfer style/face. Faster than LoRA, but weaker control.</li>
+</ul>
+<p>The engineering mantra: <strong>fix structure first (ControlNet), then identity (LoRA), then tune mood last (prompt + IP-Adapter)</strong>. Route "what you want" to the right control channel instead of cramming it all into the text prompt.</p>
+
+<div class="diagram">Denoising loop  ──receives multiple conditions per step──▶
+┌──────────────────────────────────────────────┐
+│  text prompt  ─┐                              │
+│  (CLIP encoded) │  coarse: subject/mood       │
+│                ▼                              │
+│  IP-Adapter ──▶ cross-attention  ─ style/face │
+│  (reference)    │                             │
+│  LoRA      ──▶ UNet weight delta ─ char/style │
+│                │                             │
+│  ControlNet ─▶ UNet encoder bypass ─ pose/comp│
+│  (edge/depth/pose)   ▲ strongest spatial lock │
+└──────────────────────────────────────────────┘
+   control strength: ControlNet > LoRA > IP-Adapter > prompt</div>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># diffusers: ControlNet(pose) + LoRA(character) stacked</span>
+from diffusers import StableDiffusionXLControlNetPipeline, ControlNetModel
+cn = ControlNetModel.from_pretrained("...controlnet-openpose-sdxl")
+pipe = StableDiffusionXLControlNetPipeline.from_pretrained(
+    "stabilityai/stable-diffusion-xl-base-1.0", controlnet=cn)
+pipe.load_lora_weights("./my_character.safetensors")  <span class="tag-com"># consistency</span>
+
+img = pipe(
+    prompt="mychar, cinematic lighting, rooftop at dusk",
+    image=pose_map,                 <span class="tag-com"># openpose skeleton locks pose</span>
+    controlnet_conditioning_scale=0.8,  <span class="tag-com"># don't use 1.0; leave slack</span>
+    guidance_scale=6.5, num_inference_steps=30,
+    generator=torch.Generator().manual_seed(42),  <span class="tag-com"># reproducible</span>
+).images[0]</code></pre>
+
+<div class="fail"><strong>Failure modes:</strong> ① Stacking 3+ ControlNets → conditions fight, producing deformities; get one condition working first. ② <code>controlnet_conditioning_scale=1.0</code> welds structure shut and the prompt stops mattering. ③ LoRA <code>rank</code> too high + too little data → overfit; it parrots training images, won't generalize. ④ Forgetting to fix the <code>seed</code>, so you can't reproduce "that good one from last time."</div>
+<div class="res">Resources: <a href="https://arxiv.org/abs/2302.05543" target="_blank">ControlNet paper (arXiv 2302.05543)</a> · <a href="https://huggingface.co/docs/diffusers/using-diffusers/controlnet" target="_blank">diffusers ControlNet docs</a></div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Image Prompts: Completely Different Rules from LLMs</h2>
+<div class="claim">Claim: a diffusion prompt is not an "instruction" but "coordinates in a conditional distribution"; negation goes through a separate channel, CFG sets obedience, CLIP only reads the first 77 tokens.</div>
+
+<h3>Background &amp; principle</h3>
+<p>Bringing LLM prompting habits to diffusion is almost all wrong. Four core differences:</p>
+<ul>
+<li><strong>Negation fails</strong>: writing "don't add a hat" makes a hat <strong>more likely</strong> because you mentioned it. Put exclusions into a separate <code>negative_prompt</code> channel.</li>
+<li><strong>CFG scale = obedience</strong>: classifier-free guidance (Ho &amp; Salimans 2022) extrapolates between conditional and unconditional predictions. Too low (&lt;4) drifts off-prompt; too high (&gt;14) oversaturates with artifacts. SDXL typically uses <strong>5–8</strong>.</li>
+<li><strong>Order is weight</strong>: earlier tokens carry more influence; most UIs also support explicit <code>(word:1.3)</code> weighting.</li>
+<li><strong>77-token hard cut</strong>: the CLIP text encoder takes only 77 tokens; the overflow is silently dropped—don't write essays.</li>
+</ul>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># ❌ LLM-style (almost always backfires on diffusion)</span>
+"Please generate a portrait. Make sure there is no blur,
+ and don't include any text or watermark in the image."
+<span class="tag-com"># → mentioning blur/text/watermark summons them; instruction filler eats 77 tokens</span>
+
+<span class="tag-com"># ✅ Diffusion-style: positive holds only what you WANT, exclude via negative</span>
+prompt = "portrait of a woman, soft window light, 85mm, \
+          shallow depth of field, (sharp focus:1.2)"
+negative_prompt = "blurry, text, watermark, extra fingers, \
+                   lowres, deformed hands"
+<span class="tag-com"># guidance_scale=7  order: subject→light→lens→quality</span></code></pre>
+
+<div class="fail"><strong>Failure modes:</strong> ① Writing negatives into the positive prompt (the most common faceplant). ② Piling hundreds of "quality spells" past 77 tokens—the tail is dropped while you think it works. ③ Cranking CFG to 15+ for "more obedience," getting burnt colors and oil-painting artifacts. ④ Copying prompts across models: SD1.5 spells weight differently on SDXL/Flux and need retuning.</div>
+<div class="res">Resources: <a href="https://arxiv.org/abs/2207.12598" target="_blank">Classifier-Free Guidance (arXiv 2207.12598)</a> · <a href="https://arxiv.org/abs/2307.01952" target="_blank">SDXL technical report (arXiv 2307.01952)</a></div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Image Generation Agent: Turning Gacha into a Generate–Critique–Repaint Loop</h2>
+<div class="claim">Claim: single-shot generation is gambling; reliable output comes from an agentic loop—a VLM as reviewer, local inpaint as fix, fixed seed as version control.</div>
+
+<h3>Background &amp; principle</h3>
+<p>Production won't accept "render ten, pick one." Wire image generation into an agent loop, reusing the harness thinking you already know (Day 3): <strong>generate → VLM evaluates against the brief → if it fails, mask the problem region + inpaint a local repaint → upscale to finalize</strong>. The key is a multimodal model (Claude / GPT-4V) acting as an <strong>eval gate</strong>, automating "human picks the image" into a structured score. Repaint only fixes the bad local region (hands, text, stray objects) instead of re-rolling the whole image—saving cost and preserving the parts already correct.</p>
+
+<div class="diagram">┌─────────────────────────────────────────────┐
+│  brief ──▶ ① text-to-image (seed=fixed)       │
+│               │                              │
+│               ▼                              │
+│           ② VLM review ──meets brief?──┐      │
+│           (Claude/GPT-4V)              │ no   │
+│               │ yes                    ▼      │
+│               │           ③ locate bad region │
+│               │           ④ inpaint repaint   │
+│               │                 │ (loop≤N)    │
+│               ▼  ◀──────────────┘             │
+│           ⑤ upscale → final                   │
+│                                              │
+│   human gate: fails N rounds → escalate,      │
+│               no infinite repaint             │
+└─────────────────────────────────────────────┘</div>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># VLM as reviewer: structured score drives whether to repaint</span>
+import anthropic
+client = anthropic.Anthropic()
+
+def critique(image_b64, brief):
+    msg = client.messages.create(
+        model="claude-opus-4-8", max_tokens=400,
+        messages=[{"role":"user","content":[
+            {"type":"image","source":{"type":"base64",
+             "media_type":"image/png","data":image_b64}},
+            {"type":"text","text":
+             f"Brief: {brief}\nScore strictly, return JSON: "
+             '{"pass":bool,"issues":[...],"worst_region":"hands|text|..."}'}
+        ]}])
+    return msg.content[0].text   <span class="tag-com"># → parse, decide which region to inpaint</span>
+
+<span class="tag-com"># loop: max_iters=3, escalate to human beyond that, avoid burning $$ on infinite repaints</span></code></pre>
+
+<div class="fail"><strong>Failure modes:</strong> ① The VLM hallucinates too—inventing details not in the generated image; pair scoring with consistency checks or multi-vote. ② No <code>max_iters</code> and no human gate → one image repaints endlessly, burning dollars. ③ Changing seed each round → fix one spot, break another, never converges; lock unmasked regions during inpaint. ④ Treating a full re-roll as a "fix," discarding the parts already correct.</div>
+<div class="res">Resources: <a href="https://huggingface.co/docs/diffusers/using-diffusers/inpaint" target="_blank">diffusers Inpainting docs</a> · <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">Anthropic · Building Effective Agents</a> (loop design)</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Watermarking &amp; Copyright: The Provenance Layer You Can't Skip</h2>
+<div class="claim">Claim: a visible watermark is decoration; real proof of origin is SynthID (robust invisible watermark) + C2PA (cryptographically signed metadata), and copyright risk lives mostly on the training-data side.</div>
+
+<h3>Background &amp; principle</h3>
+<p>Ship a generated image into a product and compliance surfaces immediately. Engineering splits into two layers:</p>
+<ul>
+<li><strong>SynthID</strong> (Google DeepMind): embeds an invisible watermark <strong>distributed across the whole image's pixels</strong>, surviving screenshots, resizing, JPEG recompression, and minor crops—it persists even after metadata is stripped. By 2026 SynthID + C2PA has become a cross-vendor de facto standard.</li>
+<li><strong>C2PA Content Credentials</strong>: attaches a <strong>cryptographically signed chain of origin</strong> (who, which model, how edited). Verifiable and traceable, but <strong>a single screenshot or re-save can strip it</strong>—so pair it with SynthID.</li>
+<li><strong>Copyright gray zone</strong>: the real legal risk is not "does the output carry a watermark" but the <strong>training data</strong> and <strong>style replication</strong>. Using LoRA to clone a living artist's style, or fine-tuning on someone's work, is a high-risk zone.</li>
+</ul>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># Sign output with C2PA Content Credentials (c2patool)</span>
+c2patool input.png \
+  --manifest manifest.json \   <span class="tag-com"># declare: AI-generated + model + time</span>
+  --output signed.png
+
+<span class="tag-com"># key fields in manifest.json</span>
+{
+  "claim_generator": "my-pipeline/1.0",
+  "assertions": [
+    {"label": "c2pa.actions",
+     "data": {"actions": [{"action": "c2pa.created",
+              "digitalSourceType": "trainedAlgorithmicMedia"}]}}
+  ]
+}
+<span class="tag-com"># two layers: C2PA signature (strippable but verifiable) + platform SynthID (robust, invisible)</span></code></pre>
+
+<div class="fail"><strong>Failure modes:</strong> ① Relying only on metadata/EXIF watermarks—one screenshot and it's gone. ② Assuming "added a watermark, so I'm off the hook": copyright risk is on training data and style replication, which watermarks don't solve. ③ A commercial LoRA training set mixing in copyrighted/privacy-protected faces or works, planting downstream legal landmines. ④ Mistaking C2PA for tamper-proofing—it proves origin, doesn't prevent stripping; it must be paired with a robust watermark.</div>
+<div class="res">Resources: <a href="https://deepmind.google/technologies/synthid/" target="_blank">Google DeepMind · SynthID</a> · <a href="https://c2pa.org/" target="_blank">C2PA · Content Credentials standard</a></div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// PUTTING IT TOGETHER · A "Reproducible Brand Asset" Pipeline</h3>
+<p>String the four points into a factory that batch-produces consistent, traceable assets—this is the watershed between gacha and engineering:</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>Identity layer</strong>: train a LoRA (rank 16–32) on 20–40 brand assets to lock style/character, with a fixed trigger word.</li>
+<li><strong>Structure layer</strong>: prepare openpose / depth maps per placement as ControlNet conditions, <code>conditioning_scale≈0.7</code>, so composition is reusable and tunable.</li>
+<li><strong>Prompt layer</strong>: positive holds only "what you want," quality and exclusions go into negative; lock CFG to 6–7; keep a <strong>fixed seed table</strong> throughout for reproducibility.</li>
+<li><strong>Agent layer</strong>: a VLM reviews each image against the brand brief, inpaints bad regions locally, escalates to human after <code>max_iters=3</code>.</li>
+<li><strong>Provenance layer</strong>: sign finals with C2PA + platform SynthID; keep an audit trail of the LoRA training set's copyright review.</li>
+</ol>
+<p style="margin-top:12px">Get this running and you no longer deliver "a few nice images" but a <strong>parameterized, reproducible, auditable</strong> generation system—exactly what separates image engineering from image dabbling.</p>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// DEEPER THINKING</h3>
+<details><summary>An LLM prompt is an "instruction"; a diffusion prompt is "distribution coordinates." Is the root of this difference the training objective?</summary><div>Yes. LLMs are RLHF-aligned into instruction-following assistants, so they parse the prompt as a command—understanding negation, conditions, meta-instructions. Diffusion models only learned the <strong>conditional probability</strong> text→image; CLIP compresses the whole text into one embedding vector, with no mechanism to "execute instructions"—it just pushes you toward a region of latent space. So "don't" fails (the model only sees the hat token pushing you toward hat-having regions), and order is weight (earlier tokens contribute more to the embedding). Grasp this and you stop cramming natural-language commands into diffusion prompts.</div></details>
+<details><summary>Using a VLM to review generated images—does this fall into "judge and contestant from the same source"? Both may hallucinate at the same spot.</summary><div>The risk is real but mitigable. Same-source means generation and evaluation share similar visual priors and may share <strong>blind spots</strong> (e.g., both insensitive to finger count). Mitigations: ① review with a model from a different family than the generator; ② use dedicated detectors (finger count, OCR, object counting) for hard structural constraints rather than a generic VLM; ③ multi-vote, or require the VLM to locate coordinates before scoring to reduce confabulation. Fundamentally this is the same debiasing problem as LLM-as-judge—a VLM reviewer blocks obvious junk but can't replace human review in critical scenarios.</div></details>
+<details><summary>ControlNet gives pixel-level control, but stronger control means less creative space for the model. Where's the optimum of this trade-off?</summary><div>It depends on the task's "determinism need." E-commerce hero shots, UI assets, layout-aligned scenes: high conditioning_scale (0.8–1.0), trading diversity for control. Concept exploration, moodboards: low scale (0.3–0.5) or no ControlNet, letting the model riot. In practice 1.0 is rarely used—it welds structure shut, kills the prompt, and degrades the model into a "fill tool." Smarter is staged: low control to explore directions, then high control at finalization to lock structure. Control isn't better in larger doses; it's <strong>the right strength at the right stage</strong>.</div></details>
+<details><summary>If robust watermarks like SynthID get widely deployed, will they spark a "de-watermarking" arms race? How should engineering view their effectiveness boundary?</summary><div>Yes, and it's already happening. Any watermark is <strong>probabilistic, not a cryptographic guarantee</strong>: aggressive regeneration (img2img through another model), heavy degradation, or adversarial perturbation can all weaken it. So be honest about its role—SynthID addresses "unintentional spread" and "platform-side bulk detection," not stopping a determined attacker. The right mindset: treat it as <strong>one layer of defense in depth</strong> (paired with C2PA signatures + platform policy + law), not a silver bullet. Its value is in scale—DeepMind reports over 100 billion items watermarked, making "detectable by default" the ecosystem norm and raising the cost of misuse, rather than achieving 100% irremovability.</div></details>
+<details><summary>Training-data copyright risk can't be solved by watermarks. For an individual creator, how do you draw the line between capability and risk?</summary><div>Tier it. Low risk: train LoRAs on clearly licensed/CC0 data, generate generic assets, replicate your own work's style. High risk: cloning a living artist's recognizable style, fine-tuning on others' copyrighted work, generating real faces that may infringe likeness rights. The middle ground (learning a generic aesthetic) is still legally evolving. Pragmatic advice: ① audit and log training-set provenance before commercial use (provenance is also your own legal evidence); ② avoid style replication that can "name a living artist"; ③ make the C2PA "AI-generated" declaration your default—be transparent rather than hiding it. The stronger the capability, the more you must treat compliance as a first-class engineering concern, not an afterthought patch.</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://arxiv.org/abs/2302.05543" target="_blank">ControlNet · Adding Conditional Control to Text-to-Image Diffusion Models</a> — foundational paper on spatial conditioning</li>
+<li><a href="https://arxiv.org/abs/2208.12242" target="_blank">DreamBooth · Subject-Driven Generation</a> — the classic route to subject/character consistency</li>
+<li><a href="https://arxiv.org/abs/2307.01952" target="_blank">SDXL technical report</a> — the engineering baseline for modern open t2i</li>
+<li><a href="https://huggingface.co/docs/diffusers/index" target="_blank">Hugging Face diffusers docs</a> — runnable implementations of ControlNet/LoRA/inpaint</li>
+<li><a href="https://c2pa.org/" target="_blank">C2PA · Content Credentials</a> — origin-signing standard; pairs with DeepMind SynthID for two-layer provenance</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 47 · 2026-06-26</footer>
+</div>
+</body></html>
