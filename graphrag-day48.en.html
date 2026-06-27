@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 48 · Knowledge Bases & GraphRAG — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 48 / PHASE 5 · ENGINEERING</span>
+<h1>Knowledge Bases & GraphRAG</h1>
+<h2>Document Parsing · Table/Chart · Knowledge Graph · GraphRAG</h2>
+<div class="date">2026-06-27 · BigCat</div>
+<p class="pitch">Most RAG doesn't lose on the retrieval algorithm — the documents were already shattered before they entered the store.</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>Most RAG failures aren't in the retrieval algorithm — they're upstream: the documents were already shattered before ingestion. Two-column PDFs misordered, tables sliced in half by chunking, cross-document entity relationships never built. So vanilla RAG can answer "what does clause 3.2 say" but not "which duplicate obligations exist across this whole contract set" — that kind of <strong>global sensemaking question</strong> is a structural blind spot for top-k retrieval: the answer lives in no single chunk, only in the global distribution. GraphRAG is built for exactly this: first use an LLM to extract an entity knowledge graph from the corpus, pre-generate summaries for graph communities, then query via two paths — <strong>local (entity neighborhood) / global (community-summary rollup)</strong>. The price: indexing a million-token corpus burns dozens of times the LLM cost of building a vanilla store. This issue covers the four most-overlooked layers of knowledge-base engineering — document parsing, tables/charts, graph construction, the GraphRAG trade-off — and when it's a weapon vs. over-engineering.</p>
+</div>
+
+<div class="diagram">Knowledge-base Pipeline (GraphRAG end to end)
+
+  raw docs          INDEX time (expensive · one-off)      QUERY time
+ ┌────────┐ parse  ┌─────────────────────────┐
+ │PDF/table│ ─────▶ │ 1 entity/relation extract│
+ │ /chart │ layout │   (1 LLM call per chunk) │
+ └────────┘ aware  │ 2 entity resolution      │
+                   │ 3 community detection    │
+                   │   (Leiden)               │
+                   │ 4 pre-gen community summ.│
+                   └───────────┬─────────────┘
+                               │ knowledge graph + summaries
+                 ┌─────────────┴──────────────────┐
+                 ▼                                 ▼
+           LOCAL search                      GLOBAL search
+      entity→neighbor→rel→comm        ask each summary → map-reduce
+      "how do X and Y relate"         "what are the main themes"
+      cheap · local                   expensive · global sensemaking</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>Document Parsing: from "extract text" to "restore layout & reading order"</h2>
+<div class="claim">Claim: the ceiling on RAG quality is fixed at the parsing layer — if misordered text goes in before chunking, no reranker downstream can save it.</div>
+
+<h3>Background & Principle</h3>
+<p>Most RAG demos use <code>PyPDF2</code> / <code>pdfplumber</code> to pull a raw text stream — fine for single-column born-digital PDFs, but on real documents (two-column papers, contracts with headers/footers, scans) it produces three silent injuries: (1) <strong>reading-order scramble</strong> — two columns interleaved by y-coordinate into one line; (2) headers/footers/watermarks bleeding into body text, polluting embeddings; (3) <strong>tables flattened</strong> into structureless token streams. Layout-aware parsers (Docling, unstructured, LlamaParse) first do <strong>layout detection</strong> (bounding boxes for title / paragraph / table / figure), then reassemble by reading order and route block types separately. Docling uses an RT-DETR-family layout model, emitting a structured document with types and reading order (IBM, arXiv 2408.09869). Engineering point: parsing isn't a one-off ETL — it's a first-class citizen alongside chunking. <strong>Wrong layout, every chunk boundary is wrong.</strong></p>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-key">from</span> docling.document_converter <span class="tag-key">import</span> DocumentConverter
+
+conv = DocumentConverter()
+doc  = conv.convert(<span class="tag-gpt">"contract.pdf"</span>).document
+
+<span class="tag-com"># Export by structure, not a raw text stream — keep heading levels & tables</span>
+md = doc.export_to_markdown()           <span class="tag-com"># table→md table, heading→#</span>
+
+<span class="tag-com"># Key: chunk by "reading order + block type", not by char count</span>
+<span class="tag-key">for</span> item <span class="tag-key">in</span> doc.iterate_items():
+    <span class="tag-key">if</span> item.label == <span class="tag-gpt">"section_header"</span>:
+        section = item.text             <span class="tag-com"># attach a section path to each chunk</span>
+    <span class="tag-key">elif</span> item.label == <span class="tag-gpt">"table"</span>:
+        <span class="tag-key">yield</span> serialize_table(item)      <span class="tag-com"># tables as their own chunk, see §2</span>
+    <span class="tag-key">elif</span> item.label == <span class="tag-gpt">"text"</span>:
+        <span class="tag-key">yield</span> {<span class="tag-gpt">"text"</span>: item.text, <span class="tag-gpt">"section"</span>: section}</code></pre>
+
+<div class="fail">
+<strong>Failure mode</strong>: scans / handwriting / complex multi-level merged tables — the layout model's confidence is low and it misorders silently without erroring. For mission-critical docs, add a parse-confidence threshold alert + sampled human spot-checks; don't trust blindly. Reverse trap: running Docling on pure single-column born-digital docs is overkill — <code>pdfplumber</code> is enough and ~10× faster.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Docling technical report (IBM, arXiv 2408.09869) + source <a href="https://github.com/docling-project/docling" target="_blank">docling-project/docling</a> · unstructured.io
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Tables / Charts: keeping structural semantics from dissolving in a chunk</h2>
+<div class="claim">Claim: tables are a structural blind spot for RAG — naive chunking drops "2023 revenue" and its number into different chunks, and what comes back is fragments stripped of their row/column relationships.</div>
+
+<h3>Background & Principle</h3>
+<p>A table's semantics live in its 2D structure: a cell's meaning is jointly determined by its <strong>row header + column header</strong>. Flattened to text, "152.3" loses the binding "it is 2023 Q3 North America revenue." Two engineering routes: (1) <strong>structural serialization</strong> — convert to markdown / HTML / one-record-per-row JSON so the LLM still sees row/column alignment at generation time; (2) <strong>visual route</strong> — for inherently text-free charts (bar/line), have a vision model produce a structured description or a multimodal embedding. In practice a hybrid is most robust: serialize small tables to markdown into the text index; split large tables into per-row records with header + caption injected; route charts through vision-caption and index alongside the caption. This shares its root with Anthropic's <strong>Contextual Retrieval</strong> — inject context (table caption / section) before embedding to lift recall substantially.</p>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># Table → one context-bearing record per row (prevents row/col loss)</span>
+<span class="tag-key">def</span> serialize_table(table, doc_title, section):
+    headers = table.header_row          <span class="tag-com"># ["Quarter","Region","Rev(M)"]</span>
+    <span class="tag-key">for</span> row <span class="tag-key">in</span> table.body_rows:
+        cells = dict(zip(headers, row))
+        <span class="tag-com"># Key: each row carries headers + caption + section → still readable on recall</span>
+        ctx = f<span class="tag-gpt">"[doc:{doc_title}|sec:{section}|table:{table.caption}] "</span>
+        <span class="tag-key">yield</span> ctx + <span class="tag-gpt">"; "</span>.join(f<span class="tag-gpt">"{h}={v}"</span> <span class="tag-key">for</span> h,v <span class="tag-key">in</span> cells.items())
+        <span class="tag-com"># "...table:Quarterly Rev] Quarter=2023Q3; Region=NA; Rev(M)=152.3"</span>
+
+<span class="tag-com"># Charts (no text) → vision model emits a structured description, then index</span>
+desc = vision_model(<span class="tag-gpt">"describe axes/trend/extrema, output JSON"</span>, image=chart_png)</code></pre>
+
+<div class="fail">
+<strong>Failure mode</strong>: a large table spanning pages (header on the prior page, data on the next) gets split into two blocks and rows lose their header — do table-merge at the parse layer. Serializing very wide tables to markdown blows the chunk token budget; here you must use row-as-record. Most dangerous: vision descriptions <strong>fabricate numbers that don't exist</strong> — verify key figures against the source table; never let a vision model be the data source.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Anthropic <em>Introducing Contextual Retrieval</em>, <a href="https://www.anthropic.com/news/contextual-retrieval" target="_blank">anthropic.com/news/contextual-retrieval</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Knowledge-graph construction: extraction cost, entity resolution, incremental update</h2>
+<div class="claim">Claim: LLM-based entity/relation extraction is GraphRAG's foundation — and its most expensive, most drift-prone step. Cost is O(corpus tokens), not O(queries).</div>
+
+<h3>Background & Principle</h3>
+<p>Graph construction is three steps: (1) <strong>entity/relation extraction</strong> — per chunk, have the LLM emit <code>(entity, type, desc)</code> and <code>(source, relation, target)</code>; (2) <strong>entity resolution</strong> — "OpenAI", "OpenAI Inc.", "the company" must resolve to the same node, or the graph fragments into islands; (3) <strong>community detection</strong> — algorithms like Leiden cluster densely connected nodes into communities, and you pre-generate a summary per community for global search. Two engineering realities: extraction cost grows linearly with the corpus — indexing a million-token corpus can cost tens to hundreds of times the retrieval cost; and <strong>schema choice decides everything</strong> — open extraction recalls broadly but is noisy and explodes node count, while schema-guided (a whitelist of types) is precise but misses out-of-domain. Incremental update is another pain point: LightRAG's (HKUDS, arXiv 2410.05779) incremental algorithm avoids full rebuilds, whereas early Microsoft GraphRAG nearly re-ran community detection to change a single document.</p>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># schema-guided extraction (type whitelist; control noise & node blowup)</span>
+EXTRACT = <span class="tag-gpt">"""Extract entities and relations using only these types:
+entities: [Person, Org, Product, Tech, Money]
+relations: [acquires, invests, releases, partners, belongs_to]
+output JSON: {"entities":[{"name","type","desc"}],
+              "relations":[{"source","relation","target"}]}
+text: {chunk}"""</span>
+
+<span class="tag-com"># Entity resolution: don't build the graph straight from extraction — resolve aliases first</span>
+<span class="tag-key">def</span> resolve(raw):
+    <span class="tag-com"># 1) normalize(case/suffix) 2) embedding nearest-neighbor cluster 3) LLM arbitrates edge cases</span>
+    clusters = cluster_by_embedding(normalize(raw), threshold=0.9)
+    <span class="tag-key">return</span> [merge(c) <span class="tag-key">for</span> c <span class="tag-key">in</span> clusters]   <span class="tag-com"># aliases merge into one node</span></code></pre>
+
+<div class="fail">
+<strong>Failure mode</strong>: skip entity resolution → the graph fragments into a pile of single nodes, and global search degrades into noise. Open extraction without a whitelist → node count explodes linearly with the corpus, and community detection yields a swarm of meaningless tiny clusters. The LLM will <strong>fabricate edges that don't exist</strong> (hallucinated edges), especially forcing cross-paragraph links in long chunks; mitigate by requiring every relation to locate to a source span — provenance validation.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · LightRAG (HKUDS, arXiv 2410.05779) <a href="https://github.com/HKUDS/LightRAG" target="_blank">github.com/HKUDS/LightRAG</a> · Microsoft GraphRAG docs
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>When GraphRAG is worth it, and when it's over-engineering</h2>
+<div class="claim">Claim: GraphRAG isn't an upgraded vanilla RAG — it's a different tool built for "global sensemaking questions." For 80% of factoid queries, using it is over-engineering.</div>
+
+<h3>Background & Principle</h3>
+<p>The core insight of GraphRAG (Edge et al., arXiv 2404.16130): RAG excels at "local retrieval" (the answer sits in a few chunks), but <strong>structurally fails</strong> on queries like "What are the main themes?" that require surveying the whole corpus — the answer is in no single chunk, but in the global distribution. Its solution is two retrieval paths: <strong>local search</strong> (fan out from query entities to neighbors + relations + their communities, good for "how do X and Y relate") and <strong>global search</strong> (ask the question against every community summary, then map-reduce rollup into a total answer, good for "main themes / trends"). The cost is high: indexing extracts per-chunk over millions of tokens plus community summaries, and a global query scans many communities. Decision framework: small corpus / factoid queries / budget-sensitive → vanilla (or hybrid) RAG; large corpus and thematic, multi-hop, connect-the-dots queries → go graph. The middle ground: cheaper variants — LightRAG (incremental, dual-level retrieval), HippoRAG (Personalized PageRank single-step multi-hop, 6–13× faster and 10–20× cheaper than iterative retrieval, NeurIPS 2024 / arXiv 2405.14831), and Microsoft's DRIFT (fuses local + global).</p>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># Routing: classify the query type first; don't brute-force GraphRAG everywhere</span>
+<span class="tag-key">def</span> route(query):
+    qtype = classify(query)   <span class="tag-com"># factoid / relational / global</span>
+    <span class="tag-key">if</span> qtype == <span class="tag-gpt">"factoid"</span>:
+        <span class="tag-key">return</span> vanilla_rag(query)             <span class="tag-com"># top-k vector retrieval, cheapest</span>
+    <span class="tag-key">if</span> qtype == <span class="tag-gpt">"relational"</span>:
+        <span class="tag-key">return</span> graphrag.local_search(query)   <span class="tag-com"># entity-neighborhood fan-out</span>
+    <span class="tag-key">return</span> graphrag.global_search(query)      <span class="tag-com"># community-summary rollup</span>
+
+<span class="tag-com"># global search is essentially map-reduce over community summaries</span>
+<span class="tag-com">#   map:    each summary independently yields "partial answer + relevance score"</span>
+<span class="tag-com">#   reduce: filter by score → merge into the final answer (this step makes it costly)</span></code></pre>
+
+<div class="fail">
+<strong>Failure mode</strong>: treating GraphRAG as the default RAG — for a factoid like "what does clause 3.2 say," it's several times slower, tens of times costlier, and not necessarily a better answer. Second trap: a frequently-updated corpus on early GraphRAG (full community rebuild) → runaway index cost; for high update rates pick LightRAG's incremental path. Third: global search's rollup "smooths over" detail and is unreliable when you need exact numbers — fall back to local / vanilla.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · GraphRAG <em>From Local to Global</em> (Edge et al., arXiv 2404.16130) + <a href="https://github.com/microsoft/graphrag" target="_blank">microsoft/graphrag</a> · HippoRAG (arXiv 2405.14831)
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// Capstone · Build yourself a "dual-mode knowledge base"</h3>
+<div class="diagram">query type → tool choice
+
+ factoid    "what does clause 3.2 say"   ─▶ Vanilla RAG (top-k)   cheapest
+ relational "which firms did A acquire"  ─▶ GraphRAG local        mid
+ multi-hop  "who did A's portfolio fund" ─▶ HippoRAG (PPR step)   mid·fast
+ global     "main themes in the corpus"  ─▶ GraphRAG global       priciest
+ high churn "new docs every day"         ─▶ LightRAG (incremental) skip rebuild</div>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>Parse layer</strong>: use Docling to convert 50 mixed docs (papers / contracts / reports) to structured markdown; serialize tables row-as-record with headers injected. Spot-check 5 against layout.</li>
+<li><strong>Build two indexes</strong>: A = vanilla vector store (chunk + embedding); B = GraphRAG (schema-guided extraction + community summaries). Record B's indexing token cost — it'll shock you.</li>
+<li><strong>Write 12 questions</strong>: 4 factoid / 4 relational / 4 global, with known ground truth.</li>
+<li><strong>Routing comparison</strong>: factoid → A, relational / global → B; record cost / latency / accuracy per class.</li>
+<li><strong>Three first-hand conclusions</strong>: (a) parse quality decides everything — a mis-laid-out doc is wrong in both indexes; (b) GraphRAG isn't worth it for factoids; (c) on global questions vanilla fails outright and only GraphRAG answers — the empirical proof of §4's claim.</li>
+<li><strong>Advanced</strong>: swap B for LightRAG, add 3 new docs, compare incremental update vs. full rebuild cost.</li>
+</ol>
+<p style="margin-top:12px">Once you've done this, you'll instinctively skin any "knowledge base / GraphRAG product" — how clean is its parse layer? does the graph do entity resolution? is the query local or global? — instead of being dazzled by "graph-enhanced" marketing.</p>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// Deep Thinking</h3>
+<details><summary>GraphRAG indexing cost is O(corpus), vanilla is O(queries). When does this prepaid cost pay off?</summary><div>The break-even depends on whether "query volume × per-query delta" covers the one-off indexing delta. GraphRAG indexing is expensive in per-chunk extraction + community summaries, but amortized over many queries the per-query cost isn't necessarily higher. Pays off when: the corpus is relatively stable (no frequent rebuilds), query volume is high, and many queries are global questions vanilla can't answer — here the prepaid cost buys capability, not savings. Doesn't pay off: high-churn corpus (rebuilds can't be amortized), sparse queries, or all-factoid queries (the global structure goes unused). At root it's the classic batch-precompute vs. online-compute trade-off.</div></details>
+<details><summary>How do entity-resolution errors get amplified in global search?</summary><div>In local search, one wrong entity affects only that query; in global search, one wrong entity pollutes the whole graph topology. If "OpenAI" doesn't merge with "OpenAI Inc.", each connects to only half its edges, and community detection splits nodes that should share a cluster into different communities — so the community summaries are themselves wrong. And global search does map-reduce over those summaries, so the error is amplified twice (pre-generation + rollup) and is invisible. That's why entity resolution is foundation, not optimization: it errs at index time, every downstream query inherits it, and nothing throws.</div></details>
+<details><summary>Document-parsing errors are silent (no error, but downstream pollution). How do you build observability for it engineering-wise?</summary><div>The parse layer doesn't throw like code; when it's wrong the text just "looks a bit off." Instrument three places: (1) parse time — record the layout model's confidence per block, flag low-confidence pages for review; (2) chunk time — monitor anomalous chunks (ultra-short/long, all-numeric, full of header residue), the fingerprints of parse failure; (3) retrieval time — sample recalled chunks for LLM self-assessment "is this text coherent and readable." Layer a gold standard on top: a fixed set of probe queries with "known answer in doc X table Y" run periodically — if recall drops, parsing regressed.</div></details>
+<details><summary>A table's semantics are 2D, but the LLM context is a 1D sequence — what's the essence of this mismatch? Why is the vision route sometimes better?</summary><div>The essence: linearizing a 2D structure forces a traversal order (row-major or column-major), and either one pushes the "other dimension's" adjacency far apart in token distance — two vertically adjacent numbers in a column may be separated by a full row of text after serialization. The model rebuilds relations via attention across distance, and the farther apart, the more error-prone. The vision route sidesteps linearization: row/column adjacency is preserved spatially in the image, and the vision encoder operates directly on 2D, making it more robust for "read row R column C" localization. The cost: vision fabricates numbers and is token-expensive — so exact figures still go back to the structured source.</div></details>
+<details><summary>Global search is map-reduce over community summaries — is this isomorphic to multi-agent orchestrator-workers?</summary><div>Structurally isomorphic, semantically different. Both are "split → process in parallel → aggregate": a community summary ≈ a worker handling a block, rollup ≈ the orchestrator aggregating. But the key difference: GraphRAG's "split" is <strong>precomputed at index time</strong> (communities are fixed before the query), workers process static summaries rather than dynamic subtasks, and there's no inter-agent IPC or decision drift — which is exactly why it's more controllable than true multi-agent. Put differently, GraphRAG global search is an "orchestrator-workers workflow with a frozen topology," moving multi-agent's costliest, most error-prone "dynamic split" offline. That also explains its cost structure: expensive in offline graph-building, cheap in the determinism of online queries.</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// Further Reading</h3>
+<ul>
+<li><a href="https://arxiv.org/abs/2404.16130" target="_blank">From Local to Global: A Graph RAG Approach (Edge et al.)</a> — the foundational GraphRAG paper, local/global dual path</li>
+<li><a href="https://github.com/microsoft/graphrag" target="_blank">microsoft/graphrag</a> — official implementation + DRIFT search (fuses local+global)</li>
+<li><a href="https://arxiv.org/abs/2410.05779" target="_blank">LightRAG: Simple and Fast RAG (HKUDS)</a> — dual-level retrieval + incremental update, cheaper graph RAG</li>
+<li><a href="https://arxiv.org/abs/2405.14831" target="_blank">HippoRAG (NeurIPS 2024)</a> — Personalized PageRank single-step multi-hop, 6–13× faster than iterative retrieval</li>
+<li><a href="https://www.anthropic.com/news/contextual-retrieval" target="_blank">Anthropic · Contextual Retrieval</a> — inject context before chunking, large recall gains</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 48 · 2026-06-27</footer>
+</div>
+</body></html>

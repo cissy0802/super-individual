@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 48 · 知识库与 GraphRAG — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 48 / PHASE 5 · ENGINEERING</span>
+<h1>知识库与 GraphRAG</h1>
+<h2>Document Parsing · Table/Chart · Knowledge Graph · GraphRAG</h2>
+<div class="date">2026-06-27 · BigCat</div>
+<p class="pitch">大多数 RAG 不是输在检索算法，是文档进库前就已经碎了。</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>大多数 RAG 失败不在检索算法，而在更前面——文档进库前已经碎了。PDF 两栏错位、表格被 chunk 拦腰斩断、跨文档的实体关系根本没建立。于是 vanilla RAG 能答「第 3.2 条写了什么」，却答不了「整个合同集里有哪些重复义务」——这类<strong>全局 sensemaking 问题</strong>是 top-k 检索的结构性盲区：答案不在任何单个 chunk，而在全局分布里。GraphRAG 就是为这类问题造的：先用 LLM 把语料抽成实体知识图谱，再对图的 community 预生成摘要，查询时 <strong>local（实体邻域）/ global（社区摘要 rollup）</strong>双路。代价是索引一次百万 token 的语料要烧掉数十倍于 vanilla 建库的 LLM 成本。这一期讲知识库工程最被忽视的四层——文档解析、表格/图表、图谱构建、GraphRAG 的取舍，以及它什么时候是杀器、什么时候是过度工程。</p>
+</div>
+
+<div class="diagram">知识库 Pipeline（GraphRAG 全貌）
+
+  原始文档            索引期（贵·一次性）              查询期
+ ┌────────┐  解析   ┌─────────────────────────┐
+ │PDF/表格│ ──────▶ │ 1 实体/关系抽取(每chunk  │
+ │ /图表  │ 布局感知│   一次 LLM call)         │
+ └────────┘         │ 2 实体消歧 / 合并        │
+                    │ 3 社区检测 (Leiden)      │
+                    │ 4 社区摘要预生成         │
+                    └───────────┬─────────────┘
+                                │ 知识图谱 + 社区摘要
+                  ┌─────────────┴──────────────────┐
+                  ▼                                 ▼
+            LOCAL search                      GLOBAL search
+       实体→邻居→关系→社区            问每个社区摘要 → map-reduce
+       「X 和 Y 什么关系」            「语料的主要主题是什么」
+       便宜 · 局部                    贵 · 全局 sensemaking</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>文档解析：从「抽文本」到「还原版面与阅读序」</h2>
+<div class="claim">论断：RAG 质量的天花板在解析层就定死了——chunk 之前喂进去的若是错位文本，后面再好的 reranker 也救不回来。</div>
+
+<h3>背景与原理</h3>
+<p>多数 RAG demo 用 <code>PyPDF2</code> / <code>pdfplumber</code> 直接抽文本流，对单栏 born-digital PDF 还行，对真实文档（两栏论文、带页眉页脚的合同、扫描件）会产生三类 silent 损伤：（1）<strong>阅读序错乱</strong>——两栏按 y 坐标交错读成一行；（2）页眉/页脚/水印混入正文，污染 embedding；（3）<strong>表格被拍平</strong>成无结构 token 流。布局感知解析器（Docling、unstructured、LlamaParse）先做 <strong>layout detection</strong>（检测 title / paragraph / table / figure 的 bounding box），再按阅读序重组，把不同 block 类型分流。Docling 用 RT-DETR 系版面检测模型，输出带类型与阅读序的结构化文档（IBM, arXiv 2408.09869）。工程要点：解析不是一次性 ETL，是 RAG pipeline 里和 chunking 同级的一等公民——<strong>版面错了，chunk 边界全错</strong>。</p>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-key">from</span> docling.document_converter <span class="tag-key">import</span> DocumentConverter
+
+conv = DocumentConverter()
+doc  = conv.convert(<span class="tag-gpt">"contract.pdf"</span>).document
+
+<span class="tag-com"># 按结构导出，而不是裸文本流——保留标题层级与表格</span>
+md = doc.export_to_markdown()           <span class="tag-com"># 表格→md table，标题→#</span>
+
+<span class="tag-com"># 关键：按「阅读序 + block 类型」切 chunk，而非按字符数</span>
+<span class="tag-key">for</span> item <span class="tag-key">in</span> doc.iterate_items():
+    <span class="tag-key">if</span> item.label == <span class="tag-gpt">"section_header"</span>:
+        section = item.text             <span class="tag-com"># 给每个 chunk 带上 section 路径</span>
+    <span class="tag-key">elif</span> item.label == <span class="tag-gpt">"table"</span>:
+        <span class="tag-key">yield</span> serialize_table(item)      <span class="tag-com"># 表格单独成 chunk，见 §2</span>
+    <span class="tag-key">elif</span> item.label == <span class="tag-gpt">"text"</span>:
+        <span class="tag-key">yield</span> {<span class="tag-gpt">"text"</span>: item.text, <span class="tag-gpt">"section"</span>: section}</code></pre>
+
+<div class="fail">
+<strong>失败模式</strong>：扫描件 / 手写 / 复杂多级合并表格——版面模型置信度低，silent 错位且不报错。mission-critical 文档要做解析置信度阈值告警 + 抽样 human spot-check，别盲信。反向坑：对纯单栏 born-digital 文档上 Docling 是杀鸡用牛刀，<code>pdfplumber</code> 够用且快约 10×。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Docling 技术报告（IBM, arXiv 2408.09869）+ 源码 <a href="https://github.com/docling-project/docling" target="_blank">docling-project/docling</a> · unstructured.io
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>表格 / 图表：结构语义如何不在 chunk 里丢失</h2>
+<div class="claim">论断：表格是 RAG 的结构性盲区——naive chunking 会让「2023 营收」和那个数字落进不同 chunk，检索回来也是失去行列关系的碎片。</div>
+
+<h3>背景与原理</h3>
+<p>表格的语义在二维结构里：一个单元格的意义由它的<strong>行表头 + 列表头</strong>共同决定。拍平成文本后，「152.3」失去了「它是 2023 Q3 北美营收」这个 binding。两条工程路线：（1）<strong>结构序列化</strong>——转成 markdown / HTML / 每行一条 record 的 JSON，让 LLM 生成时仍看得到行列对齐；（2）<strong>视觉路线</strong>——对本就无文本的图表（柱状/折线）用 vision model 生成结构化描述或做 multimodal embedding。实践中混合最稳：小表序列化成 markdown 进文本索引；大表按行拆 record 并给每行注入表头与表标题；图表走 vision-caption 再连同 caption 一起索引。这与 Anthropic 的 <strong>Contextual Retrieval</strong> 同源——chunk 前注入上下文（表标题 / 章节），召回显著提升。</p>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-com"># 表格→每行一条带上下文的 record（防止行列关系丢失）</span>
+<span class="tag-key">def</span> serialize_table(table, doc_title, section):
+    headers = table.header_row          <span class="tag-com"># ["季度","地区","营收(M)"]</span>
+    <span class="tag-key">for</span> row <span class="tag-key">in</span> table.body_rows:
+        cells = dict(zip(headers, row))
+        <span class="tag-com"># 关键：每行自带表头 + 表标题 + 章节 → 检索回来仍可读</span>
+        ctx = f<span class="tag-gpt">"[文档:{doc_title}|章节:{section}|表:{table.caption}] "</span>
+        <span class="tag-key">yield</span> ctx + <span class="tag-gpt">"; "</span>.join(f<span class="tag-gpt">"{h}={v}"</span> <span class="tag-key">for</span> h,v <span class="tag-key">in</span> cells.items())
+        <span class="tag-com"># "...表:季度营收] 季度=2023Q3; 地区=北美; 营收(M)=152.3"</span>
+
+<span class="tag-com"># 图表（无文本）→ vision model 生成结构化描述再索引</span>
+desc = vision_model(<span class="tag-gpt">"描述坐标轴/趋势/极值，输出 JSON"</span>, image=chart_png)</code></pre>
+
+<div class="fail">
+<strong>失败模式</strong>：跨页大表（表头在上页、数据在下页）被解析器切成两个 block，行失去表头——需在解析层做 table-merge。超宽表序列化成 markdown 会爆 chunk token 预算，这时必须走 row-as-record。最危险的：vision 描述会<strong>编造不存在的数值</strong>，关键数字要回原表核对，别让 vision model 当数据源。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Anthropic <em>Introducing Contextual Retrieval</em>, <a href="https://www.anthropic.com/news/contextual-retrieval" target="_blank">anthropic.com/news/contextual-retrieval</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>知识图谱构建：抽取成本、实体消歧、增量更新</h2>
+<div class="claim">论断：用 LLM 抽实体关系是 GraphRAG 的地基，也是它最贵、最易漂移的一步——成本是 O(语料 token)，不是 O(查询)。</div>
+
+<h3>背景与原理</h3>
+<p>图谱构建三步：（1）<strong>实体 / 关系抽取</strong>——逐 chunk 让 LLM 输出 <code>(entity, type, desc)</code> 和 <code>(source, relation, target)</code>；（2）<strong>实体消歧 / 合并</strong>（entity resolution）——「OpenAI」「OpenAI Inc.」「the company」要 resolve 成同一节点，否则图碎成孤岛；（3）<strong>社区检测</strong>——用 Leiden 等算法把稠密连接节点聚成 community，为 global search 预生成摘要。两个工程现实：抽取成本随语料线性增长，百万 token 语料的索引成本能到检索成本的几十上百倍；<strong>schema 选择决定一切</strong>——open extraction 召回广但噪声大、节点爆炸，schema-guided（给定类型白名单）精度高但漏域外。增量更新是另一痛点：LightRAG（HKUDS, arXiv 2410.05779）的增量算法避免全量重建，而早期 Microsoft GraphRAG 改一个文档近乎要重跑社区检测。</p>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-com"># schema-guided 抽取（给类型白名单，控噪声与节点爆炸）</span>
+EXTRACT = <span class="tag-gpt">"""从文本抽取实体与关系，仅用以下类型：
+实体: [人物, 组织, 产品, 技术, 金额]
+关系: [收购, 投资, 发布, 合作, 隶属]
+输出 JSON: {"entities":[{"name","type","desc"}],
+            "relations":[{"source","relation","target"}]}
+文本: {chunk}"""</span>
+
+<span class="tag-com"># 实体消歧：抽完不要直接建图，先 resolve 别名</span>
+<span class="tag-key">def</span> resolve(raw):
+    <span class="tag-com"># 1) 规范化(大小写/后缀) 2) embedding 近邻聚类 3) LLM 仲裁边界 case</span>
+    clusters = cluster_by_embedding(normalize(raw), threshold=0.9)
+    <span class="tag-key">return</span> [merge(c) <span class="tag-key">for</span> c <span class="tag-key">in</span> clusters]   <span class="tag-com"># 别名合并成一节点</span></code></pre>
+
+<div class="fail">
+<strong>失败模式</strong>：跳过 entity resolution → 图谱碎成一堆单节点，global search 退化成噪声。open extraction 不设白名单 → 节点数随语料线性爆炸，社区检测出一堆无意义小簇。LLM 抽关系会<strong>编造不存在的边</strong>（hallucinated edge），尤其在长 chunk 里跨段强行连；缓解：要求每条关系能定位到原文 span，做 provenance 校验。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · LightRAG（HKUDS, arXiv 2410.05779）<a href="https://github.com/HKUDS/LightRAG" target="_blank">github.com/HKUDS/LightRAG</a> · Microsoft GraphRAG 文档
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>GraphRAG 什么时候值得，什么时候是过度工程</h2>
+<div class="claim">论断：GraphRAG 不是 vanilla RAG 的升级版，是为「全局 sensemaking 问题」造的另一种工具——80% 的事实型查询用它是过度工程。</div>
+
+<h3>背景与原理</h3>
+<p>GraphRAG（Edge et al., arXiv 2404.16130）的核心洞察：RAG 擅长「局部 retrieval」（答案在某几个 chunk 里），但对「What are the main themes?」这类需要纵览整个语料的 query <strong>结构性失败</strong>——答案不在任何单个 chunk，而在全局分布。它的解法是两路检索：<strong>local search</strong>（从查询实体 fan-out 到邻居 + 关系 + 所属社区，适合「X 和 Y 什么关系」）和 <strong>global search</strong>（把问题问向每个 community summary，再 map-reduce rollup 成总答，适合「主要主题 / 趋势」）。代价极高：索引要对百万级 token 逐 chunk 抽取 + 社区摘要，global search 一次查询要扫多个社区。决策框架：语料小 / 查询是事实型 / 预算敏感 → vanilla（或 hybrid）RAG；语料大且查询是 thematic、多跳、需要 connect-the-dots → 上图谱。中间地带看更省的变体：LightRAG（增量、双层检索）、HippoRAG（Personalized PageRank 单步多跳，比迭代检索快 6–13×、便宜 10–20×，NeurIPS 2024 / arXiv 2405.14831）、Microsoft 的 DRIFT（融合 local + global）。</p>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-com"># 路由：先判断 query 类型，别无脑全用 GraphRAG</span>
+<span class="tag-key">def</span> route(query):
+    qtype = classify(query)   <span class="tag-com"># factoid / relational / global</span>
+    <span class="tag-key">if</span> qtype == <span class="tag-gpt">"factoid"</span>:
+        <span class="tag-key">return</span> vanilla_rag(query)             <span class="tag-com"># top-k 向量检索，最便宜</span>
+    <span class="tag-key">if</span> qtype == <span class="tag-gpt">"relational"</span>:
+        <span class="tag-key">return</span> graphrag.local_search(query)   <span class="tag-com"># 实体邻域 fan-out</span>
+    <span class="tag-key">return</span> graphrag.global_search(query)      <span class="tag-com"># 社区摘要 rollup</span>
+
+<span class="tag-com"># global search 本质 = map-reduce over community summaries</span>
+<span class="tag-com">#   map:    每个社区摘要独立生成「部分答案 + 相关性打分」</span>
+<span class="tag-com">#   reduce: 按分数筛选 → 合并成最终答（这步决定了它贵）</span></code></pre>
+
+<div class="fail">
+<strong>失败模式</strong>：把 GraphRAG 当默认 RAG——对「第 3.2 条写了什么」这种 factoid，它比 vanilla 慢几倍、贵几十倍，答案还不一定更好。第二坑：语料频繁更新却用早期 GraphRAG（全量重建社区），索引成本失控——高频更新选 LightRAG 增量路线。第三：global search 的 rollup 会「抹平」细节，需要精确数字时不可靠，该回 local / vanilla。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · GraphRAG <em>From Local to Global</em>（Edge et al., arXiv 2404.16130）+ <a href="https://github.com/microsoft/graphrag" target="_blank">microsoft/graphrag</a> · HippoRAG（arXiv 2405.14831）
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// 综合实战 · 给自己的文档库造一个「双模式知识库」</h3>
+<div class="diagram">查询类型 → 工具选择
+
+ 事实型   「第3.2条写了什么」    ─▶ Vanilla RAG (top-k)   最便宜
+ 关系型   「A 收购了哪些公司」   ─▶ GraphRAG local        中
+ 多跳     「A 投的公司又投了谁」 ─▶ HippoRAG (PPR 单步)    中·快
+ 全局     「语料有哪些主要主题」 ─▶ GraphRAG global       最贵
+ 高频更新 「每天新增文档」       ─▶ LightRAG (增量)        省重建</div>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>解析层</strong>：用 Docling 把 50 份混合文档（论文 / 合同 / 报表）转结构化 markdown，表格按 row-as-record 注入表头。spot-check 5 份核对版面。</li>
+<li><strong>建两个索引</strong>：A = vanilla 向量库（chunk + embedding）；B = GraphRAG（schema-guided 抽取 + 社区摘要）。记录 B 的索引 token 成本——你会被它吓到。</li>
+<li><strong>出 12 个问题</strong>：4 factoid / 4 relational / 4 global，已知 ground truth。</li>
+<li><strong>路由对比</strong>：factoid 走 A，relational / global 走 B，记录每类的成本 / 延迟 / 准确率。</li>
+<li><strong>三条亲身结论</strong>：(a) 解析质量决定一切，版面错的文档两个索引都答不对；(b) factoid 上 GraphRAG 不值；(c) global 问题上 vanilla 直接失败、GraphRAG 才答得出——这就是 §4 论断的实证。</li>
+<li><strong>进阶</strong>：把 B 换成 LightRAG，新增 3 份文档，对比增量更新 vs 全量重建的成本差。</li>
+</ol>
+<p style="margin-top:12px">做完这一套，你以后看任何「知识库 / GraphRAG 产品」都会先剥皮——它的解析层多干净？图谱有没有做 entity resolution？查询是 local 还是 global？——而不是被「图谱增强」营销词唬住。</p>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// ENGLISH GLOSSARY</h3>
+<dl>
+<dt>Document Layout Analysis</dt><dd>版面分析：检测文档中 title/段落/表格/图的 bounding box 与类型，是阅读序还原的前提。</dd>
+<dt>Reading Order</dt><dd>阅读序：人类阅读文档的顺序。两栏 PDF 按坐标硬读会错乱，需版面模型重建。</dd>
+<dt>Contextual Retrieval</dt><dd>上下文检索：chunk 前注入章节/表标题等上下文再 embedding，显著提升召回（Anthropic）。</dd>
+<dt>Row-as-Record</dt><dd>行级记录：把表格每行序列化成自带表头的独立 chunk，防止行列关系在切分中丢失。</dd>
+<dt>Entity Resolution</dt><dd>实体消歧：把同一实体的不同别名（OpenAI / OpenAI Inc.）合并成一个图节点。</dd>
+<dt>Community Detection</dt><dd>社区检测：Leiden 等算法把稠密连接的节点聚成 community，供 global search 预生成摘要。</dd>
+<dt>Local Search</dt><dd>局部检索：从查询实体 fan-out 到邻居/关系/社区，适合关系型、具体实体问题。</dd>
+<dt>Global Search</dt><dd>全局检索：把问题问向每个社区摘要再 map-reduce rollup，适合主题/趋势类 sensemaking。</dd>
+<dt>GraphRAG</dt><dd>把语料抽成知识图谱 + 社区摘要后做 RAG 的范式（Microsoft, arXiv 2404.16130）。</dd>
+<dt>Personalized PageRank</dt><dd>HippoRAG 用来在图上做单步多跳检索的算法，替代昂贵的迭代检索。</dd>
+</dl>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// 深入思考</h3>
+<details><summary>GraphRAG 索引成本是 O(语料)，vanilla 是 O(查询)。什么时候这笔预付成本划算？</summary><div>盈亏平衡取决于「查询量 × 单查询差值」是否覆盖一次性索引差。GraphRAG 索引贵在逐 chunk 抽取 + 社区摘要，但摊薄到海量查询后单查询不一定贵。划算的场景：语料相对稳定（不频繁重建）、高查询量、且大量查询是 vanilla 答不出的 global 问题——这时预付成本买到的是「能力」而非「省钱」。不划算：语料高频更新（每次重建摊不掉）、查询稀疏、或查询全是 factoid（图谱提供的全局结构根本用不上）。本质是 batch 预计算 vs 在线计算的经典权衡。</div></details>
+<details><summary>实体消歧的错误如何在 global search 里被放大？</summary><div>local search 错一个实体只影响那条查询；global search 错一个实体会污染整张图的拓扑。若「OpenAI」没和「OpenAI Inc.」合并，它们各自只连到一半的边，社区检测会把本该同簇的节点拆进不同 community，于是社区摘要本身就是错的——而 global search 是在这些摘要上做 map-reduce，错误被「预生成 + rollup」两次放大且不可见。这就是为什么 entity resolution 是地基而非优化项：它错在索引期，全部下游查询继承这个错，且没有报错。</div></details>
+<details><summary>文档解析的错误是 silent 的（不报错但污染下游），工程上怎么建立可观测性？</summary><div>解析层不像代码会抛异常，错了只是「文本看起来怪怪的」。可观测性要在三处埋点：(1) 解析期——记录版面模型每个 block 的置信度，低于阈值的页面打标待审；(2) chunk 期——监控异常 chunk（极短/极长、纯数字、含大量页眉残片），它们是解析失败的指纹；(3) 检索期——对召回的 chunk 抽样做 LLM 自评「这段文本是否连贯可读」。再叠加一层金标准：固定一组「已知答案在某文档某表」的探针查询定期跑，召回率掉了就是解析回归。</div></details>
+<details><summary>表格的语义在二维结构，而 LLM 上下文是一维序列——这个 mismatch 的本质是什么？为什么 vision 路线有时反而更好？</summary><div>本质是：把二维结构线性化必然要选一个遍历顺序（行优先 or 列优先），任何一种都会让「另一维」的邻接关系在 token 距离上被拉远——同一列上下相邻的两个数，序列化后可能隔着整行文本。模型靠 attention 跨距离重建关系，距离越远越易错。vision 路线绕开了线性化：图像里行列邻接是空间上保留的，vision encoder 直接在二维上做特征，对「读出某行某列」这类定位任务反而更鲁棒。代价是 vision 会编数值、且 token 贵——所以精确数字仍要回结构化源核对。</div></details>
+<details><summary>global search 是 map-reduce over community summaries——这和 multi-agent 的 orchestrator-workers 是同构的吗？</summary><div>结构同构，语义不同。两者都是「切分 → 并行处理 → 汇总」：community 摘要 ≈ worker 各自处理一块，rollup ≈ orchestrator 汇总。但关键差异：GraphRAG 的「切分」是<strong>索引期预计算</strong>的（社区在查询前就定好），worker 处理的是静态摘要而非动态子任务，没有 agent 间的 IPC 与决策漂移——这正是它比真正 multi-agent 可控的原因。换个角度：GraphRAG global search 是一个「冻结了拓扑的 orchestrator-workers workflow」，把 multi-agent 最贵最易错的「动态切分」搬到了离线。这也解释了它的代价结构：贵在离线建图，省在在线查询的确定性。</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://arxiv.org/abs/2404.16130" target="_blank">From Local to Global: A Graph RAG Approach (Edge et al.)</a> — GraphRAG 奠基论文，local/global 双路</li>
+<li><a href="https://github.com/microsoft/graphrag" target="_blank">microsoft/graphrag</a> — 官方实现 + DRIFT search（融合 local+global）</li>
+<li><a href="https://arxiv.org/abs/2410.05779" target="_blank">LightRAG: Simple and Fast RAG (HKUDS)</a> — 双层检索 + 增量更新，更省的图谱 RAG</li>
+<li><a href="https://arxiv.org/abs/2405.14831" target="_blank">HippoRAG (NeurIPS 2024)</a> — Personalized PageRank 单步多跳，比迭代检索快 6–13×</li>
+<li><a href="https://www.anthropic.com/news/contextual-retrieval" target="_blank">Anthropic · Contextual Retrieval</a> — chunk 前注入上下文，召回大幅提升</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 48 · 2026-06-27</footer>
+</div>
+</body></html>
