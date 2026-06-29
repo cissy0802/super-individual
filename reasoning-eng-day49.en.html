@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 49 · Reasoning Model Engineering — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border:1px solid rgba(0,212,255,0.3);border-radius:20px;padding:6px 14px;font-family:"SF Mono",Menlo,monospace}
+.xref a:hover{background:rgba(0,212,255,0.08)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 49 / PHASE 6 · ENGINEERING THE NEW FRONTIER</span>
+<h1>Reasoning Model Engineering</h1>
+<h2>Routing · Thinking Budget · Agentic Reasoning · Using the Trace</h2>
+<div class="date">2026-06-29 · BigCat</div>
+<p class="pitch">Reasoning isn't a "smarter model" — it's a slower, pricier knob that also overthinks.</p>
+</header>
+
+<div class="xref">
+<a href="https://cissy0802.github.io/ai-ml-daily/reasoning-models-day28.en.html">Prerequisite → ai-ml-daily Day 28 (Reasoning Models)</a>
+</div>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>o1 / o3 / DeepSeek-R1 / Claude extended thinking turn "reasoning ability" into a tunable parameter. The engineering reality: most teams either <strong>turn thinking on for everything</strong> (cost and latency multiply, and simple tasks get less accurate) or <strong>never turn it on</strong> (forcing a standard model through tasks that genuinely need reasoning). This issue isn't about what a reasoning model is or how RL trains the CoT — that's ai-ml-daily Day 28. It's about four engineering decisions: <strong>which requests should route to reasoning</strong>, <strong>how to set the thinking budget</strong> (and why "longer = more accurate" is false), <strong>how to use reasoning inside an agentic loop without breaking the protocol</strong>, and <strong>how far you can trust a reasoning trace</strong>. The core counter-intuition: longer chains of thought are often less accurate — and you paid double the tokens for them.</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>Routing: Which Requests Actually Deserve Reasoning</h2>
+<div class="claim">Claim: a reasoning model isn't the default tier — it's a high-cost tier triggered by "verifiable + steps not compressible up front."</div>
+
+<h3>Background & Principle</h3>
+<p>Reasoning models trade test-time compute for accuracy: more tokens spent on hidden thinking. Snell et al. 2024, <em>Scaling LLM Test-Time Compute Optimally</em> (arXiv 2408.03314), gives the key engineering result — <strong>the optimal strategy depends on task difficulty</strong>: adding reasoning to easy questions yields almost nothing, while on hard ones test-time compute can beat simply scaling model parameters. So the routing test isn't "important vs not," it's three conditions that must all hold to escalate: (1) the answer is <strong>verifiable</strong> (math/code/logic with objective truth); (2) it needs <strong>multi-step planning whose step count can't be pre-compressed into a workflow</strong>; (3) the cost of error exceeds the extra money and latency. Conversely, retrieval QA, formatting, classification, rewriting, extraction — one-shot tasks — routed to reasoning just burn money and often lose accuracy to overthinking.</p>
+
+<div class="diagram">        request in
+            │
+            ▼
+   ┌─────────────────────┐   no
+   │ objectively          ├────────▶ standard model (fast/cheap)
+   │ verifiable answer?   │
+   └──────────┬──────────┘
+              │ yes
+              ▼
+   ┌─────────────────────┐   no
+   │ multi-step & step    ├────────▶ workflow / standard model
+   │ count unknown?       │
+   └──────────┬──────────┘
+              │ yes
+              ▼
+   ┌─────────────────────┐   low
+   │ error cost vs 2-5×   ├────────▶ standard + self-check
+   │ overhead?            │
+   └──────────┬──────────┘
+              │ high
+              ▼
+     reasoning model + tiered thinking budget</div>
+
+<h3>Hands-on</h3>
+<p>Write routing as a code-layer pre-classifier, not "send everything to o3":</p>
+<pre><code><span class="tag-key">def</span> route(task):
+    <span class="tag-com"># cheap classifier (standard model/rules) picks a difficulty tier</span>
+    <span class="tag-key">if</span> task.kind <span class="tag-key">in</span> (<span class="tag-gpt">"lookup"</span>, <span class="tag-gpt">"format"</span>, <span class="tag-gpt">"classify"</span>):
+        <span class="tag-key">return</span> (<span class="tag-gpt">"claude-haiku-4-5"</span>, <span class="tag-key">None</span>)            <span class="tag-com"># no thinking</span>
+    <span class="tag-key">if</span> task.kind <span class="tag-key">in</span> (<span class="tag-gpt">"math"</span>, <span class="tag-gpt">"plan"</span>, <span class="tag-gpt">"debug"</span>) <span class="tag-key">and</span> task.verifiable:
+        <span class="tag-key">return</span> (<span class="tag-gpt">"o3"</span>, <span class="tag-gpt">"medium"</span>)                     <span class="tag-com"># escalate + medium budget</span>
+    <span class="tag-key">return</span> (<span class="tag-gpt">"claude-sonnet-4-6"</span>, <span class="tag-key">None</span>)</code></pre>
+<p>An underrated fact: <strong>within the same reasoning family, a smaller model on high effort often loses to a larger model on low effort — but is far cheaper</strong>. So the routing table must tune two dimensions, model size <em>and</em> reasoning tier, not just one.</p>
+
+<div class="fail">
+<strong>Failure mode</strong>: treating reasoning as "quality insurance" turned on everywhere. Result: (1) latency goes from 1s to 10s+, killing streaming first-token UX; (2) easy tasks get <em>less</em> accurate (see §2 overthinking); (3) bills 3-5×. Reasoning is a guided weapon, not a default shield.
+</div>
+
+<div class="res">
+<strong>Resources</strong> · Snell et al. <em>Scaling LLM Test-Time Compute Optimally</em>, <a href="https://arxiv.org/abs/2408.03314" target="_blank">arXiv 2408.03314</a> ·
+OpenAI <em>Reasoning best practices</em>, <a href="https://developers.openai.com/api/docs/guides/reasoning-best-practices" target="_blank">developers.openai.com</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Thinking Budget: Longer ≠ More Accurate</h2>
+<div class="claim">Claim: the thinking budget is a knob with a sweet spot — too low underthinks, too high overthinks, both lose accuracy.</div>
+
+<h3>Background & Principle</h3>
+<p>The two vendors expose different control surfaces. OpenAI uses <code>reasoning_effort</code> (low / medium / high); Anthropic extended thinking historically used <code>budget_tokens</code> (must be &lt; <code>max_tokens</code>), <strong>but on Opus 4.6 / Sonnet 4.6 budget_tokens is deprecated</strong>, replaced by adaptive thinking — depth is handled by <code>effort</code> and the model decides how long to think. The key counter-intuition comes from two empirical papers: <em>On the Underthinking of o1-like LLMs</em> (arXiv 2501.18585) finds models flip between ideas without digging in; and the opposite, overthinking, is just as real — <strong>longer chains of thought can lower average accuracy</strong> as the model loops and self-revises. In short, more budget isn't better: each task type has its own sweet spot, found via eval, not guessed.</p>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># OpenAI o-series: effort is the main knob (Responses API)</span>
+resp = client.responses.create(
+    model=<span class="tag-gpt">"o3"</span>, reasoning={<span class="tag-gpt">"effort"</span>: <span class="tag-gpt">"medium"</span>}, input=task)
+
+<span class="tag-com"># Anthropic extended thinking (3.7 ~ 4.x &lt; 4.6): explicit budget_tokens</span>
+resp = client.messages.create(
+    model=<span class="tag-gpt">"claude-sonnet-4-5"</span>, max_tokens=<span class="tag-key">8000</span>,
+    thinking={<span class="tag-gpt">"type"</span>:<span class="tag-gpt">"enabled"</span>, <span class="tag-gpt">"budget_tokens"</span>: <span class="tag-key">4000</span>},  <span class="tag-com"># must be &lt; max_tokens</span>
+    messages=msgs)
+
+<span class="tag-com"># 4.6+: budget_tokens deprecated, use adaptive thinking — depth via effort</span>
+thinking={<span class="tag-gpt">"type"</span>:<span class="tag-gpt">"enabled"</span>}   <span class="tag-com"># model adapts, paired with the effort knob</span></code></pre>
+<p>Engineering practice: set three budget tiers per task class (low/medium/high, or ~1k/4k/16k tokens), then <strong>sweep a set of ground-truth questions and plot "budget vs accuracy," taking the knee, not the peak</strong>. Most tasks top out at medium; high only adds cost, not score.</p>
+
+<div class="fail">
+<strong>Failure mode</strong>: (1) handing a simple classification task a high budget — triggers overthinking, accuracy drops, latency spikes. (2) setting <code>budget_tokens</code> ≥ <code>max_tokens</code> errors out; thinking tokens draw from the same output budget. (3) shipping old budget_tokens code on 4.6+ — deprecated; migrate to effort.
+</div>
+
+<div class="res">
+<strong>Resources</strong> · Anthropic <em>Extended thinking</em> docs, <a href="https://docs.claude.com/en/docs/build-with-claude/extended-thinking" target="_blank">docs.claude.com/.../extended-thinking</a> ·
+Wang et al. <em>Underthinking of o1-like LLMs</em>, <a href="https://arxiv.org/abs/2501.18585" target="_blank">arXiv 2501.18585</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Reasoning Inside the Agentic Loop: Interleaved Thinking & the Protocol Trap</h2>
+<div class="claim">Claim: the biggest trap with reasoning in an agent isn't when to turn it on — it's preserving thinking blocks verbatim between tool calls.</div>
+
+<h3>Background & Principle</h3>
+<p>Standard reasoning is "think, then answer." But an agent needs "think a bit → call tool → see result → think again → call again" — that's <strong>interleaved thinking</strong> (Anthropic enables it with the beta header <code>interleaved-thinking-2025-05-14</code>): the model can insert thinking around each tool call and adjust the next step from the tool_result. OpenAI's o3/o4-mini instead train tool calling <strong>natively into the CoT</strong>, so the model decides when to use tools while thinking. Here's the easily-tripped protocol trap: <strong>across turns, you must pass back the previous assistant turn's thinking blocks verbatim (including their signatures)</strong>. Many harnesses strip thinking as "filler" to save tokens — the result is either an error, or a severed reasoning chain and a suddenly worse agent. In interleaved mode the thinking tokens also accumulate across blocks, so budget semantics differ from a single turn.</p>
+
+<div class="diagram">single-turn reasoning:   [think ........] → answer
+agentic interleaved:
+   [think]→tool_use──▶ tool_result ──▶[think]→tool_use──▶ ... → answer
+      ▲                                    ▲
+      └── these thinking blocks must be passed back verbatim (w/ signature)
+          stripping them = protocol error / severed reasoning chain</div>
+
+<h3>Hands-on</h3>
+<pre><code>msgs = [{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>, <span class="tag-gpt">"content"</span>: task}]
+<span class="tag-key">while</span> <span class="tag-key">True</span>:
+    r = client.beta.messages.create(
+        model=<span class="tag-gpt">"claude-sonnet-4-5"</span>, max_tokens=<span class="tag-key">8000</span>,
+        betas=[<span class="tag-gpt">"interleaved-thinking-2025-05-14"</span>],
+        thinking={<span class="tag-gpt">"type"</span>:<span class="tag-gpt">"enabled"</span>, <span class="tag-gpt">"budget_tokens"</span>:<span class="tag-key">4000</span>},
+        tools=schemas, messages=msgs)
+    msgs.append({<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"assistant"</span>, <span class="tag-gpt">"content"</span>: r.content})  <span class="tag-com"># ← keep thinking+tool_use verbatim</span>
+    <span class="tag-key">if</span> r.stop_reason != <span class="tag-gpt">"tool_use"</span>: <span class="tag-key">break</span>
+    msgs.append({<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>, <span class="tag-gpt">"content"</span>: run_tools(r.content)})
+    <span class="tag-com"># critical: do NOT delete thinking blocks from r.content here</span></code></pre>
+<p>Another engineering point: reasoning is most valuable in an agent for <strong>planning and recovery</strong> — let it think hard about the overall plan up front, and about why a tool failed afterward. Purely mechanical tool calls in between don't need high reasoning every step; tune the tier on demand.</p>
+
+<div class="fail">
+<strong>Failure mode</strong>: (1) compaction/history trimming deletes thinking blocks — in interleaved mode this errors or severs reasoning; if you keep a turn, keep all of it. (2) jamming a reasoning model into a fixed-step pipeline as an "agent" — that's a workflow; a standard model + code control flow is faster and more stable (see Day 3).
+</div>
+
+<div class="res">
+<strong>Resources</strong> · Anthropic <em>Extended thinking · interleaved thinking</em>, <a href="https://docs.claude.com/en/docs/build-with-claude/extended-thinking" target="_blank">docs.claude.com/.../extended-thinking</a> ·
+OpenAI <em>o3/o4-mini function calling guide</em>, <a href="https://developers.openai.com/cookbook/examples/o-series/o3o4-mini_prompting_guide" target="_blank">developers.openai.com/cookbook</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Prompt Anti-Patterns & the Honest Use of the Trace</h2>
+<div class="claim">Claim: a CoT prompt tuned for a standard model often hurts a reasoning model; and the reasoning trace is not a faithful explanation.</div>
+
+<h3>Background & Principle</h3>
+<p>A reasoning model already does internal thinking, so <strong>telling it externally to "think step by step" is redundant and sometimes harmful</strong> — OpenAI's official guide is explicit: these models prefer <strong>concise, direct prompts</strong>, and forced CoT scaffolding plus heavy few-shot can lower performance (Simon Willison's 2025 prompting notes summarize this well). So the "let's think step by step + 5 examples" templates carried over from the GPT-4 era should be torn out. The second trap is the <strong>trustworthiness of the reasoning trace</strong>: a chain of thought reads coherent, but it's <strong>not a faithful record of the model's decision</strong> — interpretability research repeatedly shows post-hoc rationalization (backward rationalization). So don't parse CoT text for hard downstream decisions, and don't believe a conclusion just because "the reasoning looks right." Trust the verifiable final output (run the tests, reconcile the numbers, check the citations), not the narrated process.</p>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># BAD: drop a GPT-4 CoT template straight onto o3 / extended thinking</span>
+<span class="tag-gpt">"Let's think step by step. Here are 6 examples... Now reason carefully:"</span>
+<span class="tag-com"># → redundant scaffolding + heavy few-shot, often lowers reasoning-model perf</span>
+
+<span class="tag-com"># GOOD: concise and direct, state the constraints, let it think</span>
+<span class="tag-gpt">"Fix this concurrency bug. Constraints: don't change the public API, keep it backward compatible."</span>
+<span class="tag-com"># When you need markdown (OpenAI o-series), put on the first line of the developer message:</span>
+<span class="tag-gpt">"Formatting re-enabled"</span></code></pre>
+<p>An eval rule of thumb that runs against intuition: <strong>do not assume a longer trace = more trustworthy</strong>. When evaluating reasoning output, watch objective accuracy and don't be dazzled by a long, meticulous trace — "thought thoroughly yet answered wrong" is common on hard problems. It's essentially using an imperfect verifier to pick among imperfect chains, laundering errors into more confident wrongness.</p>
+
+<div class="fail">
+<strong>Failure mode</strong>: (1) treating the reasoning model as one that "explains itself" and using the CoT as audit evidence — it's a performance, not a log. (2) piling on few-shot CoT templates — spend more, perform worse. (3) an LLM-judge that rewards "thorough reasoning" — that trains the model to overthink.
+</div>
+
+<div class="res">
+<strong>Resources</strong> · Simon Willison <em>OpenAI reasoning models: advice on prompting</em>, <a href="https://simonwillison.net/2025/Feb/2/openai-reasoning-models-advice-on-prompting/" target="_blank">simonwillison.net</a> ·
+DeepSeek-R1 (RL-incentivized reasoning), <a href="https://arxiv.org/abs/2501.12948" target="_blank">arXiv 2501.12948</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// Capstone · Add a "reasoning router + budget" layer to your agent</h3>
+<p>String the four points into a shippable weekend upgrade: give an existing agent tiered reasoning instead of all-on or all-off.</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>Routing layer (§1)</strong>: add a cheap classifier before the LLM call — push <code>lookup/format</code> to a small standard model, and <code>math/plan/debug</code> that's verifiable to reasoning. Log the hit rate per class.</li>
+<li><strong>Budget sweep (§2)</strong>: for each escalated task class, prepare 10-20 ground-truth questions, sweep low/medium/high, plot the accuracy curve, and <strong>take the knee</strong>. You'll usually find medium already tops out.</li>
+<li><strong>Agentic wiring (§3)</strong>: if the agent thinks-then-tools, enable interleaved thinking and audit your message assembly — confirm thinking blocks survive verbatim across turns and compaction doesn't drop them.</li>
+<li><strong>Prompt slimming (§4)</strong>: delete all "step by step" scaffolding and redundant few-shot; switch to concise-and-direct + explicit constraints. A/B before vs after.</li>
+<li><strong>Honest eval</strong>: judge only verifiable final accuracy, p95 latency, and per-request cost; <strong>never reward trace length</strong>. Reconciling these gives you an "accuracy / cost / latency" table — the entire decision basis for reasoning engineering.</li>
+</ol>
+<p style="margin-top:12px">Once done, "should we use reasoning?" stops being a gut call — you have a routing table keyed by task type with tiers and budgets: cheaper, lower latency, and often more accurate.</p>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// KEY TERMS</h3>
+<dl>
+<dt>Reasoning Model</dt><dd>A model that trades test-time compute (hidden thinking tokens) for accuracy: o1/o3, DeepSeek-R1, Claude extended thinking.</dd>
+<dt>Test-Time Compute</dt><dd>Extra compute spent at inference (not training) time. Snell 2024: the optimal allocation depends on task difficulty.</dd>
+<dt>Thinking Budget</dt><dd>Token cap for internal thinking. Anthropic <code>budget_tokens</code> / OpenAI <code>reasoning_effort</code>.</dd>
+<dt>Adaptive Thinking</dt><dd>The Opus/Sonnet 4.6+ replacement for fixed budget_tokens; depth adapts via effort.</dd>
+<dt>reasoning_effort</dt><dd>OpenAI o-series reasoning-depth knob: low / medium / high.</dd>
+<dt>Interleaved Thinking</dt><dd>Inserting thinking between tool calls (Anthropic beta header). Requires keeping thinking blocks across turns.</dd>
+<dt>Overthinking / Underthinking</dt><dd>Overthinking (verbose, self-revising, less accurate) vs underthinking (jumping between ideas without depth).</dd>
+<dt>Backward Rationalization</dt><dd>The model reaches a conclusion then invents reasons. So a CoT trace is not a faithful decision log.</dd>
+</dl>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// DEEPER QUESTIONS</h3>
+<details><summary>If the reasoning trace isn't faithful, why does passing it back to the model (interleaved thinking) still improve agent performance?</summary><div>Distinguish "external explanation" from "internal working memory." As a causal explanation for humans the trace is untrustworthy (post-hoc rationalization); but as <strong>conditioning input</strong> for the model's own next step it's genuinely useful — it caches intermediate conclusions into context, and later tokens compute on top of them. So stripping it severs the chain (loses working memory), while using it as audit evidence fools you (it's not a faithful log). Same text, two uses, completely different trustworthiness.</div></details>
+<details><summary>Given a "budget sweet spot," why don't vendors just let the model decide how long to think instead of exposing budget/effort knobs?</summary><div>4.6's adaptive thinking is exactly that move. But knobs still matter: (1) adaptation is the model's <strong>subjective</strong> difficulty estimate, with systematic bias (overthinks easy items); (2) production needs <strong>predictable cost and latency ceilings</strong>, which pure adaptation makes p95 uncontrollable; (3) different businesses sit at different accuracy-vs-latency trade-offs and need external enforcement. So the trend is "adaptive by default + effort as a ceiling," not pure auto.</div></details>
+<details><summary>The routing classifier itself costs an LLM call. When does this routing layer become a net loss?</summary><div>When the request distribution is highly homogeneous (almost all one difficulty tier), routing just adds a hop of latency and cost — fixing the tier is better. Routing pays off when the <strong>difficulty distribution is wide</strong> and the <strong>high tier is much pricier</strong>: the saved big-model/high-reasoning calls dwarf the classification cost. Optimizations: classify with rules/a small model/cache (sub-second, near-free), reserve expensive judgment for genuinely ambiguous requests; or route for free on upstream metadata (task type, source).</div></details>
+<details><summary>"Shorter answers are often more accurate" — does that mean we should penalize long output? How do we avoid squashing hard problems too short?</summary><div>You can't penalize length across the board, or hard problems get underthought. The fix is to <strong>tier by difficulty</strong>: squash easy items (prevent overthinking), give hard ones enough budget (prevent underthinking), decided jointly by §1 routing and §2 budget sweeps. Statistically "shorter is more accurate" is largely <strong>survivorship bias</strong> — models tend to write longer when unsure. The real lever is matching "thinking amount ↔ true difficulty," not monotonically rewarding or punishing length.</div></details>
+<details><summary>Reasoning models train tool calls into the CoT (e.g. o3). What does that mean for Day 3 harness design?</summary><div>It means the "when to call a tool" decision shifts partly from the harness into the model. Upside: the model can weigh tool use while thinking and parallelize calls; cost: the harness loses visibility into control flow, and the permission gate must still physically intercept at execution (the model "deciding" in CoT ≠ being allowed). Design-wise the harness retreats from "orchestrate every step" to "define boundaries + intercept dangerous actions + backstop the loop," handing tactical decisions to the model while it guards the strategic rails.</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://docs.claude.com/en/docs/build-with-claude/extended-thinking" target="_blank">Anthropic · Extended thinking</a> — official docs for budget_tokens / adaptive thinking / interleaved thinking</li>
+<li><a href="https://developers.openai.com/api/docs/guides/reasoning-best-practices" target="_blank">OpenAI · Reasoning best practices</a> — concise prompts, developer message, effort usage</li>
+<li><a href="https://arxiv.org/abs/2408.03314" target="_blank">Snell et al. · Scaling LLM Test-Time Compute Optimally</a> — foundational paper on difficulty-based compute allocation</li>
+<li><a href="https://arxiv.org/abs/2501.18585" target="_blank">Wang et al. · On the Underthinking of o1-like LLMs</a> — empirical reasoning failure modes</li>
+<li><a href="https://simonwillison.net/2025/Feb/2/openai-reasoning-models-advice-on-prompting/" target="_blank">Simon Willison · Advice on prompting reasoning models</a> — why to stop saying "think step by step"</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 49 · 2026-06-29</footer>
+</div>
+</body></html>

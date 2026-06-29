@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 49 · 推理模型工程 — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border:1px solid rgba(0,212,255,0.3);border-radius:20px;padding:6px 14px;font-family:"SF Mono",Menlo,monospace}
+.xref a:hover{background:rgba(0,212,255,0.08)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 49 / PHASE 6 · 新前沿工程化</span>
+<h1>推理模型工程</h1>
+<h2>Routing · Thinking Budget · Agentic Reasoning · Trace 利用</h2>
+<div class="date">2026-06-29 · BigCat</div>
+<p class="pitch">Reasoning 不是「更聪明的模型」，是一个更贵更慢、且会过度思考的旋钮。</p>
+</header>
+
+<div class="xref">
+<a href="https://cissy0802.github.io/ai-ml-daily/reasoning-models-day28.html">前置概念 → ai-ml-daily Day 28 (推理模型)</a>
+</div>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>o1 / o3 / DeepSeek-R1 / Claude extended thinking 让「推理能力」变成一个可调参数。但工程现实是：大多数团队要么<strong>全量打开 thinking</strong>（成本和延迟翻几倍，简单任务还更不准），要么<strong>从不打开</strong>（该用的复杂任务也硬扛标准模型）。这一期不讲 reasoning model 是什么、RL 怎么训出 CoT——那是 ai-ml-daily Day 28 的事。这里只讲四个工程决策：<strong>什么请求该路由到 reasoning</strong>、<strong>思维预算怎么给</strong>（以及为什么「想得越久越准」是错的）、<strong>agentic loop 里怎么调推理且不破坏协议</strong>、<strong>reasoning trace 能信到什么程度</strong>。核心反直觉：更长的思维链常常更不准，而你为它付了双倍的 token。</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>路由决策：什么请求才值得 reasoning</h2>
+<div class="claim">论断：reasoning model 不是默认档，是按「任务可验证 + 步数不可预先压缩」触发的高成本档。</div>
+
+<h3>背景与原理</h3>
+<p>reasoning model 用 test-time compute 换准确率：把更多 token 花在隐藏的思考上。Snell 等人 2024 的 <em>Scaling LLM Test-Time Compute Optimally</em>（arXiv 2408.03314）给出关键工程结论——<strong>最优策略取决于任务难度</strong>：简单题上加推理几乎无收益，难题上 test-time compute 才可能比单纯放大模型参数更划算。所以路由的判据不是「重要不重要」，而是三条同时满足才升档：(1) 答案<strong>可验证</strong>（数学/代码/逻辑有客观对错）；(2) 需要<strong>多步规划且步数无法预先压成 workflow</strong>；(3) 错误成本高于多花的钱和延迟。反过来，检索问答、格式化、分类、改写、抽取——这些一步到位的任务路由到 reasoning 纯属烧钱，还常因「过度思考」掉准确率。</p>
+
+<div class="diagram">         请求进来
+            │
+            ▼
+   ┌─────────────────────┐   否
+   │ 答案客观可验证？      ├────────▶ 标准模型(快/便宜)
+   └──────────┬──────────┘
+              │ 是
+              ▼
+   ┌─────────────────────┐   否
+   │ 多步 & 步数不可预知？ ├────────▶ workflow / 标准模型
+   └──────────┬──────────┘
+              │ 是
+              ▼
+   ┌─────────────────────┐   低
+   │ 错误成本 vs 2-5× 开销 ├────────▶ 标准 + 自检
+   └──────────┬──────────┘
+              │ 高
+              ▼
+        reasoning 模型 + 思维预算分级</div>
+
+<h3>实战示例</h3>
+<p>把路由写成代码层的前置分类，而不是「全量上 o3」：</p>
+<pre><code><span class="tag-key">def</span> route(task):
+    <span class="tag-com"># cheap 分类器（标准模型/规则）先判难度档</span>
+    <span class="tag-key">if</span> task.kind <span class="tag-key">in</span> (<span class="tag-gpt">"lookup"</span>, <span class="tag-gpt">"format"</span>, <span class="tag-gpt">"classify"</span>):
+        <span class="tag-key">return</span> (<span class="tag-gpt">"claude-haiku-4-5"</span>, <span class="tag-key">None</span>)            <span class="tag-com"># 不开 thinking</span>
+    <span class="tag-key">if</span> task.kind <span class="tag-key">in</span> (<span class="tag-gpt">"math"</span>, <span class="tag-gpt">"plan"</span>, <span class="tag-gpt">"debug"</span>) <span class="tag-key">and</span> task.verifiable:
+        <span class="tag-key">return</span> (<span class="tag-gpt">"o3"</span>, <span class="tag-gpt">"medium"</span>)                     <span class="tag-com"># 升档 + 中预算</span>
+    <span class="tag-key">return</span> (<span class="tag-gpt">"claude-sonnet-4-6"</span>, <span class="tag-key">None</span>)</code></pre>
+<p>一个被低估的事实：<strong>同一个 reasoning 模型族里，小号开高推理常常打不过大号开低推理，但便宜得多</strong>——所以路由表里要同时调「模型大小」和「推理档位」两个维度，不是只调一个。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：把 reasoning 当「质量保险」全量打开。结果是 (1) 延迟从 1s 涨到 10s+，流式首 token 体验崩塌；(2) 简单任务准确率不升反降（见 §2 过度思考）；(3) 账单 3-5×。reasoning 是定向武器，不是默认护盾。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Snell et al. <em>Scaling LLM Test-Time Compute Optimally</em>, <a href="https://arxiv.org/abs/2408.03314" target="_blank">arXiv 2408.03314</a> ·
+OpenAI <em>Reasoning best practices</em>, <a href="https://developers.openai.com/api/docs/guides/reasoning-best-practices" target="_blank">developers.openai.com</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>思维预算：更长不等于更准</h2>
+<div class="claim">论断：thinking budget 是个有甜区的旋钮——过低欠思考、过高过度思考，两头都掉准确率。</div>
+
+<h3>背景与原理</h3>
+<p>两家给了不同的控制面。OpenAI 用 <code>reasoning_effort</code>（low / medium / high）；Anthropic extended thinking 历史上用 <code>budget_tokens</code>（必须 &lt; <code>max_tokens</code>），<strong>但在 Opus 4.6 / Sonnet 4.6 上 budget_tokens 已弃用</strong>，改成 adaptive thinking——深度交给 <code>effort</code> 自适应，模型自己决定想多久。关键反直觉来自两篇实证：<em>Underthinking of o1-like LLMs</em>（arXiv 2501.18585）发现模型会在思路间频繁跳转、不深挖；而过度思考的反面同样存在——<strong>思维链越长，平均准确率反而可能下降</strong>，模型陷入重复与自我推翻。换句话说，预算不是越大越好，每个任务类型有自己的甜区，要靠 eval 找，不能拍脑袋给满。</p>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-com"># OpenAI o-series：effort 是主旋钮（Responses API）</span>
+resp = client.responses.create(
+    model=<span class="tag-gpt">"o3"</span>, reasoning={<span class="tag-gpt">"effort"</span>: <span class="tag-gpt">"medium"</span>}, input=task)
+
+<span class="tag-com"># Anthropic extended thinking（3.7 ~ 4.x &lt; 4.6）：显式 budget_tokens</span>
+resp = client.messages.create(
+    model=<span class="tag-gpt">"claude-sonnet-4-5"</span>, max_tokens=<span class="tag-key">8000</span>,
+    thinking={<span class="tag-gpt">"type"</span>:<span class="tag-gpt">"enabled"</span>, <span class="tag-gpt">"budget_tokens"</span>: <span class="tag-key">4000</span>},  <span class="tag-com"># 必须 &lt; max_tokens</span>
+    messages=msgs)
+
+<span class="tag-com"># 4.6+：budget_tokens 弃用，改 adaptive thinking — 深度交给 effort</span>
+thinking={<span class="tag-gpt">"type"</span>:<span class="tag-gpt">"enabled"</span>}   <span class="tag-com"># 模型自适应，配合 effort 旋钮</span></code></pre>
+<p>工程做法：按任务档位设三级预算（low/medium/high 或 ~1k/4k/16k token），<strong>用一组带 ground truth 的题扫一遍，画「预算 vs 准确率」曲线，取拐点而非顶点</strong>。多数任务会在中档触顶，高档只增成本不增分。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：(1) 给简单分类任务塞高预算——触发过度思考，准确率反降、延迟暴涨。(2) <code>budget_tokens</code> 设得≥<code>max_tokens</code> 直接报错；记住思考 token 占用的是同一个输出额度。(3) 在 4.6+ 上还硬塞 budget_tokens 老代码——已弃用，迁移到 effort。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Anthropic <em>Extended thinking</em> 文档, <a href="https://docs.claude.com/en/docs/build-with-claude/extended-thinking" target="_blank">docs.claude.com/.../extended-thinking</a> ·
+Wang et al. <em>Underthinking of o1-like LLMs</em>, <a href="https://arxiv.org/abs/2501.18585" target="_blank">arXiv 2501.18585</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Agentic loop 里的推理：interleaved thinking 与协议坑</h2>
+<div class="claim">论断：在 agent 里用 reasoning，最大的坑不是何时开，而是 tool 调用之间必须原样保留 thinking block。</div>
+
+<h3>背景与原理</h3>
+<p>标准 reasoning 是「想完再答」。但 agent 需要「想一下→调工具→看结果→再想→再调」——这就是 <strong>interleaved thinking</strong>（Anthropic 用 beta header <code>interleaved-thinking-2025-05-14</code> 开启）：模型可以在每次 tool 调用前后插入思考，根据 tool_result 调整下一步。OpenAI o3/o4-mini 则把工具调用<strong>原生训进 CoT</strong>，让模型在思考中决定何时用工具。这里有个极易踩的协议坑：<strong>多轮之间，你必须把上一轮 assistant 返回的 thinking block（连同它的 signature）原样回传</strong>。很多 harness 为了省 token 把 thinking 当「废话」strip 掉——结果要么报错，要么割裂了模型的推理链，agent 行为骤然变差。interleaved 模式下思考 token 还会累计跨多个 block，预算语义和单轮不同。</p>
+
+<div class="diagram">单轮 reasoning：   [think ........] → answer
+agentic interleaved：
+   [think]→tool_use──▶ tool_result ──▶[think]→tool_use──▶ ... → answer
+      ▲                                    ▲
+      └── 这些 thinking block 必须随 messages 原样回传(含 signature)
+          strip 掉 = 协议错 / 推理链断裂</div>
+
+<h3>实战示例</h3>
+<pre><code>msgs = [{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>, <span class="tag-gpt">"content"</span>: task}]
+<span class="tag-key">while</span> <span class="tag-key">True</span>:
+    r = client.beta.messages.create(
+        model=<span class="tag-gpt">"claude-sonnet-4-5"</span>, max_tokens=<span class="tag-key">8000</span>,
+        betas=[<span class="tag-gpt">"interleaved-thinking-2025-05-14"</span>],
+        thinking={<span class="tag-gpt">"type"</span>:<span class="tag-gpt">"enabled"</span>, <span class="tag-gpt">"budget_tokens"</span>:<span class="tag-key">4000</span>},
+        tools=schemas, messages=msgs)
+    msgs.append({<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"assistant"</span>, <span class="tag-gpt">"content"</span>: r.content})  <span class="tag-com"># ← 原样存 thinking+tool_use</span>
+    <span class="tag-key">if</span> r.stop_reason != <span class="tag-gpt">"tool_use"</span>: <span class="tag-key">break</span>
+    msgs.append({<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>, <span class="tag-gpt">"content"</span>: run_tools(r.content)})
+    <span class="tag-com"># 关键：不要在这里删 r.content 里的 thinking block</span></code></pre>
+<p>另一个工程要点：reasoning 在 agent 里最值钱的地方是<strong>规划与纠错</strong>——开局让它想清楚整体计划、tool 失败后让它想为什么失败。中间纯粹的机械 tool 调用不必每步高推理，按需调档。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：(1) compaction / 历史裁剪时把 thinking block 删了——interleaved 模式下报错或推理断裂；要保留就整轮保留。(2) 把 reasoning model 塞进一个步数固定的流程当 agent 用——那是 workflow，标准模型 + 代码控制流更快更稳（见 Day 3）。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Anthropic <em>Extended thinking · interleaved thinking</em>, <a href="https://docs.claude.com/en/docs/build-with-claude/extended-thinking" target="_blank">docs.claude.com/.../extended-thinking</a> ·
+OpenAI <em>o3/o4-mini function calling guide</em>, <a href="https://developers.openai.com/cookbook/examples/o-series/o3o4-mini_prompting_guide" target="_blank">developers.openai.com/cookbook</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Prompt 反模式与 trace 的诚实用法</h2>
+<div class="claim">论断：给标准模型调好的 CoT prompt 搬到 reasoning model 上往往帮倒忙；reasoning trace 也不能当忠实解释。</div>
+
+<h3>背景与原理</h3>
+<p>reasoning model 自带内部思考，<strong>外部再让它「think step by step」是冗余甚至有害的</strong>——OpenAI 官方指南明确：这类模型偏好<strong>简洁直接的 prompt</strong>，硬加 CoF 引导和大量 few-shot 反而可能拉低表现（Simon Willison 2025 年那篇 prompting 建议总结得很清楚）。所以从 GPT-4 时代搬来的「让我们一步步思考 + 5 个示例」模板要拆掉。第二个陷阱关于 <strong>reasoning trace 的可信度</strong>：思维链读起来条理分明，但它<strong>不是模型决策的忠实记录</strong>——可解释性研究反复显示模型会事后合理化（backward rationalization）。所以别 parse CoT 文本去做下游硬决策，也别因为「思路看着对」就信结论。要信，就用可验证的最终输出（跑测试、对数值、查引用），而不是信过程叙述。</p>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-com"># BAD：把 GPT-4 的 CoT 模板原样套给 o3 / extended thinking</span>
+<span class="tag-gpt">"Let's think step by step. Here are 6 examples... Now reason carefully:"</span>
+<span class="tag-com"># → 冗余引导 + 大量 few-shot，常拉低 reasoning model 表现</span>
+
+<span class="tag-com"># GOOD：简洁直给，把约束讲清楚，让模型自己想</span>
+<span class="tag-gpt">"修复这个并发 bug。约束：不改公共 API，保持向后兼容。"</span>
+<span class="tag-com"># 需要 markdown 时（OpenAI o 系列）在 developer message 首行：</span>
+<span class="tag-gpt">"Formatting re-enabled"</span></code></pre>
+<p>eval 上的反直觉守则：<strong>不要假设更长的思考 = 更可信</strong>。给 reasoning 输出做评估时，盯客观正确率，别被冗长缜密的 trace 唬住——「想得满满当当却答错」在难题上很常见，本质是用一个不完美的验证器去筛不完美的推理链，错误被「洗」得更自信而已。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：(1) 把 reasoning model 当成「会解释自己」的模型，拿 CoT 当审计证据——它是表演，不是日志。(2) 继续堆 few-shot CoT 模板，钱花了表现还降。(3) 用 LLM-judge 评 reasoning 时奖励「思路详尽」，等于训练模型过度思考。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Simon Willison <em>OpenAI reasoning models: advice on prompting</em>, <a href="https://simonwillison.net/2025/Feb/2/openai-reasoning-models-advice-on-prompting/" target="_blank">simonwillison.net</a> ·
+DeepSeek-R1（RL 激励推理）, <a href="https://arxiv.org/abs/2501.12948" target="_blank">arXiv 2501.12948</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// 综合实战 · 给你的 agent 加一层「推理路由 + 预算」</h3>
+<p>把四点串成一个能落地的周末改造：给现有 agent 接上推理分级，而不是全量开或全量关。</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>路由层（§1）</strong>：在 LLM 调用前加一个 cheap 分类器，把请求打成 <code>lookup/format</code> → 标准小模型、<code>math/plan/debug</code> 且可验证 → reasoning。记录每类的命中率。</li>
+<li><strong>预算扫描（§2）</strong>：对升档的任务类型，准备 10-20 道带 ground truth 的题，扫 low/medium/high 三档，画准确率曲线，<strong>取拐点</strong>写进路由表。多半你会发现 medium 已触顶。</li>
+<li><strong>agentic 接线（§3）</strong>：若 agent 需要边想边调工具，开 interleaved thinking，并审计你的 message 拼接——确认 thinking block 跨轮原样保留、compaction 不误删。</li>
+<li><strong>prompt 瘦身（§4）</strong>：删掉所有「step by step」引导和冗余 few-shot，改成简洁直给 + 明确约束。A/B 对比瘦身前后。</li>
+<li><strong>诚实 eval</strong>：评估只看可验证的最终正确率与 p95 延迟、单请求成本；<strong>绝不奖励 trace 长度</strong>。对账你会得到一张「准确率 / 成本 / 延迟」三轴表——这就是推理工程的全部决策依据。</li>
+</ol>
+<p style="margin-top:12px">做完这套，你对「要不要上 reasoning」就不再凭感觉，而是有一张按任务类型标好档位与预算的路由表——省钱、降延迟，且常常更准。</p>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// ENGLISH GLOSSARY</h3>
+<dl>
+<dt>Reasoning Model</dt><dd>用 test-time compute（隐藏思考 token）换准确率的模型，如 o1/o3、DeepSeek-R1、Claude extended thinking。</dd>
+<dt>Test-Time Compute</dt><dd>推理时（而非训练时）投入的额外算力。Snell 2024：最优分配取决于任务难度。</dd>
+<dt>Thinking Budget</dt><dd>分给内部思考的 token 上限。Anthropic <code>budget_tokens</code> / OpenAI <code>reasoning_effort</code>。</dd>
+<dt>Adaptive Thinking</dt><dd>Opus/Sonnet 4.6+ 取代固定 budget_tokens 的机制，深度由 effort 自适应。</dd>
+<dt>reasoning_effort</dt><dd>OpenAI o 系列的推理深度旋钮：low / medium / high。</dd>
+<dt>Interleaved Thinking</dt><dd>tool 调用之间插入思考的模式（Anthropic beta header）。需跨轮保留 thinking block。</dd>
+<dt>Overthinking / Underthinking</dt><dd>过度思考（冗长、自我推翻、降准）与欠思考（思路频繁跳转不深挖）两类失败。</dd>
+<dt>Backward Rationalization</dt><dd>模型先得结论再编理由。故 CoT trace 不是忠实的决策记录。</dd>
+</dl>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// 深入思考</h3>
+<details><summary>如果 reasoning trace 不忠实，为什么把它回传给模型（interleaved thinking）还能提升 agent 表现？</summary><div>关键区分「对外解释」和「对内工作记忆」。trace 作为给人看的因果解释不可信（事后合理化）；但作为模型自己下一步推理的<strong>条件输入</strong>是真实有用的——它把中间结论缓存进了上下文，后续 token 在它之上继续算。所以 strip 掉会断链（损失工作记忆），而拿它当审计证据会被骗（不是忠实日志）。同一段文本，两种用途，可信度完全不同。</div></details>
+<details><summary>既然存在「预算甜区」，为什么厂商不直接让模型自适应决定想多久，而要暴露 budget/effort 旋钮？</summary><div>4.6 的 adaptive thinking 正是往「自适应」走。但旋钮仍有价值：(1) 自适应是模型对难度的<strong>主观估计</strong>，会系统性偏差（简单题也过度想）；(2) 生产要的是<strong>可预测的成本与延迟上限</strong>，纯自适应让 p95 不可控；(3) 不同业务对「准确率 vs 延迟」权衡点不同，需外部强制。所以趋势是「自适应为主 + effort 给上界」，而非纯自动。</div></details>
+<details><summary>路由分类器本身要花一次 LLM 调用。什么时候这层路由反而得不偿失？</summary><div>当请求分布高度同质（几乎都是同一档难度）时，路由只是徒增一跳延迟与成本——直接定档更好。路由划算的前提是<strong>难度分布宽</strong>且<strong>高档显著贵</strong>：省下的大模型/高推理调用要远超分类成本。优化手段：用规则/小模型/缓存做分类（亚秒、近乎免费），把昂贵判断留给真正模糊的请求；甚至可以用上游元数据（任务类型、来源）零成本路由。</div></details>
+<details><summary>「短答案常比长答案更准」——这是否意味着我们该惩罚长输出？怎么不把该想的难题也压短？</summary><div>不能一刀切惩罚长度，否则难题被欠思考。正解是<strong>按难度分层</strong>：易题压短（防过度思考），难题给够预算（防欠思考），由 §1 的路由 + §2 的预算扫描共同决定。统计上「短更准」很大程度是<strong>幸存者偏差</strong>——模型在没把握时倾向写更长。真正的杠杆是匹配「思考量 ↔ 真实难度」，而非单调地奖励或惩罚长度。</div></details>
+<details><summary>reasoning model 把工具调用训进 CoT（如 o3）。这对 Day 3 的 harness 设计意味着什么？</summary><div>意味着「何时调工具」的决策从 harness 部分让渡给了模型内部。好处：模型能在思考中权衡是否需要工具、并行多调；代价：harness 对控制流的可见性下降，permission gate 仍须在执行层物理拦截（模型在 CoT 里「决定」不等于被允许）。设计上 harness 要从「编排每一步」退到「定义边界 + 拦截危险动作 + 兜底循环」，把战术决策交给模型，自己守战略护栏。</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://docs.claude.com/en/docs/build-with-claude/extended-thinking" target="_blank">Anthropic · Extended thinking</a> — budget_tokens / adaptive thinking / interleaved thinking 官方文档</li>
+<li><a href="https://developers.openai.com/api/docs/guides/reasoning-best-practices" target="_blank">OpenAI · Reasoning best practices</a> — 简洁 prompt、developer message、effort 用法</li>
+<li><a href="https://arxiv.org/abs/2408.03314" target="_blank">Snell et al. · Scaling LLM Test-Time Compute Optimally</a> — 推理算力按难度分配的奠基论文</li>
+<li><a href="https://arxiv.org/abs/2501.18585" target="_blank">Wang et al. · On the Underthinking of o1-like LLMs</a> — 推理失败模式实证</li>
+<li><a href="https://simonwillison.net/2025/Feb/2/openai-reasoning-models-advice-on-prompting/" target="_blank">Simon Willison · Advice on prompting reasoning models</a> — 为什么别再 think step by step</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 49 · 2026-06-29</footer>
+</div>
+</body></html>
