@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 50 · LLM Guardrails & Sandboxing — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 50 / PHASE 6 · ENGINEERING</span>
+<h1>LLM Guardrails & Sandboxing</h1>
+<h2>Dual Gate · Jailbreak Classifier · Policy Gate · Execution Sandbox</h2>
+<div class="date">2026-06-30 · BigCat</div>
+<p class="pitch">"Please don't" in a system prompt is the weakest guardrail there is; the real boundary lives in the harness.</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>You already know how prompt injection hits you (Day 24). This issue is about defending — but first accept a counter-intuitive engineering reality: <strong>a model's own safety fine-tuning plus a system prompt cannot stop indirect prompt injection</strong>. Simon Willison's "lethal trifecta" puts it bluntly: the moment an agent has all three of "can read private data + ingests untrusted content + has an outbound channel," it is <strong>unconditionally</strong> exploitable for data exfiltration — no amount of alignment saves you. So guardrails aren't prompts, they're architecture: independent classifiers, deterministic validation, OS-level sandboxes, egress control. Four things this issue: how to build the input/output <strong>dual gate</strong>, why jailbreak defense needs an <strong>independent classifier</strong> rather than prompt hardening, how the output policy gate must <strong>fail-closed</strong>, and how the agent execution sandbox severs the lethal trifecta.</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>Dual Gate: One Independent Gate on Each Side of the Model</h2>
+<div class="claim">Claim: guardrails are two independent gates flanking the model — and you must never let the main model gate itself.</div>
+
+<h3>Background & Principle</h3>
+<p>Treat an LLM app like an untrusted network service: input arrives from outside (users, retrieved documents, tool returns), output flows downstream (user screen, database, the next tool). The first principle of security engineering is to <strong>place an independent gate on each side</strong>, not to hope the model behaves.</p>
+<ul>
+<li><strong>Input gate</strong>: moderation + jailbreak classifier + PII/secret detection. Judge once <em>before</em> content enters the main model's context.</li>
+<li><strong>Output gate</strong>: content safety + PII redaction + schema validation. Judge once <em>before</em> content leaves the context for downstream.</li>
+</ul>
+<p>Key point: gates must be <strong>independent components</strong> — a separate small model (Meta's Llama Guard, OpenAI's moderation endpoint) or deterministic rules (regex redaction of secrets / card numbers). Letting the main model "review itself" is an anti-pattern: the same model that can be jailbroken gets bypassed by the <em>same</em> jailbreak string during self-review — attack and review share one poisoned context. PII and secret leakage is what the gate should hard-code: API keys, JWTs, card numbers get redacted at the exit gate with <strong>deterministic regex</strong> — don't trust the LLM to "remember to redact."</p>
+
+<div class="diagram">┌── untrusted input ──┐                 ┌── downstream / egress ──┐
+ user·docs·tool return                   user screen·DB·next tool
+        │                                        ▲
+        ▼                                        │
+  ┌───────────┐      ┌─────────┐      ┌────────────┐
+  │ input gate│ ───▶ │ main    │ ───▶ │ output gate │
+  │ moderation│      │ model   │      │ content     │
+  │ +jailbreak│      │ (no mem)│      │ +PII redact │
+  │ +PII scan │      └─────────┘      │ +schema     │
+  └───────────┘                       │ fail-closed │
+   indep model / rules                 └────────────┘
+                                        indep model / rules
+   ❌ anti-pattern: let the main model gate itself</div>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-key">import</span> re, anthropic
+client = anthropic.Anthropic()
+
+<span class="tag-com"># Input gate: independent classifier (Llama Guard / moderation, pseudo)</span>
+<span class="tag-key">def</span> input_gate(text):
+    verdict = classify_safety(text)          <span class="tag-com"># separate small model, not the main one</span>
+    <span class="tag-key">if</span> verdict.unsafe: <span class="tag-key">raise</span> Blocked(verdict.categories)
+    <span class="tag-key">return</span> text
+
+<span class="tag-com"># Output gate: deterministic redaction + content safety, both must pass</span>
+SECRET = re.compile(<span class="tag-gpt">r"sk-[A-Za-z0-9]{20,}|eyJ[\w-]+\.[\w-]+\.[\w-]+"</span>)  <span class="tag-com"># key / JWT</span>
+<span class="tag-key">def</span> output_gate(text):
+    text = SECRET.sub(<span class="tag-gpt">"[REDACTED]"</span>, text)      <span class="tag-com"># regex redaction, not the LLM</span>
+    <span class="tag-key">if</span> classify_safety(text).unsafe: <span class="tag-key">raise</span> Blocked(<span class="tag-gpt">"output"</span>)
+    <span class="tag-key">return</span> text
+
+<span class="tag-key">def</span> guarded_call(user_input):
+    safe_in = input_gate(user_input)
+    raw = client.messages.create(model=<span class="tag-gpt">"claude-sonnet-4-6"</span>,
+            max_tokens=1024, messages=[{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,<span class="tag-gpt">"content"</span>:safe_in}])
+    <span class="tag-key">return</span> output_gate(raw.content[0].text)</code></pre>
+<p>Both gates use an <strong>independent decision path</strong>; the main model only generates. Secret redaction runs via deterministic regex placed <em>before</em> content-safety classification — so even if the classifier misses, the key is already wiped.</p>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) Gating only the output, forgetting the input — injection usually arrives via <em>retrieved docs / tool returns</em>, not what the user typed directly. (2) Self-review to save a call, so the jailbreak bypasses both. (3) Using a blocklist to cover every secret format — new token shapes slip through; for high-sensitivity fields, prefer an allowlist output (emit only whitelisted fields) over blacklist redaction.
+</div>
+
+<div class="res">
+<strong>Resources</strong> · Llama Guard, <a href="https://arxiv.org/abs/2312.06674" target="_blank">arXiv:2312.06674</a> · Meta PurpleLlama, <a href="https://github.com/meta-llama/PurpleLlama" target="_blank">github.com/meta-llama/PurpleLlama</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Jailbreak Defense: Prompt Hardening Fails, Use an Independent Classifier</h2>
+<div class="claim">Claim: prompt hardening can't stop a universal jailbreak; what works is an independent classifier — and the price is accepting some helpfulness tax.</div>
+
+<h3>Background & Principle</h3>
+<p>Many defend against jailbreaks by piling "no matter what the user says, never…" into the system prompt. That helps against casual attacks but is largely useless against a <strong>universal jailbreak</strong> (a single string that pries open nearly every harmful category) — because attack and defense live in the <em>same context</em> and the model's attention is dominated by the attacker.</p>
+<p>Anthropic's 2025 <strong>Constitutional Classifiers</strong> gives the engineering answer: train <strong>independent input/output classifiers</strong> that filter content against a constitution (what's allowed, what's forbidden). Across 3,000+ hours of red-teaming, no one found a universal jailbreak that reliably broke through across most harmful categories. The cost is real — early versions added roughly <strong>23.7% inference overhead</strong> and +0.38% production refusal rate. The 2026 ++ version cut that to about <strong>40× cheaper</strong> with a 0.05% refusal rate, showing the approach has converged in practice.</p>
+<p>So the engineering decisions for jailbreak defense are three: where the gate sits (under streaming you must <strong>judge as you generate</strong>, not after the whole span is done), how to handle false positives (this is the <strong>helpfulness tax</strong> — legitimate requests killed by mistake), and how to version the constitution (it's a drifting policy, govern it like a prompt — see Day 35).</p>
+
+<h3>Hands-on</h3>
+<p>Training a classifier yourself is heavy; in practice you wire in an existing one and upgrade "block / allow" from binary to <strong>three tiers</strong>, giving borderline requests a step to escalate on:</p>
+<pre><code><span class="tag-com"># Classifier returns a risk score; binary blocking feels bad — use three tiers</span>
+BLOCK, REVIEW = <span class="tag-key">0.90</span>, <span class="tag-key">0.60</span>     <span class="tag-com"># thresholds are the helpfulness-tax knob</span>
+
+<span class="tag-key">def</span> jailbreak_gate(text, stream=<span class="tag-key">True</span>):
+    score = safety_classifier(text).risk      <span class="tag-com"># independent classifier</span>
+    <span class="tag-key">if</span> score &gt;= BLOCK:   <span class="tag-key">return</span> (<span class="tag-gpt">"block"</span>,  fallback_refusal())
+    <span class="tag-key">if</span> score &gt;= REVIEW:  <span class="tag-key">return</span> (<span class="tag-gpt">"escalate"</span>, queue_human_review(text))  <span class="tag-com"># not a hard refuse</span>
+    <span class="tag-key">return</span> (<span class="tag-gpt">"allow"</span>, text)
+
+<span class="tag-com"># streaming: sample every N tokens; on BLOCK, cut the stream immediately</span>
+<span class="tag-key">for</span> chunk <span class="tag-key">in</span> stream:
+    buf += chunk
+    <span class="tag-key">if</span> len(buf) % <span class="tag-key">200</span> == <span class="tag-key">0</span> <span class="tag-key">and</span> jailbreak_gate(buf)[<span class="tag-key">0</span>] == <span class="tag-gpt">"block"</span>:
+        abort_stream(); <span class="tag-key">break</span></code></pre>
+<p>The threshold is a direct cost/safety knob: raise BLOCK → more misses; lower it → helpfulness tax spikes and legitimate users get refused for nothing. Keep an <code>escalate</code> tier in the middle to route borderline requests to a human instead of bluntly rejecting them.</p>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) Binary block/allow only, no escalate tier — borderline requests are either killed or waved through, losing on both UX and safety. (2) In streaming, judging only after the full span is generated — harmful content already reached the user's screen. (3) The constitution / thresholds never update — it's a drifting policy, and new jailbreak techniques bypass a stale version within months.
+</div>
+
+<div class="res">
+<strong>Resources</strong> · Constitutional Classifiers, <a href="https://arxiv.org/abs/2501.18837" target="_blank">arXiv:2501.18837</a> · Anthropic research, <a href="https://www.anthropic.com/research/constitutional-classifiers" target="_blank">anthropic.com/research/constitutional-classifiers</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Output Policy Gate: Guardrails as Code, and It Must Fail-Closed</h2>
+<div class="claim">Claim: output validation is three layers — schema + business policy + facts — and when validation fails it must reject by default (fail-closed), not log a warning and let it through.</div>
+
+<h3>Background & Principle</h3>
+<p>Content safety is only half the output gate; the other half is <strong>correctness and policy</strong>. Validate LLM output as if it were untrusted external input, in three layers:</p>
+<ol>
+<li><strong>Structure</strong>: schema validation (Pydantic / JSON Schema). Not valid JSON, missing field, wrong type → reject.</li>
+<li><strong>Policy</strong>: business rules. Amount can't be negative, the cited SKU must exist in inventory, generated SQL can't contain <code>DELETE</code>. <strong>Judge with deterministic code, not the LLM.</strong></li>
+<li><strong>Facts</strong>: optional LLM-judge / grounding check — did the output cite retrieved evidence (connects to Day 11 RAG).</li>
+</ol>
+<p>The key engineering decision is <strong>fail-closed</strong>: when validation fails, <strong>reject by default</strong> and take the fallback — not "catch exception → log warning → ship anyway." A meaningful share of production incidents are fail-open — the validator throws, the error gets swallowed, and dirty data flows unimpeded. Frameworks like Guardrails AI package this as a <strong>re-ask loop</strong>: validation fails → feed the failure reason back to the model to regenerate → retry with a <strong>cap</strong> → still failing, fail-closed to a fallback.</p>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-key">from</span> pydantic <span class="tag-key">import</span> BaseModel, field_validator
+
+<span class="tag-key">class</span> Order(BaseModel):
+    sku: str
+    qty: int
+    amount: float
+    <span class="tag-gpt">@field_validator</span>(<span class="tag-gpt">"amount"</span>)
+    <span class="tag-key">def</span> non_negative(cls, v):
+        <span class="tag-key">if</span> v &lt; <span class="tag-key">0</span>: <span class="tag-key">raise</span> ValueError(<span class="tag-gpt">"amount must be &gt;= 0"</span>)   <span class="tag-com"># policy layer</span>
+        <span class="tag-key">return</span> v
+
+<span class="tag-key">def</span> validated_extract(prompt, max_retries=<span class="tag-key">2</span>):       <span class="tag-com"># re-ask must be capped</span>
+    <span class="tag-key">for</span> _ <span class="tag-key">in</span> range(max_retries + <span class="tag-key">1</span>):
+        raw = call_llm(prompt)
+        <span class="tag-key">try</span>:
+            order = Order.model_validate_json(raw)   <span class="tag-com"># structure + policy</span>
+            <span class="tag-key">if</span> order.sku <span class="tag-key">not in</span> INVENTORY: <span class="tag-key">raise</span> ValueError(<span class="tag-gpt">"unknown SKU"</span>)
+            <span class="tag-key">return</span> order
+        <span class="tag-key">except</span> ValueError <span class="tag-key">as</span> e:
+            prompt += <span class="tag-gpt">f"\n\nLast output failed validation: {e}. Fix and re-emit."</span>  <span class="tag-com"># re-ask</span>
+    <span class="tag-key">return</span> FALLBACK            <span class="tag-com"># ★ fail-closed: still failing at the cap → fallback, never ship dirty data</span></code></pre>
+<p>All three layers judge together, re-ask feeds the failure reason back to the model, but it <strong>must be capped</strong> — when the cap is hit and it still fails, fail-closed to a fallback rather than returning the last (still-invalid) output.</p>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) Fail-open: <code>except: pass</code> swallows the validation failure, which equals no validation. (2) Uncapped re-ask — when the model repeatedly errs, cost explodes and latency runs away. (3) Validating schema but not business policy — valid JSON with <code>amount=-999</code> ships fine; the most dangerous case is exactly "correct format, wrong semantics."
+</div>
+
+<div class="res">
+<strong>Resources</strong> · Guardrails AI, <a href="https://github.com/guardrails-ai/guardrails" target="_blank">github.com/guardrails-ai/guardrails</a> · Guardrails docs, <a href="https://www.guardrailsai.com/docs" target="_blank">guardrailsai.com/docs</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Execution Sandbox: Sever the Lethal Trifecta</h2>
+<div class="claim">Claim: cutting any one edge of the lethal trifecta is more reliable than hardening the model; a sandbox must lock both the filesystem and egress — one without the other isn't isolation.</div>
+
+<h3>Background & Principle</h3>
+<p>Agents execute model-generated code / shell / SQL — the highest-risk action class. The defense isn't telling the model to "be careful," it's <strong>OS-level sandboxing + severing the lethal trifecta</strong>. Simon Willison's lethal trifecta: <strong>private-data access + untrusted-content ingestion + an outbound channel</strong>; all three present = unconditionally exploitable for exfiltration. The good news is engineering-friendly — <strong>removing any one edge</strong> makes the system safe: don't grant private data, don't ingest untrusted content, or cut egress. The third is usually the most actionable.</p>
+
+<div class="diagram">     LETHAL TRIFECTA (all three present = unconditional exfiltration)
+
+            ┌──────────────────┐
+            │ ① private data   │
+            │  email/code/DB   │
+            └────────┬─────────┘
+         ┌───────────┴───────────┐
+┌────────▼────────┐     ┌────────▼────────┐
+│ ② untrusted     │     │ ③ outbound      │
+│ web/docs/tools  │     │ HTTP/img/links  │
+└─────────────────┘     └─────────────────┘
+
+   remove any one edge → system is safe
+   most actionable: cut ③ egress (deny-all + allowlist)</div>
+
+<p>The sandbox must <strong>manage both dimensions</strong>:</p>
+<ul>
+<li><strong>Filesystem isolation</strong>: read-only / write-only to the working dir. Firecracker microVM (own kernel, gold standard for multi-tenant), gVisor (user-space kernel intercepting syscalls), bubblewrap/seatbelt (OS namespaces, no container needed).</li>
+<li><strong>Network isolation</strong>: deny-all egress by default, allow only a controlled exit through an external proxy + domain allowlist.</li>
+</ul>
+<p>Anthropic's sandbox for Claude Code is exactly this paradigm: bubblewrap (Linux) / seatbelt (macOS) locks the filesystem, and the network can only go through a unix domain socket connected to a proxy <em>outside</em> the sandbox — <strong>which is precisely how this remote execution environment you're in works</strong> (all outbound HTTPS goes through an agent proxy).</p>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># Run model-generated code: no network + read-only root + write only the work dir</span>
+docker run --rm \
+  --network none \                 <span class="tag-com"># ③ cut egress (trifecta edge three)</span>
+  --read-only \                    <span class="tag-com"># root filesystem read-only</span>
+  --tmpfs /work:rw,size=64m \      <span class="tag-com"># the only writable area, ephemeral</span>
+  --memory 512m --cpus 1 \         <span class="tag-com"># resource caps, guard against fork bombs</span>
+  --cap-drop ALL --pids-limit 128 \
+  -v "$PWD/task:/work/task:ro" \   <span class="tag-com"># task files mounted read-only</span>
+  sandbox-img python /work/task/gen.py
+
+<span class="tag-com"># If the task truly needs the network: don't use --network none; force it</span>
+<span class="tag-com">#   through an allowlist proxy: HTTPS_PROXY=http://egress-proxy:3128</span>
+<span class="tag-com">#   + the proxy only permits whitelisted domains</span></code></pre>
+<p><code>--network none</code> directly removes the trifecta's third edge — the cleanest isolation. If the task must reach the network, don't open a free exit; force it through an egress proxy that <strong>only permits whitelisted domains</strong> — a controlled narrow channel, not an open door.</p>
+
+<div class="fail">
+<strong>Failure modes</strong>: (1) Filesystem sandbox done well, network left open — the trifecta's third edge remains, and injection still exfiltrates private data. Isolation isn't only locking files. (2) The egress allowlist permits domains like <code>*.github.com</code>/<code>pastebin</code> that can be abused as an outbound channel. (3) Treating the sandbox as the only line of defense and skipping the input gate — the sandbox blocks execution harm, not "executing an injection embedded in a retrieved document as if it were an instruction."
+</div>
+
+<div class="res">
+<strong>Resources</strong> · Simon Willison <em>The lethal trifecta</em>, <a href="https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/" target="_blank">simonwillison.net</a> · Anthropic <em>Claude Code sandboxing</em>, <a href="https://www.anthropic.com/engineering/claude-code-sandboxing" target="_blank">anthropic.com/engineering</a> · <a href="https://github.com/anthropic-experimental/sandbox-runtime" target="_blank">anthropic-experimental/sandbox-runtime</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// Putting It Together · A "Minimal Trust Boundary" for Your Agent</h3>
+<p>Assemble the four points into a checklist you can drop onto any agent that takes actions. Each line maps to a specific failure mode above:</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>Input gate</strong>: use an independent classifier (Llama Guard / moderation) on user input <em>and on retrieved/tool returns</em> — injection usually arrives via the latter.</li>
+<li><strong>Jailbreak tiers</strong>: three tiers (allow / escalate / block); the threshold is the helpfulness-tax knob; sample as you stream.</li>
+<li><strong>Output policy gate</strong>: schema + business rules + (optional) grounding, re-ask <strong>capped</strong>, <strong>fail-closed</strong> to a fallback at the cap.</li>
+<li><strong>Execution sandbox</strong>: <code>--network none</code> or an egress allowlist proxy + read-only root + resource caps — cut the trifecta's third edge first.</li>
+<li><strong>PII/secrets</strong>: deterministic redaction (regex) at the exit gate; for high-sensitivity fields use allowlist output over blocklist redaction.</li>
+<li><strong>Red-team once</strong>: write 5 indirect-injection cases (hidden inside "a webpage to summarize") and run them to see which layer catches it first — if nothing does, you've found the hole.</li>
+</ol>
+<p style="margin-top:12px">The core principle: <strong>guardrails are architecture, not prompts</strong>. Each one is physical interception in the harness layer that the model cannot talk its way past. From now on, when you look at any "secure AI product," you'll instinctively hunt for its four boundaries — and if you can't find them, they aren't there.</p>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// DEEP THINKING</h3>
+<details><summary>If removing any one trifecta edge makes the system safe, why do people build sandboxes/classifiers first instead of just "not granting private data"?</summary><div>Because the first two edges are often the <strong>product value itself</strong>. An agent that can read your email and query your codebase exists <em>because</em> it "accesses private data" — cut it and you cut the product; "ingesting untrusted content" is frequently the requirement too (summarize a page, read a PR). Only the third edge, egress, is usually an <em>implementation detail</em> rather than a value point — most tasks don't need the agent to freely reach arbitrary external sites. So egress control is the highest-ROI edge: small cost, big payoff. That's why Anthropic tightened Claude Code's sandbox network default to "proxy-only" rather than restricting it from reading your code.</div></details>
+<details><summary>Should the output gate and input gate use the same classifier, or two different ones?</summary><div>Different directions, best tuned separately. The input gate cares whether content is "an attack / harmful request / contains sensitive data" — it detects <em>intent and injection</em>. The output gate cares whether generated content is "harmful / leaking / malformed" — it detects the <em>product</em>. Models like Llama Guard distinguish prompt classification from response classification by design; the taxonomy and thresholds can differ — e.g. stricter on PII leakage at the output, more sensitive to jailbreak patterns at the input. Sharing one threshold tends to leave one end too loose and the other too tight. The base model can be shared to save deployment cost; just split the policy.</div></details>
+<details><summary>A jailbreak classifier adds ~24% inference overhead (early version). When is that cost not worth it, and a lighter approach better?</summary><div>It depends on attack surface and blast radius. Public-facing, arbitrary user input, and the model able to cause real harm (generate harmful instructions, operate real systems) → worth it; that's why Anthropic optimized the cost from 24% to the ++ version: it <em>must</em> stay on. Conversely, internal tools, trusted users, output that goes to people not systems, low harm ceiling → a heavy classifier is over-engineering; a lightweight moderation endpoint + output gate suffices. The criterion isn't "is a jailbreak possible," it's "how much damage if one succeeds." Spending 24% of compute on jailbreak defense in a low-blast-radius setting is putting the budget in the wrong place.</div></details>
+<details><summary>Fail-closed is safer but rejects legitimate output when the validator misjudges, hurting availability. When should you fail-open?</summary><div>When the cost of "letting one piece of dirty data through" &lt; the cost of "rejecting one good piece." E.g. an internal analytics dashboard, non-critical content recommendations, draft scenarios a human can correct after the fact — here availability wins, and fail-open + logging + async review is more reasonable. Anything touching money, permissions, external publishing, or irreversible actions (transfers, sending email, deleting data) must fail-closed. It's essentially risk tiering: tag actions by blast radius, fail-closed for high-risk, fail-open for low. A blanket choice loses both ways — all fail-closed and the UX is too bad to use, all fail-open and you have no guardrail.</div></details>
+<details><summary>All four guardrails are in place and the agent still gets breached by indirect injection — where is it most likely leaking?</summary><div>The most common is the <strong>input gate judging only direct user input, not tool/retrieval returns</strong>. Injection hides in "a webpage to summarize" or "a PR comment to read"; that content bypasses the user-facing input gate and enters the context directly. Next is an egress allowlist with a hole — permitting a seemingly harmless domain that can encode outbound data (image host, URL shortener, even DNS lookups). Third: each layer is correct individually, but the <em>combination</em> was never tested — sandbox blocks execution, gates block content, yet no one verified the cross-layer path "injection makes the agent call an allowlisted tool to exfiltrate." So finish with an end-to-end red-team, not just per-layer unit tests.</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/" target="_blank">Simon Willison · The lethal trifecta for AI agents</a> — the foundational threat model for injection defense</li>
+<li><a href="https://www.anthropic.com/research/constitutional-classifiers" target="_blank">Anthropic · Constitutional Classifiers</a> — independent jailbreak classifiers (arXiv:2501.18837)</li>
+<li><a href="https://arxiv.org/abs/2312.06674" target="_blank">Meta · Llama Guard</a> — open-source input/output safety classifier</li>
+<li><a href="https://github.com/guardrails-ai/guardrails" target="_blank">Guardrails AI</a> — output schema/policy validation + re-ask framework</li>
+<li><a href="https://www.anthropic.com/engineering/claude-code-sandboxing" target="_blank">Anthropic · Claude Code Sandboxing</a> — the bubblewrap/seatbelt + egress proxy implementation paradigm</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 50 · 2026-06-30</footer>
+</div>
+</body></html>

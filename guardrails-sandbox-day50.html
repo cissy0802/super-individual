@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 50 · LLM 安全护栏与沙箱 — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 50 / PHASE 6 · ENGINEERING</span>
+<h1>LLM 安全护栏与沙箱</h1>
+<h2>Dual Gate · Jailbreak Classifier · Policy Gate · Execution Sandbox</h2>
+<div class="date">2026-06-30 · BigCat</div>
+<p class="pitch">system prompt 里的「请不要」是最弱的护栏；真正的边界在 harness。</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>读者已经懂 prompt injection 怎么打人（Day 24）。这一期讲怎么防——但先接受一个反直觉的工程现实：<strong>模型自身的 safety fine-tuning 加 system prompt，挡不住 indirect prompt injection</strong>。Simon Willison 的「lethal trifecta」说得很死：只要 agent 同时具备「能读私有数据 + 会摄入不可信内容 + 有外发通道」三件事，它就<strong>无条件</strong>可被注入泄密，再强的对齐也救不了。所以护栏不是写 prompt，是工程架构：独立 classifier、确定性校验、OS 级沙箱、egress 控制。这一期讲四件事——输入输出<strong>双闸门</strong>怎么搭、越狱为什么得靠<strong>独立 classifier</strong> 而不是 prompt 加固、输出策略门怎么 <strong>fail-closed</strong>、agent 执行沙箱怎么切断 lethal trifecta。</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>双闸门：模型两侧各一道独立闸门</h2>
+<div class="claim">论断：guardrails 是模型两侧的两道独立闸门，绝不能让主模型自己当闸门。</div>
+
+<h3>背景与原理</h3>
+<p>把 LLM 应用当成一个不可信的网络服务：input 来自外部（用户、检索文档、工具返回），output 要流入下游（用户屏幕、数据库、下一个 tool）。安全工程第一原则是<strong>在两侧各放一道独立闸门</strong>，而不是指望模型自己守规矩。</p>
+<ul>
+<li><strong>输入闸门</strong>：moderation + 越狱 classifier + PII/secret 检测。在内容进入主模型 context <em>之前</em>判一次。</li>
+<li><strong>输出闸门</strong>：内容安全 + PII 脱敏 + schema 校验。在内容离开 context、进入下游<em>之前</em>判一次。</li>
+</ul>
+<p>关键：闸门必须是<strong>独立组件</strong>——独立的小模型（Meta 的 Llama Guard、OpenAI 的 moderation endpoint）或确定性规则（正则脱敏 secret / 信用卡号）。让主模型「自己审自己」是反模式：同一个能被越狱撬开的模型，在自审时会被<em>同一个</em>越狱串一起绕过——攻击和审查共享一个被污染的 context。PII 与密钥防泄是闸门最该硬编码的部分：API key、JWT、卡号在出闸门时用<strong>确定性正则</strong>脱敏，别指望 LLM「记得脱敏」。</p>
+
+<div class="diagram">┌──── 不可信输入 ────┐                 ┌──── 下游 / 外发 ────┐
+ 用户·检索文档·工具返回                  用户屏幕·DB·下一个 tool
+        │                                        ▲
+        ▼                                        │
+  ┌───────────┐      ┌─────────┐      ┌────────────┐
+  │ 输入闸门  │ ───▶ │ 主模型  │ ───▶ │ 输出闸门    │
+  │ moderation│      │ (LLM)   │      │ 内容安全    │
+  │ +越狱clf  │      │ no mem  │      │ +PII 脱敏   │
+  │ +PII 检测 │      └─────────┘      │ +schema 校验 │
+  └───────────┘                       │ fail-closed │
+   独立模型 / 规则                      └────────────┘
+                                        独立模型 / 规则
+   ❌ 反模式：让主模型自己当闸门（同一个越狱一起绕过）</div>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-key">import</span> re, anthropic
+client = anthropic.Anthropic()
+
+<span class="tag-com"># 输入闸门：独立分类器（这里用 Llama Guard / moderation 端点，伪代码）</span>
+<span class="tag-key">def</span> input_gate(text):
+    verdict = classify_safety(text)          <span class="tag-com"># 独立小模型，不是主模型</span>
+    <span class="tag-key">if</span> verdict.unsafe: <span class="tag-key">raise</span> Blocked(verdict.categories)
+    <span class="tag-key">return</span> text
+
+<span class="tag-com"># 输出闸门：确定性脱敏 + 内容安全，二者都过才放行</span>
+SECRET = re.compile(<span class="tag-gpt">r"sk-[A-Za-z0-9]{20,}|eyJ[\w-]+\.[\w-]+\.[\w-]+"</span>)  <span class="tag-com"># key / JWT</span>
+<span class="tag-key">def</span> output_gate(text):
+    text = SECRET.sub(<span class="tag-gpt">"[REDACTED]"</span>, text)      <span class="tag-com"># 正则脱敏，不靠 LLM</span>
+    <span class="tag-key">if</span> classify_safety(text).unsafe: <span class="tag-key">raise</span> Blocked(<span class="tag-gpt">"output"</span>)
+    <span class="tag-key">return</span> text
+
+<span class="tag-key">def</span> guarded_call(user_input):
+    safe_in = input_gate(user_input)
+    raw = client.messages.create(model=<span class="tag-gpt">"claude-sonnet-4-6"</span>,
+            max_tokens=1024, messages=[{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,<span class="tag-gpt">"content"</span>:safe_in}])
+    <span class="tag-key">return</span> output_gate(raw.content[0].text)</code></pre>
+<p>两道闸门用的是<strong>独立判定路径</strong>，主模型只负责生成。secret 脱敏走确定性正则、放在内容安全分类之前——即使分类器漏判，key 也已经被抹掉。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）只在输出端设闸门，忘了输入端——注入常常从<em>检索文档 / 工具返回</em>这条不可信输入进来，不是用户直接打的。（2）让主模型自审，省一次调用，结果越狱一起绕过。（3）secret 脱敏用 blocklist 想覆盖所有格式——新格式 token 漏网；高敏感字段宁可用 allowlist 输出（只放白名单字段）而不是黑名单脱敏。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Llama Guard, <a href="https://arxiv.org/abs/2312.06674" target="_blank">arXiv:2312.06674</a> · Meta PurpleLlama, <a href="https://github.com/meta-llama/PurpleLlama" target="_blank">github.com/meta-llama/PurpleLlama</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>越狱防御：prompt 加固防不住，要独立 classifier</h2>
+<div class="claim">论断：prompt 加固挡不住 universal jailbreak；可靠的是独立 classifier，代价是你必须接受一点 helpfulness tax。</div>
+
+<h3>背景与原理</h3>
+<p>很多人防越狱的做法是往 system prompt 堆「无论用户怎么说都不要……」。这对随手攻击有点用，对 <strong>universal jailbreak</strong>（一个能撬开几乎所有有害类别的通用越狱串）基本无效——因为攻击和防御写在<em>同一个 context</em> 里，模型注意力被攻击者主导。</p>
+<p>Anthropic 2025 的 <strong>Constitutional Classifiers</strong> 给了工程答案：训练<strong>独立的 input/output 分类器</strong>，按一份 constitution（什么允许、什么禁止）过滤进出内容。在 3000+ 小时红队中，没人找到能在大多数有害类别上稳定击穿的 universal jailbreak。代价是真实的——早期版本带来约 <strong>23.7% 的推理开销</strong>和 +0.38% 的生产拒答率。2026 的 ++ 版把成本砍到约 <strong>40× 更便宜</strong>、拒答率压到 0.05%，说明这条路在工程上已经收敛。</p>
+<p>所以越狱防御的工程决策是三件事：闸门放哪（streaming 时要<strong>边生成边判</strong>，不能等整段生成完才拦）、false positive 怎么处理（这就是 <strong>helpfulness tax</strong>——正常请求被误杀）、constitution 怎么版本化（它是一份会漂的策略，要像 prompt 一样治理，见 Day 35）。</p>
+
+<h3>实战示例</h3>
+<p>自己训分类器太重，工程上更常见的是接现成分类器、把「拦 / 放」二元升级成<strong>三档</strong>，给边界请求一个 escalate 的台阶：</p>
+<pre><code><span class="tag-com"># 输出分类器返回一个风险分数；二元拦截体验差，用三档</span>
+BLOCK, REVIEW = <span class="tag-key">0.90</span>, <span class="tag-key">0.60</span>     <span class="tag-com"># 阈值即 helpfulness tax 旋钮</span>
+
+<span class="tag-key">def</span> jailbreak_gate(text, stream=<span class="tag-key">True</span>):
+    score = safety_classifier(text).risk      <span class="tag-com"># 独立分类器</span>
+    <span class="tag-key">if</span> score &gt;= BLOCK:   <span class="tag-key">return</span> (<span class="tag-gpt">"block"</span>,  fallback_refusal())
+    <span class="tag-key">if</span> score &gt;= REVIEW:  <span class="tag-key">return</span> (<span class="tag-gpt">"escalate"</span>, queue_human_review(text))  <span class="tag-com"># 不直接拒</span>
+    <span class="tag-key">return</span> (<span class="tag-gpt">"allow"</span>, text)
+
+<span class="tag-com"># streaming：每 N 个 token 抽检一次，命中 BLOCK 立即掐流</span>
+<span class="tag-key">for</span> chunk <span class="tag-key">in</span> stream:
+    buf += chunk
+    <span class="tag-key">if</span> len(buf) % <span class="tag-key">200</span> == <span class="tag-key">0</span> <span class="tag-key">and</span> jailbreak_gate(buf)[<span class="tag-key">0</span>] == <span class="tag-gpt">"block"</span>:
+        abort_stream(); <span class="tag-key">break</span></code></pre>
+<p>阈值是一个直接的成本/安全旋钮：调高 BLOCK → 漏判变多；调低 → helpfulness tax 飙升，正常用户被无故拒。中间留一个 <code>escalate</code> 档，把边界请求送人工而不是粗暴拒掉。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）只做二元拦/放，没有 escalate 档——边界请求要么误杀要么放过，体验和安全两头不讨好。（2）streaming 场景等整段生成完才判，有害内容已经流到用户屏幕上了。（3）constitution / 阈值永不更新——它是会漂的策略，新越狱手法几个月就绕过一版。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Constitutional Classifiers, <a href="https://arxiv.org/abs/2501.18837" target="_blank">arXiv:2501.18837</a> · Anthropic 研究博客, <a href="https://www.anthropic.com/research/constitutional-classifiers" target="_blank">anthropic.com/research/constitutional-classifiers</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>输出策略门：guardrails as code，且必须 fail-closed</h2>
+<div class="claim">论断：输出校验是 schema + 业务策略 + 事实三层，且校验不过时默认拒绝放行（fail-closed），不是记个 warning 就放出去。</div>
+
+<h3>背景与原理</h3>
+<p>内容安全只是输出闸门的一半；另一半是<strong>正确性与业务策略</strong>。把 LLM 输出当成不可信的外部输入来校验，分三层：</p>
+<ol>
+<li><strong>结构层</strong>：schema 校验（Pydantic / JSON Schema）。不是合法 JSON、字段缺失、类型不对 → 拒。</li>
+<li><strong>策略层</strong>：业务规则。金额不能为负、引用的 SKU 必须在库存表里、生成的 SQL 不能含 <code>DELETE</code>。<strong>用确定性代码判，别用 LLM。</strong></li>
+<li><strong>事实层</strong>：可选的 LLM-judge / grounding 校验——输出有没有 cite 到检索证据（接 Day 11 RAG）。</li>
+</ol>
+<p>关键工程决策是 <strong>fail-closed</strong>：校验不过时默认<strong>拒绝放行</strong>，走 fallback，而不是「catch 异常 → 记个 warning → 照样放出去」。生产事故里相当一部分是 fail-open——校验器自己抛异常被吞掉，脏数据反而畅通无阻。Guardrails AI 这类框架把这套封装成 <strong>re-ask loop</strong>：校验失败 → 把失败原因塞回模型重生成 → 有<strong>上限</strong>地重试 → 仍不过则 fail-closed 走兜底。</p>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-key">from</span> pydantic <span class="tag-key">import</span> BaseModel, field_validator
+
+<span class="tag-key">class</span> Order(BaseModel):
+    sku: str
+    qty: int
+    amount: float
+    <span class="tag-gpt">@field_validator</span>(<span class="tag-gpt">"amount"</span>)
+    <span class="tag-key">def</span> non_negative(cls, v):
+        <span class="tag-key">if</span> v &lt; <span class="tag-key">0</span>: <span class="tag-key">raise</span> ValueError(<span class="tag-gpt">"amount must be &gt;= 0"</span>)   <span class="tag-com"># 策略层</span>
+        <span class="tag-key">return</span> v
+
+<span class="tag-key">def</span> validated_extract(prompt, max_retries=<span class="tag-key">2</span>):       <span class="tag-com"># re-ask 必须有上限</span>
+    <span class="tag-key">for</span> _ <span class="tag-key">in</span> range(max_retries + <span class="tag-key">1</span>):
+        raw = call_llm(prompt)
+        <span class="tag-key">try</span>:
+            order = Order.model_validate_json(raw)   <span class="tag-com"># 结构 + 策略层</span>
+            <span class="tag-key">if</span> order.sku <span class="tag-key">not in</span> INVENTORY: <span class="tag-key">raise</span> ValueError(<span class="tag-gpt">"unknown SKU"</span>)
+            <span class="tag-key">return</span> order
+        <span class="tag-key">except</span> ValueError <span class="tag-key">as</span> e:
+            prompt += <span class="tag-gpt">f"\n\n上次输出校验失败：{e}。请修正后重出。"</span>  <span class="tag-com"># re-ask</span>
+    <span class="tag-key">return</span> FALLBACK            <span class="tag-com"># ★ fail-closed：到顶仍不过 → 兜底，绝不放脏数据</span></code></pre>
+<p>三层校验合在一起判，re-ask 把失败原因回喂给模型，但<strong>必须 capped</strong>，到顶仍不过就 fail-closed 返回 fallback——而不是返回最后一次（仍然非法的）输出。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）fail-open：<code>except: pass</code> 把校验失败吞掉，等于没校验。（2）re-ask 不设上限，模型反复出错时成本爆炸、延迟失控。（3）只校验 schema 不校验业务策略——合法 JSON 但 <code>amount=-999</code> 照样放行，最危险的恰恰是「格式正确、语义错误」。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Guardrails AI, <a href="https://github.com/guardrails-ai/guardrails" target="_blank">github.com/guardrails-ai/guardrails</a> · Guardrails 概念文档, <a href="https://www.guardrailsai.com/docs" target="_blank">guardrailsai.com/docs</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>执行沙箱：切断 lethal trifecta</h2>
+<div class="claim">论断：切断 lethal trifecta 任一条边，比加固模型更可靠；沙箱要同时锁文件系统和 egress，少一个都不算隔离。</div>
+
+<h3>背景与原理</h3>
+<p>Agent 会执行模型生成的代码 / shell / SQL——这是最高危的 action class。防御不是让模型「小心点」，是 <strong>OS 级沙箱 + 切断 lethal trifecta</strong>。Simon Willison 的 lethal trifecta：<strong>私有数据访问 + 不可信内容摄入 + 外发通道</strong>，三者俱全 = 无条件可被注入泄密。工程上的好消息是——<strong>移除任意一条边</strong>系统就安全：要么不给私有数据、要么不摄入不可信内容、要么掐断 egress。最可操作的通常是第三条。</p>
+
+<div class="diagram">      LETHAL TRIFECTA（三者俱全 = 无条件可注入泄密）
+
+            ┌──────────────────┐
+            │ ① 私有数据访问    │
+            │  邮件 / 代码 / DB │
+            └────────┬─────────┘
+         ┌───────────┴───────────┐
+┌────────▼────────┐     ┌────────▼────────┐
+│ ② 不可信内容    │     │ ③ 外发通道       │
+│ 网页/文档/工具  │     │ HTTP/图片/外链   │
+└─────────────────┘     └─────────────────┘
+
+   移除任意一条边 → 系统安全
+   最可操作：掐断 ③ egress（deny-all + allowlist）</div>
+
+<p>沙箱<strong>两个维度都要管</strong>：</p>
+<ul>
+<li><strong>文件系统隔离</strong>：只读 / 只允许写工作目录。Firecracker microVM（独立内核，多租户金标准）、gVisor（用户态内核拦截 syscall）、bubblewrap/seatbelt（OS namespace，无需容器）。</li>
+<li><strong>网络隔离</strong>：默认 deny-all egress，只放行连到外部 proxy 的受控出口 + domain allowlist。</li>
+</ul>
+<p>Anthropic 给 Claude Code 做的沙箱正是这个范式：用 bubblewrap（Linux）/ seatbelt（macOS）锁文件系统，网络只能走一个连到沙箱<em>外部</em> proxy 的 unix domain socket——<strong>这正是你现在这个远程执行环境的工作方式</strong>（出站 HTTPS 全走 agent proxy）。</p>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-com"># 跑模型生成的代码：默认无网 + 只读根 + 只写工作目录</span>
+docker run --rm \
+  --network none \                 <span class="tag-com"># ③ 掐断 egress（trifecta 第三条）</span>
+  --read-only \                    <span class="tag-com"># 根文件系统只读</span>
+  --tmpfs /work:rw,size=64m \      <span class="tag-com"># 唯一可写区，临时</span>
+  --memory 512m --cpus 1 \         <span class="tag-com"># 资源上限，防 fork bomb</span>
+  --cap-drop ALL --pids-limit 128 \
+  -v "$PWD/task:/work/task:ro" \   <span class="tag-com"># 任务文件只读挂入</span>
+  sandbox-img python /work/task/gen.py
+
+<span class="tag-com"># 若确实需要联网：不要 --network none，改为强制走 allowlist proxy</span>
+<span class="tag-com">#   HTTPS_PROXY=http://egress-proxy:3128  + proxy 侧只放行白名单域</span></code></pre>
+<p><code>--network none</code> 直接消掉 trifecta 第三条边，是最干脆的隔离。若任务必须联网，就别开放自由出口，而是强制经过一个<strong>只放行白名单域</strong>的 egress proxy——可控的窄通道，不是敞开的大门。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：（1）文件系统沙箱做足了，网络却敞着——lethal trifecta 第三条还在，注入照样把私有数据 exfil 出去。隔离不是只锁文件。（2）egress allowlist 放行了 <code>*.github.com</code>/<code>pastebin</code> 这类可被当外发通道滥用的域。（3）把沙箱当唯一防线，省了输入闸门——沙箱挡执行危害，挡不住「把检索文档里的注入当指令执行」本身。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Simon Willison <em>The lethal trifecta</em>, <a href="https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/" target="_blank">simonwillison.net</a> · Anthropic <em>Claude Code sandboxing</em>, <a href="https://www.anthropic.com/engineering/claude-code-sandboxing" target="_blank">anthropic.com/engineering</a> · <a href="https://github.com/anthropic-experimental/sandbox-runtime" target="_blank">anthropic-experimental/sandbox-runtime</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// 综合实战 · 给你的 agent 配一套「最小可信边界」</h3>
+<p>把这一期四点拼成一个清单，套到任何会执行动作的 agent 上。每一条都对应前面一个具体失败模式：</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>输入闸门</strong>：用独立分类器（Llama Guard / moderation）判用户输入<em>和检索/工具返回</em>——注入常从后者进来。</li>
+<li><strong>越狱档位</strong>：分类器三档（allow / escalate / block），阈值即 helpfulness tax 旋钮；streaming 边生成边抽检。</li>
+<li><strong>输出策略门</strong>：schema + 业务规则 + （可选）grounding 三层，re-ask <strong>capped</strong>，到顶 <strong>fail-closed</strong> 走 fallback。</li>
+<li><strong>执行沙箱</strong>：<code>--network none</code> 或 egress allowlist proxy + 只读根 + 资源上限——先掐 lethal trifecta 第三条边。</li>
+<li><strong>PII/密钥</strong>：出闸门确定性脱敏（正则），高敏感字段用 allowlist 输出而非 blocklist 脱敏。</li>
+<li><strong>红队一次</strong>：自己写 5 个 indirect injection 用例（藏在「待总结的网页」里），跑一遍看哪一层先拦住——拦不住就知道边界漏在哪。</li>
+</ol>
+<p style="margin-top:12px">核心心法：<strong>护栏是架构不是 prompt</strong>。每一道都是 harness 层的物理拦截，模型说服不了它们。你以后看任何「安全的 AI 产品」，就会习惯性地去找它的四道边界在哪——找不到，就是没有。</p>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// ENGLISH GLOSSARY</h3>
+<dl>
+<dt>Guardrails</dt><dd>包裹 LLM 的安全/正确性约束层，工程上是 harness 里的独立组件，不是 system prompt 里的祈使句。</dd>
+<dt>Dual Gate</dt><dd>模型两侧各一道独立闸门：输入闸门防有害/注入/PII 进入，输出闸门防有害/泄密/非法格式流出。</dd>
+<dt>Llama Guard</dt><dd>Meta 开源的 input/output 安全分类小模型，按可定制 taxonomy 判 prompt 与 response 的安全类别。</dd>
+<dt>Constitutional Classifiers</dt><dd>Anthropic 的独立越狱分类器，按一份 constitution 过滤进出内容，在大规模红队下未被 universal jailbreak 击穿。</dd>
+<dt>Universal Jailbreak</dt><dd>单个能撬开几乎所有有害类别的通用越狱串；prompt 加固难防，需独立分类器。</dd>
+<dt>Helpfulness Tax</dt><dd>安全过滤导致正常请求被误拒的代价；分类器阈值就是这个税率的旋钮。</dd>
+<dt>Fail-closed</dt><dd>校验失败时默认拒绝放行、走 fallback；反面 fail-open 会在出错时反而放出脏数据。</dd>
+<dt>Lethal Trifecta</dt><dd>Simon Willison：私有数据 + 不可信内容 + 外发通道三者俱全即无条件可被注入泄密；移除任一条边即安全。</dd>
+<dt>Egress Control</dt><dd>沙箱网络出口管控：默认 deny-all，只放行 proxy + domain allowlist，切断 exfiltration 通道。</dd>
+</dl>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// 深入思考</h3>
+<details><summary>既然 lethal trifecta 移除任一条边就安全，为什么实践中大家还是先做沙箱/分类器，而不是干脆「不给私有数据」？</summary><div>因为前两条边往往是<strong>产品价值本身</strong>。一个能读你邮件、查你代码库的 agent，「访问私有数据」就是它存在的理由，砍掉它等于砍掉产品；「摄入不可信内容」也常常是需求（总结网页、读 PR）。唯独第三条 egress 通常是<em>实现细节</em>而非价值点——大多数任务不需要 agent 自由访问任意外网。所以 egress 控制是性价比最高的边：代价小、收益大。这也解释了为什么 Anthropic 把 Claude Code 沙箱的网络默认收紧到「只走 proxy」，而不是限制它读你的代码。</div></details>
+<details><summary>输出闸门和输入闸门用同一个分类器，还是该用两个不同的？</summary><div>方向不同，最好分开调。输入闸门关心「这段内容是不是攻击/有害请求/含敏感数据」，偏检测<em>意图与注入</em>；输出闸门关心「生成内容是不是有害/泄密/格式非法」，偏检测<em>产物</em>。Llama Guard 这类模型设计上区分 prompt classification 与 response classification，taxonomy 和阈值可以不同——比如输出端对 PII 泄露要更严，输入端对越狱模式更敏感。共用一套阈值通常会让一端过松一端过严。但底座模型可以同一个，省部署成本，只是 policy 分开。</div></details>
+<details><summary>越狱分类器有 ~24% 推理开销（早期版本）。什么时候这个成本不值得，该用更轻的方案？</summary><div>取决于 attack surface 和 blast radius。面向公众、任意用户能输入、且模型有能力造成实际危害（生成有害指令、操作真实系统）→ 值得，这是 Anthropic 把成本从 24% 优化到 ++ 版的原因：它<em>必须</em>开。反过来，内部工具、可信用户、输出只进人不进系统、危害上限低 → 重分类器是过度工程，一个轻量 moderation 端点 + 输出闸门就够。判据不是「越狱可不可能」，是「越狱成功后能造成多大损失」。低 blast radius 场景花 24% 算力防越狱，是把预算花错地方。</div></details>
+<details><summary>fail-closed 更安全，但会在校验器误判时拒绝合法输出，伤可用性。什么场景该 fail-open？</summary><div>当「漏放一条脏数据」的代价 &lt; 「拒绝一条好数据」的代价时。例如内部分析 dashboard、非关键的内容推荐、可由人事后纠正的草稿场景——这里可用性优先，fail-open + 记日志 + 异步复核更合理。而涉及金钱、权限、对外发布、不可逆动作（转账、发邮件、删数据）必须 fail-closed。本质是一道风险分级：把 action 按 blast radius 打标，高危 fail-closed，低危 fail-open。一刀切两边都吃亏——全 fail-closed 体验差到没人用，全 fail-open 等于没护栏。</div></details>
+<details><summary>这四道护栏都做了，agent 还是被 indirect injection 攻破，最可能漏在哪？</summary><div>最常见是<strong>输入闸门只判了用户直接输入，没判工具/检索返回</strong>。注入藏在「待总结的网页」「待读的 PR 评论」里，这些内容绕过了面向用户的输入闸门，直接进了 context。其次是 egress allowlist 留了口子——放行了某个看似无害但能编码外发数据的域（图床、URL shortener、甚至 DNS 查询）。第三是各层独立做对了，但<em>组合</em>没测过：沙箱挡执行、闸门挡内容，却没人验证「注入指令让 agent 调用一个被 allowlist 放行的 tool 去外发」这条跨层路径。所以收尾一定要做一次端到端红队，而不是逐层单测。</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/" target="_blank">Simon Willison · The lethal trifecta for AI agents</a> — 注入防御的威胁模型基石</li>
+<li><a href="https://www.anthropic.com/research/constitutional-classifiers" target="_blank">Anthropic · Constitutional Classifiers</a> — 独立越狱分类器（arXiv:2501.18837）</li>
+<li><a href="https://arxiv.org/abs/2312.06674" target="_blank">Meta · Llama Guard</a> — 开源 input/output 安全分类小模型</li>
+<li><a href="https://github.com/guardrails-ai/guardrails" target="_blank">Guardrails AI</a> — 输出 schema/策略校验 + re-ask 框架</li>
+<li><a href="https://www.anthropic.com/engineering/claude-code-sandboxing" target="_blank">Anthropic · Claude Code Sandboxing</a> — bubblewrap/seatbelt + egress proxy 的实现范式</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 50 · 2026-06-30</footer>
+</div>
+</body></html>
