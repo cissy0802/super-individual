@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 51 · Automatic Prompt Optimization — Super Individual Daily</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border:1px solid rgba(0,212,255,0.3);border-radius:20px;padding:6px 14px;font-family:"SF Mono",Menlo,monospace}
+.xref a:hover{background:rgba(0,212,255,0.08)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 51 / PHASE 6 · FRONTIER ENGINEERING</span>
+<h1>Automatic Prompt Optimization</h1>
+<h2>DSPy · APE / OPRO · Eval-Driven · Auto Few-shot Selection</h2>
+<div class="date">2026-07-01 · BigCat</div>
+<p class="pitch">Stop hand-tuning prompts—treat the prompt as a parameter compiled from a metric, and let search tune it.</p>
+</header>
+
+<div class="xref">
+<a href="https://cissy0802.github.io/ai-ml-daily/prompt-engineering-day3.html">Prerequisite → ai-ml-daily Day 3 (Prompt Engineering)</a>
+</div>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>For power users, the marginal return on hand-tuning prompts is shrinking: you tweak a version on instinct, run a few examples, decide it "feels better," and ship. That's neither reproducible nor provable. Automatic Prompt Optimization turns this into a <strong>measurable, searchable optimization problem</strong>: define a metric, and let a program search over instruction wording and few-shot combinations. This issue is not about what prompt engineering is or why CoT works—that's ai-ml-daily Day 3. Here we cover four engineering decisions: <strong>when auto-optimization is worth it and when it's a waste</strong>; <strong>how DSPy compiles prompts as programs</strong>; <strong>the real gains and traps of instruction search (APE / OPRO)</strong>; <strong>auto few-shot selection and overfitting governance</strong>. The core counter-intuition: without a trustworthy eval, auto-optimization only makes you overfit to the wrong objective faster and more confidently.</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>Hand-tuning vs Auto-optimization: Ask if It's Worth It First</h2>
+<div class="claim">Claim: the precondition for auto-optimization isn't "the prompt is bad"—it's "you have a trustworthy metric and enough labeled samples."</div>
+
+<h3>Background &amp; Principle</h3>
+<p>Auto-optimization is fundamentally <strong>black-box search using eval scores as a gradient</strong>: it climbs only toward the metric you define. So the coarser the metric, the more crooked the result. Three conditions must all hold to trigger it: (1) an <strong>objective or semi-objective metric</strong> (accuracy, F1, format compliance, or a calibrated LLM-judge); (2) <strong>dozens to hundreds of samples with ground truth</strong>, splittable into independent train / val / test; (3) the prompt is <strong>called at high frequency</strong>, justifying a one-time optimization cost. Conversely, one-off tasks, open-ended creation with no scorable metric, or single-digit sample counts—hand-tuning is faster and cheaper. One often-ignored criterion: <strong>is the task stable</strong>. If requirements shift weekly and the schema changes daily, optimized artifacts expire fast and maintenance overwhelms the gain.</p>
+
+<div class="diagram">   Auto-optimize the prompt?
+            │
+            ▼
+  ┌──────────────────────┐  no
+  │ Trustworthy metric?   ├────▶ Build eval first (Day 6), don't rush
+  └──────────┬───────────┘
+             │ yes
+             ▼
+  ┌──────────────────────┐  no
+  │ ≥ dozens of labels?   ├────▶ Hand-tune + a few few-shots
+  └──────────┬───────────┘
+             │ yes
+             ▼
+  ┌──────────────────────┐  no
+  │ High-freq & stable?   ├────▶ Hand-tune (artifacts expire)
+  └──────────┬───────────┘
+             │ yes
+             ▼
+   Auto-optimize (DSPy / APE / OPRO)</div>
+
+<div class="fail">
+<strong>Failure mode</strong>: kicking off auto-optimization with 20 unsplit samples and an uncalibrated LLM-judge. The metric gets pumped up, production doesn't improve—you just overfit noise. <strong>Eval quality is the ceiling of auto-optimization</strong>; build the eval first (Day 6 / Day 29), don't put the cart before the horse.
+</div>
+
+<div class="res">
+<strong>Resources</strong> · Anthropic <em>Prompt improver</em> (the lightest-weight entry point), <a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/prompt-improver" target="_blank">docs.anthropic.com/.../prompt-improver</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>DSPy: Compile Prompts as Programs</h2>
+<div class="claim">Claim: DSPy lets you write a declarative "signature + module" program, then have an optimizer compile instructions and few-shots from a metric—instead of hand-writing strings.</div>
+
+<h3>Background &amp; Principle</h3>
+<p>The core shift in DSPy (Khattab et al. 2023, arXiv 2310.03714): <strong>you declare the input/output signature and module structure, and hand "what the actual prompt looks like" to an optimizer to search</strong>. A <code>Signature</code> defines fields (e.g. <code>text -&gt; label</code>), a <code>Module</code> (e.g. <code>ChainOfThought</code>) defines how it's called, and the optimizer <strong>jointly optimizes two things</strong> on the trainset: each module's instruction wording, and automatically bootstrapped few-shot examples. MIPROv2 (Opsahl-Ong et al. 2024, arXiv 2406.11695) uses Bayesian optimization to search instruction+demo combinations; it does <strong>credit assignment for multi-stage LM programs without module-level labels</strong>—you give only the final metric and it apportions across modules. The value: when you switch models or change requirements, you re-<code>compile</code> once instead of rewriting every prompt.</p>
+
+<h3>Example</h3>
+<pre><code><span class="tag-key">import</span> dspy
+dspy.configure(lm=dspy.LM(<span class="tag-gpt">"anthropic/claude-haiku-4-5"</span>))
+
+<span class="tag-key">class</span> <span class="tag-claude">Classify</span>(dspy.Signature):
+    <span class="tag-gpt">"""Judge the urgency of a support ticket."""</span>
+    ticket: str = dspy.InputField()
+    urgency: str = dspy.OutputField(desc=<span class="tag-gpt">"low|medium|high"</span>)
+
+program = dspy.ChainOfThought(Classify)
+
+<span class="tag-com"># metric: just return a comparable score</span>
+<span class="tag-key">def</span> metric(gold, pred, trace=<span class="tag-key">None</span>):
+    <span class="tag-key">return</span> gold.urgency == pred.urgency
+
+<span class="tag-key">from</span> dspy.teleprompt <span class="tag-key">import</span> MIPROv2
+opt = MIPROv2(metric=metric, auto=<span class="tag-gpt">"medium"</span>)      <span class="tag-com"># search intensity tier</span>
+compiled = opt.compile(program, trainset=train, valset=val)
+compiled.save(<span class="tag-gpt">"classify.v3.json"</span>)                  <span class="tag-com"># artifact into registry (Day 35)</span></code></pre>
+<p>Key mental model: you're not tuning "prompt text," you're tuning three knobs—<strong>metric, trainset, optimizer tier</strong>. The optimized instruction often reads unremarkable or even odd, yet scores higher on val—which is exactly the point of ceding aesthetic judgment to data.</p>
+
+<div class="fail">
+<strong>Failure mode</strong>: (1) trainset too small (a dozen) → the optimizer treats noise as signal, val collapses. (2) metric is boolean all-or-nothing, too coarse-grained → no gradient to climb, effectively random. (3) using DSPy as a "magic tuning" black box and never reading its generated prompt—undebuggable when it breaks. <strong>Always print and archive the final prompt after compile.</strong>
+</div>
+
+<div class="res">
+<strong>Resources</strong> · Khattab et al. <em>DSPy</em>, <a href="https://arxiv.org/abs/2310.03714" target="_blank">arXiv 2310.03714</a> ·
+DSPy official optimizer docs, <a href="https://dspy.ai/learn/optimization/optimizers/" target="_blank">dspy.ai/learn/optimization</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Instruction Search: The Real Gains of APE and OPRO</h2>
+<div class="claim">Claim: letting an LLM propose and iterate instructions (APE/OPRO) can beat human-written ones, but artifacts that are "counter-intuitive and non-transferable across models" are the norm, not a bug.</div>
+
+<h3>Background &amp; Principle</h3>
+<p>Two classic routes. <strong>APE</strong> (Zhou et al. 2022, arXiv 2211.01910) treats the "instruction" as a program: have an LLM generate a batch of candidate instructions, then score and select the best via the target model's eval—matching or beating human-written on 24 NLP tasks. <strong>OPRO</strong> (Yang et al. 2023, arXiv 2309.03409) goes further: it feeds the "history of (prompt, score) pairs" sorted by score back to the LLM, having it <strong>propose a better next version based on the trajectory</strong>, forming an iterative climb. Prompts found this way are often surprising—OPRO's famous find on GSM8K is "Take a deep breath and work on this problem step by step," which outscored human-written CoT cues. This shows two things: the objective is <strong>score, not readability</strong>; and this win <strong>depends strongly on the specific model</strong> being optimized—switch models and you usually re-search.</p>
+
+<div class="diagram">OPRO iterative instruction search:
+   ┌─────────────────────────────────────┐
+   │ meta-prompt: history(instr,score) sorted│
+   └───────────────┬─────────────────────┘
+                   ▼   LLM proposes N new instructions
+        ┌────────────────────┐
+        │ score on eval set   │
+        └─────────┬──────────┘
+                  ▼  write back to history, keep top-k
+        ┌────────────────────┐  not converged
+        │ score still rising? ├──────────▶ loop to top
+        └─────────┬──────────┘
+                  │ converged
+                  ▼
+       verify on held-out test, then pin</div>
+
+<h3>Example</h3>
+<p>You can hand-roll a minimal OPRO loop without any third-party library:</p>
+<pre><code><span class="tag-key">def</span> opro_step(history, n=<span class="tag-key">8</span>):
+    <span class="tag-com"># history: [(instr, score), ...] sorted ascending by score</span>
+    shown = <span class="tag-gpt">"\n"</span>.join(<span class="tag-gpt">f"instr: {i}\nscore: {s:.2f}"</span> <span class="tag-key">for</span> i,s <span class="tag-key">in</span> history[-<span class="tag-key">10</span>:])
+    meta = <span class="tag-gpt">f"""Below are instructions and their scores (higher is better).
+{shown}
+Write {n} <span class="tag-key">new</span> instructions aiming for a higher score. Output instructions only."""</span>
+    cands = propose(meta)                     <span class="tag-com"># LLM generates candidates</span>
+    <span class="tag-key">return</span> [(c, eval_on_valset(c)) <span class="tag-key">for</span> c <span class="tag-key">in</span> cands]  <span class="tag-com"># score each</span>
+<span class="tag-com"># iterate, merge new (instr,score) into history, pin on test after convergence</span></code></pre>
+<p>Engineering rule: <strong>candidates must be scored on held-out val, and the final version must be verified on a test set that never participated in the search</strong>—otherwise what you found is a "score-pumping incantation," not a real improvement. For a shortcut, Anthropic Console's prompt improver is a zero-code entry point—good for getting a strong baseline before considering search.</p>
+
+<div class="fail">
+<strong>Failure mode</strong>: (1) searching and validating on the same set → overfit, test reverts to baseline. (2) porting an "incantation" found on model A directly to model B → the gain vanishes or worsens; instruction search <strong>barely transfers across models</strong>. (3) no stopping criterion for iteration—burning thousands of calls for a 0.5% gain, where cost long ago exceeded benefit.
+</div>
+
+<div class="res">
+<strong>Resources</strong> · Zhou et al. <em>APE</em>, <a href="https://arxiv.org/abs/2211.01910" target="_blank">arXiv 2211.01910</a> ·
+Yang et al. <em>Large Language Models as Optimizers (OPRO)</em>, <a href="https://arxiv.org/abs/2309.03409" target="_blank">arXiv 2309.03409</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Auto Few-shot Selection and Overfitting Governance</h2>
+<div class="claim">Claim: the biggest output of auto-optimization is often not instructions but a set of auto-selected few-shots; and its biggest risk is overfitting to eval—so treat data splitting and governance like model training.</div>
+
+<h3>Background &amp; Principle</h3>
+<p>An underrated fact: <strong>on many tasks, auto-bootstrapped few-shot examples yield more than fine-tuning instruction wording</strong>. DSPy's <code>BootstrapFewShot</code> does exactly this: a teacher model runs on the trainset, the metric filters for "complete trajectories that got it right" as examples, then packs them into the prompt. This is more systematic than hand-picking. But examples are double-edged: selected samples <strong>carry their distribution, format, and even biases into the prompt</strong>, which can backfire on out-of-distribution inputs. So auto-optimization must borrow ML discipline: <strong>train / val / test three-way split</strong>, search touches only train+val, reporting trusts only test; and fold the artifact into <strong>Day 35's prompt registry</strong>—versioned, rollback-able, recording "which model, which data, which metric it was compiled with." When you switch models or data drifts, the registry triggers re-compilation instead of letting production silently degrade.</p>
+
+<h3>Example</h3>
+<pre><code><span class="tag-com"># Data splitting is the seatbelt of auto-optimization, not optional</span>
+train, val, test = split(data, <span class="tag-key">0.6</span>, <span class="tag-key">0.2</span>, <span class="tag-key">0.2</span>)
+
+<span class="tag-key">from</span> dspy.teleprompt <span class="tag-key">import</span> BootstrapFewShot
+opt = BootstrapFewShot(metric=metric,
+        max_bootstrapped_demos=<span class="tag-key">4</span>,   <span class="tag-com"># examples generated by teacher</span>
+        max_labeled_demos=<span class="tag-key">4</span>)      <span class="tag-com"># examples taken directly from train</span>
+compiled = opt.compile(program, trainset=train)
+
+<span class="tag-com"># trust only the test score—it never participated in search</span>
+<span class="tag-key">print</span>(evaluate(compiled, test))
+<span class="tag-com"># record provenance: model + data version + metric + score → registry</span></code></pre>
+<p>Governance checklist: <strong>the gap between val and test scores</strong> is your overfitting thermometer—a large gap means you over-searched, so dial back search intensity or add data. After launch, monitor production score vs test score; when <strong>prompt drift</strong> appears (same prompt shifting in quality due to a model update), that provenance in the registry lets you reproduce and re-compile with one click.</p>
+
+<div class="fail">
+<strong>Failure mode</strong>: (1) only splitting train/test and repeatedly tuning hyperparameters on test → test quietly becomes val, leakage. (2) few-shots selected from highly homogeneous samples → the model's behavior narrows, long-tail inputs collapse. (3) artifacts not versioned—after swapping a model endpoint nobody knows to re-compile, and production accuracy quietly bleeds for weeks before it's noticed.
+</div>
+
+<div class="res">
+<strong>Resources</strong> · Opsahl-Ong et al. <em>MIPRO</em> (joint instruction+demo optimization for multi-stage programs), <a href="https://arxiv.org/abs/2406.11695" target="_blank">arXiv 2406.11695</a> ·
+DSPy <em>choosing an optimizer</em>, <a href="https://dspy.ai/learn/optimization/optimizers/" target="_blank">dspy.ai/learn/optimization</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// PUTTING IT TOGETHER · Auto-optimize One High-Frequency Prompt</h3>
+<p>String the four points into a weekend build: pick a prompt called thousands of times a day and run the full "decide → compile → search → govern" flow.</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>Pass the decision gate (§1)</strong>: confirm it has a trustworthy metric, ≥ dozens of labeled samples, high frequency, and stability. Missing eval? Stop and build it—that's the ceiling.</li>
+<li><strong>Three-way split</strong>: train/val/test = 6/2/2, lock test in the safe, touch it only once at the very end.</li>
+<li><strong>DSPy compile (§2)</strong>: write signature + <code>ChainOfThought</code>, compile on train+val with <code>MIPROv2(auto="medium")</code>, print and archive the final prompt.</li>
+<li><strong>Go further with instruction search if needed (§3)</strong>: if DSPy isn't enough, hand-roll an OPRO loop to iterate instructions, with a stopping criterion (score plateau / budget cap).</li>
+<li><strong>Close with governance (§4)</strong>: compare val vs test to gauge overfitting; store the artifact with <em>model+data+metric+score</em> in the registry (Day 35); monitor production score after launch, re-compile on drift.</li>
+</ol>
+<p style="margin-top:12px">After this, your prompt goes from "tweaked on feel" to "a compiled artifact with provenance—reproducible and rollback-able." Switching models means one re-run, not an all-nighter rewrite.</p>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// DEEP THINKING</h3>
+<details><summary>Since auto-optimization only climbs toward the metric, isn't it the same trap as Goodhart's Law? How to defend?</summary><div>It's the same-family risk: once a metric becomes an optimization target, it stops being a good measure. Three layers of defense. (1) <strong>Multi-objective metric</strong>: don't optimize accuracy alone—fold format compliance, refusal rate, and length constraints into the metric to block single-point gaming. (2) <strong>Strict held-out test isolation</strong>: test is touched only once at pinning; the moment you tune hyperparameters on it, it's compromised. (3) <strong>Sample production distribution for re-evaluation</strong>: an eval set is always an approximation of reality; periodically refresh test with new production data so optimization doesn't fit a stale distribution. In essence, auto-optimization amplifies the importance of metric design—the metric is the value function you hand to the machine.</div></details>
+<details><summary>DSPy says "programming not prompting," but the output is still a prompt string. What does the abstraction actually save?</summary><div>It saves the <strong>coupling cost of hand-writing and hand-maintaining prompts</strong>. Traditionally, the model, task, prompt wording, and few-shots are all welded into one string; switching models or changing requirements means a total rewrite. DSPy decouples this into "declared program structure" + "compilable parameters": the structure (signature/module) is stable, the prompt is a compiled artifact. Switching models leaves the structure untouched—just re-<code>compile</code>. Analogy: a compiler—you write a high-level language and let the compiler generate assembly for the target architecture, rather than hand-writing assembly. What's saved isn't "prompts don't appear"—it's "not manually tuning prompts for each model/requirement combination."</div></details>
+<details><summary>OPRO found counter-intuitive incantations like "take a deep breath and think step by step"—why? What does this mean for "interpretable prompt engineering"?</summary><div>Because the objective is the <strong>eval score</strong>, not human readability or semantic legitimacy. A model's prompt sensitivity is high-dimensional and nonlinear; certain wordings happen to activate internal states favorable for that model on that task, which human priors can't predict. This means "interpretable prompt engineering" has a ceiling: a prompt written by reasoning may not be the optimum. But it also warns—these incantations are <strong>fragile and non-transferable</strong>, failing when the model or distribution changes; they're essentially overfit to specific weights. The engineering tradeoff: chasing score means accepting uninterpretability and managing fragility with a registry; chasing robustness and maintainability means preferring a slightly lower but explainable, cross-model-stable prompt.</div></details>
+<details><summary>Will auto-optimization eventually make the "prompt engineer" skill obsolete?</summary><div>It shifts, it doesn't vanish. What disappears is the layer of "tweaking wording letter-by-letter on feel"—which should've been handed to search anyway. What remains and grows more valuable: <strong>defining a good metric (the value function), constructing a representative dataset, judging when to automate, diagnosing overfitting and drift</strong>. These are the ability to translate fuzzy business goals into optimizable problems—exactly what search can't replace. Analogy: compilers didn't kill programmers, they killed hand-written assembly; they lifted human attention to a higher abstraction level. Auto prompt optimization is the same lift for prompt engineers.</div></details>
+<details><summary>If every model switch requires re-compiling the prompt, how does this relate to "vendor lock-in" (Day 45 anti-pattern)?</summary><div>It's actually <strong>unlocking, not locking</strong>—provided you use the right tools. Hand-written prompts are the implicit lock-in: wording deeply couples to one model, migration = rewrite, cost so high nobody moves. Once frameworks like DSPy decouple "structure" from "model-specific prompt," the cost of switching models drops to "re-run compile once," which makes you more willing to switch vendors. The real lock-in risk is elsewhere: if the optimization framework itself supports only one vendor, or your eval/data pipeline is bound to one API, that's lock-in. So governance must keep the eval and data layers vendor-neutral, turning "re-compilable" into a migration capability rather than another dependency.</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://arxiv.org/abs/2310.03714" target="_blank">Khattab et al. · DSPy: Compiling Declarative LM Calls into Self-Improving Pipelines</a> — the foundational paper on programmatic prompts</li>
+<li><a href="https://arxiv.org/abs/2211.01910" target="_blank">Zhou et al. · Large Language Models Are Human-Level Prompt Engineers (APE)</a> — automatic instruction generation and selection</li>
+<li><a href="https://arxiv.org/abs/2309.03409" target="_blank">Yang et al. · Large Language Models as Optimizers (OPRO)</a> — iterative instruction search</li>
+<li><a href="https://arxiv.org/abs/2406.11695" target="_blank">Opsahl-Ong et al. · Optimizing Instructions and Demonstrations (MIPRO)</a> — joint optimization for multi-stage programs</li>
+<li><a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/prompt-improver" target="_blank">Anthropic · Prompt improver</a> — zero-code auto-optimization entry point</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual Daily · Day 51 · 2026-07-01</footer>
+</div>
+</body></html>
