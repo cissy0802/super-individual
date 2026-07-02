@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Day 12 · Fine-tuning vs Prompting — Super Individual Daily</title>
+<title>Day 12 · Fine-tuning vs Prompting — Super Individual</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
@@ -524,7 +524,7 @@ vLLM <em>Sampling parameters</em>, <a href="https://docs.vllm.ai/en/latest/servi
 <details><summary>If by 2027 open-source 7B models match Claude 4.x on most business tasks, how will the "should I FT" decision tree change?</summary><div>The decision tree flips. Today: prompt → RAG → bigger model → FT, because "bigger model" has the highest ROI. When a 7B open model is already near top-tier API, "bigger model" stops yielding gain—the only remaining levers are prompt and FT. At that point <strong>FT's relative ROI rises sharply</strong> because: (1) the base model is already strong enough that FT doesn't need to add base capability, only alignment/style/format lock—small data suffices; (2) marginal cost of private deployment approaches zero (open + quantized + edge GPU), removing the inference cost constraint; (3) data ownership becomes the core competitive moat—your FT dataset is something competitors can't replicate. Prediction: by 2027, "should I FT" will flip from "99% no" to "business moats require FT"—but still small high-quality data + LoRA, not a return to 2023's full-FT era. <strong>FT is always engineering, always ROI-driven—it's just that the ROI function itself is shifting.</strong></div></details>
 </div>
 
-<footer>BigCat · Super Individual Daily · Day 12 / 2026-05-27</footer>
+<footer>BigCat · Super Individual · Day 12 / 2026-05-27</footer>
 </div>
 <script src="https://cissy0802.github.io/comments.js" defer></script>
 <script src="https://cissy0802.github.io/search.js" defer></script>

@@ -2,7 +2,7 @@
 
 源是仓库中的文件本身（`ls *-{day,week,book,issue}*.html`）。本文件是主题查找表：N → 主题。
 
-**本路线图已收口：Day 1–51 封顶，不再自动续写。** Phase 1–5（Day 1–48）为 AI 超级个体工程全集；Phase 6（Day 49–51）是 cross-ref ai-ml-daily 后补齐的 3 个工程空白（推理模型工程化 / 安全护栏与沙箱 / 自动 prompt 优化）——概念归 ai-ml，本 routine 只讲工程。向量库 / ANN 索引等已在两边覆盖（ai-ml Day 4/22 + 本 routine Day 11/43），不再补。
+**本路线图已收口：Day 1–52 封顶，不再自动续写。** Phase 1–5（Day 1–48）为 AI 超级个体工程全集；Phase 6（Day 49–52）是 cross-ref ai-ml-daily 与月度前沿刷新后补齐的工程空白（推理模型工程化 / 安全护栏与沙箱 / 自动 prompt 优化 / 智能体商务与支付协议）——概念归 ai-ml，本 routine 只讲工程。向量库 / ANN 索引等已在两边覆盖（ai-ml Day 4/22 + 本 routine Day 11/43），不再补。
 （注：仅改本文件不阻止 routine 在 day51 之后再 append；停止续写需在 routine prompt / cron 侧设上限或暂停。）
 
 ## Phase 1 — Engineering 核心
@@ -67,3 +67,4 @@
 - Day 49: 推理模型的工程化 — 何时用 reasoning(o1/o3/R1) vs 标准模型、extended thinking 与思维预算控制、推理成本/延迟权衡与路由、agent 内的推理调用、解析与利用 reasoning trace（概念见 ai-ml Day 28 推理模型）
 - Day 50: LLM 安全护栏与沙箱 — 输入/输出过滤、PII 脱敏与密钥防泄、越狱与有害内容防御、输出校验与策略门(guardrails)、agent 代码执行沙箱（注入攻防见 Day 24、对齐失败机制见 ai-ml Day 47）
 - Day 51: 自动 Prompt 优化 — 程序化 prompt(DSPy)、APE/自动 prompt 搜索、eval 驱动迭代 vs 手调、few-shot 自动选样与指令优化（prompt 概念见 ai-ml Day 3、版本治理见 Day 35）
+- Day 52: 智能体商务与支付协议 — agent 代人付款/相互结算的新协议层：AP2(Agent Payments Protocol, Google) 的 Mandate 授权(Intent/Cart)、ACP(Agentic Commerce Protocol, OpenAI/Stripe)、x402(Coinbase, HTTP 402 稳定币原生支付)、与 A2A/MCP 的关系、授权·真实性·问责三难与工程落地（2026 前沿，月度前沿刷新纳入；概念/生态见来源，本 routine 讲协议与落地工程）

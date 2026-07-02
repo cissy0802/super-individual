@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 52 · 智能体商务与支付协议 — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border:1px solid rgba(0,212,255,0.3);border-radius:20px;padding:6px 14px;font-family:"SF Mono",Menlo,monospace}
+.xref a:hover{background:rgba(0,212,255,0.08)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 52 / PHASE 6 · 新前沿工程化</span>
+<h1>智能体商务与支付协议</h1>
+<h2>AP2 授权 · x402 结算 · ACP 结账 · 授权·真实性·问责三难</h2>
+<div class="date">2026-07-01 · BigCat</div>
+<p class="pitch">让 agent 花钱，难的不是「发起支付」，是「证明这笔钱被谁、在什么约束下授权」。</p>
+</header>
+
+<div class="xref">
+<a href="https://cissy0802.github.io/super-individual-weekly/mcp-day18.html">前置协议 → 本仓 Day 18 (MCP) · Day 13 (多智能体协作)</a>
+</div>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>Agent 能查、能想、能调工具，但一到「付钱」就断了——因为整个支付栈是为「人点按钮」设计的，不是为「agent 代人结算」设计的。2025 下半年起，这一层突然长出三套协议：Google 的 <strong>AP2</strong>、OpenAI/Stripe 的 <strong>ACP</strong>、Coinbase 的 <strong>x402</strong>。这一期不讲「电商是什么」「稳定币是什么」——那是生态背景，见来源。这里只讲四个工程决策：<strong>三套协议各解决什么、怎么选</strong>；<strong>AP2 的 Mandate 如何把「授权」变成可验证、可追责的密码学对象</strong>；<strong>x402 如何用一个尘封 30 多年的 HTTP 状态码做机器原生的按次支付</strong>；以及<strong>把 agent 接上钱之后，授权边界、重放、问责这些必踩的坑怎么治理</strong>。核心反直觉：签名解决的是问责的「谁授权了」，不是决策的「买得对不对」——两件事都得管，别混为一谈。</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>协议全景与选型：三条不同的路</h2>
+<div class="claim">论断：AP2 / ACP / x402 不是三选一的竞品，而是「授权 / 结账 / 结算」三个不同层，多数真实系统会叠着用。</div>
+
+<h3>背景与原理</h3>
+<p>三者常被并列成「agent 支付协议」，但它们切的是不同的面，搞混就会选错。</p>
+<ul>
+<li><strong>AP2（Agent Payments Protocol, Google，2025-09 发布，60+ 伙伴）— 授权层。</strong>回答「用户到底授权 agent 买什么、花多少」。它<strong>支付方式无关</strong>（卡、稳定币、实时转账都行），用密码学签名的 <strong>Mandate</strong> 承载授权，扩展自 A2A、与 MCP 协同。定位：跨 agent、跨商户的可信授权底座。</li>
+<li><strong>ACP（Agentic Commerce Protocol, OpenAI + Stripe + Meta）— 结账层。</strong>让 agent 在对话里直接完成一次商户结账（ChatGPT 的 Instant Checkout 即基于它）。商户仍是 merchant of record，Stripe 的 Shared Payment Token 传递支付凭证。定位：把「你的商品被 agent 买走」这条链路标准化。</li>
+<li><strong>x402（Coinbase + Cloudflare）— 结算层。</strong>用 HTTP 402 让一次 API 调用本身可以按次收费，稳定币（USDC）秒级链上结算，无账户无 API key。定位：agent↔API、agent↔agent 的机器原生微支付。</li>
+</ul>
+
+<div class="diagram">   你要解决哪一层？
+            │
+   ┌────────┼─────────────────┬──────────────────┐
+   ▼        ▼                 ▼                  ▼
+「谁授权agent    「让agent在对话里     「按次卖我的
+ 买什么」      结完这单账」        API/数据/工具」
+   │             │                    │
+   ▼             ▼                    ▼
+ AP2           ACP                  x402
+（授权/信任）  （商户结账）        （HTTP 402 结算）
+   │                                  │
+   └──────── 常叠加使用 ──────────────┘
+   AP2 承载「用户授权了这次代购」，
+   底层再用 x402 或卡完成实际结算。</div>
+
+<p>选型一句话：<strong>代人购物、要跨商户可信授权 → AP2</strong>；<strong>你是商户、想被 ChatGPT 这类 agent 买到 → ACP</strong>；<strong>你在卖 API/工具、想让调用方（人或 agent）按次付费 → x402</strong>。复杂系统往往同时出现：AP2 定「授权语义」，x402 或卡做「实际结算」。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：把它们当竞品做二选一评测，或以为「上了 AP2 就不用别的」。AP2 本身不结算、x402 不管跨商户授权语义——它们是<strong>可组合的层，不是替代关系</strong>。按「你缺哪一层」来选，别按「哪个协议更火」来选。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Google Cloud <em>Announcing Agent Payments Protocol (AP2)</em>, <a href="https://cloud.google.com/blog/products/ai-machine-learning/announcing-agents-to-payments-ap2-protocol" target="_blank">cloud.google.com/blog/.../ap2-protocol</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>AP2 的 Mandate：可验证的授权委托</h2>
+<div class="claim">论断：AP2 的核心不是「支付」，是把「用户授权」做成一张可验证凭证（VC）——它同时锁死了授权范围、真实身份和事后问责。</div>
+
+<h3>背景与原理</h3>
+<p>AP2 要解决 agent 支付的三难：<strong>授权（authorization）</strong>——agent 真的被允许买这个吗？<strong>真实性（authenticity）</strong>——这笔请求真是这个用户/agent 发的、没被篡改吗？<strong>问责（accountability）</strong>——出事后能不能证明是谁、在什么约束下批准的？三者都靠 <strong>Mandate</strong> 解决。Mandate 是一张 W3C <strong>Verifiable Credential</strong>（JSON-LD），用 ECDSA P-256 签名、SHA-256 完整性哈希，内含请求载荷、时间戳、nonce、公钥引用与签名——<strong>防篡改、不可否认、可移植</strong>。</p>
+<p>两种关键 Mandate 对应两种场景：</p>
+<ul>
+<li><strong>Intent Mandate（意图授权）— 人不在场。</strong>装的是用户的自然语言请求 + 硬约束：最高价、商品规格、有效期（TTL）、允许的商户、agent 身份引用。等于「我授权你在这些边界内替我买」，agent 之后可自主成交。</li>
+<li><strong>Cart Mandate（购物车授权）— 人在场。</strong>由商户按用户请求生成具体购物车，用户用设备上<strong>硬件密钥当场签名</strong>，绑定 payer/payee 身份、tokenized 支付方式、风控载荷、最终交易明细。</li>
+</ul>
+<p>第三种 <strong>Payment Mandate</strong> 传给支付网络，让发卡行/网络也能看到「这是 agent 发起的交易」信号。价值：每一步授权都留下密码学证据链，谁在什么约束下批了什么，事后可验、不可赖。</p>
+
+<h3>实战示例</h3>
+<p>一个 Intent Mandate 的结构（简化）：</p>
+<pre><code>{
+  <span class="tag-gpt">"@context"</span>: [<span class="tag-gpt">"https://www.w3.org/ns/credentials/v2"</span>,
+               <span class="tag-gpt">"https://ap2-protocol.org/context/v1"</span>],
+  <span class="tag-gpt">"type"</span>: [<span class="tag-gpt">"VerifiableCredential"</span>, <span class="tag-gpt">"IntentMandate"</span>],
+  <span class="tag-gpt">"issuer"</span>: <span class="tag-gpt">"did:user:8f3a..."</span>,           <span class="tag-com">// 用户身份</span>
+  <span class="tag-gpt">"issuanceDate"</span>: <span class="tag-gpt">"2026-07-01T09:00:00Z"</span>,
+  <span class="tag-gpt">"credentialSubject"</span>: {
+    <span class="tag-gpt">"agent"</span>: <span class="tag-gpt">"did:agent:bigcat-shopper"</span>,  <span class="tag-com">// 被授权的 agent</span>
+    <span class="tag-gpt">"intent"</span>: <span class="tag-gpt">"买一台 65 分贝以下的便携榨汁机"</span>,
+    <span class="tag-gpt">"constraints"</span>: {
+      <span class="tag-gpt">"maxPrice"</span>: {<span class="tag-gpt">"amount"</span>: <span class="tag-key">80</span>, <span class="tag-gpt">"currency"</span>: <span class="tag-gpt">"USD"</span>},
+      <span class="tag-gpt">"allowedMerchants"</span>: [<span class="tag-gpt">"merchant:xyz-store"</span>],
+      <span class="tag-gpt">"expiry"</span>: <span class="tag-gpt">"2026-07-03T00:00:00Z"</span>       <span class="tag-com">// TTL：过期即失效</span>
+    }
+  },
+  <span class="tag-gpt">"proof"</span>: {                               <span class="tag-com">// 密码学签名</span>
+    <span class="tag-gpt">"type"</span>: <span class="tag-gpt">"EcdsaSecp256r1Signature2019"</span>,
+    <span class="tag-gpt">"nonce"</span>: <span class="tag-gpt">"a1b2c3..."</span>,                  <span class="tag-com">// 防重放</span>
+    <span class="tag-gpt">"jws"</span>: <span class="tag-gpt">"eyJ..."</span>
+  }
+}</code></pre>
+<p>验证方（商户/网络）做三件事：<strong>验签</strong>（真实性）、<strong>检查 constraints 是否覆盖本次购买</strong>（授权）、<strong>把整张 VC 连同 nonce 存档</strong>（问责）。心智：你不是在传「一句话指令」，是在传「一份带边界、带签名、带时效的委托书」。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：(1) 约束写太松（maxPrice 很高、allowedMerchants 空）→ 等于给 agent 一张空白支票，授权层形同虚设。(2) 不校验 expiry/nonce → mandate 被重放，一次授权被花两次。(3) 只验签不比对 constraints → 签名真但买超范围照样放行。<strong>签名保证「没被篡改」，不保证「没越权」——两件事都要查。</strong>
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · AP2 官方规范（Mandate / VC 结构）, <a href="https://ap2-protocol.org/specification/" target="_blank">ap2-protocol.org/specification</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>x402：HTTP 402 的机器原生支付流</h2>
+<div class="claim">论断：x402 把「付费」塞进一次普通 HTTP 往返——服务端答 402 报价、客户端签名重试、facilitator 秒级结算，让 API 本身成为可按次售卖的商品。</div>
+
+<h3>背景与原理</h3>
+<p><strong>HTTP 402 Payment Required</strong> 是 1990 年代就留在协议里、却尘封 30 多年的状态码。x402（Coinbase + Cloudflare）把它激活成机器原生支付层。流程三步：</p>
+<ol>
+<li><strong>报价</strong>：客户端无凭证调用付费端点 → 服务端返回 <strong>402</strong>，body 里 <code>accepts[]</code> 列出可接受的支付选项（链、币种、金额、收款地址、facilitator）。</li>
+<li><strong>授权</strong>：客户端选一个选项，钱包用 <strong>EIP-3009 TransferWithAuthorization</strong> 对这些确切条款签名，把签名载荷 base64 后放进 <strong>X-PAYMENT</strong> 头，重放同一请求。</li>
+<li><strong>结算</strong>：服务端验签，通过 facilitator 在链上结算（USDC 等稳定币），然后返回真正的响应。</li>
+</ol>
+<p>整个来回约 <strong>2 秒</strong>，无需账户、无需 API key，支持 Base / Ethereum / Arbitrum / Polygon / Solana。对超级个体的意义：你写的一个工具/数据 API，可以直接对「任何 agent」按次收费，不用注册体系、不用发 key、不用月度账单。x402 生态已归入 Linux Foundation，Stripe、Cloudflare 接入。</p>
+
+<h3>实战示例</h3>
+<p>HTTP 层（与语言无关）的一次完整往返：</p>
+<pre><code><span class="tag-com"># 1) agent 首次请求，无支付</span>
+<span class="tag-key">GET</span> /api/premium-forecast HTTP/1.1
+Host: data.example.com
+
+<span class="tag-com"># 2) 服务端报价</span>
+HTTP/1.1 <span class="tag-claude">402 Payment Required</span>
+Content-Type: application/json
+{
+  <span class="tag-gpt">"accepts"</span>: [{
+    <span class="tag-gpt">"scheme"</span>: <span class="tag-gpt">"exact"</span>, <span class="tag-gpt">"network"</span>: <span class="tag-gpt">"base"</span>,
+    <span class="tag-gpt">"asset"</span>: <span class="tag-gpt">"USDC"</span>, <span class="tag-gpt">"amount"</span>: <span class="tag-gpt">"0.01"</span>,
+    <span class="tag-gpt">"payTo"</span>: <span class="tag-gpt">"0xMerchant..."</span>,
+    <span class="tag-gpt">"facilitator"</span>: <span class="tag-gpt">"https://facilitator.example"</span>
+  }]
+}
+
+<span class="tag-com"># 3) agent 用钱包签 EIP-3009，带 X-PAYMENT 重试</span>
+<span class="tag-key">GET</span> /api/premium-forecast HTTP/1.1
+Host: data.example.com
+<span class="tag-claude">X-PAYMENT</span>: eyJzY2hlbWUiOiJleGFjdCIsInNpZ25hdHVyZSI6...
+
+<span class="tag-com"># 4) 验签 + 链上结算后返回内容</span>
+HTTP/1.1 <span class="tag-gpt">200 OK</span>
+X-PAYMENT-RESPONSE: {<span class="tag-gpt">"settled"</span>:true,<span class="tag-gpt">"tx"</span>:<span class="tag-gpt">"0xabc..."</span>}
+{ <span class="tag-gpt">"forecast"</span>: <span class="tag-gpt">"..."</span> }</code></pre>
+<p>心智：402 把「计价、鉴权、结算」从「注册-发 key-开发票」的重流程，压缩成一次 HTTP 挑战-应答。适合 <strong>pay-per-call</strong> 的数据、推理、工具服务。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：(1) 把 x402 接到大额、需退款的场景 → 稳定币结算即时且难逆，<strong>没有信用卡的 chargeback 保护</strong>，大额风险自负。(2) 服务端不设每请求/每 agent 的限额与幂等 → 被循环调用刷爆钱包。(3) 忽略 facilitator 的信任假设 → 你把结算外包给了一个第三方，得评估它靠不靠谱。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Coinbase <em>x402</em>（协议与 facilitator）, <a href="https://github.com/coinbase/x402" target="_blank">github.com/coinbase/x402</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>工程落地与失败模式：授权边界、重放、问责</h2>
+<div class="claim">论断：给 agent 接上钱，真正的工程量不在「发起支付」，在「约束授权、防重放、留问责」——这三件事决定它是资产还是事故。</div>
+
+<h3>背景与原理</h3>
+<p>把前三节拼成能上线的系统，必须补上四道治理：</p>
+<ul>
+<li><strong>授权边界（scope）</strong>：Intent Mandate 的 constraints 是第一道闸——每次授权都给<strong>最小必要范围</strong>（单次预算、白名单商户、TTL）。绝不发「无上限、无过期、无商户限制」的 mandate。</li>
+<li><strong>重放与幂等</strong>：每个 mandate/支付带 nonce + expiry，服务端记录已用 nonce；x402 侧对每请求做幂等键，防止一次授权被结算多次。</li>
+<li><strong>人在环分级（HITL）</strong>：低额、白名单内 → agent 自动成交；超阈值、新商户、异常 → 暂停并升级给人批准（承接 <a href="https://cissy0802.github.io/super-individual-weekly/hitl-day34.html" style="color:#00d4ff">Day 34</a> 的置信度路由 auto/ask/deny）。Intent Mandate 本质就是一种<strong>「预授权的 HITL」</strong>——把人的批准提前固化成带边界的凭证。</li>
+<li><strong>问责与审计</strong>：每笔交易连同它的 mandate/签名/nonce/结算 tx 一起入库，可回放「谁、在什么约束下、批了这笔」。这是出事时唯一能自证的东西。</li>
+</ul>
+
+<h3>实战示例</h3>
+<p>一个下单前的守卫，把三难落成可执行的检查——顺序不能省：</p>
+<pre><code><span class="tag-key">def</span> <span class="tag-claude">authorize_purchase</span>(mandate, cart):
+    verify_signature(mandate)                    <span class="tag-com"># 真实性</span>
+    <span class="tag-key">assert</span> <span class="tag-key">not</span> nonce_seen(mandate.proof.nonce)   <span class="tag-com"># 防重放</span>
+    <span class="tag-key">assert</span> now() &lt; mandate.expiry                <span class="tag-com"># 时效</span>
+    c = mandate.constraints
+    <span class="tag-key">assert</span> cart.total &lt;= c.maxPrice              <span class="tag-com"># 授权边界</span>
+    <span class="tag-key">assert</span> cart.merchant <span class="tag-key">in</span> c.allowedMerchants
+    <span class="tag-key">if</span> cart.total &gt; HITL_THRESHOLD <span class="tag-key">or</span> cart.merchant <span class="tag-key">not in</span> TRUSTED:
+        <span class="tag-key">return</span> escalate_to_human(mandate, cart)  <span class="tag-com"># 分级：升级</span>
+    record_audit(mandate, cart)                  <span class="tag-com"># 问责</span>
+    <span class="tag-key">return</span> settle(cart)                          <span class="tag-com"># 结算（AP2/x402/卡）</span></code></pre>
+<p>顺序即防线：<strong>验签 → 防重放 → 查边界 → 分级 → 审计 → 结算</strong>。少一环，就多一个能被利用的口子。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：(1) 只验签就放行（§2 的老坑），越权照过。(2) 没有 kill switch / 预算熔断——agent 逻辑出错时，没有「今日已花 X，停」的硬闸。(3) 审计只记结果不记授权凭证 → 出事无法自证「这是被授权的」，问责链断裂。(4) 「人在环」设成一刀切：全人工 → 退化成没有 agent；全自动 → 失控。<strong>分级才是关键。</strong>
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · <em>Identity Management for Agentic AI</em>（agent 世界的授权/认证/问责综述）, <a href="https://arxiv.org/abs/2510.25819" target="_blank">arXiv 2510.25819</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// 综合实战 · 给一个购物 agent 端到端接上支付</h3>
+<p>把四节串成一条能落地的链路：</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>授权（§2）</strong>：用户签一张 Intent Mandate，constraints = 单次 ≤ $80、白名单商户、48h TTL。人的批准被固化成一份可验证的委托书。</li>
+<li><strong>选路（§1）</strong>：跨商户代购 → 用 AP2 承载授权语义；买的是 API/数据 → 直接走 x402；要卖进 ChatGPT → ACP。按「缺哪一层」选。</li>
+<li><strong>结算（§3）</strong>：成交时商户侧生成 Cart Mandate 由用户（或预授权）签，底层用 x402 / 卡完成约 2 秒结算，留下结算 tx。</li>
+<li><strong>治理（§4）</strong>：下单前跑守卫（验签 → 防重放 → 查边界 → HITL 分级 → 审计），超阈值升级给人，全程留证据链；配预算熔断与 kill switch。</li>
+</ol>
+<p style="margin-top:12px">做完这套，你的 agent 从「能查会想但不敢付」，升级为「能在密码学边界内替你花钱、且每一笔都可追责」——这才是 agent 真正接入经济活动的门槛。</p>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// ENGLISH GLOSSARY</h3>
+<dl>
+<dt>AP2 (Agent Payments Protocol)</dt><dd>Google 主导的 agent 支付授权协议：用签名 Mandate 承载授权，支付方式无关，扩展自 A2A。</dd>
+<dt>Mandate</dt><dd>AP2 中承载用户授权的可验证凭证，密码学签名、带约束（价格/商户/时效）。</dd>
+<dt>Intent / Cart / Payment Mandate</dt><dd>分别对应人不在场（意图+硬约束）、人在场（具体购物车+当场签名）、传给支付网络三类授权凭证。</dd>
+<dt>Verifiable Credential (VC)</dt><dd>W3C 标准的防篡改、可验证、可移植的签名数据结构（JSON-LD）。</dd>
+<dt>ACP (Agentic Commerce Protocol)</dt><dd>OpenAI+Stripe+Meta 的 agent 结账协议，ChatGPT Instant Checkout 的基础。</dd>
+<dt>x402</dt><dd>Coinbase+Cloudflare 基于 HTTP 402 的稳定币机器原生支付协议。</dd>
+<dt>HTTP 402 Payment Required</dt><dd>尘封 30 余年的 HTTP 状态码，x402 将其激活为支付挑战。</dd>
+<dt>EIP-3009 (TransferWithAuthorization)</dt><dd>以太坊代币授权转账标准，x402 用它对支付条款离线签名。</dd>
+<dt>Facilitator</dt><dd>x402 中代为在链上验签与结算的第三方服务。</dd>
+<dt>A2A (Agent2Agent)</dt><dd>agent 间互操作协议，AP2 在其上扩展支付语义。</dd>
+<dt>Non-repudiation（非否认性）</dt><dd>签名使授权方事后无法否认曾批准该交易。</dd>
+</dl>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// 深入思考</h3>
+<details><summary>AP2 用密码学 mandate 解决了「问责」，但当 agent 在约束内买错了东西，链条上到底谁担责？</summary><div>签名解决的是<strong>「谁授权了、授权范围是什么」</strong>，不是<strong>「这个决策对不对」</strong>——这是两层问责。mandate 能证明「用户确实授权了 agent 在 ≤$80、这家店范围内买榨汁机」，所以如果 agent 在范围内买了一台用户其实不满意的机器，<strong>责任落在用户的授权而非商户或网络</strong>——就像你给了店员一张有额度的委托书，他在额度内买错了，是你的委托问题。真正的灰区在<strong>约束之外</strong>：如果 agent 越了界（买超价、买错店），验证方本应拦下，拦不下就是<strong>实现方（验证逻辑）的责任</strong>。所以 mandate 把问责从「说不清」变成「按边界切」：范围内=授权方担，越界放行=验证方担。它没消灭「买得对不对」的判断风险，只是让「谁该为此负责」变得可裁定。</div></details>
+<details><summary>x402 让一次 API 调用能 per-call 收费，这会不会催生一个「agent 只为另一个 agent 服务」的机器经济？对超级个体意味着什么？</summary><div>会，而且这正是设计意图。当支付的摩擦降到「一次 HTTP 往返、2 秒、零手续费门槛」，<strong>低于人类会为之注册账号的金额</strong>（一次调用几厘钱）也变得可结算，于是 agent 之间可以互相买数据、买算力、买工具调用，形成人不在回路里的微交易网。对超级个体是双刃：<strong>机会</strong>是你写的一个小工具/数据源可以直接对全世界的 agent 按次变现，不用做用户体系、不用谈 BD；<strong>风险</strong>是你的 agent 也在花你的钱买别人的服务，成本从「可预期的月度订阅」变成「一堆微交易的长尾」，没有预算熔断就会阴性失血。超级个体的护城河从此不只是「会用工具」，还包括「能设计一个自己会赚钱、也守得住预算的 agent」。</div></details>
+<details><summary>AP2（授权层）、ACP（结账层）、x402（结算层）会走向统一，还是分层共存？</summary><div>更可能<strong>分层共存</strong>，类比 TCP/IP：没有一个协议既管路由又管应用，是因为不同层的变化速率和关注点不同。授权语义（谁能花多少）演化慢、要跨生态可信；结算轨道（卡/稳定币/银行）多样且互斥，谁也吃不掉谁；结账体验（在哪个界面成交）绑具体平台。硬把三层塞进一个协议，等于让「换结算方式」牵动「授权模型」，反而更脆。真实趋势是<strong>接口标准化 + 实现多样化</strong>：AP2 的 mandate 可以背书一笔最终走 x402 或走卡的交易，就像 HTTP 之上可以跑各种应用。要警惕的不是「不统一」，而是<strong>某一层被单一供应商垄断</strong>——那才是把分层的自由重新锁死。</div></details>
+<details><summary>Intent Mandate 让 agent 在人不在场时花钱——这和 Day 34「高风险必须人在环」矛盾吗？</summary><div>不矛盾，Intent Mandate 恰恰是 HITL 的一种<strong>时间平移</strong>：它把「人的批准」从「交易发生的那一刻」提前到「签发授权的那一刻」，并用密码学把批准的<strong>边界</strong>固化下来。这和「高风险人在环」的精神一致——高风险的部分（要不要授权、授权多少、给谁、多久）依然是人当场决定的，只是决定被前置了。真正违背 HITL 的是<strong>无边界的预授权</strong>（空白支票 mandate），那等于把人踢出了回路。所以工程上正确的姿势是：<strong>用约束的紧致度来编码风险等级</strong>——低风险给宽约束+长 TTL 让 agent 自主跑，高风险要么收紧约束（单次小额、白名单），要么干脆退回实时 Cart Mandate 让人当场签。HITL 不是「必须实时」，是「必须有人划定边界」。</div></details>
+<details><summary>稳定币原生结算绕过了传统 chargeback / 退款保护——agent 付错了钱能追回吗？</summary><div>大概率<strong>追不回</strong>，这是 x402 这类链上即时结算的结构性代价：没有中心化清算方，就没有「拨回一笔已确认交易」的按钮。信用卡的 chargeback 本质是<strong>发卡行作为可信中介垫付争议风险</strong>，链上结算把中介去掉了，也就去掉了这层保护。这意味着风险治理必须<strong>前移到支付之前</strong>而非事后：额度熔断、白名单、幂等键、人在环分级、可回滚的「先冻结再结算」模式。换句话说，传统支付把安全网放在<strong>事后</strong>（争议、退款、拒付），agent 原生支付逼你把安全网放在<strong>事前</strong>（授权边界、守卫、审计）。这也解释了为什么大额、易争议的场景更适合走 AP2+卡（保留 chargeback），而 x402 更适合小额、幂等、可接受损失的机器微交易——<strong>协议选型本身就是风险选型</strong>。</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://cloud.google.com/blog/products/ai-machine-learning/announcing-agents-to-payments-ap2-protocol" target="_blank">Google Cloud · Announcing Agent Payments Protocol (AP2)</a> — 授权层的官方发布</li>
+<li><a href="https://ap2-protocol.org/specification/" target="_blank">AP2 Protocol · Specification</a> — Mandate / Verifiable Credential 结构的权威定义</li>
+<li><a href="https://github.com/coinbase/x402" target="_blank">Coinbase · x402</a> — HTTP 402 支付流、facilitator 与 EIP-3009 实现</li>
+<li><a href="https://github.com/agentic-commerce-protocol/agentic-commerce-protocol" target="_blank">Agentic Commerce Protocol (ACP)</a> — OpenAI/Stripe/Meta 维护的对话内结账开放标准</li>
+<li><a href="https://arxiv.org/abs/2510.25819" target="_blank">Identity Management for Agentic AI</a> — agent 世界的授权 / 认证 / 问责综述</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual · Day 52 · 2026-07-01</footer>
+</div>
+<script src="https://cissy0802.github.io/comments.js" defer></script>
+<script src="https://cissy0802.github.io/search.js" defer></script>
+<script src="https://cissy0802.github.io/index-button.js" defer></script>
+<script src="https://cissy0802.github.io/i18n-tts.js" defer></script>
+</body></html>
