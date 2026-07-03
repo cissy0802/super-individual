@@ -107,15 +107,32 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <p>METR's 2025 RCT (16 experienced open-source maintainers, on large codebases they'd maintained for years) measured a counter-intuitive result: <strong>being allowed to use AI made them 19% slower</strong>, while the developers themselves still believed afterward that they were 20% faster. The cause wasn't slow generation — it was <strong>verification cost</strong>: in a complex codebase, writing was never the bottleneck; reading, reviewing, and confirming the AI output is correct was. AI sped up the non-bottleneck and piled work onto the bottleneck.</p>
 <p>Connect this to the main line: if a senior engineer's most valuable skill is "verification and judgment," then <strong>what a junior must practice to become senior is exactly that</strong> — reading others' code, judging whether an implementation is right, locating problems in an architecture. Using AI without guardrails (let it generate, merge it wholesale) skips precisely that practice. At the individual level, the perception-reality gap is the biggest trap: METR's veterans were slowed and still convinced they'd sped up. <strong>Don't trust the feeling; trust the hard test — can you reproduce it independently with AI off.</strong></p>
 
-<div class="diagram">Production mode (throughput)   Learning mode (ability)
-┌───────────────┐            ┌───────────────┐
-│ AI generates   │            │ You generate   │
-│      ↓         │            │      ↓         │
-│ You verify ✓   │            │ AI reviews/asks│
-└───────────────┘            └───────────────┘
- trains "verify muscle"       trains generate + verify
- ⚠ only-left long-term → generation atrophies → verification decays too
-   (you must be able to write before you can review)</div>
+<div class="diagram" style="white-space:normal;padding:18px 16px">
+<svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" style="width:100%;height:auto">
+  <text x="170" y="30" fill="#00d4ff" font-size="14" font-weight="700" text-anchor="middle" font-family="-apple-system,sans-serif">Production mode · throughput</text>
+  <text x="510" y="30" fill="#ff6ec4" font-size="14" font-weight="700" text-anchor="middle" font-family="-apple-system,sans-serif">Learning mode · ability</text>
+  <line x1="340" y1="46" x2="340" y2="212" stroke="#2a2e44" stroke-width="1" stroke-dasharray="3,5"/>
+
+  <rect x="60" y="52" width="220" height="46" rx="8" fill="#00d4ff" opacity="0.85"/>
+  <text x="170" y="80" fill="#0a0e1a" font-size="14.5" font-weight="700" text-anchor="middle" font-family="-apple-system,sans-serif">AI generates</text>
+  <line x1="170" y1="100" x2="170" y2="124" stroke="#5a6378" stroke-width="2"/><polygon points="164,124 176,124 170,132" fill="#5a6378"/>
+  <rect x="60" y="134" width="220" height="46" rx="8" fill="#7b61ff" opacity="0.9"/>
+  <text x="170" y="162" fill="#fff" font-size="14.5" font-weight="700" text-anchor="middle" font-family="-apple-system,sans-serif">You verify ✓</text>
+  <text x="170" y="204" fill="#a0a4b8" font-size="12.5" text-anchor="middle" font-family="-apple-system,sans-serif">trains the "verify muscle"</text>
+
+  <rect x="400" y="52" width="220" height="46" rx="8" fill="#7b61ff" opacity="0.9"/>
+  <text x="510" y="80" fill="#fff" font-size="14.5" font-weight="700" text-anchor="middle" font-family="-apple-system,sans-serif">You generate</text>
+  <line x1="510" y1="100" x2="510" y2="124" stroke="#5a6378" stroke-width="2"/><polygon points="504,124 516,124 510,132" fill="#5a6378"/>
+  <rect x="400" y="134" width="220" height="46" rx="8" fill="#00d4ff" opacity="0.85"/>
+  <text x="510" y="162" fill="#0a0e1a" font-size="14" font-weight="700" text-anchor="middle" font-family="-apple-system,sans-serif">AI reviews / asks ✓</text>
+  <text x="510" y="204" fill="#a0a4b8" font-size="12.5" text-anchor="middle" font-family="-apple-system,sans-serif">trains generate + verify</text>
+
+  <rect x="40" y="232" width="600" height="52" rx="8" fill="#ff5757" opacity="0.1"/>
+  <rect x="40" y="232" width="600" height="52" rx="8" fill="none" stroke="#ff5757" stroke-opacity="0.35"/>
+  <text x="340" y="258" fill="#ff8a8a" font-size="12" font-weight="700" text-anchor="middle" font-family="-apple-system,sans-serif">⚠ only-left long-term → generation atrophies → verification decays too</text>
+  <text x="340" y="277" fill="#a0a4b8" font-size="11.5" text-anchor="middle" font-family="-apple-system,sans-serif">(you must be able to write before you can review)</text>
+</svg>
+</div>
 </div>
 
 <!-- ============ 4 ============ -->
