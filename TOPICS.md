@@ -70,3 +70,4 @@
 - Day 52: 智能体商务与支付协议 — agent 代人付款/相互结算的新协议层：AP2(Agent Payments Protocol, Google) 的 Mandate 授权(Intent/Cart)、ACP(Agentic Commerce Protocol, OpenAI/Stripe)、x402(Coinbase, HTTP 402 稳定币原生支付)、与 A2A/MCP 的关系、授权·真实性·问责三难与工程落地（2026 前沿，月度前沿刷新纳入；概念/生态见来源，本 routine 讲协议与落地工程）
 - Day 53: 用 AI 学习的护栏工程 — PNAS 无护栏 −17% / 导师版消除损害、生成-验证倒置（学习 vs 干活模式）、工程师验证瓶颈（METR）、组织里给 junior engineer 用的四条护栏、测量职业阶梯；反哺自 deep-research「初级工程师」
 - Day 54: 给自己的 AI 工作流做 oracle 盘点 — 哪些验证环节有独立裁判(测试/编译器/形式检查)、哪些是AI 看 AI, 按可验证性重排自动化边界, 同源验证的独立性陷阱, 个人版护栏先于规模检查清单(钩子·源自 deep-research #3)
+- Day 55: 把三个已验证开关装进自己的学习流程 — 检索练习(带反馈+延迟后测)、间隔(比例随考期变化, 递增无证据)、交错(仅限易混材料); 实验室→课堂衰减账本与轻剂量陷阱; AI 学习工具选型: 看它是否默认这三个开关而非卖学习风格(钩子·源自 deep-research #4)
