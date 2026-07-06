@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 54 · Oracle 盘点 — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.homework{background:linear-gradient(135deg,rgba(255,110,196,0.1),rgba(123,97,255,0.1));border:1px solid rgba(255,110,196,0.3);border-radius:10px;padding:22px 24px;margin:36px 0}
+.homework h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 54 / PHASE 6 · ENGINEERING</span>
+<h1>Oracle 盘点</h1>
+<h2>Test Oracle · 独立性陷阱 · 按可验证性重排自动化边界</h2>
+<div class="date">2026-07-06 · BigCat</div>
+<p class="pitch">能不能放手让 AI 自动跑，不取决于它多聪明，取决于有没有一个独立于它的裁判。</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>你手里的 AI 工作流里，每一个「自动化环节」背后都藏着一个问题：<strong>谁来判断这一步做对了？</strong> 软件测试里这叫 <strong>test oracle problem</strong>——判断「观察到的行为是否正确」的那个裁判。当裁判是编译器、类型检查、测试、property check 时，它<strong>独立于</strong>生成代码的模型，说对就是对；当裁判是「让 AI 再看一遍」「多个 agent 辩论」「self-consistency 投票」时，它和生成者<strong>共享失败模式</strong>——是同一个大脑批改自己的卷子。这一期不讲「怎么写更好的 eval」，讲一件更底层的事：给自己的整条 AI 流水线做一次 <strong>oracle 盘点</strong>，标出哪些环节有独立裁判、哪些是 AI 看 AI，然后<strong>按可验证性、而不是按任务难度</strong>重新画自动化边界。这决定了你哪些地方能真正放手，哪些地方一放手就是在放大一个没有裁判的系统。</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>什么是 Oracle：以及大多数人用的是「假 oracle」</h2>
+<div class="claim">论断：一个验证环节的价值不取决于它多严格，而取决于它是否独立于被验证者的失败模式。</div>
+
+<h3>背景与原理</h3>
+<p>Barr 等人 2015 年那篇被反复引用的 oracle 综述把「验证」拆成了一个很干净的问题：test oracle 就是能回答「这个输出对不对」的信息源。它按<strong>独立性和可自动化程度</strong>分四类，这个分类直接决定你能不能放手：</p>
+<ul>
+<li><strong>Specified oracle</strong>：来自 spec / 形式化契约 / 类型系统。<em>强、独立</em>——类型检查器和你的模型没有共谋。</li>
+<li><strong>Implicit oracle</strong>：来自「不该发生的普遍事实」——crash、panic、assert 失败、内存越界、编译不过。<em>最便宜的独立裁判</em>，几乎白送。</li>
+<li><strong>Derived oracle</strong>：从其他来源派生——回归基线、metamorphic 关系、property 不变量。<em>独立于单次输出的对错</em>。</li>
+<li><strong>No oracle（人）</strong>：没有上述任何一种时，只能靠人判断。<em>最贵、最不可规模化</em>。</li>
+</ul>
+<p>关键洞察在这：<strong>编译器、类型检查、单元测试、property-based test 是强独立 oracle；而「让 LLM 再检查一遍」「LLM-as-judge」「self-consistency」是弱 oracle 甚至伪 oracle</strong>——因为验证者和生成者是同一个（或同族）模型，它们的盲区高度重叠。你以为加了一道验证，其实只是让同一个大脑把答案又抄了一遍。盘点的第一步，就是对流水线里每个环节问：这里的裁判，是哪一类？</p>
+
+<h3>实战示例</h3>
+<p>给你的工作流列一张 oracle 盘点表——每个自动化环节一行，标注裁判类型与独立性：</p>
+<pre><code><span class="tag-com"># 环节                裁判              类型         独立于模型?</span>
+生成函数实现        typecheck+pytest   implicit/spec  <span class="tag-gpt">是 ✅</span>  → 可全自动
+重构等价改写        回归测试快照        derived        <span class="tag-gpt">是 ✅</span>  → 可全自动
+SQL 生成            在只读库上 EXPLAIN  implicit       <span class="tag-gpt">是 ✅</span>  → 可全自动
+文档摘要质量        LLM-as-judge       伪 oracle       <span class="tag-claude">否 ❌</span>  → 需人抽检
+「这段代码安全吗」  另一个 LLM 说安全   伪 oracle       <span class="tag-claude">否 ❌</span>  → 需独立扫描/人
+需求是否理解对      —（无）            no oracle      <span class="tag-claude">否 ❌</span>  → 必须人</code></pre>
+<p>贴在项目根目录。规则很简单：<strong>「独立于模型」那一列是 ✅ 的行，才有资格全自动放手</strong>；❌ 的行要么找到一个真 oracle，要么保留人在环。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：把「通过了 LLM review」当成「验证过了」。LLM review 能抓到低级错误（有信号），但它系统性地放过<em>生成者和它共有的</em>那类错误——而那恰恰是最危险、最需要拦住的一类。伪 oracle 的危害不是没用，是<strong>制造了「已验证」的假象</strong>，让你误以为可以放手。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Barr, Harman, McMinn, Shahbaz, Yoo <em>The Oracle Problem in Software Testing: A Survey</em> (IEEE TSE 2015), <a href="https://discovery.ucl.ac.uk/id/eprint/1471263/1/06963470.pdf" target="_blank">discovery.ucl.ac.uk (PDF)</a> · Anthropic <em>Building Effective Agents</em>, <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">anthropic.com/engineering</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>同源验证的独立性陷阱：AI 看 AI 为什么不算验证</h2>
+<div class="claim">论断：用同一族模型生成又验证，错误是相关的；self-preference 让它系统性放过自己的错——双重检查≈单次检查。</div>
+
+<h3>背景与原理</h3>
+<p>为什么「独立」是核心词？做一点粗糙的概率直觉：如果 generator 漏检率是 <code>p</code>，再叠一道<strong>完全独立</strong>的 verifier（漏检率 <code>q</code>），双漏概率降到 <code>p·q</code>——平方级下降，这才是「双重检查」的价值来源。但如果 verifier 和 generator 的错误<strong>高度相关</strong>（相关系数 ρ→1），双漏概率退回到 ≈ <code>p</code>——你什么都没多买到。同一个模型自查、同族模型互查，正是 ρ 很高的情形：它们在同样的地方自信地错。</p>
+<p>更糟的是 <strong>self-preference bias</strong>。Panickssery 等人 2024 年（NeurIPS）证明：LLM 评判者能<strong>认出</strong>自己的生成并系统性打更高分——人类看来质量相当时也如此。加上 Day 5 讲过的 backward rationalization、confidence inflation，「让 AI 检查 AI」不仅相关，还带正向偏袒。所以 multi-agent debate、self-reflection 这些看起来像「独立验证」的东西，本质仍是同族大脑的内部争论，共享同一套盲区。</p>
+
+<h3>实战示例</h3>
+<p>破解办法只有一条主线：<strong>把裁判换成非 LLM，或换成与问题数学性质绑定的 oracle</strong>。metamorphic testing 是最典型的一招——不判单个输出对错，判<em>多次执行之间的关系</em>，关系来自问题本身而非模型：</p>
+<pre><code><span class="tag-com"># LLM 生成了一个 sort 实现，你没有「正确答案」当 oracle</span>
+<span class="tag-com"># → 用 property + metamorphic 关系当独立裁判（hypothesis）</span>
+<span class="tag-key">from</span> hypothesis <span class="tag-key">import</span> given, strategies <span class="tag-key">as</span> st
+
+<span class="tag-claude">@given</span>(st.lists(st.integers()))
+<span class="tag-key">def</span> test_idempotent(xs):
+    <span class="tag-key">assert</span> my_sort(my_sort(xs)) == my_sort(xs)      <span class="tag-com"># MR: 排序幂等</span>
+
+<span class="tag-claude">@given</span>(st.lists(st.integers()))
+<span class="tag-key">def</span> test_permutation(xs):
+    <span class="tag-key">assert</span> sorted(my_sort(xs)) == sorted(xs)         <span class="tag-com"># MR: 输出是输入的排列</span>
+
+<span class="tag-claude">@given</span>(st.lists(st.integers()), st.integers())
+<span class="tag-key">def</span> test_shift_invariant(xs, k):
+    <span class="tag-key">assert</span> my_sort([x+k <span class="tag-key">for</span> x <span class="tag-key">in</span> xs]) == [x+k <span class="tag-key">for</span> x <span class="tag-key">in</span> my_sort(xs)]</code></pre>
+<p>这三条 property 里没有一个「标准答案」，但它们联合起来是一张<strong>独立于 LLM 的过滤网</strong>——模型编不出既满足全部关系又是错的实现。这就是把「无 oracle 任务」硬转成「有 oracle 任务」的手艺。退一步的弱化版：至少让 verifier 用<em>不同族</em>模型（Claude 生成 → 换一族模型 + 显式扫描器交叉），能降低 ρ，但仍不如一个真正的非 LLM oracle。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：把 multi-agent debate 或「reflection 循环」当成独立验证写进 pipeline，然后在它上面开自动放行。同族 agent 的辩论会在共有盲区上达成<em>一致的错</em>——一致不等于正确，反而给了你更强的「已验证」错觉。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Panickssery et al. <em>LLM Evaluators Recognize and Favor Their Own Generations</em> (NeurIPS 2024), <a href="https://proceedings.neurips.cc/paper_files/paper/2024/hash/7f1f0218e45f5414c79c0679633e47bc-Abstract-Conference.html" target="_blank">neurips.cc</a> · Segura et al. <em>Metamorphic Testing: A Review</em> (ACM Computing Surveys), <a href="https://dl.acm.org/doi/10.1145/3143561" target="_blank">dl.acm.org/10.1145/3143561</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>按可验证性重排自动化边界</h2>
+<div class="claim">论断：自动化边界不该按「任务难不难」画，该按「有没有便宜的独立 oracle」画。</div>
+
+<h3>背景与原理</h3>
+<p>大多数人画自动化边界的直觉是「简单的交给 AI，难的自己来」。这是错的坐标轴。正确的坐标轴是<strong>可验证性</strong>——一个环节有没有便宜、独立的 oracle。把它排成一道阶梯：</p>
+
+<div class="diagram">           可验证性阶梯（Verifiability Ladder）
+  oracle 强度 ▲  独立性 ▲  →  自动化决策
+ ┌──────────────────────────────────────────────────────┐
+ │ ① 强 oracle   编译 / 类型 / 单元测试 / 形式检查        │
+ │               独立、近零边际成本  → 全自动 + fail-closed │
+ ├──────────────────────────────────────────────────────┤
+ │ ② 派生 oracle  metamorphic / property / 回归快照       │
+ │               独立于单次对错      → 全自动 + 抽样人核    │
+ ├──────────────────────────────────────────────────────┤
+ │ ③ 弱 oracle   LLM-judge / 启发式规则 / 交叉模型         │
+ │               与生成者相关        → 自动预筛 + 人把关    │
+ ├──────────────────────────────────────────────────────┤
+ │ ④ 无 oracle   需求理解 / 品味 / 战略判断               │
+ │               只能靠人            → human-in-the-loop   │
+ └──────────────────────────────────────────────────────┘
+  放手区（可全自动）：① ②      把关区（必须人在环）：③ ④</div>
+
+<p>规则：<strong>越靠上，越该无脑放手让 AI 高速迭代</strong>——因为 generate-and-check 循环便宜又可信，AI 跑错了 oracle 会立刻拦下。<strong>越靠下，越该保留人在环</strong>。最危险的是 <strong>generate-verify gap</strong> 大的任务：生成一秒钟、验证要半小时。METR 2025 那项随机对照实验里，资深开发者用 AI 后完成时间反而<strong>多了 19%</strong>——一个主要来源就是验证成本被系统性低估：AI 生成飞快，但把「看起来对」验证成「真的对」的活全压回了人身上，而这段没有 oracle。</p>
+
+<h3>实战示例</h3>
+<p>重排你的 agentic loop：<strong>只在有 oracle 的 sub-task 上开自动 retry，无 oracle 的 sub-task 一律 checkpoint 交人</strong>。</p>
+<pre><code><span class="tag-key">def</span> step(task):
+    out = llm_generate(task)
+    oracle = ORACLE_FOR[task.kind]          <span class="tag-com"># 盘点表查出来的裁判</span>
+    <span class="tag-key">if</span> oracle.independent:                   <span class="tag-com"># ①② 阶梯上层</span>
+        <span class="tag-key">for</span> _ <span class="tag-key">in</span> range(MAX_RETRY):
+            <span class="tag-key">if</span> oracle.check(out): <span class="tag-key">return</span> out   <span class="tag-com"># 通过才放行 (fail-closed)</span>
+            out = llm_fix(task, oracle.feedback)   <span class="tag-com"># 独立反馈驱动自修复</span>
+        <span class="tag-key">raise</span> NeedsHuman(task)                <span class="tag-key">          </span><span class="tag-com"># 试满了仍不过 → 交人</span>
+    <span class="tag-key">else</span>:                                     <span class="tag-com"># ③④ 阶梯下层：不许自动放行</span>
+        <span class="tag-key">return</span> checkpoint_to_human(task, out)</code></pre>
+<p>这段的灵魂是那个 <code>if oracle.independent</code>：它把「AI 能不能自转」这个决策，从「任务看起来简不简单」硬移到了「有没有独立裁判」。Day 3 讲过升级成 agent 的三条件之一就是「能验证最终输出对错」——这里给了它可操作的判据。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：在没有 oracle 的地方开自动循环。agent 会「跑飞还不自知」——没有独立裁判，retry 只是在放大同一个错误，还烧 token。凡是要开 <code>MAX_RETRY</code> 自动重试的环节，先确认它上面挂着的是①②，不是③④。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · METR <em>Measuring the Impact of Early-2025 AI on Experienced Open-Source Developer Productivity</em> (arXiv:2507.09089), <a href="https://arxiv.org/abs/2507.09089" target="_blank">arxiv.org/abs/2507.09089</a> · Simon Willison <em>on reviewing AI-generated code</em>, <a href="https://simonwillison.net/tags/ai-assisted-programming/" target="_blank">simonwillison.net</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>个人版护栏：先做 oracle 盘点，再谈规模化</h2>
+<div class="claim">论断：把一个 AI 工作流从「手动跑」升级到「自动/规模化」之前不做 oracle 盘点，等于在放大一个没有裁判的系统。</div>
+
+<h3>背景与原理</h3>
+<p>规模化放大的从来不只是产出，还有<strong>没被 oracle 拦住的错误</strong>。手动跑十次，你眼睛就是那个（很贵但独立的）oracle；一旦自动化跑一万次，你的眼睛退场了，如果没有别的独立裁判补位，错误就以一万倍的速度流进下游。所以「个人版护栏」的本质是：<strong>在你自己的 harness 层，把独立 oracle 固化成自动 gate，在放手之前</strong>。一张升级前必答的检查清单：</p>
+<ol>
+<li>这个环节<strong>有</strong>独立 oracle 吗？（编译/类型/测试/property，还是只有 LLM？）</li>
+<li>这个 oracle<strong>独立于</strong>生成它的模型吗？（同族自查不算）</li>
+<li>这个 oracle 是 <strong>fail-closed</strong> 吗？（不过就 block，而不是记个 warning 放行）</li>
+<li>没有 oracle 的环节，<strong>留了 human checkpoint</strong> 吗？</li>
+</ol>
+<p>四个都 ✅ 才有资格把这条流水线接上自动触发。任何一个 ❌，就是你规模化时会被反噬的地方。</p>
+
+<h3>实战示例</h3>
+<p>在 Claude Code 里，护栏就是 hooks——把真 oracle 挂成 fail-closed 的门，不过就物理拦截，不靠模型自觉：</p>
+<pre><code>{
+  <span class="tag-claude">"hooks"</span>: {
+    <span class="tag-claude">"PostToolUse"</span>: [{
+      <span class="tag-claude">"matcher"</span>: <span class="tag-gpt">"Edit|Write"</span>,
+      <span class="tag-claude">"hooks"</span>: [{<span class="tag-claude">"type"</span>:<span class="tag-gpt">"command"</span>,
+        <span class="tag-claude">"command"</span>:<span class="tag-gpt">"tsc --noEmit && pytest -q || exit 2"</span>}]  <span class="tag-com"># 真 oracle，非 0 即拦</span>
+    }],
+    <span class="tag-claude">"Stop"</span>: [{<span class="tag-claude">"hooks"</span>:[{<span class="tag-claude">"type"</span>:<span class="tag-gpt">"command"</span>,
+        <span class="tag-claude">"command"</span>:<span class="tag-gpt">"pytest tests/property -q || exit 2"</span>}]}]  <span class="tag-com"># 派生 oracle</span>
+  }
+}</code></pre>
+<p><code>exit 2</code> 是关键：Claude Code 的 hook 用非零退出把结果<strong>作为错误反馈回喂给模型并阻断本次动作</strong>——这就是把独立 oracle 变成 fail-closed gate。注意别把「格式类」hook（prettier / lint --fix）误当验证正确性：它们让代码<em>能看</em>，不保证<em>跑对</em>。护栏要分清「能跑」和「跑对」。</p>
+
+<div class="fail">
+<strong>失败模式</strong>：把 lint / format / 「代码没报错」当成正确性 oracle。格式 oracle ≠ 正确性 oracle ≠ 语义 oracle——三者独立。一段能编译、格式漂亮、lint 全绿的代码，逻辑可以是彻底错的。盘点时务必标清每个 gate 到底在验证哪一层，别用一个下层 oracle 冒充上层的覆盖。
+</div>
+
+<div class="res">
+<strong>进阶资源</strong> · Claude Code Hooks 文档, <a href="https://docs.claude.com/en/docs/claude-code/hooks" target="_blank">docs.claude.com/.../hooks</a> · Anthropic <em>Building Effective Agents</em>（升级成 agent 的判据）, <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">anthropic.com/engineering</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// 综合实战 · 给自己的一条流水线做 oracle 盘点</h3>
+<p>挑一条你已经在用的 AI 工作流（比如「Claude Code 改 bug → 提 PR」或「RAG 问答」），花半小时走一遍：</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>拆环节</strong>：把流水线拆成 5–8 个原子步骤，每步一行。</li>
+<li><strong>标裁判</strong>：给每步填「裁判是谁」——编译 / 类型 / 测试 / property / LLM-judge / 人 / 无。</li>
+<li><strong>判独立</strong>：对每个裁判打 ✅/❌——它独立于生成这一步的模型吗？同族自查一律 ❌。</li>
+<li><strong>排阶梯</strong>：把每步归到①强 / ②派生 / ③弱 / ④无 oracle 四档。</li>
+<li><strong>重画边界</strong>：①②划入「放手区」接自动 gate（fail-closed）；③④划入「把关区」留 human checkpoint。若某个你本想自动化的步骤落在③④，问：能不能给它造一个真 oracle？（让输出可编译 / 可执行 / 可查引用 / 带 schema——把无 oracle 转成有 oracle）</li>
+<li><strong>装护栏</strong>：把①②的 oracle 写成 Claude Code hook 或 CI gate，跑一遍。</li>
+</ol>
+<p style="margin-top:12px">做完你会发现：真正卡住你规模化的，从来不是「模型不够强」，而是<strong>那几个没有独立裁判的环节</strong>。把它们找出来、要么造 oracle 要么留人——这就是个人 AI 工作流从「能用」到「敢放手」的分水岭。</p>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// ENGLISH GLOSSARY</h3>
+<dl>
+<dt>Test Oracle</dt><dd>判断「观察到的行为是否正确」的信息源/裁判。本期核心概念。</dd>
+<dt>Oracle Problem</dt><dd>为一个程序自动地获得正确性裁判的难题；无 oracle 时只能靠人，是测试自动化的瓶颈。</dd>
+<dt>Implicit Oracle</dt><dd>来自「普遍不该发生」的隐式裁判：crash / assert / 编译不过。最便宜的独立 oracle。</dd>
+<dt>Derived Oracle</dt><dd>从其他来源派生的裁判：回归基线、metamorphic 关系、property 不变量。</dd>
+<dt>Metamorphic Testing</dt><dd>不判单个输出对错，而验证多次执行输入/输出之间的关系（MR），因而无需单点 oracle。</dd>
+<dt>Property-Based Testing</dt><dd>用输入的普遍性质（不变量）当裁判，随机生成大量输入验证之（QuickCheck / Hypothesis）。</dd>
+<dt>Self-Preference Bias</dt><dd>LLM 评判者认出并系统性偏袒自己的生成（Panickssery 2024）——AI 看 AI 不独立的根因之一。</dd>
+<dt>Generate-Verify Gap</dt><dd>生成成本远低于验证成本的落差；gap 越大，无 oracle 的自动化越危险。</dd>
+<dt>Fail-Closed</dt><dd>验证不通过就阻断（而非记警告放行）的门策略。护栏的默认姿态。</dd>
+<dt>Verifiability Ladder</dt><dd>按 oracle 强度与独立性把环节排成的阶梯，用来决定自动化边界画在哪。</dd>
+</dl>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// 深入思考</h3>
+<details><summary>LLM-as-judge 到处都在用，如果它不是独立 oracle，为什么很多 eval 里它「有用」？</summary><div>因为它对<strong>粗粒度偏好</strong>有真信号，对<strong>生成者自身盲区</strong>无信号——两件事别混。judge 与被判者<em>不同族</em>、判「A 明显比 B 好」这种大差距时，它和人类判断相关度不低，够用；judge 与生成者<em>同族</em>、判细粒度「这段逻辑到底对不对」时，self-preference + 共享盲区让它失效。所以 LLM-judge 适合做<em>排序/预筛</em>，不适合做<em>放手前的最后一道正确性门</em>：用它筛掉一眼烂的，再用真 oracle 或人守细节。</div></details>
+<details><summary>编译器是强 oracle，但只覆盖「类型对」不覆盖「逻辑对」。强 oracle 覆盖窄、弱 oracle 覆盖宽，怎么取舍？</summary><div>oracle 有两个正交维度：<strong>强度</strong>（说对就真对）和<strong>覆盖</strong>（能管多少种错）。别指望单个 oracle 兼得。正解是<strong>叠多个窄而强的 oracle</strong>去逼近宽覆盖：类型管接口、单测管样例、property/metamorphic 管不变量、fuzz 管崩溃。每加一层强 oracle，覆盖并上一块，且都独立。反模式是用一个「宽而弱」的 oracle（LLM-judge）假装覆盖全部——覆盖是宽了，但每一格都不可信。宁可要一堆可信的窄，不要一个可疑的宽。</div></details>
+<details><summary>metamorphic testing 号称「不需要 oracle」，这和「要独立 oracle」矛盾吗？</summary><div>不矛盾——MR 本身就是一种 derived oracle。它不需要「单个输入的标准答案」这种 oracle，但它需要一个来自<strong>问题数学性质</strong>的关系（<code>sort(shift(x))==shift(sort(x))</code>）。这个关系独立于模型：它来自排序的定义，不来自任何一次生成。所以「不需要 oracle」是指不需要点对点的参考答案，不是说不需要裁判——裁判换成了「关系必须成立」。这恰恰是最实用的一招：<strong>当你造不出标准答案时，去找问题里天然成立的关系</strong>。</div></details>
+<details><summary>如果我这个环节手上只有 LLM、别的 oracle 都没有，怎么办？</summary><div>把任务改造成「能被非 LLM 验证」的形态——这就是 grounding 的工程本质。让 LLM 别直接输出结论，而是输出<strong>可执行代码</strong>（拿编译器/测试当裁判）、<strong>可查证的引用</strong>（拿检索/URL 存在性当裁判）、<strong>结构化 schema</strong>（拿 validator 当裁判）、<strong>可复算的中间量</strong>（拿计算器/SQL 当裁判）。核心动作：把「判断一段自然语言对不对」（无 oracle）转成「判断一个可机器检验的产物对不对」（有 oracle）。转不动、真的只能靠人品味的，就老实留 human checkpoint，别自欺。</div></details>
+<details><summary>规模化时 oracle 的成本结构会怎么变？这对「先盘点再放大」意味着什么？</summary><div>强 oracle（编译/测试）边际成本近零——跑一次和跑一万次差不多，规模化几乎免费。弱 oracle（人核、LLM-judge）成本随量<strong>线性甚至超线性</strong>涨：人会累会走神，LLM-judge 要 token。于是规模化会把成本压到「还留着人/弱 oracle 的环节」上，它们变成瓶颈——这正是 METR 里资深开发者变慢的结构性原因。含义很直接：<strong>放大之前尽量把环节往阶梯上层迁</strong>（给它造强 oracle），迁不动的要预算好人力。没 oracle 的环节，自动化只是把验证债转移，不是消除。</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://discovery.ucl.ac.uk/id/eprint/1471263/1/06963470.pdf" target="_blank">Barr et al. · The Oracle Problem in Software Testing: A Survey (IEEE TSE 2015)</a> — oracle 四分类的奠基综述</li>
+<li><a href="https://proceedings.neurips.cc/paper_files/paper/2024/hash/7f1f0218e45f5414c79c0679633e47bc-Abstract-Conference.html" target="_blank">Panickssery et al. · LLM Evaluators Recognize and Favor Their Own Generations (NeurIPS 2024)</a> — AI 看 AI 不独立的实证</li>
+<li><a href="https://arxiv.org/abs/2507.09089" target="_blank">METR · Early-2025 AI on Experienced OSS Developer Productivity</a> — 验证瓶颈致资深开发者 +19% 耗时</li>
+<li><a href="https://dl.acm.org/doi/10.1145/3143561" target="_blank">Segura et al. · Metamorphic Testing: A Review (ACM CSUR)</a> — 无 oracle 时的派生裁判手艺</li>
+<li><a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">Anthropic · Building Effective Agents</a> — 「能验证输出对错」是升级成 agent 的前提</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual · Day 54 · 2026-07-06</footer>
+</div>
+</body></html>
