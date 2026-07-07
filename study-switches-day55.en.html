@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 55 · Three Proven Learning Switches — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;overflow-x:auto}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking{margin:40px 0}
+.thinking h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 55 / PHASE 6 · CROSS-REF</span>
+<h1>Three Proven Learning Switches</h1>
+<h2>Retrieval Practice · Spacing · Interleaving — wiring them into your (and your AI's) learning loop</h2>
+<div class="date">2026-07-07 · BigCat</div>
+<p class="pitch">There are hundreds of "study techniques." Cognitive science has repeatedly validated only three switches — the rest is packaging, including whatever your AI learning tool is selling you.</p>
+</header>
+
+<div class="xref">
+<a href="learning-guardrails-day53.en.html">Follows → Day 53 Learning Guardrails (the generate–verify inversion)</a>
+</div>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>Day 53 argued that learning with AI <em>requires</em> guardrails. This issue hands you the three strongest rebars inside those guardrails. Dunlosky et al.'s heavily-cited 2013 review put ten mainstream study techniques on the table and rated each by strength of evidence — and most of them (highlighting, rereading, summarizing, imagery) scored low or context-dependent. <strong>Only "practice testing" and "distributed practice" earned high-utility ratings that generalize across ages and materials</strong>; interleaving earned a conditional "moderate." In other words, if you engineer learning as a system, there are really only <strong>three switches</strong> worth wiring in: retrieval, spacing, interleaving. This issue skips "what they are" (that's Psych 101) and covers three things that actually bite in practice: <strong>each switch's precise activation condition, its failure boundary, and a four-question checklist for selecting or building an AI learning tool</strong> — because almost none of them turn these on by default.</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>Retrieval Practice: the strongest switch — but only counts with feedback + a delayed post-test</h2>
+<div class="claim">Claim: actively pulling from memory beats rereading by a wide margin; an AI that hands you the answer instantly is just rereading disguised as conversation.</div>
+
+<h3>Background & Principle</h3>
+<p>Roediger & Karpicke 2006 nailed it: after reading a passage, a "reread it" group and a "close the book and freely recall it" group looked similar at first — the reread group even felt more confident. But on the <strong>delayed test</strong> a week later, the retrieval-practice group won decisively. That's the <strong>testing effect</strong>: memory doesn't consolidate when you "see" material, it consolidates when you <em>effortfully retrieve</em> it. Dunlosky's review rated it top-tier, holding across ages and subjects. <strong>But it has two non-negotiable engineering conditions</strong>: retrieval must be <em>effortful</em> (free recall — not multiple choice you can guess, which tests recognition, not recall); and it must carry <strong>corrective feedback</strong>, or you "practice in" your wrong answers. And whether it worked can only be seen on a <strong>delayed post-test</strong> — an immediate test only reflects a short-term cache.</p>
+
+<h3>Hands-on</h3>
+<p>Turning any chatbot from an answer-machine into an examiner takes one system prompt:</p>
+<pre><code><span class="tag-com"># Retrieval loop: force recall first, then reveal + correct, then schedule a delayed post-test</span>
+SYSTEM: You are my retrieval-practice coach. Strict rules:
+1. I name a topic I just studied; you pose 3 <span class="tag-key">open-ended free-recall questions</span>
+   (no multiple choice — that's guessable, tests recognition not recall)
+2. Reveal <span class="tag-key">nothing</span> — no hints, no answers — until AFTER I answer
+3. Then give the model answer + <span class="tag-key">point-by-point correction</span> (no feedback = errors get practiced in)
+4. Attach a delayed post-test plan per question: re-quiz me on it in N days</code></pre>
+<p>Rules 2 and 3 are the crux: push the "reveal" to after I've answered, and force feedback — exactly the mechanism by which Day 53's "tutor version" guardrail erased the learning harm.</p>
+
+<div class="fail"><strong>Failure modes</strong>: ① multiple choice instead of free recall — guessable means effortless, degrading to recognition; ② declaring "got it" from an immediate self-test — that measures working-memory cache, gone in a week; ③ feedback-free self-testing — you practice in the wrong answers, worse than not testing.</div>
+
+<div class="res"><strong>Going deeper</strong> · Roediger & Karpicke <em>Test-Enhanced Learning</em> (Psychological Science 2006) · Dunlosky et al. <em>Improving Students' Learning With Effective Learning Techniques</em>, <a href="https://journals.sagepub.com/doi/10.1177/1529100612453266" target="_blank">PSPI 2013</a></div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Spacing: it works — but the optimal gap is a proportion of your deadline, and expanding schedules have no long-term evidence</h2>
+<div class="claim">Claim: distributed &gt; massed is ironclad; but the optimal gap isn't a fixed number of days — it's a fraction of "when you'll need it," and the farther out, the smaller the fraction.</div>
+
+<h3>Background & Principle</h3>
+<p>Cramming scores high on the spot and feels fluent, but decays fast; spread the same time across spaced sessions and long-term retention improves markedly. The real engineering question is <strong>how long the gap should be</strong>. Cepeda et al. 2008 — 1,350+ people, study gaps up to 3.5 months, final tests delayed up to 1 year — mapped a "ridgeline": final performance rises then falls with the gap (an inverted U), and <strong>the optimal gap grows with the test delay but shrinks as a proportion of it</strong> — roughly 20–40% of a 1-week delay, dropping to about 5–10% of a 1-year delay. A second counter-intuitive result comes from Karpicke & Roediger 2007: <strong>expanding schedules only win short-term; equal-interval wins long-term</strong>. What actually matters is that the <em>first</em> review is delayed and effortful, not whether later gaps expand.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg" role="img" style="width:100%;height:auto" font-family="-apple-system,sans-serif">
+  <text x="340" y="24" fill="#00d4ff" font-size="14" font-weight="700" text-anchor="middle">Cepeda 2008 ridgeline: final retention vs study gap (inverted U)</text>
+  <line x1="70" y1="255" x2="640" y2="255" stroke="#3a3e58" stroke-width="1.5"/>
+  <line x1="70" y1="255" x2="70" y2="45" stroke="#3a3e58" stroke-width="1.5"/>
+  <text x="355" y="292" fill="#a0a4b8" font-size="12" text-anchor="middle">study gap (short &#8594; long)</text>
+  <text x="42" y="150" fill="#a0a4b8" font-size="12" text-anchor="middle" transform="rotate(-90 42 150)">final retention</text>
+  <path d="M95,245 Q210,70 340,240" fill="none" stroke="#00d4ff" stroke-width="2.5"/>
+  <line x1="212" y1="95" x2="212" y2="255" stroke="#00d4ff" stroke-width="1" stroke-dasharray="3,4" opacity="0.6"/>
+  <circle cx="212" cy="92" r="4" fill="#00d4ff"/>
+  <text x="212" y="80" fill="#00d4ff" font-size="11.5" text-anchor="middle">test in 1 week · optimal &#8776; 20&#8211;40%</text>
+  <path d="M150,248 Q430,130 630,242" fill="none" stroke="#ff6ec4" stroke-width="2.5"/>
+  <line x1="430" y1="145" x2="430" y2="255" stroke="#ff6ec4" stroke-width="1" stroke-dasharray="3,4" opacity="0.6"/>
+  <circle cx="430" cy="142" r="4" fill="#ff6ec4"/>
+  <text x="470" y="132" fill="#ff6ec4" font-size="11.5" text-anchor="middle">test in 1 year · optimal fraction &#8776; 5&#8211;10%</text>
+  <text x="355" y="312" fill="#6a6e88" font-size="10.5" text-anchor="middle">gap too short &#8594; back to cramming; too long &#8594; off the ridge, fully forgotten</text>
+</svg>
+</div>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># Set gaps as a FRACTION of the deadline, not fixed days</span>
+retention_interval = days_until_needed        <span class="tag-com"># days until interview / launch / exam</span>
+first_gap = <span class="tag-key">0.1</span> * retention_interval          <span class="tag-com"># first review ~10% of the deadline</span>
+<span class="tag-com"># Cepeda 2008: optimal gap grows with the deadline, shrinks as a fraction of it</span>
+<span class="tag-com"># Karpicke&amp;Roediger 2007: use equal intervals long-term, don't fetishize expanding;</span>
+<span class="tag-com">#   what matters is the first review is delayed off the study session and effortful</span></code></pre>
+
+<div class="fail"><strong>Failure modes</strong>: ① fluency illusion — cramming feels smooth, misread as "learned"; ② the <strong>micro-dose trap</strong>: spacing once ≈ not spacing — it needs multiple doses to pay off; ③ gap stretched too long falls off the ridge — you've fully forgotten by review time, so it's relearning.</div>
+
+<div class="res"><strong>Going deeper</strong> · Cepeda et al. <em>Spacing Effects in Learning: A Temporal Ridgeline of Optimal Retention</em> (Psychological Science 2008), <a href="https://laplab.ucsd.edu/articles/Cepeda%20et%20al%202008_psychsci.pdf" target="_blank">PDF</a> · Karpicke & Roediger <em>Expanding Retrieval Practice…</em>, <a href="https://learninglab.psych.purdue.edu/downloads/2007/2007_Karpicke_Roediger_JEPLMC.pdf" target="_blank">JEP:LMC 2007</a></div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Interleaving: only works for confusable material — misapplied, it's pure switching cost</h2>
+<div class="claim">Claim: interleaving beats blocking, but the mechanism is training discrimination — so it only pays when items are confusable and you must first pick the right method.</div>
+
+<h3>Background & Principle</h3>
+<p>Why does interleaving beat blocking? Rohrer & Taylor 2007's math experiments give a mechanism-level answer: with blocked practice you already know "this whole page uses the same formula," so you only train <em>execution</em>, never <em>discrimination</em> — and you flounder on a mixed test. Their <strong>error analysis</strong> showed the blocked group's mistakes were overwhelmingly "picked the wrong method" — not "couldn't compute," but "didn't know which tool to use." Interleaving shuffles problem types, forcing you to first judge "which kind is this, which approach applies" on every item — training exactly that discrimination step. <strong>But that also bounds it</strong>: interleaving's dividend comes from distinguishing confusable items, so it only helps material that is <strong>mutually confusable and requires strategy selection</strong> (derivatives vs. integrals, optimistic vs. pessimistic locks, several similar bug classes). For independent skills with no "wrong-method" problem, interleaving just adds context-switching cost. This is precisely why Dunlosky rated it only <strong>moderate</strong> — utility is highly material-dependent.</p>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># Interleave only the "confusable pairs"; keep independent skills blocked</span>
+confusable = [(<span class="tag-gpt">"derivative"</span>,<span class="tag-gpt">"integral"</span>), (<span class="tag-gpt">"BFS"</span>,<span class="tag-gpt">"DFS"</span>), (<span class="tag-gpt">"optimistic-lock"</span>,<span class="tag-gpt">"pessimistic-lock"</span>)]
+independent = [<span class="tag-gpt">"learn SQL"</span>, <span class="tag-gpt">"ear training"</span>]  <span class="tag-com"># no discrimination problem -> only adds cost</span>
+
+<span class="tag-key">for</span> pair <span class="tag-key">in</span> confusable:            <span class="tag-com"># shuffle the two types together,</span>
+    quiz = shuffle(problems(pair))    <span class="tag-com"># forcing "which kind is this?" first</span>
+<span class="tag-com"># When asking AI to generate: require mixed order, DON'T label the type</span></code></pre>
+
+<div class="fail"><strong>Failure modes</strong>: ① interleaving unrelated material — no discrimination dividend, only switching cost; ② interleaving "feels harder and slower" (desirable difficulty), so learners have a poor in-the-moment experience and abandon it — yet that effort is what delivers the long-term gain; ③ treating interleaving as a universal switch and mixing everything, ignoring that it's a <em>conditional</em> tool.</div>
+
+<div class="res"><strong>Going deeper</strong> · Rohrer & Taylor interleaved-math series, <a href="https://pubmed.ncbi.nlm.nih.gov/24578089/" target="_blank">Rohrer et al. 2014 (PubMed)</a> · Dunlosky et al. PSPI 2013 (interleaving rated moderate)</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Selecting an AI learning tool: check which switches it defaults to, not which "learning style" it sells</h2>
+<div class="claim">Claim: whether an AI learning tool is worth using comes down to whether it makes the three switches its defaults; if the pitch is "adapts to your learning style," dock points.</div>
+
+<h3>Background & Principle</h3>
+<p>Collapse the first three sections into one <strong>selection criterion</strong>. Most AI tutors default to "explain first, then hand over the full answer" — which is rereading, and the very source of the learning harm in Day 53's PNAS "vanilla GPT" group. An even more common marketing line is "intelligently adapts to your learning style" (visual/auditory/…): <strong>Pashler et al.'s 2008 authoritative review states plainly that this "meshing hypothesis" lacks supporting evidence</strong> — tailoring instruction to a learning style does not improve outcomes. So "sells a learning style" isn't a feature, it's a pseudoscience signal. There's also an engineering reality: <strong>lab → classroom effect decay</strong>. The three switches show handsome effect sizes in the lab, but in real settings effects generally shrink and vary by material (Dunlosky's review keeps stressing "utility is conditional"). The implication is direct: <strong>outsourcing the discipline of the three switches to a tool's defaults is more reliable than sustaining it yourself daily</strong> — because micro-dosing and intermittent execution are exactly how these switches fail.</p>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># Four questions for any AI learning tool (use it to select OR to build)</span>
+[ ] Force me to recall before revealing?      <span class="tag-claude">No = rereading disguised as chat</span>
+[ ] Schedule a DELAYED post-test, not on-the-spot? <span class="tag-claude">No = tests short-term cache only</span>
+[ ] Mix confusable content in the quiz?        <span class="tag-claude">No = discrimination training lost</span>
+[ ] Give corrective feedback every answer?     <span class="tag-claude">No = wrong answers get practiced in</span>
+<span class="tag-com"># Deduction signal: the pitch is "adapts to your learning style"</span>
+<span class="tag-com">#   -> meshing hypothesis has no evidence (Pashler 2008)</span></code></pre>
+<p>Passing all four means the three switches are actually set as defaults; otherwise the discipline still rests on you — and you won't sustain it.</p>
+
+<div class="fail"><strong>Failure modes</strong>: being drawn to "personalized / instant answers / streaks that never require recall" product narratives; or knowing the four questions yet expecting yourself to manually backfill the switches a tool lacks — the micro-dose trap collapses manual discipline within two weeks.</div>
+
+<div class="res"><strong>Going deeper</strong> · Pashler, McDaniel, Rohrer & Bjork <em>Learning Styles: Concepts and Evidence</em>, <a href="https://journals.sagepub.com/doi/full/10.1111/j.1539-6053.2009.01038.x" target="_blank">PSPI 2008</a> · This site: <a href="learning-guardrails-day53.en.html">Day 53 Learning Guardrails</a> (the generate–verify inversion)</div>
+</div>
+
+<!-- ============ Checklist ============ -->
+<div class="combo">
+<h3>// ONE-PAGE SWITCH CARD</h3>
+<p><strong>① Retrieval</strong> — activates on: free recall (not multiple choice) + corrective feedback + a delayed post-test; fails on: guessable, no feedback, on-the-spot testing only.</p>
+<p><strong>② Spacing</strong> — activates on: first review delayed to "~10% of the deadline," multiple doses; fails on: spacing just once (micro-dose), stretched too long off the ridge, fetishizing expanding schedules.</p>
+<p><strong>③ Interleaving</strong> — activates on: mutually confusable material requiring strategy selection; fails on: interleaving unrelated independent skills (pure switching cost).</p>
+<p><strong>Core:</strong> there are hundreds of study techniques; only three reliably generalize across materials (Dunlosky 2013). Selecting an AI tool is one question — <strong>does it make these three its defaults, or is it selling "learning styles"?</strong></p>
+</div>
+
+<!-- ============ Thinking ============ -->
+<div class="thinking">
+<h3>// DEEPER QUESTIONS</h3>
+<details><summary>All three switches are "desirable difficulties." Can I just stack them to the max — retrieve, stretch spacing, and fully interleave, all at once?</summary><div>No — difficulty only helps while it's <em>desirable</em>; overdo it and it flips into "undesirable difficulty" that crushes learning instead. Each switch has an independent failure boundary: spacing <em>too long</em> falls off the Cepeda ridge — you've fully forgotten by review time, so it's relearning from zero; interleaving <em>non-confusable</em> independent material is only switching cost; retrieval <em>without feedback</em> practices in your errors. They aren't "harder is always better" knobs — each has a sweet spot. Engineering move: first guarantee the floor (retrieval with feedback), then tune spacing to "effortful but still recallable," and use interleaving only on discriminative material — rather than cranking all three to max for a feeling of virtue.</div></details>
+<details><summary>Why does "learning styles" — a debunked idea — still sell for so long, even inside AI products?</summary><div>Because it satisfies two things at once: it's <strong>flattering</strong> ("you didn't fail because you slacked, you just hadn't found your style"), and it shifts responsibility from "persist at an effortful method" to "switch to a comfortable one." Meanwhile the three real switches are all <em>desirable difficulties</em> — worse in-the-moment experience, more tiring, and scores don't jump immediately (in Karpicke's studies learners even <em>underrated</em> retrieval's benefit). So the market naturally tilts toward "selling comfort" over "selling effectiveness": comfort is felt instantly, effectiveness only shows up on the delayed post-test. This is isomorphic to Day 53's +48% illusion — <strong>short-term experience and long-term ability often run opposite</strong>, and product metrics only capture the short term. So selection can't trust feel; it can only run the four questions.</div></details>
+<details><summary>These switches are for "learning mode." Do they conflict with Day 53's "production mode: AI generates / you verify"?</summary><div>No conflict — it's a division of labor. Day 53's core: production mode (throughput first) has AI generate and you verify; learning mode (capability first) inverts it — you generate, AI verifies. These three switches are the concrete mechanisms that make "you generate" actually build capability in learning mode — retrieval forces you to generate from memory first, spacing makes that generation repeated and effortful, interleaving forces discrimination before generating. So Day 53 gave the <em>order</em> (who generates first), and this issue gives the <em>parameters</em> (how to arrange the generation act so it builds skill). In the same block of time you can absolutely run production mode on boilerplate you already know (let AI write) and learning mode on the core you're learning (all three switches on) — the key is not to mix up the optimal usage of the two modes.</div></details>
+<details><summary>If these switches decay in real settings, is it still worth the effort to wire them into a flow?</summary><div>Yes, but calibrate expectations. Decay isn't failure: Dunlosky rated retrieval and spacing high-utility precisely because they stay reliably positive <em>even discounted</em>, across ages and materials — whereas the techniques they beat (rereading, highlighting, summarizing) barely show stable gains even in the lab. The real lesson is <em>why</em> decay happens: usually not a broken mechanism, but <strong>insufficient dose and intermittent execution</strong> (the micro-dose trap). That actually reinforces point 4's conclusion — rather than relying on daily manual willpower (easiest to break), pick a tool that sets the three switches as defaults so the discipline is baked into the flow. In engineering, "make the correct behavior the default" always beats "sustain correct behavior by willpower" against decay.</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://journals.sagepub.com/doi/10.1177/1529100612453266" target="_blank">Dunlosky et al. · Improving Students' Learning With Effective Learning Techniques (PSPI 2013)</a> — ten techniques rated; retrieval & spacing = high utility, interleaving = moderate</li>
+<li><a href="https://laplab.ucsd.edu/articles/Cepeda%20et%20al%202008_psychsci.pdf" target="_blank">Cepeda et al. · Spacing Effects in Learning: A Temporal Ridgeline of Optimal Retention (Psychological Science 2008)</a> — the optimal gap varies with the deadline</li>
+<li><a href="https://learninglab.psych.purdue.edu/downloads/2007/2007_Karpicke_Roediger_JEPLMC.pdf" target="_blank">Karpicke & Roediger · Expanding Retrieval Practice… (JEP:LMC 2007)</a> — expanding wins short-term, equal-interval wins long-term</li>
+<li><a href="https://pubmed.ncbi.nlm.nih.gov/24578089/" target="_blank">Rohrer et al. · Interleaved math practice is not limited to superficially similar problems (2014)</a> — the dividend comes from discrimination</li>
+<li><a href="https://journals.sagepub.com/doi/full/10.1111/j.1539-6053.2009.01038.x" target="_blank">Pashler, McDaniel, Rohrer & Bjork · Learning Styles: Concepts and Evidence (PSPI 2008)</a> — the meshing hypothesis lacks evidence</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual · Day 55 · 2026-07-07</footer>
+</div>
+</body></html>

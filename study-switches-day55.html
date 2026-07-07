@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 55 · 三个已验证的学习开关 — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;overflow-x:auto}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking{margin:40px 0}
+.thinking h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 55 / PHASE 6 · CROSS-REF</span>
+<h1>三个已验证的学习开关</h1>
+<h2>检索练习 · 间隔 · 交错 — 把它们装进你和 AI 的学习流程</h2>
+<div class="date">2026-07-07 · BigCat</div>
+<p class="pitch">「学习技巧」有上百种，认知科学反复验证的只有三个开关——其余都是包装，包括你的 AI 学习工具卖给你的那套。</p>
+</header>
+
+<div class="xref">
+<a href="learning-guardrails-day53.html">承接 → Day 53 用 AI 学习的护栏工程（生成-验证倒置）</a>
+</div>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>Day 53 讲了「用 AI 学习必须装护栏」，这一期给出护栏里最硬核的那三根钢筋。Dunlosky 等人 2013 年那篇被反复引用的综述把十种主流学习技巧摆上台，逐一按证据强度打分——结果绝大多数（划重点、重读、总结、想象法）只拿到低分或依赖场景，<strong>只有「练习性测验」和「分散练习」拿到跨年龄、跨材料的高效用评级</strong>，交错练习拿到有条件的中等。也就是说，把学习当系统来工程化，真正值得你装进流程的<strong>开关只有三个</strong>：检索练习、间隔、交错。这一期不讲「它们是什么」（那是心理学 101），讲三件工程上要命的事：<strong>每个开关精确的生效条件、失效边界，以及怎么用一张四问清单去筛选或自建 AI 学习工具</strong>——因为几乎没有一个 AI 家教默认打开它们。</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>检索练习：最强的开关，但必须「带反馈 + 延迟后测」才算数</h2>
+<div class="claim">论断：从记忆里主动取出，比再看一遍强得多；但一个立刻给你答案的 AI，本质是伪装成对话的重读。</div>
+
+<h3>背景与原理</h3>
+<p>Roediger & Karpicke 2006 那组经典实验把它测死：读完一段材料，「再读一遍」组和「合上书自由回忆」组，短期内重读组自我感觉更好、当场也不差；但一周后的<strong>延迟测验</strong>里，做过检索练习的组显著胜出。这就是 <strong>testing effect</strong>——记忆不是在「看到」时变牢，是在「费劲取出」时变牢。Dunlosky 综述把它评为最高效用之一，跨年龄跨学科都成立。<strong>但它有两个不可省的工程条件</strong>：一是取出必须<em>费劲</em>（自由回忆，不是能猜的选择题——那测的是再认，不是回忆）；二是必须有<strong>反馈纠错</strong>，否则错误答案会被你一同「练牢」。而衡量它有没有生效，只能看<strong>延迟后测</strong>，当场测只反映短期缓存。</p>
+
+<h3>实战示例</h3>
+<p>把任意 chatbot 从「答案机」改造成「考官」，一段 system prompt 就够：</p>
+<pre><code><span class="tag-com"># 检索练习循环：先逼回忆，再揭晓 + 纠错，最后排延迟后测</span>
+SYSTEM: 你是我的检索练习教练，严格遵守：
+1. 我给一个刚学的主题，你出 3 道<span class="tag-key">开放式自由回忆题</span>
+   （不许出选择题——选择题能猜，测的是再认不是回忆）
+2. 在我作答<span class="tag-key">之前</span>绝不泄露任何提示或答案
+3. 我答完后给标准答案 + <span class="tag-key">逐点纠错</span>（无反馈 = 错误固化）
+4. 每题附一个延迟后测计划：这题放到 N 天后再考我一次</code></pre>
+<p>关键是第 2、3 条：把「揭晓」推到你作答之后，并强制反馈——这正是 Day 53 里「导师版」护栏消除学习损害的机制。</p>
+
+<div class="fail"><strong>失败模式</strong>：① 用选择题代替自由回忆——能猜就没费劲，退化成再认；② 学完立刻自测就宣布「记住了」——当场测量的是工作记忆缓存，一周后照样忘；③ 无反馈的自测——把错的也练牢了，比不测更糟。</div>
+
+<div class="res"><strong>进阶资源</strong> · Roediger & Karpicke <em>Test-Enhanced Learning</em> (Psychological Science 2006) · Dunlosky et al. <em>Improving Students' Learning With Effective Learning Techniques</em>, <a href="https://journals.sagepub.com/doi/10.1177/1529100612453266" target="_blank">PSPI 2013</a></div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>间隔：有效，但「最优间隔是考期的比例」，且递增间隔无长期证据</h2>
+<div class="claim">论断：分散 &gt; 集中是铁律；但最优间隔不是固定天数，而是你「何时要用」的一个比例——考得越远，比例越小。</div>
+
+<h3>背景与原理</h3>
+<p>集中练（cramming）当场分数高、感觉流畅，但忘得快；把同样的时间摊到多次、拉开间隔，长期留存显著更好。工程上真正要拿捏的是<strong>间隔多长</strong>。Cepeda 等人 2008 年用 1350 多人、复习间隔最长 3.5 个月、终测延迟最长 1 年，画出了一条「岭线」：终测表现随间隔先升后降（倒 U），而<strong>最优间隔随考期放大，但占考期的比例在缩小</strong>——考期 1 周时最优间隔约占 20–40%，考期 1 年时降到约 5–10%。另一条反直觉结论来自 Karpicke & Roediger 2007：<strong>递增间隔（expanding）只赢短期，等间隔在长期反而更好</strong>；真正重要的是「第一次复习要延迟、要费劲」，而不是后续间隔递不递增。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg" role="img" style="width:100%;height:auto" font-family="-apple-system,sans-serif">
+  <text x="340" y="24" fill="#00d4ff" font-size="14" font-weight="700" text-anchor="middle">Cepeda 2008 岭线：终测留存 vs 复习间隔（倒 U）</text>
+  <line x1="70" y1="255" x2="640" y2="255" stroke="#3a3e58" stroke-width="1.5"/>
+  <line x1="70" y1="255" x2="70" y2="45" stroke="#3a3e58" stroke-width="1.5"/>
+  <text x="355" y="292" fill="#a0a4b8" font-size="12" text-anchor="middle">复习间隔（短 → 长）</text>
+  <text x="42" y="150" fill="#a0a4b8" font-size="12" text-anchor="middle" transform="rotate(-90 42 150)">终测留存</text>
+  <!-- curve A: 近考(1周) 峰值偏左 -->
+  <path d="M95,245 Q210,70 340,240" fill="none" stroke="#00d4ff" stroke-width="2.5"/>
+  <line x1="212" y1="95" x2="212" y2="255" stroke="#00d4ff" stroke-width="1" stroke-dasharray="3,4" opacity="0.6"/>
+  <circle cx="212" cy="92" r="4" fill="#00d4ff"/>
+  <text x="212" y="80" fill="#00d4ff" font-size="11.5" text-anchor="middle">考期 1 周 · 最优 ≈ 20–40%</text>
+  <!-- curve B: 远考(1年) 峰值偏右、更宽 -->
+  <path d="M150,248 Q430,130 630,242" fill="none" stroke="#ff6ec4" stroke-width="2.5"/>
+  <line x1="430" y1="145" x2="430" y2="255" stroke="#ff6ec4" stroke-width="1" stroke-dasharray="3,4" opacity="0.6"/>
+  <circle cx="430" cy="142" r="4" fill="#ff6ec4"/>
+  <text x="470" y="132" fill="#ff6ec4" font-size="11.5" text-anchor="middle">考期 1 年 · 最优比例反而 ≈ 5–10%</text>
+  <text x="355" y="312" fill="#6a6e88" font-size="10.5" text-anchor="middle">间隔太短→退回集中练；太长→跌下岭线、全忘光</text>
+</svg>
+</div>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-com"># 按「考期比例」定间隔，而不是背固定天数</span>
+retention_interval = days_until_needed        <span class="tag-com"># 距面试/上线/考试还有几天</span>
+first_gap = <span class="tag-key">0.1</span> * retention_interval          <span class="tag-com"># 首次复习 ≈ 考期的 ~10%</span>
+<span class="tag-com"># Cepeda 2008：最优间隔随考期放大，但占考期的比例递减</span>
+<span class="tag-com"># Karpicke&amp;Roediger 2007：长期用等间隔即可，别迷信递增；</span>
+<span class="tag-com">#   真正重要的是「第一次复习别紧跟着学、要隔开、要费劲」</span></code></pre>
+
+<div class="fail"><strong>失败模式</strong>：① 流畅性错觉——集中练当场很顺，误判为「学会了」；② <strong>轻剂量陷阱</strong>：只隔一次 ≈ 没隔，间隔要多剂量才显效；③ 间隔拉太长跌下岭线，复习时已全忘，等于重学。</div>
+
+<div class="res"><strong>进阶资源</strong> · Cepeda et al. <em>Spacing Effects in Learning: A Temporal Ridgeline of Optimal Retention</em> (Psychological Science 2008), <a href="https://laplab.ucsd.edu/articles/Cepeda%20et%20al%202008_psychsci.pdf" target="_blank">PDF</a> · Karpicke & Roediger <em>Expanding Retrieval Practice…</em>, <a href="https://learninglab.psych.purdue.edu/downloads/2007/2007_Karpicke_Roediger_JEPLMC.pdf" target="_blank">JEP:LMC 2007</a></div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>交错：只对「易混材料」有效，用错场景反而是纯切换成本</h2>
+<div class="claim">论断：交错胜过分块，但机制是「训练判别」；所以它只在项目彼此易混、你必须先选对方法时才回本。</div>
+
+<h3>背景与原理</h3>
+<p>为什么交错（interleaving）比分块（blocking）好？Rohrer & Taylor 2007 的数学实验给了机制级答案：分块练习时，你已经知道「这一整版都用同一个公式」，于是只练了<em>执行</em>，没练<em>判别</em>；一到混合考试就抓瞎。他们的<strong>错误分析</strong>显示，分块组的错绝大多数是「选错了方法」——不是不会算，是不知道该用哪个。交错练习把不同类型打散，逼你每题先判断「这是哪一类、该用哪招」，练的正是这个判别动作。<strong>但这也划定了它的边界</strong>：交错的红利来自「区分易混项」，所以它只对<strong>彼此易混、需要选择策略</strong>的材料有效（求导 vs 积分、乐观锁 vs 悲观锁、几类相似的 bug）；对彼此独立、不存在「选错方法」问题的技能，交错只徒增上下文切换成本。这正是 Dunlosky 只给它<strong>中等</strong>评级的原因——效用高度依赖材料。</p>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-com"># 只交错「易混对」，独立技能照常分块</span>
+confusable = [(<span class="tag-gpt">"求导"</span>,<span class="tag-gpt">"积分"</span>), (<span class="tag-gpt">"BFS"</span>,<span class="tag-gpt">"DFS"</span>), (<span class="tag-gpt">"乐观锁"</span>,<span class="tag-gpt">"悲观锁"</span>)]
+independent = [<span class="tag-gpt">"学 SQL"</span>, <span class="tag-gpt">"练听力"</span>]   <span class="tag-com"># 无判别问题 → 交错只增成本</span>
+
+<span class="tag-key">for</span> pair <span class="tag-key">in</span> confusable:            <span class="tag-com"># 把两类题打散混排，</span>
+    quiz = shuffle(problems(pair))    <span class="tag-com"># 逼你每题先答「这是哪一类」</span>
+<span class="tag-com"># 让 AI 出题时明确要求：混合出题、不要标注题目类型</span></code></pre>
+
+<div class="fail"><strong>失败模式</strong>：① 交错本无关联的材料——没有判别红利，只剩切换损耗；② 交错「感觉更难更慢」（合意困难），学习者当场体验差、容易放弃，但正是这份费劲带来长期收益；③ 把交错当万能开关全程混排，忽略它是<em>条件性</em>工具。</div>
+
+<div class="res"><strong>进阶资源</strong> · Rohrer & Taylor 交错数学练习系列，<a href="https://pubmed.ncbi.nlm.nih.gov/24578089/" target="_blank">Rohrer et al. 2014（PubMed）</a> · Dunlosky et al. PSPI 2013（交错评为中等效用）</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>AI 学习工具选型：看它默认哪三个开关，而不是它卖什么「学习风格」</h2>
+<div class="claim">论断：一款 AI 学习工具值不值得用，只看它是否把三个开关设成默认；卖点是「适配你的学习风格」的，直接减分。</div>
+
+<h3>背景与原理</h3>
+<p>把前三节收成一条<strong>选型判据</strong>。市面上绝大多数 AI 家教默认的是「先讲解、再给完整答案」——那正是重读，也是 Day 53 里 PNAS「原味 GPT」组学习损害的来源。更常见的营销话术是「智能适配你的学习风格」（视觉型/听觉型…）：<strong>Pashler 等人 2008 年的权威综述明确指出，这套「meshing 假说」缺乏支持证据</strong>——按学习风格定制教学并不能提升效果。所以「卖学习风格」不是卖点，是伪科学信号。还有一层工程现实：<strong>实验室 → 课堂的效应衰减</strong>。上面三个开关在实验室效应量漂亮，但一落到真实场景，效应普遍缩水、且随材料波动（Dunlosky 综述反复强调「效用依条件而变」）。含义很直接：<strong>把三个开关的纪律外包给工具的默认设置，比靠你自己每天坚持更可靠</strong>——因为轻剂量、断续执行，正是它们失效的方式。</p>
+
+<h3>实战示例</h3>
+<pre><code><span class="tag-com"># AI 学习工具四问（选型 or 自建都用它）</span>
+[ ] 揭晓答案前先逼我回忆？        <span class="tag-claude">否 = 伪装成聊天的重读</span>
+[ ] 自动排「延迟后测」，而非当场测？<span class="tag-claude">否 = 只测短期缓存</span>
+[ ] 把易混内容混排出题？          <span class="tag-claude">否 = 丢了判别训练</span>
+[ ] 每次作答都给纠错反馈？        <span class="tag-claude">否 = 错误会被练牢</span>
+<span class="tag-com"># 减分信号：卖点是「适配你的学习风格」</span>
+<span class="tag-com">#   → meshing 假说无证据（Pashler 2008）</span></code></pre>
+<p>四问全过，才是把三个开关设成了默认；否则纪律仍压在你身上——而你不会长期坚持。</p>
+
+<div class="fail"><strong>失败模式</strong>：被「个性化 / 即时答案 / 连续打卡但从不要求回忆」的产品叙事吸引；或明知四问、却指望自己手动补齐工具缺的开关——轻剂量陷阱会让手动纪律在两周内瓦解。</div>
+
+<div class="res"><strong>进阶资源</strong> · Pashler, McDaniel, Rohrer & Bjork <em>Learning Styles: Concepts and Evidence</em>, <a href="https://journals.sagepub.com/doi/full/10.1111/j.1539-6053.2009.01038.x" target="_blank">PSPI 2008</a> · 本站 <a href="learning-guardrails-day53.html">Day 53 学习护栏</a>（生成-验证倒置）</div>
+</div>
+
+<!-- ============ Checklist ============ -->
+<div class="combo">
+<h3>// 一页开关卡</h3>
+<p><strong>① 检索练习</strong>——生效条件：自由回忆（非选择题）+ 纠错反馈 + 延迟后测；失效：能猜、无反馈、只当场测。</p>
+<p><strong>② 间隔</strong>——生效条件：首次复习延迟到「考期的 ~10%」、多剂量；失效：只隔一次（轻剂量）、拉太长跌下岭线、迷信递增间隔。</p>
+<p><strong>③ 交错</strong>——生效条件：材料彼此易混、需选对方法；失效：交错本无关联的独立技能（纯切换成本）。</p>
+<p><strong>内核：</strong>学习技巧有上百种，跨材料稳定生效的只有这三个（Dunlosky 2013）。选 AI 工具就一句话——<strong>它把这三个设成默认了吗？还是在卖「学习风格」？</strong></p>
+</div>
+
+<!-- ============ Thinking ============ -->
+<div class="thinking">
+<h3>// 深入思考</h3>
+<details><summary>三个开关都属于「合意困难」，能不能无脑叠满：又检索、又拉长间隔、又全交错？</summary><div>不能——困难是「合意」的才有益，叠过头会翻成「不合意困难」，反而压垮学习。三者各有独立的失效边界：间隔<em>太长</em>会跌下 Cepeda 岭线、复习时已全忘，等于从零重学；交错用在<em>不易混</em>的独立材料上只剩切换成本；检索<em>无反馈</em>会把错误一起练牢。它们不是「越难越好」的旋钮，而是各有甜区的开关。工程做法：先保证检索有反馈这条底线，再把间隔调到「费劲但还能想起来」，交错只用在判别性材料上——而不是把三个难度拉满自我感动。</div></details>
+<details><summary>为什么「学习风格」这种被证伪的说法，还能长期卖得动、连 AI 产品都在用？</summary><div>因为它同时满足了两个心理：它<strong>讨喜</strong>（「你没学好不是不努力，是没找到适合你的方式」），且它把责任从「坚持费劲的方法」转移到「换一种舒服的方法」。而三个真开关全是<em>合意困难</em>——当场体验更差、更累、分数还不立刻涨（Karpicke 实验里学习者甚至<em>低估</em>了检索的效果）。于是市场天然偏向「卖舒服」而非「卖有效」：舒服的立刻被感知到，有效的要等延迟后测才显现。这跟 Day 53 的 +48% 幻觉同构——<strong>短期体验和长期能力经常反向</strong>，产品指标又只抓得住短期。所以选型不能信体感，只能对着四问硬核。</div></details>
+<details><summary>这三个开关是给「学习模式」的。它们和 Day 53「干活模式 AI 生成/你验证」冲突吗？</summary><div>不冲突，是分工。Day 53 的核心是：干活模式（吞吐优先）让 AI 生成、你验证；学习模式（能力优先）要倒过来，你生成、AI 验证。这三个开关正是「学习模式」里让「你生成」这一端真正长出能力的具体机制——检索=逼你先从记忆生成、间隔=让生成动作重复且费劲、交错=让生成时必须先判别。换句话说 Day 53 给了<em>顺序</em>（谁先生成），这一期给了<em>参数</em>（生成动作怎么排布才长本事）。同一段时间里，你完全可以对已会的样板走干活模式（AI 先写），对要学的核心走学习模式（三开关全开）——关键是别把两种模式的最优用法搞混。</div></details>
+<details><summary>如果三个开关在真实场景里效应会衰减，那还值得费这么大劲装进流程吗？</summary><div>值得，但要摆正预期。衰减不等于失效：Dunlosky 把检索与间隔评为高效用，正是因为它们<em>即便打折</em>仍跨年龄、跨材料稳定为正——而被它比下去的重读、划线、总结，是连实验室里都难有稳定收益。真正的教训在「衰减为什么发生」：多半不是机制不灵，是<strong>剂量不足和执行断续</strong>（轻剂量陷阱）。这恰好反过来支持第 4 点的结论——与其靠个人每天手动坚持（最容易断），不如选一个把三开关设成默认的工具，让纪律固化在流程里。工程上永远是「把正确行为变成默认」比「靠意志力维持正确行为」更抗衰减。</div></details>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// 术语表</h3>
+<dl>
+<dt>testing effect / retrieval practice</dt><dd>从记忆主动取出比重读更能巩固长期记忆。生效前提：费劲取出 + 反馈 + 延迟后测。</dd>
+<dt>recognition vs recall（再认 vs 回忆）</dt><dd>选择题测再认（能猜），自由回忆才是检索练习的有效形态。</dd>
+<dt>spacing effect（间隔效应）</dt><dd>分散练优于集中练。最优间隔是「考期的一个比例」，考得越远比例越小（Cepeda 岭线）。</dd>
+<dt>expanding vs equal-interval</dt><dd>递增间隔只赢短期，长期等间隔更好；关键是首次复习要延迟、要费劲（Karpicke & Roediger 2007）。</dd>
+<dt>interleaving（交错）</dt><dd>打散不同类型练习，训练「判别/选对方法」。仅对易混材料有效，故 Dunlosky 评为中等。</dd>
+<dt>desirable difficulty（合意困难）</dt><dd>Bjork：适度的难（费劲、延迟、间隔）反而学得牢；但过头会翻成不合意困难。</dd>
+<dt>meshing hypothesis（学习风格假说）</dt><dd>「按学习风格定制教学更有效」——Pashler 2008 指出缺乏证据，是 AI 工具选型的减分信号。</dd>
+</dl>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://journals.sagepub.com/doi/10.1177/1529100612453266" target="_blank">Dunlosky et al. · Improving Students' Learning With Effective Learning Techniques（PSPI 2013）</a> — 十种技巧逐一打分，检索与间隔=高效用、交错=中等</li>
+<li><a href="https://laplab.ucsd.edu/articles/Cepeda%20et%20al%202008_psychsci.pdf" target="_blank">Cepeda et al. · Spacing Effects in Learning: A Temporal Ridgeline of Optimal Retention（Psychological Science 2008）</a> — 最优间隔随考期变化的岭线</li>
+<li><a href="https://learninglab.psych.purdue.edu/downloads/2007/2007_Karpicke_Roediger_JEPLMC.pdf" target="_blank">Karpicke & Roediger · Expanding Retrieval Practice…（JEP:LMC 2007）</a> — 递增只赢短期，等间隔赢长期</li>
+<li><a href="https://pubmed.ncbi.nlm.nih.gov/24578089/" target="_blank">Rohrer et al. · 交错数学练习不限于表面相似的题型（2014）</a> — 交错的红利来自判别</li>
+<li><a href="https://journals.sagepub.com/doi/full/10.1111/j.1539-6053.2009.01038.x" target="_blank">Pashler, McDaniel, Rohrer & Bjork · Learning Styles: Concepts and Evidence（PSPI 2008）</a> — meshing 假说缺乏证据</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual · Day 55 · 2026-07-07</footer>
+</div>
+</body></html>
