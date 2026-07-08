@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 56 · Determinism Engineering — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 56 / PHASE 6 · ENGINEERING</span>
+<h1>Determinism Engineering</h1>
+<h2>For LLM inference — the real drift source · what seed guarantees · steadying evals · the cost trade-off</h2>
+<div class="date">2026-07-08 · BigCat</div>
+<p class="pitch">temperature=0 was never the same as reproducible — what makes two runs diverge isn't sampling, it's the batch size you don't control.</p>
+</header>
+
+<div class="xref">
+<a href="inference-opt-day14.en.html">Prerequisite → Day 14 Inference Optimization (KV cache · dynamic batching · kernels)</a>
+</div>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>Almost anyone who has run an LLM eval has hit this wall: same prompt, <code>temperature=0</code>, seed pinned — and two runs still differ; prompt A beats B by 2 points and you can't tell if that's a real gain or noise. Most people file it under "model voodoo" and either ignore it or frantically add seeds. <strong>The widely-shared 2025 Thinking Machines Lab blog dug out the real culprit: the drift isn't from sampling randomness, it's floating-point non-associativity + server-side dynamic batching — the batch your request lands in is out of your hands, and batch size changes the reduction order of matmul/attention, nudging the per-token logits.</strong> This issue doesn't explain "what temperature is" (that's 101) — only four things that bite in production: where the drift actually enters, what seed/system_fingerprint really guarantee, how to make evals stop being flaky, and the throughput bill you pay for determinism.</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>The real drift source: not sampling, but batch-invariance</h2>
+<div class="claim">Claim: setting temperature to 0 only kills one random source — sampling. What makes the same prompt differ across runs is floating-point non-associativity × a batch size you can't control.</div>
+
+<h3>Background & principle</h3>
+<p>Break one intuition first: <code>temperature=0</code> is <strong>greedy decoding</strong> (take the argmax logit at each step), which in theory is fully deterministic. So where does drift come from? Floating-point addition <strong>is not associative</strong>: <code>(a+b)+c ≠ a+(b+c)</code> at finite precision differs in the last few bits. And the GPU kernels for matmul, RMSNorm, attention <strong>pick different reduction strategies and tiling orders depending on the current batch size</strong> — this is the lack of <strong>batch-invariance</strong> Thinking Machines names: the same sample, run alone vs. packed into a batch of 32 requests, reduces in a different order and produces logits that differ ever so slightly. On most tokens that error is harmless, but hit a <strong>near-tie token where two logits are nearly equal</strong> and argmax flips, choosing a different word — then autoregression amplifies that fork infinitely and the two trajectories fully diverge. The key: a production inference server's batch size floats with <strong>live load</strong>, entirely outside a caller's control, so "same request, different moment" simply drifts.</p>
+
+<div class="diagram">      Same prompt, two calls, temperature=0
+┌────────────────────────────────────────────────────┐
+│  low-load moment      │   high-load moment           │
+│  your request batch=1 │   batch=48 (same request)    │
+│        │              │          │                   │
+│        ▼              │          ▼                   │
+│  matmul reduction A   │   matmul reduction B         │
+│  (fp non-associative → differ in last few bits)      │
+│        │              │          │                   │
+│        ▼              │          ▼                   │
+│  logits: 0.4999 …     │   logits: 0.5001 …           │
+│        │              │          │                   │
+│        ▼ argmax       │          ▼ argmax            │
+│    token = " the"     │      token = " a"  ← FLIP!   │
+│        │              │          │                   │
+│        ▼              │          ▼                   │
+│   autoregression amplifies the fork → different text │
+└────────────────────────────────────────────────────┘
+  drift is not in "sampling", it's in "which batch you fall into"</div>
+
+<h3>Hands-on</h3>
+<p>Reproduce it yourself first — turn "voodoo" into something observable by running a fixed input N times and locating the <strong>first divergent token</strong>:</p>
+<pre><code><span class="tag-com"># Diagnose: run the same request N times, see where outputs fork</span>
+outs = [call(prompt, temperature=0, seed=0) for _ in range(20)]
+uniq = set(outs)
+print(f"{len(uniq)} distinct outputs / 20 runs")   <span class="tag-com"># &gt;1 = nondeterministic</span>
+<span class="tag-com"># Find the first divergence: align outputs by token, locate first mismatch index</span>
+<span class="tag-com"># Divergence usually sits late and on near-tie tokens — confirms batch-reduction drift</span></code></pre>
+<p>Make this the <strong>first health check</strong> when you adopt any new provider or self-hosted stack: measure how nondeterministic it is before deciding whether to pay for determinism.</p>
+
+<div class="fail"><strong>Failure modes</strong>: ① assuming <code>seed=0 + temperature=0</code> reproduces — stable on a single low-load box, drifts the moment you hit production concurrency; ② filing nondeterminism as a model bug — it's a systemic property of fp + batching, not a defect; ③ concluding from a single run.</div>
+
+<div class="res"><strong>Going deeper</strong> · Thinking Machines Lab · <a href="https://thinkingmachines.ai/blog/defeating-nondeterminism-in-llm-inference/" target="_blank">Defeating Nondeterminism in LLM Inference</a> (Horace He et al., 2025 — with a batch-invariant kernel library)</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>The truth about seed / system_fingerprint: mostly, not guaranteed</h2>
+<div class="claim">Claim: OpenAI's seed offers "best-effort" reproduction bound to a system_fingerprint; one backend change voids it, and longer outputs drift more — it is not a promise of bit-level reproduction.</div>
+
+<h3>Background & principle</h3>
+<p>The <code>seed</code> parameter on closed APIs is often misread as a "determinism switch." The official wording is far more restrained: same <code>seed</code> and same other params yield <strong>"mostly deterministic"</strong> output; and it's bound to a <code>system_fingerprint</code> — a fingerprint of the backend weights + infrastructure config. <strong>The moment the provider changes inference config (which happens a few times a year), the fingerprint changes and seed's reproduction guarantee is void.</strong> A finer trap: the docs state that even when seed and fingerprint match, you may still observe differences; and larger <code>max_tokens</code> / longer output means worse reproducibility (the §1 fork amplifies — more tokens, more chances to hit a near-tie). So position seed correctly: <strong>a variance-reduction tool, not a variance-elimination guarantee.</strong></p>
+
+<h3>Hands-on</h3>
+<pre><code>resp = client.chat.completions.create(
+    model="...", messages=msgs,
+    temperature=0,
+    seed=42,                       <span class="tag-com"># pin the seed</span>
+    max_tokens=256,                <span class="tag-key"># shorter = steadier: don't gamble reproduction at 4k</span>
+)
+fp = resp.system_fingerprint       <span class="tag-com"># record it!</span>
+log(fp)                            <span class="tag-com"># fp changed = your baseline is void, re-run the benchmark</span>
+<span class="tag-com"># Right use: pin seed + monitor fingerprint changes + keep output short</span>
+<span class="tag-com"># Wrong expectation: bit-level regression assertions / cross-fingerprint comparison</span></code></pre>
+
+<div class="fail"><strong>Failure modes</strong>: ① writing one seeded output into a strict string assertion as the "golden answer" — the next fingerprint change turns them all red; ② expecting seed to reproduce long-form generation; ③ comparing results across fingerprints / model versions and misreading it as model regression.</div>
+
+<div class="res"><strong>Going deeper</strong> · OpenAI Cookbook · <a href="https://cookbook.openai.com/examples/reproducible_outputs_with_the_seed_parameter" target="_blank">Reproducible outputs with the seed parameter</a> (seed + system_fingerprint usage and limits)</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Making evals non-flaky: don't chase bit reproduction, control variance</h2>
+<div class="claim">Claim: eval score jitter is usually not model regression — it's nondeterministic inference flipping pass/fail on borderline samples; the fix isn't pretending variance is gone, it's measuring and reporting it.</div>
+
+<h3>Background & principle</h3>
+<p>Connect §1–2 to evals: since the same request drifts, your pass/fail verdict flips on <strong>samples sitting right at the threshold</strong>. You get 82 one run, 85 the next; judging "the new prompt is better" from a <strong>single run</strong> is likely reading noise. Two engineering exits — pick one, don't mix: <strong>(A) want true reproduction</strong> — self-host, use batch-invariant kernels (vLLM has a demo), pin down the systemic drift, evals align bit-for-bit; <strong>(B) accept nondeterminism</strong> — sample each case <code>n≥5</code> times, turn a single score into a <strong>distribution + confidence interval</strong>, and judge A/B by whether intervals overlap, not by which of two single points is larger. Most teams on closed APIs can only take (B), so stop treating a single run as ground truth.</p>
+
+<pre><code><span class="tag-com"># Robustifying eval: repeated sampling → report mean±std, not a single point</span>
+scores = [grade(run(case)) for _ in range(5)]   <span class="tag-com"># n≥5</span>
+mean, std = stat(scores)
+report(case, mean, std)
+<span class="tag-com"># A/B: check if confidence intervals overlap; don't conclude from 82 vs 85</span>
+<span class="tag-com"># Bonus: flag near-tie samples (pass/fail flips across repeats) — noise hotspots</span></code></pre>
+
+<div class="fail"><strong>Failure modes</strong>: ① a single eval drops 3 points and you declare "the model regressed" — it's within variance; ② pinning a seed and believing variance is gone — you only hid it behind the fingerprint; ③ using (A)'s tactic (disable batching) while on a closed API — you can't touch its kernels.</div>
+
+<div class="res"><strong>Going deeper</strong> · Thinking Machines batch-invariant kernel library + vLLM repro demo (see §1 link) · This site <a href="real-world-eval-day29.en.html">Day 29 Real-World Eval</a> (variance & confidence intervals)</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>When you want determinism, when you don't, and what it costs</h2>
+<div class="claim">Claim: determinism is not a free default — it's an engineering choice paid for in throughput: debug/audit/cache/RL training want it, creative generation doesn't.</div>
+
+<h3>Background & principle</h3>
+<p>Determinism has a real price. Batch-invariant kernels give up "pick the fastest reduction adaptively per batch," and in Thinking Machines' measurements <strong>the deterministic mode is markedly slower (throughput nearly halved when unoptimized)</strong>, closed only later with engineering. So don't flip determinism on globally — decide by scenario: <strong>debug / reproduce a bug / compliance audit / regression baseline</strong> — yes, reproducibility is mandatory; <strong>on-policy RL training</strong> — yes, if the sampler (inference) and trainer are numerically inconsistent, on-policy quietly degrades into off-policy and the gradient is biased; <strong>creative generation / brainstorming / diverse candidates</strong> — no, you want diversity; forcing <code>temp=0</code> for "stability" only makes output dull, handing you the same mediocre answer across calls.</p>
+
+<div class="combo">
+<h3>// Determinism decision table</h3>
+<p><strong>Want · debug / reproduce a prod bug</strong> — must replay the same trajectory or you can't localize.</p>
+<p><strong>Want · compliance audit / regression assertion</strong> — conclusions must be reproducible; use (A) self-hosting or at least pin seed + short output.</p>
+<p><strong>Want · on-policy RL</strong> — sampler and trainer numerically aligned, else the training target shifts.</p>
+<p><strong>Depends · prefix caching hits</strong> — you only reap the cache dividend when the input prefix is bit-stable; drift = miss.</p>
+<p><strong>Don't · creative / multi-candidate / ensemble voting</strong> — diversity is the value; temp&gt;0 is a feature, not a bug.</p>
+</div>
+
+<div class="fail"><strong>Failure modes</strong>: ① nailing <code>temperature=0</code> on a creative task for "consistency" — output turns uniform and rigid; ② disabling batching globally in production for "reproducibility" — throughput halved, cost doubled, and nobody actually needed it; ③ doing RL but running inference and training on two numerical paths — train/inference mismatch makes the curve diverge weirdly.</div>
+
+<div class="res"><strong>Going deeper</strong> · The RL / on-policy section of Thinking Machines' "Defeating Nondeterminism…" (2025) · This site <a href="inference-opt-day14.en.html">Day 14 Inference Optimization</a> (batching & prefix caching)</div>
+</div>
+
+<!-- ============ Thinking ============ -->
+<div class="thinking">
+<h3>// DEEPER QUESTIONS</h3>
+<details><summary>Why is temperature=0 greedy decoding the "least stable," while temperature&gt;0 sometimes looks more robust?</summary><div>Because greedy is a <em>hard argmax</em>: when two logits differ by 0.0001, whichever is larger wins, so a few bits of floating drift can flip it, and autoregression amplifies the fork into entirely different output. It turns "tiny numerical noise on a near-tie token" into a <strong>discrete, irreversible choice</strong>. Sampling at <code>temperature&gt;0</code> already treats tokens as a probability distribution — you've already accepted run-to-run difference, so you don't mistakenly expect consistency; and two near-tie tokens have near-equal probabilities under sampling, so either pick is within the distribution, unlike greedy which manufactures the "was supposed to be fixed but changed" illusion. So the real lesson isn't "turn off randomness for determinism" but: <strong>greedy's determinism is on paper only, and it's unusually sensitive to underlying floating noise</strong> — for true reproduction you must fix the kernel's batch-invariance, not just crank temperature to 0.</div></details>
+<details><summary>If a batch-invariant kernel nearly halves throughput, why is it non-negotiable in RL training?</summary><div>Because on-policy RL's <em>correctness</em> depends on "the policy used to sample" and "the policy whose gradient you update" being the same one. In production the sampler (inference engine, chasing throughput, dynamic batching) and the trainer (forward pass, a different kernel) run two numerical paths — the §1 drift creates a systematic bias in token probabilities. So you think you're doing on-policy, but the samples you collected no longer <strong>belong</strong> to the policy distribution you're updating, quietly becoming biased off-policy, the gradient carrying an unmodeled correction term, the training curve strangely unstable or diverging. Here determinism isn't "nice-to-have reproducibility" — it's <strong>a precondition for the algorithm's assumptions to hold</strong> — so you'd rather halve throughput than misalign sampler/trainer numerics. This also explains why the blog came from a lab doing RL/post-training: they got bitten by this bug.</div></details>
+<details><summary>Closed APIs can never give bit-level reproduction — does "reproducible AI research/eval" still hold on an API?</summary><div>It holds, but you must downgrade "reproducible" from <em>bit-level</em> to <em>statistical</em>. Expecting a provider to emit byte-identical output on a given day is fantasy — fingerprints change, batch is out of your hands. Pragmatic reproducibility is: ① <strong>lock what you can</strong> — record model version, system_fingerprint, all sampling params, prompt hash; ② <strong>report a distribution, not a point</strong> — n≥5 repeats, give mean±std and a confidence interval so others can reproduce your conclusion <em>statistically</em>; ③ <strong>make conclusions robust to fingerprint changes</strong> — if your "A beats B by 2 points" can't survive one backend update, it was never a finding, just noise. The only route to true bit reproduction is self-hosting + batch-invariant kernels, removing the provider as an uncontrolled variable entirely.</div></details>
+<details><summary>Can you just cache answers to sidestep the whole nondeterminism problem?</summary><div>You can dodge part of it, but it depends on what you cache and where the edge is. <strong>Exact prefix caching</strong> (same prompt returns the stored output) does make repeated requests 100% consistent — but it only covers <em>identical</em> inputs, and in an agent the context changes every turn, so hit rate is often low. <strong>KV/prefix caching</strong> (caching a prefix's intermediate activations) saves compute, not determinism: it requires the prefix to be bit-stable to hit, and the §1 drift makes a supposedly-identical prefix compute slightly differently and miss instead. <strong>Semantic caching</strong> (similar question returns an approximate answer) trades accuracy for consistency, handing you "stable but wrong" on borderline samples. So caching is a tool for <em>throughput and consistency</em>, not a substitute for <em>correctness and reproducibility</em> — it lets you compute less but doesn't fix why the underlying drift happens. To cure it, you're back to kernel batch-invariance.</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://thinkingmachines.ai/blog/defeating-nondeterminism-in-llm-inference/" target="_blank">Thinking Machines Lab · Defeating Nondeterminism in LLM Inference (Horace He et al., 2025)</a> — pins drift to batch-invariance and ships reproducible kernels</li>
+<li><a href="https://cookbook.openai.com/examples/reproducible_outputs_with_the_seed_parameter" target="_blank">OpenAI Cookbook · Reproducible outputs with the seed parameter</a> — official usage and the "mostly" limits of seed + system_fingerprint</li>
+<li><a href="https://learn.microsoft.com/en-us/azure/ai-foundry/openai/how-to/reproducible-output" target="_blank">Microsoft Learn · Reproducible output with Azure OpenAI</a> — seed/fingerprint practice and alerting in a managed setting</li>
+<li><a href="inference-opt-day14.en.html">This site · Day 14 Inference Optimization</a> — dynamic batching, KV/prefix caching (this issue's upstream)</li>
+<li><a href="real-world-eval-day29.en.html">This site · Day 29 Real-World Eval</a> — fighting eval noise with distributions and confidence intervals</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual · Day 56 · 2026-07-08</footer>
+</div>
+</body></html>

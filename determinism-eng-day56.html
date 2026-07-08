@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 56 · Determinism Engineering — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 56 / PHASE 6 · ENGINEERING</span>
+<h1>Determinism Engineering</h1>
+<h2>推理的确定性工程 — 漂移源 · seed 的真相 · 稳住 eval · 成本权衡</h2>
+<div class="date">2026-07-08 · BigCat</div>
+<p class="pitch">temperature=0 从来不等于可复现——真正让你两次跑出不同结果的，不是采样，是你控制不了的 batch size。</p>
+</header>
+
+<div class="xref">
+<a href="inference-opt-day14.html">前置工程 → Day 14 推理优化（KV cache · 动态 batching · kernel）</a>
+</div>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>几乎每个用 LLM 做过 eval 的人都撞过这堵墙：同一个 prompt、<code>temperature=0</code>、连 seed 都固定了，跑两次结果还是不一样；A/B 两版 prompt 差 2 分，你不知道那是真提升还是噪声。多数人把它归成「模型玄学」，然后要么假装没看见，要么疯狂加 seed。<strong>2025 年 Thinking Machines Lab 那篇被反复转的博客把真凶挖了出来：漂移的根源不是采样随机，而是浮点非结合律 + 服务端动态 batching——你的请求落在多大的 batch 里，你根本控制不了，而 batch size 会改变 matmul/attention 的归约顺序，逐 token 拨动 logits。</strong>这一期不解释「什么是 temperature」（那是 101），只讲四件工程上要命的事：漂移到底从哪进来、seed/system_fingerprint 能给你什么保证、怎么让 eval 不再 flaky、以及确定性要用吞吐换的成本账。</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>漂移的真源：不是采样，是 batch-invariance</h2>
+<div class="claim">论断：把 temperature 调到 0 只关掉了「采样」这一个随机源；同一 prompt 两次跑出不同结果，真凶是浮点非结合律 × 你控制不了的 batch size。</div>
+
+<h3>背景与原理</h3>
+<p>先破一个直觉：<code>temperature=0</code> 是<strong>贪心解码</strong>（每步取 argmax logit），理论上完全确定。那漂移从哪来？浮点加法<strong>不满足结合律</strong>：<code>(a+b)+c ≠ a+(b+c)</code> 在有限精度下会差最后几个 bit。而 matmul、RMSNorm、attention 这些算子的 GPU kernel，会<strong>按当前 batch 大小选不同的归约（reduction）策略与分块顺序</strong>——这就是 Thinking Machines 说的缺乏 <strong>batch-invariance</strong>：同一个样本，单独跑和塞在 32 条请求的 batch 里跑，归约顺序不同，算出的 logits 就差那么一丁点。多数 token 上这点误差无所谓，但只要碰到<strong>两个 logit 几乎并列的临界 token</strong>，argmax 就翻面，选了不同的词——之后自回归把这个分叉无限放大，两条轨迹彻底发散。关键在于：生产推理服务的 batch size 随<strong>实时负载</strong>浮动，你作为调用方完全无法控制，所以「同一请求、不同时刻」就是会漂。</p>
+
+<div class="diagram">      同一个 prompt，两次调用，temperature=0
+┌────────────────────────────────────────────────────┐
+│  低负载时刻          │   高负载时刻                   │
+│  你的请求 batch=1    │   你的请求 batch=48（同一条）  │
+│        │            │          │                    │
+│        ▼            │          ▼                    │
+│  matmul 归约顺序 A   │   matmul 归约顺序 B            │
+│  （浮点非结合 → 结果差最后几个 bit）                  │
+│        │            │          │                    │
+│        ▼            │          ▼                    │
+│  logits: 0.4999 …   │   logits: 0.5001 …            │
+│        │            │          │                    │
+│        ▼ argmax     │          ▼ argmax             │
+│    token = " the"   │      token = " a"   ← 翻面！   │
+│        │            │          │                    │
+│        ▼            │          ▼                    │
+│   之后自回归把分叉放大 → 两段完全不同的输出           │
+└────────────────────────────────────────────────────┘
+  漂移不在「采样」，在「你落进多大的 batch」——而这你管不着</div>
+
+<h3>实战示例</h3>
+<p>先自己复现一次，把「玄学」变成可观测——固定输入跑 N 次，定位<strong>第一个分歧 token</strong>的位置：</p>
+<pre><code><span class="tag-com"># 诊断：同一请求跑 N 次，看输出在第几个 token 开始分叉</span>
+outs = [call(prompt, temperature=0, seed=0) for _ in range(20)]
+uniq = set(outs)
+print(f"{len(uniq)} 种不同输出 / 20 次")   <span class="tag-com"># &gt;1 就是非确定</span>
+<span class="tag-com"># 找首个分歧位：把每次输出按 token 对齐，定位第一个不一致的 index</span>
+<span class="tag-com"># 通常分歧点越靠后、越集中在 near-tie 的临界 token —— 印证 batch 归约漂移</span></code></pre>
+<p>把这段当你接任何新 provider/新自托管栈的<strong>第一个体检项</strong>：先量清楚它有多不确定，再决定要不要为确定性付钱。</p>
+
+<div class="fail"><strong>失败模式</strong>：① 以为 <code>seed=0 + temperature=0</code> 就复现了——单机低负载测确实稳，一上生产高并发就漂；② 把非确定当模型 bug 提工单——这是浮点+batching 的系统性质，不是缺陷；③ 只测一次就下结论。</div>
+
+<div class="res"><strong>进阶资源</strong> · Thinking Machines Lab · <a href="https://thinkingmachines.ai/blog/defeating-nondeterminism-in-llm-inference/" target="_blank">Defeating Nondeterminism in LLM Inference</a>（Horace He 等, 2025，含 batch-invariant kernel 库）</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>seed / system_fingerprint 的真相：mostly，不是 guaranteed</h2>
+<div class="claim">论断：OpenAI 的 seed 给的是「尽力复现」，且绑定 system_fingerprint；后端一变全失效，输出越长越易漂——它不是 bit-level 复现的承诺。</div>
+
+<h3>背景与原理</h3>
+<p>闭源 API 提供的 <code>seed</code> 参数常被误读成「确定性开关」。官方口径其实很克制：设了相同的 <code>seed</code>、相同的其余参数，输出<strong>「mostly deterministic」</strong>；而且它绑定一个 <code>system_fingerprint</code>——代表后端权重 + 基础设施配置的指纹。<strong>只要供应商换了推理配置（一年会变几次），fingerprint 一变，seed 的复现保证立刻作废。</strong>更细的坑：官方明说即便 seed 与 fingerprint 都对得上，仍可能观察到差异；且 <code>max_tokens</code> 越大、输出越长，复现性越差（第 1 点的分叉放大，token 越多越容易踩到临界点）。所以 seed 的正确定位是：<strong>降低方差的工具，不是消除方差的保证</strong>。</p>
+
+<h3>实战示例</h3>
+<pre><code>resp = client.chat.completions.create(
+    model="...", messages=msgs,
+    temperature=0,
+    seed=42,                       <span class="tag-com"># 固定 seed</span>
+    max_tokens=256,                <span class="tag-key"># 越短越稳：别开到 4k 去赌复现</span>
+)
+fp = resp.system_fingerprint       <span class="tag-com"># 记录它！</span>
+log(fp)                            <span class="tag-com"># fp 变了 = 你的复现基线作废，重跑基准</span>
+<span class="tag-com"># 正确用法：seed 固定 + 监控 fingerprint 变更 + 输出尽量短</span>
+<span class="tag-com"># 错误期待：拿它做 bit-level 回归断言 / 跨 fingerprint 比对</span></code></pre>
+
+<div class="fail"><strong>失败模式</strong>：① 把带 seed 的一次输出当「黄金答案」写进严格字符串断言——下次 fingerprint 变更集体挂红；② 长文本生成也指望 seed 复现；③ 跨 fingerprint / 跨模型版本比对结果，误判成模型退化。</div>
+
+<div class="res"><strong>进阶资源</strong> · OpenAI Cookbook · <a href="https://cookbook.openai.com/examples/reproducible_outputs_with_the_seed_parameter" target="_blank">Reproducible outputs with the seed parameter</a>（seed + system_fingerprint 用法与限制）</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>让 eval 不 flaky：不追 bit 复现，而是控制方差</h2>
+<div class="claim">论断：eval 分数抖动，多半不是模型退化，是非确定推理让边界样本的 pass/fail 翻面；解法不是假装消除方差，是量它、报它。</div>
+
+<h3>背景与原理</h3>
+<p>把第 1、2 点接到 eval 上：既然同一请求会漂，那你的 pass/fail 判定在<strong>贴着阈值的边界样本</strong>上就会随机翻面。跑一次得 82 分，再跑得 85 分，你若用<strong>单次跑</strong>去判「新 prompt 更好」，很可能只是在读噪声。两条工程出路，二选一别混用：<strong>(A) 要真复现</strong>——自托管，上 batch-invariant kernel（vLLM 有 demo），把系统性漂移按住，评估可 bit 对齐；<strong>(B) 接受非确定</strong>——每个样本重复采样 <code>n≥5</code>，把单点分数变成<strong>分布 + 置信区间</strong>，A/B 判定看区间是否重叠，而不是看两个单点谁大。绝大多数用闭源 API 的团队只能走 (B)，那就别再假装单次跑是真理。</p>
+
+<pre><code><span class="tag-com"># eval 稳健化：重复采样 → 报均值±std，而不是单点</span>
+scores = [grade(run(case)) for _ in range(5)]   <span class="tag-com"># n≥5</span>
+mean, std = stat(scores)
+report(case, mean, std)
+<span class="tag-com"># A/B 判定：看置信区间是否重叠，别用 82 vs 85 这种单点差下结论</span>
+<span class="tag-com"># 额外：把 near-tie（重复跑里 pass/fail 翻面）的样本单独标注，它们是噪声高发区</span></code></pre>
+
+<div class="fail"><strong>失败模式</strong>：① 单次 eval 掉 3 分就宣布「模型退化了」——其实在方差内；② 固定 seed 后以为方差消失了，实则只是把它藏进了 fingerprint；③ 用 (A) 的手段（关 batching）却又走闭源 API——你根本碰不到它的 kernel。</div>
+
+<div class="res"><strong>进阶资源</strong> · Thinking Machines batch-invariant kernel 库 + vLLM 复现 demo（见第 1 点链接）· 本站 <a href="real-world-eval-day29.html">Day 29 真实世界 Eval</a>（方差与置信区间）</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>什么时候要确定性、什么时候别，以及它的成本</h2>
+<div class="claim">论断：确定性不是免费默认，是要拿吞吐去换的工程选择——debug/审计/缓存/RL 训练要，创意生成不要。</div>
+
+<h3>背景与原理</h3>
+<p>确定性有真实价格。batch-invariant kernel 放弃了「按 batch 自适应挑最快归约策略」这条优化路，Thinking Machines 的实测里<strong>确定性模式明显更慢（未充分优化时吞吐近乎腰斩）</strong>，之后才靠工程把差距收窄。所以别无脑全局开确定性，按场景决策：<strong>debug / 复现 bug / 合规审计 / 回归基线</strong>——要，可复现是刚需；<strong>on-policy RL 训练</strong>——要，采样端（inference）和训练端数值若不一致，on-policy 会悄悄退化成 off-policy，梯度有偏；<strong>创意生成 / 头脑风暴 / 多样候选</strong>——不要，你本就想要多样性，强上 <code>temp=0</code> 求「稳定」只会让输出变呆、多次调用给你同一个平庸答案。</p>
+
+<div class="combo">
+<h3>// 确定性决策表</h3>
+<p><strong>要 · debug / 复现线上 bug</strong> — 必须能重放同一轨迹，否则无从定位。</p>
+<p><strong>要 · 合规审计 / 回归断言</strong> — 结论要可重现；用 (A) 自托管或至少固定 seed+短输出。</p>
+<p><strong>要 · on-policy RL</strong> — sampler 与 trainer 数值一致，否则训练目标偏移。</p>
+<p><strong>看情况 · prefix caching 命中</strong> — 输入前缀 bit 稳定才吃得到缓存红利；漂了就 miss。</p>
+<p><strong>不要 · 创意 / 多候选 / 集成投票</strong> — 多样性就是价值，temp&gt;0 是特性不是 bug。</p>
+</div>
+
+<div class="fail"><strong>失败模式</strong>：① 给创意任务强钉 <code>temperature=0</code> 求「一致」，产出千篇一律且僵化；② 为「可复现」在生产全局关 batching，吞吐腰斩、成本翻倍还没人真的需要；③ 做 RL 却让推理与训练走两套数值路径，train/inference mismatch 让曲线诡异发散。</div>
+
+<div class="res"><strong>进阶资源</strong> · Thinking Machines《Defeating Nondeterminism…》(2025) 的 RL 与 on-policy 章节 · 本站 <a href="inference-opt-day14.html">Day 14 推理优化</a>（batching 与 prefix caching）</div>
+</div>
+
+<!-- ============ Thinking ============ -->
+<div class="thinking">
+<h3>// 深入思考</h3>
+<details><summary>为什么恰恰是 temperature=0 的贪心解码「最不稳」，反而 temperature&gt;0 有时看着更"耐操"？</summary><div>因为贪心是<em>硬 argmax</em>：两个 logit 只差 0.0001 时，谁大取谁，浮点漂那几个 bit 就能让它翻面，之后自回归把分叉放大成完全不同的输出。它把「临界 token 上的微小数值噪声」<strong>放大成离散的、不可逆的选择</strong>。而 <code>temperature&gt;0</code> 的采样本来就把 token 当概率分布抽——你早就接受了 run-to-run 不同，心理上不会误以为「应该一致」；而且两个 near-tie token 在采样下本来概率就接近，选哪个都在分布内，不像贪心那样制造「本该确定却变了」的错觉。所以真正的教训不是「关掉随机就确定」，而是：<strong>贪心的确定性是纸面上的，它对底层浮点噪声异常敏感</strong>——要真复现，必须去修 kernel 的 batch-invariance，而不是把 temperature 拧到 0 了事。</div></details>
+<details><summary>如果 batch-invariant kernel 让吞吐近乎腰斩，为什么 RL 训练里还非它不可？</summary><div>因为 on-policy RL 的<em>正确性</em>依赖「采样用的策略」和「更新梯度用的策略」是同一个。生产里 sampler（推理引擎，追吞吐、动态 batching）和 trainer（前向，另一套 kernel）走的是两条数值路径——第 1 点讲的漂移会让二者在 token 概率上产生系统性偏差。于是你以为在做 on-policy，实际采到的样本已经<strong>不属于</strong>你正在更新的那个策略分布，悄悄变成有偏的 off-policy，梯度带着一个你没建模的修正项，训练曲线会诡异地不稳甚至发散。这里确定性不是「锦上添花的可复现」，而是<strong>算法假设成立的前提</strong>——所以宁可吞吐腰斩也要 sampler/trainer 数值对齐。这也解释了为什么这篇博客出自一家做 RL/后训练的实验室：他们是被这个 bug 咬过的。</div></details>
+<details><summary>闭源 API 永远给不了 bit-level 复现，那「可复现的 AI 研究/评测」在 API 上还成立吗？</summary><div>成立，但你得把「可复现」的定义从<em>bit 级</em>降到<em>统计级</em>。指望某供应商在某天给出逐字节相同的输出是幻想——fingerprint 会变、batch 你管不着。务实的可复现是：①<strong>锁死你能锁的</strong>——记录 model 版本、system_fingerprint、所有采样参数、prompt 哈希；②<strong>报分布而非单点</strong>——n≥5 重复、给均值±std 和置信区间，让别人能在<em>统计意义</em>上复现你的结论；③<strong>结论要对 fingerprint 变更鲁棒</strong>——如果你的「A 比 B 好 2 分」经不起一次后端更新，那本来就不是发现，是噪声。真正要 bit 复现，唯一的路是自托管 + batch-invariant kernel，把供应商这个不可控变量整个拿掉。</div></details>
+<details><summary>能不能靠「把答案缓存起来」直接绕过整个非确定性问题？</summary><div>能绕一部分，但要看你缓存的是什么、边界在哪。<strong>精确前缀缓存</strong>（同一 prompt 直接返存过的输出）确实让重复请求 100% 一致——但它只覆盖<em>完全相同</em>的输入，agent 里每轮 context 都在变，命中率往往很低。<strong>KV/prefix caching</strong>（缓存前缀的中间激活）省的是算力不是给你确定性：它要求前缀 bit 稳定才命中，而第 1 点的漂移恰恰会让本该相同的前缀算出微差、反而 miss。<strong>语义缓存</strong>（相似问题返近似答案）则用一致性换了准确性，边界样本上会给你「稳定但错」的答案。所以缓存是<em>吞吐与一致性</em>的工具，不是<em>正确性与可复现</em>的替代——它能让你少算，但没修好底层为什么会漂。真要根治，还是回到 kernel 的 batch-invariance。</div></details>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// 术语表</h3>
+<dl>
+<dt>batch invariance</dt><dd>同一样本无论单独跑还是塞进多大 batch，数值结果都相同的性质。主流推理 kernel 缺这个性质 → run-to-run 漂移的根因。</dd>
+<dt>floating-point non-associativity</dt><dd>有限精度下 (a+b)+c ≠ a+(b+c)。归约顺序一变结果差最后几个 bit，是所有漂移的物理源头。</dd>
+<dt>greedy / argmax decoding</dt><dd>temperature=0 每步取最大 logit。纸面确定，但对 near-tie token 上的浮点噪声极度敏感。</dd>
+<dt>near-tie token</dt><dd>两个候选 logit 几乎并列的位置。漂移在这里从「几个 bit」翻成「不同的词」，再被自回归放大。</dd>
+<dt>seed（API 参数）</dt><dd>请求相同则「mostly」复现，绑定 system_fingerprint。是降方差工具，非确定性保证。</dd>
+<dt>system_fingerprint</dt><dd>后端权重+基础设施配置的指纹。它一变，seed 的复现基线作废——务必记录并监控。</dd>
+<dt>batch-invariant kernel</dt><dd>放弃按 batch 自适应归约、换取跨 batch 数值一致的 kernel（如 Thinking Machines 为 vLLM 提供的实现）。代价是吞吐下降。</dd>
+<dt>train/inference mismatch</dt><dd>采样端与训练端数值路径不同，令 on-policy RL 悄悄变有偏 off-policy，梯度失真。</dd>
+</dl>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://thinkingmachines.ai/blog/defeating-nondeterminism-in-llm-inference/" target="_blank">Thinking Machines Lab · Defeating Nondeterminism in LLM Inference（Horace He 等, 2025）</a> — 把漂移定位到 batch-invariance，并给出可复现的 kernel 库</li>
+<li><a href="https://cookbook.openai.com/examples/reproducible_outputs_with_the_seed_parameter" target="_blank">OpenAI Cookbook · Reproducible outputs with the seed parameter</a> — seed + system_fingerprint 的官方用法与「mostly」限制</li>
+<li><a href="https://learn.microsoft.com/en-us/azure/ai-foundry/openai/how-to/reproducible-output" target="_blank">Microsoft Learn · Reproducible output with Azure OpenAI</a> — seed/fingerprint 在托管场景下的实践与告警</li>
+<li><a href="inference-opt-day14.html">本站 Day 14 · 推理优化</a> — 动态 batching、KV/prefix caching 的机制（本期漂移的上游）</li>
+<li><a href="real-world-eval-day29.html">本站 Day 29 · 真实世界 Eval</a> — 用分布与置信区间对抗评估噪声</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual · Day 56 · 2026-07-08</footer>
+</div>
+</body></html>
