@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 57 · Semantic Caching — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 57 · ENGINEERING</span>
+<h1>Semantic Caching</h1>
+<h2>Three-Tier Stack · Asymmetric Threshold · Scope Key · Two-Metric Monitoring</h2>
+<div class="date">2026-07-09 · BigCat</div>
+<p class="pitch">Don't pay twice for the same question — but one wrong hit costs more than a hundred misses.</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>Your LLM bill is stuffed with "semantic duplicates": the same question phrased differently, FAQs, templated queries. <strong>Exact-match caching</strong> is useless here — change one character and it misses. <strong>Prefix caching</strong> (Day 15/16's <code>cache_control</code>) only saves input tokens; the answer is still fully re-inferred every time. To actually pay once per question, you need <strong>semantic caching</strong>: embed the request, and on a vector-neighbor hit, reuse the old answer — saving an <strong>entire inference</strong>. But semantic caching is one of the few optimizations in this series that gets <strong>more dangerous the more you use it</strong>: loosen the threshold a notch and the system starts returning the "return policy" answer to an "exchange policy" question — and it <strong>doesn't error</strong>; the user gets a confidently wrong answer. This issue is not about installing GPTCache — it's about walking the tightrope between saving money and false hits.</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>The Three-Tier Cache Stack: exact → prefix → semantic</h2>
+<div class="claim">Claim: these three tiers stack, they don't substitute; hit rate, savings, and risk all rise together — so you must query from the safest tier first.</div>
+
+<h3>Background & Principle</h3>
+<p>Treating "cache" as one thing is a rookie mistake. An LLM request has three cacheable points with wildly different cost and risk:</p>
+<ul>
+<li><strong>L1 exact cache</strong>: hash the request text → answer. Lowest hit rate (one punctuation change and it misses), but <strong>zero semantic risk</strong> — a hit is guaranteed to be the same sentence.</li>
+<li><strong>L2 prefix cache</strong>: Anthropic <code>cache_control</code> caches the stable prefix (system prompt, few-shot, long docs) server-side. It saves input tokens <strong>but still runs a full inference every time</strong> — the answer is recomputed, so it too is zero semantic risk. Note: Anthropic defaults to a 5-minute TTL (optional 1 hour), up to 4 breakpoints, and <strong>any byte change before a breakpoint invalidates the cache from that point onward</strong> — so place the breakpoint exactly on the boundary between the stable prefix and the volatile tail.</li>
+<li><strong>L3 semantic cache</strong>: embed the request → nearest neighbor (ANN) → if distance is below threshold, return the <strong>old answer</strong>. Saves an entire inference (largest savings), but <strong>may hit the wrong old answer</strong>.</li>
+</ul>
+<p>The key engineering decision: query the three tiers <strong>in order</strong>, with the semantic tier last, handling only what exact/prefix let through. An identical query should be caught by the zero-risk L1 and never reach L3 to gamble on a similarity check.</p>
+
+<div class="diagram">  REQUEST  "Can I return this?"
+     │  normalize (lowercase / strip punctuation / stopwords)
+     ▼
+  ┌── L1 EXACT (hash) ──────── hit ──▶ return answer   ✅ 0 risk
+  │        miss │
+  │             ▼
+  ├── L2 PREFIX (cache_control) ─────▶ saves input tokens
+  │        (still one inference; answer recomputed)   ✅ 0 semantic risk
+  │             │ after generation
+  │             ▼
+  ├── L3 SEMANTIC (embed + ANN, dist &lt; τ) ─ hit ──▶ return *old* answer
+  │        miss │                        ⚠️ false-hit risk
+  │             ▼
+  └────────▶  LLM  ──▶ write back L1 + L3 (with scope key + TTL)</div>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-key">def</span> answer(q, scope):
+    qn = normalize(q)                          <span class="tag-com"># normalize: collapse surface variants first</span>
+    <span class="tag-key">if</span> (a := L1.get(hash(qn, scope))): <span class="tag-key">return</span> a   <span class="tag-com"># zero-risk hit</span>
+    hit = L3.search(embed(qn), scope, k=1)     <span class="tag-com"># semantic neighbor</span>
+    <span class="tag-key">if</span> hit <span class="tag-key">and</span> hit.dist &lt; TAU:  <span class="tag-key">return</span> hit.answer   <span class="tag-com"># ⚠️ threshold gate</span>
+    a = llm(qn, scope)                         <span class="tag-com"># L2 prefix cache applies inside this call</span>
+    L1.put(hash(qn, scope), a); L3.put(embed(qn), a, scope, ttl=...)
+    <span class="tag-key">return</span> a</code></pre>
+
+<div class="fail">
+<strong>Failure mode</strong>: skipping L1/L2 and going "all semantic." That means throwing even identical queries — which could hit L1 at zero risk — into a similarity gamble, manufacturing false hits out of nothing. The semantic tier plugs leaks; it doesn't lead.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · GPTCache (Zilliz, reference semantic-cache impl), <a href="https://github.com/zilliztech/GPTCache" target="_blank">github.com/zilliztech/GPTCache</a> ·
+Anthropic Prompt Caching docs, <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching" target="_blank">platform.claude.com/.../prompt-caching</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>The Threshold Tunes Risk, Not Accuracy</h2>
+<div class="claim">Claim: the similarity threshold is a risk dial, not a precision dial — a false hit costs far more than a miss, so the threshold should lean strict, preferring to miss.</div>
+
+<h3>Background & Principle</h3>
+<p>The two errors have grossly <strong>asymmetric</strong> costs. A <strong>miss</strong> costs one extra API call (a fraction of a cent plus a little latency) — harmless. A <strong>false hit</strong> costs a user a confidently wrong answer — broken trust, possibly legal fallout. Given the asymmetry, you don't pick the threshold at "max F1"; you pick it at "false hits pushed below tolerance" — which usually means a stricter threshold and more misses.</p>
+<p>Redis uses cosine distance over <code>[0,2]</code>, where 0 = identical and 2 = opposite; a smaller threshold = stricter = fewer false hits. <strong>The embedding choice matters even more than the threshold</strong>: a generic sentence encoder can't separate "return vs exchange" (near-synonyms, different answers), nor "can I return" vs "can't I return" (one word apart, opposite meaning, near-identical vectors). So don't guess the threshold — <strong>sweep</strong> it: take a batch of human-labeled <code>(q1, q2, should-hit?)</code> pairs, plot false-hit and false-miss curves, and pick the highest-hit-rate point subject to "false hits under the red line."</p>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># Threshold sweep: pick tau under a false-hit cap, not at max F1</span>
+<span class="tag-key">def</span> pick_tau(pairs, embed, max_false_hit=0.01):
+    best = <span class="tag-key">None</span>
+    <span class="tag-key">for</span> tau <span class="tag-key">in</span> arange(0.05, 0.40, 0.01):
+        fh = mean([dist(embed(a),embed(b)) &lt; tau <span class="tag-key">and not</span> same
+                   <span class="tag-key">for</span> a,b,same <span class="tag-key">in</span> pairs])     <span class="tag-com"># false-hit rate</span>
+        hit = mean([dist(embed(a),embed(b)) &lt; tau <span class="tag-key">and</span> same
+                   <span class="tag-key">for</span> a,b,same <span class="tag-key">in</span> pairs])
+        <span class="tag-key">if</span> fh &lt;= max_false_hit: best = (tau, hit, fh)  <span class="tag-com"># constraint first</span>
+    <span class="tag-key">return</span> best   <span class="tag-com"># highest hit rate under the strict cap</span></code></pre>
+
+<div class="fail">
+<strong>Failure mode</strong>: shipping the default threshold (many libs give 0.8 similarity) plus a generic embedding straight to prod. Near-synonyms, negations, and number-bearing queries ("order 1234" vs "order 1235") have near-identical embeddings and false-hit reliably. The MeanCache paper (arXiv 2403.02694) names it outright: existing cache methods can't find true semantic similarity, yielding <strong>unacceptable false hit/miss rates</strong> — not a tuning nuisance, but the core hard problem of semantic caching.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Redis "What is Semantic Caching" (threshold & distance units), <a href="https://redis.io/blog/how-to-cache-semantic-search/" target="_blank">redis.io/blog/how-to-cache-semantic-search</a> ·
+MeanCache: User-Centric Semantic Caching, <a href="https://arxiv.org/abs/2403.02694" target="_blank">arXiv:2403.02694</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Cache Poisoning: Correctness Isn't Just "Do the Questions Look Alike"</h2>
+<div class="claim">Claim: two literally identical questions can have different answers — what decides whether a cache entry can be shared is the scope key, not query similarity.</div>
+
+<h3>Background & Principle</h3>
+<p>Even with a perfect similarity judgment, a semantic cache has a subtler error class: the answer itself <strong>no longer holds</strong>. Three poison sources:</p>
+<ul>
+<li><strong>Personalization</strong>: "Where is my order?" has a different answer per user — a cross-user hit is a disaster (and leaks others' privacy).</li>
+<li><strong>Freshness</strong>: "latest price" or "today's stock" cached yesterday is poison today.</li>
+<li><strong>Context dependence</strong>: the same "what about the second one?" points at entirely different things given different conversation histories.</li>
+</ul>
+<p>The fix is a <strong>scope key</strong>: the cache key can't be just the query embedding — bolt on <code>user_id / tenant / data_version / lang / context summary</code>, and only allow hits within the same scope. Tier TTLs by freshness: static knowledge might get a day, prices/stock maybe 60 seconds or no cache at all. MeanCache's approach encodes a <strong>context chain</strong> per cached query to distinguish context-dependent queries from self-contained ones — only the latter are safe to reuse across sessions.</p>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># scope key: similarity is only the necessary condition; scope match is the sufficient one</span>
+<span class="tag-key">def</span> scope_key(req):
+    <span class="tag-key">return</span> {
+      <span class="tag-gpt">"tenant"</span>: req.tenant_id,          <span class="tag-com"># isolate multi-tenant</span>
+      <span class="tag-gpt">"user"</span>:   req.user_id <span class="tag-key">if</span> req.personalized <span class="tag-key">else</span> <span class="tag-gpt">"*"</span>,
+      <span class="tag-gpt">"lang"</span>:   req.lang,
+      <span class="tag-gpt">"dv"</span>:     req.data_version,        <span class="tag-com"># data changes → old cache auto-mismatches</span>
+    }
+<span class="tag-com"># hang invalidation hooks on the write path: source changes → clear cache by scope</span>
+<span class="tag-key">def</span> on_price_update(sku):
+    cache.invalidate(scope={<span class="tag-gpt">"dv"</span>: bump_version()})   <span class="tag-com"># bump version → all old cache mismatches</span></code></pre>
+
+<div class="fail">
+<strong>Failure mode</strong>: a global shared cache with no invalidation hook. The database updates but nobody tells the cache, and the agent confidently answers from stale data — wrong on freshness and permissions alike. <strong>Invalidation must be triggered by the write path</strong> — using a data version number as part of the scope is the cheapest implementation: bump the version on any source change and all old entries mismatch instantly, no per-row deletion needed.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · MeanCache (context chain for context-dependent queries), <a href="https://arxiv.org/abs/2403.02694" target="_blank">arXiv:2403.02694</a> ·
+Redis LLM Cache (scope / TTL usage), <a href="https://docs.redisvl.com/en/latest/user_guide/03_llmcache.html" target="_blank">docs.redisvl.com/.../llmcache</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Hit-Rate Engineering + Two-Metric Monitoring</h2>
+<div class="claim">Claim: watching hit rate alone tempts you to loosen the threshold until the system breaks — you must monitor hit rate and false-hit rate together.</div>
+
+<h3>Background & Principle</h3>
+<p>First, the safe ways to raise hit rate (no threshold change, no added risk):</p>
+<ul>
+<li><strong>Canonicalization</strong>: lowercase, strip punctuation and extra whitespace, drop politeness noise ("pls / could you / would you mind"), so the L1 exact tier absorbs surface variants — less load on the semantic tier, a narrower false-hit surface.</li>
+<li><strong>Negative cache</strong>: cache "no results / I don't know" too, so the same empty query doesn't keep hitting the LLM.</li>
+<li><strong>Warmup</strong>: preload the store offline with high-frequency historical queries.</li>
+</ul>
+<p>But hit rate is a <strong>dangerous single metric</strong>: loosen the threshold → hit rate rises → bill looks great → but false hits quietly rise too. So you need a <strong>shadow eval</strong>: <strong>sample</strong> some already-cache-hit requests, actually call the LLM, and compare whether old and new answers are equivalent (via LLM-as-judge or embedding similarity), estimating the live false-hit rate. This is the same idea as Day 42's shadow testing and Day 56's "stabilize eval with a distribution, not a single point" — <strong>use a cheap side channel to surface silent errors</strong>.</p>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># shadow sampling: quietly recompute 1% of hits to quantify false-hit rate</span>
+<span class="tag-key">def</span> answer_monitored(q, scope):
+    hit = semantic_lookup(q, scope)
+    <span class="tag-key">if</span> hit <span class="tag-key">and</span> sample(0.01):              <span class="tag-com"># 1% of hits go to shadow reconciliation</span>
+        truth = llm(q, scope)
+        <span class="tag-key">if not</span> equivalent(hit.answer, truth):  <span class="tag-com"># judge / similarity</span>
+            metrics.incr(<span class="tag-gpt">"cache.false_hit"</span>)   <span class="tag-com"># alert on THIS, not hit rate</span>
+    <span class="tag-key">return</span> hit.answer <span class="tag-key">if</span> hit <span class="tag-key">else</span> llm(q, scope)</code></pre>
+
+<div class="fail">
+<strong>Failure mode</strong>: reporting hit rate as a KPI to the team. People optimize what's measured — engineers loosen the threshold to make hit rate look good, false hits rise in the unmonitored dark, until customer complaints erupt one day. <strong>Hit rate is the benefit metric, false-hit rate is the guardrail metric, and both must be watched together</strong>; when the guardrail breaks, give back hit rate first.
+</div>
+
+<div class="res">
+<strong>Going deeper</strong> · Redis "What is Semantic Caching" (hit rate & evaluation), <a href="https://redis.io/blog/how-to-cache-semantic-search/" target="_blank">redis.io/blog/how-to-cache-semantic-search</a> ·
+GPTCache eval module, <a href="https://github.com/zilliztech/GPTCache" target="_blank">github.com/zilliztech/GPTCache</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// Capstone · Add a "Safe" Semantic Cache to Your Own RAG/Agent</h3>
+<p>String the four points into a weekend project: add semantic caching to your existing RAG or support agent, aiming not for max hit rate but for <strong>zero perceptible false hits</strong>.</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>Build three tiers</strong>: normalize → L1 exact (Redis hash) → L3 semantic (GPTCache / RedisVL) → LLM. Hand L2 prefix caching to Anthropic <code>cache_control</code>, parking system prompt + retrieved docs before one breakpoint.</li>
+<li><strong>Label 50 query pairs</strong>: pick 50 semantically-close question pairs from real logs, hand-label "should share the answer," run the §2 threshold sweep, and pick the threshold under a false-hit ≤ 1% cap.</li>
+<li><strong>Add the scope key</strong>: bolt on <code>tenant / user (only when personalized) / lang / data_version</code>; hang a hook on the source data's write path that bumps <code>data_version</code>.</li>
+<li><strong>Ship shadow reconciliation</strong>: recompute 1% of hits, emit both <code>hit_rate</code> and <code>false_hit_rate</code> to metrics, and alert only on the latter.</li>
+<li><strong>Do the math</strong>: a week later, count inferences saved and the false-hit rate. You'll find that <strong>tightening the threshold — hit rate dropping from 40% to 25% but false hits at zero — is the point production actually wants</strong>, not the reverse.</li>
+</ol>
+<p style="margin-top:12px">Once you've built this, whenever you see someone brag "we added semantic caching and saved X%," you'll instinctively ask: <strong>what's your false-hit rate and how did you measure it?</strong> — savings numbers with no answer to that are hand-waving.</p>
+</div>
+
+<!-- ============ Glossary ============ -->
+<div class="glossary">
+<h3>// KEY TERMS</h3>
+<dl>
+<dt>Semantic Cache</dt><dd>A cache that embeds the request and reuses the old answer on a vector-neighbor hit, saving a whole inference. This issue's protagonist.</dd>
+<dt>Exact / Prefix Cache</dt><dd>Exact caching (text hash) and prefix caching (e.g. Anthropic cache_control saving input tokens); both are zero semantic risk.</dd>
+<dt>False Hit</dt><dd>Similarity says hit, but the returned old answer is actually wrong — the most expensive error in semantic caching.</dd>
+<dt>Similarity Threshold (τ)</dt><dd>The distance cutoff for "close enough to reuse." A risk dial, not a precision dial; keep it strict.</dd>
+<dt>Cosine Distance</dt><dd>The distance metric Redis uses, over [0,2]: 0 = identical, 2 = opposite.</dd>
+<dt>Scope Key</dt><dd>Isolation dimensions beyond the embedding: tenant / user / data_version / lang. Decides whether an entry can be shared across requests.</dd>
+<dt>Canonicalization</dt><dd>Request normalization (lowercase, strip punctuation and politeness noise) so the exact tier collapses surface variants first.</dd>
+<dt>Negative Cache</dt><dd>Caching "no results / don't know" to stop empty queries from repeatedly hitting the LLM.</dd>
+<dt>Cache Poisoning</dt><dd>An entry is still hit even though personalization / freshness / context dependence has made its answer no longer valid.</dd>
+<dt>Shadow Eval</dt><dd>Sampling hit requests to recompute and compare answers, quantifying the live false-hit rate.</dd>
+</dl>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// DEEPER THINKING</h3>
+<details><summary>Semantic caching uses an embedding to judge "close enough to reuse," and RAG uses one to judge "close enough to retrieve." Can they share a threshold?</summary><div>No — opposite directions. RAG recall should be <strong>wide</strong>: over-retrieve candidates and let a reranker/LLM filter; a false positive is harmless (downstream drops it). A cache hit should be <strong>strict</strong>: once hit, it's returned directly with no downstream gate, so a false positive becomes a wrong answer. The same query pair may deserve retrieval but not a cache hit. So the cache threshold must be markedly stricter than the retrieval threshold on the same embedding, and be labeled/tuned on "answer equivalence," not "topical relevance."</div></details>
+<details><summary>Reasoning models (o1/R1, Day 49) are pricier, so caching saves more. But their thinking path differs every run for the same prompt — what does that mean for semantic caching?</summary><div>The reward is largest and so is the risk. Being expensive, one hit saves a lot; but the output is a long reasoning chain, and while two near-synonymous questions may share a correct final answer, their intermediate reasoning may not be reusable — caching the whole trace forces A's reasoning onto B. Pragmatic move: cache only the <strong>final answer</strong>, never the reasoning trace, and tighten the threshold beyond what you'd use for a plain model (longer answers diverge more easily on details). For high-value cases, prefer to allow only exact-tier hits and forgo semantic hits.</div></details>
+<details><summary>Why is "hit rate" — the most natural-looking KPI — actually the most dangerous metric in semantic caching?</summary><div>Because it and false-hit rate are inversely coupled by the same dial (the threshold): loosening raises both. Once hit rate is a KPI, people optimize it — loosening the threshold, whose hit-rate gain is visible and reportable while the false-hit rise is silent and only visible via dedicated shadow sampling. The system gets steadily pushed toward "pretty savings, more wrong answers." The fix is to make false-hit rate an un-crossable guardrail and optimize hit rate only within it — the benefit metric obeys the guardrail. Same engineering philosophy as Day 34/56's "constrain optimization with a guardrail."</div></details>
+<details><summary>If the embedding model is upgraded (a stronger sentence encoder), what happens to an already-built semantic cache?</summary><div>The whole vector store is void — old vectors and new-query vectors live in different spaces, distances are incomparable, and the threshold loses meaning. Same as Day 40's "embedding migration means rebuilding the index." So the embedding version must go into the scope key (or become a separate namespace), and on upgrade you keep old and new stores side by side and cut over gradually — never mix in place. It's a reminder: semantic caching ties "savings" to "embedding choice" — the cost of switching embeddings includes rebuilding the cache, so choose right the first time.</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://github.com/zilliztech/GPTCache" target="_blank">GPTCache · Zilliz</a> — reference semantic-cache impl, with embedding + vector store + eval module</li>
+<li><a href="https://redis.io/blog/how-to-cache-semantic-search/" target="_blank">Redis · What is Semantic Caching</a> — practical guide to threshold, cosine distance, hit-rate evaluation</li>
+<li><a href="https://arxiv.org/abs/2403.02694" target="_blank">MeanCache (arXiv:2403.02694)</a> — false hit/miss as the core hard problem; context chains for context-dependent queries</li>
+<li><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching" target="_blank">Anthropic · Prompt Caching</a> — the breakpoint / TTL mechanics of prefix caching (that L2 tier)</li>
+<li><a href="https://docs.redisvl.com/en/latest/user_guide/03_llmcache.html" target="_blank">RedisVL · LLM Cache</a> — code usage for scope, TTL, distance threshold</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual · Day 57 · 2026-07-09</footer>
+</div>
+</body></html>
