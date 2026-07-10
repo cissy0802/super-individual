@@ -1,9 +1,10 @@
 # Topics Roadmap
 
+> **⚠️ routine 须知**：本表即全部计划。只写下面**已列出**的条目；**全部写完就停**——别自己发明新主题、别往本文件加行。写完只发一条 PushNotification 请 BigCat 补充。（新条目由 BigCat / deep-research 反哺加进本表，届时你自然继续写。）
+
 源是仓库中的文件本身（`ls *-{day,week,book,issue}*.html`）。本文件是主题查找表：N → 主题。
 
 **本路线图已收口：Day 1–53 封顶，不再自动续写。** Phase 1–5（Day 1–48）为 AI 超级个体工程全集；Phase 6（Day 49–53）是 cross-ref 补齐的工程空白（推理模型工程化 / 安全护栏与沙箱 / 自动 prompt 优化 / 智能体商务与支付协议 / 用 AI 学习的护栏工程）——概念归 ai-ml，本 routine 只讲工程。向量库 / ANN 索引等已在两边覆盖（ai-ml Day 4/22 + 本 routine Day 11/43），不再补。Day 53 是从 deep-research「初级工程师」一期反哺回来的手动增补（learning guardrails + junior engineer 组织用法），非 cron 产出。
-（注：仅改本文件不阻止 routine 在 day51 之后再 append；停止续写需在 routine prompt / cron 侧设上限或暂停。）
 
 ## Phase 1 — Engineering 核心
 - Day 1: Prompt Engineering — System prompt 架构、四层结构、XML vs MD、CoT 边界、prefix caching
