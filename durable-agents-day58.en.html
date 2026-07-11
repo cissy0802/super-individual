@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 58 · Durable Agent Execution — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.homework{background:linear-gradient(135deg,rgba(255,110,196,0.1),rgba(123,97,255,0.1));border:1px solid rgba(255,110,196,0.3);border-radius:10px;padding:22px 24px;margin:36px 0}
+.homework h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 58 · ENGINEERING</span>
+<h1>Durable Agent Execution</h1>
+<h2>Replay Journal · Exactly-Once Side Effects · Determinism Boundary · Durable Suspend</h2>
+<div class="date">2026-07-11 · BigCat</div>
+<p class="pitch">When your agent crashes, it shouldn't rerun everything from scratch — it should resume from the step where it died.</p>
+</header>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>Your agent runs for 8 minutes, makes 12 tool calls, burns tens of thousands of tokens — then step 13 gets OOM-killed. Now what? Most harnesses answer "start over from the top," including the steps that already succeeded, already charged a card, already sent an email. Fine in a demo, a disaster in production. Agent runtimes have grown from <strong>seconds to minutes and hours</strong>, and every step can hit a rate limit, a network blip, a worker restart. An "in-process while loop" simply can't survive that. The answer is <strong>durable execution</strong>: turn the agentic loop from an in-memory loop into a replayable log. This issue covers four things — how durable execution works, why a checkpoint snapshot still isn't enough, how to make side effects exactly-once, and how replay determinism reconciles with LLM non-determinism. It's the layer that upgrades Day 39 (error recovery) from "retry one step" to "keep the whole agent alive."</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>Durable Execution: Run the Agentic Loop as a Replayable Log</h2>
+<div class="claim">Claim: durable execution isn't "stronger retry" — it records the agent's entire execution history as a journal, and on crash it replays back to the failure point, rerunning none of the steps that already succeeded.</div>
+
+<h3>Background &amp; Principle</h3>
+<p>An ordinary agent loop keeps its state in process memory: the messages array, the loop counter, local variables. The process dies, it's all gone. Durable execution engines (<strong>Temporal / Restate / DBOS</strong>) swap the model: every time your workflow function completes a "durable step," the engine writes that step's <strong>input and output into a journal</strong> (event log). After a crash, the engine <strong>reruns the same function</strong> on a fresh worker — but steps already in the journal aren't actually re-executed; their recorded return values are <em>replayed</em> back until execution catches up to the crash point, then continues.</p>
+<p>This model is tailor-made for agents: LLM calls are slow and expensive (1–30s, real money), tool calls may have side effects, tasks span minutes. Temporal adds only about <strong>10–50ms</strong> of overhead per durable step — negligible against an LLM call — in exchange for "kill the worker however you like, the agent resumes from the last successful step." DBOS is even lighter, storing the journal straight into your existing <strong>Postgres</strong>: one pip package, no separate broker or control plane.</p>
+
+<div class="diagram">     Ordinary loop (in-memory)         Durable Execution (journaled)
+ ─────────────────────────    ───────────────────────────────────
+   step1  ✓ (in RAM)            step1 ✓ ─┐
+   step2  ✓ (in RAM)            step2 ✓  ├─▶ JOURNAL (event log, durable)
+   step3  ✓ (in RAM)            step3 ✓ ─┘        │
+   step4  ✗ CRASH               step4 ✗ CRASH     │
+   ─────────────────            ─────────────────  ▼
+   restart ⇒ step1 from top     restart ⇒ fresh worker replays fn:
+   ❌ duplicate LLM / payment      step1→replay (recorded value, no exec)
+   ❌ spent tokens all wasted      step2→replay   step3→replay
+                                  step4→actually executes ← resume here
+                                  ✅ first 3 steps: zero rerun</div>
+
+<h3>Example</h3>
+<p>DBOS makes "which parts are durable steps" clearest — <code>@DBOS.workflow</code> is the replayable orchestration, <code>@DBOS.step</code> is a journaled atomic step:</p>
+<pre><code><span class="tag-key">from</span> dbos <span class="tag-key">import</span> DBOS
+
+<span class="tag-claude">@DBOS.step</span>()                       <span class="tag-com"># each step's return value is written to the Postgres journal</span>
+<span class="tag-key">def</span> call_llm(msgs): <span class="tag-key">return</span> client.messages.create(...)
+
+<span class="tag-claude">@DBOS.step</span>()
+<span class="tag-key">def</span> run_tool(name, args): <span class="tag-key">return</span> TOOLS[name](args)
+
+<span class="tag-claude">@DBOS.workflow</span>()                   <span class="tag-com"># on crash, resume from the last completed step</span>
+<span class="tag-key">def</span> agent(task):
+    msgs = [{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,<span class="tag-gpt">"content"</span>:task}]
+    <span class="tag-key">for</span> _ <span class="tag-key">in</span> range(<span class="tag-key">30</span>):
+        r = call_llm(msgs)               <span class="tag-com"># succeeded turns aren't re-sent on replay</span>
+        <span class="tag-key">if</span> r.stop_reason == <span class="tag-gpt">"end_turn"</span>: <span class="tag-key">return</span> r
+        out = run_tool(...)              <span class="tag-com"># crash here → prior steps all skipped on restart</span>
+        msgs += [...]</code></pre>
+<p>You barely change the agent logic — you just wrap the "expensive / side-effecting" operations in a step and the loop in a workflow. The execution semantics go from "crash loses everything" to "crash resumes."</p>
+
+<div class="fail">
+<strong>Failure mode</strong>: cramming everything into one giant step (e.g. the whole loop) — journal granularity too coarse, so a crash can only rewind to the loop start, i.e. no durability at all. Too fine (a step per string concat) blows up the journal and slows replay. Right granularity: <strong>one step per expensive or side-effecting boundary</strong> (one LLM call, one tool call).
+</div>
+
+<div class="res">
+<strong>More</strong> · Restate <em>What is Durable Execution</em>, <a href="https://www.restate.dev/what-is-durable-execution" target="_blank">restate.dev/what-is-durable-execution</a> ·
+DBOS <em>Why DBOS</em>, <a href="https://docs.dbos.dev/why-dbos" target="_blank">docs.dbos.dev/why-dbos</a> ·
+Temporal <em>Durable Execution meets AI</em>, <a href="https://temporal.io/blog/durable-execution-meets-ai-why-temporal-is-the-perfect-foundation-for-ai" target="_blank">temporal.io/blog</a>
+</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Checkpoint ≠ Durable Execution: Snapshots Can't Save a Half-Run Node</h2>
+<div class="claim">Claim: LangGraph's checkpointer stores state snapshots <em>between</em> nodes, not execution progress <em>inside</em> a node — so a node that crashes halfway reruns from its first line.</div>
+
+<h3>Background &amp; Principle</h3>
+<p>Many assume "I use a LangGraph checkpointer / I persist state to a DB, therefore I'm durable." Not so. A checkpoint is a state snapshot saved after each <strong>super-step (node boundary)</strong>; it gives you memory, human-in-the-loop, and <em>node-level</em> fault tolerance. But crash granularity is brutal: if a node internally calls an LLM, then sends an email, then crashes on the third line — on restart the <strong>entire node replays from line one</strong>: the LLM is re-called, the email re-sent. Diagrid's <em>Checkpoints Are Not Durable Execution</em> nails it: snapshots record "which cells you visited," not "which irreversible actions you took inside a cell."</p>
+<p>LangGraph itself exposes three <code>durability</code> modes so you can pick the trade-off: <strong>exit</strong> (persist only on exit — fastest, no mid-run recovery), <strong>async</strong> (persist asynchronously — small chance of losing the last step), <strong>sync</strong> (persist synchronously before each next step — slowest but safest). Even sync only pushes recovery granularity to the <em>node boundary</em>; atomicity <em>within</em> a node is still on you. That's the fundamental gap versus <em>step-level journal</em> engines like Temporal/Restate.</p>
+
+<h3>Example</h3>
+<pre><code><span class="tag-com"># ❌ Dangerous: one node holds two side-effecting actions</span>
+<span class="tag-key">def</span> node_book_trip(state):
+    flight = charge_card(state)      <span class="tag-com"># side effect 1: charge succeeds</span>
+    email  = send_confirm(flight)    <span class="tag-com"># crash here → charge_card runs AGAIN on replay!</span>
+    <span class="tag-key">return</span> {<span class="tag-gpt">"booking"</span>: email}
+
+<span class="tag-com"># ✅ Fix A: split into single-side-effect nodes; checkpoint boundary = side-effect boundary</span>
+graph.add_node(<span class="tag-gpt">"charge"</span>, charge_node)   <span class="tag-com"># at most one irreversible action per node</span>
+graph.add_node(<span class="tag-gpt">"email"</span>,  email_node)
+<span class="tag-com"># compile with the safest mode, bind thread_id as the resume handle</span>
+app = graph.compile(checkpointer=saver, durability=<span class="tag-gpt">"sync"</span>)
+app.invoke(inp, config={<span class="tag-gpt">"configurable"</span>:{<span class="tag-gpt">"thread_id"</span>:uid}})</code></pre>
+<p>The discipline: <strong>in a checkpoint engine, "one node = one safely-replayable unit."</strong> Slice nodes down to "at most one irreversible side effect" so the snapshot boundary actually aligns with the danger boundary. Otherwise, move up to a step-level journal engine (§03).</p>
+
+<div class="fail">
+<strong>Failure mode</strong>: reaching for <code>durability="exit"</code> for convenience, then a long task crashes mid-run and the thread holds nothing — because it only persists on clean exit. Long-running / high-risk agents need at least async; anything touching charges/emails/external writes needs sync + single-side-effect nodes.
+</div>
+
+<div class="res">
+<strong>More</strong> · LangGraph <em>Persistence</em> docs, <a href="https://docs.langchain.com/oss/python/langgraph/persistence" target="_blank">docs.langchain.com/.../persistence</a> ·
+Diagrid <em>Checkpoints Are Not Durable Execution</em>, <a href="https://www.diagrid.io/blog/checkpoints-are-not-durable-execution-why-langgraph-crewai-google-adk-and-others-fall-short-for-production-agent-workflows" target="_blank">diagrid.io/blog</a>
+</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Exactly-Once Side Effects: Journal Your LLM &amp; Tool Calls, Then Add Idempotency</h2>
+<div class="claim">Claim: replay correctness rests on one iron rule — <strong>a recorded step replays data only, never re-executes</strong>; and the external world the engine can't reach (payment APIs, email) needs your own idempotency keys.</div>
+
+<h3>Background &amp; Principle</h3>
+<p>Durable execution's "exactly-once" has an easily misread boundary: what the engine guarantees is that a <strong>step's return value is materialized in the journal exactly once</strong> — on replay it won't call your function body twice. Restate's <code>ctx.run()</code>, Temporal's activity, DBOS's <code>@DBOS.step</code> all mean this. But the engine can't stop <em>the wrapped call itself</em> from producing duplicate effects on the outside world — if your step charges twice on its <em>first</em> execution, the journal faithfully records that result.</p>
+<p>So the real discipline is two layers: <strong>(1) wrap every external call as a step/activity</strong> so the engine handles "don't re-execute on replay"; <strong>(2) for non-idempotent external APIs, carry an idempotency key inside the step</strong> so the downstream service handles "dedupe duplicate requests." Restate even supports request-level idempotency keys with automatic dedup. LLM calls, though "externally side-effect-free," must still be wrapped as steps — otherwise replay re-burns tokens for nothing.</p>
+
+<h3>Example</h3>
+<pre><code><span class="tag-com"># Idempotency key = a stable, reproducible ID within the workflow (never random/timestamp!)</span>
+<span class="tag-claude">@DBOS.step</span>()
+<span class="tag-key">def</span> charge(user, amount, idem_key):
+    <span class="tag-key">return</span> stripe.PaymentIntent.create(
+        amount=amount, customer=user,
+        idempotency_key=idem_key)      <span class="tag-com"># ← Stripe dedupes; replay/retry charges once</span>
+
+<span class="tag-claude">@DBOS.workflow</span>()
+<span class="tag-key">def</span> checkout(user, cart):
+    <span class="tag-com"># key derived from workflow identity → unchanged across replays → naturally idempotent</span>
+    key = <span class="tag-key">f</span><span class="tag-gpt">"pay-{DBOS.workflow_id}"</span>
+    charge(user, cart.total, key)      <span class="tag-com"># crash+replay: step already recorded → not re-executed</span>
+    send_receipt(user)                 <span class="tag-com"># if it crashes here, charge won't fire twice</span></code></pre>
+<p>The key thing is the key's <strong>origin</strong>: it must derive from the workflow's durable identity (workflow_id + step sequence), so every replay computes the same key. Using <code>uuid4()</code> or a timestamp as the key is the classic trap — each replay makes a new key, downstream can't tell it's the same transaction, dedup fails.</p>
+
+<div class="fail">
+<strong>Failure mode</strong>: memoizing tool results while forgetting LLM outputs are non-deterministic — handling "read a file" (deterministic) and "ask the model" (non-deterministic) with the same memoization logic. Replaying a stale file read is fine; but if the business needs "always ask the latest model," you shouldn't blindly replay the cached value — mark that step recomputable. Deciding <strong>which steps replay recorded values vs. re-execute</strong> is a design-time call.
+</div>
+
+<div class="res">
+<strong>More</strong> · Restate <em>Durable AI Loops</em>, <a href="https://www.restate.dev/blog/durable-ai-loops-fault-tolerance-across-frameworks-and-without-handcuffs" target="_blank">restate.dev/blog/durable-ai-loops</a> ·
+Restate AI examples (agents/A2A/MCP), <a href="https://github.com/restatedev/ai-examples" target="_blank">github.com/restatedev/ai-examples</a>
+</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Replay Determinism vs LLM Non-Determinism: Push the Uncertainty into Activities</h2>
+<div class="claim">Claim: durable execution needs workflow code to be <strong>deterministically replayable</strong>, while LLMs, randomness, clocks, and networks are inherently uncertain — the fix is to squeeze all non-determinism out of the workflow body and into journaled steps.</div>
+
+<h3>Background &amp; Principle</h3>
+<p>Replay works only if, when the workflow function reruns, its control flow follows the <strong>exact same path byte-for-byte</strong> — otherwise it replays into a branch that doesn't exist in the journal and the engine is lost. That forbids the workflow body from <strong>directly containing</strong>: random numbers, <code>now()</code>/clocks, direct network/file IO, and… direct LLM calls. All are "sources of non-determinism." This is a <em>different</em> determinism from Day 56's sampling determinism: that issue was "same prompt, same output"; here it's "same function reruns the same path."</p>
+<p>The fix is uniform and elegant: <strong>wrap every source of non-determinism in a step/activity</strong>. On first execution it truly runs and its result enters the journal; on replay it doesn't run — it emits the old journaled value. So from the workflow's view, even a dice roll becomes deterministic. The LLM's non-deterministic output is "frozen" into the log, and the workflow body returns to a pure, replayable state machine. This also unlocks durable execution's killer capability: <strong>long suspend</strong> — with a durable timer + signal, an agent can "sleep" for days awaiting human approval, holding zero live process, and wake to resume the moment the signal arrives.</p>
+
+<div class="diagram">   WORKFLOW body (must be deterministic, replayable)
+   ┌───────────────────────────────────────────┐
+   │  plan → decide → loop → ...                │  ← pure logic / control flow only
+   │    │        │        │                     │
+   │    ▼        ▼        ▼                      │
+   │  ┌──────┐ ┌──────┐ ┌──────────────┐        │
+   │  │ STEP │ │ STEP │ │ durable timer│        │
+   │  │ LLM  │ │ tool │ │ + signal (approve)     │
+   │  └──┬───┘ └──┬───┘ └──────┬───────┘        │
+   └─────┼────────┼───────────┼─────────────────┘
+         ▼        ▼           ▼
+     [all non-determinism trapped in steps / frozen by journal]
+     on replay: steps emit old values, timer fires instantly → body walks same path</div>
+
+<h3>Example</h3>
+<pre><code><span class="tag-com"># Temporal style: workflow deterministic, non-determinism goes to activities</span>
+<span class="tag-claude">@workflow.defn</span>
+<span class="tag-key">class</span> ApprovalAgent:
+    <span class="tag-key">def</span> __init__(self): self._approved = <span class="tag-key">None</span>
+    <span class="tag-claude">@workflow.signal</span>                       <span class="tag-com"># external approval arrives via signal</span>
+    <span class="tag-key">def</span> approve(self, ok): self._approved = ok
+    <span class="tag-claude">@workflow.run</span>
+    <span class="tag-key">async def</span> run(self, task):
+        plan = <span class="tag-key">await</span> workflow.execute_activity(  <span class="tag-com"># LLM call = activity</span>
+            call_llm, task, start_to_close_timeout=<span class="tag-key">TIMEOUT</span>)
+        <span class="tag-com"># sleep until "someone approves" or 3-day timeout — zero live process</span>
+        <span class="tag-key">await</span> workflow.wait_condition(
+            <span class="tag-key">lambda</span>: self._approved <span class="tag-key">is not</span> <span class="tag-key">None</span>,
+            timeout=timedelta(days=<span class="tag-key">3</span>))
+        <span class="tag-key">if</span> self._approved:
+            <span class="tag-key">await</span> workflow.execute_activity(apply_plan, plan, ...)</code></pre>
+<p>Note <code>call_llm</code> is never called directly in the workflow body — it's always an activity. <code>wait_condition</code> + signal lets the agent hang for days without burning a cent of compute — the cleanest way to land an "async human approval queue" (Day 34).</p>
+
+<div class="fail">
+<strong>Failure mode</strong>: writing <code>if random() &gt; 0.5</code> or <code>datetime.now()</code> for branching in the workflow body — on replay the value changes, control flow diverges, and the engine throws a non-determinism error and crashes. Same for <code>import requests</code> firing directly in the workflow, or a version-drifting library driving a core branch. Iron rule: <strong>the workflow body touches pure logic only; all side effects and non-determinism sink into steps/activities.</strong>
+</div>
+
+<div class="res">
+<strong>More</strong> · Jack Vanlightly <em>Demystifying Determinism in Durable Execution</em>, <a href="https://jack-vanlightly.com/blog/2025/11/24/demystifying-determinism-in-durable-execution" target="_blank">jack-vanlightly.com</a> ·
+Temporal <em>Of course you can build dynamic AI agents</em>, <a href="https://temporal.io/blog/of-course-you-can-build-dynamic-ai-agents-with-temporal" target="_blank">temporal.io/blog</a>
+</div>
+</div>
+
+<!-- ============ Combo ============ -->
+<div class="combo">
+<h3>// PUTTING IT TOGETHER · Give Your Long-Running Agent a "Resume Point"</h3>
+<p>Turn this issue into one verifiable mini-project: take any agent loop you have, add durable execution, and <strong>kill the process by hand to prove it actually resumes</strong>.</p>
+<ol style="margin-left:20px;margin-top:10px">
+<li><strong>Pick an engine</strong>: already on Postgres → DBOS (lightest, pip install); cross-language / complex orchestration → Temporal; hugging your existing framework → Restate. Don't jump to the heaviest first.</li>
+<li><strong>Draw step boundaries</strong> (§01): one step per LLM call, one per tool call; the loop body is the workflow. No giant steps.</li>
+<li><strong>Split side-effect nodes</strong> (§02): any "charge / email / external write" action is its own step, and <strong>at most one irreversible action per step</strong>.</li>
+<li><strong>Add idempotency keys</strong> (§03): every external write carries a key derived from <code>workflow_id</code>. Never <code>uuid4()</code>/timestamp.</li>
+<li><strong>Purge non-determinism</strong> (§04): sink every <code>random</code>/<code>now()</code>/direct IO in the workflow body into a step.</li>
+<li><strong>Chaos-verify</strong>: <code>kill -9</code> the worker mid-run, restart, and confirm — (a) completed LLM calls weren't re-sent (check the token bill), (b) the charge happened once, (c) the agent resumed from the break, not the top. This is the <strong>only ground truth</strong> for the whole exercise: if you haven't killed it by hand, it isn't durable.</li>
+</ol>
+<p style="margin-top:12px">Do this and you'll feel something counterintuitive: durable execution barely changed your agent logic, yet turned "demo-grade reliability" into "production-grade reliability" — the difference lives entirely in the execution substrate, not the prompt.</p>
+</div>
+
+<!-- ============ Deep Thinking ============ -->
+<div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
+<style>
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+</style>
+<h3>// DEEPER QUESTIONS</h3>
+<details><summary>Replay reuses old LLM outputs. But what if I actually want the agent, after a crash, to "rethink with the latest model" rather than replay the old answer?</summary><div>This touches a design tension in durable execution: replay freezes history by default, yet sometimes you want "fresh." The fix is to explicitly distinguish step semantics. Most engines let you mark a call as "not journaled / recompute every time" (non-durable / local), or use versioned activities: old-journal steps keep old values, only newly triggered ones use the new model. More commonly, "don't swap brains inside one workflow" — a genuine re-think should be a <strong>new workflow instance</strong>, not a replay of the same one. Conflating "resume execution" and "re-decide" is a root cause of design accidents: the former wants consistency, the latter wants freshness — they shouldn't share a path.</div></details>
+<details><summary>Durable execution needs the workflow deterministic and replayable, yet the essence of an agent is letting the LLM dynamically decide the next step. Aren't these in conflict?</summary><div>No, because "who is uncertain" is cleanly separated. The LLM's <em>decision</em> is indeed non-deterministic — but once that decision happens, its output is frozen into the journal by the activity, becoming a determined value. The workflow body just "walks if/else with that already-determined decision value," and the if/else itself is deterministic. In other words: non-determinism happens <em>inside</em> the activity boundary; the workflow always sees an already-collapsed result. Temporal's <em>Of course you can build dynamic AI agents</em> rebuts exactly the "durable = static DAG only" myth: dynamic agents run fine on durable engines, as long as all non-determinism sinks into activities.</div></details>
+<details><summary>When should you <em>not</em> adopt durable execution? Where's the cost?</summary><div>Three cases to skip it: (1) the task is <strong>seconds-long, side-effect-free, safely retryable wholesale</strong> — a journal just adds complexity and a DB dependency; (2) the team hasn't even gotten the agent logic working — adopting Temporal too early makes debugging harder (extra worker/journal cognitive load); (3) the side effects are naturally idempotent or losslessly replayable (pure reads). The costs are mainly: per-step persistence overhead and latency, an engine/DB to operate, and the "workflow must be deterministic" coding constraint (no casual <code>now()</code>). The criterion, same as Day 03's workflow-vs-agent: <strong>use the simple thing until "crash loses progress" actually starts to hurt.</strong></div></details>
+<details><summary>Between checkpoints (LangGraph) and step-level journals (Temporal), is there a middle ground? How to choose?</summary><div>Yes, and it's common in practice to mix. The axis is "side-effect density × task duration × team ops capacity." A pure conversational / short RAG agent: LangGraph's checkpointer is enough, with built-in time-travel debugging and human-in-the-loop. Once you have <strong>cross-system writes, charges, multi-day suspend, strict exactly-once</strong>, move to a step-level journal engine. Middle ground: write agent logic in LangGraph, but run the whole thing as one activity inside Temporal (ZenML/AppScale have been promoting this combo) — LangGraph handles in-graph orchestration, Temporal handles cross-graph durability and retries. It needn't be either/or.</div></details>
+<details><summary>Idempotency keys must derive from workflow identity. But if an agent dynamically decides to "call the same tool 10 times," how do you keep each key both stable and mutually distinct?</summary><div>The insight: the key binds not to "call content" but to "the call's position in the journal." The engine gives each step a deterministically incrementing id (step_id), reproduced identically on replay. So key = <code>workflow_id + step_id</code> (or + a stable loop index), naturally satisfying "same call's key unchanged on replay, different calls' keys distinct." Never key on call <em>content</em> — two intentionally-repeated identical calls (e.g. polling) would be wrongly deduped into one. That's why the key should be derived by the engine/framework, not hand-written: hand-rolling easily trades off "stable" against "unique."</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://www.restate.dev/what-is-durable-execution" target="_blank">Restate · What is Durable Execution</a> — first-principles account of journal + replay</li>
+<li><a href="https://www.diagrid.io/blog/checkpoints-are-not-durable-execution-why-langgraph-crewai-google-adk-and-others-fall-short-for-production-agent-workflows" target="_blank">Diagrid · Checkpoints Are Not Durable Execution</a> — the gap between snapshots and true durability</li>
+<li><a href="https://temporal.io/blog/durable-execution-meets-ai-why-temporal-is-the-perfect-foundation-for-ai" target="_blank">Temporal · Durable Execution meets AI</a> — why agents especially need a durable substrate</li>
+<li><a href="https://docs.dbos.dev/why-dbos" target="_blank">DBOS · Why DBOS</a> — a lightweight durable library built on Postgres</li>
+<li><a href="https://jack-vanlightly.com/blog/2025/11/24/demystifying-determinism-in-durable-execution" target="_blank">Jack Vanlightly · Demystifying Determinism</a> — what replay determinism actually constrains</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual · Day 58 · 2026-07-11</footer>
+</div>
+</body></html>
