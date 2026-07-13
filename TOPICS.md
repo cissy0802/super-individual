@@ -72,3 +72,8 @@
 - Day 53: 用 AI 学习的护栏工程 — PNAS 无护栏 −17% / 导师版消除损害、生成-验证倒置（学习 vs 干活模式）、工程师验证瓶颈（METR）、组织里给 junior engineer 用的四条护栏、测量职业阶梯；反哺自 deep-research「初级工程师」
 - Day 54: 给自己的 AI 工作流做 oracle 盘点 — 哪些验证环节有独立裁判(测试/编译器/形式检查)、哪些是AI 看 AI, 按可验证性重排自动化边界, 同源验证的独立性陷阱, 个人版护栏先于规模检查清单(钩子·源自 deep-research #3)
 - Day 55: 把三个已验证开关装进自己的学习流程 — 检索练习(带反馈+延迟后测)、间隔(比例随考期变化, 递增无证据)、交错(仅限易混材料); 实验室→课堂衰减账本与轻剂量陷阱; AI 学习工具选型: 看它是否默认这三个开关而非卖学习风格(钩子·源自 deep-research #4)
+
+<!-- ↓ 补录：已发布但当时漏记进 TOPICS 的 Day 56–58（内容源于反哺/手动生成，回填路线图以保持 TOPICS 为超集、防编号撞车） -->
+- Day 56: 推理的确定性工程 — 漂移真源(batch-invariance 而非采样)、seed/system_fingerprint 的 mostly-not-guaranteed、让 eval 不 flaky(控方差而非 bit 复现)、何时要确定性及其成本
+- Day 57: 语义缓存工程 — 三层缓存栈(exact→prefix→semantic)、非对称阈值(容忍多贵的错答案)、作用域键与缓存中毒、命中率工程 + 双指标监控
+- Day 58: 持久化 Agent 执行 — Replay Journal 把 agentic loop 跑成可重放日志、副作用 Exactly-Once(journal + 幂等)、确定性边界(把不确定赶进 activity)、Durable Suspend
