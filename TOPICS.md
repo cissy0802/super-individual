@@ -77,3 +77,4 @@
 - Day 56: 推理的确定性工程 — 漂移真源(batch-invariance 而非采样)、seed/system_fingerprint 的 mostly-not-guaranteed、让 eval 不 flaky(控方差而非 bit 复现)、何时要确定性及其成本
 - Day 57: 语义缓存工程 — 三层缓存栈(exact→prefix→semantic)、非对称阈值(容忍多贵的错答案)、作用域键与缓存中毒、命中率工程 + 双指标监控
 - Day 58: 持久化 Agent 执行 — Replay Journal 把 agentic loop 跑成可重放日志、副作用 Exactly-Once(journal + 幂等)、确定性边界(把不确定赶进 activity)、Durable Suspend
+- Day 59: 给自己开"手动剂量" — AI 时代的技能保鲜处方 — 技能衰退剂量依赖且认知先于运动(近期练习量比总经验更能预测水平, 停用一年掉逾一个标准差); "在场增益 vs 撤后退化"两本账用在个人技能盘点上(AI 宕机日/超范围任务时你还剩多少); 处方设计: 定期不带 AI 完成核心任务 + 亲历 AI 失效的演习(口头叮嘱和通识课实测无效)+ 对结果的个人问责; 航空教训: 开处方没用, 要核查剂量真的发生(钩子·源自 deep-research #7)
