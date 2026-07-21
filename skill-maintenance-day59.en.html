@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 59 · Prescribe Yourself a "Manual Dose" — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;overflow-x:auto}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking{margin:40px 0}
+.thinking h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}}
+</style></head><body>
+<div class="container">
+
+<header>
+<span class="week-tag">DAY 59 / PHASE 6 · CROSS-REF</span>
+<h1>Prescribe Yourself a "Manual Dose"</h1>
+<h2>A skill-maintenance prescription for the AI age — porting 60 years of aviation-automation lessons into your workflow</h2>
+<div class="date">2026-07-21 · BigCat</div>
+<p class="pitch">Your performance with AI is climbing; your performance without it is quietly falling — and you only ever see the first ledger. Aviation paid sixty years of tuition for this.</p>
+</header>
+
+<div class="xref">
+<a href="learning-guardrails-day53.en.html">Follows → Day 53 Learning Guardrails (the generate–verify inversion)</a>
+</div>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>Swap the cockpit for an IDE and the autopilot for a coding agent, and you'll find aviation walked our exact path forty years ago. <strong>Skill decay isn't a question of "whether" — it's a dosing question of "how fast, and which skill first."</strong> Arthur et al.'s heavily-cited 1998 meta-analysis gave the curve: effect size is roughly 0 right after training, dropping to about −1.4 standard deviations after more than a year of nonuse — and <strong>cognitive, judgment, and accuracy-based skills decay faster than physical, speed-based ones</strong>. That's the worst possible combination: what AI takes over is exactly the judgment work that degrades fastest. This issue skips the "does AI make us dumber" hot-take and covers three things that actually bite in engineering: <strong>the dosing law of skill decay, the second ledger you never see, and a "dose-verification" prescription that even aviation regulators tripped over</strong>.</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>Skill decay is dose-dependent — and cognitive skills go first</h2>
+<div class="claim">Claim: what decides how much you degrade isn't "did you use AI," it's "how long since you did it by hand"; and the judgment skills AI takes over are exactly the ones on the steepest decay curve.</div>
+
+<h3>Background & principle</h3>
+<p>Arthur et al. meta-analyzed 50+ studies and nearly 200 data points, quantifying "use it or lose it" into a curve: <strong>skill loss deepens monotonically with the nonuse interval</strong> — about −0.01 right after training, dropping to roughly −1.4 SD after 365+ days. More importantly, their moderator analysis: <strong>cognitive, accuracy-based, artificial (non-natural) tasks decay far more than physical, speed-based, natural ones</strong>. Map that onto AI collaboration and it stings: what you hand AI was never the manual grunt work, it's <em>should we design it this way, is this boundary condition right, where does this logic blow up</em> — all the fastest-decaying judgment skills. So "I use AI to code every day, my chops won't rust" is an illusion: you're practicing <strong>directing and reviewing</strong>, not <strong>deriving by hand</strong> — and the latter is the ledger that empties fastest.</p>
+
+<h3>Hands-on</h3>
+<p>First run a <strong>skill audit</strong>, mapping your core skills onto a minefield by "outsourcing depth × decay speed":</p>
+<pre><code><span class="tag-com"># Skill-freshness audit: lower-right = danger (deeply outsourced + fast decay)</span>
+skill                    outsourced-to-AI   Arthur class      risk
+architecture trade-offs  high              cognitive/acc → steep  <span class="tag-claude">HIGH</span>
+boundary/failure-mode    high              cognitive/acc → steep  <span class="tag-claude">HIGH</span>
+writing algorithms cold  med-high          cognitive → steep      <span class="tag-key">WATCH</span>
+looking up API/syntax    high              memory → relearnable   low
+naming/formatting        high              speed → shallow        low
+<span class="tag-com"># Rule: fully outsource the low-risk; keep a "manual dose" for the high-risk</span></code></pre>
+<p>The point of the audit is <strong>triage</strong>: fully outsource syntax lookups and boilerplate — "memory + instantly relearnable" skills. Reserve the manual dose for the judgment skills that are both deeply outsourced and sitting in the steep decay zone.</p>
+
+<div class="fail"><strong>Failure modes</strong>: ① consoling yourself with "usage frequency" — what you use frequently is the AI, not the skill itself; ② treating all skills equally as "must keep fresh," spreading the dose so thin none gets enough (see the micro-dose trap in point 3); ③ auditing only hard skills, missing the steepest ones — "problem definition / taste" — which have no syntax to look up and are hardest to rebuild once gone.</div>
+
+<div class="res"><strong>Going deeper</strong> · Arthur, Bennett, Stanush & McNelly <em>Factors That Influence Skill Decay and Retention</em>, <a href="https://gwern.net/doc/psychology/spaced-repetition/1998-arthur.pdf" target="_blank">Human Performance 1998 (PDF)</a></div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Two ledgers: assisted gain vs. post-removal decline — you only see the first</h2>
+<div class="claim">Claim: daily performance (AI present) climbs steadily while removal performance (AI failed) quietly drops; disaster strikes at the moment only the second ledger counts.</div>
+
+<h3>Background & principle</h3>
+<p>Aviation human-factors gave these two ledgers a name: the <strong>out-of-the-loop performance problem</strong>. Endsley & Kiris (1995) ran a clean experiment: let an expert system take over navigation and operators do fine in the moment; but the instant the system <strong>fails and a human must take over</strong>, the fully-automated groups show significantly worse reaction time and situation awareness. The mechanism is a <strong>shift from active processing to passive monitoring</strong> — you no longer make decisions by hand, you just watch it decide, so you lose both the skill and the real-time grasp of "what's actually going on right now." That's the two ledgers: <strong>the first is "how capable you are with AI"</strong>, climbing daily, the KPI you and your boss both watch; <strong>the second is "how much you have left once AI is gone"</strong>, never on any dashboard — yet it decides whether you can catch it when AI goes down, hands you an out-of-scope task, or gives a plausible-but-wrong answer.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 330" xmlns="http://www.w3.org/2000/svg" role="img" style="width:100%;height:auto" font-family="-apple-system,sans-serif">
+  <text x="340" y="24" fill="#00d4ff" font-size="14" font-weight="700" text-anchor="middle">The two ledgers diverge over time (you only see the top one)</text>
+  <line x1="70" y1="270" x2="640" y2="270" stroke="#3a3e58" stroke-width="1.5"/>
+  <line x1="70" y1="270" x2="70" y2="50" stroke="#3a3e58" stroke-width="1.5"/>
+  <text x="355" y="306" fill="#a0a4b8" font-size="12" text-anchor="middle">time · deeper AI collaboration →</text>
+  <text x="42" y="160" fill="#a0a4b8" font-size="12" text-anchor="middle" transform="rotate(-90 42 160)">performance</text>
+  <path d="M90,200 Q360,120 630,80" fill="none" stroke="#00d4ff" stroke-width="2.5"/>
+  <circle cx="630" cy="80" r="4" fill="#00d4ff"/>
+  <text x="500" y="105" fill="#00d4ff" font-size="12" text-anchor="middle">① assisted gain (AI in hand) · KPI rising</text>
+  <path d="M90,205 Q360,240 630,255" fill="none" stroke="#ff6ec4" stroke-width="2.5" stroke-dasharray="6,5"/>
+  <circle cx="630" cy="255" r="4" fill="#ff6ec4"/>
+  <text x="495" y="240" fill="#ff6ec4" font-size="12" text-anchor="middle">② removal performance (AI failed) · unmeasured</text>
+  <line x1="630" y1="88" x2="630" y2="247" stroke="#ffd166" stroke-width="1" stroke-dasharray="3,3"/>
+  <text x="612" y="175" fill="#ffd166" font-size="11" text-anchor="end">out-of-loop gap</text>
+  <text x="355" y="324" fill="#6a6e88" font-size="10.5" text-anchor="middle">disaster isn't in ①—it's the moment AI is gone and only ② counts</text>
+</svg>
+</div>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># Schedule an "AI outage day" to read the second ledger</span>
+Today: core task with zero AI, log just two things—
+  1. Stall points: which step used to be smooth, now needs a pause?  <span class="tag-com"># decay signal</span>
+  2. Completion/time vs. usual with AI: how big the gap?             <span class="tag-com"># the out-of-loop gap</span>
+<span class="tag-com"># Variant: take a task beyond AI's current ability, see if you can catch it solo</span>
+<span class="tag-com"># Don't log a score, log "which judgments I no longer dare make myself"</span></code></pre>
+<p>This isn't self-punishment, it's <strong>fitting a gauge to the second ledger</strong>. If you don't measure it, it stays 0 — until reality forces the account settled one day.</p>
+
+<div class="fail"><strong>Failure modes</strong>: ① using the first ledger (output with AI) to prove "I haven't decayed" — that's the very core of the out-of-loop illusion; ② sneaking a quick AI lookup on your "outage day" — then you never left the loop, gauge void; ③ blaming post-removal stalls on "off day today" instead of recognizing them as decay signals.</div>
+
+<div class="res"><strong>Going deeper</strong> · Endsley & Kiris <em>The Out-of-the-Loop Performance Problem and Level of Control in Automation</em>, <a href="https://journals.sagepub.com/doi/10.1518/001872095779064555" target="_blank">Human Factors 1995</a></div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Prescription: regular manual dose + living through failure + personal accountability</h2>
+<div class="claim">Claim: verbally warning "AI errs, be careful" barely works; only doing it by hand, living through it blowing up, and owning the result actually welds the skill back on.</div>
+
+<h3>Background & principle</h3>
+<p>Aviation gave the prescription long ago — and stepped on its rake. FAA's 2013 <strong>SAFO 13002</strong> says it plainly: continuous autopilot use does <em>not</em> reinforce manual-flight skills, and degrades the ability to "quickly recover from an undesired state," so operators must actively create hand-flying opportunities. Translated into a personal prescription, three ingredients — none optional: <strong>① regularly complete core tasks without AI</strong> (the "hand-flying," reclaiming the steep-decay judgment skills); <strong>② live through AI failure firsthand</strong> — not hearing "AI hallucinates," but actually getting burned by a confidently-wrong answer and debugging it out by hand. Aviation training repeatedly finds: <em>verbal briefings and generic courses barely transfer, only experiential / startle scenarios stick</em>; <strong>③ personal accountability for the result</strong> — you sign off, not "the AI wrote it." Together these three counter Day 53's <strong>generate–verify inversion</strong>: production mode has AI generate and you verify; freshness must switch back to learning mode — you generate, AI verifies.</p>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># Personal manual-dose prescription (pin to your weekly plan)</span>
+[ ] Manual dose: each week, pick 1 core task and do it fully by hand
+      → choose a HIGH-risk skill (architecture/boundary reasoning), not syntax lookup
+[ ] Failure drill: each month, deliberately dig into an AI wrong output,
+      reproduce by hand where it errs —— <span class="tag-key">living it &gt; being told</span>
+[ ] Accountability: every AI output ships under your name, your liability,
+      and you can walk through "why this is right" line by line
+<span class="tag-com"># Learning-mode switch: core skill = you generate / AI verifies (counter the inversion)</span></code></pre>
+<p>Note the <strong>selection</strong> of ingredient one: spend the manual dose on the high-risk skills the point-1 audit surfaced. Wasting precious "AI-free time" on low-risk skills like syntax lookup is the most common fake diligence.</p>
+
+<div class="fail"><strong>Failure modes</strong>: ① substituting "I know AI errs" for "I got burned by AI and debugged it out by hand" — the former is a generic course, empirically non-transferring; ② spending the manual dose on low-risk skills for a sense of activity; ③ claiming learning mode but switching back to AI-generates the instant you stall — i.e., you never switched.</div>
+
+<div class="res"><strong>Going deeper</strong> · FAA <em>SAFO 13002: Manual Flight Operations</em>, <a href="https://www.faa.gov/sites/faa.gov/files/other_visit/aviation_industry/airline_operators/airline_safety/SAFO13002.pdf" target="_blank">FAA 2013</a> · this site <a href="learning-guardrails-day53.en.html">Day 53 Learning Guardrails</a> (generate–verify inversion)</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>The hardest lesson: writing the prescription isn't enough — verify the dose actually happened</h2>
+<div class="claim">Claim: aviation issued the prescription and skills decayed anyway — because nobody verified pilots actually hand-flew. Personal freshness is the same: intent isn't a dose, only what happened is.</div>
+
+<h3>Background & principle</h3>
+<p>This is the most counterintuitive — and most valuable — lesson. Issuing SAFO 13002 didn't solve it: a DOT Office of Inspector General (OIG) 2016 flight-deck-automation audit found that <strong>operators did not ensure pilots actually got and used hand-flying opportunities</strong> — the prescription was written, the dose never landed, skills kept decaying. The reason is plain: hand-flying is more tiring, slower, more prone to small in-the-moment errors, and under first-ledger KPI pressure like "on-time rate," both pilots and airlines instinctively revert to autopilot. <strong>Relying on intent and willpower to sustain correct behavior is the shared failure mode of every freshness prescription.</strong> The fix is to move "verification" from the person to the process (Day 54's oracle inventory, Day 55's "bake it into the default rather than daily willpower"): <strong>fit the manual dose with a record and check independent of your will</strong>, so "did this week's dose actually happen" becomes a queryable fact, not a self-assessment.</p>
+
+<h3>Hands-on</h3>
+<pre><code><span class="tag-com"># Fit the manual dose with "dose verification" — intent → queryable fact</span>
+[ ] Log the event: tag manual-dose tasks (git commit / journal),
+      count "core tasks done AI-free" at month end
+[ ] Independent signal: use point-2's "post-removal time gap" as the objective gauge,
+      not the self-assessment "my chops feel fine lately"
+[ ] Bake in the default: schedule it into a fixed slot / process hook,
+      don't rely on remembering—micro-dose + intermittent = the standard way it fails
+<span class="tag-com"># Verify "the dose actually happened," not "I intend to"</span></code></pre>
+<p>The core is one line: <strong>writing the prescription is intent, verification is fact.</strong> Freshness rarely trips on "not knowing you should go manual" — it trips on "thinking you went manual when you didn't."</p>
+
+<div class="fail"><strong>Failure modes</strong>: ① treating "I plan to go manual weekly" as already doing it — intent isn't a dose; ② substituting subjective "feel" for an objective gauge, where self-assessment is always over-optimistic (you can't see the out-of-loop gap to begin with); ③ grinding on willpower instead of baking it into a process default, then quietly reverting to full auto within weeks under KPI pressure.</div>
+
+<div class="res"><strong>Going deeper</strong> · DOT OIG <em>Enhanced FAA Oversight Could Reduce Hazards Associated With Increased Use of Flight Deck Automation</em>, <a href="https://www.oig.dot.gov/sites/default/files/FAA%20Flight%20Decek%20Automation_Final%20Report%5E1-7-16.pdf" target="_blank">DOT OIG 2016</a> · this site <a href="oracle-inventory-day54.en.html">Day 54 Oracle Inventory</a></div>
+</div>
+
+<!-- ============ Checklist ============ -->
+<div class="combo">
+<h3>// ONE-PAGE PRESCRIPTION CARD</h3>
+<p><strong>① Dosing law</strong> — decay deepens monotonically with nonuse time (Arthur 1998, over 1 SD after a year), and cognitive/judgment beats physical for speed of loss; audit first, spend the manual dose on "deeply outsourced + steep-decay" high-risk skills.</p>
+<p><strong>② Two ledgers</strong> — assisted gain (AI in hand, rising daily) masks post-removal decline (AI failed, unmeasured); schedule an "AI outage day" to read the second ledger — the out-of-loop gap is 0 until you measure it.</p>
+<p><strong>③ Three ingredients</strong> — regular AI-free core tasks + living through AI failure (living it &gt; being told) + personal accountability; switch core skills back to "you generate / AI verifies."</p>
+<p><strong>④ Verify the dose</strong> — SAFO issued, skills decayed anyway, because landing wasn't verified (DOT OIG 2016). Intent isn't a dose — fit an independent record + bake in a process default.</p>
+</div>
+
+<!-- ============ Thinking ============ -->
+<div class="thinking">
+<h3>// DEEPER QUESTIONS</h3>
+<details><summary>If AI only gets stronger and barely goes down, is the second ledger (post-removal performance) still worth the cost to maintain?</summary><div>Yes, but the reason isn't "fear of downtime." The second ledger really catches three everyday scenarios: one, AI gives a <em>plausible-but-wrong</em> answer and you need independent judgment to stop it — this is exactly Day 53's verification bottleneck, and verification ability itself decays; two, <em>beyond-AI's-current-ability</em> new problems, where the frontier is always humans first; three, <em>problem definition and taste</em> — AI optimizes the goal you give it, but hand it the wrong goal and it'll efficiently drive you into a ditch. The stronger AI gets, the lower the value of pure execution and the higher the value of "judging what to let it do, and verifying it did it right" — precisely the steepest-decay skills. Maintaining the second ledger isn't nostalgia, it's keeping yourself on the higher-leverage end.</div></details>
+<details><summary>Is the manual dose (AI-free practice) zero-sum against "high-throughput output with AI"? Is time spent by hand pure loss?</summary><div>Short-term it looks zero-sum, long-term it's investment. The key is <strong>triage</strong> (point 1): fully outsource low-risk skills — syntax lookups, boilerplate, formatting — don't waste a minute doing them by hand; there it's pure efficiency gain. The manual dose lands only on high-risk skills, and the dose need not be large: Arthur's curve is "longer nonuse, more loss," meaning <em>small but regular</em> re-practice keeps you on the flat part, far cheaper than rebuilding after decaying to −1.4. The real zero-sum trap is the inverse — wasting AI-free time on low-risk skills for a diligence feeling while fully outsourcing the high-risk ones. So the question isn't "whether to go manual," it's "where to spend the scarce manual budget."</div></details>
+<details><summary>Why does "living through AI failure" beat "being told AI errs" by so much? Everyone gets the point — why do people still fall in?</summary><div>Because "getting it" and "wiring it into reflex" are different things. Being told is <em>declarative knowledge</em> (you can recite "AI hallucinates"); living it builds <em>procedural vigilance</em> (see a certain output, your body suspects first) — aviation training repeatedly finds generic briefings barely transfer to real high-pressure scenarios, only experiential, even slightly startling drills stick. This is isomorphic to Day 55's retrieval practice: rereading doesn't build memory, effortful recall does. In engineering: don't expect "double-check AI output" to change behavior; manufacture one experience of <em>actually getting burned and debugging it out by hand</em> — that jolt of "it can be this confidently wrong" beats a hundred verbal reminders.</div></details>
+<details><summary>How does this "manual dose" prescription relate to Day 55's three learning switches and Day 53's learning guardrails? Any overlap?</summary><div>Three segments of one chain, no overlap. Day 53 answers "who generates first," Day 55 answers "how to arrange the generation act" (retrieval, spacing, interleaving), and Day 59 answers <em>triggering and verification</em>: in a default state where AI can already do the work for you, <strong>on what basis, how often, for which skills you actively switch back to learning mode, and how to confirm you actually switched</strong>. The first two lean "how to learn"; this one leans "how to force yourself to still learn under the temptation of shipping without learning."</div></details>
+</div>
+
+<!-- ============ Refs ============ -->
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://gwern.net/doc/psychology/spaced-repetition/1998-arthur.pdf" target="_blank">Arthur, Bennett, Stanush & McNelly · Factors That Influence Skill Decay and Retention (Human Performance 1998)</a> — decay meta-analysis, ~−1.4 SD after a year, cognitive/accuracy decays faster</li>
+<li><a href="https://journals.sagepub.com/doi/10.1518/001872095779064555" target="_blank">Endsley & Kiris · The Out-of-the-Loop Performance Problem and Level of Control in Automation (Human Factors 1995)</a> — slower takeover, lower situation awareness after full automation</li>
+<li><a href="https://www.faa.gov/sites/faa.gov/files/other_visit/aviation_industry/airline_operators/airline_safety/SAFO13002.pdf" target="_blank">FAA · SAFO 13002: Manual Flight Operations (2013)</a> — continuous autopilot degrades manual-flight skills; create hand-flying opportunities</li>
+<li><a href="https://www.oig.dot.gov/sites/default/files/FAA%20Flight%20Decek%20Automation_Final%20Report%5E1-7-16.pdf" target="_blank">DOT OIG · Enhanced FAA Oversight Could Reduce Hazards Associated With Increased Use of Flight Deck Automation (2016)</a> — prescription issued but landing unverified, skills kept decaying</li>
+<li><a href="learning-guardrails-day53.en.html">This site · Day 53 · Learning Guardrails</a> — the generate–verify inversion, learning mode vs. production mode</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual · Day 59 · 2026-07-21</footer>
+</div>
+</body></html>
