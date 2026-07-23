@@ -228,7 +228,7 @@ HumanLayer <em>12-Factor Agents</em>（own your control flow / errors）, <a hre
 </div>
 <!-- ============ Combo ============ -->
 <div class="combo">
-<h3 data-tts="b6751e47b54744c5">// 综合实战 · 把玩具 agent 改造成可恢复 agent</h3>
+<h3 data-tts="b2876da377cd68f7">// 综合实战 · 把玩具 agent 改造成可恢复 agent</h3>
 <p>拿你手上任何一个 100 行的 demo agent，按这张 checklist 逐项加固——每一项都对应上面一个失败模式：</p>
 <ol style="margin-left:20px;margin-top:10px">
 <li><strong>分层 retry</strong>：给 <code>messages.create</code> 和网络型 tool 套 <code>call_with_backoff</code>（full jitter）；语义错误<strong>不</strong>包进去，原样喂回模型。</li>
@@ -242,7 +242,7 @@ HumanLayer <em>12-Factor Agents</em>（own your control flow / errors）, <a hre
 </div>
 <!-- ============ Glossary ============ -->
 <div class="glossary">
-<h3 data-tts="57476919f17dc3c8">// ENGLISH GLOSSARY</h3>
+<h3 data-tts="35358b14306a38d1">// ENGLISH GLOSSARY</h3>
 <dl>
 <dt>Transient vs Permanent Error</dt><dd>瞬时故障（429/超时，可退避重试）vs 永久故障（401/参数错，应 fail-fast）。判别是 retry 设计的起点。</dd>
 <dt>Full Jitter</dt><dd>把退避时间随机化到整个 [0, backoff] 窗口，避免客户端同步化反复撞击。AWS Marc Brooker 推荐。</dd>

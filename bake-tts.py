@@ -40,7 +40,7 @@ DEFAULT_VOICE_ZH = "zh-CN-XiaoxiaoNeural"
 DEFAULT_VOICE_EN = "en-US-JennyNeural"
 # Elements whose data-zh/data-en text becomes part of a model's narration.
 NARRATION_TAGS = ("h1", "h2", "h3", "h4", "p", "div", "li", "summary", "span",
-                  "strong", "b")
+                  "strong", "b", "dt", "dd")
 REPO_DIR = Path(__file__).parent.resolve()
 AUDIO_DIR = REPO_DIR / "audio"
 # Azure tolerates much larger bodies than Volcano. 3000 chars gives plenty of
@@ -402,6 +402,19 @@ def collect_groups(soup) -> list[tuple]:
             text = visible_text(node).strip()
             if not text:
                 continue
+            # <ol><li> numbering is painted by the browser, absent from the DOM
+            # text — so a "7 步清单" is read as one run-on with no step markers.
+            if node.name == "li":
+                ol = node.find_parent("ol")
+                if ol is not None:
+                    idx = ol.find_all("li", recursive=False).index(node) + 1 \
+                          if node in ol.find_all("li", recursive=False) else None
+                    if idx:
+                        text = f"第{idx}，{text}"
+            # In a <dl> glossary, <dt> is the term and <dd> its definition;
+            # a trailing colon after the term stops "Workflow 预定义…" running on.
+            if node.name == "dt":
+                text = text + "："
             # Skip prompt-box etc. whose text is clearly the wrong language
             # (e.g. "English Prompt" boxes inside a zh page with no `en` class)
             if "prompt-box" in classes or "prompt-block" in classes or "prompt-item" in classes:
