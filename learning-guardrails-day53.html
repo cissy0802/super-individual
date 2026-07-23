@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<html lang="zh-CN"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Day 53 · 用 AI 学习的护栏工程 — Super Individual</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -46,47 +47,39 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
 </style></head><body>
 <div class="container">
-
 <header>
 <span class="week-tag">DAY 53 / PHASE 6 · CROSS-REF</span>
-<h1>用 AI 学习的护栏工程</h1>
-<h2>Learning Guardrails · 生成-验证倒置 · 从个人到组织给 Junior 用</h2>
+<h1 data-tts="e0e7435c65d5618a">用 AI 学习的护栏工程</h1>
+<h2 data-tts="f4caa062b96f29ff">Learning Guardrails · 生成-验证倒置 · 从个人到组织给 Junior 用</h2>
 <div class="date">2026-07-03 · BigCat</div>
 <p class="pitch">同一个 AI，配置对了让你学得更快，配置错了让你根本学不会——差别不在 AI，在护栏。</p>
 </header>
-
 <div class="intro">
-<h3>// WHY THIS MATTERS</h3>
+<h3 data-tts="73e46b96b468f457">// WHY THIS MATTERS</h3>
 <p>这一期是从深度研究站<a href="https://cissy0802.github.io/deep-research/junior-engineers-deep.html" target="_blank">《「初级工程师正在消失」是真的吗》</a>反哺回来的工程化一课。前面 52 期讲的都是「怎么用 AI 把活干得更快」；这一期讲一个被忽略的反向问题：<strong>用 AI 干活的同时，怎么不把「学习」本身给关掉</strong>。这不是鸡汤——它有一条经同行评审、随机对照的硬证据，而且直接决定了两件很具体的事：你自己该怎么用 AI 学新东西，以及如果你是 tech lead，该怎么让团队里的 junior engineer 用 AI 而不毁掉他们的成长。核心机制只有一句：<strong>AI 默认替你完成的，恰好是「学习只在其中发生」的那个环节——除非你用护栏把它要回来。</strong></p>
 </div>
-
 <!-- ============ 1 ============ -->
 <div class="section">
 <span class="num">// 01</span>
-<h2>反直觉起点：同一个 AI，能加速学习，也能关掉学习</h2>
+<h2 data-tts="429c4de7320b462b">反直觉起点：同一个 AI，能加速学习，也能关掉学习</h2>
 <div class="claim">论断：无护栏地用 AI 学习，练习期表现飙升，撤掉 AI 后比从没用过还差——加速的是产出，不是能力。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="f0951cdc7186a5cc">背景与原理</h3>
 <p>2025 年 PNAS 一项近千名高中生的随机对照实验（Bastani et al.，已对抗验证）把这件事测死了。三组：无 AI 对照组、拿到「原味 GPT-4」的组、拿到「带护栏的 GPT 导师」的组。结果分两段读：</p>
 <ul>
 <li><strong>练习期</strong>：原味 GPT 组成绩 +48%，导师组 +127%——两组都比对照组强很多，看起来 AI 大胜。</li>
 <li><strong>撤掉 AI 后的考试</strong>：原味 GPT 组反而比<em>从没用过 AI</em> 的对照组差 <strong>17%</strong>；带护栏的导师组则基本没有这个损失。</li>
 </ul>
 <p>机制是「合意困难」（desirable difficulty，Bjork）被抄近路抄掉了：学习不发生在「看到正确答案」的瞬间，发生在「自己挣扎着产出、然后被纠正」的过程里。原味 AI 直接给答案，把那个挣扎删了——练习分数上去了，因为分数量的是「有没有答案在手」，不是「脑子里有没有长出能力」。这跟工程里最贵的一课同构：<strong>生成便宜了，不等于理解便宜了。</strong></p>
-
 <div class="fail"><strong>为什么这不是「AI 有害」：</strong>同一个实验里，带护栏的导师版几乎消除了损害。所以结论不是「别用 AI 学习」，是「用 AI 学习必须装护栏」——毒药与补品之间，隔的就是一层配置。</div>
-
-<h3>可复用的判据</h3>
+<h3 data-tts="c25bc4e5aaa5316c">可复用的判据</h3>
 <p>判断你正在「用 AI 学」还是「用 AI 替」，只问一句：<strong>如果现在把 AI 关掉，我能独立复现刚才这段产出吗？</strong>能，AI 是脚手架；不能，AI 是拐杖——练习分数会骗你，这个问题不会。</p>
 </div>
-
 <!-- ============ 2 ============ -->
 <div class="section">
 <span class="num">// 02</span>
-<h2>个人护栏：把「生成-验证」顺序倒过来</h2>
+<h2 data-tts="21b9f82850143eea">个人护栏：把「生成-验证」顺序倒过来</h2>
 <div class="claim">论断：让 AI 先生成、你来验证，是在训练验证肌肉、废掉生成肌肉；学习期要反过来。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="4893337f0af7ed4c">背景与原理</h3>
 <p>干活模式（production mode）和学习模式（learning mode）的最优 AI 用法是<strong>相反</strong>的，混用是最常见的错误。</p>
 <ul>
 <li><strong>干活模式</strong>：AI 生成 → 你验证。目标是吞吐，这套没错，前 52 期讲的都是它。</li>
@@ -98,55 +91,46 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <li><strong>检索优先</strong>：能凭记忆答的先凭记忆答，再用 AI 核对——检索练习（retrieval practice）是效应量最稳的学习法之一，AI 最容易顺手把它抄没。</li>
 <li><strong>让 AI 出题，不是出答案</strong>：把 AI 当成给你生成练习题、追问「为什么」、指出盲区的考官，而不是答案贩卖机。</li>
 </ol>
-
 <div class="fail"><strong>反模式：</strong>把不懂的东西直接丢给 AI 要「讲解 + 完整代码」，读一遍觉得懂了，关掉页面复现不出来。练习期的 +48% 幻觉就是这么产生的。</div>
 </div>
-
 <!-- ============ 3 ============ -->
 <div class="section">
 <span class="num">// 03</span>
-<h2>为什么这条对工程师尤其致命</h2>
+<h2 data-tts="19fa2c0f1737879b">为什么这条对工程师尤其致命</h2>
 <div class="claim">论断：工程师的核心技能正在从「写」迁到「读与验证」，而无护栏的 AI 恰好把练这块的机会拿走。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="2e7d8d2eb52681c0">背景与原理</h3>
 <p>METR 2025 的随机对照实验（16 名资深开源维护者，在自己维护多年的大型代码库上）测到一个反直觉结果：<strong>允许用 AI 反而慢了 19%</strong>，而开发者本人事后仍以为自己快了 20%。原因不是 AI 生成得慢，是<strong>验证成本</strong>——在复杂代码库里，写从来不是瓶颈，读懂、审查、确认 AI 产出对不对才是。AI 把不是瓶颈的环节加速了，把是瓶颈的环节堆高了。</p>
 <p>把这条和 Day 53 主线接上：如果资深工程师最贵的能力是「验证与判断」，那么<strong>初级工程师要长成资深，练的就该是这块</strong>——读别人的代码、判断一段实现对不对、在架构里定位问题。而无护栏地用 AI（让它生成、自己囫囵合入）恰好跳过了这段练习。个人层面，感知-现实错位是最大的陷阱：METR 的老手被拖慢还坚信自己变快了；<strong>别信体感，信「关掉 AI 能不能独立复现」这个硬判据。</strong></p>
-
 <div class="diagram" style="white-space:normal;padding:18px 16px">
-<svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" style="width:100%;height:auto">
-  <text x="170" y="30" fill="#00d4ff" font-size="15" font-weight="700" text-anchor="middle" font-family="-apple-system,sans-serif">干活模式 · 吞吐优先</text>
-  <text x="510" y="30" fill="#ff6ec4" font-size="15" font-weight="700" text-anchor="middle" font-family="-apple-system,sans-serif">学习模式 · 能力优先</text>
-  <line x1="340" y1="46" x2="340" y2="212" stroke="#2a2e44" stroke-width="1" stroke-dasharray="3,5"/>
-
-  <rect x="60" y="52" width="220" height="46" rx="8" fill="#00d4ff" opacity="0.85"/>
-  <text x="170" y="80" fill="#0a0e1a" font-size="14.5" font-weight="700" text-anchor="middle" font-family="-apple-system,sans-serif">AI 生成</text>
-  <line x1="170" y1="100" x2="170" y2="124" stroke="#5a6378" stroke-width="2"/><polygon points="164,124 176,124 170,132" fill="#5a6378"/>
-  <rect x="60" y="134" width="220" height="46" rx="8" fill="#7b61ff" opacity="0.9"/>
-  <text x="170" y="162" fill="#fff" font-size="14.5" font-weight="700" text-anchor="middle" font-family="-apple-system,sans-serif">你验证 ✓</text>
-  <text x="170" y="204" fill="#a0a4b8" font-size="12.5" text-anchor="middle" font-family="-apple-system,sans-serif">训练「验证肌肉」</text>
-
-  <rect x="400" y="52" width="220" height="46" rx="8" fill="#7b61ff" opacity="0.9"/>
-  <text x="510" y="80" fill="#fff" font-size="14.5" font-weight="700" text-anchor="middle" font-family="-apple-system,sans-serif">你先生成</text>
-  <line x1="510" y1="100" x2="510" y2="124" stroke="#5a6378" stroke-width="2"/><polygon points="504,124 516,124 510,132" fill="#5a6378"/>
-  <rect x="400" y="134" width="220" height="46" rx="8" fill="#00d4ff" opacity="0.85"/>
-  <text x="510" y="162" fill="#0a0e1a" font-size="14.5" font-weight="700" text-anchor="middle" font-family="-apple-system,sans-serif">AI 审稿 / 追问 ✓</text>
-  <text x="510" y="204" fill="#a0a4b8" font-size="12.5" text-anchor="middle" font-family="-apple-system,sans-serif">同时训练「生成 + 验证」</text>
-
-  <rect x="40" y="232" width="600" height="52" rx="8" fill="#ff5757" opacity="0.1"/>
-  <rect x="40" y="232" width="600" height="52" rx="8" fill="none" stroke="#ff5757" stroke-opacity="0.35"/>
-  <text x="340" y="258" fill="#ff8a8a" font-size="12.5" font-weight="700" text-anchor="middle" font-family="-apple-system,sans-serif">⚠ 长期只用左边 → 生成肌肉萎缩 → 验证也会退化</text>
-  <text x="340" y="277" fill="#a0a4b8" font-size="11.5" text-anchor="middle" font-family="-apple-system,sans-serif">（你得先会写，才会审）</text>
+<svg role="img" style="width:100%;height:auto" viewbox="0 0 680 300" xmlns="http://www.w3.org/2000/svg">
+<text fill="#00d4ff" font-family="-apple-system,sans-serif" font-size="15" font-weight="700" text-anchor="middle" x="170" y="30">干活模式 · 吞吐优先</text>
+<text fill="#ff6ec4" font-family="-apple-system,sans-serif" font-size="15" font-weight="700" text-anchor="middle" x="510" y="30">学习模式 · 能力优先</text>
+<line stroke="#2a2e44" stroke-dasharray="3,5" stroke-width="1" x1="340" x2="340" y1="46" y2="212"></line>
+<rect fill="#00d4ff" height="46" opacity="0.85" rx="8" width="220" x="60" y="52"></rect>
+<text fill="#0a0e1a" font-family="-apple-system,sans-serif" font-size="14.5" font-weight="700" text-anchor="middle" x="170" y="80">AI 生成</text>
+<line stroke="#5a6378" stroke-width="2" x1="170" x2="170" y1="100" y2="124"></line><polygon fill="#5a6378" points="164,124 176,124 170,132"></polygon>
+<rect fill="#7b61ff" height="46" opacity="0.9" rx="8" width="220" x="60" y="134"></rect>
+<text fill="#fff" font-family="-apple-system,sans-serif" font-size="14.5" font-weight="700" text-anchor="middle" x="170" y="162">你验证 ✓</text>
+<text fill="#a0a4b8" font-family="-apple-system,sans-serif" font-size="12.5" text-anchor="middle" x="170" y="204">训练「验证肌肉」</text>
+<rect fill="#7b61ff" height="46" opacity="0.9" rx="8" width="220" x="400" y="52"></rect>
+<text fill="#fff" font-family="-apple-system,sans-serif" font-size="14.5" font-weight="700" text-anchor="middle" x="510" y="80">你先生成</text>
+<line stroke="#5a6378" stroke-width="2" x1="510" x2="510" y1="100" y2="124"></line><polygon fill="#5a6378" points="504,124 516,124 510,132"></polygon>
+<rect fill="#00d4ff" height="46" opacity="0.85" rx="8" width="220" x="400" y="134"></rect>
+<text fill="#0a0e1a" font-family="-apple-system,sans-serif" font-size="14.5" font-weight="700" text-anchor="middle" x="510" y="162">AI 审稿 / 追问 ✓</text>
+<text fill="#a0a4b8" font-family="-apple-system,sans-serif" font-size="12.5" text-anchor="middle" x="510" y="204">同时训练「生成 + 验证」</text>
+<rect fill="#ff5757" height="52" opacity="0.1" rx="8" width="600" x="40" y="232"></rect>
+<rect fill="none" height="52" rx="8" stroke="#ff5757" stroke-opacity="0.35" width="600" x="40" y="232"></rect>
+<text fill="#ff8a8a" font-family="-apple-system,sans-serif" font-size="12.5" font-weight="700" text-anchor="middle" x="340" y="258">⚠ 长期只用左边 → 生成肌肉萎缩 → 验证也会退化</text>
+<text fill="#a0a4b8" font-family="-apple-system,sans-serif" font-size="11.5" text-anchor="middle" x="340" y="277">（你得先会写，才会审）</text>
 </svg>
 </div>
 </div>
-
 <!-- ============ 4 ============ -->
 <div class="section">
 <span class="num">// 04</span>
-<h2>组织护栏：怎么让 Junior Engineer 用 AI</h2>
+<h2 data-tts="463d1f3e302baddf">组织护栏：怎么让 Junior Engineer 用 AI</h2>
 <div class="claim">论断：给 junior 配 AI 不该是「配自动驾驶」，该是「配一个必须由他当第一验证者的副驾」——护栏在流程里，不在叮嘱里。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="4ad10fc381def76a">背景与原理</h3>
 <p>组织层面有个好消息和一个陷阱。好消息：QJE 2025 那项 5000+ 客服的随机对照研究发现，AI 辅助让最缺经验的新人效率 +30%，两个月的新人能顶过去六个月的——而且这些收益<strong>反映的是持久学习</strong>（AI 宕机时技能仍在），不是依赖。陷阱：这个「真学习」的前提，是研究里那套<strong>带护栏的用法</strong>；换成「junior + AI 自动驾驶、无人审」，你复现的就是 PNAS 原味组的 −17%，只不过发生在生产代码库里。</p>
 <p>把个人护栏（第 02 节）翻译成组织机制，四条：</p>
 <ol>
@@ -155,21 +139,18 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <li><strong>留住导师制，别让 AI 顶替 mentor。</strong>LeadDev 2025 调查里，38% 的工程 leader 承认 AI 已经减少了资深对 junior 的直接带教——这正是 PNAS「撤掉护栏」在组织里的样子。AI 可以答语法，不能替代「资深指着你的 PR 说这里为什么不对」。</li>
 <li><strong>开始测量阶梯。</strong>junior 到能独立负责的时长、AI 辅助下 junior 产出的 review 通过率、新人留存——全行业几乎没人测。先测的团队，能及早发现「AI 用法把成长关掉了」，而不是三年后突然发现没人能接资深的班。</li>
 </ol>
-
 <div class="fail"><strong>单家理性、行业透支：</strong>「junior 反正有 AI，那就少招/不带」在单个季度是省钱的，拉到三五年是断代——要么高价挖别家的中级，要么没得挖。已经有 32% 因 AI 裁岗的经理在往回招人。给 junior 装对护栏，是这条曲线里唯一可持续的解。</div>
 </div>
-
 <!-- ============ Checklist ============ -->
 <div class="combo">
-<h3>// 一页护栏检查表</h3>
+<h3 data-tts="c3e9caf984ceb8bb">// 一页护栏检查表</h3>
 <p><strong>个人（学习模式）：</strong>① 只对「新东西」先自己给答案（预测 / 草图 / 伪代码均可）、再让 AI 揭晓对照，已会的照常 AI 先写　② 能凭记忆先凭记忆、AI 只做核对　③ 让 AI 出题与追问，不要完整答案　④ 硬判据：关掉 AI 能否独立复现？</p>
 <p><strong>组织（带 junior）：</strong>① junior = AI 产出的第一验证者　② AI 代码走同一 review/测试门禁　③ 保留资深对 junior 的直接带教　④ 测量「junior→独立负责」时长与 review 通过率</p>
 <p><strong>一句话内核：</strong>AI 让「生成」趋零，学习恰好只发生在「生成 + 被纠错」里——护栏的全部作用，就是把这个环节从 AI 手里要回到人手里。</p>
 </div>
-
 <!-- ============ Glossary ============ -->
 <div class="glossary">
-<h3>// 术语表</h3>
+<h3 data-tts="b9e5c6147472fe92">// 术语表</h3>
 <dl>
 <dt>desirable difficulty（合意困难）</dt><dd>Bjork 提出：让学习「适度变难」（自己产出、延迟反馈、间隔）反而记得更牢。AI 最容易顺手抹平这种困难。</dd>
 <dt>retrieval practice（检索练习）</dt><dd>凭记忆主动提取，比重读效应量更稳。「先凭记忆答、再用 AI 核对」就是在保护它。</dd>
@@ -177,23 +158,21 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <dt>验证瓶颈</dt><dd>生成成本趋零后，瓶颈移到「确认产出对不对」。工程师的核心能力正随之从写迁到读与验证。</dd>
 </dl>
 </div>
-
 <!-- ============ Refs ============ -->
 <div class="refs">
-<h3>// 延伸阅读</h3>
+<h3 data-tts="28e0447d7343ade6">// 延伸阅读</h3>
 <ul>
 <li><a href="https://cissy0802.github.io/deep-research/junior-engineers-deep.html" target="_blank">BigCat Deep Research · 「初级工程师正在消失」是真的吗</a> — 本期的母研究，含完整证据与对抗验证</li>
 <li><a href="https://www.pnas.org/doi/10.1073/pnas.2422633122" target="_blank">Bastani et al. · Generative AI without guardrails can harm learning（PNAS 2025）</a> — 无护栏 −17% / 导师版消除损害</li>
-<li><a href="https://academic.oup.com/qje/article/140/2/889/7990658" target="_blank">Brynjolfsson, Li & Raymond · Generative AI at Work（QJE 2025）</a> — 新手 +30%、收益反映持久学习</li>
+<li><a href="https://academic.oup.com/qje/article/140/2/889/7990658" target="_blank">Brynjolfsson, Li &amp; Raymond · Generative AI at Work（QJE 2025）</a> — 新手 +30%、收益反映持久学习</li>
 <li><a href="https://arxiv.org/abs/2507.09089" target="_blank">METR · 早-2025 AI 对资深开发者生产率的影响</a> — 资深反而 −19%、感知-现实错位</li>
 <li><a href="https://leaddev.com/the-ai-impact-report-2025" target="_blank">LeadDev · AI Impact Report 2025</a> — 38% 的工程 leader：AI 已减少对 junior 的直接带教</li>
 </ul>
 </div>
-
 <footer>BigCat · Super Individual · Day 53 · 2026-07-03</footer>
 </div>
-<script src="https://hub.cissychen.com/comments.js" defer></script>
-<script src="https://hub.cissychen.com/search.js" defer></script>
-<script src="https://hub.cissychen.com/index-button.js" defer></script>
-<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
 </body></html>

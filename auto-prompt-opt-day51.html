@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<html lang="zh-CN"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Day 51 · 自动 Prompt 优化 — Super Individual</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -49,33 +50,27 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
 </style></head><body>
 <div class="container">
-
 <header>
 <span class="week-tag">DAY 51 / PHASE 6 · 新前沿工程化</span>
-<h1>自动 Prompt 优化</h1>
-<h2>DSPy · APE / OPRO · Eval 驱动 · Few-shot 自动选样</h2>
+<h1 data-tts="3cae5394e29faa7a">自动 Prompt 优化</h1>
+<h2 data-tts="3570e990aa427f22">DSPy · APE / OPRO · Eval 驱动 · Few-shot 自动选样</h2>
 <div class="date">2026-07-01 · BigCat</div>
 <p class="pitch">别再手搓 prompt——把它当成一个由 metric 编译出来的参数，让搜索去调。</p>
 </header>
-
 <div class="xref">
 <a href="https://cissy0802.github.io/ai-ml-daily/prompt-engineering-day3.html">前置概念 → ai-ml-daily Day 3 (Prompt Engineering)</a>
 </div>
-
 <div class="intro">
-<h3>// WHY THIS MATTERS</h3>
+<h3 data-tts="45ad2ea91d45bba8">// WHY THIS MATTERS</h3>
 <p>资深用户手调 prompt 的边际收益正在递减：你凭直觉改一版、跑几个例子、觉得「好像好点了」就上线——这既不可复现，也无法证明真的变好了。自动 Prompt 优化把这件事变成一个<strong>可度量、可搜索的优化问题</strong>：定义 metric，让程序去搜索 instruction 措辞和 few-shot 组合。这一期不讲 prompt engineering 是什么、CoT 为什么有效——那是 ai-ml-daily Day 3。这里只讲四个工程决策：<strong>什么时候值得自动优化、什么时候纯属浪费</strong>；<strong>DSPy 怎么把 prompt 当程序编译</strong>；<strong>APE / OPRO 这类指令搜索的真实收益与坑</strong>；<strong>few-shot 自动选样和 overfit 治理</strong>。核心反直觉：没有一个可信的 eval，自动优化只会让你更快、更自信地过拟合到错的目标上。</p>
 </div>
-
 <!-- ============ 1 ============ -->
 <div class="section">
 <span class="num">// 01</span>
-<h2>手调 vs 自动优化：先问值不值得</h2>
+<h2 data-tts="53c23fac6bec1fc9">手调 vs 自动优化：先问值不值得</h2>
 <div class="claim">论断：自动 prompt 优化的前置条件不是「prompt 不好」，而是「你有一个可信的 metric 和足够的标注样本」。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="f2cceec5bcc4364e">背景与原理</h3>
 <p>自动优化的本质是<strong>用 eval 分数做梯度的黑盒搜索</strong>：它只会朝你定义的 metric 爬坡。所以 metric 有多糙，优化就有多歪。触发自动优化要三条同时满足：(1) 有<strong>客观或半客观的 metric</strong>（准确率、F1、格式合规、LLM-judge 且已校准）；(2) 有<strong>几十到几百条带 ground truth 的样本</strong>，且能切出独立的 train / val / test；(3) 这个 prompt 会<strong>反复高频调用</strong>，值得一次性投入优化成本。反过来，一次性任务、没法定义分数的开放创作、样本个位数——手调更快更省。还有个常被忽略的判据：<strong>任务是否稳定</strong>。需求每周变、schema 天天改的场景，优化产物很快过期，维护成本盖过收益。</p>
-
 <div class="diagram">   要不要自动优化 prompt？
             │
             ▼
@@ -90,31 +85,26 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
              │ 是
              ▼
   ┌──────────────────────┐  否
-  │ 高频复用 & 任务稳定？  ├────▶ 手调（优化产物会过期）
+  │ 高频复用 &amp; 任务稳定？  ├────▶ 手调（优化产物会过期）
   └──────────┬───────────┘
              │ 是
              ▼
      自动优化（DSPy / APE / OPRO）</div>
-
 <div class="fail">
 <strong>失败模式</strong>：拿 20 条没切分的样本、用一个没校准的 LLM-judge 就开跑自动优化。结果 metric 被刷高，线上没变好——你只是过拟合了噪声。<strong>eval 质量是自动优化的天花板</strong>，先补 eval（Day 6 / Day 29），别本末倒置。
 </div>
-
 <div class="res">
 <strong>进阶资源</strong> · Anthropic <em>Prompt improver</em>（最轻量的自动优化入口）, <a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/prompt-improver" target="_blank">docs.anthropic.com/.../prompt-improver</a>
 </div>
 </div>
-
 <!-- ============ 2 ============ -->
 <div class="section">
 <span class="num">// 02</span>
-<h2>DSPy：把 prompt 当程序编译</h2>
+<h2 data-tts="52e6d2e5c931d70e">DSPy：把 prompt 当程序编译</h2>
 <div class="claim">论断：DSPy 让你写「签名 + 模块」的声明式程序，再用 optimizer 从 metric 编译出 instruction 和 few-shot，而不是手写字符串。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="f4fbe090cd539e74">背景与原理</h3>
 <p>DSPy（Khattab 等 2023，arXiv 2310.03714）的核心转变：<strong>你声明输入/输出的 signature 和模块结构，把「具体 prompt 长什么样」交给 optimizer 去搜</strong>。一个 <code>Signature</code> 定义字段（如 <code>text -&gt; label</code>），一个 <code>Module</code>（如 <code>ChainOfThought</code>）定义调用方式，optimizer 则在 trainset 上<strong>联合优化两样东西</strong>：每个模块的 instruction 措辞，以及自动 bootstrap 出来的 few-shot 示例。MIPROv2（Opsahl-Ong 等 2024，arXiv 2406.11695）用贝叶斯优化搜索 instruction+demo 组合；它对多阶段 LM 程序做<strong>无模块级标签的信用分配</strong>——你只给最终 metric，它自己分摊到各模块。价值在于：换模型、改需求时，你重新 <code>compile</code> 一次，而不是重写所有 prompt。</p>
-
-<h3>实战示例</h3>
+<h3 data-tts="cdb1a7bda00c70f6">实战示例</h3>
 <pre><code><span class="tag-key">import</span> dspy
 dspy.configure(lm=dspy.LM(<span class="tag-gpt">"anthropic/claude-haiku-4-5"</span>))
 
@@ -134,26 +124,21 @@ opt = MIPROv2(metric=metric, auto=<span class="tag-gpt">"medium"</span>)      <s
 compiled = opt.compile(program, trainset=train, valset=val)
 compiled.save(<span class="tag-gpt">"classify.v3.json"</span>)                  <span class="tag-com"># 产物入 registry（Day 35）</span></code></pre>
 <p>关键心智：你调的不是「prompt 文本」，是 <strong>metric、trainset、optimizer 档位</strong>三个旋钮。优化出来的 instruction 常常读起来平平无奇甚至有点怪，但在 val 上分更高——这正是把审美判断让给数据的意义。</p>
-
 <div class="fail">
 <strong>失败模式</strong>：(1) trainset 太小（十几条）→ optimizer 把噪声当信号，val 崩。(2) metric 是布尔全对全错、粒度太粗 → 搜索没有梯度可爬，等于随机。(3) 把 DSPy 当「魔法调优」黑盒用，从不看它生成的 prompt——出问题无法 debug。<strong>compile 完务必打印最终 prompt 存档。</strong>
 </div>
-
 <div class="res">
 <strong>进阶资源</strong> · Khattab et al. <em>DSPy</em>, <a href="https://arxiv.org/abs/2310.03714" target="_blank">arXiv 2310.03714</a> ·
 DSPy 官方 optimizer 文档, <a href="https://dspy.ai/learn/optimization/optimizers/" target="_blank">dspy.ai/learn/optimization</a>
 </div>
 </div>
-
 <!-- ============ 3 ============ -->
 <div class="section">
 <span class="num">// 03</span>
-<h2>指令搜索：APE 与 OPRO 的真实收益</h2>
+<h2 data-tts="0e2e2400a38f0b47">指令搜索：APE 与 OPRO 的真实收益</h2>
 <div class="claim">论断：让 LLM 自己提议并迭代 instruction（APE/OPRO）确实能超过人手写，但产物「反直觉、跨模型不迁移」是常态，不是 bug。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="ac2bc954dd872f5b">背景与原理</h3>
 <p>两条经典路线。<strong>APE</strong>（Zhou 等 2022，arXiv 2211.01910）把「指令」当程序：让 LLM 生成一批候选 instruction，用目标模型的 eval 分数打分选最优——在 24 个 NLP 任务上追平甚至超过人手写。<strong>OPRO</strong>（Yang 等 2023，arXiv 2309.03409）更进一步：把「历史 (prompt, score) 对」按分数排序喂回给 LLM，让它<strong>基于轨迹提议更好的下一版</strong>，形成迭代爬坡。这类方法搜出来的 prompt 常出人意料——OPRO 在 GSM8K 上搜出的名句是「Take a deep breath and work on this problem step by step」，比人写的 CoF 引导更高分。这说明两件事：优化目标是<strong>分数不是可读性</strong>；且这种胜出<strong>强烈依赖被优化的那个模型</strong>，换模型往往要重搜。</p>
-
 <div class="diagram">OPRO 迭代式指令搜索：
    ┌─────────────────────────────────────┐
    │ meta-prompt：历史(instr, score)按分排序 │
@@ -169,8 +154,7 @@ DSPy 官方 optimizer 文档, <a href="https://dspy.ai/learn/optimization/optimi
                   │ 收敛
                   ▼
           在 held-out test 上验证后定版</div>
-
-<h3>实战示例</h3>
+<h3 data-tts="812c9bcce241c97a">实战示例</h3>
 <p>不引第三方库也能手搓一个最小 OPRO 循环：</p>
 <pre><code><span class="tag-key">def</span> opro_step(history, n=<span class="tag-key">8</span>):
     <span class="tag-com"># history: [(instr, score), ...] 已按 score 升序</span>
@@ -182,27 +166,22 @@ DSPy 官方 optimizer 文档, <a href="https://dspy.ai/learn/optimization/optimi
     <span class="tag-key">return</span> [(c, eval_on_valset(c)) <span class="tag-key">for</span> c <span class="tag-key">in</span> cands]  <span class="tag-com"># 逐条打分</span>
 <span class="tag-com"># 反复迭代，把新 (instr,score) 并回 history，收敛后在 test 上定版</span></code></pre>
 <p>工程守则：<strong>候选一定要在 held-out val 上打分，最终版必须在从未参与搜索的 test 上验证</strong>——否则你搜到的是「刷分咒语」，不是真提升。想省事，Anthropic Console 的 prompt improver 是零代码入口，适合先拿到一个强基线再考虑上搜索。</p>
-
 <div class="fail">
 <strong>失败模式</strong>：(1) 在同一个 set 上又搜又验 → 过拟合，test 打回原形。(2) 把 A 模型搜出的「神咒」直接搬到 B 模型 → 收益消失甚至变差，指令搜索<strong>几乎不跨模型迁移</strong>。(3) 迭代不设停机准则，烧掉几千次调用换来 0.5% 提升——收益早已被成本盖过。
 </div>
-
 <div class="res">
 <strong>进阶资源</strong> · Zhou et al. <em>APE</em>, <a href="https://arxiv.org/abs/2211.01910" target="_blank">arXiv 2211.01910</a> ·
 Yang et al. <em>Large Language Models as Optimizers (OPRO)</em>, <a href="https://arxiv.org/abs/2309.03409" target="_blank">arXiv 2309.03409</a>
 </div>
 </div>
-
 <!-- ============ 4 ============ -->
 <div class="section">
 <span class="num">// 04</span>
-<h2>Few-shot 自动选样与 overfit 治理</h2>
+<h2 data-tts="74179bc2f06f2d08">Few-shot 自动选样与 overfit 治理</h2>
 <div class="claim">论断：自动优化最大的产出常常不是 instruction，而是一组自动挑出的 few-shot；而它最大的风险是过拟合到 eval，必须像模型训练一样做数据切分与治理。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="a01300ba08af25f1">背景与原理</h3>
 <p>一个被低估的事实：<strong>在很多任务上，自动 bootstrap 出的 few-shot 示例，收益大于 instruction 措辞的微调</strong>。DSPy 的 <code>BootstrapFewShot</code> 就是让 teacher 模型在 trainset 上跑、用 metric 筛出「答对的完整轨迹」当示例，再塞进 prompt。这比人手挑例子更系统。但示例是把双刃剑：选进来的样本会<strong>把它们的分布、格式、甚至偏见一起带进 prompt</strong>，在分布外输入上可能反噬。所以自动优化必须借用机器学习的纪律：<strong>train / val / test 三分</strong>，搜索只碰 train+val，报告只信 test；并把优化产物纳入 <strong>Day 35 的 prompt registry</strong>——版本化、可回滚、记录「用哪个模型、哪份数据、哪个 metric 编译的」。换模型或数据漂移时，靠 registry 触发重编译，而不是让线上悄悄退化。</p>
-
-<h3>实战示例</h3>
+<h3 data-tts="132ffb80520afa2b">实战示例</h3>
 <pre><code><span class="tag-com"># 数据切分是自动优化的安全带，不是可选项</span>
 train, val, test = split(data, <span class="tag-key">0.6</span>, <span class="tag-key">0.2</span>, <span class="tag-key">0.2</span>)
 
@@ -216,20 +195,17 @@ compiled = opt.compile(program, trainset=train)
 <span class="tag-key">print</span>(evaluate(compiled, test))
 <span class="tag-com"># 记录 provenance：model + data 版本 + metric + 分数 → registry</span></code></pre>
 <p>治理清单：<strong>val 和 test 分数的差距</strong>就是过拟合温度计——差距大说明搜过头了，回退搜索强度或加数据。上线后监控线上分数 vs test 分数，出现 <strong>prompt 漂移</strong>（同一 prompt 因模型更新而效果变化）时，registry 里那份 provenance 让你能一键复现并重编译。</p>
-
 <div class="fail">
 <strong>失败模式</strong>：(1) 只切 train/test，用 test 反复调超参 → test 悄悄变成 val，泄漏。(2) few-shot 选进了高度同质的样本 → 窄化了模型行为，长尾输入崩。(3) 优化产物没版本化，换了个模型端点后无人知道该重编译——线上准确率阴跌几周才被发现。
 </div>
-
 <div class="res">
 <strong>进阶资源</strong> · Opsahl-Ong et al. <em>MIPRO</em>（多阶段程序的指令+示例联合优化）, <a href="https://arxiv.org/abs/2406.11695" target="_blank">arXiv 2406.11695</a> ·
 DSPy <em>choosing an optimizer</em>, <a href="https://dspy.ai/learn/optimization/optimizers/" target="_blank">dspy.ai/learn/optimization</a>
 </div>
 </div>
-
 <!-- ============ Combo ============ -->
 <div class="combo">
-<h3>// 综合实战 · 给一个高频 prompt 上一次自动优化</h3>
+<h3 data-tts="ec8398ddcb402ac0">// 综合实战 · 给一个高频 prompt 上一次自动优化</h3>
 <p>把四点串成一个能落地的周末改造：挑一个每天调用上千次的 prompt，走完「判断→编译→搜索→治理」全流程。</p>
 <ol style="margin-left:20px;margin-top:10px">
 <li><strong>先过判断门（§1）</strong>：确认它有可信 metric、≥数十条带标注样本、高频且稳定。缺 eval 就先停下补 eval——这是天花板。</li>
@@ -240,10 +216,9 @@ DSPy <em>choosing an optimizer</em>, <a href="https://dspy.ai/learn/optimization
 </ol>
 <p style="margin-top:12px">做完这套，你的 prompt 从「凭手感改」升级为「有 provenance、可复现、可回滚的编译产物」——换模型时重跑一次，而不是通宵重写。</p>
 </div>
-
 <!-- ============ Glossary ============ -->
 <div class="glossary">
-<h3>// ENGLISH GLOSSARY</h3>
+<h3 data-tts="5ef4c892d7a9f68d">// ENGLISH GLOSSARY</h3>
 <dl>
 <dt>APO (Automatic Prompt Optimization)</dt><dd>用 eval 分数驱动搜索来自动改进 prompt 的统称。</dd>
 <dt>DSPy</dt><dd>声明式 LM 编程框架：写 signature+module，由 optimizer 从 metric 编译出 prompt。</dd>
@@ -256,7 +231,6 @@ DSPy <em>choosing an optimizer</em>, <a href="https://dspy.ai/learn/optimization
 <dt>Provenance</dt><dd>优化产物的血统记录：用哪个模型、哪份数据、哪个 metric 编译。</dd>
 </dl>
 </div>
-
 <!-- ============ Deep Thinking ============ -->
 <div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
 <style>
@@ -271,17 +245,16 @@ DSPy <em>choosing an optimizer</em>, <a href="https://dspy.ai/learn/optimization
 .thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
 .thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
 </style>
-<h3>// 深入思考</h3>
+<h3 data-tts="4ee270243e99468f">// 深入思考</h3>
 <details><summary>既然自动优化只朝 metric 爬坡，那它和「Goodhart 定律」是不是同一个陷阱？怎么防？</summary><div>是同源风险：一旦 metric 成为优化目标，它就不再是好的度量。防线有三层。(1) <strong>metric 多目标化</strong>：别只优化准确率，把格式合规、拒答率、长度约束一起入 metric，堵单点刷分。(2) <strong>held-out test 严格隔离</strong>：test 只在定版时碰一次，一旦拿它调超参就失效。(3) <strong>线上真实分布抽样复评</strong>：eval set 永远是现实的近似，定期用线上新数据刷新 test，防止优化贴合了一个过时的分布。本质上，自动优化把「metric 设计」的重要性放大了——metric 就是你交给机器的价值函数。</div></details>
 <details><summary>DSPy 说「programming not prompting」，但优化出的还是 prompt 字符串。这个抽象到底省了什么？</summary><div>省的是<strong>手写与手维护 prompt 的耦合成本</strong>。传统写法里，模型、任务、prompt 措辞、few-shot 全焊死在一根字符串上；换模型或改需求就得整体重写。DSPy 把它解耦成「声明的程序结构」+「可编译的参数」：结构（signature/module）稳定，prompt 是编译产物。换模型时结构不动，重 <code>compile</code> 即可。类比编译器——你写高级语言，让编译器针对目标架构生成汇编，而不是手写汇编。省的不是「不出现 prompt」，是「不用手动为每个模型/需求组合去调 prompt」。</div></details>
 <details><summary>OPRO 搜出「深呼吸再一步步想」这类反直觉神咒——为什么会这样？这对「可解释的 prompt 工程」意味着什么？</summary><div>因为优化目标是<strong>eval 分数</strong>，不是人类可读性或语义正当性。模型的 prompt 敏感性是高维非线性的，某些措辞恰好激活了对该模型该任务有利的内部状态，人类先验根本预测不到。这意味着「可解释的 prompt 工程」有天花板：靠讲道理写出的 prompt 未必是最优点。但反过来也警示——这类神咒<strong>脆且不迁移</strong>，换模型/换分布就失效，本质是对特定权重的过拟合。工程上的取舍：追求分数就接受不可解释并用 registry 管住脆性；追求鲁棒与可维护，就宁可要一个略低但讲得通、跨模型稳的 prompt。</div></details>
 <details><summary>自动优化会不会最终让「prompt engineer」这个技能消失？</summary><div>会转移，不会消失。消失的是「凭手感逐字调措辞」这一层——那本就该交给搜索。留下且更值钱的是：<strong>定义好 metric（价值函数）、构造有代表性的数据集、判断何时该自动化、诊断过拟合与漂移</strong>。这些是把模糊业务目标翻译成可优化问题的能力，恰恰是搜索替代不了的。类比：编译器没消灭程序员，消灭的是手写汇编；它把人的注意力抬到了更高的抽象层。自动 prompt 优化对 prompt engineer 是同一种抬升。</div></details>
 <details><summary>如果每次换模型都要重新编译 prompt，这和「供应商锁定」（Day 45 反模式）是什么关系？</summary><div>它其实是<strong>解锁而非锁定</strong>——前提是你用对了工具。手写 prompt 才是隐性锁定：措辞深度耦合某个模型，迁移=重写，成本高到没人愿动。DSPy 这类框架把「结构」和「针对模型的 prompt」解耦后，换模型的代价降为「重跑一次 compile」，反而让你更敢换供应商。真正的锁定风险在别处：如果优化框架本身只支持单一供应商、或你的 eval/数据管道绑死某家 API，那才是锁定。所以治理上要保证 eval 与数据层供应商中立，把「可重编译」变成一种迁移能力，而不是又一层依赖。</div></details>
 </div>
-
 <!-- ============ Refs ============ -->
 <div class="refs">
-<h3>// 延伸阅读</h3>
+<h3 data-tts="16848c2b0998aaec">// 延伸阅读</h3>
 <ul>
 <li><a href="https://arxiv.org/abs/2310.03714" target="_blank">Khattab et al. · DSPy: Compiling Declarative LM Calls into Self-Improving Pipelines</a> — 程序化 prompt 的奠基论文</li>
 <li><a href="https://arxiv.org/abs/2211.01910" target="_blank">Zhou et al. · Large Language Models Are Human-Level Prompt Engineers (APE)</a> — 自动指令生成与选择</li>
@@ -290,11 +263,10 @@ DSPy <em>choosing an optimizer</em>, <a href="https://dspy.ai/learn/optimization
 <li><a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/prompt-improver" target="_blank">Anthropic · Prompt improver</a> — 零代码自动优化入口</li>
 </ul>
 </div>
-
 <footer>BigCat · Super Individual · Day 51 · 2026-07-01</footer>
 </div>
-<script src="https://hub.cissychen.com/comments.js" defer></script>
-<script src="https://hub.cissychen.com/search.js" defer></script>
-<script src="https://hub.cissychen.com/index-button.js" defer></script>
-<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
 </body></html>

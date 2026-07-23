@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<html lang="zh-CN"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Day 23 · Personal AI Infra — Super Individual</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -46,30 +47,25 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
 </style></head><body>
 <div class="container">
-
 <header>
 <span class="week-tag">DAY 23 / PHASE 2 · 应用与系统</span>
-<h1>Personal AI Infra</h1>
-<h2>LLM Gateway · 跨模型路由 · Cache 层 · Observability &amp; Key 管理</h2>
+<h1 data-tts="5ccebc0ce9d77c0f">Personal AI Infra</h1>
+<h2 data-tts="527a75179ff46f48">LLM Gateway · 跨模型路由 · Cache 层 · Observability &amp; Key 管理</h2>
 <div class="date">2026-06-06 · BigCat</div>
 <p class="pitch">超级个体的护城河不在某个 prompt，在那条没人看见的私有 AI 管线。</p>
 </header>
-
 <div class="intro">
-<h3>// WHY THIS MATTERS</h3>
+<h3 data-tts="a944eb4da0cbd441">// WHY THIS MATTERS</h3>
 <p>当你同时在用 Claude Code、Cursor、几个自写脚本、两三个 side project，每个都各自 <code>import anthropic</code> / <code>import openai</code>、各自硬编 API key、各自直连 provider——你已经拥有了一个<strong>没有中枢的分布式系统</strong>，而且是最差的那种：换模型要改 N 处、成本不可见、provider 抖一下全线挂、出了 bug 没有 trace。本期讲的不是某个工具，是<strong>把这堆散点收口成一条私有管线</strong>的四层架构：一个统一接入的 <strong>gateway</strong>、一层<strong>跨模型路由 + fallback</strong>、一层<strong>cache</strong>、一套<strong>observability + key 治理</strong>。这套东西在公司叫「平台团队的活」，但对超级个体，它就是一个周末能搭起来、之后每天省钱省心的基础设施。装一次，所有 app 受益。</p>
 </div>
-
 <!-- ============ 1 ============ -->
 <div class="section">
 <span class="num">// 01</span>
-<h2>LLM Gateway：所有调用收口到一个端点</h2>
+<h2 data-tts="b0c232539f28d190">LLM Gateway：所有调用收口到一个端点</h2>
 <div class="claim">论断：别让每个脚本各自直连 provider SDK——auth / 路由 / cache / 日志应该收口在一个 OpenAI 兼容端点后面。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="4289c6dc61384343">背景与原理</h3>
 <p>Gateway 是整套 infra 的<strong>单一入口</strong>。所有 app 不再认识「Anthropic」「OpenAI」「Gemini」，只认识一个本地端点 <code>http://localhost:4000/v1</code>，统一说 OpenAI ChatCompletions 方言。Gateway 在背后负责真正的 provider 适配、鉴权、记账、缓存、日志。<strong>LiteLLM Proxy</strong> 是个体最省事的选择：一个 <code>config.yaml</code> 把 100+ provider 映射成统一模型名，跑起来就是一个 OpenAI 兼容服务器。</p>
 <p>关键收益是<strong>解耦</strong>：换底层模型只改 gateway 一处配置，所有下游 app 零改动；想给某个 app 限额、换 key、加 fallback，全在中枢做。这正是下面这张图想表达的——四层都挂在 gateway 后面，app 侧只看见一个端点。</p>
-
 <div class="diagram">┌─ Apps ────────────┐
 │ Cursor · 脚本A     │   都只认识一个 OpenAI 兼容端点
 │ side-proj · cron   │        http://localhost:4000/v1
@@ -85,8 +81,7 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
     ▼               ▼               ▼               ▼
  Anthropic       OpenAI         Gemini         本地 Ollama
  (真 key 只存在 gateway 这一层，app 永远拿不到)</div>
-
-<h3>实战示例</h3>
+<h3 data-tts="ae08e55f7e7fdafe">实战示例</h3>
 <pre><code><span class="tag-com"># config.yaml —— 统一模型名映射到真实 provider</span>
 model_list:
   - model_name: <span class="tag-gpt">smart</span>            <span class="tag-com"># app 只说 "smart"</span>
@@ -103,29 +98,24 @@ model_list:
 <span class="tag-key">from</span> openai <span class="tag-key">import</span> OpenAI
 client = OpenAI(base_url=<span class="tag-gpt">"http://localhost:4000/v1"</span>, api_key=<span class="tag-gpt">"sk-my-virtual-key"</span>)
 client.chat.completions.create(model=<span class="tag-gpt">"smart"</span>, messages=[...])  <span class="tag-com"># 用 OpenAI SDK 调 Claude</span></code></pre>
-
 <div class="fail">
 <strong>失败模式</strong>：把 gateway 做成单点故障——所有 app 直连本地一个进程，gateway 一挂全线挂。个体方案：gateway 配置无状态化（config + 环境变量），用 <code>supervisord</code> / systemd 自动拉起；或干脆把不可中断的关键 app 保留一条直连 provider 的 fallback 路径，gateway 只承载「能容忍偶发抖动」的流量。
 </div>
-
 <div class="res">
 <strong>进阶资源</strong> · LiteLLM Proxy 文档, <a href="https://docs.litellm.ai/docs/simple_proxy" target="_blank">docs.litellm.ai/docs/simple_proxy</a> ·
 LiteLLM 源码, <a href="https://github.com/BerriAI/litellm" target="_blank">github.com/BerriAI/litellm</a>
 </div>
 </div>
-
 <!-- ============ 2 ============ -->
 <div class="section">
 <span class="num">// 02</span>
-<h2>跨模型路由与 Fallback：按任务选模型，按可用性兜底</h2>
+<h2 data-tts="e1d2d1758b0614f6">跨模型路由与 Fallback：按任务选模型，按可用性兜底</h2>
 <div class="claim">论断：路由有两个正交维度——「这个任务该用哪档模型」（成本）和「这个 provider 挂了怎么办」（可用性）。别混在一起。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="30801ffd2d45a396">背景与原理</h3>
 <p><strong>第一维度（成本路由）</strong>：不是所有调用都值得 frontier 模型。分类、抽取、格式化、路由判断本身——这些用 Haiku 档够了，价格差一个数量级。把「贵模型默认」改成「便宜模型默认、贵模型按需」，是个体 token 账单立刻砍半的最快动作。</p>
 <p><strong>第二维度（可用性 fallback）</strong>：provider 会限流、会 5xx、会偶发拒答。Fallback 是一条<strong>有序模型链</strong>：主模型报错就自动试下一个。<strong>OpenRouter</strong> 把这个做成了一个 <code>models</code> 数组参数——按优先级排，前一个出错自动落到下一个，<strong>最终按真正用上的那个模型计费</strong>。LiteLLM 也有等价的 router fallback。</p>
 <p>关键纪律：<strong>两个维度不要纠缠</strong>。成本路由是「我主动选便宜的」，fallback 是「被动兜底别让我挂」。把降级模型误当成本优化，会在 provider 抖动时悄悄把质量也降了还不自知。</p>
-
-<h3>实战示例</h3>
+<h3 data-tts="50c92e07d4ff0a3d">实战示例</h3>
 <pre><code><span class="tag-com"># 成本路由：先用一句话分类，再决定派哪档模型</span>
 tier = classify(task)                       <span class="tag-com"># 用 cheap 模型判断难度</span>
 model = <span class="tag-gpt">"smart"</span> <span class="tag-key">if</span> tier == <span class="tag-gpt">"hard"</span> <span class="tag-key">else</span> <span class="tag-gpt">"cheap"</span>
@@ -140,29 +130,24 @@ client.chat.completions.create(
     messages=[...],
 )
 <span class="tag-com"># 响应里 model 字段会告诉你最终实际用了哪个 → 一定要 log 它</span></code></pre>
-
 <div class="fail">
 <strong>失败模式</strong>：（1）跨 provider fallback 时假设 prompt 通用——同一份 system prompt 在 Claude 上调好的，落到 GPT 上行为可能漂移；fallback 链里跨家时要么接受质量波动，要么各家备一份 prompt。（2）路由分类器本身用了贵模型，省的钱还不够分类的钱。分类必须用最便宜的档，甚至规则/正则先筛。
 </div>
-
 <div class="res">
 <strong>进阶资源</strong> · OpenRouter Model Fallbacks, <a href="https://openrouter.ai/docs/guides/routing/model-fallbacks" target="_blank">openrouter.ai/docs/.../model-fallbacks</a> ·
 LiteLLM Router &amp; Fallbacks, <a href="https://docs.litellm.ai/docs/simple_proxy" target="_blank">docs.litellm.ai/docs/simple_proxy</a>
 </div>
 </div>
-
 <!-- ============ 3 ============ -->
 <div class="section">
 <span class="num">// 03</span>
-<h2>Cache 两层：Provider 端 Prompt Cache + 语义缓存</h2>
+<h2 data-tts="56214359811c4fee">Cache 两层：Provider 端 Prompt Cache + 语义缓存</h2>
 <div class="claim">论断：「缓存」在 LLM 里是两个完全不同的东西——别把 provider 端的 prefix 复用和应用层的语义命中混为一谈。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="1fb938547a5b1c08">背景与原理</h3>
 <p><strong>第一层 · Provider prompt caching</strong>：缓存的是<strong>prefix（前缀）</strong>。把稳定不变的部分（system prompt、工具定义、长文档）标上 <code>cache_control</code>，provider 端缓存这段 KV 计算，后续命中只按极低费率收 read。Anthropic 文档明确：<strong>cache read 约为基础 input 价的 0.1×</strong>，5 分钟 cache write 约 1.25×、1 小时约 2×。这一层是<strong>同一个长 prefix 反复调</strong>时的省钱利器（agent loop、多轮对话尤其明显），但它只复用计算、不跳过推理——每次还是真调了模型。</p>
 <p><strong>第二层 · 语义缓存（GPTCache 这类）</strong>：缓存的是<strong>整个问答对</strong>。新 query 先做 embedding，和历史 query 比相似度，足够像就直接返回旧答案，<strong>完全不调模型</strong>——延迟和成本都→0。代价是「相似」的判定有风险：阈值松了会返回不该返回的旧答案。</p>
 <p>两层正交、可叠加：prefix cache 降<em>每次调用</em>的成本，语义 cache 降<em>调用次数</em>。前者几乎零风险，后者省得多但要管阈值。</p>
-
-<h3>实战示例</h3>
+<h3 data-tts="4eb4a88826016948">实战示例</h3>
 <pre><code><span class="tag-com"># 第一层：Anthropic prompt caching —— 给稳定 prefix 打标</span>
 client.messages.create(
   model=<span class="tag-gpt">"claude-opus-4-8"</span>,
@@ -180,28 +165,23 @@ hit = vec_store.search(emb, threshold=<span class="tag-key">0.95</span>)   <span
 <span class="tag-key">if</span> hit: <span class="tag-key">return</span> hit.cached_answer            <span class="tag-com"># 0 token, 0 延迟</span>
 ans = call_llm(query); vec_store.add(emb, ans)</code></pre>
 <p>纪律一条：<strong>把易变内容放 prefix 末尾</strong>。prompt cache 命中的前提是前缀逐字节一致，一个动态时间戳塞在 system 开头就能让整段 cache 全部失效。</p>
-
 <div class="fail">
 <strong>失败模式</strong>：语义缓存阈值过松，把「2023 年财报」的旧答案返回给「2024 年财报」的新问——两句话 embedding 很近，但答案完全错。高事实性、强时效的 query 不要上语义缓存；它适合 FAQ、客服、稳定知识这类「问法多变、答案稳定」的场景。
 </div>
-
 <div class="res">
 <strong>进阶资源</strong> · Anthropic Prompt Caching, <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching" target="_blank">platform.claude.com/.../prompt-caching</a> ·
 GPTCache, <a href="https://github.com/zilliztech/GPTCache" target="_blank">github.com/zilliztech/GPTCache</a>
 </div>
 </div>
-
 <!-- ============ 4 ============ -->
 <div class="section">
 <span class="num">// 04</span>
-<h2>Observability 与 Key 治理：看得见花了多少，管得住谁在花</h2>
+<h2 data-tts="601b8a29621f829e">Observability 与 Key 治理：看得见花了多少，管得住谁在花</h2>
 <div class="claim">论断：没有 trace 的 AI 管线是在盲飞——你不知道钱花哪了、哪个 app 在烧、key 泄露了多久。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="2ba1ede8a9c7667d">背景与原理</h3>
 <p><strong>Observability</strong>：LLM 调用的可观测和普通 API 不同，你要看的是 prompt/completion 对、token 用量、每次调用成本、延迟、以及（agent 场景）整条调用链。<strong>Langfuse</strong> 是个体首选的开源方案：可自托管，原生理解 LLM 概念（token、cost、trace、嵌套 span），接 OpenTelemetry 和各家 SDK。装上之后，「这个月哪个 side project 偷偷烧了 $40」从猜测变成一张图。</p>
 <p><strong>Key 治理</strong>——三条铁律：<strong>(1) 真 key 永远不进代码、不进 git</strong>，只存环境变量或 secret manager，且只存在 gateway 这一层。<strong>(2) 给每个 app 发 virtual key 而非共用真 key</strong>：LiteLLM 的 virtual key 支持 per-key 预算、限流、模型白名单、过期时间——某个 app 失控烧钱，只伤它自己的额度，且能单独吊销不影响别人。<strong>(3) 预算从小开始</strong>（$5–50），按真实用量上调，每把 key 设硬上限——这是个体防「凌晨死循环烧爆账单」的唯一兜底。</p>
-
-<h3>实战示例</h3>
+<h3 data-tts="cced6447b4e89445">实战示例</h3>
 <pre><code><span class="tag-com"># Langfuse：装饰器自动 trace，零侵入</span>
 <span class="tag-key">from</span> langfuse.openai <span class="tag-key">import</span> OpenAI   <span class="tag-com"># drop-in 替换，自动记 token/cost/latency</span>
 client = OpenAI(base_url=<span class="tag-gpt">"http://localhost:4000/v1"</span>, api_key=<span class="tag-gpt">"sk-my-virtual-key"</span>)
@@ -215,21 +195,18 @@ client = OpenAI(base_url=<span class="tag-gpt">"http://localhost:4000/v1"</span>
   <span class="tag-claude">"models"</span>: [<span class="tag-gpt">"cheap"</span>],          <span class="tag-com"># 只许用便宜档，防误用 opus</span>
   <span class="tag-claude">"duration"</span>: <span class="tag-gpt">"90d"</span>             <span class="tag-com"># key 本身 90 天后失效</span>
 }</code></pre>
-
 <div class="fail">
 <strong>失败模式</strong>：（1）只看「总花费」不看「分 app / 分 key 花费」——总账单涨了却定位不到哪个项目，等于没监控。trace 一定要带 app/key 维度的 tag。（2）所有 app 共用一把真 key 还硬编进多个 repo：一处泄露，全线裸奔，且因为没分 key 你根本不知道是哪个 app 漏的、影响面多大。
 </div>
-
 <div class="res">
 <strong>进阶资源</strong> · Langfuse 文档, <a href="https://langfuse.com/docs" target="_blank">langfuse.com/docs</a> ·
 Langfuse 源码, <a href="https://github.com/langfuse/langfuse" target="_blank">github.com/langfuse/langfuse</a> ·
 LiteLLM Virtual Keys, <a href="https://docs.litellm.ai/docs/proxy/virtual_keys" target="_blank">docs.litellm.ai/docs/proxy/virtual_keys</a>
 </div>
 </div>
-
 <!-- ============ Combo ============ -->
 <div class="combo">
-<h3>// 综合实战 · 一个周末搭起你的私有 AI 管线</h3>
+<h3 data-tts="5daff627e8f8cb84">// 综合实战 · 一个周末搭起你的私有 AI 管线</h3>
 <p>四层串成一个能跑的最小 infra，之后所有 app 共享：</p>
 <ol style="margin-left:20px;margin-top:10px">
 <li><strong>起 gateway</strong>：LiteLLM 一个 <code>config.yaml</code>，映射 <code>smart</code>/<code>cheap</code> 两档模型，真 key 走环境变量。<code>litellm --config config.yaml</code> 跑起来，端点 <code>localhost:4000</code>。</li>
@@ -240,10 +217,9 @@ LiteLLM Virtual Keys, <a href="https://docs.litellm.ai/docs/proxy/virtual_keys" 
 </ol>
 <p style="margin-top:12px">搭完后，「换模型」从改 N 个 repo 变成改一行 config；「这个月 AI 花了多少」从信用卡账单倒查变成一张实时仪表盘。这就是从「会用 AI 工具」到「拥有 AI 基础设施」的分水岭。</p>
 </div>
-
 <!-- ============ Glossary ============ -->
 <div class="glossary">
-<h3>// ENGLISH GLOSSARY</h3>
+<h3 data-tts="9a2579d96adabab6">// ENGLISH GLOSSARY</h3>
 <dl>
 <dt>LLM Gateway / Proxy</dt><dd>统一接入层，把多家 provider 收口成一个 OpenAI 兼容端点。代表：LiteLLM Proxy。</dd>
 <dt>OpenAI-compatible</dt><dd>用 OpenAI ChatCompletions 方言作为通用协议，任何 OpenAI SDK 客户端零改动接入。</dd>
@@ -257,7 +233,6 @@ LiteLLM Virtual Keys, <a href="https://docs.litellm.ai/docs/proxy/virtual_keys" 
 <dt>Budget Window</dt><dd>virtual key 的周期性花费上限（如每 30 天 $20），防失控烧钱。</dd>
 </dl>
 </div>
-
 <!-- ============ Deep Thinking ============ -->
 <div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
 <style>
@@ -272,17 +247,16 @@ LiteLLM Virtual Keys, <a href="https://docs.litellm.ai/docs/proxy/virtual_keys" 
 .thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
 .thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
 </style>
-<h3>// 深入思考</h3>
+<h3 data-tts="033545c9479018fa">// 深入思考</h3>
 <details><summary>Gateway 把所有调用收口，本身就成了单点故障 + 延迟新增一跳。对个体，这个集中化的收益真的盖过代价吗？</summary><div>对个体（流量小、app 多）收益压倒性。新增一跳的延迟是本地进程级（毫秒），相对 LLM 推理几秒可忽略；单点故障可用 systemd 自动拉起 + 关键 app 保留直连兜底解决。换来的是：换模型一处改、成本一眼见、key 一处管。代价随<em>流量规模</em>上升而上升（企业级要考虑 HA、横向扩展），但个体远没到那个拐点——这里集中化几乎是纯赚。</div></details>
 <details><summary>Prompt cache 省的是「同一 prefix 反复调」的钱，语义 cache 省的是「相似 query」的钱。什么样的工作负载两者都帮不上？</summary><div>「每次 prefix 都不同 + 每次 query 都新」的负载：比如一次性的大文档分析、每次喂不同代码库的 review、探索式研究。prefix 每次变 → 没有可复用前缀；query 每次新 → 语义命中率≈0。这类负载只能靠模型路由（用对档位）和 batch API（非实时打折）省钱。识别它的信号：cache 命中率长期低于 10% 还硬开 1h cache，write 溢价反而亏钱。</div></details>
 <details><summary>跨 provider fallback 听起来很稳，但它隐含一个危险假设。是什么？怎么防？</summary><div>隐含假设：「换个模型，输出质量等价」。实际 prompt 是针对特定模型调优的，跨家 fallback 时行为会漂移——格式、语气、工具调用风格都可能变，而你浑然不觉因为「至少没报错」。防法：(1) 在 trace 里强制 log 实际命中的模型，定期看 fallback 触发率；(2) 对质量敏感的链路只在<em>同家</em>内 fallback（opus→sonnet），跨家 fallback 只用于「有总比没有强」的非关键路径；(3) 给跨家降级的输出打标，下游能识别。</div></details>
 <details><summary>Virtual key 的 per-key 预算是「硬上限」。但 LLM 调用的成本要等响应回来才知道——预算检查到底发生在调用前还是调用后？这造成什么边界问题？</summary><div>预算是基于<em>已记录的累计 spend</em> 检查，发生在调用前；但单次成本要响应后才结算。所以存在「超额尾巴」：当累计逼近上限时，并发的几个请求可能都通过了预检、最后一起把账户冲过上限。对个体单线程影响很小，但 agent 并发或定时任务批量触发时会暴露。务实做法：把预算设在你真正能承受的数字之下留缓冲，并配合 provider 侧的硬性 spend limit 做二道防线——别把 gateway 预算当成绝对不可逾越的墙。</div></details>
 <details><summary>这套 infra 是「会用 AI」到「拥有 AI infra」的分水岭。但它会不会反而成为锁死你的复杂度负债？什么时候该拆掉？</summary><div>会，如果过度工程。判据是<em>痛点驱动</em>：你有 ≥3 个 app、月账单要分摊、换过 ≥2 次模型——这三个信号出现才值得搭，否则一个 <code>config.py</code> 集中 key 就够。拆/简化的信号：某层半年没动过配置（说明没在解决真问题）、维护 gateway 的时间超过它省的时间。infra 的价值在「装一次所有 app 受益」，一旦 app 收敛到 1 个或全迁到托管 IDE，这套自建管线就该退化成一个轻量配置文件，别为了架构而架构。</div></details>
 </div>
-
 <!-- ============ Refs ============ -->
 <div class="refs">
-<h3>// 延伸阅读</h3>
+<h3 data-tts="8ef5f2e44fb0ede1">// 延伸阅读</h3>
 <ul>
 <li><a href="https://docs.litellm.ai/docs/simple_proxy" target="_blank">LiteLLM Proxy (LLM Gateway)</a> — 个体最省事的统一 gateway，含路由/fallback/记账</li>
 <li><a href="https://openrouter.ai/docs/guides/routing/model-fallbacks" target="_blank">OpenRouter · Model Fallbacks</a> — models 数组做有序兜底，按实际命中计费</li>
@@ -291,11 +265,10 @@ LiteLLM Virtual Keys, <a href="https://docs.litellm.ai/docs/proxy/virtual_keys" 
 <li><a href="https://github.com/zilliztech/GPTCache" target="_blank">GPTCache</a> — 语义缓存，命中相似 query 直接返回不调模型</li>
 </ul>
 </div>
-
 <footer>BigCat · Super Individual · Day 23 · 2026-06-06</footer>
 </div>
-<script src="https://hub.cissychen.com/comments.js" defer></script>
-<script src="https://hub.cissychen.com/search.js" defer></script>
-<script src="https://hub.cissychen.com/index-button.js" defer></script>
-<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
 </body></html>

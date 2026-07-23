@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<html lang="zh-CN"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Day 59 · 给自己开「手动剂量」 — Super Individual</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -59,34 +60,28 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}}
 </style></head><body>
 <div class="container">
-
 <header>
 <span class="week-tag">DAY 59 / PHASE 6 · CROSS-REF</span>
-<h1>给自己开「手动剂量」</h1>
-<h2>AI 时代的技能保鲜处方 — 把航空自动化 60 年的教训搬到你的工作流</h2>
+<h1 data-tts="6555f088e3ea72d2">给自己开「手动剂量」</h1>
+<h2 data-tts="6092b6889f2265b7">AI 时代的技能保鲜处方 — 把航空自动化 60 年的教训搬到你的工作流</h2>
 <div class="date">2026-07-21 · BigCat</div>
 <p class="pitch">你用 AI 干活的表现在涨，不用 AI 时的表现在悄悄掉——你只看得到第一本账。航空业为此付了六十年学费。</p>
 </header>
-
 <div class="xref">
 <a href="learning-guardrails-day53.html">承接 → Day 53 用 AI 学习的护栏工程（生成-验证倒置）</a>
 </div>
-
 <div class="intro">
-<h3>// WHY THIS MATTERS</h3>
+<h3 data-tts="edf086566b14bebb">// WHY THIS MATTERS</h3>
 <p>把驾驶舱换成 IDE、把自动驾驶换成 coding agent，你会发现航空业早在四十年前就走完了我们正在走的路。<strong>技能衰退不是「会不会」的问题，是「掉多快、先掉哪个」的剂量问题</strong>——Arthur 等人 1998 年那篇被反复引用的元分析给出了曲线：训练刚结束时效应量约为 0，停用超过一年掉到约 −1.4 个标准差，而且<strong>认知、判断、精度类技能比体力、速度类技能掉得更快</strong>。这正是最坏的组合：AI 替你接管的，恰恰是最容易退化的那类判断工作。这一期不讲「AI 会让人变笨吗」这种口水题，讲三件工程上要命的事：<strong>技能衰退的剂量规律、你从来看不到的第二本账、以及一张连航空监管都栽过跟头的「剂量核查」处方</strong>。</p>
 </div>
-
 <!-- ============ 1 ============ -->
 <div class="section">
 <span class="num">// 01</span>
-<h2>技能衰退是剂量依赖的——而且认知技能先掉</h2>
+<h2 data-tts="20fa8ee7c2a48fe2">技能衰退是剂量依赖的——而且认知技能先掉</h2>
 <div class="claim">论断：决定你退化多少的不是「用没用过 AI」，是「多久没亲手做」；且 AI 替你接管的判断类技能，恰恰是衰减曲线最陡的那一类。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="c149bd502cf74779">背景与原理</h3>
 <p>Arthur 等人 1998 年对 50 多篇研究、近 200 个数据点做元分析，把「不用就退化」量化成了一条曲线：<strong>技能损失随停用间隔单调加深</strong>——刚训练完效应量约 −0.01，停用超过 365 天掉到约 −1.4 个标准差。更关键的是他们的调节变量分析：<strong>认知类、精度类、人为（非自然）任务比体力类、速度类、自然任务退化得更厉害</strong>。套到 AI 协作上就很扎心：你交给 AI 的从来不是拧螺丝的体力活，而是<em>要不要这样设计、这个边界条件对不对、这段逻辑哪里会炸</em>——全是衰减最快的判断类技能。所以「我天天用 AI 写代码，手感不会生」是错觉：你在练的是<strong>指挥和验收</strong>，不是<strong>亲手推导</strong>，而后者才是掉得最快的那本。</p>
-
-<h3>实战示例</h3>
+<h3 data-tts="1b8011f1eba15eb5">实战示例</h3>
 <p>先做一次<strong>技能盘点</strong>，按「外包程度 × 衰减速度」给你的核心技能排个雷区：</p>
 <pre><code><span class="tag-com"># 技能保鲜盘点：越靠右下越危险（外包得深 + 掉得快）</span>
 skill                 外包给AI程度   Arthur类别        风险
@@ -97,44 +92,38 @@ skill                 外包给AI程度   Arthur类别        风险
 命名/格式             高            速度 → 平缓        低
 <span class="tag-com"># 规则：低危的尽管全外包；高危的必须留「手动剂量」</span></code></pre>
 <p>盘点的意义是<strong>分流</strong>：查语法、写样板这类「记忆+可即时再学」的技能全外包无所谓；真正要保留手动剂量的，是那些外包得深、又恰好落在陡峭衰减区的判断技能。</p>
-
 <div class="fail"><strong>失败模式</strong>：① 用「使用频率」自我安慰——你高频使用的是 AI，不是那项技能本身；② 把所有技能一视同仁地「都得保鲜」，剂量摊薄到每项都不够（见第 3 点的轻剂量陷阱）；③ 只盘点硬技能，漏掉最陡的「问题定义 / 品味判断」——它们没有语法可查，一旦退化最难补。</div>
-
-<div class="res"><strong>进阶资源</strong> · Arthur, Bennett, Stanush & McNelly <em>Factors That Influence Skill Decay and Retention</em>, <a href="https://gwern.net/doc/psychology/spaced-repetition/1998-arthur.pdf" target="_blank">Human Performance 1998（PDF）</a></div>
+<div class="res"><strong>进阶资源</strong> · Arthur, Bennett, Stanush &amp; McNelly <em>Factors That Influence Skill Decay and Retention</em>, <a href="https://gwern.net/doc/psychology/spaced-repetition/1998-arthur.pdf" target="_blank">Human Performance 1998（PDF）</a></div>
 </div>
-
 <!-- ============ 2 ============ -->
 <div class="section">
 <span class="num">// 02</span>
-<h2>两本账：在场增益 vs 撤后退化——你只看得到第一本</h2>
+<h2 data-tts="63dac23274f82b76">两本账：在场增益 vs 撤后退化——你只看得到第一本</h2>
 <div class="claim">论断：日常表现（AI 在场）稳稳上涨，撤离表现（AI 失效）悄悄下滑；灾难发生在只有第二本账才算数的那一刻。</div>
-
-<h3>背景与原理</h3>
-<p>航空人机工程给了这两本账一个名字：<strong>out-of-the-loop performance problem</strong>（脱环表现问题）。Endsley & Kiris 1995 年做了一个干净的实验：让专家系统接管导航任务，操作者当场表现很好；可一旦系统<strong>失效需要人接管</strong>，那些全自动组的反应时间和情境觉知显著更差。机制是<strong>从主动处理退化为被动监视</strong>——你不再亲手做决策，只是看着它做，于是既丢了技能，也丢了「现在到底什么状况」的实时理解。这就是两本账：<strong>第一本是「有 AI 时你多能干」</strong>，天天在涨，是你和老板都盯着的 KPI；<strong>第二本是「AI 撤了之后你还剩多少」</strong>，从不出现在任何仪表盘上，却决定了 AI 宕机、给你一个超范围任务、或它给出看似合理实则错误的答案时——你能不能兜住。</p>
-
+<h3 data-tts="9ac5696b62a02351">背景与原理</h3>
+<p>航空人机工程给了这两本账一个名字：<strong>out-of-the-loop performance problem</strong>（脱环表现问题）。Endsley &amp; Kiris 1995 年做了一个干净的实验：让专家系统接管导航任务，操作者当场表现很好；可一旦系统<strong>失效需要人接管</strong>，那些全自动组的反应时间和情境觉知显著更差。机制是<strong>从主动处理退化为被动监视</strong>——你不再亲手做决策，只是看着它做，于是既丢了技能，也丢了「现在到底什么状况」的实时理解。这就是两本账：<strong>第一本是「有 AI 时你多能干」</strong>，天天在涨，是你和老板都盯着的 KPI；<strong>第二本是「AI 撤了之后你还剩多少」</strong>，从不出现在任何仪表盘上，却决定了 AI 宕机、给你一个超范围任务、或它给出看似合理实则错误的答案时——你能不能兜住。</p>
 <div class="diagram">
-<svg viewBox="0 0 680 330" xmlns="http://www.w3.org/2000/svg" role="img" style="width:100%;height:auto" font-family="-apple-system,sans-serif">
-  <text x="340" y="24" fill="#00d4ff" font-size="14" font-weight="700" text-anchor="middle">两本账随时间背离（你只看得到上面那条）</text>
-  <line x1="70" y1="270" x2="640" y2="270" stroke="#3a3e58" stroke-width="1.5"/>
-  <line x1="70" y1="270" x2="70" y2="50" stroke="#3a3e58" stroke-width="1.5"/>
-  <text x="355" y="306" fill="#a0a4b8" font-size="12" text-anchor="middle">时间 · AI 协作越用越深 →</text>
-  <text x="42" y="160" fill="#a0a4b8" font-size="12" text-anchor="middle" transform="rotate(-90 42 160)">表现</text>
-  <!-- ledger 1: assisted, rising -->
-  <path d="M90,200 Q360,120 630,80" fill="none" stroke="#00d4ff" stroke-width="2.5"/>
-  <circle cx="630" cy="80" r="4" fill="#00d4ff"/>
-  <text x="500" y="105" fill="#00d4ff" font-size="12" text-anchor="middle">① 在场增益（AI 在手）· KPI 在涨</text>
-  <!-- ledger 2: unassisted, declining -->
-  <path d="M90,205 Q360,240 630,255" fill="none" stroke="#ff6ec4" stroke-width="2.5" stroke-dasharray="6,5"/>
-  <circle cx="630" cy="255" r="4" fill="#ff6ec4"/>
-  <text x="495" y="240" fill="#ff6ec4" font-size="12" text-anchor="middle">② 撤后表现（AI 失效）· 无人测量</text>
-  <!-- gap arrow -->
-  <line x1="630" y1="88" x2="630" y2="247" stroke="#ffd166" stroke-width="1" stroke-dasharray="3,3"/>
-  <text x="612" y="175" fill="#ffd166" font-size="11" text-anchor="end">脱环鸿沟</text>
-  <text x="355" y="324" fill="#6a6e88" font-size="10.5" text-anchor="middle">灾难不在①里发生——在 AI 撤离、只有②算数的那一刻</text>
+<svg font-family="-apple-system,sans-serif" role="img" style="width:100%;height:auto" viewbox="0 0 680 330" xmlns="http://www.w3.org/2000/svg">
+<text fill="#00d4ff" font-size="14" font-weight="700" text-anchor="middle" x="340" y="24">两本账随时间背离（你只看得到上面那条）</text>
+<line stroke="#3a3e58" stroke-width="1.5" x1="70" x2="640" y1="270" y2="270"></line>
+<line stroke="#3a3e58" stroke-width="1.5" x1="70" x2="70" y1="270" y2="50"></line>
+<text fill="#a0a4b8" font-size="12" text-anchor="middle" x="355" y="306">时间 · AI 协作越用越深 →</text>
+<text fill="#a0a4b8" font-size="12" text-anchor="middle" transform="rotate(-90 42 160)" x="42" y="160">表现</text>
+<!-- ledger 1: assisted, rising -->
+<path d="M90,200 Q360,120 630,80" fill="none" stroke="#00d4ff" stroke-width="2.5"></path>
+<circle cx="630" cy="80" fill="#00d4ff" r="4"></circle>
+<text fill="#00d4ff" font-size="12" text-anchor="middle" x="500" y="105">① 在场增益（AI 在手）· KPI 在涨</text>
+<!-- ledger 2: unassisted, declining -->
+<path d="M90,205 Q360,240 630,255" fill="none" stroke="#ff6ec4" stroke-dasharray="6,5" stroke-width="2.5"></path>
+<circle cx="630" cy="255" fill="#ff6ec4" r="4"></circle>
+<text fill="#ff6ec4" font-size="12" text-anchor="middle" x="495" y="240">② 撤后表现（AI 失效）· 无人测量</text>
+<!-- gap arrow -->
+<line stroke="#ffd166" stroke-dasharray="3,3" stroke-width="1" x1="630" x2="630" y1="88" y2="247"></line>
+<text fill="#ffd166" font-size="11" text-anchor="end" x="612" y="175">脱环鸿沟</text>
+<text fill="#6a6e88" font-size="10.5" text-anchor="middle" x="355" y="324">灾难不在①里发生——在 AI 撤离、只有②算数的那一刻</text>
 </svg>
 </div>
-
-<h3>实战示例</h3>
+<h3 data-tts="ec21b5e2597c6c50">实战示例</h3>
 <pre><code><span class="tag-com"># 给自己排一个「AI 宕机日」来读第二本账</span>
 今天：核心任务全程不开 AI，只记两件事——
   1. 卡壳点：哪一步以前顺手、现在要停下来想？   <span class="tag-com"># 这就是退化信号</span>
@@ -142,22 +131,17 @@ skill                 外包给AI程度   Arthur类别        风险
 <span class="tag-com"># 变体：接一个「超 AI 能力范围」的任务，看你能不能独立兜住</span>
 <span class="tag-com"># 记的不是分数，是「哪些判断我已经不敢自己下了」</span></code></pre>
 <p>这不是自我惩罚，是<strong>给第二本账装一次量表</strong>。你不测，它就永远是 0——直到某天被现实强行结账。</p>
-
 <div class="fail"><strong>失败模式</strong>：① 拿第一本账（有 AI 时的产出）证明「我没退化」——这恰恰是脱环问题的核心错觉；② 「宕机日」还是偷偷开 AI 查一下——那就没撤环，量表作废；③ 把撤后的卡顿归因为「今天状态差」，而不认它是退化信号。</div>
-
-<div class="res"><strong>进阶资源</strong> · Endsley & Kiris <em>The Out-of-the-Loop Performance Problem and Level of Control in Automation</em>, <a href="https://journals.sagepub.com/doi/10.1518/001872095779064555" target="_blank">Human Factors 1995</a></div>
+<div class="res"><strong>进阶资源</strong> · Endsley &amp; Kiris <em>The Out-of-the-Loop Performance Problem and Level of Control in Automation</em>, <a href="https://journals.sagepub.com/doi/10.1518/001872095779064555" target="_blank">Human Factors 1995</a></div>
 </div>
-
 <!-- ============ 3 ============ -->
 <div class="section">
 <span class="num">// 03</span>
-<h2>处方设计：定期手动剂量 + 亲历失效演习 + 个人问责</h2>
+<h2 data-tts="1e39677ea591d6f8">处方设计：定期手动剂量 + 亲历失效演习 + 个人问责</h2>
 <div class="claim">论断：口头叮嘱「AI 会出错，要小心」几乎无效；只有亲手做、亲历它炸、并对结果负责，才真的把技能焊回身上。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="0bbfd6c50176c727">背景与原理</h3>
 <p>航空业早给出了处方，也踩过坑。FAA 2013 年的 <strong>SAFO 13002</strong> 直说：持续用自动驾驶<em>不会</em>强化手飞技能，反而退化「快速从异常状态改出」的能力，因此要求航司主动创造手飞机会。把它翻译成个人处方，三味药缺一不可：<strong>① 定期不带 AI 完成核心任务</strong>（对应「手飞」，把陡峭衰减区的判断技能拿回来练）；<strong>② 亲历 AI 失效的演习</strong>——不是听一句「AI 有幻觉」，而是真的被它一本正经的错误答案坑一次、亲手 debug 出来。航空培训反复验证：<em>口头简报和泛泛的通识课几乎不迁移，唯有亲历性/惊吓性场景训练才留得住</em>；<strong>③ 对结果的个人问责</strong>——是你签字发布，不是「AI 写的」。这三味药共同对冲 Day 53 的<strong>生成-验证倒置</strong>：干活模式让 AI 生成、你验证；保鲜必须切回学习模式——你生成、AI 验证。</p>
-
-<h3>实战示例</h3>
+<h3 data-tts="f29c1c4ce54c31bf">实战示例</h3>
 <pre><code><span class="tag-com"># 个人手动剂量处方（贴在周计划里）</span>
 [ ] 手动剂量：每周挑 1 个核心任务全程不用 AI 亲手做
       → 选「高危」技能（架构/边界推演），不选查语法
@@ -167,22 +151,17 @@ skill                 外包给AI程度   Arthur类别        风险
       发布前你能逐行讲清「为什么这样对」
 <span class="tag-com"># 学习模式切换：核心技能 = 你生成/AI验证（对冲生成-验证倒置）</span></code></pre>
 <p>注意第一味药的<strong>选材</strong>：手动剂量要花在第 1 点盘出的高危技能上。把宝贵的「无 AI 时间」浪费在查语法这种低危技能上，是最常见的假勤奋。</p>
-
 <div class="fail"><strong>失败模式</strong>：① 用「我知道 AI 会错」代替「我亲手被 AI 坑过并 debug 出来」——前者是通识课，实测不迁移；② 手动剂量选在低危技能上刷存在感；③ 嘴上说学习模式，一卡壳立刻切回让 AI 生成——等于没切。</div>
-
 <div class="res"><strong>进阶资源</strong> · FAA <em>SAFO 13002: Manual Flight Operations</em>, <a href="https://www.faa.gov/sites/faa.gov/files/other_visit/aviation_industry/airline_operators/airline_safety/SAFO13002.pdf" target="_blank">FAA 2013</a> · 本站 <a href="learning-guardrails-day53.html">Day 53 学习护栏</a>（生成-验证倒置）</div>
 </div>
-
 <!-- ============ 4 ============ -->
 <div class="section">
 <span class="num">// 04</span>
-<h2>最硬的教训：开处方没用，要核查剂量真的发生</h2>
+<h2 data-tts="b17d1d2a3f7ec2a0">最硬的教训：开处方没用，要核查剂量真的发生</h2>
 <div class="claim">论断：航空监管发了处方、技能照样退化——因为没人核查飞行员真去手飞了。个人保鲜同理：意图不算剂量，发生了才算。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="60a235de6cda04c9">背景与原理</h3>
 <p>这是全篇最反直觉、也最值钱的一课。SAFO 13002 发出去并没有解决问题：美国交通部监察长办公室（DOT OIG）2016 年那份飞行甲板自动化审计发现，<strong>航司并没有确保飞行员真的获得并使用了手飞机会</strong>——处方开了，剂量没落地，技能继续退化。原因很朴素：手飞更累、更慢、当场更容易出小差错，在「准点率」这类第一本账的 KPI 压力下，飞行员和航司都会本能退回自动驾驶。<strong>光靠意图和意志力维持正确行为，是所有保鲜处方失败的共同方式。</strong>解法是把「核查」从人换成流程（Day 54 的 oracle 盘点、Day 55 的「固化成默认而非靠每天坚持」）：<strong>给手动剂量装一个独立于你意志的记录与核查</strong>，让「这周的剂量到底发生了没有」变成可查的事实，而不是一句自我感觉。</p>
-
-<h3>实战示例</h3>
+<h3 data-tts="0de2bcfd3fac2d66">实战示例</h3>
 <pre><code><span class="tag-com"># 给手动剂量装「剂量核查」——意图 → 可查事实</span>
 [ ] 记录发生：手动剂量任务打 tag（git commit / 日志），
       月底能数出「无 AI 完成了几个核心任务」
@@ -192,33 +171,28 @@ skill                 外包给AI程度   Arthur类别        风险
       别指望临时想起——轻剂量+断续=处方失效的标准死法
 <span class="tag-com"># 核查的是「剂量真发生了」，不是「我打算做」</span></code></pre>
 <p>核心就一句：<strong>开处方是意图，核查是事实。</strong>技能保鲜栽的跟头，几乎从不是「不知道该手动」，而是「以为手动了，其实没有」。</p>
-
 <div class="fail"><strong>失败模式</strong>：① 把「我打算每周手动一次」当成已经在做——意图不是剂量；② 用主观「手感」替代客观量表，自评永远偏乐观（脱环鸿沟你本来就看不到）；③ 靠意志力硬扛而不固化成流程默认，两三周后在 KPI 压力下悄悄退回全自动。</div>
-
 <div class="res"><strong>进阶资源</strong> · DOT OIG <em>Enhanced FAA Oversight Could Reduce Hazards Associated With Increased Use of Flight Deck Automation</em>, <a href="https://www.oig.dot.gov/sites/default/files/FAA%20Flight%20Decek%20Automation_Final%20Report%5E1-7-16.pdf" target="_blank">DOT OIG 2016</a> · 本站 <a href="oracle-inventory-day54.html">Day 54 oracle 盘点</a></div>
 </div>
-
 <!-- ============ Checklist ============ -->
 <div class="combo">
-<h3>// 一页处方卡</h3>
+<h3 data-tts="d68ebe2d79545149">// 一页处方卡</h3>
 <p><strong>① 剂量规律</strong>——退化随停用时间单调加深（Arthur 1998，一年掉逾 1 个标准差），认知/判断类比体力类掉更快；先盘点，手动剂量押在「外包深 + 衰减陡」的高危技能上。</p>
 <p><strong>② 两本账</strong>——在场增益（AI 在手，天天涨）掩盖撤后退化（AI 失效，无人测）；排「AI 宕机日」主动读第二本账，脱环鸿沟不测就是 0。</p>
 <p><strong>③ 三味药</strong>——定期无 AI 做核心任务 + 亲历 AI 失效（亲历 &gt; 被告知）+ 个人问责；核心技能切回「你生成/AI 验证」。</p>
 <p><strong>④ 核查剂量</strong>——SAFO 发了、技能照退，因为没核查落地（DOT OIG 2016）。意图不算剂量，装独立记录 + 固化成流程默认。</p>
 </div>
-
 <!-- ============ Thinking ============ -->
 <div class="thinking">
-<h3>// 深入思考</h3>
+<h3 data-tts="f6ea961052fe0795">// 深入思考</h3>
 <details><summary>如果 AI 只会越来越强、几乎不宕机，第二本账（撤后表现）还值得花代价维护吗？</summary><div>值得，但理由不是「怕它宕机」。第二本账真正兜的是三种日常场景：一是 AI 给出<em>看似合理实则错误</em>的答案，你要有独立判断力才拦得住——这正是 Day 53 的验证瓶颈，而验证能力本身就会退化；二是<em>超出 AI 当前能力</em>的新问题，前沿从来人先蹚；三是<em>问题定义和品味</em>，AI 能优化你给的目标，给错目标它会高效地把你带沟里。AI 越强，纯执行的价值越低，「判断该让它做什么、验收它做得对不对」的价值越高——那恰恰是最陡衰减区的技能。维护第二本账不是怀旧，是把自己留在杠杆更高的那端。</div></details>
 <details><summary>手动剂量（无 AI 练习）和「用 AI 高效产出」是不是零和？花在手动上的时间就是纯损失？</summary><div>短期像零和，长期是投资。关键在<strong>分流</strong>（第 1 点）：低危技能——查语法、写样板、格式化——全外包，一分钟手动都别浪费，这里纯赚效率。手动剂量只押在高危技能上，且剂量不需大：Arthur 曲线是「停用越久掉越多」，含义是<em>少量但规律</em>的再练就能把你留在平缓段，成本远低于退化到 −1.4 后从头补。真正的零和陷阱是反的——把无 AI 时间浪费在低危技能上刷勤奋感，高危技能却全程外包。所以不是「要不要手动」，是「把稀缺的手动预算花在哪」。</div></details>
 <details><summary>为什么「亲历 AI 失效」比「被告知 AI 会出错」有效这么多？道理谁都懂，为什么还是拦不住人踩坑？</summary><div>因为「懂」和「装进条件反射」是两码事。被告知是<em>陈述性知识</em>（你能背出「AI 有幻觉」），亲历建立的是<em>程序性警觉</em>（看到某类输出，你身体先起疑）——航空培训反复发现，泛泛的通识简报几乎不迁移到真实高压场景，唯有亲历性、甚至带点惊吓的演练才留得住。这和 Day 55 的检索练习同构：光重读不长记忆，费劲取出才长。落到工程上：别指望一句「注意核对 AI 输出」能改变行为，要制造一次让你<em>真的被坑并亲手 debug 出来</em>的经历——那个「原来它能这么自信地错」的震动，比一百次口头提醒都管用。</div></details>
 <details><summary>这套「手动剂量」处方，和 Day 55 三个学习开关、Day 53 学习护栏是什么关系？会不会重复？</summary><div>是一条链的三段，不重复。Day 53 回答「谁先生成」，Day 55 回答「生成动作怎么排」（检索、间隔、交错三开关），Day 59 回答的是<em>触发与核查</em>：在 AI 已能替你干活的默认态下，<strong>你凭什么、多久、对哪些技能主动切回学习模式，以及怎么确认你真切了</strong>。前两期偏「怎么学」，这一期偏「在不学也能交活的诱惑下，怎么逼自己还去学」。</div></details>
 </div>
-
 <!-- ============ Glossary ============ -->
 <div class="glossary">
-<h3>// 术语表</h3>
+<h3 data-tts="7f9a1873b555748f">// 术语表</h3>
 <dl>
 <dt>skill decay（技能衰退）</dt><dd>训练后因停用而损失技能；损失随停用间隔单调加深（Arthur 1998：一年后约 −1.4 个标准差）。</dd>
 <dt>nonuse / retention interval（停用间隔）</dt><dd>停止练习到再次施展之间的时长——技能衰退的头号预测变量。间隔越长，掉得越多。</dd>
@@ -229,23 +203,21 @@ skill                 外包给AI程度   Arthur类别        风险
 <dt>generation-verification inversion（生成-验证倒置）</dt><dd>Day 53：干活模式让 AI 生成、你验证；保鲜/学习必须倒过来——你生成、AI 验证。</dd>
 </dl>
 </div>
-
 <!-- ============ Refs ============ -->
 <div class="refs">
-<h3>// 延伸阅读</h3>
+<h3 data-tts="ac6f1399febea034">// 延伸阅读</h3>
 <ul>
-<li><a href="https://gwern.net/doc/psychology/spaced-repetition/1998-arthur.pdf" target="_blank">Arthur, Bennett, Stanush & McNelly · Factors That Influence Skill Decay and Retention（Human Performance 1998）</a> — 技能衰退元分析，停用一年约 −1.4 SD，认知/精度类掉得更快</li>
-<li><a href="https://journals.sagepub.com/doi/10.1518/001872095779064555" target="_blank">Endsley & Kiris · The Out-of-the-Loop Performance Problem and Level of Control in Automation（Human Factors 1995）</a> — 全自动化后接管更慢、情境觉知更低</li>
+<li><a href="https://gwern.net/doc/psychology/spaced-repetition/1998-arthur.pdf" target="_blank">Arthur, Bennett, Stanush &amp; McNelly · Factors That Influence Skill Decay and Retention（Human Performance 1998）</a> — 技能衰退元分析，停用一年约 −1.4 SD，认知/精度类掉得更快</li>
+<li><a href="https://journals.sagepub.com/doi/10.1518/001872095779064555" target="_blank">Endsley &amp; Kiris · The Out-of-the-Loop Performance Problem and Level of Control in Automation（Human Factors 1995）</a> — 全自动化后接管更慢、情境觉知更低</li>
 <li><a href="https://www.faa.gov/sites/faa.gov/files/other_visit/aviation_industry/airline_operators/airline_safety/SAFO13002.pdf" target="_blank">FAA · SAFO 13002: Manual Flight Operations（2013）</a> — 持续自动驾驶退化手飞技能，要求主动创造手飞机会</li>
 <li><a href="https://www.oig.dot.gov/sites/default/files/FAA%20Flight%20Decek%20Automation_Final%20Report%5E1-7-16.pdf" target="_blank">DOT OIG · Enhanced FAA Oversight Could Reduce Hazards Associated With Increased Use of Flight Deck Automation（2016）</a> — 处方发了却没核查落地，技能继续退化</li>
 <li><a href="learning-guardrails-day53.html">本站 Day 53 · 用 AI 学习的护栏工程</a> — 生成-验证倒置、学习模式 vs 干活模式</li>
 </ul>
 </div>
-
 <footer>BigCat · Super Individual · Day 59 · 2026-07-21</footer>
 </div>
-<script src="https://hub.cissychen.com/comments.js" defer></script>
-<script src="https://hub.cissychen.com/search.js" defer></script>
-<script src="https://hub.cissychen.com/index-button.js" defer></script>
-<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
 </body></html>

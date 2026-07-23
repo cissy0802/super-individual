@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<html lang="zh-CN"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Day 58 · Durable Agent Execution — Super Individual</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -48,30 +49,25 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
 </style></head><body>
 <div class="container">
-
 <header>
 <span class="week-tag">DAY 58 · ENGINEERING</span>
-<h1>Durable Agent Execution</h1>
-<h2>Replay Journal · Exactly-Once Side Effects · Determinism Boundary · Durable Suspend</h2>
+<h1 data-tts="f0fc2727a8fffb92">Durable Agent Execution</h1>
+<h2 data-tts="06c407b214568159">Replay Journal · Exactly-Once Side Effects · Determinism Boundary · Durable Suspend</h2>
 <div class="date">2026-07-11 · BigCat</div>
 <p class="pitch">Agent 崩了不该从头再跑一遍——让它从崩溃的那一步接着走。</p>
 </header>
-
 <div class="intro">
-<h3>// WHY THIS MATTERS</h3>
+<h3 data-tts="84e333fabe7893d9">// WHY THIS MATTERS</h3>
 <p>你写的 agent 跑了 8 分钟、调了 12 次工具、烧了几万 token，第 13 步进程被 OOM 杀了——然后呢？多数人的 harness 答案是「整个从头再来」，包括那些已经成功、已经付过钱、已经发过邮件的步骤。这在 demo 里无所谓，在生产里是灾难。Agent 的执行时间从<strong>秒级涨到分钟甚至小时级</strong>,每一步都可能撞上 rate limit、网络抖动、worker 重启,「进程内的 while 循环」这种执行模型根本扛不住。答案叫 <strong>durable execution</strong>:把 agentic loop 从内存里的循环,变成一条可重放的日志。这一期讲四件事——durable execution 的机制、为什么 checkpoint 快照还不够、副作用怎么做到 exactly-once、以及 replay 确定性怎么和 LLM 的非确定性和解。这是把 Day 39(错误恢复)从「retry 单步」升级到「整条 agent 存活」的那一层。</p>
 </div>
-
 <!-- ============ 1 ============ -->
 <div class="section">
 <span class="num">// 01</span>
-<h2>Durable Execution:把 agentic loop 跑成可重放的日志</h2>
+<h2 data-tts="2fd173a4fce00c77">Durable Execution:把 agentic loop 跑成可重放的日志</h2>
 <div class="claim">论断:durable execution 不是「更强的 retry」,是把整个 agent 的执行历史记成一条 journal,崩溃后 replay 回到断点——中间成功的步骤一步都不重跑。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="c80c25c763999206">背景与原理</h3>
 <p>普通 agent loop 的状态活在进程内存里:messages 数组、循环计数、局部变量。进程一死,全没了。Durable execution 引擎(<strong>Temporal / Restate / DBOS</strong>)换了个模型:你的 workflow 函数每执行一个「持久步骤」,引擎就把这一步的<strong>输入和输出写进一条 journal</strong>(event log)。进程崩溃后,引擎在新 worker 上<strong>重新运行同一个函数</strong>,但已经在 journal 里的步骤不再真正执行——直接把记录的返回值<em>replay</em> 回去,直到追上崩溃点,再继续往下跑。</p>
 <p>对 agent 这个模型是量身定做:LLM 调用又慢又贵(1–30 秒、真金白银),工具调用可能有副作用,任务动辄跨分钟。Temporal 每个持久步骤只加约 <strong>10–50ms</strong> 开销——相对 LLM 调用可忽略,换来的是「worker 随便被杀,agent 都能从上一个成功步骤接着走」。DBOS 更轻,直接把 journal 存进你已有的 <strong>Postgres</strong>,一个 pip 包、不需要额外的 broker 或控制面。</p>
-
 <div class="diagram">     普通 loop(内存态)            Durable Execution(journal 态)
  ─────────────────────────    ───────────────────────────────────
    step1  ✓ (in RAM)            step1 ✓ ─┐
@@ -84,8 +80,7 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
    ❌ 已花的 token 全废            step2→replay   step3→replay
                                   step4→真正执行 ← 从这里继续
                                   ✅ 前 3 步零重跑</div>
-
-<h3>实战示例</h3>
+<h3 data-tts="fba2d7fe29ff405b">实战示例</h3>
 <p>DBOS 的写法最能看清「哪些是持久步骤」——<code>@DBOS.workflow</code> 是可重放的编排,<code>@DBOS.step</code> 是被 journal 记录的原子步骤:</p>
 <pre><code><span class="tag-key">from</span> dbos <span class="tag-key">import</span> DBOS
 
@@ -104,29 +99,24 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
         out = run_tool(...)              <span class="tag-com"># 崩在这里,重启后前面全部跳过</span>
         msgs += [...]</code></pre>
 <p>你几乎没改 agent 逻辑——只是给「昂贵/有副作用」的操作套上 step,给循环套上 workflow。执行语义就从「崩了全丢」变成「崩了续跑」。</p>
-
 <div class="fail">
 <strong>失败模式</strong>:把所有东西都塞进一个巨型 step(比如整个 loop),journal 粒度太粗——崩溃只能回到 loop 起点,等于没有 durable。粒度反过来太细(每个字符串拼接都 step)则 journal 爆炸、replay 变慢。正确粒度:<strong>每个昂贵或有副作用的边界</strong>(一次 LLM 调用、一次 tool 调用)一个 step。
 </div>
-
 <div class="res">
 <strong>进阶资源</strong> · Restate <em>What is Durable Execution</em>, <a href="https://www.restate.dev/what-is-durable-execution" target="_blank">restate.dev/what-is-durable-execution</a> ·
 DBOS <em>Why DBOS</em>, <a href="https://docs.dbos.dev/why-dbos" target="_blank">docs.dbos.dev/why-dbos</a> ·
 Temporal <em>Durable Execution meets AI</em>, <a href="https://temporal.io/blog/durable-execution-meets-ai-why-temporal-is-the-perfect-foundation-for-ai" target="_blank">temporal.io/blog</a>
 </div>
 </div>
-
 <!-- ============ 2 ============ -->
 <div class="section">
 <span class="num">// 02</span>
-<h2>Checkpoint ≠ Durable Execution:快照救不了「节点跑一半崩」</h2>
+<h2 data-tts="4af33d890582ac3e">Checkpoint ≠ Durable Execution:快照救不了「节点跑一半崩」</h2>
 <div class="claim">论断:LangGraph 的 checkpointer 存的是「节点之间」的状态快照,而不是「节点之内」的执行进度——一个节点跑到一半崩,整个节点会重头再跑一遍。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="2bcf9ccaea171103">背景与原理</h3>
 <p>很多人以为「我用了 LangGraph checkpointer / 存了 state 到 DB」就等于 durable。不是。Checkpoint 是在每个 <strong>super-step(节点边界)</strong>之后存一张状态快照;它给你的是记忆、human-in-the-loop、和<em>节点级</em>的容错。但崩溃的粒度是残酷的:如果一个节点内部先调了 LLM、又发了邮件,然后在第三行崩了——重启时<strong>整个节点从第一行重放</strong>,LLM 会重调、邮件会重发。Diagrid 那篇 <em>Checkpoints Are Not Durable Execution</em> 把这点说透了:快照记的是「到过哪些格子」,不是「格子里做过哪些不可撤销的动作」。</p>
 <p>LangGraph 自己暴露了三档 <code>durability</code> 来让你选权衡:<strong>exit</strong>(只在退出时落盘,最快,崩了不可恢复)、<strong>async</strong>(异步落盘,有小概率丢最后一步)、<strong>sync</strong>(每步同步落盘再继续,最慢但最稳)。选 sync 也只把恢复粒度做到<em>节点边界</em>,节点内的原子性仍然要你自己保证。这就是它和 Temporal/Restate 这类<em>步骤级 journal</em> 引擎的本质差距。</p>
-
-<h3>实战示例</h3>
+<h3 data-tts="f08161850f796c4b">实战示例</h3>
 <pre><code><span class="tag-com"># ❌ 危险:一个节点里塞了两个有副作用的动作</span>
 <span class="tag-key">def</span> node_book_trip(state):
     flight = charge_card(state)      <span class="tag-com"># 副作用 1:扣款成功</span>
@@ -140,28 +130,23 @@ graph.add_node(<span class="tag-gpt">"email"</span>,  email_node)
 app = graph.compile(checkpointer=saver, durability=<span class="tag-gpt">"sync"</span>)
 app.invoke(inp, config={<span class="tag-gpt">"configurable"</span>:{<span class="tag-gpt">"thread_id"</span>:uid}})</code></pre>
 <p>核心纪律:<strong>checkpoint 引擎里,「一个节点 = 一个可安全重放的单元」</strong>。把节点切到「最多含一个不可逆副作用」,快照边界才真正对齐了危险边界。要么就升级到步骤级 journal 的引擎(§03)。</p>
-
 <div class="fail">
 <strong>失败模式</strong>:用 <code>durability="exit"</code> 图省事,结果长任务中途崩溃后 thread 里啥都没有——因为它只在正常退出时才落盘。长时/高风险的 agent 至少要 async,涉及扣款/发信/写外部系统的一律 sync + 单副作用节点。
 </div>
-
 <div class="res">
 <strong>进阶资源</strong> · LangGraph <em>Persistence</em> 文档, <a href="https://docs.langchain.com/oss/python/langgraph/persistence" target="_blank">docs.langchain.com/.../persistence</a> ·
 Diagrid <em>Checkpoints Are Not Durable Execution</em>, <a href="https://www.diagrid.io/blog/checkpoints-are-not-durable-execution-why-langgraph-crewai-google-adk-and-others-fall-short-for-production-agent-workflows" target="_blank">diagrid.io/blog</a>
 </div>
 </div>
-
 <!-- ============ 3 ============ -->
 <div class="section">
 <span class="num">// 03</span>
-<h2>副作用的 Exactly-Once:LLM 和工具调用必须 journal 化 + 幂等</h2>
+<h2 data-tts="ca82925b60e909d8">副作用的 Exactly-Once:LLM 和工具调用必须 journal 化 + 幂等</h2>
 <div class="claim">论断:replay 的正确性建立在一条铁律上——<strong>已记录的步骤只重放数据,绝不重新执行</strong>;而引擎管不到的外部世界(付款 API、发邮件),得靠你自己加幂等键。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="daac8781bda8e0ac">背景与原理</h3>
 <p>durable execution 的「exactly-once」有个容易被误读的边界:引擎保证的是<strong>step 的返回值在 journal 里只被物化一次</strong>——重放时不会二次调用你的函数体。Restate 的 <code>ctx.run()</code>、Temporal 的 activity、DBOS 的 <code>@DBOS.step</code> 都是这个语义。但引擎无法阻止<em>被包裹的那次调用本身</em>对外部世界产生重复效果——如果你在 step <em>第一次</em>执行时就同时扣了两次款,journal 只会忠实记下这个结果。</p>
 <p>所以真正的工程纪律是两层:<strong>(1)把每个外部调用都包成一个 step/activity</strong>,让引擎负责「不重放执行」;<strong>(2)对非幂等的外部 API,在 step 内部再带上 idempotency key</strong>,让下游服务负责「重复请求去重」。Restate 甚至支持请求级 idempotency key 自动去重。LLM 调用虽然「无外部副作用」,也必须包成 step——否则 replay 时会重新烧一次 token,贵得毫无必要。</p>
-
-<h3>实战示例</h3>
+<h3 data-tts="1e123ce7df7a081f">实战示例</h3>
 <pre><code><span class="tag-com"># 幂等键 = workflow 内稳定可复现的 ID(不能用随机数/时间戳!)</span>
 <span class="tag-claude">@DBOS.step</span>()
 <span class="tag-key">def</span> charge(user, amount, idem_key):
@@ -176,27 +161,22 @@ Diagrid <em>Checkpoints Are Not Durable Execution</em>, <a href="https://www.dia
     charge(user, cart.total, key)      <span class="tag-com"># 崩溃重放:step 已记录 → 不再执行</span>
     send_receipt(user)                 <span class="tag-com"># 若在此崩,charge 不会二次触发</span></code></pre>
 <p>关键在幂等键的<strong>来源</strong>:它必须从 workflow 的持久身份(workflow_id + 步骤序号)派生,这样每次 replay 算出来的 key 都一样。用 <code>uuid4()</code> 或时间戳当 key 是最经典的坑——每次重放生成新 key,下游认不出是同一笔,去重失效。</p>
-
 <div class="fail">
 <strong>失败模式</strong>:给 tool 结果做缓存却忘了 LLM 输出不确定——把「读文件」这种确定性 tool 和「问模型」这种非确定性调用用同一套 memoization 逻辑处理。读文件重放拿旧值没问题;但如果业务依赖「每次都问最新模型」,就不该无脑 replay 缓存值,得显式标记该 step 为可重算。分清<strong>哪些 step 要 replay 记录值、哪些要重新执行</strong>,是设计时就要定的。
 </div>
-
 <div class="res">
 <strong>进阶资源</strong> · Restate <em>Durable AI Loops</em>, <a href="https://www.restate.dev/blog/durable-ai-loops-fault-tolerance-across-frameworks-and-without-handcuffs" target="_blank">restate.dev/blog/durable-ai-loops</a> ·
 Restate AI examples(agents/A2A/MCP), <a href="https://github.com/restatedev/ai-examples" target="_blank">github.com/restatedev/ai-examples</a>
 </div>
 </div>
-
 <!-- ============ 4 ============ -->
 <div class="section">
 <span class="num">// 04</span>
-<h2>Replay 确定性 vs LLM 非确定性:把不确定赶进 activity</h2>
+<h2 data-tts="9657d33cc4443068">Replay 确定性 vs LLM 非确定性:把不确定赶进 activity</h2>
 <div class="claim">论断:durable execution 要求 workflow 代码<strong>确定性可重放</strong>,而 LLM、随机、时钟、网络天生不确定——解法是把所有不确定性挤出 workflow 主体,关进被 journal 记录的 step 里。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="dafe3906a6499947">背景与原理</h3>
 <p>replay 能工作的前提是:重新运行 workflow 函数时,它的控制流走得和第一次<strong>逐字节一致</strong>——否则重放到一半,代码走到了 journal 里不存在的分支,引擎就懵了。这要求 workflow 主体里<strong>不能直接出现</strong>:随机数、<code>now()</code>/时钟、直接的网络/文件 IO、以及……直接 LLM 调用。这些都是「不确定源」。这正好和 Day 56 讲的采样确定性是<em>两种不同的确定性</em>:那期讲「同 prompt 同输出」,这里讲「同函数重放走同一条路」。</p>
 <p>解法统一而优雅:<strong>把每一个不确定源都包进一个 step/activity</strong>。第一次执行时它真跑、结果进 journal;replay 时它不跑、直接吐 journal 里的旧值——于是从 workflow 的视角看,连「掷骰子」都变成了确定的。LLM 的非确定输出被这一层「冻结」进日志,workflow 主体就重新变回一个纯粹、可重放的状态机。这也顺带解锁了 durable execution 最杀的一个能力:<strong>长时暂停</strong>——用 durable timer + signal,agent 可以「睡」几天等人审批,期间不占任何常驻进程,审批信号一到就从睡点唤醒续跑。</p>
-
 <div class="diagram">   WORKFLOW 主体(必须确定、可重放)
    ┌───────────────────────────────────────────┐
    │  plan → decide → loop → ...                │  ← 只有纯逻辑/控制流
@@ -210,8 +190,7 @@ Restate AI examples(agents/A2A/MCP), <a href="https://github.com/restatedev/ai-e
          ▼        ▼           ▼
      [不确定性全部被关进 step / 由 journal 冻结]
      replay 时:step 吐旧值,timer 立即到期 → 主体走同一条路</div>
-
-<h3>实战示例</h3>
+<h3 data-tts="70866219de95f286">实战示例</h3>
 <pre><code><span class="tag-com"># Temporal 风格:workflow 确定,不确定性走 activity</span>
 <span class="tag-claude">@workflow.defn</span>
 <span class="tag-key">class</span> ApprovalAgent:
@@ -229,20 +208,17 @@ Restate AI examples(agents/A2A/MCP), <a href="https://github.com/restatedev/ai-e
         <span class="tag-key">if</span> self._approved:
             <span class="tag-key">await</span> workflow.execute_activity(apply_plan, plan, ...)</code></pre>
 <p>注意 <code>call_llm</code> 从不在 workflow 体里直接调——它永远是个 activity。<code>wait_condition</code> + signal 让 agent 挂起数天而不烧一分钱算力,这是「异步人审批队列」(Day 34)最干净的落地方式。</p>
-
 <div class="fail">
 <strong>失败模式</strong>:在 workflow 主体里写 <code>if random() &gt; 0.5</code> 或 <code>datetime.now()</code> 做分支——replay 时值变了,控制流分叉,引擎报 non-determinism error 直接崩。同理:workflow 里 <code>import requests</code> 直接发请求、或用会随版本变化的库做核心分支,都会破坏可重放性。铁律:<strong>workflow 体只碰纯逻辑,一切副作用与不确定性下沉到 step/activity。</strong>
 </div>
-
 <div class="res">
 <strong>进阶资源</strong> · Jack Vanlightly <em>Demystifying Determinism in Durable Execution</em>, <a href="https://jack-vanlightly.com/blog/2025/11/24/demystifying-determinism-in-durable-execution" target="_blank">jack-vanlightly.com</a> ·
 Temporal <em>Of course you can build dynamic AI agents</em>, <a href="https://temporal.io/blog/of-course-you-can-build-dynamic-ai-agents-with-temporal" target="_blank">temporal.io/blog</a>
 </div>
 </div>
-
 <!-- ============ Combo ============ -->
 <div class="combo">
-<h3>// 综合实战 · 给你的长时 agent 装上「断点续跑」</h3>
+<h3 data-tts="86273abcd5951c31">// 综合实战 · 给你的长时 agent 装上「断点续跑」</h3>
 <p>把这一期串成一个可验证的小工程:拿你现有的任意 agent loop,给它加上 durable 执行,并<strong>亲手 kill 进程验证它真能续跑</strong>。</p>
 <ol style="margin-left:20px;margin-top:10px">
 <li><strong>选引擎</strong>:已有 Postgres → DBOS(最轻,pip 装);要跨语言/复杂编排 → Temporal;要贴着现有框架 → Restate。别一上来就上最重的。</li>
@@ -254,10 +230,9 @@ Temporal <em>Of course you can build dynamic AI agents</em>, <a href="https://te
 </ol>
 <p style="margin-top:12px">做完你会得到一个反直觉的体感:durable execution 几乎没改你的 agent 逻辑,却把「demo 级可靠性」变成了「生产级可靠性」——差别全在执行底座,不在 prompt。</p>
 </div>
-
 <!-- ============ Glossary ============ -->
 <div class="glossary">
-<h3>// ENGLISH GLOSSARY</h3>
+<h3 data-tts="1bb723cbad97ebca">// ENGLISH GLOSSARY</h3>
 <dl>
 <dt>Durable Execution</dt><dd>把程序执行历史记成可持久 journal、崩溃后 replay 续跑的编程范式。Temporal/Restate/DBOS 的核心。</dd>
 <dt>Journal / Event Log</dt><dd>记录每个持久步骤输入输出的日志;replay 的数据源。</dd>
@@ -271,7 +246,6 @@ Temporal <em>Of course you can build dynamic AI agents</em>, <a href="https://te
 <dt>Durable Timer / Signal</dt><dd>让 agent 挂起数天等外部事件、零常驻进程唤醒续跑的原语。</dd>
 </dl>
 </div>
-
 <!-- ============ Deep Thinking ============ -->
 <div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
 <style>
@@ -286,17 +260,16 @@ Temporal <em>Of course you can build dynamic AI agents</em>, <a href="https://te
 .thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
 .thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
 </style>
-<h3>// 深入思考</h3>
+<h3 data-tts="156fdb6063650bbe">// 深入思考</h3>
 <details><summary>replay 会重放旧的 LLM 输出。但如果我就是想让 agent 崩溃后「用最新模型重新想一遍」,而不是重放旧答案,该怎么办?</summary><div>这触到了 durable execution 的一个设计张力:replay 默认冻结历史,而你有时想要「fresh」。解法是显式区分 step 的语义。多数引擎允许你把某个调用标记为「不进 journal / 每次重算」(non-durable / local),或者用版本化 activity:旧 journal 的 step 保持旧值,只有新触发的才走新模型。更常见的做法是「不在同一 workflow 内换脑」——重来一遍想法应该是一个<strong>新 workflow 实例</strong>,而不是同一实例的 replay。混淆「恢复执行」和「重新决策」是设计事故的根源:前者要一致,后者要新鲜,不该共用一条路径。</div></details>
 <details><summary>durable execution 要求 workflow 确定可重放,可 agent 的本质就是让 LLM 动态决定下一步。这两者不矛盾吗?</summary><div>不矛盾,因为「谁不确定」被精确切开了。LLM 的<em>决策</em>确实不确定——但那次决策一旦发生,它的输出就被 activity 冻进 journal,成了一个确定的值。workflow 主体只是「拿着这个已确定的决策值走 if/else」,而 if/else 本身是确定的。换句话说:非确定性发生在 activity 边界<em>内</em>,workflow 看到的永远是已经坍缩过的结果。Temporal 那篇《Of course you can build dynamic AI agents》就是在反驳「durable = 只能静态 DAG」的误解:动态 agent 完全能跑在 durable 引擎上,只要不确定性都下沉到 activity。</div></details>
 <details><summary>什么时候「不」该上 durable execution?它的成本在哪?</summary><div>三种情况别上:(1)任务是<strong>秒级、无副作用、可无脑重试</strong>的——加 journal 只是徒增复杂度和一个数据库依赖;(2)团队还没把 agent 逻辑跑通,过早上 Temporal 会让调试更难(多了 worker/journal 心智负担);(3)副作用本身天然幂等或可无损重放(纯读)。成本主要是:每步的持久化开销与延迟、一套要运维的引擎/DB、以及「workflow 必须确定」带来的写码约束(不能随手 <code>now()</code>)。判据和 Day 03 的 workflow-vs-agent 一样:<strong>能用简单的就别上重的</strong>,直到「崩溃丢进度」真的开始疼。</div></details>
 <details><summary>Checkpoint(LangGraph)和步骤级 journal(Temporal)之间,有没有中间地带?怎么选?</summary><div>有,而且实践里常混用。选择轴是「副作用密度 × 任务时长 × 团队运维能力」。纯对话/短 RAG agent:LangGraph checkpointer 足够,还自带 time-travel 调试和 human-in-the-loop。一旦出现<strong>跨系统写、扣款、多天挂起、严格 exactly-once</strong>,就该上步骤级 journal 引擎。中间地带:用 LangGraph 写 agent 逻辑,但把它整个作为一个 activity 跑在 Temporal 里(近来 ZenML/AppScale 都在推这种组合)——LangGraph 管图内编排,Temporal 管跨图的持久与重试。不必二选一。</div></details>
 <details><summary>幂等键必须从 workflow 身份派生。可如果 agent 动态决定「同一个工具调用 10 次」,每次的 key 怎么保证既稳定又互不相同?</summary><div>关键洞察:幂等键要绑的不是「调用内容」而是「调用在 journal 中的位置」。引擎给每个 step 一个确定递增的序号(step_id),replay 时序号复现一致。所以 key = <code>workflow_id + step_id</code>(或 + 一个稳定的循环下标),天然满足「同一次调用 replay 时 key 不变、不同次调用 key 不同」。千万别用调用<em>内容</em>做 key——内容相同的两次故意重复调用(比如轮询)会被错误去重成一次。这也是为什么幂等键该由引擎/框架派生,而不是你手写:手写极易在「稳定」和「唯一」之间顾此失彼。</div></details>
 </div>
-
 <!-- ============ Refs ============ -->
 <div class="refs">
-<h3>// 延伸阅读</h3>
+<h3 data-tts="4eaa3e9f3df0afaf">// 延伸阅读</h3>
 <ul>
 <li><a href="https://www.restate.dev/what-is-durable-execution" target="_blank">Restate · What is Durable Execution</a> — journal + replay 机制的第一性讲解</li>
 <li><a href="https://www.diagrid.io/blog/checkpoints-are-not-durable-execution-why-langgraph-crewai-google-adk-and-others-fall-short-for-production-agent-workflows" target="_blank">Diagrid · Checkpoints Are Not Durable Execution</a> — 快照与真 durable 的差距</li>
@@ -305,11 +278,10 @@ Temporal <em>Of course you can build dynamic AI agents</em>, <a href="https://te
 <li><a href="https://jack-vanlightly.com/blog/2025/11/24/demystifying-determinism-in-durable-execution" target="_blank">Jack Vanlightly · Demystifying Determinism</a> — replay 确定性到底约束了什么</li>
 </ul>
 </div>
-
 <footer>BigCat · Super Individual · Day 58 · 2026-07-11</footer>
 </div>
-<script src="https://hub.cissychen.com/comments.js" defer></script>
-<script src="https://hub.cissychen.com/search.js" defer></script>
-<script src="https://hub.cissychen.com/index-button.js" defer></script>
-<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
 </body></html>

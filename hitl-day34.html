@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<html lang="zh-CN"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Day 34 · Human-in-the-Loop 工程 — Super Individual</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -46,30 +47,25 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
 </style></head><body>
 <div class="container">
-
 <header>
 <span class="week-tag">DAY 34 / PHASE 4 · HUMAN-IN-THE-LOOP</span>
-<h1>Human-in-the-Loop 工程</h1>
-<h2>置信度路由 · 异步审批 · 可中断恢复 · 审批审计</h2>
+<h1 data-tts="63082396b16e0933">Human-in-the-Loop 工程</h1>
+<h2 data-tts="46feec0d229ff64f">置信度路由 · 异步审批 · 可中断恢复 · 审批审计</h2>
 <div class="date">2026-06-15 · BigCat</div>
 <p class="pitch">真正的 HITL 不是「弹个框等你点 yes」，是让 agent 学会优雅地暂停、把决定权交还给你、再无缝接回去。</p>
 </header>
-
 <div class="intro">
-<h3>// WHY THIS MATTERS</h3>
+<h3 data-tts="7bd869dbd31dad6b">// WHY THIS MATTERS</h3>
 <p>Day 31 讲过「不可逆动作前加 human gate」——但那只是一行 <code>input()</code>。一旦 agent 跑在后台、跑几百轮、你不在终端前盯着，同步阻塞就崩了：agent 卡死等一个没人的终端；或者你嫌烦，干脆全 <code>auto</code>。生产级 HITL 不是一个对话框，是一套<strong>编排工程</strong>：agent 何时才值得打扰人（置信度路由）、怎么在不阻塞的前提下问（异步审批 + 状态持久化）、人怎么接管再交还（可中断 checkpoint）、这一切怎么留痕复盘（审批审计）。本期把 <code>require_human</code> 从一行 <code>input()</code>，升级成一个能在你睡觉时挂起、手机点一下就恢复的系统。<strong>HITL 的工程难点从来不是「要不要问人」，而是「问的时候 agent 怎么办」。</strong></p>
 </div>
-
 <!-- ============ 1 ============ -->
 <div class="section">
 <span class="num">// 01</span>
-<h2>置信度路由：决定「什么时候才值得打扰人」</h2>
+<h2 data-tts="c3fbdd0bd894b73a">置信度路由：决定「什么时候才值得打扰人」</h2>
 <div class="claim">论断：每个动作都问人 → 审批疲劳到全程盲点头；什么都不问 → 把不该自动的自动了。HITL 的第一道工程是<strong>路由</strong>，不是 gate。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="d7ab7c0209a7f090">背景与原理</h3>
 <p>Day 31 按「可逆性」分档（可逆放手、不可逆过人）。这里加第二个轴：<strong>置信度 × 影响</strong>。两轴交叉出三档——<code>auto</code>（高置信 + 低影响，放手）、<code>ask</code>（低置信 或 中高影响，问人）、<code>deny</code>（越权 / 超预算，直接拒，<strong>根本不进人的队列</strong>）。关键陷阱：<strong>置信度不能让模型自评</strong>——它系统性高估。用<strong>可验证的代理信号</strong>替代：检索命中数、工具是否报错、多次采样是否自洽（self-consistency）、输出是否吻合 schema。模型说「我有把握」不算数，证据说了算。</p>
-
-<h3>实战示例</h3>
+<h3 data-tts="cbeff537b19cd22a">实战示例</h3>
 <pre><code><span class="tag-key">def</span> confidence(ctx):                  <span class="tag-com"># 用可验证信号，不问模型「你多有把握」</span>
     sigs = [ctx.retrieval_hits &gt;= 2,
             <span class="tag-key">not</span> ctx.tool_errored,
@@ -84,25 +80,20 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
     <span class="tag-key">if</span> c &gt;= 0.8 <span class="tag-key">and</span> impact == <span class="tag-gpt">"low"</span>:  <span class="tag-key">return</span> <span class="tag-gpt">"auto"</span>
     <span class="tag-key">return</span> <span class="tag-gpt">"ask"</span>                          <span class="tag-com"># 低置信 或 中高影响 → 问人</span></code></pre>
 <p>核心 mental model：<strong>HITL 的成本是人的注意力</strong>，而注意力是会枯竭的稀缺资源。路由的目标不是「更安全」，是「把人的每一次介入都花在刀刃上」。</p>
-
 <div class="fail">
 <strong>失败模式</strong>：（1）置信度让模型自评——它在「想完成任务」的压力下高估，等于没路由。（2）阈值拍脑袋定死，从不回归（见 §4）。（3）把 <code>deny</code> 也丢进人的审批队列——越权动作根本不该出现在那里，混进来只会淹没真正需要判断的 <code>ask</code>。
 </div>
-
 <div class="res">
 <strong>进阶资源</strong> · Anthropic <em>Building Effective Agents</em>（人类监督与 agent-computer interface）, <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">anthropic.com/engineering/building-effective-agents</a>
 </div>
 </div>
-
 <!-- ============ 2 ============ -->
 <div class="section">
 <span class="num">// 02</span>
-<h2>异步审批：让 agent 暂停、通知、恢复</h2>
+<h2 data-tts="34e25ed8e4ff2030">异步审批：让 agent 暂停、通知、恢复</h2>
 <div class="claim">论断：<code>input()</code> 是同步阻塞——后台 agent 用它必死。生产 HITL 的核心是把「等人」从<strong>阻塞</strong>变成<strong>挂起 + 回调</strong>。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="a737acf411bd3ffc">背景与原理</h3>
 <p>agent 跑到 <code>ask</code> 档时，<code>input()</code> 会冻住整个 worker，干等一个可能几小时没人看的终端。正解是 <strong>durable execution</strong> 的思路：把当前状态 <strong>checkpoint 到进程外</strong>（不是留内存）→ 向审批通道（Slack / 手机推送 / 队列）发请求 → <strong>让出资源、退出</strong> → 人决定后通过 callback 或轮询，从 checkpoint <strong>接着跑</strong>。两条铁律：状态必须在进程外（进程挂了审批不丢）；resume 必须<strong>幂等</strong>（同一个 approval 被重放，动作不能执行两次）。再给每个审批挂 <strong>SLA 超时</strong>：挂太久 → 默认 deny 或升级，绝不无限等。</p>
-
 <div class="diagram">┌──────────────── 异步审批循环（不阻塞） ────────────────┐
 │  agent loop ──▶ route()==ask                            │
 │        │                                                 │
@@ -115,8 +106,7 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 │        ▼  ⑥ resume_from(checkpoint) 接着跑               │
 │  超时未决 ─▶ SLA 触发：默认 deny / 升级给备份审批人      │
 └──────────────────────────────────────────────────────────┘</div>
-
-<h3>实战示例</h3>
+<h3 data-tts="58c5b273da2f0881">实战示例</h3>
 <pre><code><span class="tag-key">async def</span> step(ctx):
     action = plan(ctx)
     <span class="tag-key">if</span> route(action, ctx) == <span class="tag-gpt">"ask"</span>:
@@ -130,27 +120,22 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
     mark_seen(aid); ctx = load_checkpoint(aid)
     <span class="tag-key">if</span> decision == <span class="tag-gpt">"approve"</span>: resume_from(ctx)  <span class="tag-com"># ⑥ 从断点接着跑</span>
     <span class="tag-key">else</span>: resume_from(ctx, denied=<span class="tag-key">True</span>)        <span class="tag-com"># 否决也回灌给 agent</span></code></pre>
-
 <div class="fail">
 <strong>失败模式</strong>：（1）同步 <code>input()</code> 阻塞整个 worker——一个待审批拖垮所有并发任务。（2）状态只在内存——进程一重启 / 一崩，审批和进度全丢。（3）没幂等——callback 重放或用户连点两下，转账执行两次。（4）审批无超时——一个没人理的 <code>ask</code> 让任务永久挂起。
 </div>
-
 <div class="res">
 <strong>进阶资源</strong> · Temporal <em>Durable Execution</em>（长流程的状态持久化与重放）, <a href="https://temporal.io" target="_blank">temporal.io</a> ·
 LangGraph <em>Human-in-the-loop</em>（interrupt / resume）, <a href="https://langchain-ai.github.io/langgraph/concepts/human_in_the_loop/" target="_blank">langchain-ai.github.io</a>
 </div>
 </div>
-
 <!-- ============ 3 ============ -->
 <div class="section">
 <span class="num">// 03</span>
-<h2>可中断与人工接管：不止「批 / 否」，还要能「改」</h2>
+<h2 data-tts="f5aeb99d013e3d5e">可中断与人工接管：不止「批 / 否」，还要能「改」</h2>
 <div class="claim">论断：HITL 的高价值不在二选一的批准，而在人能<strong>介入修改</strong> agent 的中间产物，再让它接着跑。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="06fd005d99b28108">背景与原理</h3>
 <p>把人类介入只想成 approve / reject，是浪费。真实工作流里还有两种更值钱的动作：<strong>edit</strong>（改它的 plan / 草稿 / 参数再继续）和 <strong>takeover</strong>（人接手做几步，再还给 agent）。要支持这两种，agent loop 必须满足三个前提：<strong>可中断</strong>（不是 <code>while True</code> 跑到死）、<strong>状态可序列化</strong>、<strong>可从任意 checkpoint 恢复</strong>。更关键的一点常被漏掉：人改完之后，必须把修改<strong>回灌进 agent 的上下文</strong>——否则它下一步又用旧计划覆盖你的修改。所以「计划」「草稿」要做成<strong>可被人覆写的显式状态</strong>，而不是埋在 prompt 历史里。</p>
-
-<h3>实战示例</h3>
+<h3 data-tts="82b1b558a181ff30">实战示例</h3>
 <pre><code><span class="tag-key">def</span> loop(state):
     <span class="tag-key">while</span> <span class="tag-key">not</span> state.done:
         <span class="tag-key">if</span> stop_requested(): <span class="tag-key">return</span> snapshot(state)  <span class="tag-com"># 可中断：随时存盘退出</span>
@@ -164,27 +149,22 @@ LangGraph <em>Human-in-the-loop</em>（interrupt / resume）, <a href="https://l
             state = decision.human_steps         <span class="tag-com"># 人做几步，再 resume 还给 agent</span>
     <span class="tag-key">return</span> state</code></pre>
 <p>一个反直觉但重要的点：<strong>edit 比 reject 更省人力</strong>。reject 把 agent 打回重来（它可能再犯同样的错）；edit 直接把它推到正轨，一次校正胜过十次否决。</p>
-
 <div class="fail">
 <strong>失败模式</strong>：（1）不可中断的 <code>while True</code>——想介入只能 kill，进度全丢，只能从头再来。（2）人改了草稿，但没回灌 context——agent 下一轮无视你的修改。（3）checkpoint 状态不全——恢复时缺关键变量，agent「失忆」乱跑。
 </div>
-
 <div class="res">
 <strong>进阶资源</strong> · LangGraph <em>Breakpoints &amp; state editing</em>, <a href="https://langchain-ai.github.io/langgraph/concepts/human_in_the_loop/" target="_blank">langchain-ai.github.io</a> ·
 Microsoft <em>Guidelines for Human-AI Interaction</em>（G9–G11：可纠错 / 可接管）, <a href="https://www.microsoft.com/en-us/research/publication/guidelines-for-human-ai-interaction/" target="_blank">microsoft.com</a>
 </div>
 </div>
-
 <!-- ============ 4 ============ -->
 <div class="section">
 <span class="num">// 04</span>
-<h2>审批的可观测与审计：谁批了什么、批得对不对</h2>
+<h2 data-tts="397f16953f01e391">审批的可观测与审计：谁批了什么、批得对不对</h2>
 <div class="claim">论断：审批本身是一等数据。不留痕，你既学不到「哪些 ask 是多余的」，也查不清「这个动作当时谁批的」。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="06514fa6547db5c8">背景与原理</h3>
 <p>每条审批至少要留：<strong>动作、agent 的理由、置信度、谁批的、延迟多久、最终结果</strong>。这份日志有两个用途。第一，<strong>回归路由阈值</strong>——某类 <code>ask</code> 你 95% 都批 → 降级为 <code>auto</code>；某类 <code>auto</code> 出过事 → 升级为 <code>ask</code>。§1 的阈值不是一次拍定，是从审计数据里长出来的。第二，<strong>升级与委派</strong>——高影响动作要求不止一人 / 特定角色批（轻量 RBAC）；审批挂太久自动升级给备份审批人。最后，对抗审批疲劳最有效的一招：同类低风险动作<strong>批量呈现</strong>（一屏批 10 个），而不是弹 10 次对话框。</p>
-
-<h3>实战示例</h3>
+<h3 data-tts="d30bfcd2e496c666">实战示例</h3>
 <pre><code><span class="tag-key">def</span> log_approval(rec):                    <span class="tag-com"># 每条审批落库，供回归 + 追责</span>
     db.insert(action=rec.action, reason=rec.agent_reason,
               conf=rec.confidence, approver=rec.who,
@@ -195,19 +175,16 @@ Microsoft <em>Guidelines for Human-AI Interaction</em>（G9–G11：可纠错 / 
     rate = mean(r.outcome == <span class="tag-gpt">"approved"</span> <span class="tag-key">for</span> r <span class="tag-key">in</span> rows)
     <span class="tag-key">if</span> rate &gt; 0.95 <span class="tag-key">and</span> no_incidents(rows): suggest(<span class="tag-gpt">"ask→auto"</span>)  <span class="tag-com"># 总在批 = 多余的 ask</span>
     <span class="tag-key">if</span> any(r.outcome == <span class="tag-gpt">"incident"</span> <span class="tag-key">for</span> r <span class="tag-key">in</span> rows): suggest(<span class="tag-gpt">"auto→ask"</span>)</code></pre>
-
 <div class="fail">
 <strong>失败模式</strong>：（1）审批不留痕——事后无法复盘、无法追责、阈值永远拍脑袋。（2）阈值定死不回归——多余的 ask（疲劳）和漏网的 auto（事故）都不修。（3）所有审批一个粒度——高风险和低风险混在一个队列，真正重要的被噪音淹没。
 </div>
-
 <div class="res">
 <strong>进阶资源</strong> · Anthropic <em>Agentic Misalignment</em>（对敏感动作降自主 / 加监督的建议）, <a href="https://www.anthropic.com/research/agentic-misalignment" target="_blank">anthropic.com/research/agentic-misalignment</a>
 </div>
 </div>
-
 <!-- ============ Combo ============ -->
 <div class="combo">
-<h3>// 综合实战 · 给后台 agent 加一层异步 HITL</h3>
+<h3 data-tts="37c7519081df3ce4">// 综合实战 · 给后台 agent 加一层异步 HITL</h3>
 <p>把四点串成一个周末项目：给你常跑的后台 agent 加一层「能在你睡觉时挂起、手机点一下就恢复」的审批层，并亲手 red-team 它。</p>
 <ol style="margin-left:20px;margin-top:10px">
 <li><strong>路由</strong>：写 <code>(confidence, impact) → {auto, ask, deny}</code> 表，置信度用可验证信号代理（检索命中 / 工具报错 / self-consistency），不问模型。</li>
@@ -219,10 +196,9 @@ Microsoft <em>Guidelines for Human-AI Interaction</em>（G9–G11：可纠错 / 
 </ol>
 <p style="margin-top:12px">做完这套，你以后看任何「自主 agent 产品」会本能地先问：它问人的时候自己怎么办（阻塞还是挂起）、我能不能改它的中间产物、审批留没留痕——而不是被 demo 里的「一键全自动」唬住。</p>
 </div>
-
 <!-- ============ Glossary ============ -->
 <div class="glossary">
-<h3>// ENGLISH GLOSSARY</h3>
+<h3 data-tts="be190f85aca3f041">// ENGLISH GLOSSARY</h3>
 <dl>
 <dt>Human-in-the-Loop (HITL)</dt><dd>把人类判断嵌入 agent 执行回路的工程，而非事后审查。</dd>
 <dt>Confidence Routing</dt><dd>按（置信度 × 影响）把动作路由到 auto / ask / deny，决定是否打扰人。</dd>
@@ -236,7 +212,6 @@ Microsoft <em>Guidelines for Human-AI Interaction</em>（G9–G11：可纠错 / 
 <dt>Approval Fatigue</dt><dd>审批过多导致盲目点批，使 HITL 退化为橡皮图章。</dd>
 </dl>
 </div>
-
 <!-- ============ Deep Thinking ============ -->
 <div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
 <style>
@@ -251,17 +226,16 @@ Microsoft <em>Guidelines for Human-AI Interaction</em>（G9–G11：可纠错 / 
 .thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
 .thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
 </style>
-<h3>// 深入思考</h3>
+<h3 data-tts="23b9cd352571767a">// 深入思考</h3>
 <details><summary>§1 用「可验证信号」代理置信度。但很多开放任务（写一段策略建议）根本没有可验证信号，这种怎么定 auto / ask？</summary><div>没有可验证信号，就<strong>退回按影响分档</strong>（回到 Day 31 的可逆性轴）：开放任务的输出若只是「草稿给你看」，影响低 → auto 出草稿但默认进 review；若会自动发出去（发邮件 / 发推），影响高 → 强制 ask。换句话说，置信度路由和可逆性 gate 是<strong>互补的两个轴</strong>，不是二选一：有可验证信号时用置信度，没有时退回影响 / 可逆性。两者都不强时，fail-safe 默认 ask。真正危险的是「既无信号又默认 auto」。</div></details>
 <details><summary>异步审批要 durable execution、状态落库、幂等回调——这对个人项目是不是过度工程？什么时候 input() 就够？</summary><div>有个清晰的分界：<strong>agent 是否在你的注意力之外运行</strong>。你坐在终端前盯着它一步步跑，<code>input()</code> 完全够，别上队列。一旦它（a）跑在后台 / cron、（b）单次运行跨越你的注意力窗口（几十分钟以上）、或（c）多个实例并发——同步阻塞就会咬你：worker 卡死、进程一崩进度全丢。判据不是「项目大小」，是「出问题时你在不在场」。不在场，才需要 durable。在场，过度工程反而是负担。</div></details>
 <details><summary>edit / takeover 让人改 agent 的中间产物。但如果人改得比 agent 还糟，或人自己也不确定？HITL 是不是只是把责任甩给疲惫的人？</summary><div>这是真问题。HITL 不创造判断力，它只<strong>放置</strong>判断力——放错地方就是甩锅。两条原则避免：（1）只在<strong>人确实比模型强</strong>的点上要人介入（领域知识、价值取舍、对你私人语境的了解），纯算力 / 检索类别让 agent 自己来。（2）给人<strong>决策所需的上下文</strong>，而不是光丢个 yes/no——附上 agent 的理由、置信度、备选项。如果人只能盲批，那不是 HITL，是责任转移的仪式。当人也不确定时，正确动作往往是 escalate（升级）或 abstain（搁置），而非硬批。</div></details>
 <details><summary>§4 用历史审批回归阈值=用过去决定未来。如果你过去图省事乱批，回归出的 auto 阈值会不会把坏习惯固化成自动化？</summary><div>会，这是 HITL 审计的核心陷阱：<strong>它会放大你的批准偏差</strong>。<code>retune()</code> 里那个 <code>no_incidents</code> 条件就是防线——只在「总批 <strong>且</strong> 没出过事」时才建议降级，光「总批」不够。但更稳的做法是别让回归<strong>自动</strong>改阈值，只让它<strong>提议</strong>（<code>suggest()</code> 而非 <code>apply()</code>），由你定期 review。把人的偏差喂回系统、系统再自动化这个偏差，是 HITL 最隐蔽的失败——所以审计本身也要被审计。</div></details>
 <details><summary>这套 confidence routing 和 Day 31 的 reversibility gate 是什么关系？什么时候用哪个？会打架吗？</summary><div>不打架，是<strong>纵深的两层</strong>。Day 31 的 reversibility gate 是<strong>底线安全</strong>：不可逆动作无论置信度多高都过 gate——这是不能被路由绕过的硬约束。本期的 confidence routing 是<strong>上层效率</strong>：在「该不该问人」的灰区里，用置信度决定打扰频率，省人的注意力。组合方式：先过 reversibility（不可逆 → 必 ask，置信度再高也不放行），可逆动作再交给 confidence routing 决定 auto / ask。一句话：<strong>可逆性决定「能不能自动」，置信度决定「值不值得问」。</strong>前者管安全下限，后者管效率上限。</div></details>
 </div>
-
 <!-- ============ Refs ============ -->
 <div class="refs">
-<h3>// 延伸阅读</h3>
+<h3 data-tts="32acab1a2569db58">// 延伸阅读</h3>
 <ul>
 <li><a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">Anthropic · Building Effective Agents</a> — agent-computer interface 与人类监督的工程原则</li>
 <li><a href="https://langchain-ai.github.io/langgraph/concepts/human_in_the_loop/" target="_blank">LangGraph · Human-in-the-loop</a> — interrupt / resume / breakpoints / state editing 的参考实现</li>
@@ -270,11 +244,10 @@ Microsoft <em>Guidelines for Human-AI Interaction</em>（G9–G11：可纠错 / 
 <li><a href="https://www.anthropic.com/research/agentic-misalignment" target="_blank">Anthropic · Agentic Misalignment</a> — 为何高影响动作要降自主、加人类监督</li>
 </ul>
 </div>
-
 <footer>BigCat · Super Individual · Day 34 · 2026-06-15</footer>
 </div>
-<script src="https://hub.cissychen.com/comments.js" defer></script>
-<script src="https://hub.cissychen.com/search.js" defer></script>
-<script src="https://hub.cissychen.com/index-button.js" defer></script>
-<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
 </body></html>

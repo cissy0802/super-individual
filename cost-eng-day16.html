@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<html lang="zh-CN"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Day 16 · Cost Engineering — Super Individual</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -46,27 +47,23 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
 </style></head><body>
 <div class="container">
-
 <header>
 <span class="week-tag">DAY 16 / PHASE 2 · 应用与系统</span>
-<h1>Cost Engineering</h1>
-<h2>Token 经济学 · Prompt Caching · Model Routing · Batch & 监控</h2>
+<h1 data-tts="56d3a233b92fc9bb">Cost Engineering</h1>
+<h2 data-tts="b34d06a449c5b587">Token 经济学 · Prompt Caching · Model Routing · Batch &amp; 监控</h2>
 <div class="date">2026-05-31 · BigCat</div>
 <p class="pitch">「这个模型贵」是错的归因；成本是个乘积，每一项都能压一个数量级。</p>
 </header>
-
 <div class="intro">
-<h3>// WHY THIS MATTERS</h3>
+<h3 data-tts="44883762378257b6">// WHY THIS MATTERS</h3>
 <p>2026 年的真实账单结构：同一个 Sonnet，重度用户月账单从 $80 到 $8000 的差距，<strong>90% 不是用得多少，是工程做得粗细</strong>。Anthropic 官方文档把账单展开成五项乘积——uncached input、cache write、cache read、batch、output——任何一项忽略掉就少掉一次 5×~10× 的杠杆。Simon Willison 在 2024 年底总结过去一年最反直觉的趋势：「LLM 价格在崩塌」。但真正吃到红利的不是用便宜模型的人，而是会把 <strong>caching + routing + batch</strong> 三件事叠起来的人——三者乘起来理论可以做到原价的 5% 以下。这一期讲四件事：怎么把账单拆到 token 级、prompt caching 的工程化、什么时候该 route 到便宜模型、batch + 监控告警的最小工程。</p>
 </div>
-
 <!-- ============ 1 ============ -->
 <div class="section">
 <span class="num">// 01</span>
-<h2>Token 经济学：账单是乘积，不是模型名</h2>
+<h2 data-tts="0cf01fff894c6252">Token 经济学：账单是乘积，不是模型名</h2>
 <div class="claim">论断：成本归因到模型名（「Opus 贵」）是 99% 团队的第一错；真正的归因单位是「每次调用的五项 token 分布」。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="cead55287b7ed151">背景与原理</h3>
 <p>Anthropic API 的实际计费公式（官方 prompt caching 文档可验证）：</p>
 <div class="diagram">cost = uncached_input × 1.0x          ← 默认输入
      + cache_write_5m × 1.25x         ← 写入 5 分钟缓存
@@ -76,8 +73,7 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
      × (1 - 0.5 if batch else 0)      ← Batch API -50%</div>
 <p>这意味着<strong>三件反直觉的事</strong>：（1）模型名只决定 base rate，乘上 cache 命中率和 batch 比例后，"贵" 模型可能比 "便宜" 模型更省。（2）<strong>output 是真正的成本中心</strong>——多数模型 output 单价是 input 的 5 倍；让模型「少说话」（structured output、明确 max_tokens、禁止 chain-of-thought 当 final answer）的 ROI 大于换模型。（3）cache_write 比默认 input 贵 25%，所以「试一试 cache 看看」是负 ROI 的——必须先估命中率。</p>
 <p>Simon Willison 维护的 <code>llm-prices.com</code> 是值得收藏的对照表。他 2024 年底有一条结论值得记：用 Gemini Flash 8B 给 68000 张照片生成 caption 总成本 $1.68——说明真正贵的从来不是「调 LLM」，是「用错档位的 LLM 调没必要调的内容」。</p>
-
-<h3>实战示例</h3>
+<h3 data-tts="83ba4cc0c45099f6">实战示例</h3>
 <p>把账单结构嵌进每次调用，<strong>三行代码做成本归因</strong>：</p>
 <pre><code><span class="tag-key">import</span> anthropic
 client = anthropic.Anthropic()
@@ -94,30 +90,25 @@ client = anthropic.Anthropic()
           + u.cache_creation_input_tokens * rate[<span class="tag-gpt">"cw5"</span>]
           + u.cache_read_input_tokens     * rate[<span class="tag-gpt">"cr"</span>]
           + u.output_tokens        * rate[<span class="tag-gpt">"out"</span>]) / 1e6
-    print(<span class="tag-gpt">f"$&#123;cost:.4f&#125; | hit={u.cache_read_input_tokens/(u.cache_read_input_tokens+u.cache_creation_input_tokens+1):.0%}"</span>)
+    print(<span class="tag-gpt">f"${cost:.4f} | hit={u.cache_read_input_tokens/(u.cache_read_input_tokens+u.cache_creation_input_tokens+1):.0%}"</span>)
     <span class="tag-key">return</span> r, cost</code></pre>
 <p>跑一周后看 p50 / p95 cost 分布，95% 的团队会发现：少数 outlier 请求（output 超长 / 没命中 cache）占总成本一半以上——这才是优化目标。</p>
-
 <div class="fail">
 <strong>失败模式</strong>：（1）只盯着「换便宜模型」，忽略 output cap。Output 砍半通常比换模型省得还多。（2）用 dashboard 上的「总花费」做决策——必须按「per-feature cost」和「per-request p95 cost」归因，不然永远不知道是哪类请求在烧钱。
 </div>
-
 <div class="res">
 <strong>进阶资源</strong> · Anthropic Prompt Caching 文档, <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching" target="_blank">platform.claude.com/.../prompt-caching</a> ·
 Simon Willison <em>LLM Pricing Calculator</em>, <a href="https://www.llm-prices.com/" target="_blank">llm-prices.com</a>
 </div>
 </div>
-
 <!-- ============ 2 ============ -->
 <div class="section">
 <span class="num">// 02</span>
-<h2>Prompt Caching：拿到 90% 折扣的工程化</h2>
+<h2 data-tts="28ad73bec15daafe">Prompt Caching：拿到 90% 折扣的工程化</h2>
 <div class="claim">论断：caching 的难点不在 API，在「让前缀保持稳定」——99% 的 cache miss 来自工程师无意中破坏了 prefix invariance。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="ff1c53473a3970d9">背景与原理</h3>
 <p>Anthropic prompt caching 的契约：用 <code>cache_control: {type:"ephemeral"}</code> 标记 breakpoint，<strong>从请求开头到该 breakpoint 的所有内容</strong>（tools → system → messages 顺序）作为一个 cache key。下次请求只要前缀字节完全相同，就以 <code>0.1×</code> input 价命中；任何一个字节变了，整段重写、付 <code>1.25×</code> 写入费。</p>
 <p>这条契约带来三条铁律：（1）<strong>不变的放前面，变的放后面</strong>——tool schema、system prompt、long doc、few-shot 全部前置；user 当前请求放最后。（2）<strong>动态拼接是 cache killer</strong>——任何随时间变化的 token（当前时间、随机 ID、动态计数器）出现在前缀里，命中率直接归零。（3）<strong>breakpoint 上限 4 个</strong>——通常放在 tools 末、system 末、history 末，给当前 user 留空。Minimum cacheable 长度按模型，Sonnet 通常 1024 tokens，Opus 4096 tokens（来自官方文档）；不到阈值不缓存，所以小请求 cache 是无效的。</p>
-
 <div class="diagram">┌─ 高命中率的 prompt 结构 ───────────────────────────┐
 │  [tools schema      ]  ← cache_control ① 几乎不变  │
 │  [system prompt     ]  ← cache_control ② 偶尔改版  │
@@ -126,8 +117,7 @@ Simon Willison <em>LLM Pricing Calculator</em>, <a href="https://www.llm-prices.
 │  [user 当前请求      ]  ← 不 cache，每次都新       │
 └────────────────────────────────────────────────────┘
  命中率: 通常 70-95%   实际账单: 名义的 15-30%</div>
-
-<h3>实战示例</h3>
+<h3 data-tts="7cdb165776ecb84d">实战示例</h3>
 <p>「滚动追加 history」是最值得注意的 pattern——多轮对话里把 cache_control 打在<strong>最新一轮的前一轮 assistant 消息上</strong>，让旧 history 全部命中：</p>
 <pre><code>messages = [
   {<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,      <span class="tag-gpt">"content"</span>:[{<span class="tag-gpt">"type"</span>:<span class="tag-gpt">"text"</span>,<span class="tag-gpt">"text"</span>:turn1_user}]},
@@ -138,32 +128,27 @@ Simon Willison <em>LLM Pricing Calculator</em>, <a href="https://www.llm-prices.
   {<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,      <span class="tag-gpt">"content"</span>:[{<span class="tag-gpt">"type"</span>:<span class="tag-gpt">"text"</span>,<span class="tag-gpt">"text"</span>:turn3_user}]},   <span class="tag-com"># 新</span>
 ]</code></pre>
 <p>turn3 请求过来时，前面 4 条全部走 cache_read（0.1×），只有 turn3_user 是新 input。第 4 轮再请求时把 breakpoint 移到 turn3 末——这是滚动 cache 的标准做法，多轮对话账单瞬间砍掉 80%。<strong>5 分钟 TTL 内每命中一次会自动续期</strong>，所以高频会话不需要 1h cache（贵 2×）。</p>
-
 <div class="fail">
 <strong>失败模式</strong>：（1）<strong>在 system prompt 里插入当前日期</strong>——每天 0 点 cache 全部失效。日期请放到 user message 里。（2）tool 定义里调一个返回时间戳的 helper——schema 字符串被 stringify 时变了，cache 全 miss。（3）小请求开 cache：不到 minimum 阈值不会缓存，只是白付 1.25× 写入费的风险（实际未达阈值时不收）；但 1024/4096 阈值以下根本走不进 cache 路径。先用 <code>cache_read_input_tokens / total_input</code> 监控真实命中率，<strong>低于 40% 说明前缀不稳，要重构 prompt 结构，而不是关 cache</strong>。
 </div>
-
 <div class="res">
 <strong>进阶资源</strong> · Anthropic <em>Prompt Caching with Claude</em>, <a href="https://www.anthropic.com/news/prompt-caching" target="_blank">anthropic.com/news/prompt-caching</a> ·
 Anthropic Cookbook caching 示例, <a href="https://github.com/anthropics/anthropic-cookbook" target="_blank">github.com/anthropics/anthropic-cookbook</a>
 </div>
 </div>
-
 <!-- ============ 3 ============ -->
 <div class="section">
 <span class="num">// 03</span>
-<h2>Model Routing & Cascading：让便宜模型先尝试</h2>
+<h2 data-tts="4d4491941b72e459">Model Routing &amp; Cascading：让便宜模型先尝试</h2>
 <div class="claim">论断：单一模型策略是浪费——70% 的请求 Haiku 就够，但你得用工程手段把它路出去。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="0a1007d3c1c2e0d5">背景与原理</h3>
 <p>真实流量的难度分布是长尾的：大部分请求（分类、抽取、改写、简单代码）小模型就能做对，少数请求（推理、长上下文、复杂代码）才需要旗舰。两种工程化做法：</p>
 <ul>
 <li><strong>Routing</strong>：用一个轻量分类器（可以是 Haiku 自身、可以是 embedding + 阈值、可以是规则）<em>预判难度</em>，路到不同模型。代表工作是 Berkeley LMSys 的 RouteLLM（ICLR 2025）：用人类偏好数据训路由器，在保持 GPT-4 95% 质量的前提下，MT Bench 上成本降 85%、MMLU 降 45%。</li>
 <li><strong>Cascading</strong>：先让最便宜的模型试，模型自评 confidence（或用 logprob / judge）；不达标才升级。优点是不需要预判难度，缺点是失败请求要付双份钱。</li>
 </ul>
-<p>什么时候 routing 是负 ROI？两个红线：<strong>（1）routing 决策的成本 > 节省</strong>——给 Haiku 调用前再跑一次 LLM 分类，分类成本可能已经吃掉差价；<strong>（2）routing 错误代价 &gt; 节省</strong>——把医疗诊断 route 到 mini 模型省下 $0.01，错一次赔 $10000。规则：routing 适用于<em>高量、低单价错误代价、难度方差大</em>的场景（客服、抽取、初筛、批量生成）。</p>
-
-<h3>实战示例</h3>
+<p>什么时候 routing 是负 ROI？两个红线：<strong>（1）routing 决策的成本 &gt; 节省</strong>——给 Haiku 调用前再跑一次 LLM 分类，分类成本可能已经吃掉差价；<strong>（2）routing 错误代价 &gt; 节省</strong>——把医疗诊断 route 到 mini 模型省下 $0.01，错一次赔 $10000。规则：routing 适用于<em>高量、低单价错误代价、难度方差大</em>的场景（客服、抽取、初筛、批量生成）。</p>
+<h3 data-tts="8f9adb23cedfe90a">实战示例</h3>
 <p>不要从训路由器开始——先用 <strong>LiteLLM 这种 open-source proxy</strong> 把多 provider 收拢到一个 OpenAI 兼容端点，再加 fallback 规则。10 分钟见效：</p>
 <pre><code><span class="tag-com"># litellm config.yaml — 把 80% 流量灌给便宜模型，错误时升级</span>
 model_list:
@@ -181,33 +166,28 @@ router_settings:
 <span class="tag-com"># client 侧：只调 tier-cheap，复杂请求走显式 tier-mid</span>
 client.chat.completions.create(model=<span class="tag-gpt">"tier-cheap"</span>, messages=[...])</code></pre>
 <p>这套配置做了三件事：fallback（错误时升级）、context window fallback（装不下时升级）、统一 OpenAI 接口（client 代码不需要 if-else 分支）。配合 LiteLLM 的 cost tracking，能直接看每个 tier 的占比和单价——比从头训 router 务实得多。</p>
-
 <div class="fail">
 <strong>失败模式</strong>：（1）在 hot path 用 LLM 当 router，每个请求多一次 LLM 调用，分类 latency + cost 吃掉所有节省。<strong>规则路由 / embedding 阈值优先</strong>。（2）cascade 时低档模型的 self-eval 信号不可靠（Day 9 讲过的 sycophancy）——别问模型「你确定吗」，问外部 judge 或用任务自带的 verifier。
 </div>
-
 <div class="res">
 <strong>进阶资源</strong> · LMSys RouteLLM, <a href="https://www.lmsys.org/blog/2024-07-01-routellm/" target="_blank">lmsys.org/blog/routellm</a> · arXiv 2406.18665 ·
 LiteLLM Router 文档, <a href="https://docs.litellm.ai/docs/routing" target="_blank">docs.litellm.ai/docs/routing</a>
 </div>
 </div>
-
 <!-- ============ 4 ============ -->
 <div class="section">
 <span class="num">// 04</span>
-<h2>Batch API + 成本监控告警</h2>
+<h2 data-tts="957fdaa99f08176c">Batch API + 成本监控告警</h2>
 <div class="claim">论断：能容忍小时级延迟的任务都该走 batch；不能监控的成本都会失控。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="eed4af277bc4b035">背景与原理</h3>
 <p>Anthropic Message Batches API 和 OpenAI Batch API 的契约几乎一致：异步提交、24 小时 SLA、<strong>所有 token 价 -50%</strong>，且能和 prompt caching 叠加（理论极限 ≈ 原价的 5%——0.5 × 0.1）。它的工程意义不是「便宜一半」，是<strong>把可异步的工作流和必须同步的工作流分开</strong>，前者天然便宜一半。</p>
 <p>判断该不该走 batch 的三个问题：<strong>（1）用户在不在等结果？</strong>不在 → 可 batch。<strong>（2）下一步操作是否阻塞当前 trace？</strong>不阻塞 → 可 batch。<strong>（3）失败重试容忍 24h 吗？</strong>能容忍 → 可 batch。典型可 batch 场景：nightly eval、回填历史数据、文档批量摘要、嵌入计算、报告生成。不可 batch：用户实时对话、agent loop 内部 tool call、需要立刻反馈的 UI。</p>
 <p>监控这一层经常被跳过——直到月底账单 3 倍才发现。最小可用监控只要三个信号：<strong>per-request cost、cache hit rate、model tier 分布</strong>。任何一个突变都对应一类 bug（prompt 改了破坏 cache / 上游误路由到旗舰 / output 失控）。</p>
-
-<h3>实战示例</h3>
+<h3 data-tts="7946625243c7a10b">实战示例</h3>
 <pre><code><span class="tag-com"># A) Batch 提交 — 异步任务一行换 -50%</span>
 <span class="tag-key">from</span> anthropic.types.messages.batch_create_params <span class="tag-key">import</span> Request
 batch = client.messages.batches.create(requests=[
-    Request(custom_id=<span class="tag-gpt">f"doc-&#123;i&#125;"</span>, params={<span class="tag-gpt">"model"</span>:<span class="tag-gpt">"claude-sonnet-4-6"</span>,
+    Request(custom_id=<span class="tag-gpt">f"doc-{i}"</span>, params={<span class="tag-gpt">"model"</span>:<span class="tag-gpt">"claude-sonnet-4-6"</span>,
         <span class="tag-gpt">"max_tokens"</span>:1024, <span class="tag-gpt">"messages"</span>:[{<span class="tag-gpt">"role"</span>:<span class="tag-gpt">"user"</span>,<span class="tag-gpt">"content"</span>:doc}]})
     <span class="tag-key">for</span> i, doc <span class="tag-key">in</span> enumerate(docs)
 ])
@@ -227,20 +207,17 @@ batch = client.messages.batches.create(requests=[
 <span class="tag-com"># 2) avg(llm.cache_hit) by feature &lt; 0.4 持续 1h          ← 前缀被破坏</span>
 <span class="tag-com"># 3) sum(cost) by model{tier=premium} / sum(cost) &gt; 0.6  ← routing 失效</span></code></pre>
 <p>这套监控不到一天搭完，下次「不知道钱花哪了」的故障可以预防。把 batch 比例和 cache 命中率做成 dashboard 头牌指标，你会发现「优化 prompt」和「优化成本」常常是同一件事。</p>
-
 <div class="fail">
 <strong>失败模式</strong>：（1）把 agent loop 的中间 tool call 丢进 batch——agent 是 sync 的，下一步依赖上一步，batch 直接破坏 loop。Batch 只适合<em>独立、可并行、不阻塞</em>的请求。（2）把成本归因到「model 维度」——决策的最小颗粒应该是<strong>feature 维度</strong>（搜索 / 摘要 / 写代码 / 分类），同一个模型在不同 feature 上的成本结构完全不同。
 </div>
-
 <div class="res">
 <strong>进阶资源</strong> · Anthropic <em>Introducing the Message Batches API</em>, <a href="https://www.anthropic.com/news/message-batches-api" target="_blank">anthropic.com/news/message-batches-api</a> ·
 OpenAI Batch API 文档, <a href="https://platform.openai.com/docs/guides/batch" target="_blank">platform.openai.com/docs/guides/batch</a>
 </div>
 </div>
-
 <!-- ============ Combo ============ -->
 <div class="combo">
-<h3>// 综合实战 · 一周把账单砍 70% 的复盘流程</h3>
+<h3 data-tts="bea9828d803c9dc2">// 综合实战 · 一周把账单砍 70% 的复盘流程</h3>
 <p>把这四点串成一个真实可执行的复盘工作流——周一拉账单、周五看结果：</p>
 <ol style="margin-left:20px;margin-top:10px">
 <li><strong>Day 1 · 归因</strong>：把上月账单按 feature × model × cache-hit 三维度切。多数团队会发现 1-2 个 feature 吃掉 60%+ 总成本——优先打这两个，其它先别动。</li>
@@ -252,10 +229,9 @@ OpenAI Batch API 文档, <a href="https://platform.openai.com/docs/guides/batch"
 </ol>
 <p style="margin-top:12px">叠加完保守估计 60-80% 成本砍掉，且质量不降。最重要的副产品：你会培养出一种「看 prompt 就能估账单」的工程肌肉——这是 AI 超级个体的基本功之一。</p>
 </div>
-
 <!-- ============ Glossary ============ -->
 <div class="glossary">
-<h3>// ENGLISH GLOSSARY</h3>
+<h3 data-tts="6e4b926498bd7297">// ENGLISH GLOSSARY</h3>
 <dl>
 <dt>Token Economics</dt><dd>把 LLM 账单拆成 input/output/cache_write/cache_read/batch 五项乘积的成本分析框架。</dd>
 <dt>Prompt Caching</dt><dd>对稳定前缀做服务端缓存，命中时 input 价 0.1×。Anthropic 通过 cache_control breakpoint 显式声明。</dd>
@@ -269,7 +245,6 @@ OpenAI Batch API 文档, <a href="https://platform.openai.com/docs/guides/batch"
 <dt>Cost Attribution</dt><dd>把账单按 feature × model × cache-hit 拆解的归因方法。优于按 model 看总数。</dd>
 </dl>
 </div>
-
 <!-- ============ Deep Thinking ============ -->
 <div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
 <style>
@@ -284,17 +259,16 @@ OpenAI Batch API 文档, <a href="https://platform.openai.com/docs/guides/batch"
 .thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
 .thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
 </style>
-<h3>// 深入思考</h3>
+<h3 data-tts="815aa5e040076896">// 深入思考</h3>
 <details><summary>Cache write 是 1.25× 默认价。什么场景下开 cache 实际是负 ROI？怎么算盈亏平衡？</summary><div>盈亏平衡点：cache write 多付 0.25×，cache hit 每次省 0.9×。所以「打平」需要至少 <code>0.25/0.9 ≈ 0.28</code> 次未来命中——即未来 5 分钟内还会访问 ≥1 次同前缀。结论：单次性请求（搜索、一次性 QA）开 cache 是负 ROI；多轮对话、agent loop、batch 处理同一文档都是正 ROI。判定标准：写入时能不能预测「这段 prefix 5 分钟内还会被请求」。不能预测就别开。</div></details>
 <details><summary>Output 单价通常是 input 的 5×。为什么 provider 这么定价？是不是说明 output 计算量也是 5×？</summary><div>不完全是。技术上 output 比 input 贵的根因是<strong>自回归解码</strong>——每个 output token 都要跑一遍完整 forward pass（用上整段 KV cache），而 input 是一次 prefill 批量处理。但 5× 的 markup 包含了很多商业因素：output 量小所以单价容忍高、output 直接对应用户感知质量、output 是 provider 主要差异化。工程意义：与其换便宜模型，不如先降低 output 长度（structured output、严格 max_tokens、不让模型重复输入）。</div></details>
 <details><summary>RouteLLM 论文报告了 85% 降本。为什么实际部署中很少见到这个数字？</summary><div>三个原因：（1）论文 baseline 是「100% 用 GPT-4」，真实团队早就在用 mid-tier 模型，节省空间小很多。（2）论文用 MT Bench 等 benchmark 评质量，真实场景的 edge case 分布更宽，router 准确率会降。（3）routing 决策本身有成本（embedding / 分类器 / latency），论文常常不算进去。所以实战中 30-50% 已经是好结果，期望 85% 会失望。但配合 cache + batch 叠加，整体降本 70% 是合理目标。</div></details>
 <details><summary>Batch API 看起来无脑该用——为什么很多团队明明能 batch 却不 batch？</summary><div>三个隐性障碍：（1）<strong>心智成本</strong>：sync API 是 request-response，batch 是 submit-poll-collect，需要重写状态机和失败重试。（2）<strong>体验损失</strong>：用户习惯了「秒回」，把后台任务也包装成「立刻处理」是产品惯性。（3）<strong>编排复杂度</strong>：batch 适合「大量同构请求」，但真实工作流常常异构，强行 batch 反而拖慢关键路径。务实做法：识别 1-2 个明显可 batch 的场景（eval、回填），用最简 poll 模式接进去；不要一开始就上 Temporal 这种 workflow engine。</div></details>
 <details><summary>成本监控的最小信号是 cost、cache_hit、tier 分布。如果只能加一条告警，加哪条？</summary><div>选 <strong>per-feature cache_hit_rate 突降</strong>。理由：成本绝对值会随业务增长正常波动，单次 outlier 是个体问题不是系统问题，tier 分布变化通常是有意调整。但 cache hit 突降几乎一定是 bug——某个工程师悄悄改了 system prompt、加了时间戳、调了 tool schema，这类改动不会触发任何 alert，但会在月底账单上反映成 5-10× 涨幅。Cache hit 是<strong>领先指标</strong>，cost 是滞后指标。</div></details>
 </div>
-
 <!-- ============ Refs ============ -->
 <div class="refs">
-<h3>// 延伸阅读</h3>
+<h3 data-tts="83e4dd59da807ca7">// 延伸阅读</h3>
 <ul>
 <li><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching" target="_blank">Anthropic · Prompt Caching 文档</a> — cache_control、TTL、pricing multiplier 权威来源</li>
 <li><a href="https://www.anthropic.com/news/message-batches-api" target="_blank">Anthropic · Message Batches API</a> — 50% 折扣的官方说明</li>
@@ -303,11 +277,10 @@ OpenAI Batch API 文档, <a href="https://platform.openai.com/docs/guides/batch"
 <li><a href="https://www.llm-prices.com/" target="_blank">Simon Willison · LLM Pricing Calculator</a> — 跨 provider 价格对照表，决策必备</li>
 </ul>
 </div>
-
 <footer>BigCat · Super Individual · Day 16 · 2026-05-31</footer>
 </div>
-<script src="https://hub.cissychen.com/comments.js" defer></script>
-<script src="https://hub.cissychen.com/search.js" defer></script>
-<script src="https://hub.cissychen.com/index-button.js" defer></script>
-<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
 </body></html>

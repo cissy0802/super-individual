@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<html lang="zh-CN"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Day 47 · 图像生成工程 — Super Individual</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -46,27 +47,23 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
 </style></head><body>
 <div class="container">
-
 <header>
 <span class="week-tag">DAY 47 / PHASE 5 · 非 LLM 模态</span>
-<h1>图像生成工程</h1>
-<h2>控制栈 · Prompt 反直觉 · 生成 Agent · Provenance</h2>
+<h1 data-tts="58526e59da0e42f8">图像生成工程</h1>
+<h2 data-tts="7a1cddc25ca6cdbc">控制栈 · Prompt 反直觉 · 生成 Agent · Provenance</h2>
 <div class="date">2026-06-26 · BigCat</div>
 <p class="pitch">文本 prompt 是最弱的控制旋钮；可控、可复现、可合规才是图像工程。</p>
 </header>
-
 <div class="intro">
-<h3>// WHY THIS MATTERS</h3>
+<h3 data-tts="25eff217530906e6">// WHY THIS MATTERS</h3>
 <p>大多数人对图像生成的认知停在「在 Midjourney 里写句咒语抽卡」。但当你要把生成图放进<strong>产品流水线</strong>——品牌一致的角色、固定构图的电商图、可批量复现的素材——抽卡立刻崩溃。图像模型和 LLM 是两套完全不同的工程学：扩散模型不是「听指令」，而是在<strong>条件分布里采样</strong>；文本 prompt 只是众多控制信号里最粗的一个。这一期不讲「扩散原理是什么」（那是概念课），讲已经会用工具的人怎么<strong>把不可控变可控</strong>：用 ControlNet/LoRA/IP-Adapter 分层叠加空间与风格控制、按扩散模型自己的规律写 prompt、把单次抽卡升级成「生成—评估—重绘」的 agentic loop、以及生产化绕不开的水印与版权 provenance 层。</p>
 </div>
-
 <!-- ============ 1 ============ -->
 <div class="section">
 <span class="num">// 01</span>
-<h2>控制栈：ControlNet / LoRA / IP-Adapter 怎么分层</h2>
+<h2 data-tts="1c53629a0a557c09">控制栈：ControlNet / LoRA / IP-Adapter 怎么分层</h2>
 <div class="claim">论断：text prompt 控制不了构图与身份；空间结构交给 ControlNet，风格与主体交给 LoRA，参考图交给 IP-Adapter，三者正交叠加。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="991770e66c1c637f">背景与原理</h3>
 <p>这三类工具作用在扩散过程的<strong>不同切面</strong>，不是互相替代而是叠加：</p>
 <ul>
 <li><strong>ControlNet</strong>（Zhang 2023）：复制 UNet encoder，用 <code>zero-conv</code> 零初始化注入<strong>空间条件</strong>（canny 边缘、depth、openpose 骨架、segmentation）。给你 pixel 级的构图/姿态锁定，代价是每张多 30%+ 推理开销。</li>
@@ -74,7 +71,6 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <li><strong>IP-Adapter</strong>：把一张<strong>参考图</strong>编码成 image prompt 注入 cross-attention，零训练就能迁移风格/人脸。比 LoRA 快，但可控性弱。</li>
 </ul>
 <p>工程心法：<strong>先定结构（ControlNet），再定身份（LoRA），最后微调氛围（prompt + IP-Adapter）</strong>。把「想要什么」拆到对的控制通道上，而不是全堆进 text prompt。</p>
-
 <div class="diagram">扩散去噪循环  ──每一步同时接收多路条件──▶
 ┌──────────────────────────────────────────────┐
 │  text prompt  ─┐                              │
@@ -87,9 +83,8 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 │  ControlNet ─▶ UNet encoder 旁路 ─ 构图/骨架   │
 │  (edge/depth/pose)   ▲ 最强的空间锁定          │
 └──────────────────────────────────────────────┘
-   控制强度：ControlNet > LoRA > IP-Adapter > prompt</div>
-
-<h3>实战示例</h3>
+   控制强度：ControlNet &gt; LoRA &gt; IP-Adapter &gt; prompt</div>
+<h3 data-tts="7c285f03aacf0cb8">实战示例</h3>
 <pre><code><span class="tag-com"># diffusers：ControlNet(姿态) + LoRA(角色) 叠加</span>
 from diffusers import StableDiffusionXLControlNetPipeline, ControlNetModel
 cn = ControlNetModel.from_pretrained("...controlnet-openpose-sdxl")
@@ -104,18 +99,15 @@ img = pipe(
     guidance_scale=6.5, num_inference_steps=30,
     generator=torch.Generator().manual_seed(42),  <span class="tag-com"># 可复现</span>
 ).images[0]</code></pre>
-
 <div class="fail"><strong>失败模式：</strong>① 叠 3 个以上 ControlNet → 条件互相打架，出畸形；先单条件调通再加。② <code>controlnet_conditioning_scale=1.0</code> 把结构焊死，prompt 完全失效。③ LoRA <code>rank</code> 过大 + 数据少 → 过拟合，只会复刻训练图、不泛化。④ 忘了固定 <code>seed</code>，无法复现「上次那张好图」。</div>
 <div class="res">进阶资源：<a href="https://arxiv.org/abs/2302.05543" target="_blank">ControlNet 论文 (arXiv 2302.05543)</a> · <a href="https://huggingface.co/docs/diffusers/using-diffusers/controlnet" target="_blank">diffusers ControlNet 文档</a></div>
 </div>
-
 <!-- ============ 2 ============ -->
 <div class="section">
 <span class="num">// 02</span>
-<h2>图像 Prompt：和 LLM 完全不同的规律</h2>
+<h2 data-tts="86f77cfb8651cb94">图像 Prompt：和 LLM 完全不同的规律</h2>
 <div class="claim">论断：扩散 prompt 不是「指令」而是「条件分布的坐标」；否定要走 negative 通道，CFG 决定听话程度，CLIP 只读前 77 token。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="5e033ac1a1462ce3">背景与原理</h3>
 <p>把 LLM 的 prompt 习惯搬到扩散模型上几乎全错。四条核心差异：</p>
 <ul>
 <li><strong>否定无效</strong>：写「don't add a hat」反而会因为提到 hat 而<strong>更可能出现帽子</strong>。要排除什么，放进独立的 <code>negative_prompt</code> 通道。</li>
@@ -123,8 +115,7 @@ img = pipe(
 <li><strong>顺序即权重</strong>：靠前的 token 影响更大；多数 UI 还支持 <code>(word:1.3)</code> 显式加权。</li>
 <li><strong>77 token 硬截断</strong>：CLIP 文本编码器只吃 77 token，超出部分静默丢弃——别写小作文。</li>
 </ul>
-
-<h3>实战示例</h3>
+<h3 data-tts="1a255be27d756a79">实战示例</h3>
 <pre><code><span class="tag-com"># ❌ LLM 式（在扩散模型里几乎必翻车）</span>
 "Please generate a portrait. Make sure there is no blur,
  and don't include any text or watermark in the image."
@@ -136,20 +127,16 @@ prompt = "portrait of a woman, soft window light, 85mm, \
 negative_prompt = "blurry, text, watermark, extra fingers, \
                    lowres, deformed hands"
 <span class="tag-com"># guidance_scale=7  顺序：主体→光线→镜头→质量</span></code></pre>
-
 <div class="fail"><strong>失败模式：</strong>① 把负面诉求写进正向 prompt（最常见翻车）。② 堆几百词「质量咒语」，超 77 token 后半段被丢，自己还以为生效。③ CFG 拉到 15+ 求「更听话」，结果颜色烧穿、出油画感伪影。④ 跨模型抄 prompt：SD1.5 的咒语在 SDXL/Flux 上权重规律不同，要重调。</div>
 <div class="res">进阶资源：<a href="https://arxiv.org/abs/2207.12598" target="_blank">Classifier-Free Guidance (arXiv 2207.12598)</a> · <a href="https://arxiv.org/abs/2307.01952" target="_blank">SDXL 技术报告 (arXiv 2307.01952)</a></div>
 </div>
-
 <!-- ============ 3 ============ -->
 <div class="section">
 <span class="num">// 03</span>
-<h2>图像生成 Agent：把抽卡变成生成—评估—重绘循环</h2>
+<h2 data-tts="4649e28e31140414">图像生成 Agent：把抽卡变成生成—评估—重绘循环</h2>
 <div class="claim">论断：单次生成是赌博；可靠产出来自 agentic loop——VLM 当评审，局部 inpaint 当修正，固定 seed 当版本控制。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="c83c7b2dcb293df7">背景与原理</h3>
 <p>生产场景不接受「跑十张挑一张」。把图像生成接进 agent loop，复用你已经熟的 harness 思路（Day 3）：<strong>生成 → VLM 评估是否符合 brief → 不符合则对问题区域做 mask + inpaint 局部重绘 → 升采样定稿</strong>。关键是用一个多模态模型（Claude / GPT-4V）当 <strong>eval gate</strong>，把「人眼挑图」自动化成结构化判分。重绘只改坏的局部（手、文字、多余物体），而不是整张重抽——既省成本又保住已经对的部分。</p>
-
 <div class="diagram">┌─────────────────────────────────────────────┐
 │  brief ──▶ ① text-to-image (seed=固定)        │
 │               │                              │
@@ -165,8 +152,7 @@ negative_prompt = "blurry, text, watermark, extra fingers, \
 │                                              │
 │   人工 gate：N 轮仍不过 → 升级人审，不无限重绘  │
 └─────────────────────────────────────────────┘</div>
-
-<h3>实战示例</h3>
+<h3 data-tts="e4698f0fb19f8a91">实战示例</h3>
 <pre><code><span class="tag-com"># VLM 当评审：结构化判分，驱动是否重绘</span>
 import anthropic
 client = anthropic.Anthropic()
@@ -184,26 +170,22 @@ def critique(image_b64, brief):
     return msg.content[0].text   <span class="tag-com"># → 解析后决定 inpaint 哪块</span>
 
 <span class="tag-com"># loop：max_iters=3，超出转人工，避免无限重绘烧钱</span></code></pre>
-
 <div class="fail"><strong>失败模式：</strong>① VLM 也会幻觉——对生成图「脑补」出不存在的细节，判分需配一致性校验或多次投票。② 没有 <code>max_iters</code> 和人工 gate → 一张图反复重绘烧掉几美元。③ 每轮换 seed → 修一处坏另一处，永不收敛；inpaint 时锁住未 mask 区域。④ 把整图重抽当「修正」，丢掉上一轮已经对的部分。</div>
 <div class="res">进阶资源：<a href="https://huggingface.co/docs/diffusers/using-diffusers/inpaint" target="_blank">diffusers Inpainting 文档</a> · <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">Anthropic · Building Effective Agents</a>（loop 设计）</div>
 </div>
-
 <!-- ============ 4 ============ -->
 <div class="section">
 <span class="num">// 04</span>
-<h2>水印与版权：生产化绕不开的 Provenance 层</h2>
+<h2 data-tts="54dbceab86526762">水印与版权：生产化绕不开的 Provenance 层</h2>
 <div class="claim">论断：可见水印是装饰；真正的来源证明是 SynthID（鲁棒不可见水印）＋ C2PA（密码学签名元数据）双层，且版权风险主要在训练数据侧。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="7d8d80a1212fe0e4">背景与原理</h3>
 <p>把生成图发到产品里，合规问题立刻浮现，工程上分两层：</p>
 <ul>
 <li><strong>SynthID</strong>（Google DeepMind）：把不可见水印<strong>分布到整张图的像素</strong>，能扛截图、缩放、JPEG 重压缩、轻度裁剪——元数据被剥了它还在。2026 年 SynthID + C2PA 已成跨厂商事实标准。</li>
 <li><strong>C2PA Content Credentials</strong>：给图附上<strong>密码学签名的来源链</strong>（谁、用什么模型、怎么改的）。可验证、可追溯，但<strong>一次截图或转存就可能被剥离</strong>——所以要和 SynthID 配对用。</li>
 <li><strong>版权灰区</strong>：真正的法律风险不在「输出有没有水印」，而在<strong>训练数据</strong>和<strong>风格复制</strong>。用 LoRA 复刻在世艺术家画风、或微调他人作品，是高风险区。</li>
 </ul>
-
-<h3>实战示例</h3>
+<h3 data-tts="f0ca60a91367eeea">实战示例</h3>
 <pre><code><span class="tag-com"># 给输出图签 C2PA Content Credentials（c2patool）</span>
 c2patool input.png \
   --manifest manifest.json \   <span class="tag-com"># 声明：AI 生成 + 模型 + 时间</span>
@@ -219,14 +201,12 @@ c2patool input.png \
   ]
 }
 <span class="tag-com"># 双层：C2PA 签名（可剥离但可验）+ 平台侧 SynthID（鲁棒不可见）</span></code></pre>
-
 <div class="fail"><strong>失败模式：</strong>① 只靠 metadata/EXIF 水印——用户一次截图全没。② 以为「加了水印就免责」：版权问题在训练数据与风格复制侧，水印解决不了。③ 商用 LoRA 训练集混入受版权/隐私保护的人脸或作品，埋下下游法律雷。④ 误以为 C2PA 防篡改——它证明来源，不阻止剥离，必须配鲁棒水印。</div>
 <div class="res">进阶资源：<a href="https://deepmind.google/technologies/synthid/" target="_blank">Google DeepMind · SynthID</a> · <a href="https://c2pa.org/" target="_blank">C2PA · Content Credentials 标准</a></div>
 </div>
-
 <!-- ============ Combo ============ -->
 <div class="combo">
-<h3>// 综合实战 · 一条「可复现品牌素材」流水线</h3>
+<h3 data-tts="225d149a9f857eff">// 综合实战 · 一条「可复现品牌素材」流水线</h3>
 <p>把四点串成一个能批量产出、风格统一、可追溯的素材工厂——这是抽卡和工程的分水岭：</p>
 <ol style="margin-left:20px;margin-top:10px">
 <li><strong>身份层</strong>：用 20–40 张品牌素材训一个 LoRA（rank 16–32）锁住画风/角色，固定触发词。</li>
@@ -237,10 +217,9 @@ c2patool input.png \
 </ol>
 <p style="margin-top:12px">跑通这一套，你交付的不再是「几张好看的图」，而是一个<strong>参数化、可复现、可审计</strong>的生成系统——这正是图像工程与图像玩票的区别。</p>
 </div>
-
 <!-- ============ Glossary ============ -->
 <div class="glossary">
-<h3>// ENGLISH GLOSSARY</h3>
+<h3 data-tts="9d62eee4540c25e7">// ENGLISH GLOSSARY</h3>
 <dl>
 <dt>ControlNet</dt><dd>注入空间条件（边缘/深度/骨架）的旁路网络，给扩散过程 pixel 级构图控制。</dd>
 <dt>LoRA</dt><dd>低秩权重增量微调；几十张图即可固化一个风格或角色，文件小、靠触发词激活。</dd>
@@ -254,7 +233,6 @@ c2patool input.png \
 <dt>DreamBooth</dt><dd>用少量图把唯一标识符绑定到特定主体的个性化微调法，角色一致性的经典路线。</dd>
 </dl>
 </div>
-
 <!-- ============ Deep Thinking ============ -->
 <div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
 <style>
@@ -269,17 +247,16 @@ c2patool input.png \
 .thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
 .thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
 </style>
-<h3>// 深入思考</h3>
+<h3 data-tts="cf5a7bb8930fce45">// 深入思考</h3>
 <details><summary>LLM 的 prompt 是「指令」，扩散模型的 prompt 是「分布坐标」。这个差异的根源是训练目标的不同吗？</summary><div>是。LLM 经 RLHF 对齐成「遵循指令」的助手，于是把 prompt 当命令解析，能理解否定、条件、元指令。扩散模型只学了「文本→图像」的<strong>条件概率</strong>，CLIP 把整段文本压成一个嵌入向量，没有「执行指令」的机制——它只是把你推向潜空间里某个区域。所以「don't」无效（模型只看到 hat 这个 token 把你推向有帽子的区域），所以顺序即权重（越靠前对嵌入贡献越大）。理解这点，就不会再把自然语言指令塞进扩散 prompt。</div></details>
 <details><summary>用 VLM 给生成图当评审，是否陷入「裁判和选手同源」的问题？两个都可能在同一处幻觉。</summary><div>风险真实存在但可缓解。同源指生成与评估都基于相似的视觉先验，可能<strong>共享盲区</strong>（如都对手指数量不敏感）。缓解：① 评审用和生成不同家族的模型；② 对结构性硬约束（手指数、文字 OCR、物体计数）用专用检测器而非泛 VLM；③ 多次投票或要求 VLM 先定位坐标再判分，降低脑补。本质上这和 LLM-as-judge 的去偏是同一类问题——VLM 评审能挡住明显废品，但不能替代关键场景的人审。</div></details>
 <details><summary>ControlNet 给了 pixel 级控制，但控制越强、模型的创造性空间越小。这个 trade-off 的最优点在哪？</summary><div>取决于任务的「确定性需求」。电商主图、UI 资产、需对齐版式的场景：高 conditioning_scale（0.8–1.0），牺牲多样性换可控。概念探索、moodboard：低 scale（0.3–0.5）或不用 ControlNet，让模型多发挥。实践上很少用 1.0——那等于把结构焊死、prompt 失效，模型退化成「填色工具」。更聪明的做法是分阶段：先低控制探方向，定稿阶段再上高控制锁结构。控制不是越多越好，是<strong>在对的阶段用对的强度</strong>。</div></details>
 <details><summary>SynthID 这类鲁棒水印若被广泛部署，会不会催生「去水印」军备竞赛？工程上该怎么看它的有效性边界？</summary><div>会，且已在发生。任何水印都是<strong>概率性而非密码学保证</strong>：足够激进的再生成（用另一个模型 img2img 重画）、强降质、对抗扰动都可能削弱它。所以工程定位要诚实——SynthID 解决的是「无意传播」和「平台侧批量检测」，不是防住蓄意攻击者。正确心态：把它当<strong>纵深防御的一层</strong>（配 C2PA 签名 + 平台政策 + 法律），而非银弹。它的价值在规模——DeepMind 称已水印超千亿件内容，让「默认可检测」成为生态常态，抬高滥用成本，而不是做到 100% 不可去除。</div></details>
 <details><summary>训练数据的版权风险无法靠水印解决。对个人创作者，怎么在能力和风险之间画线？</summary><div>分级处理。低风险：用明确授权/CC0 数据训 LoRA、生成通用素材、复刻自己的作品风格。高风险：复刻在世艺术家的可识别画风、微调他人受版权作品、生成可能侵犯肖像权的真人脸。中间地带（如学习某种通用美学）法律仍在演化。务实建议：①商用前审查训练集来源并留痕（provenance 也是给自己的法律证据）；②避开「能点名某位在世艺术家」的风格复制；③把 C2PA「AI 生成」声明当默认，主动透明而非藏。能力越强，越需要把合规当成工程的一等公民，而非事后补丁。</div></details>
 </div>
-
 <!-- ============ Refs ============ -->
 <div class="refs">
-<h3>// 延伸阅读</h3>
+<h3 data-tts="2a93d218608ab386">// 延伸阅读</h3>
 <ul>
 <li><a href="https://arxiv.org/abs/2302.05543" target="_blank">ControlNet · Adding Conditional Control to Text-to-Image Diffusion Models</a> — 空间条件控制的奠基论文</li>
 <li><a href="https://arxiv.org/abs/2208.12242" target="_blank">DreamBooth · Subject-Driven Generation</a> — 主体/角色一致性微调的经典路线</li>
@@ -288,11 +265,10 @@ c2patool input.png \
 <li><a href="https://c2pa.org/" target="_blank">C2PA · Content Credentials</a> — 来源签名标准；配合 DeepMind SynthID 构成双层 provenance</li>
 </ul>
 </div>
-
 <footer>BigCat · Super Individual · Day 47 · 2026-06-26</footer>
 </div>
-<script src="https://hub.cissychen.com/comments.js" defer></script>
-<script src="https://hub.cissychen.com/search.js" defer></script>
-<script src="https://hub.cissychen.com/index-button.js" defer></script>
-<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
 </body></html>

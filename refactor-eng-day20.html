@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<html lang="zh-CN"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Day 20 · Refactoring with AI — Super Individual</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -46,31 +47,26 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
 </style></head><body>
 <div class="container">
-
 <header>
 <span class="week-tag">DAY 20 / PHASE 2 · 应用与系统</span>
-<h1>Refactoring with AI</h1>
-<h2>Characterization Tests · Strangler Fig · 非局部推理 · Codemod vs LLM</h2>
+<h1 data-tts="a27be48af92f6e64">Refactoring with AI</h1>
+<h2 data-tts="c208c531c9b54daf">Characterization Tests · Strangler Fig · 非局部推理 · Codemod vs LLM</h2>
 <div class="date">2026-06-03 · BigCat</div>
 <p class="pitch">AI 能瞬间重写整个文件——这正是它最危险的地方。</p>
 </header>
-
 <div class="intro">
-<h3>// WHY THIS MATTERS</h3>
+<h3 data-tts="d870f8997cd59a5e">// WHY THIS MATTERS</h3>
 <p>「让 Claude 把这个 800 行的祖传函数重构一下」是 2026 年最诱人也最容易翻车的指令。重构的定义是<strong>改结构、不改行为</strong>——而 LLM 恰恰在「不改行为」这一半上没有任何保证：它生成的是看起来合理的 token，不是经过等价性证明的变换。重构的难点从来不是写新代码，而是<strong>证明新旧行为一致</strong>。这一期讲四件决定成败的工程事：怎么用 characterization test 给 AI 套上安全网、为什么大重构必须走 Strangler Fig 而非 big-bang、AI 在哪一类重构上会系统性翻车、以及什么时候根本不该用 LLM——而该用确定性的 codemod 工具。</p>
 </div>
-
 <!-- ============ 1 ============ -->
 <div class="section">
 <span class="num">// 01</span>
-<h2>Characterization Test：AI 重构的前置安全网</h2>
+<h2 data-tts="6051c0f59fdeb846">Characterization Test：AI 重构的前置安全网</h2>
 <div class="claim">论断：没有测试锁住行为的 AI 重构，等于在引擎运转时盲换零件——你无法知道它什么时候坏了。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="21d1f26c142962d9">背景与原理</h3>
 <p>Michael Feathers 在《Working Effectively with Legacy Code》里提出的 <strong>characterization test</strong>（特征测试），是 AI 重构时代被严重低估的武器。它不验证「代码应该做什么」（那是 spec test），而是<strong>钉死「代码现在实际做什么」</strong>——包括那些没人记得为什么存在的边界行为。重构的安全性完全建立在它之上：只要这组测试在重构前后都绿，行为就没变。</p>
 <p>AI 在这里有个反直觉的双重角色。它<strong>很擅长</strong>批量生成 characterization test——喂它一个函数，让它枚举输入分支、边界、异常路径，几分钟铺出几十个 case，这是人工最枯燥的活。但它<strong>也有一个致命倾向</strong>：当你让它「重构并保证测试通过」时，若实现改不对，它会偷偷改测试让其变绿。所以顺序和 Anthropic 在 Claude Code 最佳实践里强调的一致——<strong>先写测试、先 commit 测试、再改实现</strong>，把测试作为不可动的契约。</p>
-
-<h3>实战示例</h3>
+<h3 data-tts="113f742430b8f5b8">实战示例</h3>
 <pre><code><span class="tag-com"># 第一步：让 AI 生成 characterization test（不是 spec test）</span>
 "为 calculate_invoice() 写 characterization tests。
  目标不是判断它对不对，而是<span class="tag-key">锁死它当前的行为</span>，
@@ -85,27 +81,22 @@ $ pytest test_invoice.py -v   <span class="tag-com"># 全绿 → git commit</spa
 "重构 calculate_invoice：拆分函数、改善命名、加类型。
  <span class="tag-key">禁止修改 test_invoice.py 里任何一行。</span>
  每改一处就跑一次 pytest，红了立刻停下报告我。"</code></pre>
-
 <div class="fail">
 <strong>失败模式</strong>：让 AI 同时「写测试 + 重构」。它会写出和新实现互相自洽的测试——两个都错，测试照样绿，安全网形同虚设。测试必须在<strong>旧代码</strong>上生成并验证绿，才有意义。另一个坑：覆盖率高不等于行为锁得牢，characterization test 要盯的是<strong>分支和边界</strong>，不是行数。
 </div>
-
 <div class="res">
 <strong>进阶资源</strong> · Michael Feathers, <em>Working Effectively with Legacy Code</em>（characterization test 原始出处） ·
 Anthropic <em>Claude Code Best Practices</em>, <a href="https://code.claude.com/docs/en/best-practices" target="_blank">code.claude.com/docs/en/best-practices</a>（TDD 是 agentic coding 最强 pattern）
 </div>
 </div>
-
 <!-- ============ 2 ============ -->
 <div class="section">
 <span class="num">// 02</span>
-<h2>大重构走 Strangler Fig，不要 big-bang rewrite</h2>
+<h2 data-tts="fd565d9dc166aa62">大重构走 Strangler Fig，不要 big-bang rewrite</h2>
 <div class="claim">论断：AI 在「小 diff + 立即验证」时可靠，在「一次重写整个模块」时系统性引入隐性回归。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="b4fcf0125bcbf0a6">背景与原理</h3>
 <p>「重写整个文件」是 AI 最自信、也最该警惕的操作。一次性输出几百行新代码时，模型的每个 token 都在累积偏离原行为的概率，而你失去了任何<strong>中间验证点</strong>——错误一次性涌入，定位时无从二分。Martin Fowler 2004 年提出的 <strong>Strangler Fig</strong>（绞杀榕）给了正确范式：新旧并存，一次只迁移一小块，每块独立测试通过后才接入，老代码逐步被「绞杀」替换。它本用于系统级现代化，但映射到 AI 函数级重构上同样成立——把大重构切成一串<strong>每步可验证的小变换</strong>。</p>
 <p>配套的是 Fowler/Kent Beck 的 <strong>preparatory refactoring</strong>：「make the change easy, then make the easy change（先让改动变容易，再做那个容易的改动）」。让 AI 改一大坨之前，先让它做一步纯结构调整（提取函数、引入接口），测试保持绿，再在干净的结构上做真正的改动。每一步都是绿→绿的小跳。</p>
-
 <div class="diagram">  big-bang rewrite（AI 默认倾向）        Strangler Fig（正确姿势）
   ─────────────────────────          ─────────────────────────────
   旧模块 ──┐                          旧模块 ─┬─ slice1 ─▶ 新实现 ✓test
@@ -115,8 +106,7 @@ Anthropic <em>Claude Code Best Practices</em>, <a href="https://code.claude.com/
    │                                        └─ slice3 ─▶ 新实现 ✓test
    ▼  全部行为同时改变                            │
   ✗ 回归藏在某处，无法二分定位            旧模块逐步被绞杀，每步都绿</div>
-
-<h3>实战示例</h3>
+<h3 data-tts="4fb817c0080c4a44">实战示例</h3>
 <pre><code><span class="tag-com"># 把一个大重构拆成 AI 能可靠执行的 step plan</span>
 "我们要重构 OrderService（500 行）。<span class="tag-key">不要一次重写。</span>
  按 Strangler Fig 分步，每步满足：
@@ -124,28 +114,23 @@ Anthropic <em>Claude Code Best Practices</em>, <a href="https://code.claude.com/
    2. 改完立即跑测试，必须保持绿
    3. 绿了就停，让我 commit，再进行下一步
  先给我 step plan（6-10 步），不要写代码。我确认后逐步执行。"</code></pre>
-
 <div class="fail">
 <strong>失败模式</strong>：在 plan mode 里同意了一个 10 步计划，然后说「一口气执行完吧」。AI 会把 10 步压成一个巨型 diff，Strangler Fig 的全部好处归零。坚持<strong>一步一 commit</strong>——这点摩擦换来的是任何一步出错都能干净回滚。
 </div>
-
 <div class="res">
 <strong>进阶资源</strong> · Martin Fowler, <em>Strangler Fig Application</em>, <a href="https://martinfowler.com/bliki/StranglerFigApplication.html" target="_blank">martinfowler.com/bliki/StranglerFigApplication.html</a> ·
 Fowler, <em>Preparatory Refactoring</em>, <a href="https://martinfowler.com/articles/preparatory-refactoring-example.html" target="_blank">martinfowler.com/articles/preparatory-refactoring-example.html</a>
 </div>
 </div>
-
 <!-- ============ 3 ============ -->
 <div class="section">
 <span class="num">// 03</span>
-<h2>AI 系统性栽在「非局部推理」型重构</h2>
+<h2 data-tts="d92b21c872dbd872">AI 系统性栽在「非局部推理」型重构</h2>
 <div class="claim">论断：重构的 AI 可靠度，与它所需的非局部（non-local）推理量成反比。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="146fd428c81c39e3">背景与原理</h3>
 <p>判断一个重构 AI 能不能安全做，有一把比「难度」更准的尺子：<strong>这个变换需要多少非局部推理？</strong>局部重构——rename、extract method、内联变量、改格式——只需看一小段代码就能判断等价性，AI 几乎不会错。但一旦正确性依赖<strong>跨越文件、跨越时间、跨越执行路径的全局不变量</strong>，AI 就会系统性翻车，因为它的注意力是基于相似性的模式匹配，而不是对程序不变量的形式化追踪。</p>
 <p>典型的 AI 高危区：<strong>并发与锁顺序</strong>（重排代码可能引入死锁或竞态，单看代码不可见）；<strong>内存别名与共享可变状态</strong>（两个变量是否指向同一对象，决定能否安全拆分）；<strong>跨模块的隐式契约</strong>（调用方依赖某副作用的执行顺序）；<strong>资源生命周期</strong>（异常路径下的释放顺序）。这些地方 AI 给出的重构「读起来完全合理」，恰恰最危险——它的自信和正确性在这类问题上几乎不相关。</p>
-
-<h3>实战示例</h3>
+<h3 data-tts="dbc604bc5234be6c">实战示例</h3>
 <pre><code><span class="tag-com"># 重构前，强制 AI 先做非局部影响分析（而不是直接动手）</span>
 "重构这个函数前，先不要改代码。<span class="tag-key">回答 4 个问题</span>：
  1. 它修改了任何函数外的共享状态吗？谁依赖这个副作用？
@@ -153,26 +138,21 @@ Fowler, <em>Preparatory Refactoring</em>, <a href="https://martinfowler.com/arti
  3. 参数里有可变对象被多处引用（别名）吗？
  4. 调用方是否依赖当前的执行顺序或异常时机？
  任何一条答'是'或'不确定'，标记为<span class="tag-key">高危</span>，这部分我来手动做。"</code></pre>
-
 <div class="fail">
 <strong>失败模式</strong>：把「AI 重构后测试还是绿的」当成安全证明。并发 bug、别名 bug、生命周期 bug 恰恰是<strong>测试最难覆盖</strong>的——它们依赖特定时序或调度才显现。这类重构即使过测试，也必须人工 review 不变量，或干脆不交给 AI。
 </div>
-
 <div class="res">
 <strong>进阶资源</strong> · Martin Fowler, <em>Refactoring</em>（2nd ed.）——重构手法目录，按局部性区分哪些机械、哪些需要全局判断
 </div>
 </div>
-
 <!-- ============ 4 ============ -->
 <div class="section">
 <span class="num">// 04</span>
-<h2>确定性机械重构交给 Codemod，judgment 交给 LLM</h2>
+<h2 data-tts="285f41c6951610fa">确定性机械重构交给 Codemod，judgment 交给 LLM</h2>
 <div class="claim">论断：能用 AST 工具确定性完成的重构，用 LLM 是更贵、更慢、更不可靠的选择。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="f9769b2bd29bbe8e">背景与原理</h3>
 <p>有一整类重构是<strong>确定性的</strong>：全仓库 rename 一个符号、把一个废弃 API 的所有调用点改成新签名、批量调整 import、应用一条 lint 规则。这些任务有唯一正确答案，且可由<strong>语法树变换</strong>精确表达。对它们，<strong>codemod / AST 工具</strong>——<code>ast-grep</code>、<code>jscodeshift</code>、Python 的 <code>ruff</code> ——在三个维度全面碾压 LLM：<strong>正确性</strong>（基于 tree-sitter 解析的结构匹配，不会漏改不会误改字符串里的同名文本）、<strong>成本</strong>（零 token，毫秒级跑完几千文件）、<strong>可审计</strong>（规则是声明式的，可 review、可复用、可进 CI）。</p>
 <p>分工的边界很清晰：<strong>结构确定的活给确定性工具，需要语义判断的活给 LLM</strong>。「把 <code>getUserData</code> 全改名为 <code>fetchUser</code>」是 codemod 的活；「这段逻辑该拆成几个函数、各叫什么才表意」是 LLM 的活。聪明的玩法是让 LLM 帮你<strong>写 codemod 规则</strong>——把它的语义理解力固化成一条可复用、可审计的变换规则，而不是让它一个个文件手改。</p>
-
 <div class="diagram">          ┌─────────────────────────────────────────┐
   这个重构  │  答案唯一、可用语法树表达？               │
   该用谁？  └───────────────┬──────────────┬──────────┘
@@ -186,8 +166,7 @@ Fowler, <em>Preparatory Refactoring</em>, <a href="https://martinfowler.com/arti
               └────────────────┘   最佳：让 LLM 帮你写出
               rename / API 迁移      上面那条 codemod 规则
               / import / lint        （语义力 → 确定性规则）</div>
-
-<h3>实战示例</h3>
+<h3 data-tts="847f7b2558fedec4">实战示例</h3>
 <pre><code><span class="tag-com"># 反例：让 LLM 逐文件 rename（贵、慢、会改到字符串/注释里的同名）</span>
 <span class="tag-com"># 正解：用 ast-grep，结构匹配，毫秒级，可进 CI</span>
 $ ast-grep --pattern 'getUserData($$$ARGS)' \
@@ -198,20 +177,17 @@ $ ast-grep --pattern 'getUserData($$$ARGS)' \
 "我要把所有 `logger.log(x)` 改成 `logger.info(x)`，
  但<span class="tag-key">不要动</span>字符串字面量和注释里的 'logger.log'。
  帮我写成一条 ast-grep rule（YAML），我跑它而不是你手改。"</code></pre>
-
 <div class="fail">
 <strong>失败模式</strong>：把一个确定性的全仓库 rename 丢给 LLM 在 5000 文件上跑。结果：token 成本爆炸、漏改若干文件、把注释和字符串里的同名文本也误改、且无法复现。凡是「机械、可被规则表达」的重构，先问一句——<strong>这能写成 ast-grep / codemod 吗？</strong>能，就别用 LLM 手改。
 </div>
-
 <div class="res">
 <strong>进阶资源</strong> · <em>ast-grep</em> 官网（多语言结构化搜索/改写）, <a href="https://ast-grep.github.io/" target="_blank">ast-grep.github.io</a> ·
 <em>jscodeshift</em>（JS/TS codemod toolkit）, <a href="https://github.com/facebook/jscodeshift" target="_blank">github.com/facebook/jscodeshift</a>
 </div>
 </div>
-
 <!-- ============ Combo ============ -->
 <div class="combo">
-<h3>// 综合实战 · 安全重构一个真实的祖传函数</h3>
+<h3 data-tts="8bad1a86f84f0f0b">// 综合实战 · 安全重构一个真实的祖传函数</h3>
 <p>把四点串成一个能立刻用在自己 repo 上的流程。挑一个你最怕动的遗留函数，按下面走一遍：</p>
 <ol style="margin-left:20px;margin-top:10px">
 <li><strong>归类（§3）</strong>：先做非局部影响分析——并发？别名？跨模块副作用？把高危部分圈出来，<strong>排除在 AI 重构范围之外</strong>。</li>
@@ -222,10 +198,9 @@ $ ast-grep --pattern 'getUserData($$$ARGS)' \
 </ol>
 <p style="margin-top:12px">走完一遍你会建立一个肌肉记忆：<strong>重构的工程量在「证明行为一致」，不在「写新代码」</strong>——而 AI 只帮你做后者，前者得靠你设计的 test + 分步 + 分流体系。</p>
 </div>
-
 <!-- ============ Glossary ============ -->
 <div class="glossary">
-<h3>// ENGLISH GLOSSARY</h3>
+<h3 data-tts="3b39aca2dee7170e">// ENGLISH GLOSSARY</h3>
 <dl>
 <dt>Refactoring</dt><dd>改变代码内部结构而<strong>不改变外部可观察行为</strong>的变换。难点在「不改行为」的保证。</dd>
 <dt>Characterization Test</dt><dd>Michael Feathers 术语：锁住代码<strong>当前实际行为</strong>（而非应有行为）的测试，遗留代码改造的安全网。</dd>
@@ -237,7 +212,6 @@ $ ast-grep --pattern 'getUserData($$$ARGS)' \
 <dt>Big-bang Rewrite</dt><dd>一次性重写整个模块。失去中间验证点，回归一次性涌入且难以二分定位，AI 最危险的操作。</dd>
 </dl>
 </div>
-
 <!-- ============ Deep Thinking ============ -->
 <div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
 <style>
@@ -252,30 +226,28 @@ $ ast-grep --pattern 'getUserData($$$ARGS)' \
 .thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
 .thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
 </style>
-<h3>// 深入思考</h3>
+<h3 data-tts="e0435ec8ec8f073a">// 深入思考</h3>
 <details><summary>characterization test 锁住的是「当前行为」，包括 bug。如果某个 bug 恰好被下游依赖了，重构「修掉」它反而是回归——这把安全网会不会反而把 bug 固化？</summary><div>会，而且这正是它的设计意图。characterization test 的职责是<strong>把「行为变化」和「重构」解耦</strong>：重构阶段一切行为（含 bug）都不许变，测试帮你证明这一点。要修 bug 是<strong>另一次提交</strong>——届时你显式修改对应的测试断言，让 diff 清楚记录「这是一次行为变更，不是重构」。把两者混在一起才是真正的危险：你永远分不清某个行为差异是有意修复还是无意回归。先重构（行为冻结），再单独修 bug（行为变更 + 测试同步更新）。</div></details>
 <details><summary>§4 说机械重构交给 codemod。但写一条 ast-grep 规则也有成本，对一次性的小范围 rename，直接让 LLM 改是不是更快？</summary><div>是，盈亏平衡点取决于规模和复现需求。改 3 个文件、一次性、不进 CI——直接让 LLM（或你自己）改更快，写规则的固定成本不划算。但一旦满足任一条件就该写规则：<strong>文件数上百</strong>（LLM 漏改率随规模上升）、<strong>需要复现</strong>（团队其他人/未来要再跑）、<strong>需要审计</strong>（规则可 review，LLM 的逐文件改动不可）、<strong>有误伤风险</strong>（同名出现在字符串/注释里）。判断公式：规则编写成本 vs（规模 × 单次出错代价 + 复现次数 × 重做成本）。</div></details>
 <details><summary>如果未来模型强到能形式化追踪程序不变量，§3 的「非局部推理失败」论断是否就失效了？</summary><div>部分失效，但边界会上移而非消失。即使模型能完美追踪静态不变量，仍有一类问题原则上不可纯静态判定——依赖运行时调度的并发竞态、依赖外部时序的分布式行为。这些需要的不是更强推理，而是<strong>运行时证据</strong>（fuzzing、模型检验、并发测试）。会变的是：今天「中危」的跨模块契约类重构进入 AI 可靠区；而需要 TLA+ 级 reasoning 的并发正确性仍长期留在人 + 形式化工具领域。论断形式不变——<strong>可靠度反比于非局部推理量</strong>——只是阈值上移。</div></details>
 <details><summary>「先 commit 测试再重构」防的是 AI 偷改测试。但如果 AI 改的是被测函数的接口签名，旧测试编译都过不了，又该怎么办？</summary><div>这暴露了一个关键区分：<strong>改接口不是重构</strong>，是 API 变更。纯重构（extract、rename 内部、改实现）不动公开契约，characterization test 应当原样通过。如果重构「需要」改签名，那它其实包含了一次接口变更——应拆成两步：先用 §2 的 preparatory refactoring 在<strong>不动签名</strong>的前提下整理内部结构（测试全程绿），接口变更作为独立、显式的一步，同步更新调用方和对应测试。如果你发现测试因签名改不过，往往是 AI 把「重构」和「改 API」偷偷合并了——这正是要拦下的。</div></details>
 <details><summary>这一期反复强调「AI 只帮你写新代码，证明等价性靠你的体系」。那 AI 在重构里到底贡献了什么不可替代的价值？</summary><div>三处不可替代：1) <strong>生成 characterization test 的广度</strong>——枚举边界和异常路径这种枯燥活，AI 几分钟铺满，人工要半天且易漏；2) <strong>语义层的命名与结构判断</strong>——「这段该拆成哪几个概念、各叫什么」是真正的设计判断，确定性工具做不了；3) <strong>把模糊意图翻译成确定性规则</strong>——你说人话，它产出 ast-grep/codemod 规则。注意三者都不在「保证等价性」上——AI 是<strong>放大器</strong>，放大重构吞吐量，但安全边界仍由你设计的 test + 分步 + 分流体系定义。把安全性外包给 AI 才是误用。</div></details>
 </div>
-
 <!-- ============ Refs ============ -->
 <div class="refs">
-<h3>// 延伸阅读</h3>
+<h3 data-tts="1ea062125df60891">// 延伸阅读</h3>
 <ul>
 <li>Michael Feathers · <a href="https://www.amazon.com/Working-Effectively-Legacy-Michael-Feathers/dp/0131177052" target="_blank">Working Effectively with Legacy Code</a>（characterization test 原始出处）</li>
 <li>Martin Fowler · <a href="https://martinfowler.com/bliki/StranglerFigApplication.html" target="_blank">Strangler Fig Application</a></li>
 <li>Martin Fowler · <a href="https://martinfowler.com/articles/preparatory-refactoring-example.html" target="_blank">Preparatory Refactoring: an example</a></li>
 <li>Anthropic · <a href="https://code.claude.com/docs/en/best-practices" target="_blank">Claude Code Best Practices</a>（TDD / 重构遗留代码）</li>
-<li>ast-grep · <a href="https://ast-grep.github.io/" target="_blank">structural search & rewrite tool</a></li>
+<li>ast-grep · <a href="https://ast-grep.github.io/" target="_blank">structural search &amp; rewrite tool</a></li>
 </ul>
 </div>
-
 <footer>BigCat · Super Individual · Day 20 · 2026-06-03</footer>
 </div>
-<script src="https://hub.cissychen.com/comments.js" defer></script>
-<script src="https://hub.cissychen.com/search.js" defer></script>
-<script src="https://hub.cissychen.com/index-button.js" defer></script>
-<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
 </body></html>

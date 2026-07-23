@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<html lang="zh-CN"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Day 2 · Context Engineering — Super Individual</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -47,40 +48,34 @@ pre code{color:#d8e8e8}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.68rem}}
 </style></head><body>
-<a href="https://cissy0802.github.io/" style="position:fixed;top:14px;left:14px;font-size:0.82rem;color:inherit;opacity:0.55;text-decoration:none;padding:6px 12px;border:1px solid currentColor;border-radius:20px;z-index:100;backdrop-filter:blur(6px);transition:opacity 0.2s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.55">← Hub</a>
+<a href="https://cissy0802.github.io/" onmouseout="this.style.opacity=0.55" onmouseover="this.style.opacity=1" style="position:fixed;top:14px;left:14px;font-size:0.82rem;color:inherit;opacity:0.55;text-decoration:none;padding:6px 12px;border:1px solid currentColor;border-radius:20px;z-index:100;backdrop-filter:blur(6px);transition:opacity 0.2s">← Hub</a>
 <div class="container">
-
 <header>
 <span class="week-tag">DAY 02 / PHASE 1 · ENGINEERING</span>
-<h1>Context Engineering</h1>
-<h2>Lost-in-the-Middle · 信息排布 · Chunk 设计 · Context Compaction</h2>
+<h1 data-tts="b1aed9175fbe8940">Context Engineering</h1>
+<h2 data-tts="db49bb35ae6eff85">Lost-in-the-Middle · 信息排布 · Chunk 设计 · Context Compaction</h2>
 <div class="date">2026-05-22 · BigCat</div>
 <p class="pitch">「200K context」不等于「200K 有效注意力」。</p>
 </header>
 <div class="cross-ref" style="margin: 24px auto; max-width: 760px; padding: 14px 18px; border-left: 3px solid #00d4ff; background: rgba(0,212,255,0.10); border-radius: 4px; font-size: 0.92rem;">
-  <a href="https://cissy0802.github.io/ai-ml-daily/llm-basics-day1.html" style="color: #00d4ff; text-decoration: none; font-weight: 500;">
+<a href="https://cissy0802.github.io/ai-ml-daily/llm-basics-day1.html" style="color: #00d4ff; text-decoration: none; font-weight: 500;">
     前置概念 → ai-ml-daily Day 1: LLM 基础（Attention 机制、Tokenization、位置编码）
   </a>
 </div>
-
-
 <div class="intro">
-<h3>// WHY THIS MATTERS</h3>
+<h3 data-tts="43a7edcba2bcb343">// WHY THIS MATTERS</h3>
 <p>所有大模型厂商都在卷 context window：Claude Sonnet 4.5 给了 1M、Gemini 2.5 给到 2M、GPT-5 也跟到 400K。于是大量人开始把整个 codebase / 全公司文档 / 三十轮历史对话一股脑塞进去，然后困惑：「为什么模型答不上来？我明明把答案放进去了。」答案是 <strong>context window 长 ≠ context 有效</strong>。注意力在长序列上是退化的、信息排布的位置决定模型能不能用、chunk 切的方式比换一个 embedding model 重要 10 倍。这一期讲四件事：长 context 真实有效长度的衡量、信息在 prompt 里的物理位置怎么放、为什么 90% 的 RAG 输给作者自己的 chunk 策略、以及当 history 超长时怎么做 compaction 而不丢关键信息。</p>
 </div>
-
 <!-- ============ 1 ============ -->
 <div class="section">
 <span class="num">// 01</span>
-<h2>Lost-in-the-Middle：长 context 的真实有效长度</h2>
+<h2 data-tts="bacba4a521f354d8">Lost-in-the-Middle：长 context 的真实有效长度</h2>
 <div class="claim">论断：把关键信息放进 prompt 中段，就是把它埋进模型的视觉盲区。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="857eb1a1f2ed619f">背景与原理</h3>
 <p>Liu et al. 2023 的 <em>Lost in the Middle: How Language Models Use Long Contexts</em>（TACL 2024 收录）是这一切讨论的起点。他们让模型在一组文档里找答案，把 ground-truth 文档分别放在第 1、5、10、15、20 个位置，画出准确率曲线。结果在所有测试的模型（包括 GPT-3.5、Claude、Longchat）上都是 <strong>U 形</strong>：首尾位置准确率接近 75%，中段塌到 50% 以下——比关闭整个 retrieval 还差。</p>
 <p>原因有两层。第一，预训练阶段，token 之间的依赖大多是局部的、或对齐到文档开头（causal mask 让 attention 天然偏向最近 token，RoPE 等位置编码的 long-tail 衰减也让远距离 attention score 变弱）。第二，post-training 的指令数据多数是「短 prompt → 答案」结构，模型对「指令在尾、关键事实在中段」的形态见过的样本少。</p>
 <p>2024 年 NoLiMa（Modarressi et al.）进一步证明：当 question 和 answer 之间没有词面 overlap 时，所谓的 100K+ 长上下文模型在 32K 处就掉到基线以下。Chroma 2025 年的 <em>Context Rot</em> 报告复测了 18 个最新模型（含 Claude Sonnet 4、GPT-4.1、Gemini 2.5），结论一样：<strong>有效 context 远短于宣传的 max context</strong>，且和任务难度反向相关。</p>
-
-<h3>实战示例</h3>
+<h3 data-tts="412189e312f2d00b">实战示例</h3>
 <p>跑一个最小 NIAH（Needle in a Haystack）测试，先量一下你常用模型的真实有效长度：</p>
 <pre><code><span class="tag-key">import</span> anthropic, random, string
 
@@ -106,25 +101,21 @@ needle = "BigCat 的会议密码是 PURPLE-OWL-9182。"
                 "\n\nQ: BigCat 的会议密码是什么？只回答密码。"}])
         print(length, pos, r.content[0].text.strip())</code></pre>
 <p>跑完会得到一张 (length × position) 的命中表。<strong>你只能信任那张表里命中率 ≥ 95% 的格子</strong>——超过的部分，不管厂商宣传多少 K，都不该塞关键信息。</p>
-
 <div class="fail">
 <strong>失败模式</strong>：很多团队用 NIAH 单针测出「100% 通过 1M context」，就放心地把多份合同、邮件、聊天记录混进 prompt。NIAH 只测「字面查找」，而真实任务要的是<strong>多跳推理 + 整合</strong>，难度高 1-2 个数量级。BABILong、RULER、LongBench v2 才是更接近真实的 benchmark。
 </div>
-
 <div class="res">
 <strong>进阶资源</strong> · Liu et al. 2023, <a href="https://arxiv.org/abs/2307.03172" target="_blank">arxiv.org/abs/2307.03172</a> ·
 Chroma 2025 <em>Context Rot</em>, <a href="https://research.trychroma.com/context-rot" target="_blank">research.trychroma.com/context-rot</a> ·
 Greg Kamradt 的原版 NIAH 仓库，<a href="https://github.com/gkamradt/LLMTest_NeedleInAHaystack" target="_blank">github.com/gkamradt/LLMTest_NeedleInAHaystack</a>
 </div>
 </div>
-
 <!-- ============ 2 ============ -->
 <div class="section">
 <span class="num">// 02</span>
-<h2>信息排布原则：U 形分布 + Anchor + Restate</h2>
+<h2 data-tts="54e7ca457f206363">信息排布原则：U 形分布 + Anchor + Restate</h2>
 <div class="claim">论断：prompt 不是一个 bag of tokens，它是一条<strong>有梯度的注意力管道</strong>。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="424b621447a41b24">背景与原理</h3>
 <p>既然首尾权重最高，prompt 内部的物理排布就该按重要性梯度铺。Anthropic 官方文档给的 long-context 建议（claude.com/docs · Long context tips）非常直白：<strong>把待引用的长文档放在 prompt 的最上方，让 question 出现在 user turn 的末尾</strong>。这条规则在 Claude 上反复被测过，能把 long doc Q&amp;A 的准确率提 10-20%。</p>
 <p>实操有三个动作：</p>
 <ul>
@@ -132,7 +123,6 @@ Greg Kamradt 的原版 NIAH 仓库，<a href="https://github.com/gkamradt/LLMTes
 <li><strong>Restate（复述）</strong>：在让 Claude 引用长文档时，要求它先「quote the relevant sentences verbatim」再回答。这一步强制模型在生成答案前把信息从中段重新拉到当前 attention 区。</li>
 <li><strong>Stable prefix</strong>：把不变的指令 / schema / examples 全部放最前，让 KV cache 命中率最大化（这一点和 Day 1 的 prefix caching 同源）。</li>
 </ul>
-
 <div class="diagram">┌──────────────── Prompt 物理排布 ─────────────────┐
 │  ↑ HIGH attention                              │
 │  ┌──────────────────────────────────────────┐  │
@@ -149,8 +139,7 @@ Greg Kamradt 的原版 NIAH 仓库，<a href="https://github.com/gkamradt/LLMTes
 │  └──────────────────────────────────────────┘  │
 │  ↑ HIGH attention                              │
 └────────────────────────────────────────────────┘</div>
-
-<h3>实战示例</h3>
+<h3 data-tts="875114bb756d6866">实战示例</h3>
 <pre><code><span class="tag-claude">&lt;documents&gt;</span>
   <span class="tag-claude">&lt;document index="1"&gt;</span>
     <span class="tag-claude">&lt;source&gt;</span>contracts/acme-2024.pdf<span class="tag-claude">&lt;/source&gt;</span>
@@ -165,24 +154,20 @@ Greg Kamradt 的原版 NIAH 仓库，<a href="https://github.com/gkamradt/LLMTes
 
 <span class="tag-key">Question</span>：
 我方在 Acme 合同里能否在第 18 个月单方面终止？请逐条列出依据。</code></pre>
-
 <div class="fail">
 <strong>失败模式</strong>：在 chat history 很长的会话里把新指令塞进 system，又指望模型「重新读一遍 system」。模型不会主动「再读」——它只是在每个 token 上做一次 attention。指令需要在<strong>最近的 user turn 里复述</strong>才会被注意到。
 </div>
-
 <div class="res">
 <strong>进阶资源</strong> · Anthropic Long context tips, <a href="https://docs.claude.com/en/docs/build-with-claude/prompt-engineering/long-context-tips" target="_blank">docs.claude.com/.../long-context-tips</a> ·
 Lilian Weng 的 <em>LLM Powered Autonomous Agents</em> 关于 working memory 的章节，<a href="https://lilianweng.github.io/posts/2023-06-23-agent/" target="_blank">lilianweng.github.io/posts/2023-06-23-agent</a>
 </div>
 </div>
-
 <!-- ============ 3 ============ -->
 <div class="section">
 <span class="num">// 03</span>
-<h2>RAG 真正的瓶颈：Chunk 设计远比 Embedding Model 重要</h2>
+<h2 data-tts="52e4eed915726cf8">RAG 真正的瓶颈：Chunk 设计远比 Embedding Model 重要</h2>
 <div class="claim">论断：90% 的 RAG 写错了，错的不是 embedding，是切文档的方式。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="6b39b1a621882f6b">背景与原理</h3>
 <p>团队上线 RAG 的标准流程：固定 512-token chunk + 50 overlap + OpenAI embedding + 简单 top-k。然后效果不好就开始换 embedding model、换向量库。换完发现差不多。这是因为：</p>
 <ul>
 <li><strong>语义边界被切坏</strong>：固定大小切，会在句中、段落中切断。一个「但是上述条件不适用于...」的转折句被切成两个 chunk，retrieval 命中其中一个就是错的答案。</li>
@@ -190,8 +175,7 @@ Lilian Weng 的 <em>LLM Powered Autonomous Agents</em> 关于 working memory 的
 <li><strong>单一粒度</strong>：法律条款适合 200 token，源代码适合按函数切，研报适合按章节切——固定粒度等于对所有任务用一种锤子。</li>
 </ul>
 <p>真正决定 RAG 上限的三件事：<strong>chunk 边界（语义切分）、chunk 上下文（contextual prefix）、检索融合（hybrid + rerank）</strong>。embedding model 在合理选择下只是 ±5% 的差异。</p>
-
-<h3>实战示例</h3>
+<h3 data-tts="d680af5eeae84f93">实战示例</h3>
 <p>Anthropic 推荐的 Contextual Retrieval 流程（可直接搬到自己的项目）：</p>
 <pre><code><span class="tag-claude"># 步骤 1：为每个 chunk 生成上下文（用 Claude Haiku 批量做，配合 prompt caching）</span>
 context_prompt = """
@@ -212,25 +196,21 @@ bm25_hits  = bm25_index.search(query, k=150)
 fused = reciprocal_rank_fusion([dense_hits, bm25_hits])
 top20 = cohere_rerank(query, fused[:150], top_n=20)</code></pre>
 <p>关键工程细节：第 1 步的 <code>{whole_doc}</code> 在 prompt 里复用同一个 system + document prefix，所有 chunk 共享 prompt cache，成本可以压到原 1/10。Anthropic 自己测下来一篇 100 页文档的 contextualization 成本大约 $1.02——比换 embedding model 便宜得多，效果好得多。</p>
-
 <div class="fail">
 <strong>失败模式</strong>：把 contextual retrieval 当 silver bullet。它对「需要外部信息消歧」的 chunk 提升大；对「完全独立可读」的 chunk（如 API 文档每条 endpoint 独立）几乎无收益，反而增加成本。先做 baseline eval，再决定哪些 corpus 上用。
 </div>
-
 <div class="res">
 <strong>进阶资源</strong> · Anthropic <em>Introducing Contextual Retrieval</em> 2024, <a href="https://www.anthropic.com/news/contextual-retrieval" target="_blank">anthropic.com/news/contextual-retrieval</a> ·
 LlamaIndex 的 chunking 实验，<a href="https://www.llamaindex.ai/blog" target="_blank">llamaindex.ai/blog</a> ·
 Jina AI <em>Late Chunking</em> 论文，<a href="https://arxiv.org/abs/2409.04701" target="_blank">arxiv.org/abs/2409.04701</a>
 </div>
 </div>
-
 <!-- ============ 4 ============ -->
 <div class="section">
 <span class="num">// 04</span>
-<h2>Context Compaction：长对话的可控压缩</h2>
+<h2 data-tts="b9379caabf591f42">Context Compaction：长对话的可控压缩</h2>
 <div class="claim">论断：长会话不是「窗口爆了」的问题，是「信号被噪声稀释」的问题。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="bf28546d931ac14a">背景与原理</h3>
 <p>Agent / 长聊会话跑到第 50 轮，accuracy 经常断崖下跌。原因不一定是 token 超了——很多时候离 max context 还远，但模型已经晕了。这就是 <strong>context rot</strong>：相关信号被无关历史稀释，加上 lost-in-the-middle，模型把注意力压到了无关 token 上。</p>
 <p>处理 long history 有四种主流策略，工程选择对应不同 trade-off：</p>
 <ul>
@@ -239,8 +219,7 @@ Jina AI <em>Late Chunking</em> 论文，<a href="https://arxiv.org/abs/2409.0470
 <li><strong>Hierarchical memory</strong>：working memory（最近）+ episodic memory（事件摘要）+ semantic memory（向量化检索）。MemGPT (Packer et al. 2023, <em>arxiv.org/abs/2310.08560</em>) 是经典实现，也是 Lilian Weng <em>LLM Powered Autonomous Agents</em> 推荐的模板。</li>
 <li><strong>Selective pruning（基于相关性）</strong>：用一个小模型给每个 historical turn 打分，低于阈值的整段抛掉，而不是按时间。适合 tool-use heavy 的 agent——大多数 tool output 用完一次就再也不被引用了。</li>
 </ul>
-
-<h3>实战示例</h3>
+<h3 data-tts="2c75137102633ad6">实战示例</h3>
 <p>给一个长跑的 coding agent 写一段最小可用的 compaction loop：</p>
 <pre><code><span class="tag-key">def</span> maybe_compact(history, model="claude-sonnet-4-6", threshold=120_000):
     tok = count_tokens(history)
@@ -261,21 +240,18 @@ Compress the following turns into JSON with keys:
 """}]).content[0].text
     <span class="tag-key">return</span> [{"role":"system","content":f"&lt;prior_session&gt;{summary}&lt;/prior_session&gt;"}] + recent</code></pre>
 <p>关键经验：<strong>压缩的 schema 比压缩的算法重要</strong>。强制模型按固定 key 输出（goal / decisions / artifacts / open_questions / forbidden），可以让下一轮 prompt 直接引用 <code>&lt;prior_session&gt;.forbidden</code>，比让模型自由总结鲁棒得多。</p>
-
 <div class="fail">
 <strong>失败模式</strong>：（1）压缩时把代码片段也总结掉，下次让 agent 改代码时它再要原文，反而多花 token。规则：<em>code / file paths / exact identifiers 永远保留原文，自然语言才压</em>。（2）每轮都 compact，把缓存彻底打掉，反向涨成本。设置 hysteresis：触发阈值 120K，恢复到 60K，期间不再触发。
 </div>
-
 <div class="res">
 <strong>进阶资源</strong> · Anthropic <em>Effective context engineering for AI agents</em> 工程博客, <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" target="_blank">anthropic.com/engineering/effective-context-engineering-for-ai-agents</a> ·
 MemGPT 论文, <a href="https://arxiv.org/abs/2310.08560" target="_blank">arxiv.org/abs/2310.08560</a> ·
 Simon Willison <em>Context engineering</em> 词条整理, <a href="https://simonwillison.net/tags/context-engineering/" target="_blank">simonwillison.net/tags/context-engineering</a>
 </div>
 </div>
-
 <!-- ============ Combo ============ -->
 <div class="combo">
-<h3>// 综合实战 · 给个人 RAG 做一次端到端改造</h3>
+<h3 data-tts="13f018904547db1b">// 综合实战 · 给个人 RAG 做一次端到端改造</h3>
 <p>把上面四点串成一个周末项目：拿你自己的 Notion / Obsidian 笔记当 corpus，做一个可日常用的 personal knowledge agent。</p>
 <ol style="margin-left:20px;margin-top:10px">
 <li><strong>切</strong>：按 Markdown header 切（不要 fixed-size）。<code>##</code> 以上每一段为一个 chunk，附 frontmatter + breadcrumb（文件路径 + heading 链）。</li>
@@ -287,10 +263,9 @@ Simon Willison <em>Context engineering</em> 词条整理, <a href="https://simon
 </ol>
 <p style="margin-top:12px">这一套跑下来，你会发现 <strong>chunking + contextualization + rerank</strong> 这三步带来的提升，比把 embedding model 换 5 次都大。</p>
 </div>
-
 <!-- ============ Glossary ============ -->
 <div class="glossary">
-<h3>// ENGLISH GLOSSARY</h3>
+<h3 data-tts="8794f0a2a166c741">// ENGLISH GLOSSARY</h3>
 <dl>
 <dt>Context Window</dt><dd>模型一次推理能处理的最大 token 数（输入 + 输出）。1M context ≠ 1M 有效注意力。</dd>
 <dt>Lost-in-the-Middle</dt><dd>关键信息位于 prompt 中段时，模型准确率呈 U 形塌陷。Liu et al. 2023。</dd>
@@ -304,7 +279,6 @@ Simon Willison <em>Context engineering</em> 词条整理, <a href="https://simon
 <dt>Hierarchical Memory</dt><dd>working / episodic / semantic 三层记忆架构。MemGPT 是代表实现。</dd>
 </dl>
 </div>
-
 <!-- ============ Deep Thinking ============ -->
 <div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
 <style>
@@ -319,17 +293,16 @@ Simon Willison <em>Context engineering</em> 词条整理, <a href="https://simon
 .thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
 .thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
 </style>
-<h3>// 深入思考</h3>
+<h3 data-tts="369b6ff32d0c6ee8">// 深入思考</h3>
 <details><summary>Lost-in-the-Middle 是 transformer 架构的固有缺陷，还是训练数据偏见？未来模型会消失这问题吗？</summary><div>两者都有。架构层：positional encoding 在长 context 下精度下降，attention 在中段被稀释。训练层：大多数 instruction tuning 数据是短文本，模型没学到「中段也要看」。新模型（GPT-4o long、Claude 3.5 200k）通过 needle-in-haystack 训练有改善，但 Liu et al. 2024 显示真实任务上仍有 20%+ gap。短期不会消失。</div></details>
 <details><summary>RAG 切 chunk 时，按固定字符切 vs 按 semantic boundary 切，差距多大？为什么很多 framework 默认前者？</summary><div>Semantic boundary 通常 recall 高 10-30%——embedding 是按语义单元训的，半截句子 embedding 是噪声。Framework 默认固定字符是因为简单 + 不依赖文档解析。Production 应该 hybrid：按 paragraph/heading 切，再用 max_tokens 兜底。</div></details>
 <details><summary>U 形排布把关键信息放头尾。如果只有一个关键信息，放头还是放尾？</summary><div>放尾。Recency bias 更强（attention 对最近 tokens 权重最高），且大多数任务里「最后再说一遍」比「最前说一遍」收益高。但有例外：role/persona 必须放头（影响整段输出风格），任务指令放尾。这就是为什么 system prompt 模板里 role 在最上面，user query 在最下面。</div></details>
 <details><summary>Context compaction 用 LLM 做 summarization 是常见做法，但会引入幻觉。怎么设计才能既压缩又不失真？</summary><div>三个机制：1) 结构化压缩（让 LLM 输出 JSON 而非自然语言，限制 schema）；2) 双 pass 验证（compaction 后用另一个 prompt 验证「原文是否真有 X」）；3) 保留 reference（compacted 内容引用原始 chunk id，需要细节时回查）。Claude Code 的 conversation compaction 用前两种。</div></details>
 <details><summary>Chunk 大小该 200 token 还是 800 token？取决于什么变量？</summary><div>三个变量：1) 问题粒度（细节问题需小 chunk，宏观需大）；2) embedding model 训练长度（OpenAI text-embedding-3 训在 ~256 token，超过会被 mean-pool 失真）；3) retrieval k（k=1 时大 chunk 保信息，k=10 时小 chunk 保多样）。Production 常见 200-500 + overlap 50。</div></details>
 </div>
-
 <!-- ============ Refs ============ -->
 <div class="refs">
-<h3>// 延伸阅读</h3>
+<h3 data-tts="3b4b436cbec7195c">// 延伸阅读</h3>
 <ul>
 <li><a href="https://arxiv.org/abs/2307.03172" target="_blank">Liu et al. 2023 · Lost in the Middle</a> — 长 context 注意力分布的奠基性研究</li>
 <li><a href="https://research.trychroma.com/context-rot" target="_blank">Chroma 2025 · Context Rot</a> — 18 个最新模型的有效 context 复测</li>
@@ -338,11 +311,10 @@ Simon Willison <em>Context engineering</em> 词条整理, <a href="https://simon
 <li><a href="https://arxiv.org/abs/2310.08560" target="_blank">Packer et al. · MemGPT</a> — hierarchical memory 的代表实现</li>
 </ul>
 </div>
-
 <footer>BigCat · Super Individual · Day 02 · 2026-05-22</footer>
 </div>
-<script src="https://hub.cissychen.com/comments.js" defer></script>
-<script src="https://hub.cissychen.com/search.js" defer></script>
-<script src="https://hub.cissychen.com/index-button.js" defer></script>
-<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
 </body></html>

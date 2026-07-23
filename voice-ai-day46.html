@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<html lang="zh-CN"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Day 46 · Voice AI Engineering — Super Individual</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -46,65 +47,55 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
 </style></head><body>
 <div class="container">
-
 <header>
 <span class="week-tag">DAY 46 / PHASE 5 · 非 LLM 模态</span>
-<h1>Voice AI Engineering</h1>
-<h2>Cascaded vs End-to-End · Turn Detection · Barge-in · 延迟预算 · 水印</h2>
+<h1 data-tts="af68b57b1d333448">Voice AI Engineering</h1>
+<h2 data-tts="617c303060400e69">Cascaded vs End-to-End · Turn Detection · Barge-in · 延迟预算 · 水印</h2>
 <div class="date">2026-06-25 · BigCat</div>
 <p class="pitch">语音 agent 的难点不在模型，在 200ms 的轮次博弈与打断。</p>
 </header>
-
 <div class="intro">
-<h3>// WHY THIS MATTERS</h3>
+<h3 data-tts="0cab868fad04339d">// WHY THIS MATTERS</h3>
 <p>语音 AI 在 2026 已经从「能转写」跨到「能对话」——但大多数人把它当成「STT + ChatGPT + TTS 三段拼起来」，于是做出来的 agent 要么反应迟钝（用户说完两秒才出声），要么粗暴抢话（用户停顿喘口气就被打断）。语音的工程难点根本不在模型质量，而在<strong>实时性与轮次博弈</strong>：人类对话的轮换间隙只有约 200ms，端到端超过 800ms 就让人觉得「这 AI 有点傻」。这一期讲四个决定语音 agent 体感的工程决策：<strong>级联管线 vs 端到端语音模型怎么选、轮次检测与打断为什么是最难的一环、voice-to-voice 延迟预算怎么砍、以及语音克隆带来的水印与伦理责任</strong>。假设你已经会调 Whisper、会用 ElevenLabs——这里只讲怎么把它们工程化成一个不傻的实时 agent。</p>
 </div>
-
 <!-- ============ 1 ============ -->
 <div class="section">
 <span class="num">// 01</span>
-<h2>级联管线 vs 端到端语音模型：先决定走哪条路</h2>
+<h2 data-tts="79d24febc4d02963">级联管线 vs 端到端语音模型：先决定走哪条路</h2>
 <div class="claim">论断：级联（STT→LLM→TTS）保留文本层的全部控制力；端到端语音模型砍掉延迟，却也砍掉了你的工具、grounding 与审计。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="7da27ead5be9675a">背景与原理</h3>
 <p>语音 agent 有两条架构路线，这是你动手前第一个、也是代价最大的决策：</p>
 <ul>
 <li><strong>级联（Cascaded）</strong>：语音 →（STT）→ 文本 →（你熟悉的 LLM，带 RAG / tool calling / 内容审核）→ 文本 →（TTS）→ 语音。每个环节可替换、可日志、可 eval——<strong>文本是你能 grep 的中间表示</strong>。代价是三段串联的延迟叠加，且转写会丢掉语气、情感、重音。</li>
 <li><strong>端到端（Speech-to-Speech）</strong>：模型直接 audio-in / audio-out。OpenAI Realtime API、Kyutai 的 Moshi 是代表——Moshi（arXiv 2410.00037）基于一个 7B Temporal Transformer + Mimi 流式音频编解码器，理论延迟 160ms、实测约 200ms，能边听边说（full-duplex），还保留语气。代价是<strong>你失去了文本中间层</strong>：RAG 注入、tool calling、合规审核、对话审计全都变难，模型说错话你连一份能复盘的文本日志都难还原。</li>
 </ul>
 <p>结论很务实：<strong>需要工具、知识库、可审计性的生产系统，默认走级联</strong>；纯陪伴 / 闲聊 / 对语气要求极高、且不需要外部知识的场景，端到端才划算。2026 年绝大多数商用语音 agent（客服、预约、外呼）仍是级联，正是因为它们离不开 tool use 和审计。</p>
-
 <div class="diagram">┌──────────────── 级联语音 agent 管线（带延迟预算）─────────────────┐
 │                                                                  │
 │  用户说话 ─▶ [VAD/轮次检测] ─▶ [STT 流式] ─▶ [LLM] ─▶ [句子缓冲] ─▶ [TTS 流式] ─▶ 出声
 │                  │              partial      TTFT      遇句末标点     TTFB
 │           语义轮次模型(Qwen-0.5B)                       就送一句出去
 │                                                                  │
-│  voice-to-voice 预算:  目标 < 800ms  ·  金标准 < 500ms  ·  TTFB < 200ms │
+│  voice-to-voice 预算:  目标 &lt; 800ms  ·  金标准 &lt; 500ms  ·  TTFB &lt; 200ms │
 │  打断(barge-in): 用户一开口 → 停TTS播放 + 清音频缓冲 + 中止LLM生成 (三件一起) │
 └──────────────────────────────────────────────────────────────────┘</div>
-
 <div class="fail">
 <strong>失败模式</strong>：被「端到端延迟更低」带跑，把一个需要查订单、查知识库、记录工单的客服 agent 做成纯 speech-to-speech——结果发现没法插 tool calling、没法做内容审核、客户投诉时拿不出对话文本。延迟低 300ms 换不回这些。
 </div>
-
 <div class="res">
 <strong>进阶资源</strong> · OpenAI Realtime API（speech-to-speech）, <a href="https://developers.openai.com/api/docs/guides/realtime" target="_blank">developers.openai.com/.../realtime</a> ·
 Kyutai <em>Moshi</em>（端到端语音模型）, <a href="https://arxiv.org/abs/2410.00037" target="_blank">arXiv 2410.00037</a>
 </div>
 </div>
-
 <!-- ============ 2 ============ -->
 <div class="section">
 <span class="num">// 02</span>
-<h2>轮次检测与打断：语音 agent 最难的一环</h2>
+<h2 data-tts="05ab0b7ec46678f6">轮次检测与打断：语音 agent 最难的一环</h2>
 <div class="claim">论断：决定语音 agent 像不像人的，是「什么时候判定用户说完了」和「被打断时多快闭嘴」——这两件事 VAD 都做不好。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="5c3fdf285e250ab8">背景与原理</h3>
 <p>VAD（voice activity detection，如 Silero VAD）只能判断「现在有没有声音」，靠静音时长来判定轮次结束（endpointing）。问题是人说话中间会停顿思考——「我想想……这个嘛……」——VAD-only 系统会在停顿处抢话。正确解法是<strong>语义轮次检测</strong>：LiveKit 开源的 turn-detector 用一个从 Qwen2.5-0.5B 蒸馏出来的小模型（可在 CPU 上低延迟跑），根据转写文本的语义判断「这句话在语法/语义上完整了吗」，与 VAD 并联——<strong>VAD 管「有没有声」并触发打断，语义模型管「该不该接话」</strong>。</p>
 <p>打断（barge-in）是另一件独立的工程：用户一开口，你必须同时做三件事——立刻停止 TTS 播放、清空已经合成但还没播出去的音频缓冲、并中止 LLM 还在生成的那段回复。漏掉任何一件，用户都会听到 AI 自顾自把上一句说完，体验立刻「机器味」。</p>
-
-<h3>实战示例</h3>
+<h3 data-tts="8469a67559d76887">实战示例</h3>
 <pre><code><span class="tag-com"># barge-in：用户开口的瞬间，三件事一起做</span>
 <span class="tag-key">async def</span> on_user_speech_start(session):
     <span class="tag-com"># 1) 停掉正在播放的 TTS 音频（最显眼，先做）</span>
@@ -124,28 +115,23 @@ Kyutai <em>Moshi</em>（端到端语音模型）, <a href="https://arxiv.org/abs
     <span class="tag-com"># 语义已完整 → 短静音就接话；语义没完 → 等更久（用户在思考）</span>
     <span class="tag-key">return</span> eou &gt; <span class="tag-key">0.7</span> <span class="tag-key">or</span> vad_silence_ms &gt; <span class="tag-key">1200</span></code></pre>
 <p>关键在 <code>should_commit_turn</code> 的最后一行：<strong>语义完整时用短阈值（接话快），语义不完整时用长阈值（给用户思考空间）</strong>。这一条动态阈值，就是「不抢话又不迟钝」的核心。</p>
-
 <div class="fail">
 <strong>失败模式</strong>：（1）只用固定静音阈值做 endpointing——调短了抢话，调长了迟钝，没有甜点。必须叠语义信号。（2）barge-in 只停了 TTS 播放却忘清音频缓冲，结果用户说完后 AI 又「补播」半句旧回复，像鬼打墙。（3）打断后不把「被打断」写进历史，模型下一轮以为自己说完了，逻辑错乱。
 </div>
-
 <div class="res">
 <strong>进阶资源</strong> · LiveKit <em>Turn detection &amp; interruptions</em>, <a href="https://docs.livekit.io/agents/build/turns/" target="_blank">docs.livekit.io/agents/.../turns</a> ·
 LiveKit turn-detector（开源 EOU 模型）, <a href="https://huggingface.co/livekit/turn-detector" target="_blank">huggingface.co/livekit/turn-detector</a>
 </div>
 </div>
-
 <!-- ============ 3 ============ -->
 <div class="section">
 <span class="num">// 03</span>
-<h2>voice-to-voice 延迟预算：句子级流水线</h2>
+<h2 data-tts="c811c38d49eff884">voice-to-voice 延迟预算：句子级流水线</h2>
 <div class="claim">论断：语音延迟不是「等 LLM 写完再合成」，而是句子级流水线——第一句话一出来就开始 TTS，LLM 还在写后面。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="74f537de9442df01">背景与原理</h3>
 <p>自然对话的轮换间隙约 200ms，端到端 voice-to-voice 超过 <strong>800ms</strong> 用户就感觉迟钝，<strong>&lt;500ms</strong> 是金标准。预算怎么花：STT 出最终转写 + LLM 首 token（TTFT）+ TTS 首字节（TTFB）+ 网络往返，串起来很容易破秒。</p>
 <p>最关键的 trick：<strong>不要等 LLM 输出完整答案</strong>。在 LLM 流式输出时挂一个 sentence buffer，累积 token 到遇见句末标点就立刻把这一整句送进 TTS——于是 TTS 在 LLM 还在生成第二句时，就已经在播第一句了。对语音来说真正重要的指标是 <strong>TTFT</strong>，因为第一句话一完成 TTS 就能开始出声，用户根本感知不到后面还在生成。再叠几层：音频 chunk 切到 100–250ms、STT 用流式 partial 而非等整段、TTS 选支持 streaming 的供应商。</p>
-
-<h3>实战示例</h3>
+<h3 data-tts="a29b4c946fede0a5">实战示例</h3>
 <pre><code><span class="tag-com"># 句子级流水线：LLM 边生成，TTS 边播。核心是别等 LLM 写完</span>
 <span class="tag-key">import</span> re
 SENT_END = re.compile(<span class="tag-gpt">r'[。！？.!?]\s*'</span>)
@@ -163,32 +149,27 @@ SENT_END = re.compile(<span class="tag-gpt">r'[。！？.!?]\s*'</span>)
 <span class="tag-com">#  → 用户听到的延迟 ≈ STT + LLM首token + 第一句生成 + TTS首字节</span>
 <span class="tag-com">#    而不是 STT + LLM整段 + TTS整段（后者轻松破 2 秒）</span></code></pre>
 <p>实测里这一招通常能把 voice-to-voice 从 1.5s+ 砍到 700ms 以内，因为你把「LLM 写完整段」这段最长的等待，和 TTS、播放<strong>并行</strong>掉了。</p>
-
 <div class="fail">
 <strong>失败模式</strong>：（1）等 LLM <code>stop</code> 后才整段送 TTS——最常见也最致命，长回复直接破 2 秒。（2）句子切得太碎（按逗号、按 token 切），TTS 每段都有固定 overhead，反而更慢、还会让语调一顿一顿。按句末标点切是甜点。（3）只优化了模型延迟，忽略网络——客户端到 STT/TTS 供应商的 RTT 经常是隐形大头，上 edge 或就近区域。
 </div>
-
 <div class="res">
 <strong>进阶资源</strong> · Pipecat（开源语音 agent 框架，内置句子流水线）, <a href="https://github.com/pipecat-ai/pipecat" target="_blank">github.com/pipecat-ai/pipecat</a> ·
 Modal <em>One-second voice-to-voice latency</em>, <a href="https://modal.com/blog/low-latency-voice-bot" target="_blank">modal.com/blog/low-latency-voice-bot</a>
 </div>
 </div>
-
 <!-- ============ 4 ============ -->
 <div class="section">
 <span class="num">// 04</span>
-<h2>语音克隆、水印与伦理：你的责任边界</h2>
+<h2 data-tts="a3b7fca0877231d0">语音克隆、水印与伦理：你的责任边界</h2>
 <div class="claim">论断：能几秒克隆任何人的声音，意味着你的语音 agent 也能被用来诈骗——同意门和水印不是合规摆设，是你的责任边界。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="5f434221ccb17a76">背景与原理</h3>
 <p>现代 TTS（ElevenLabs 等）几秒样本就能克隆一个人的音色。这给语音 agent 工程带来两类必须处理的责任：</p>
 <ul>
 <li><strong>输入侧 · 同意与来源</strong>：你克隆的声音得到本人同意了吗？production 系统需要 <strong>consent gate</strong>（克隆前校验授权）+ 音色 provenance（每个 voice ID 记录来源与授权凭证），否则一旦被用来仿冒，法律责任在你。</li>
 <li><strong>输出侧 · 可识别为合成</strong>：你生成的语音应当可被检测出是 AI 合成。被动检测（训分类器判真假）鲁棒性差、易被规避；<strong>主动水印</strong>更可靠：Meta 的 AudioSeal（arXiv 2401.17264）用 generator/detector 架构把<strong>不可听</strong>的水印嵌进波形，能定位到 sample 级（1/16000 秒粒度）、单遍检测极快、对压缩与剪辑鲁棒，已用在 Audiobox / Seamless 上服务约 10 万日活。</li>
 </ul>
 <p>顺带纠正一个 eval 误区：评语音 agent 别只盯 STT 的 WER（词错率）。真实指标是<strong>任务成功率 + 打断准确率 + 轮次误触发率</strong>（被噪声或正常停顿误判为「说完了」的比例）——一个 WER 很低但老抢话的 agent，用户体验照样崩。</p>
-
-<h3>实战示例</h3>
+<h3 data-tts="ab346ecae1438ced">实战示例</h3>
 <pre><code><span class="tag-com"># 语音克隆的最小责任栈：同意门 + 来源记录 + 输出水印</span>
 <span class="tag-key">def</span> clone_voice(sample_audio, owner_id, consent_token):
     <span class="tag-com"># 1) consent gate：没有有效授权，物理上不让克隆</span>
@@ -203,20 +184,17 @@ Modal <em>One-second voice-to-voice latency</em>, <a href="https://modal.com/blo
     audio = tts.synthesize(text, voice_id)
     <span class="tag-com"># 3) 输出侧打上不可听水印，让生成语音可被溯源检测</span>
     <span class="tag-key">return</span> audioseal.embed(audio)   <span class="tag-com"># 检测端：audioseal.detect(audio) → 是否本系统生成</span></code></pre>
-
 <div class="fail">
 <strong>失败模式</strong>：（1）只做了 ToS 上的「不得滥用」声明，没有技术层的 consent gate——等于没防。（2）给生成语音不打水印，出事后无法自证「这段诈骗录音不是我家系统生成的」，举证责任全压自己。（3）用 WER 当唯一上线门槛，忽略打断/轮次指标，上线即翻车。
 </div>
-
 <div class="res">
 <strong>进阶资源</strong> · Meta <em>AudioSeal: Proactive Detection of Voice Cloning</em>, <a href="https://arxiv.org/abs/2401.17264" target="_blank">arXiv 2401.17264</a> ·
 AI at Meta 研究页, <a href="https://ai.meta.com/research/publications/proactive-detection-of-voice-cloning-with-localized-watermarking/" target="_blank">ai.meta.com/.../localized-watermarking</a>
 </div>
 </div>
-
 <!-- ============ Combo ============ -->
 <div class="combo">
-<h3>// 综合实战 · 用 Pipecat 造一个不傻的本地语音 agent</h3>
+<h3 data-tts="4c284f7201169dda">// 综合实战 · 用 Pipecat 造一个不傻的本地语音 agent</h3>
 <p>把这一期四点串成一个周末项目：用 Pipecat 搭一个能自然对话的语音 agent，目标不是炫技，而是亲手摸一遍语音工程的四个痛点。</p>
 <ol style="margin-left:20px;margin-top:10px">
 <li><strong>选架构（§1）</strong>：先走级联——流式 STT（Deepgram / Whisper）+ 你的 LLM（带 1 个查询 tool）+ 流式 TTS。保留文本中间层，方便你 print 每一步、做 eval。</li>
@@ -227,10 +205,9 @@ AI at Meta 研究页, <a href="https://ai.meta.com/research/publications/proacti
 </ol>
 <p style="margin-top:12px">做完这套，你以后体验任何语音产品都会下意识地拆它——它抢不抢话？被打断多快闭嘴？voice-to-voice 多少毫秒？——而不是只听音色像不像人。</p>
 </div>
-
 <!-- ============ Glossary ============ -->
 <div class="glossary">
-<h3>// ENGLISH GLOSSARY</h3>
+<h3 data-tts="539b7c948533cdfb">// ENGLISH GLOSSARY</h3>
 <dl>
 <dt>STT / ASR</dt><dd>Speech-to-Text / Automatic Speech Recognition，语音转文本。流式 partial 输出比等整段更利于低延迟。</dd>
 <dt>TTS</dt><dd>Text-to-Speech，文本合成语音。支持 streaming 的供应商才能做句子级流水线。</dd>
@@ -245,7 +222,6 @@ AI at Meta 研究页, <a href="https://ai.meta.com/research/publications/proacti
 <dt>Watermarking</dt><dd>主动在生成语音里嵌入不可听标记（如 AudioSeal），用于溯源检测，比被动分类器鲁棒。</dd>
 </dl>
 </div>
-
 <!-- ============ Deep Thinking ============ -->
 <div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
 <style>
@@ -260,17 +236,16 @@ AI at Meta 研究页, <a href="https://ai.meta.com/research/publications/proacti
 .thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
 .thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
 </style>
-<h3>// 深入思考</h3>
+<h3 data-tts="24356a69abc8edde">// 深入思考</h3>
 <details><summary>端到端语音模型（Moshi/Realtime）延迟低到 200ms，为什么 2026 年的商用语音 agent 还是级联占主导？</summary><div>因为商用场景几乎都需要级联才能提供的能力：tool calling（查订单/下单/转人工）、RAG grounding（接知识库）、内容审核、可审计的对话文本日志。端到端把这一切都收进了一个黑盒 audio→audio，你既插不进工具，出事也拿不出文本复盘。延迟低 300ms 换不回这些。端到端真正合适的是纯陪伴/闲聊/语言练习这类对语气敏感、又不依赖外部知识与审计的场景。这本质是 Day 3「workflow vs agent」同款权衡：可控性 vs 端到端性能。</div></details>
 <details><summary>轮次检测要同时跑 VAD 和一个语义小模型，这不是又加了延迟吗？为什么不直接把静音阈值调大点？</summary><div>调大静音阈值是「全局变迟钝」——所有轮次都多等，包括用户明明说完的短句。语义模型实现的是<strong>条件化</strong>等待：句子语义完整时用短阈值（快接话），不完整时才长等（给思考空间）。这把「该快的快、该等的等」分开了，平均体感反而更好。语义模型（0.5B，CPU 可跑）的推理只有几十毫秒，且和 STT 的最终转写并行，几乎不进关键路径。代价是工程复杂度，但这是「不抢话又不迟钝」唯一的解。</div></details>
 <details><summary>句子级流水线让 TTS 边播边等 LLM 写后文——如果 LLM 后面突然改口或自我纠正，已经播出去的前半句怎么办？</summary><div>这是流式 TTS 的固有风险：已出声的音频收不回来。工程上有三道防线：1) prompt 约束模型先给结论再展开，降低改口概率；2) 句子级（而非段落级）切分，单次「沉没」的最多一句话；3) 对高风险回复（数字、金额、确认类）关掉提前流式，等完整生成再合成。本质是拿「极小概率说错半句」换「砍掉一大截延迟」的交易——对闲聊划算，对下单确认要谨慎。这也呼应 §3 失败模式：别为了延迟在所有场景无脑流式。</div></details>
 <details><summary>给所有生成语音打 AudioSeal 水印听起来很负责，但水印能被去掉吗？这套防御的真实边界在哪？</summary><div>能被削弱。重压缩、重采样、叠噪、变速都会侵蚀水印，强对抗者甚至能针对性地去除——AudioSeal 的设计目标是对<strong>常见</strong>音频处理鲁棒，不是对抗专业攻击者。所以它的真实价值不是「100% 拦截恶意」，而是：1) 给平台一个低成本的批量溯源手段（区分本系统 vs 他系统生成）；2) 抬高随手滥用的门槛；3) 提供合规与举证的技术依据。它是 defense in depth 的一层，必须叠加 consent gate、使用监控、异常检测——任何单层水印都不该被当成完整方案。</div></details>
 <details><summary>为什么说评语音 agent 用 WER 会误导？什么指标才真正预测用户体验？</summary><div>WER 只衡量 STT 转写准不准，但语音 agent 的体验崩点几乎都不在转写：用户最不能忍的是「抢话」（轮次误触发）和「迟钝」（延迟），其次是被打断后 agent 接不上。一个 WER=2% 但每三句就抢一次话的 agent，用户会觉得它很蠢。真正预测体验的是任务成功率、打断/轮次准确率、误触发率、voice-to-voice p95 延迟。这是 Day 29「Eval Beyond Benchmark」在语音域的具体化：基准指标（WER）测的是组件，体验由交互动力学决定，必须为真实交互单独建 eval。</div></details>
 </div>
-
 <!-- ============ Refs ============ -->
 <div class="refs">
-<h3>// 延伸阅读</h3>
+<h3 data-tts="5c11b5f6ab8d3754">// 延伸阅读</h3>
 <ul>
 <li><a href="https://developers.openai.com/api/docs/guides/realtime" target="_blank">OpenAI · Realtime API 指南</a> — speech-to-speech，WebRTC 优于 WebSocket 的官方建议</li>
 <li><a href="https://arxiv.org/abs/2410.00037" target="_blank">Kyutai · Moshi（arXiv 2410.00037）</a> — 全双工端到端语音模型，160ms 理论延迟</li>
@@ -279,11 +254,10 @@ AI at Meta 研究页, <a href="https://ai.meta.com/research/publications/proacti
 <li><a href="https://arxiv.org/abs/2401.17264" target="_blank">Meta · AudioSeal（arXiv 2401.17264）</a> — 语音克隆的局部化主动水印</li>
 </ul>
 </div>
-
 <footer>BigCat · Super Individual · Day 46 · 2026-06-25</footer>
 </div>
-<script src="https://hub.cissychen.com/comments.js" defer></script>
-<script src="https://hub.cissychen.com/search.js" defer></script>
-<script src="https://hub.cissychen.com/index-button.js" defer></script>
-<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
 </body></html>

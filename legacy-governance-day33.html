@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<html lang="zh-CN"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Day 33 · 大规模 Legacy 代码库的 AI 治理 — Super Individual</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -46,30 +47,25 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
 </style></head><body>
 <div class="container">
-
 <header>
 <span class="week-tag">DAY 33 / PHASE 4 · GOVERNANCE</span>
-<h1>大规模 Legacy 代码库的 AI 治理</h1>
-<h2>Strangler 渐进引入 · 棘轮 · 护栏即代码 · 让 AI 评审不成瓶颈</h2>
+<h1 data-tts="7069782cfee1c08b">大规模 Legacy 代码库的 AI 治理</h1>
+<h2 data-tts="e033b1657a2951f6">Strangler 渐进引入 · 棘轮 · 护栏即代码 · 让 AI 评审不成瓶颈</h2>
 <div class="date">2026-06-15 · BigCat</div>
 <p class="pitch">AI 把写代码的吞吐拉满了，于是瓶颈整体平移到了 review。解法不是招更多人读，是让机器先把噪音挡掉。</p>
 </header>
-
 <div class="intro">
-<h3>// WHY THIS MATTERS</h3>
+<h3 data-tts="a8a07d5af81f5383">// WHY THIS MATTERS</h3>
 <p>两个现实同时砸过来。其一：你接手 / 维护一个几十万行、没测试、没规范、上一代人留下的 legacy 库，想引入新治理（类型、架构约束、测试门），但「一上来全库强制」会瞬间冒出几千个 violation——没人看，最后整套规则被关掉。其二：AI 让<strong>写</strong>代码的吞吐暴涨，PR 数量翻几倍，而 <strong>review 还是人肉、还是一行行读</strong>，于是瓶颈从「写」整体平移到「审」；reviewer 累到 rubber-stamp，AI 生成代码里那些幻觉 API、偷改测试、漏掉的 edge case 就这么混进 main。这两件事其实是<strong>同一个工程问题</strong>：如何在不靠「更多人力」的前提下，给一个混乱的大系统引入可持续的质量约束。本期四件落地工程：用 strangler / codemod 渐进引入、用棘轮(ratchet)让库只能变好、用护栏即代码把规则变成 CI 红绿、以及把 review 分层让人只看机器判不了的。<strong>核心心法：治理不是「写进 wiki 让大家注意」，是把约束变成 diff 上的自动门。</strong></p>
 </div>
-
 <!-- ============ 1 ============ -->
 <div class="section">
 <span class="num">// 01</span>
-<h2>渐进引入：Strangler 与 codemod，别大爆炸</h2>
+<h2 data-tts="9970232be635ba0a">渐进引入：Strangler 与 codemod，别大爆炸</h2>
 <div class="claim">论断：在 legacy 库里「一次性全库上新规则」必然失败——几千告警没人看 = 规则被关。新治理只该作用于 <strong>新代码 + 本次改动的文件</strong>。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="7f8ea36514991c94">背景与原理</h3>
 <p>Martin Fowler 的 <strong>Strangler Fig</strong>：不重写，而是在边界处长出新结构，逐步「绞杀」旧代码，直到旧的可以摘除。落到治理上有两条具体手法。其一，<strong>changed-files-only gating</strong>：新规则（类型检查、lint、复杂度上限）只对 PR 里<strong>实际改动的文件</strong>强制，存量豁免但冻结——这样开发者「碰到哪改到哪」，治理随自然改动渗透，而非一夜之间引爆。其二，机械的存量改造交给 <strong>codemod</strong>（jscodeshift / OpenRewrite / ast-grep）——AST 级脚本批量改，而不是人逐文件手搓。AI 在这里的角色很明确：codemod 写不动的长尾（语义不规整、需要判断的）交给 agent 批量改，但每个改动仍走后面 §3/§4 的门。</p>
-
-<h3>实战示例</h3>
+<h3 data-tts="ee911925a1f611e9">实战示例</h3>
 <pre><code><span class="tag-com"># 只对本次 PR 改动的文件跑严格检查，存量不动</span>
 CHANGED=$(git diff --name-only origin/main... | grep <span class="tag-gpt">'\.ts$'</span>)
 <span class="tag-key">if</span> [ -n <span class="tag-gpt">"$CHANGED"</span> ]; <span class="tag-key">then</span>
@@ -79,27 +75,22 @@ CHANGED=$(git diff --name-only origin/main... | grep <span class="tag-gpt">'\.ts
 <span class="tag-com"># 机械迁移用 codemod，不是手工：</span>
 <span class="tag-com"># npx jscodeshift -t rename-api.js src/   ·   ast-grep --pattern '...' --rewrite '...'</span></code></pre>
 <p>核心 mental model：<strong>把治理接到 diff 上，而不是接到全库扫描上。</strong>全库扫描产出几千个你今天不会修的 violation，只会训练团队「忽略红色」——这是治理之死。</p>
-
 <div class="fail">
 <strong>失败模式</strong>：（1）big-bang 重写 / 一次性全库强制——violation 海啸，团队学会无视 CI 红灯。（2）codemod 能做的机械变更让人手工改——慢且引入手误。（3）改了存量文件却没让它「升级」到新标准——碰过的文件应顺手纳入治理，否则永远绞杀不完。
 </div>
-
 <div class="res">
 <strong>进阶资源</strong> · Martin Fowler <em>Strangler Fig Application</em>, <a href="https://martinfowler.com/bliki/StranglerFigApplication.html" target="_blank">martinfowler.com/bliki/StranglerFigApplication</a> ·
 <em>Software Engineering at Google</em>（Large-Scale Changes / codemod）, <a href="https://abseil.io/resources/swe-book" target="_blank">abseil.io/resources/swe-book</a>
 </div>
 </div>
-
 <!-- ============ 2 ============ -->
 <div class="section">
 <span class="num">// 02</span>
-<h2>棘轮与护栏即代码：让库只能变好</h2>
+<h2 data-tts="21231c711dee80ed">棘轮与护栏即代码：让库只能变好</h2>
 <div class="claim">论断：治理的目标不是「立刻清零」，是<strong>单调改善</strong>——允许存量欠债，禁止新增欠债，且债只减不增。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="e4f228691e386e24">背景与原理</h3>
 <p><strong>Ratchet（棘轮）</strong>：记录当前 violation 数为 baseline，CI 只在「比 baseline 更差」时 fail。存量被容忍，新增被挡住；每修好一点就把 baseline 调低，且<strong>不可回升</strong>——像棘轮一样只朝一个方向转。工具如 <code>betterer</code> 把这做成了通用机制。配套的是<strong>护栏即代码 / fitness functions</strong>（《Building Evolutionary Architectures》）：把架构约束写成<strong>可执行测试</strong>——依赖方向、分层边界、禁止 import、复杂度上限——用 ArchUnit / dependency-cruiser / import-linter 跑。治理从此从「文档 + 人盯」变成「CI 红绿」，不依赖谁记得。AI 的位置：让 agent 每个 PR 顺手降一点 baseline（修一两个存量），长尾债在日常改动中被慢慢磨平，而不是立一个永远没空做的「重构 sprint」。</p>
-
-<h3>实战示例</h3>
+<h3 data-tts="f79e9fb72c90459d">实战示例</h3>
 <pre><code><span class="tag-com"># fitness function：把「UI 层不许直接 import 数据库」写成测试</span>
 <span class="tag-key">import</span> { dependencyCruiser } <span class="tag-key">from</span> <span class="tag-gpt">"dependency-cruiser"</span>
 forbidden = [{
@@ -113,26 +104,21 @@ BASE=$(cat .debt-baseline)               <span class="tag-com"># 例如 412</spa
 NOW=$(count_violations)
 <span class="tag-key">if</span> [ <span class="tag-gpt">"$NOW"</span> -gt <span class="tag-gpt">"$BASE"</span> ]; <span class="tag-key">then</span> echo <span class="tag-gpt">"债增加了：$BASE→$NOW"</span>; exit 1; <span class="tag-key">fi</span>
 [ <span class="tag-gpt">"$NOW"</span> -lt <span class="tag-gpt">"$BASE"</span> ] &amp;&amp; echo <span class="tag-gpt">"$NOW"</span> &gt; .debt-baseline   <span class="tag-com"># 变好就锁住新低点</span></code></pre>
-
 <div class="fail">
 <strong>失败模式</strong>：（1）规则只写在 wiki / CONTRIBUTING，没进 CI——等于不存在，靠人脑执行的治理必然衰减。（2）ratchet 允许 baseline 回升——债又涨回来，棘轮失去意义。（3）fitness function 一次性设得太严，存量瞬间全红——回到 §1 的海啸，应配 ratchet 渐进收紧。
 </div>
-
 <div class="res">
 <strong>进阶资源</strong> · Ford/Parsons/Kua <em>Building Evolutionary Architectures</em>（fitness functions）, <a href="https://www.thoughtworks.com/insights/books/building-evolutionary-architectures" target="_blank">thoughtworks.com</a> ·
 <em>betterer</em>（通用 ratchet 工具）, <a href="https://phenomnomnominal.github.io/betterer/" target="_blank">betterer 文档</a>
 </div>
 </div>
-
 <!-- ============ 3 ============ -->
 <div class="section">
 <span class="num">// 03</span>
-<h2>让 review 不成瓶颈（上）：自动门先过滤</h2>
+<h2 data-tts="36de379795d4bee7">让 review 不成瓶颈（上）：自动门先过滤</h2>
 <div class="claim">论断：AI 让「写」提速 5×，review 还是人肉逐行 → 瓶颈平移到审。解法不是招更多 reviewer，是让<strong>机器先过滤</strong>，人只看机器判不了的。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="c1b4b6c43b0fc880">背景与原理</h3>
 <p>把 code review 想成 Day 34 HITL 的 <strong>confidence routing</strong> 落在代码上：每个 PR 先过一排 <strong>pre-human gate（机器门）</strong>——测试、类型、lint、coverage delta、SAST/secret 扫描、依赖审计、变更影响分析。<strong>门没过 = deny，根本不进人的队列</strong>；门全过才轮到人决定要不要细审。这对 AI 生成代码尤其值钱：AI 最高频的失败——幻觉不存在的 API、把失败测试改成 <code>assert True</code> 让 CI 转绿（见 Day 31 的 test tampering）、漏掉 null / 并发 edge case——<strong>很大一部分是机器可检测的</strong>。让 sanitizer、类型系统、mutation test、secret scanner 去抓这层，人的注意力才不会浪费在「机器本可以查出来的东西」上。关键原则反过来也成立：<strong>别让人去做机器更擅长的</strong>（人眼读不出 race condition，但 ThreadSanitizer 能）。</p>
-
 <div class="diagram">PR ──▶ ┌─────────── PRE-HUMAN GATES（全自动） ───────────┐
        │  tests · types · lint · coverageΔ · SAST       │
        │  secret-scan · dep-audit · 变更影响分析         │
@@ -143,27 +129,22 @@ NOW=$(count_violations)
                          ├─ 低风险 → 抽样 + 事后审计
                          └─ 机械/低危 → auto-merge
   机器判得了的别给人 · 人只看「机器过了但仍需判断」的</div>
-
 <div class="fail">
 <strong>失败模式</strong>：（1）把机器能查的留给人肉眼当防线——疲劳 + 漏检，双输。（2）没有 coverage / secret / SAST 门，指望 reviewer 一眼看出泄露的 key 或没覆盖的分支。（3）门太慢（30 分钟 CI）——开发者绕过、批量合，门形同虚设；门必须快到「过不了立刻知道」。
 </div>
-
 <div class="res">
 <strong>进阶资源</strong> · Google <em>Code Review Developer Guide</em>（what to look for / 速度）, <a href="https://google.github.io/eng-practices/review/" target="_blank">google.github.io/eng-practices/review</a> ·
 本站 Day 34 <em>Human-in-the-Loop</em>（confidence routing 的通用版）
 </div>
 </div>
-
 <!-- ============ 4 ============ -->
 <div class="section">
 <span class="num">// 04</span>
-<h2>让 review 不成瓶颈（下）：风险分级 · 抽样 · provenance</h2>
+<h2 data-tts="43f4e1bce5d390c1">让 review 不成瓶颈（下）：风险分级 · 抽样 · provenance</h2>
 <div class="claim">论断：过了自动门的代码，再按<strong>风险</strong>决定人审强度——高风险全审、低风险抽样 + 事后审计。一刀切的「每个 PR 都细审」既慢又假。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="16a175301bac3ec6">背景与原理</h3>
 <p>三件事把人的注意力压到「能认真审」的量级。<strong>① 风险打分</strong>：按改动碰到的路径定级——支付 / 认证 / 数据迁移 / 加密 = 高；文案 / 测试 / 注释 = 低——再叠加 diff 体量与 blast radius（见 Day 31）。高风险强制 full review + CODEOWNERS 指定 owner；低风险抽样人审 + 全量事后审计。<strong>② 信任分层</strong>：给「AI 作者」与「人类作者」不同的默认 review 强度，并随 track record 调整（同 Day 34 的审计回归阈值）——新接入的 agent 严审，跑稳了再放宽。<strong>③ Provenance / attestation</strong>：标注哪些代码由 AI 生成、用了什么模型 / prompt（SLSA 式溯源）。出事时能精确定位、能批量召回「某个坏 prompt 产出的所有代码」——这是 AI 规模化后的必需品，不是合规摆设。</p>
-
-<h3>实战示例</h3>
+<h3 data-tts="d90b0d075ae28115">实战示例</h3>
 <pre><code><span class="tag-key">def</span> review_policy(pr):
     paths = pr.changed_paths
     high = any(p.startswith((<span class="tag-gpt">"src/payment"</span>,<span class="tag-gpt">"src/auth"</span>,<span class="tag-gpt">"migrations/"</span>)) <span class="tag-key">for</span> p <span class="tag-key">in</span> paths)
@@ -175,20 +156,17 @@ NOW=$(count_violations)
 
 <span class="tag-com"># PR 元数据带上来源，出事可溯源 / 召回</span>
 provenance = { <span class="tag-gpt">"ai_generated"</span>: <span class="tag-key">True</span>, <span class="tag-gpt">"model"</span>: <span class="tag-gpt">"claude-opus-4-8"</span>, <span class="tag-gpt">"prompt_id"</span>: <span class="tag-gpt">"refactor-v3"</span> }</code></pre>
-
 <div class="fail">
 <strong>失败模式</strong>：（1）所有 PR 一个 review 强度——高风险审不透、低风险白耗人力。（2）AI 代码与人类代码同等盲信——AI 的错误分布不同（更会「自信地编」），默认信任该更低。（3）无 provenance——某个坏 prompt 量产了 200 个隐患 PR，事后无法定位是哪批、无法批量召回。
 </div>
-
 <div class="res">
 <strong>进阶资源</strong> · SLSA <em>Supply-chain provenance / attestation</em>, <a href="https://slsa.dev" target="_blank">slsa.dev</a> ·
 本站 Day 31 <em>Personal AI Safety</em>（blast radius / 可逆性）· Day 34 <em>HITL</em>（审批审计回归）
 </div>
 </div>
-
 <!-- ============ Combo ============ -->
 <div class="combo">
-<h3>// 综合实战 · 给一个 legacy repo 装「AI-ready 治理底盘」</h3>
+<h3 data-tts="7b5e5051b51fed28">// 综合实战 · 给一个 legacy repo 装「AI-ready 治理底盘」</h3>
 <p>一周计划：挑一个你正在维护的混乱大库，按下面顺序装一套不靠堆人力的治理，并验证它真的把 review 从瓶颈里解放出来。</p>
 <ol style="margin-left:20px;margin-top:10px">
 <li><strong>Ratchet</strong>：给最痛的一条规则（如 <code>any</code> 数量 / 圈复杂度）建 baseline，CI 只挡新增、变好就锁低点。</li>
@@ -201,10 +179,9 @@ provenance = { <span class="tag-gpt">"ai_generated"</span>: <span class="tag-key
 </ol>
 <p style="margin-top:12px">做完这套，你评估任何「AI 写代码」工作流时会本能地先问三件事：机器门挡掉了多少噪音、人审是按风险分级还是一刀切、出事能不能溯源到具体 prompt——而不是纠结「该不该信任 AI 写的代码」这个错问题。<strong>正确的问题永远是：信任放在哪一层、由什么来兜。</strong></p>
 </div>
-
 <!-- ============ Glossary ============ -->
 <div class="glossary">
-<h3>// ENGLISH GLOSSARY</h3>
+<h3 data-tts="20814dc3ca6db676">// ENGLISH GLOSSARY</h3>
 <dl>
 <dt>Strangler Fig</dt><dd>在旧系统边界处长出新结构、逐步替换而非重写的渐进迁移策略。Martin Fowler 命名。</dd>
 <dt>Codemod</dt><dd>AST 级的脚本化批量代码变更（jscodeshift / OpenRewrite / ast-grep），替代手工逐文件改。</dd>
@@ -218,7 +195,6 @@ provenance = { <span class="tag-gpt">"ai_generated"</span>: <span class="tag-key
 <dt>CODEOWNERS</dt><dd>把高风险路径强制绑定指定 owner 的评审机制。</dd>
 </dl>
 </div>
-
 <!-- ============ Deep Thinking ============ -->
 <div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
 <style>
@@ -233,17 +209,16 @@ provenance = { <span class="tag-gpt">"ai_generated"</span>: <span class="tag-key
 .thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
 .thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
 </style>
-<h3>// 深入思考</h3>
+<h3 data-tts="6ce430e68c7a1c8c">// 深入思考</h3>
 <details><summary>Ratchet 允许存量违规、只挡新增——技术债会不会永远卡在 baseline 高位还不清？</summary><div>会，如果只挡不还。Ratchet 的纪律是「不许变糟」，但「变好」需要单独的动力。两个常见做法：（a）把 baseline 下降设成<strong>每个 PR 顺手降一点</strong>的软约定（碰到的文件就地修一两个），让债在日常流量里被磨；（b）AI 时代有更强的手——派 agent 批量刷存量（每次一小批、走完整的 §3/§4 门），把「永远没空的重构 sprint」拆成几百个低风险小 PR。Ratchet 保证不退，agent 流量负责前进。两者缺一：只 ratchet 会停在高位，只重构会被新债抵消。</div></details>
 <details><summary>自动门能挡 AI 的低级错，但 AI 最危险的是「看起来完全对的微妙逻辑错」，机器测不出、抽样也漏，怎么办？</summary><div>这是这套体系的真实边界：自动门 + 抽样只压低<strong>可检测错误</strong>和<strong>低风险路径</strong>的成本，对「高风险路径上的微妙逻辑错」<strong>不能</strong>靠抽样。所以 §4 的风险分级是关键阀门——高风险路径<strong>不抽样，全审</strong>，而且正因为机器把低风险噪音都挡掉了，人才有精力在高风险 PR 上慢下来真读。换句话说，这套不是「让人少审」，是「<strong>把省下的注意力重新投到真正需要人脑的地方</strong>」。微妙逻辑错的防线仍是人，只是你确保了人没被琐碎淹没。配合强 property-based / mutation test 能再压一层，但替代不了高风险全审。</div></details>
 <details><summary>抽样评审 = 接受一定比例 AI 代码没人细看就进 main。这和「AI 代码更需要审」不矛盾吗？风险怎么算才不是自欺？</summary><div>不矛盾，前提是抽样<strong>只用在低风险 × 高信任</strong>象限，且<strong>有事后审计兜底</strong>。逻辑是：低风险路径（文案 / 测试 / 内部工具）即使错了，blast radius 小、可逆（见 Day 31），用「抽样 + 全量事后审计 + 快速回滚」期望成本低于「逐个全审」的人力成本。会自欺的地方有两个：一是<strong>风险分级失真</strong>（把其实高危的路径标成低危）——所以风险表要保守、未分类默认高风险；二是<strong>事后审计名存实亡</strong>（抽样了但没人真去 audit）——那就退化成「无人审」。抽样的正当性完全建立在「审计真的在跑、回滚真的够快」之上，否则就是给偷懒找借口。</div></details>
 <details><summary>Provenance 标注「AI 生成」——会不会沦为甩锅工具（出事就怪 AI），而非驱动改进？</summary><div>取决于你拿它做什么。当「证据」用 = 甩锅（「这是 AI 写的，不怪我」）；当「<strong>可观测信号</strong>」用 = 改进。后者的具体动作：按 model / prompt_id <strong>聚合缺陷率</strong>——发现某个 prompt 模板产出的代码缺陷率显著偏高，就去修那个 prompt（回到 Day 34 的审计回归、未来 Day 47 的 prompt-as-code）；发现某条高风险路径的 AI 缺陷率高，就把它的信任阈值调严、强制全审。provenance 的价值不在「归咎」，在「<strong>让 AI 产出的质量变成可度量、可回归的量</strong>」。出事召回是底线用途，驱动 prompt / 路由改进才是它真正的杠杆。</div></details>
 <details><summary>这套代码治理，和 Day 34 HITL、Day 31 safety 是什么关系？什么时候用哪个？</summary><div>三者是同一套「信任分层」思想在不同对象上的投影。<strong>Day 31</strong> 管<strong>运行时</strong>的 agent 动作（kill switch / 沙箱 / 不可逆 gate）——防的是 agent <strong>执行</strong>时祸害。<strong>Day 34 HITL</strong> 是通用的<strong>审批编排</strong>（何时问人、怎么异步、怎么接管）——是机制层。<strong>本期</strong>是把这套机制<strong>具体化到「代码进库」这一个场景</strong>：pre-human gate = confidence routing，风险分级 = impact 轴，provenance = 审计。用哪个看对象：约束 agent 跑动作用 Day 31；搭通用人审工作流用 Day 34；治理「大量 AI 代码涌入一个 legacy 库」这个具体洪流，用本期。它们叠着用，不互斥。</div></details>
 </div>
-
 <!-- ============ Refs ============ -->
 <div class="refs">
-<h3>// 延伸阅读</h3>
+<h3 data-tts="fa35fb7227a17a79">// 延伸阅读</h3>
 <ul>
 <li><a href="https://martinfowler.com/bliki/StranglerFigApplication.html" target="_blank">Martin Fowler · Strangler Fig Application</a> — legacy 渐进替换而非重写的奠基模式</li>
 <li><a href="https://abseil.io/resources/swe-book" target="_blank">Software Engineering at Google</a> — Large-Scale Changes、codemod、代码评审与所有权的工程实践（免费在线）</li>
@@ -252,11 +227,10 @@ provenance = { <span class="tag-gpt">"ai_generated"</span>: <span class="tag-key
 <li><a href="https://slsa.dev" target="_blank">SLSA · Supply-chain Levels for Software Artifacts</a> — provenance / attestation 的事实标准，AI 代码溯源的底座</li>
 </ul>
 </div>
-
 <footer>BigCat · Super Individual · Day 33 · 2026-06-15</footer>
 </div>
-<script src="https://hub.cissychen.com/comments.js" defer></script>
-<script src="https://hub.cissychen.com/search.js" defer></script>
-<script src="https://hub.cissychen.com/index-button.js" defer></script>
-<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
 </body></html>

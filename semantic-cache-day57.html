@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<html lang="zh-CN"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Day 57 · Semantic Caching — Super Individual</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -46,27 +47,23 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
 </style></head><body>
 <div class="container">
-
 <header>
 <span class="week-tag">DAY 57 · ENGINEERING</span>
-<h1>Semantic Caching</h1>
-<h2>三层缓存栈 · 非对称阈值 · 作用域键 · 双指标监控</h2>
+<h1 data-tts="39d483ebdaf2fa98">Semantic Caching</h1>
+<h2 data-tts="ef6f016f70a0147c">三层缓存栈 · 非对称阈值 · 作用域键 · 双指标监控</h2>
 <div class="date">2026-07-09 · BigCat</div>
 <p class="pitch">别为语义相同的请求付两次钱——但一次错误的命中，比一百次 miss 都贵。</p>
 </header>
-
 <div class="intro">
-<h3>// WHY THIS MATTERS</h3>
+<h3 data-tts="f29f92822d8bd466">// WHY THIS MATTERS</h3>
 <p>你的 LLM 账单里塞满了「语义重复」：同一个问题的不同问法、FAQ、模板化查询。<strong>精确缓存</strong>（exact-match）对这些完全失效——改一个字就 miss；<strong>前缀缓存</strong>（Day 15/16 讲的 <code>cache_control</code>）只省 input token、答案仍每次完整 inference。想做到「同一个问题只算一次钱」，得上<strong>语义缓存</strong>：把请求 embed，向量近邻命中就复用旧答案，省下的是<strong>整整一次推理</strong>。但语义缓存是本系列少数「越省越危险」的优化——阈值松一点，系统就会把「退货政策」的答案返回给「换货政策」的问题，而且<strong>不会报错</strong>，用户拿到的是一本正经的错答案。这一期讲的不是怎么装 GPTCache，而是怎么在省钱和 false hit 之间工程化地走钢丝。</p>
 </div>
-
 <!-- ============ 1 ============ -->
 <div class="section">
 <span class="num">// 01</span>
-<h2>三层缓存栈：exact → prefix → semantic</h2>
+<h2 data-tts="2d15dd823d345c29">三层缓存栈：exact → prefix → semantic</h2>
 <div class="claim">论断：这三层不是替代关系是叠加关系；命中率、省钱幅度、出错风险三者同向递增，所以查询顺序必须从最安全的一层开始。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="41f67526574a0dc1">背景与原理</h3>
 <p>把「缓存」当成一个东西是新手错误。LLM 请求有三层可缓存点，代价与风险截然不同：</p>
 <ul>
 <li><strong>L1 精确缓存</strong>：请求文本 hash → 答案。命中率最低（改一个标点就 miss），但<strong>零语义风险</strong>——命中的一定是同一句话。</li>
@@ -74,7 +71,6 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <li><strong>L3 语义缓存</strong>：请求 embed → 向量近邻（ANN）→ 距离小于阈值就返回<strong>旧答案</strong>。省下整整一次 inference（省钱幅度最大），但<strong>可能命中错的旧答案</strong>。</li>
 </ul>
 <p>关键工程决策：三层<strong>顺序查询</strong>，语义层放最后一道，只处理 exact/prefix 漏下来的请求。identical query 让零风险的 L1 先吃掉，永远不该进 L3 去赌一次相似度判断。</p>
-
 <div class="diagram">  REQUEST  "能退货吗？"
      │  normalize（lowercase / 去标点 / 去停用词）
      ▼
@@ -89,8 +85,7 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
   │        miss │                        ⚠️ 有 false-hit 风险
   │             ▼
   └────────▶  LLM  ──▶ 写回 L1 + L3（带 scope key + TTL）</div>
-
-<h3>实战示例</h3>
+<h3 data-tts="e6bb815d6d0db3aa">实战示例</h3>
 <pre><code><span class="tag-key">def</span> answer(q, scope):
     qn = normalize(q)                          <span class="tag-com"># 归一化：表层变体先坍缩</span>
     <span class="tag-key">if</span> (a := L1.get(hash(qn, scope))): <span class="tag-key">return</span> a   <span class="tag-com"># 零风险命中</span>
@@ -99,28 +94,23 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
     a = llm(qn, scope)                         <span class="tag-com"># L2 前缀缓存在这一层内部生效</span>
     L1.put(hash(qn, scope), a); L3.put(embed(qn), a, scope, ttl=...)
     <span class="tag-key">return</span> a</code></pre>
-
 <div class="fail">
 <strong>失败模式</strong>：跳过 L1/L2 直接「全上语义缓存」。这等于把本可零风险精确命中的 identical query，也扔进相似度判断里赌一把——凭空给自己引入 false hit。语义层是补漏的，不是打头阵的。
 </div>
-
 <div class="res">
 <strong>进阶资源</strong> · GPTCache（Zilliz，语义缓存参考实现）, <a href="https://github.com/zilliztech/GPTCache" target="_blank">github.com/zilliztech/GPTCache</a> ·
 Anthropic Prompt Caching 文档, <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching" target="_blank">platform.claude.com/.../prompt-caching</a>
 </div>
 </div>
-
 <!-- ============ 2 ============ -->
 <div class="section">
 <span class="num">// 02</span>
-<h2>阈值不是调准确率，是调「你能容忍多贵的错答案」</h2>
+<h2 data-tts="3d1cb673ef697302">阈值不是调准确率，是调「你能容忍多贵的错答案」</h2>
 <div class="claim">论断：语义缓存的相似度阈值是一个风险旋钮而不是精度旋钮——false hit 的代价远大于 miss，所以阈值该偏保守，宁可 miss。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="ccf65676bd16bb32">背景与原理</h3>
 <p>两种错误的代价严重<strong>不对称</strong>：<strong>miss</strong> 的代价 = 多花一次 API 调用（几毫厘 + 一点延迟），无害；<strong>false hit</strong> 的代价 = 用户拿到一个 confidently wrong 的答案，信任崩塌、甚至法律后果。既然不对称，阈值就不能按「F1 最高」来选，要按「把 false hit 压到可接受」来选——通常意味着更严的阈值、更多 miss。</p>
 <p>Redis 用 cosine distance，区间 <code>[0,2]</code>，0=完全相同、2=完全相反；阈值越小=越严=越少 false hit。<strong>embedding 选型的影响比阈值还大</strong>：通用句向量分不开「退货 vs 换货」这种近义但答案不同的 query，也分不开「能退吗」和「不能退吗」这种一字之差、语义相反、向量却极近的句子。所以阈值不能拍脑袋，要<strong>扫</strong>：拿一批人工标注的 <code>(q1, q2, 该不该命中)</code> pair，扫阈值画出 false-hit / false-miss 两条曲线，在「false-hit 落到红线以下」的约束里取命中率最高的点。</p>
-
-<h3>实战示例</h3>
+<h3 data-tts="580211642c8a914c">实战示例</h3>
 <pre><code><span class="tag-com"># 阈值扫描：在 false-hit 上限约束下选阈值，而不是选 F1 最高</span>
 <span class="tag-key">def</span> pick_tau(pairs, embed, max_false_hit=0.01):
     best = <span class="tag-key">None</span>
@@ -131,24 +121,20 @@ Anthropic Prompt Caching 文档, <a href="https://platform.claude.com/docs/en/bu
                    <span class="tag-key">for</span> a,b,same <span class="tag-key">in</span> pairs])
         <span class="tag-key">if</span> fh &lt;= max_false_hit: best = (tau, hit, fh)  <span class="tag-com"># 约束优先</span>
     <span class="tag-key">return</span> best   <span class="tag-com"># 严约束下命中率最高的 tau</span></code></pre>
-
 <div class="fail">
 <strong>失败模式</strong>：拿默认阈值（很多库给 0.8 相似度）+ 通用 embedding 直接上生产。近义反义句、否定句、带数字的 query（「订单 1234」vs「订单 1235」）embedding 极近，会稳定 false hit。MeanCache 论文（arXiv 2403.02694）直接点名：现有缓存方法找不到真正的语义相似，导致<strong>不可接受的 false hit/miss 率</strong>——这不是调参小问题，是语义缓存的核心难题。
 </div>
-
 <div class="res">
 <strong>进阶资源</strong> · Redis《What is Semantic Caching》（阈值与 distance 单位）, <a href="https://redis.io/blog/how-to-cache-semantic-search/" target="_blank">redis.io/blog/how-to-cache-semantic-search</a> ·
 MeanCache: User-Centric Semantic Caching, <a href="https://arxiv.org/abs/2403.02694" target="_blank">arXiv:2403.02694</a>
 </div>
 </div>
-
 <!-- ============ 3 ============ -->
 <div class="section">
 <span class="num">// 03</span>
-<h2>缓存中毒：正确性不止取决于「问题像不像」</h2>
+<h2 data-tts="7a247cdefe96e3c1">缓存中毒：正确性不止取决于「问题像不像」</h2>
 <div class="claim">论断：两个字面相同的问题，答案也可能不同——决定缓存能不能共享的是 scope key，不是 query 相似度。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="de8be0affc836a3f">背景与原理</h3>
 <p>就算相似度判断完美，语义缓存还有一类更隐蔽的错：答案本身<strong>不再成立</strong>。三种中毒源：</p>
 <ul>
 <li><strong>个性化</strong>：「我的订单到哪了」对不同用户答案不同——跨用户命中是灾难（还会泄露别人隐私）。</li>
@@ -156,8 +142,7 @@ MeanCache: User-Centric Semantic Caching, <a href="https://arxiv.org/abs/2403.02
 <li><strong>上下文依赖</strong>：同一句「那第二个呢」在不同对话历史下指向完全不同的东西。</li>
 </ul>
 <p>解法是<strong>作用域键（scope key）</strong>：缓存键不能只是 query 的 embedding，要拼上 <code>user_id / tenant / 数据版本 / 语言 / 上下文摘要</code>——只有同一 scope 内才允许命中。TTL 按内容时效分级：静态知识可以 1 天，价格/库存这类可能只给 60 秒甚至不缓存。MeanCache 的做法是给每条缓存 query 编码一段 <strong>context chain</strong>，用来区分「带上下文依赖的」和「独立自足的」query——后者才安全跨会话复用。</p>
-
-<h3>实战示例</h3>
+<h3 data-tts="5bb6a14f005a85bf">实战示例</h3>
 <pre><code><span class="tag-com"># scope key：相似度只是命中的必要条件，scope 一致才是充分条件</span>
 <span class="tag-key">def</span> scope_key(req):
     <span class="tag-key">return</span> {
@@ -169,24 +154,20 @@ MeanCache: User-Centric Semantic Caching, <a href="https://arxiv.org/abs/2403.02
 <span class="tag-com"># 数据写入路径挂失效钩子：源数据变 → 按 scope 清缓存</span>
 <span class="tag-key">def</span> on_price_update(sku):
     cache.invalidate(scope={<span class="tag-gpt">"dv"</span>: bump_version()})   <span class="tag-com"># 版本号一升，全体旧缓存失配</span></code></pre>
-
 <div class="fail">
 <strong>失败模式</strong>：全局共享缓存 + 没有失效钩子。数据库更新了、但缓存没人通知，agent 拿着旧数据一本正经地答，越权限、越时效地错下去。<strong>失效必须由 write-path 主动触发</strong>——用数据版本号做 scope 的一部分是最省事的实现：源一变就 bump 版本，所有旧缓存瞬间失配，不用逐条删。
 </div>
-
 <div class="res">
 <strong>进阶资源</strong> · MeanCache（context chain 区分上下文依赖 query）, <a href="https://arxiv.org/abs/2403.02694" target="_blank">arXiv:2403.02694</a> ·
 Redis LLM Cache（scope / TTL 用法）, <a href="https://docs.redisvl.com/en/latest/user_guide/03_llmcache.html" target="_blank">docs.redisvl.com/.../llmcache</a>
 </div>
 </div>
-
 <!-- ============ 4 ============ -->
 <div class="section">
 <span class="num">// 04</span>
-<h2>命中率工程 + 双指标监控</h2>
+<h2 data-tts="16f874f559d3ef70">命中率工程 + 双指标监控</h2>
 <div class="claim">论断：只盯命中率会诱导你把阈值越调越松，直接把系统调坏——必须同时监控命中率和 false-hit 率。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="2aeb6b49d77a9985">背景与原理</h3>
 <p>先说安全地提升命中率的手段（不动阈值、不加风险）：</p>
 <ul>
 <li><strong>Canonicalization 归一化</strong>：lowercase、去标点、去多余空格、把「pls / 请问 / 麻烦」这类礼貌噪声剥掉，让 L1 精确层先吃掉大量表层变体，语义层压力更小、false hit 面更窄。</li>
@@ -194,8 +175,7 @@ Redis LLM Cache（scope / TTL 用法）, <a href="https://docs.redisvl.com/en/la
 <li><strong>预热</strong>：用历史高频 query 离线灌库。</li>
 </ul>
 <p>但命中率是个<strong>危险的单指标</strong>：松阈值 → 命中率涨 → 账单好看 → 但 false hit 同时悄悄涨。所以必须配一个 <strong>shadow eval</strong>：<strong>抽样</strong>把已经 cache-hit 的请求也真打一次 LLM，比对新旧答案是否等价（用 LLM-as-judge 或 embedding 相似度判等），据此估算线上 false-hit 率。这和 Day 42 的影子测试、Day 56 用分布而非单点稳住 eval 是同一套思路——<strong>用一个便宜的旁路把静默错误显影出来</strong>。</p>
-
-<h3>实战示例</h3>
+<h3 data-tts="aec2062ee8c09651">实战示例</h3>
 <pre><code><span class="tag-com"># shadow sampling：1% 的命中请求偷偷真算一遍，量化 false-hit 率</span>
 <span class="tag-key">def</span> answer_monitored(q, scope):
     hit = semantic_lookup(q, scope)
@@ -204,20 +184,17 @@ Redis LLM Cache（scope / TTL 用法）, <a href="https://docs.redisvl.com/en/la
         <span class="tag-key">if not</span> equivalent(hit.answer, truth):  <span class="tag-com"># judge / 相似度</span>
             metrics.incr(<span class="tag-gpt">"cache.false_hit"</span>)   <span class="tag-com"># 报警看这个，不是命中率</span>
     <span class="tag-key">return</span> hit.answer <span class="tag-key">if</span> hit <span class="tag-key">else</span> llm(q, scope)</code></pre>
-
 <div class="fail">
 <strong>失败模式</strong>：把命中率当成 KPI 汇报给团队。人会优化被考核的指标——工程师会把阈值越调越松让命中率好看，false hit 在没人监控的暗处涨，直到某天客诉集中爆发才发现。<strong>命中率是收益指标，false-hit 率才是护栏指标，两个必须一起看</strong>；护栏破线时优先回收命中率。
 </div>
-
 <div class="res">
 <strong>进阶资源</strong> · Redis《What is Semantic Caching》（命中率与评估）, <a href="https://redis.io/blog/how-to-cache-semantic-search/" target="_blank">redis.io/blog/how-to-cache-semantic-search</a> ·
 GPTCache eval 模块, <a href="https://github.com/zilliztech/GPTCache" target="_blank">github.com/zilliztech/GPTCache</a>
 </div>
 </div>
-
 <!-- ============ Combo ============ -->
 <div class="combo">
-<h3>// 综合实战 · 给自己的 RAG/agent 加一层「安全」语义缓存</h3>
+<h3 data-tts="e2648b7478c9fadd">// 综合实战 · 给自己的 RAG/agent 加一层「安全」语义缓存</h3>
 <p>把四点串成一个周末项目：给你现有的 RAG 或客服 agent 加语义缓存，目标不是命中率最高，是<strong>零可感知 false hit</strong>。</p>
 <ol style="margin-left:20px;margin-top:10px">
 <li><strong>先搭三层</strong>：normalize → L1 exact（Redis hash）→ L3 semantic（GPTCache / RedisVL）→ LLM。L2 前缀缓存交给 Anthropic <code>cache_control</code>，把 system prompt + 检索文档卡在一个 breakpoint 前。</li>
@@ -228,10 +205,9 @@ GPTCache eval 模块, <a href="https://github.com/zilliztech/GPTCache" target="_
 </ol>
 <p style="margin-top:12px">做完这套，你以后看任何「我们上了语义缓存省了 X%」的分享，都会先问一句：<strong>你的 false-hit 率是多少、怎么测的？</strong>——答不上来的省钱数字都是耍流氓。</p>
 </div>
-
 <!-- ============ Glossary ============ -->
 <div class="glossary">
-<h3>// ENGLISH GLOSSARY</h3>
+<h3 data-tts="cf4a9d3d52369de1">// ENGLISH GLOSSARY</h3>
 <dl>
 <dt>Semantic Cache</dt><dd>把请求 embed、用向量近邻命中就复用旧答案的缓存，省下整次 inference。本期主角。</dd>
 <dt>Exact / Prefix Cache</dt><dd>精确缓存（文本 hash）与前缀缓存（如 Anthropic cache_control 省 input token），两者均零语义风险。</dd>
@@ -245,7 +221,6 @@ GPTCache eval 模块, <a href="https://github.com/zilliztech/GPTCache" target="_
 <dt>Shadow Eval</dt><dd>抽样把命中请求也真算一遍、比对答案，用来量化线上 false-hit 率。</dd>
 </dl>
 </div>
-
 <!-- ============ Deep Thinking ============ -->
 <div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
 <style>
@@ -260,16 +235,15 @@ GPTCache eval 模块, <a href="https://github.com/zilliztech/GPTCache" target="_
 .thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
 .thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
 </style>
-<h3>// 深入思考</h3>
+<h3 data-tts="0820ef14ebbcfc03">// 深入思考</h3>
 <details><summary>语义缓存用同一个 embedding 判「够像可复用」，而 RAG 也用 embedding 判「够像可召回」。两者的相似度阈值能共用一套吗？</summary><div>不能，方向相反。RAG 召回要<strong>宽</strong>：多召回几个候选，交给 reranker/LLM 去筛，false positive 无害（下游会丢）。语义缓存命中要<strong>严</strong>：一旦命中就直接返回、没有下游把关，false positive 直接变错答案。同一对 query 在 RAG 里该召回、在缓存里未必该命中。所以缓存阈值要显著严于同 embedding 的检索阈值，且要单独用「答案是否等价」而非「话题是否相关」来标注调参。</div></details>
 <details><summary>推理模型（o1/R1，Day 49）越贵，缓存收益越大。但它们同一 prompt 每次思考路径都不同，这对语义缓存意味着什么？</summary><div>收益诱惑最大、风险也最大。贵，所以命中一次省得多；但输出是长推理链，两个语义相近的问题「正确答案」也许一致，<strong>中间推理却可能不该复用</strong>——缓存整条 trace 会把 A 问题的推理硬套给 B。务实做法：只缓存<strong>最终答案</strong>不缓存 reasoning trace，且阈值收得比对普通模型更严（答案更长、更容易在细节上分叉）。对高价值场景，宁可只让 exact 层命中、放弃语义命中。</div></details>
 <details><summary>为什么「命中率」这个看起来最自然的 KPI，反而是语义缓存里最危险的考核指标？</summary><div>因为它和 false-hit 率被同一个旋钮（阈值）反向耦合：松阈值同时抬高两者。一旦命中率进了考核,人会优化它——把阈值调松,命中率的涨立刻可见、可汇报,而 false hit 的涨是静默的、要专门 shadow 采样才看得到。于是系统被稳定地推向「省钱数字漂亮但错答案变多」。正确做法是把 false-hit 率设成不可逾越的护栏指标,命中率只在护栏内优化——收益指标服从护栏指标。这与 Day 34/56 的「用护栏约束优化」是同一条工程哲学。</div></details>
 <details><summary>如果 embedding 模型升级了（换了更强的句向量），已经建好的语义缓存库会发生什么？</summary><div>整个向量库作废——旧向量和新 query 的向量在不同空间,距离不可比,阈值也失去意义。这跟 Day 40 讲的「embedding 迁移要重建索引」同源。所以 embedding 版本必须进 scope key（或直接做成独立命名空间）,升级时新旧库并存、灰度切换,不能原地混用。这也提醒:语义缓存把「省钱」和「embedding 选型」绑死了——换 embedding 的成本包含缓存库重建,选型要一次尽量选对。</div></details>
 </div>
-
 <!-- ============ Refs ============ -->
 <div class="refs">
-<h3>// 延伸阅读</h3>
+<h3 data-tts="fac95225c7acf0e0">// 延伸阅读</h3>
 <ul>
 <li><a href="https://github.com/zilliztech/GPTCache" target="_blank">GPTCache · Zilliz</a> — 语义缓存参考实现，embedding + 向量库 + eval 模块齐全</li>
 <li><a href="https://redis.io/blog/how-to-cache-semantic-search/" target="_blank">Redis · What is Semantic Caching</a> — 阈值、cosine distance、命中率评估的实操指南</li>
@@ -278,11 +252,10 @@ GPTCache eval 模块, <a href="https://github.com/zilliztech/GPTCache" target="_
 <li><a href="https://docs.redisvl.com/en/latest/user_guide/03_llmcache.html" target="_blank">RedisVL · LLM Cache</a> — scope、TTL、distance threshold 的代码用法</li>
 </ul>
 </div>
-
 <footer>BigCat · Super Individual · Day 57 · 2026-07-09</footer>
 </div>
-<script src="https://hub.cissychen.com/comments.js" defer></script>
-<script src="https://hub.cissychen.com/search.js" defer></script>
-<script src="https://hub.cissychen.com/index-button.js" defer></script>
-<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
 </body></html>

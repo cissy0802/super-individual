@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<html lang="zh-CN"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Day 41 · 流式与中断工程 — Super Individual</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -46,30 +47,25 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
 </style></head><body>
 <div class="container">
-
 <header>
 <span class="week-tag">DAY 41 / PHASE 4 · PRODUCTION</span>
-<h1>流式与中断工程</h1>
-<h2>TTFT · Partial Parsing · Streaming Tool Use · Cancellation</h2>
+<h1 data-tts="97bc4047db997616">流式与中断工程</h1>
+<h2 data-tts="876c29985e5bdbd0">TTFT · Partial Parsing · Streaming Tool Use · Cancellation</h2>
 <div class="date">2026-06-20 · BigCat</div>
 <p class="pitch">流式不是把答案早一点给你看，而是把"半截的、随时会变的、可能被掐断的"中间态变成可工程化的对象。</p>
 </header>
-
 <div class="intro">
-<h3>// WHY THIS MATTERS</h3>
+<h3 data-tts="8c9669256934140f">// WHY THIS MATTERS</h3>
 <p>几乎所有 LLM 产品都开了 streaming，但多数人只用了最浅的一层：把 token 一个个打到屏幕上。真正的难度在打字机效果之外——<strong>流进来的每一帧都是不完整的</strong>：半截的 Markdown 表格、断在引号中间的 JSON、还没收齐参数的 tool call、用户随时可能点的"停止"。这些都不是 prompt 能解决的，是 harness 层的状态管理问题。把 streaming 当成"早点显示"会埋三类线上事故：拿半截 JSON 去 <code>parse</code> 直接崩、把还没生成完的 tool input 提前执行、以及用户关了页面但服务端还在烧 token 和触发副作用。这一期讲清楚四件事：<strong>流式的本质是感知优化而非吞吐优化</strong>、增量解析必须容忍残缺、tool call 流式的 buffer 取舍、以及中途取消时的副作用回滚。</p>
 </div>
-
 <!-- ============ 1 ============ -->
 <div class="section">
 <span class="num">// 01</span>
-<h2>流式的本质：优化的是首 token 延迟，不是总时长</h2>
+<h2 data-tts="fdccaf3c3c2f9f26">流式的本质：优化的是首 token 延迟，不是总时长</h2>
 <div class="claim">论断：streaming 一秒钟都不会缩短总生成时间；它把一段"无事发生的等待"换成"持续有反馈的等待"，骗过的是感知。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="ec634d1b23e79237">背景与原理</h3>
 <p>一次 LLM 调用的延迟拆成两段：<strong>TTFT</strong>（time to first token，从发请求到第一个 token 落地）和<strong>逐 token 生成</strong>（inter-token latency × token 数）。streaming 不改变这两者之和——总 wall-clock 几乎一样——它只是让用户在 TTFT 之后立刻开始看到字，而不是干等到全部生成完。研究与产品经验都指向同一结论：<strong>同样的总时长，流式界面被感知为快得多</strong>，因为它消除了"盯着空白屏幕"这段最难熬的认知空窗。</p>
 <p>这条本质推出两个反直觉工程决策。其一：你该监控和优化的是 <strong>TTFT 的 p95，而不是总延迟</strong>——一个总耗时 10s 但 200ms 出首 token 的接口，体感远胜于 4s 总耗时却 3s 才动的接口。其二：streaming<strong>不</strong>提升吞吐，纯后台批处理任务开 streaming 没有意义，反而徒增解析复杂度。</p>
-
 <div class="diagram">总时长相同,体感天差地别 —— 优化点在 TTFT 不在总长
 
 非流式  [████████ 等待 8s 空白 ████████]→ 一次性吐出
@@ -77,8 +73,7 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 
 流式    [▌200ms]→ 字▌字▌字▌字▌字▌字▌字▌字 (持续 8s)
         用户感知: "在动,挺快" —— 同样 8s</div>
-
-<h3>实战示例</h3>
+<h3 data-tts="e8cb71a2e8b3c493">实战示例</h3>
 <pre><code><span class="tag-key">import</span> time, anthropic
 client = anthropic.Anthropic()
 
@@ -92,28 +87,23 @@ t0 = time.time(); ttft = <span class="tag-key">None</span>
             print(<span class="tag-gpt">f"TTFT={ttft*1000:.0f}ms"</span>)
         render(text)                          <span class="tag-com"># 增量上屏</span>
 total = time.time() - t0                       <span class="tag-com"># 总时长:streaming 救不了它</span></code></pre>
-
 <div class="fail">
 <strong>失败模式</strong>：把 streaming 当性能优化去汇报"延迟降低了"。总延迟一点没降，你优化的是体感；如果 TTFT 本身就高（prompt 太长、没开 prompt caching、模型在长 CoT），streaming 救不了——用户依然先盯一段空白。此时正解是先压 TTFT（缓存前缀、缩短系统提示、先流一个占位/骨架屏），而非寄希望于打字机。
 </div>
-
 <div class="res">
 <strong>进阶资源</strong> · Redis <em>Streaming LLM Responses: Make Your AI App Feel Fast</em>, <a href="https://redis.io/blog/streaming-llm-responses/" target="_blank">redis.io/blog/streaming-llm-responses</a> ·
 DeepInfra <em>LLM Provider KPIs 101: TTFT, Throughput, E2E</em>, <a href="https://deepinfra.com/blog/llm-api-provider-performance-kpis-101" target="_blank">deepinfra.com/blog</a>
 </div>
 </div>
-
 <!-- ============ 2 ============ -->
 <div class="section">
 <span class="num">// 02</span>
-<h2>增量解析：每一帧都要当"半截"处理，标准 parser 会毁掉流式</h2>
+<h2 data-tts="5494d750c4b9d625">增量解析：每一帧都要当"半截"处理，标准 parser 会毁掉流式</h2>
 <div class="claim">论断：把流式 chunk 喂给一个要求完整输入的 parser，等于把 streaming 退化回 buffering——还多了崩溃风险。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="488a5c00c98f1e0e">背景与原理</h3>
 <p>纯文本流式很简单（追加上屏即可），但凡输出有<strong>结构</strong>就立刻变难。标准 Markdown 渲染器、<code>JSON.parse</code>、XML parser 都假设输入是<strong>完整且合法</strong>的——而流式中你拿到的永远是中间态：一个还没闭合的代码块、一个写到一半的表格、一个断在 <code>"add</code> 处的字符串。直接丢给标准 parser 只有两种结局：抛异常崩掉，或者它干脆等到完整才渲染——后者把 streaming 的全部价值抹平了。</p>
 <p>正解是<strong>为残缺而设计的渐进解析</strong>：见到代码块起始就先渲染一个打开的容器、表格来一行画一行、字符串没闭合就先补一个临时引号显示。Vercel 的 Streamdown 把这套封装成 react-markdown 的流式替代品——它<strong>假设输入永远不完整</strong>，对未闭合语法做"修补再渲染"。结构化数据同理：要用<strong>容错 JSON 解析器</strong>（partial JSON / trailing-strings 模式），它能把 <code>{"city":"北</code> 解析成 <code>{"city":"北"}</code> 这样的部分对象，让 UI 边流边填字段。</p>
-
-<h3>实战示例</h3>
+<h3 data-tts="c22653eefdcf6f80">实战示例</h3>
 <pre><code><span class="tag-com"># 容错解析:用 partial-json 把半截 JSON 解析成部分对象</span>
 <span class="tag-key">from</span> partial_json_parser <span class="tag-key">import</span> loads
 
@@ -126,27 +116,22 @@ buf = <span class="tag-gpt">""</span>
     <span class="tag-key">except</span> Exception:
         <span class="tag-key">continue</span>                    <span class="tag-com"># 这一帧还不够,等下一帧</span>
 <span class="tag-com"># 关键:只有 stream 结束后的 obj 才是"最终态",中途的都是预览</span></code></pre>
-
 <div class="fail">
 <strong>失败模式</strong>：（1）对每一帧 <code>strict JSON.parse</code> 然后 try/catch 吞掉——能跑但每帧都白解析，且容易把"恰好暂时合法"的中间态误当完整。（2）更危险：把<strong>部分解析的结果当最终态去触发副作用</strong>——比如流到 <code>{"action":"delete"</code> 就执行删除，结果完整意图是 <code>{"action":"delete_draft","confirm":false}</code>。中途态只能用于<strong>渲染预览</strong>，绝不能驱动决策或副作用。
 </div>
-
 <div class="res">
 <strong>进阶资源</strong> · Vercel <em>Streamdown — Markdown for AI streaming</em>, <a href="https://streamdown.ai/" target="_blank">streamdown.ai</a> / <a href="https://github.com/vercel/streamdown" target="_blank">github.com/vercel/streamdown</a> ·
 Vercel AI SDK <em>streamObject / partial object</em>, <a href="https://ai-sdk.dev/docs/ai-sdk-core/generating-structured-data" target="_blank">ai-sdk.dev/docs</a>
 </div>
 </div>
-
 <!-- ============ 3 ============ -->
 <div class="section">
 <span class="num">// 03</span>
-<h2>Tool call 流式：input_json_delta 的累积，与 fine-grained 的取舍</h2>
+<h2 data-tts="581eb705f1b3d2c7">Tool call 流式：input_json_delta 的累积，与 fine-grained 的取舍</h2>
 <div class="claim">论断：tool 参数的流式默认是"攒齐才给你合法 JSON"；想更早拿到大参数，得开 fine-grained，但要自己承担残缺 JSON 的风险。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="e1706d1c7b874847">背景与原理</h3>
 <p>Anthropic 的 SSE 流里，一次响应由多个 content block 组成，每个 block 是 <code>content_block_start → 多个 content_block_delta → content_block_stop</code>。文本走 <code>text_delta</code>；<strong>tool 的参数走 <code>input_json_delta</code></strong>，字段是 <code>partial_json</code>——你要把到达顺序的 <code>partial_json</code> 片段<strong>按序拼接</strong>才能还原参数 JSON，而且这些片段<strong>不尊重 JSON 边界</strong>（可能断在任意字符）。默认模式下，SDK 会帮你 buffer 到 <code>content_block_stop</code>，那时拿到的才是<strong>校验过的完整合法 JSON</strong>——安全但有延迟，大参数（比如让模型写一大段文件内容）要等它整段攒完。</p>
 <p>想消除这个等待，Anthropic 提供 <strong>fine-grained tool streaming</strong>（beta header <code>fine-grained-tool-streaming-2025-05-14</code>）：参数<strong>不 buffer、不做 JSON 校验</strong>直接流出，显著降低大参数的首字延迟。代价写在文档里：<strong>不保证流出的是合法 JSON</strong>——若 <code>max_tokens</code> 截断，流可能停在某个参数中间，给你一段永远补不全的残缺 JSON。这是一个清晰的取舍：<strong>更低延迟 ⇄ 自己处理残缺</strong>。</p>
-
 <div class="diagram">一次带 tool 的流式响应,事件如何拼出参数
 
 message_start
@@ -160,8 +145,7 @@ message_stop
 
 默认:  攒到 stop 才 parse  → 安全, 慢
 细粒度: 每个 delta 即用    → 快, 可能残缺(max_tokens 截断)</div>
-
-<h3>实战示例</h3>
+<h3 data-tts="16a3f7f36afc7fea">实战示例</h3>
 <pre><code>acc = <span class="tag-gpt">""</span>
 <span class="tag-key">for</span> ev <span class="tag-key">in</span> stream:
     <span class="tag-key">if</span> ev.type == <span class="tag-gpt">"content_block_delta"</span> \
@@ -172,27 +156,22 @@ message_stop
         run_tool(name, args)                  <span class="tag-com"># ← 唯一安全的执行点</span>
 <span class="tag-com"># fine-grained beta 下,acc 在 stop 时也可能是残缺 JSON,</span>
 <span class="tag-com"># 须用容错 parser + 校验,失败则判定 tool call 不完整、不执行</span></code></pre>
-
 <div class="fail">
 <strong>失败模式</strong>：（1）在 <code>content_block_stop</code> 之前就拿累积的 <code>partial_json</code> 去 parse 并执行 tool——参数还没收齐，等于拿半个意图行动。（2）开了 fine-grained 却仍假设结尾一定是合法 JSON，不做残缺校验——一旦 <code>max_tokens</code> 截断，<code>json.loads</code> 直接抛，或更糟，容错 parser 补出一个<strong>语义被篡改的</strong>参数被执行。fine-grained 的前提是你<strong>有能力安全处理半截参数</strong>。
 </div>
-
 <div class="res">
 <strong>进阶资源</strong> · Anthropic <em>Streaming Messages</em>, <a href="https://docs.claude.com/en/docs/build-with-claude/streaming" target="_blank">docs.claude.com/.../streaming</a> ·
 Anthropic <em>Fine-grained tool streaming</em>, <a href="https://docs.claude.com/en/docs/agents-and-tools/tool-use/fine-grained-tool-streaming" target="_blank">docs.claude.com/.../fine-grained-tool-streaming</a>
 </div>
 </div>
-
 <!-- ============ 4 ============ -->
 <div class="section">
 <span class="num">// 04</span>
-<h2>中途取消与回滚：断开连接 ≠ 停止，已发出的副作用要补偿</h2>
+<h2 data-tts="c98a50138409e69a">中途取消与回滚：断开连接 ≠ 停止，已发出的副作用要补偿</h2>
 <div class="claim">论断：用户点"停止"或关页面，只断了你这端的接收；server 可能仍在生成、仍在计费、tool 可能已把副作用做出去了。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="ab853409bd30c8bf">背景与原理</h3>
 <p>"取消"在流式里有个隐蔽的真相：客户端断开 ≠ 生成停止。要真正止损，你得用 <strong><code>AbortController</code></strong>（或对应 SDK 的 cancel）显式中止那条 HTTP/SSE 连接，让 server 收到断开信号停止生成——光关 UI、丢弃后续 chunk 是不够的，那只是你不看了，token 还在烧。这是取消的<strong>第一层</strong>：止血。</p>
 <p>第二层更难，发生在 agent 流式里：取消的瞬间，某个 tool <strong>可能已经执行了副作用</strong>（订单已建、邮件已发、文件已写一半）。流式让这个问题更尖锐，因为输出是<strong>边生成边落地</strong>的，取消点落在哪里不确定。三条处理原则：(a) 把<strong>已 streamed 的部分输出</strong>显式标记为 <code>partial/aborted</code>，绝不能当完整结果入库；(b) 副作用工具必须<strong>幂等</strong>，且对已发出的副作用走<strong>补偿/回滚</strong>（见 Day 39）；(c) 长流配 <strong>checkpoint</strong>，让"取消"等价于"在某个干净的断点停下"，而非"停在任意半截状态"。</p>
-
 <div class="diagram">点"停止"之后,真正要做的三件事
 
 用户取消
@@ -201,15 +180,14 @@ Anthropic <em>Fine-grained tool streaming</em>, <a href="https://docs.claude.com
    ├─② 标记输出     → 已收 token = partial,不入库/不当真
    └─③ 副作用善后   → 已执行的 tool 走补偿;未执行的丢弃
                       配合幂等键,避免"重发一次"的二次伤害</div>
-
-<h3>实战示例</h3>
+<h3 data-tts="2ba2dca062b54bfb">实战示例</h3>
 <pre><code><span class="tag-com">// 前端:真正中止生成,而非只丢弃 chunk</span>
 <span class="tag-key">const</span> ctrl = <span class="tag-key">new</span> AbortController();
 <span class="tag-key">const</span> stream = <span class="tag-key">await</span> client.messages.stream(
     { model: <span class="tag-gpt">"claude-opus-4-8"</span>, max_tokens: 2048, messages },
     { signal: ctrl.signal });                  <span class="tag-com">// ← 绑定取消信号</span>
 
-stopBtn.onclick = () => ctrl.abort();          <span class="tag-com">// 断连,server 停生成</span>
+stopBtn.onclick = () =&gt; ctrl.abort();          <span class="tag-com">// 断连,server 停生成</span>
 
 <span class="tag-key">let</span> acc = <span class="tag-gpt">""</span>;
 <span class="tag-key">try</span> {
@@ -219,20 +197,17 @@ stopBtn.onclick = () => ctrl.abort();          <span class="tag-com">// 断连,s
     <span class="tag-key">if</span> (e.name === <span class="tag-gpt">"AbortError"</span>)
         save_as_partial(acc);                  <span class="tag-com">// 标记残缺,触发副作用补偿</span>
 }</code></pre>
-
 <div class="fail">
 <strong>失败模式</strong>：（1）以为"关闭页面/丢弃 chunk"就停止了——server 端在 abort 信号缺失时往往把整段生成跑完，账单照付，订阅式 tool 的副作用照做。（2）取消后把已收到的半截输出当成最终答案存库或返回下游，污染数据。（3）取消发生在一个<strong>非幂等</strong>副作用工具执行后却没有补偿——用户以为"我点了停止所以没发生"，实际邮件已经发出去了。
 </div>
-
 <div class="res">
 <strong>进阶资源</strong> · MDN <em>AbortController</em>, <a href="https://developer.mozilla.org/en-US/docs/Web/API/AbortController" target="_blank">developer.mozilla.org/.../AbortController</a> ·
 本系列 Day 39 <em>Agent 错误恢复与韧性</em>（幂等 / 补偿 / checkpoint）
 </div>
 </div>
-
 <!-- ============ Combo ============ -->
 <div class="combo">
-<h3>// 综合实战 · 给一个 streaming 接口做"残缺安全"加固</h3>
+<h3 data-tts="caf30833751b9ebe">// 综合实战 · 给一个 streaming 接口做"残缺安全"加固</h3>
 <p>拿你正在用的任何 streaming 聊天/agent，按这张 checklist 逐项检查——每一项对应上面一个失败模式：</p>
 <ol style="margin-left:20px;margin-top:10px">
 <li><strong>埋 TTFT 指标</strong>：在收到首个 delta 处打点，监控 TTFT 的 p50/p95，而不是只看总延迟。TTFT 高就先压前缀（缓存、缩系统提示），别指望打字机。</li>
@@ -244,10 +219,9 @@ stopBtn.onclick = () => ctrl.abort();          <span class="tag-com">// 断连,s
 </ol>
 <p style="margin-top:12px">做完你会发现：让 streaming "看起来在动"只需十行；让它在<strong>半截、截断、被掐断</strong>三种残缺下都不出事，才是 demo 与 production 的真实分界。</p>
 </div>
-
 <!-- ============ Glossary ============ -->
 <div class="glossary">
-<h3>// ENGLISH GLOSSARY</h3>
+<h3 data-tts="cb4a8ebfaf461e04">// ENGLISH GLOSSARY</h3>
 <dl>
 <dt>TTFT (Time To First Token)</dt><dd>从发请求到第一个 token 落地的延迟。流式体验真正要优化的指标，比总时长更影响体感。</dd>
 <dt>Inter-Token Latency</dt><dd>相邻两个 token 之间的间隔，决定"打字"的流畅度。</dd>
@@ -260,7 +234,6 @@ stopBtn.onclick = () => ctrl.abort();          <span class="tag-com">// 断连,s
 <dt>Cancellation vs Disconnect</dt><dd>客户端断开不等于服务端停止生成；不发 abort 信号，token 仍在烧、副作用仍在跑。</dd>
 </dl>
 </div>
-
 <!-- ============ Deep Thinking ============ -->
 <div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
 <style>
@@ -275,17 +248,16 @@ stopBtn.onclick = () => ctrl.abort();          <span class="tag-com">// 断连,s
 .thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
 .thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
 </style>
-<h3>// 深入思考</h3>
+<h3 data-tts="d7654a7db4b82fd1">// 深入思考</h3>
 <details><summary>既然 streaming 是感知优化、不省总时长，为什么不干脆隐藏中间过程、用一个高质量的加载动画"假装在思考"，等结果好了一次性呈现?</summary><div>因为流式提供的不只是"有反馈"，还有<strong>可证伪的进展</strong>和<strong>提前介入的机会</strong>。加载动画是不可证伪的——它转十秒和转一秒传达的信息一样多，用户无法判断系统是否真在工作、方向对不对。流式则让用户<strong>边生成边判断</strong>：第一句话跑偏了就立刻点停止，省下后面 9 秒的无效生成和 token。这正是第 4 点"取消"的价值前提——streaming 把"等待"变成"可中断的协作"。对长 agent 任务尤其关键：流式的中间步骤让用户能在第 3 步就发现 agent 误解了意图，而非等 40 步全跑完。隐藏过程等于放弃这层人机协同。</div></details>
 <details><summary>第 2 点说中途态"只能渲染、不能驱动副作用"。但流式 agent 的全部价值不就是边想边做吗?这条红线会不会把 agent 阉割成"想完再做"?</summary><div>红线划在"<strong>同一个未完成的结构内部</strong>"，不是划在 agent 的整个生命周期。一次 tool call 的参数 JSON 在 <code>content_block_stop</code> 之前是不可信的半截，这一条不能破——拿半个参数行动是纯粹的 bug。但 agent 的"边想边做"发生在<strong>更高的粒度</strong>：一个 tool call 完整结束后，agent 立刻发起下一个，无需等整段回复生成完。所以正确的边界是：<strong>结构（单个 tool input）必须完整才能用，但序列（多个 tool call）可以流式推进</strong>。fine-grained streaming 试图把红线往里推一点——让超大参数能边流边用——但它明确要求你自证有能力安全处理残缺，本质是把"完整性校验"的责任从平台转移给你。</div></details>
 <details><summary>取消要靠 AbortController 真断连。但很多 LLM 网关/代理在中间,客户端的 abort 真能一路传到最上游的推理引擎、让它停止解码吗?如果传不到呢?</summary><div>这是个真实的架构漏洞。abort 信号要止住计费和生成，必须<strong>逐跳传递</strong>：浏览器→你的后端→网关→模型提供商→推理引擎，任何一跳吞掉断开信号，上游就会把整段解码跑完。现实里多级代理、连接池、缓冲常常吃掉这个信号。务实的做法是<strong>不把止损全押在断连上</strong>：(1) 在你能控制的最上游一跳确保透传 abort;(2) 设较紧的 <code>max_tokens</code> 和服务端超时作为硬上界，让"取消失败"的最坏代价有界;(3) 把取消语义建在<strong>幂等 + 补偿</strong>上而非"成功停止"上——即假设生成可能仍在跑，靠副作用层的可回滚来兜底。换句话说,取消是 best-effort 止血,正确性靠 Day 39 那套韧性,不靠断连一定生效。</div></details>
 <details><summary>fine-grained tool streaming 用"更低延迟"换"可能残缺的 JSON"。在什么具体场景下这个交换是划算的?什么场景绝不该开?</summary><div>划算的场景有一个共同特征:<strong>参数极大、且半截内容本身就有展示价值</strong>。典型是让模型流式写一大段文件内容、长文档、大段代码——用户想看着它一行行出现,而不是等整个文件攒完才一次性蹦出来;此时即便末尾被 <code>max_tokens</code> 截断,前面已流出的部分仍可用(标记为未完成即可)。绝不该开的场景:参数是<strong>控制性的小结构</strong>,比如 <code>{"action":..., "target_id":..., "confirm":...}</code>——这种参数小、buffer 延迟可忽略,却字段间强耦合,残缺一个字段就语义崩坏甚至危险。判据:<strong>参数是"内容"(大、可增量消费、残缺可用)还是"指令"(小、强耦合、必须完整)?</strong>内容开,指令不开。</div></details>
 <details><summary>这一期的四件事(感知/解析/tool/取消)本质都在对抗"中间态"。这暗示了一个更普遍的工程原则吗?</summary><div>暗示的原则是:<strong>一旦把"结果"变成"过程",你就必须为过程的每个瞬间定义合法状态</strong>。非流式只有两个状态:没结果、有结果。流式把它劈成无穷多个中间态,每帧都要回答"此刻这半截能拿来做什么"。这和分布式系统从"事务"走向"最终一致性"同构:用体感收益,换来必须显式处理一大堆原本不存在的中间状态。深层启示:<strong>任何"实时化"改造的真正成本,不在让它流起来,而在为每个残缺瞬间补齐语义与安全边界</strong>。streaming 只是这个权衡在 LLM 接口上的一个投影。</div></details>
 </div>
-
 <!-- ============ Refs ============ -->
 <div class="refs">
-<h3>// 延伸阅读</h3>
+<h3 data-tts="03cb49f3f43f8b2f">// 延伸阅读</h3>
 <ul>
 <li><a href="https://docs.claude.com/en/docs/build-with-claude/streaming" target="_blank">Anthropic · Streaming Messages</a> — SSE 事件结构、text_delta 与 input_json_delta 的权威定义</li>
 <li><a href="https://docs.claude.com/en/docs/agents-and-tools/tool-use/fine-grained-tool-streaming" target="_blank">Anthropic · Fine-grained Tool Streaming</a> — 低延迟 ⇄ 残缺 JSON 的取舍与启用方式</li>
@@ -294,11 +266,10 @@ stopBtn.onclick = () => ctrl.abort();          <span class="tag-com">// 断连,s
 <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/AbortController" target="_blank">MDN · AbortController</a> — 真正中止连接/取消请求的标准机制</li>
 </ul>
 </div>
-
 <footer>BigCat · Super Individual · Day 41 · 2026-06-20</footer>
 </div>
-<script src="https://hub.cissychen.com/comments.js" defer></script>
-<script src="https://hub.cissychen.com/search.js" defer></script>
-<script src="https://hub.cissychen.com/index-button.js" defer></script>
-<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
 </body></html>

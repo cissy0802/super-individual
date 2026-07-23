@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<html lang="zh-CN"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Day 42 · AI 测试与 CI/CD — Super Individual</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -48,20 +49,17 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
 </style></head><body>
 <div class="container">
-
 <header>
 <span class="week-tag">DAY 42 / PHASE 4 · 人机协作与生产化</span>
-<h1>AI 测试与 CI/CD</h1>
-<h2>Regression Test · Eval Gate · Shadow · Canary</h2>
+<h1 data-tts="8f437d19268f9b9c">AI 测试与 CI/CD</h1>
+<h2 data-tts="a463aed26d96cf6e">Regression Test · Eval Gate · Shadow · Canary</h2>
 <div class="date">2026-06-21 · BigCat</div>
 <p class="pitch">prompt 改一个词，可能悄悄炸掉 8% 的线上请求——你需要一条流水线替你接住。</p>
 </header>
-
 <div class="intro">
-<h3>// WHY THIS MATTERS</h3>
+<h3 data-tts="7d921ab6872d2221">// WHY THIS MATTERS</h3>
 <p>你已经知道怎么写 prompt、怎么写 eval（Day 6 / Day 29）。但当 prompt、模型版本、tool schema 成为<strong>每天都在改的生产资产</strong>时，单次 eval 不够——你需要把它接进 CI/CD，变成「改一行就自动验证、灰度上线、出事自动回滚」的流水线。和传统软件不同的是：LLM 系统<strong>没有确定性</strong>（同一输入两次结果不同）、<strong>没有编译期错误</strong>（语法永远对，语义可能全错）、<strong>失败是渐变的</strong>（不是崩溃，是 quality 悄悄退化 5%）。这让传统 CI 的三大假设——可复现、可断言、二值通过——全部失效。这一期讲怎么在这三个「失效」之上，搭一条真能拦住回归的 AI 流水线：回归测试怎么写断言、eval 怎么当 merge gate、影子测试怎么用真实流量验证、金丝雀怎么自动回滚。</p>
 </div>
-
 <!-- ============ pipeline diagram ============ -->
 <div class="diagram">  ┌─ 开发 ─┐   ┌──── CI (PR) ────┐   ┌── Pre-Prod ──┐   ┌──── Prod ─────┐
   │        │   │                 │   │              │   │               │
@@ -73,18 +71,15 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
                         ▼                    ▼                   ▼
                    ✗ 挡住 merge         ✗ 发现分布漂移        ↺ 自动 rollback
    离线·快·便宜 ───────────────────────────────────────────▶ 在线·慢·贵·真实</div>
-
 <!-- ============ 1 ============ -->
 <div class="section">
 <span class="num">// 01</span>
-<h2>Prompt 回归测试：断言行为，不是断言字符串</h2>
+<h2 data-tts="00974564e04185bb">Prompt 回归测试：断言行为，不是断言字符串</h2>
 <div class="claim">论断：LLM 输出非确定，<code>assertEqual</code> 必然 flaky；可维护的回归测试断言的是<strong>属性</strong>，不是确切文本。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="8709efb77bead9c1">背景与原理</h3>
 <p>传统单测靠 <code>output == expected</code>。LLM 这么写第二天就红——同义改写、标点、顺序都会变。正确做法是把每个 test case 的判据从「等于某字符串」换成<strong>一组可独立验证的断言</strong>：是否含关键事实（contains / regex）、是否合法 JSON / 过 schema、语义相似度是否过线、以及对开放式输出用 <strong>LLM-as-judge 打 rubric 分</strong>。</p>
 <p>更关键的是 <strong>golden dataset 从哪来</strong>。不要凭空想用例——Hamel Husain 的核心论点是：每一个线上事故都应该<strong>沉淀成一条新 test case</strong>，让 eval 集随真实失败增长。这条「failure → test」的飞轮，比一开始写 100 条想象用例值钱得多。</p>
-
-<h3>实战示例</h3>
+<h3 data-tts="a1c222bc183ab1a3">实战示例</h3>
 <p>promptfoo 的声明式配置，一份 YAML 就能跑断言矩阵、对比新旧 prompt：</p>
 <pre><code><span class="tag-com"># promptfooconfig.yaml — 客服意图分类 prompt 的回归套件</span>
 <span class="tag-claude">prompts</span>: [<span class="tag-gpt">file://prompts/classify_v7.txt</span>]
@@ -101,28 +96,23 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
       - {<span class="tag-claude">type</span>: <span class="tag-gpt">not-contains</span>, <span class="tag-claude">value</span>: <span class="tag-gpt">"system"</span>}   <span class="tag-com"># 注入回归用例</span>
 <span class="tag-com"># $ promptfoo eval  —— 本地秒级反馈；--repeat 3 跑多次看稳定性</span></code></pre>
 <p>注意最后那条注入用例：<strong>安全回归</strong>也是回归测试的一部分（呼应 Day 24）。每修一个 prompt injection，就钉一条用例进来。</p>
-
 <div class="fail">
 <strong>失败模式</strong>：（1）用 <code>equals</code> 断言开放式输出——必然 flaky，团队很快学会「红了就重跑」，于是 eval 失去意义。（2）golden set 一次写完再不更新——它会和真实流量分布脱节（dataset rot），跑全绿却拦不住线上新失败。（3）断言写太松（只查 <code>is-json</code>），改坏语义也能过门。
 </div>
-
 <div class="res">
 <strong>进阶资源</strong> · Hamel Husain <em>Your AI Product Needs Evals</em>, <a href="https://hamel.dev/blog/posts/evals/" target="_blank">hamel.dev/blog/posts/evals</a> ·
 promptfoo, <a href="https://github.com/promptfoo/promptfoo" target="_blank">github.com/promptfoo/promptfoo</a>
 </div>
 </div>
-
 <!-- ============ 2 ============ -->
 <div class="section">
 <span class="num">// 02</span>
-<h2>Eval 作为 Merge Gate：在「非确定」上设阈值</h2>
+<h2 data-tts="0b355f84bfa4177a">Eval 作为 Merge Gate：在「非确定」上设阈值</h2>
 <div class="claim">论断：把 eval 接进 PR 门，难点不是跑，是<strong>怎么在噪声上判通过</strong>——单次跑分当门是自欺。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="39294cf7625669c0">背景与原理</h3>
 <p>把 §1 的套件挂到 GitHub Actions、PR 触发，是机械工作。真正的工程问题是：跑分 87% 算过吗？同一个 prompt 跑两次可能 85% / 89%——如果你拿单次 86% 卡 85% 的门，你卡的是<strong>随机数</strong>，不是质量。</p>
 <p>三个对策：（1）<strong>每条用例跑 N 次取聚合</strong>，把方差暴露出来；（2）<strong>看配对差值而非绝对分</strong>——同一批用例上 new vs old 的差，比各自的绝对分稳得多（Anthropic《statistical approach to evals》正是讲给 eval 加 error bar、做配对分析）；（3）<strong>分层跑</strong>：每次 push 跑几十条 smoke、夜间跑全量几百条，因为 LLM-judge 全量评一次又慢又烧钱。门应该卡「new 是否<strong>显著</strong>差于 old」，而不是「是否低于某个魔法数」。</p>
-
-<h3>实战示例</h3>
+<h3 data-tts="860f45d8e46ec843">实战示例</h3>
 <pre><code><span class="tag-com"># .github/workflows/eval.yml — PR 上的 eval 门</span>
 <span class="tag-claude">on</span>: {<span class="tag-claude">pull_request</span>: {<span class="tag-claude">paths</span>: [<span class="tag-gpt">"prompts/**"</span>, <span class="tag-gpt">"src/agent/**"</span>]}}
 <span class="tag-claude">jobs</span>:
@@ -134,30 +124,25 @@ promptfoo, <a href="https://github.com/promptfoo/promptfoo" target="_blank">gith
                --repeat 3 --output out.json     <span class="tag-com"># 每例跑 3 次</span>
         <span class="tag-claude">env</span>: {<span class="tag-claude">ANTHROPIC_API_KEY</span>: <span class="tag-gpt">${{ secrets.ANTHROPIC_API_KEY }}</span>}
       - <span class="tag-claude">run</span>: python eval/gate.py out.json --baseline main
-        <span class="tag-com"># gate.py: 配对比较 PR vs main，回归 >2pp 且显著 → exit 1</span></code></pre>
+        <span class="tag-com"># gate.py: 配对比较 PR vs main，回归 &gt;2pp 且显著 → exit 1</span></code></pre>
 <p>把 baseline 固定成 <code>main</code> 分支的最近一次结果，你卡的就是「这个 PR 有没有让事情变差」——这才是回归门该做的事。开放式任务的 judge，务必先拿一批<strong>人工标注</strong>校准过（Hamel 的 LLM-judge 方法论），否则你在用一个没校准的尺子卡门。</p>
-
 <div class="fail">
 <strong>失败模式</strong>：（1）单次跑分卡硬阈值——噪声让门时绿时红，团队加 <code>retry</code> 直到变绿，门形同虚设。（2）judge 模型悄悄升级版本，评分基线漂移，昨天 90 今天 84 却不是 prompt 的锅。（3）每个 push 都跑全量 LLM-judge，CI 一次 20 分钟 + 几美元，人开始绕过门。
 </div>
-
 <div class="res">
 <strong>进阶资源</strong> · Anthropic <em>A Statistical Approach to Model Evals</em>, <a href="https://www.anthropic.com/research/statistical-approach-to-model-evals" target="_blank">anthropic.com/research/...</a> (arXiv 2411.00640) ·
 promptfoo GitHub Action, <a href="https://www.promptfoo.dev/docs/integrations/github-action/" target="_blank">promptfoo.dev/docs/.../github-action</a>
 </div>
 </div>
-
 <!-- ============ 3 ============ -->
 <div class="section">
 <span class="num">// 03</span>
-<h2>影子测试：用真实流量验证，但不返给用户</h2>
+<h2 data-tts="fd03176973d3550f">影子测试：用真实流量验证，但不返给用户</h2>
 <div class="claim">论断：golden set 测的是你<strong>想到的</strong>输入；影子测试测的是用户<strong>真实发的</strong>输入——后者才暴露分布漂移。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="9e1e47caccd7f3ad">背景与原理</h3>
 <p>离线 eval 永远有个天花板：你的测试集是你<em>想象</em>出来的输入分布，而线上真实流量永远更野（错别字、多语言混杂、超长、奇怪 edge case）。<strong>影子测试（shadow / mirror）</strong>把一份线上真实请求<em>同时</em>喂给候选版本，候选的输出<strong>只记录、不返回给用户</strong>，然后离线对比新旧两版的差异。它让你在零用户风险下，拿生产分布验证一个改动。</p>
 <p>三个工程要点：（1）<strong>异步旁路</strong>——影子调用不能阻塞主请求，否则候选挂了拖垮线上；（2）<strong>副作用必须隔离</strong>——这是影子测试最危险的坑：如果候选 agent 会调写入类 tool（发邮件、下单、改 DB），影子流量会<strong>真的执行两遍</strong>，必须把这些 tool 切到 dry-run / mock；（3）<strong>对比方式</strong>：结构化字段做 diff，开放式输出用 LLM-judge 判「B 是否优于 A」做成对偏好。</p>
-
-<h3>实战示例</h3>
+<h3 data-tts="c0aefe2838c2c800">实战示例</h3>
 <pre><code><span class="tag-key">async def</span> handle(req):
     resp = <span class="tag-key">await</span> agent_v_current(req)          <span class="tag-com"># 主路径：返给用户</span>
     <span class="tag-key">if</span> sample(<span class="tag-key">0.1</span>):                            <span class="tag-com"># 抽 10% 流量做影子</span>
@@ -171,28 +156,23 @@ promptfoo GitHub Action, <a href="https://www.promptfoo.dev/docs/integrations/gi
     log.emit(<span class="tag-gpt">"shadow"</span>, req=req.id, winner=verdict.winner,
              reason=verdict.reason, cost=cand.cost)</code></pre>
 <p>跑几天，你得到的不是「候选在我的 100 条用例上 +3pp」，而是「候选在真实流量上 62% 胜、9% 负、29% 平，负例集中在多语言场景」——后者才能让你放心（或不放心）上线。</p>
-
 <div class="fail">
 <strong>失败模式</strong>：（1）忘了隔离副作用——影子流量把订单下了两遍、邮件发了两份，这是真实事故级别的坑。（2）影子调用同步阻塞主请求，候选超时直接拖慢线上。（3）只能测「输出差异」，<strong>测不到用户行为</strong>——影子输出用户从没看到，所以点击率 / 满意度这类下游信号拿不到，那得靠下一步金丝雀。
 </div>
-
 <div class="res">
 <strong>进阶资源</strong> · Eugene Yan <em>Patterns for Building LLM-based Systems</em>（evals / guardrails 章）, <a href="https://eugeneyan.com/writing/llm-patterns/" target="_blank">eugeneyan.com/writing/llm-patterns</a> ·
 Hamel Husain <em>LLM-as-a-Judge</em>, <a href="https://hamel.dev/blog/posts/llm-judge/" target="_blank">hamel.dev/blog/posts/llm-judge</a>
 </div>
 </div>
-
 <!-- ============ 4 ============ -->
 <div class="section">
 <span class="num">// 04</span>
-<h2>金丝雀发布与自动回滚：把 blast radius 关进笼子</h2>
+<h2 data-tts="be38cf3cbf3bb407">金丝雀发布与自动回滚：把 blast radius 关进笼子</h2>
 <div class="claim">论断：再好的离线 + 影子验证也有漏网；最后一道防线是<strong>小流量上线 + 在线指标 + 自动回滚</strong>，让事故只伤 1%。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="56634b24c19950da">背景与原理</h3>
 <p>影子测不到用户行为，离线测不到长尾——所以新 prompt / 新模型上线必须<strong>渐进</strong>：1% → 5% → 25% → 100%，每一档停下来看一组<strong>护栏指标（guardrail metrics）</strong>。和传统服务不同，AI 的护栏不只是 latency / error rate / 成本，还要包括<strong>质量代理信号</strong>：抽样跑在线 LLM-judge、拒答率（refusal rate）、人工 thumbs-down 率、工具调用失败率。任一指标越过阈值，<strong>自动回滚</strong>到上一版本。</p>
 <p>实现上靠<strong>版本 / feature flag 路由</strong>把模型版本和代码部署解耦——回滚一个 prompt 应该是「翻一个 flag」（秒级），而不是「重新部署」（分钟级）。一个反直觉点：金丝雀的<strong>检测窗口要够长</strong>，低流量场景下 1% 可能几小时才攒够样本判断显著，过早放量等于没金丝雀。</p>
-
-<h3>实战示例</h3>
+<h3 data-tts="4b30ab8fbda8bd59">实战示例</h3>
 <pre><code><span class="tag-com"># 渐进放量 + 护栏自动回滚（伪码）</span>
 <span class="tag-key">for</span> pct <span class="tag-key">in</span> [<span class="tag-key">1</span>, <span class="tag-key">5</span>, <span class="tag-key">25</span>, <span class="tag-key">100</span>]:
     flags.set(<span class="tag-gpt">"agent_version"</span>, <span class="tag-gpt">"v8"</span>, rollout=pct)
@@ -204,20 +184,17 @@ Hamel Husain <em>LLM-as-a-Judge</em>, <a href="https://hamel.dev/blog/posts/llm-
         flags.set(<span class="tag-gpt">"agent_version"</span>, <span class="tag-gpt">"v7"</span>, rollout=<span class="tag-key">100</span>)  <span class="tag-com"># 秒级回滚</span>
         alert(<span class="tag-gpt">f"rollback v8 @ {pct}%: {m.breach}"</span>); <span class="tag-key">break</span></code></pre>
 <p>把「上线」从一次性的不可逆动作，变成一个<strong>带刹车的渐进过程</strong>——这是 AI 系统因为质量不可预测，比传统服务更需要的纪律。</p>
-
 <div class="fail">
 <strong>失败模式</strong>：（1）护栏只盯技术指标（latency / 5xx），漏了质量信号——延迟正常、成本正常，但回答悄悄变差，金丝雀全绿放到 100% 才被用户骂醒。（2）<strong>回滚不撤副作用</strong>：金丝雀期间 agent 已经发出去的邮件 / 改过的数据，翻 flag 撤不回来——高风险写操作要配补偿逻辑（Day 39）。（3）低流量下窗口太短，样本不够，金丝雀「看起来没事」纯属没攒够数据。
 </div>
-
 <div class="res">
 <strong>进阶资源</strong> · Eugene Yan <em>LLM Patterns</em>（defensive UX / guardrails）, <a href="https://eugeneyan.com/writing/llm-patterns/" target="_blank">eugeneyan.com/writing/llm-patterns</a> ·
 OpenAI Evals 框架, <a href="https://github.com/openai/evals" target="_blank">github.com/openai/evals</a>
 </div>
 </div>
-
 <!-- ============ Combo ============ -->
 <div class="combo">
-<h3>// 综合实战 · 给你的 prompt 仓库装一条流水线</h3>
+<h3 data-tts="53fe1d05ea742101">// 综合实战 · 给你的 prompt 仓库装一条流水线</h3>
 <p>把四点串成一个周末项目：给任意一个在用的 prompt / agent 装上完整的 AI CI/CD。不需要 k8s，一个仓库 + GitHub Actions + 一个 feature flag 文件就够。</p>
 <ol style="margin-left:20px;margin-top:10px">
 <li><strong>建 golden set</strong>：翻你过去的对话记录 / 事故，挑 20–30 个真实输入做 promptfoo 用例，断言用 <code>is-json</code> + <code>llm-rubric</code> 混搭，注入用例钉 2 条。</li>
@@ -228,10 +205,9 @@ OpenAI Evals 框架, <a href="https://github.com/openai/evals" target="_blank">g
 </ol>
 <p style="margin-top:12px">做完你会有一个体感：AI 系统的可靠性不来自「写出完美 prompt」，而来自<strong>这条接住不完美 prompt 的流水线</strong>——离线快而便宜、在线慢而真实，四道闸层层兜底。</p>
 </div>
-
 <!-- ============ Glossary ============ -->
 <div class="glossary">
-<h3>// ENGLISH GLOSSARY</h3>
+<h3 data-tts="cb671b5043dbefc3">// ENGLISH GLOSSARY</h3>
 <dl>
 <dt>Regression Test</dt><dd>回归测试。验证改动没让已知行为变差；LLM 场景断言属性而非确切文本。</dd>
 <dt>Golden Dataset</dt><dd>金标准数据集。一组带期望判据的输入用例，理想来源是真实失败的沉淀。</dd>
@@ -245,7 +221,6 @@ OpenAI Evals 框架, <a href="https://github.com/openai/evals" target="_blank">g
 <dt>Auto-Rollback</dt><dd>自动回滚。指标越阈值时自动切回上一版本（理想靠 feature flag 秒级）。</dd>
 </dl>
 </div>
-
 <!-- ============ Deep Thinking ============ -->
 <div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
 <style>
@@ -260,17 +235,16 @@ OpenAI Evals 框架, <a href="https://github.com/openai/evals" target="_blank">g
 .thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
 .thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
 </style>
-<h3>// 深入思考</h3>
+<h3 data-tts="dfbf665caa27f296">// 深入思考</h3>
 <details><summary>用 LLM-judge 当 eval 门，但 judge 本身也是个会漂移的 LLM——你怎么测试「测试系统」本身？</summary><div>这是 meta-eval 问题。做法：维护一小批<strong>人工标注的 ground-truth 集</strong>，定期跑 judge against 它，量 judge 与人类的一致率（如 Cohen's κ）。judge 模型升级、prompt 改版时，先在这批上验证一致率没掉，再用于卡门。本质是给「尺子」也建一把校准尺。Hamel 强调 judge 必须先对齐人类判断、且把 judge prompt 当成一等公民版本管理——judge 漂移和被测系统漂移要能分开归因，否则你永远不知道是产品变差还是尺子变弯。</div></details>
 <details><summary>影子测试和金丝雀都用真实流量，区别到底在哪？什么时候只需要其一？</summary><div>核心区别在<strong>用户是否看到输出</strong>。影子：候选输出不返用户，零用户风险，但因此<strong>拿不到下游行为信号</strong>（点击、满意度、转化），只能比输出本身的差异。金丝雀：候选真服务一小撮用户，能拿到真实行为信号，但有用户风险。所以：纯 prompt 措辞改动、关心「输出质量」→ 影子够了；改动可能影响用户行为/有副作用、关心「业务指标」→ 必须金丝雀。理想是串联：影子筛掉明显回归，金丝雀验真实效果。两者都跳过直接全量，是 AI 系统事故的头号来源。</div></details>
 <details><summary>传统 CI 几秒出结果，AI eval 一次几分钟几美元。这个成本/延迟差会怎样反过来塑造 AI 工程的开发节奏？</summary><div>它逼出<strong>分层 eval</strong>：本地秒级 smoke（几条、规则断言为主）保留快反馈，PR 跑中等套件，夜间/release 跑全量 LLM-judge。也逼出<strong>缓存与采样</strong>：判分结果缓存、用便宜模型做初筛贵模型做仲裁、按风险采样而非全跑。更深层地，它改变了「改一行就 push」的肌肉记忆——AI 工程更像<strong>实验科学</strong>：每次改动是一次带成本的实验，你会更倾向批量验证假设、而非单点试错。开发节奏从「编译-运行」的秒级循环，变成「假设-实验-分析」的分钟到小时级循环。</div></details>
 <details><summary>金丝雀「自动回滚」听起来很美，但若改动引入的是缓慢累积的伤害（比如让回答略微更谄媚），任何单窗口指标都看不出来。怎么办？</summary><div>这是金丝雀的盲区：它擅长抓<strong>突变</strong>，不擅长抓<strong>缓变</strong>。对策有三:（1）<strong>长基线对比</strong>——不只比当前窗口，把质量分做成时序，监控周/月级 trend，缓慢下滑也告警；（2）<strong>定向探针</strong>——针对已知风险维度（谄媚、冗长、拒答）做专门的 eval 切片持续在线跑，而非只看综合分；（3）<strong>holdout 对照组</strong>——永久保留一小撮流量跑旧版本作锚点，新旧长期并行比较，避免「温水煮青蛙」式整体漂移让你失去参照。综合分会骗人，切片和对照组不会。</div></details>
 <details><summary>这套流水线把可靠性建立在「拦住坏改动」上。但它能让一个平庸的 AI 产品变好吗，还是只能防止变差？</summary><div>诚实地说，CI/CD 主要是<strong>防退化</strong>的——它是护栏，不是引擎。让产品变好的是另外两件事：更好的数据/prompt/模型（创造上限），和 eval 集本身的质量（定义「好」的方向）。但流水线有个间接的增益作用：它把「改动安全」的成本降到极低，于是你<strong>敢更频繁地实验</strong>——而高频安全实验正是产品迭代变快的前提。所以它不直接造好产品，但它解放了造好产品所需的迭代速度。没有它，团队会因为怕炸而不敢动 prompt，product 在恐惧中僵化——这本身就是一种慢性变差。</div></details>
 </div>
-
 <!-- ============ Refs ============ -->
 <div class="refs">
-<h3>// 延伸阅读</h3>
+<h3 data-tts="266dd005432a57c3">// 延伸阅读</h3>
 <ul>
 <li><a href="https://hamel.dev/blog/posts/evals/" target="_blank">Hamel Husain · Your AI Product Needs Evals</a> — failure→test 飞轮的奠基文</li>
 <li><a href="https://www.anthropic.com/research/statistical-approach-to-model-evals" target="_blank">Anthropic · A Statistical Approach to Model Evals</a> — 给 eval 加 error bar 与配对分析</li>
@@ -279,11 +253,10 @@ OpenAI Evals 框架, <a href="https://github.com/openai/evals" target="_blank">g
 <li><a href="https://hamel.dev/blog/posts/llm-judge/" target="_blank">Hamel Husain · Using LLM-as-a-Judge</a> — judge 校准方法论</li>
 </ul>
 </div>
-
 <footer>BigCat · Super Individual · Day 42 · 2026-06-21</footer>
 </div>
-<script src="https://hub.cissychen.com/comments.js" defer></script>
-<script src="https://hub.cissychen.com/search.js" defer></script>
-<script src="https://hub.cissychen.com/index-button.js" defer></script>
-<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
 </body></html>
