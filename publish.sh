@@ -4,8 +4,11 @@
 # Usage: ./publish.sh   (no args)
 #
 # Handles two file-layout modes:
-#   - LEGACY embedded: single  *-{day,week,book,issue}{N}.html  per topic
+#   - LEGACY embedded: single  *-{day,week,book,issue,skill}{N}.html  per topic
 #   - SPLIT bilingual: pair    *-{day,week,...}{N}.html  +  *-{...}{N}.en.html
+#
+# KINDs are independent numbering namespaces: the 'day' series (TOPICS.md) and
+# the 'skill' series (SKILLS.md) each count from 1 and never collide.
 #
 # Guards (filesystem is source of truth, not TOPICS.md):
 #   - new content file exists matching the pattern above
@@ -22,8 +25,8 @@ set -e
 
 # Collect all new (untracked + modified) HTML files matching the topic pattern.
 # Excludes index.html — that's expected to be modified, not "the new content".
-NEW_FILES=$(git status --porcelain | grep -oE '\S+-(day|week|book|issue)[0-9]+(\.en)?\.html$' | sort -u)
-[ -z "$NEW_FILES" ] && { echo "ERROR: no new *-{day,week,book,issue}{N}[.en].html in working tree"; exit 1; }
+NEW_FILES=$(git status --porcelain | grep -oE '\S+-(day|week|book|issue|skill)[0-9]+(\.en)?\.html$' | sort -u)
+[ -z "$NEW_FILES" ] && { echo "ERROR: no new *-{day,week,book,issue,skill}{N}[.en].html in working tree"; exit 1; }
 
 # Primary (Chinese) file = the non-.en one if any, else the .en one
 PRIMARY=$(echo "$NEW_FILES" | grep -v '\.en\.html$' | head -1)
@@ -31,7 +34,7 @@ PRIMARY=$(echo "$NEW_FILES" | grep -v '\.en\.html$' | head -1)
 
 PADDED_N=$(echo "$PRIMARY" | grep -oE '[0-9]+' | tail -1)
 N=$((10#$PADDED_N))
-KIND=$(echo "$PRIMARY" | grep -oE '(day|week|book|issue)')
+KIND=$(echo "$PRIMARY" | grep -oE '(day|week|book|issue|skill)[0-9]+(\.en)?\.html$' | grep -oE '^(day|week|book|issue|skill)')
 
 TITLE=$(grep -oE '<title>[^<]+' "$PRIMARY" | head -1 | sed 's|<title>||')
 [ -z "$TITLE" ] && TITLE="$PRIMARY"
@@ -40,12 +43,14 @@ MSG="${MSG:-Add #$N: $TITLE}"
 # ---------- TOPICS guard (anti echo-chamber) ----------
 # Topics are pre-curated by BigCat. Routines must NOT invent/append their own
 # topics when TOPICS.md runs out — that drifts toward self-repetition.
-if [ -f TOPICS.md ] && ! git diff --quiet TOPICS.md 2>/dev/null; then
-  echo "ERROR: TOPICS.md was modified by this run. Do NOT self-generate topics."
-  echo "       If TOPICS.md is exhausted: send a PushNotification asking BigCat"
-  echo "       to refill topics (or pause this routine), publish nothing, exit."
-  exit 1
-fi
+for ROADMAP in TOPICS.md SKILLS.md; do
+  if [ -f "$ROADMAP" ] && ! git diff --quiet "$ROADMAP" 2>/dev/null; then
+    echo "ERROR: $ROADMAP was modified by this run. Do NOT self-generate topics."
+    echo "       If $ROADMAP is exhausted: send a PushNotification asking BigCat"
+    echo "       to refill topics (or pause this routine), publish nothing, exit."
+    exit 1
+  fi
+done
 
 # ---------- Per-file validations ----------
 for F in $NEW_FILES; do
@@ -77,9 +82,11 @@ for F in $NEW_FILES; do
     grep -q "$F" index.html || { echo "ERROR: index.html does not reference $F"; exit 1; }
   fi
 
-  # Forbidden hardcoded scripts (auto-injected by GitHub Action)
+  # Shared scripts: CLAUDE.md asks new pages to carry the 4 tags themselves so the
+  # inject-comments Action has nothing to append. One tag each is fine; two is a bug.
   for s in comments.js search.js index-button.js i18n-tts.js; do
-    grep -q "$s" "$F" && { echo "ERROR: $F hardcodes $s (auto-injected, will duplicate)"; exit 1; }
+    N_TAG=$(grep -c "$s" "$F" || true)
+    [ "$N_TAG" -gt 1 ] && { echo "ERROR: $F includes $s $N_TAG times (duplicate script tag)"; exit 1; }
   done
   grep -q "← Hub" "$F" && echo "WARN: $F hardcodes ← Hub button (will be deduped, consider removing)"
 

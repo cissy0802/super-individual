@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill 01 · Coding Skills Roundup — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head>
+<body>
+<div class="container">
+
+<header>
+<span class="week-tag">SKILL 01 / CODING · ROUNDUP</span>
+<h1>Coding Skills Roundup</h1>
+<h2>The ones people actually install — three shapes · who's on top · when not to install any of them</h2>
+<div class="date">2026-08-29 · BigCat</div>
+<p class="pitch">"Top rated" isn't a fact, it's a question: which leaderboard? Three of them differ by three orders of magnitude.</p>
+</header>
+
+<div class="xref">
+<a href="claude-code-day17.en.html">Prerequisite → Day 17 Claude Code Advanced (what Skills / Subagents / Hooks / MCP each are)</a>
+</div>
+
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>Since Claude Code shipped its plugin system in October 2025, the <strong>skill</strong> — a folder holding a <code>SKILL.md</code> that an agent pulls into context on demand — has grown from a small feature into a whole market: an official marketplace, several third-party ones, and endless "best N skills of 2026" lists. The trouble is that those lists contradict each other. The same "most popular" slot goes to a 279k-star framework on one list and to a tool with 764 installs on another. <strong>This issue first maps the terrain of coding skills: they come in three distinct shapes, and ranking them on a single list is meaningless. Then it takes Anthropic's <em>Skill authoring best practices</em> — written for authors — and runs it backwards, as a buyer's inspection checklist.</strong> This opens the series; later issues take the top entries apart one at a time.</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>Sort by shape first: methodology, single-purpose, official reference</h2>
+<div class="claim">Claim: coding skills are three different kinds of object, with different install costs, payoff curves, and failure modes. Ranking them on one list is like comparing an operating system and a screwdriver by unit sales.</div>
+
+<h3>Background &amp; principle</h3>
+<p><strong>① Methodology-as-code.</strong> Doesn't solve one task; it takes over your whole development process. The exemplar is <strong>Superpowers</strong> (Jesse Vincent / @obra, MIT). It is a dozen-plus composable Markdown skills wired into one enforced pipeline: brainstorm → git worktree → plan → subagent-driven implementation → test-driven development → code review → finish the branch. Per its GitHub repo page, roughly <strong>279k stars as of 2026-08</strong>. It launched 2025-10-09, the same day as the Claude Code plugin system, was accepted into Anthropic's official marketplace on 2026-01-15, and also runs on Codex, Gemini CLI, Cursor, and GitHub Copilot CLI (a "harness" is the shell an agent runs inside — see glossary).</p>
+<p><strong>② Single-purpose tools.</strong> One skill, one job, useful the minute it lands. Third-party install charts are almost entirely this shape — per Agensi's install ranking (2026-08): <code>code-reviewer</code> (764 installs), <code>git-commit-writer</code> (232), <code>humanize-writing</code> (192), then <code>readme-generator</code>, <code>pr-description-writer</code>, <code>prompt-engineer</code>, <code>env-doctor</code>, <code>changelog-generator</code>, <code>truth-first</code>, <code>skill-creator</code>.</p>
+<p><strong>③ Official reference.</strong> Anthropic's own <code>anthropics/skills</code> repo (about 172k stars as of 2026-08) exists to <em>demonstrate how to write a skill</em>, not to tell you what to install. Its skills directory currently holds 19; the coding- and deliverable-adjacent ones are <code>docx</code> / <code>pdf</code> / <code>pptx</code> / <code>xlsx</code>, <code>webapp-testing</code>, <code>mcp-builder</code>, <code>web-artifacts-builder</code>, <code>frontend-design</code>, and <code>skill-creator</code> — plus <code>spec/</code> (the Agent Skills spec) and <code>template/</code>.</p>
+
+<div class="diagram">
+shape             exemplar          payoff curve      install cost    biggest risk
+───────────────────────────────────────────────────────────────────────────────────
+① methodology     Superpowers       slow start,       high: it        heavy process;
+                                    wins big tasks    changes how     pure overhead
+                                                      you work        on small tasks
+
+② single-purpose  code-reviewer     instant value,    near zero:      only helps at
+                  git-commit-…      low ceiling       one folder      the step it covers
+
+③ official ref    anthropics/       value is in       low             reading it as a
+                  skills            teaching you                      shopping list
+───────────────────────────────────────────────────────────────────────────────────
+  They stack, they are not alternatives: ① the skeleton · ② the frequent moves · ③ your template
+</div>
+
+<h3>In practice</h3>
+<p>The three <strong>stack</strong>; they are not alternatives. Methodology sets the skeleton, single-purpose fills in high-frequency moves, and the official repo is your template when you write your own. The one to ration is the second kind: it is cheap enough that you will install ten in a sitting, and the bill arrives elsewhere (section 04).</p>
+
+<div class="fail"><strong>Failure modes</strong>: ① installing Superpowers because of the star count and then pointing it at a 50-line script — enforced TDD plus two-stage review turns a ten-minute job into an hour; ② treating <code>anthropics/skills</code> as an app store and cloning it wholesale, when most of it (<code>algorithmic-art</code>, <code>slack-gif-creator</code>, <code>canvas-design</code>) has nothing to do with your work.</div>
+
+<div class="res"><strong>Going deeper</strong> · <a href="https://github.com/obra/superpowers" target="_blank">obra/superpowers</a> (the repo front page documents the full seven-phase flow)</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>"Top rated" is a question: three lists, three orders of magnitude</h2>
+<div class="claim">Claim: install charts, star counts, and editorial picks measure three different things. Without asking "which list, measured how, as of when", a ranking is noise — and aggregator sites get official skill names wrong.</div>
+
+<h3>Background &amp; principle</h3>
+<p>Put the numbers side by side: Superpowers' star count is six figures; the top install count on a third-party marketplace is three figures. That is not a popularity gap, it is a <strong>denominator gap</strong>. Stars count every passer-by on GitHub; installs count the registered users of one marketplace; "editor's pick" counts the taste of one writer. The three are not comparable.</p>
+<p>The practical hazard is that secondhand sources are wrong. While writing this issue, several 2026 aggregator articles named the official skills <code>artifacts-builder</code> and <code>slack-formatter</code>. The repo directory says otherwise: they are <code>web-artifacts-builder</code> and <code>slack-gif-creator</code> — and the latter makes GIFs, it does not format Slack messages. A wrong name means <strong>your install command fails and your agent's lookup misses</strong>.</p>
+
+<h3>In practice</h3>
+<p>Adopt one hard rule: <strong>any skill name you put in a config, feed to an agent, or repeat to a colleague comes from the repo directory or the official marketplace page</strong>. Aggregator posts are for discovering candidates, never for copying names. And ask three questions of any ranking — what is counted (stars / installs / downloads)? which pool? which month? A list that can't answer all three is inspiration, not evidence.</p>
+
+<div class="fail"><strong>Failure modes</strong>: writing one marketplace's #1 into a team standard as "the industry leader"; or the reverse — dismissing a skill for having "only 200 installs" when 200 may be the ceiling of its niche in a pool of a few thousand users.</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Run the author's checklist backwards, as a buyer's inspection</h2>
+<div class="claim">Claim: Anthropic's <em>Skill authoring best practices</em> is written for authors, but every item maps to a purchase test you can run in three minutes by opening SKILL.md.</div>
+
+<h3>Background &amp; principle</h3>
+<p>The mechanism first, because the tests depend on it: at startup the agent preloads <strong>only the <code>name</code> and <code>description</code> of every skill</strong> into the system prompt. The body of <code>SKILL.md</code> is read only once that skill is judged relevant, and bundled files only when needed — this is <strong>progressive disclosure</strong>. So: <strong>the description decides whether it fires; the length of SKILL.md decides how much context it eats once it does.</strong> The official hard limits are <code>name</code> ≤ 64 characters (lowercase, digits, hyphens) and <code>description</code> ≤ 1,024 characters, with the body <strong>recommended under 500 lines</strong>.</p>
+
+<h3>In practice</h3>
+<p>Clone it, run these six checks, and skip it if any fails:</p>
+<ol>
+<li><strong>Does the description say <em>when</em> to use it?</strong> The official guidance requires both <em>what it does</em> and <em>when to use it</em>, written in third person ("Processes Excel files…", not "I can help you…") because it is injected into the system prompt. A description like "Helps with code" tells the model it may fire at any time — so it either never fires or fires everywhere.</li>
+<li><strong>Is SKILL.md under 500 lines?</strong> Over that with no file splitting means the author skipped progressive disclosure, and you pay tokens for material you never use.</li>
+<li><strong>Are references one level deep?</strong> The docs are explicit: SKILL.md → <code>reference.md</code> is fine; <code>reference.md</code> → <code>details.md</code> is not — with nested references the model often previews with <code>head -100</code> and acts on partial information.</li>
+<li><strong>Does the degree of freedom match the task?</strong> The official analogy is a narrow bridge over cliffs versus an open field. Fragile operations like database migrations want low freedom (an exact script, don't add flags); code review wants high freedom (direction, then judgment). A skill that encodes code review as twelve mandatory steps is walking an open field like a bridge.</li>
+<li><strong>Are there scripts plus a validation loop?</strong> Deterministic operations belong in bundled scripts rather than code the model regenerates each time — more reliable, and only the script's output costs tokens, not its contents. Quality-critical steps should have a run-validate → fix → re-run loop.</li>
+<li><strong>Are there evals?</strong> The official method is <strong>evaluations before documentation</strong>: record where the model fails without the skill, build three scenarios as a baseline, then write just enough instruction to pass them. A skill whose author can't name the three concrete failures it fixes gives you no way to tell whether it works.</li>
+</ol>
+
+<div class="res"><strong>Going deeper</strong> · Anthropic · <a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices" target="_blank">Skill authoring best practices</a> (full checklist and anti-patterns)</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>The cost of installing too many: context tax, trigger collisions, wrong primitive</h2>
+<div class="claim">Claim: the marginal cost of one more skill looks like a few dozen tokens of metadata, but the real cost is <strong>selection</strong> — the more skills with overlapping descriptions, the likelier the model picks the wrong one.</div>
+
+<h3>Background &amp; principle</h3>
+<p>Progressive disclosure genuinely makes "100 installed skills" nearly free at startup. But the same docs name the other half: the description matters precisely because the model must <strong>choose one out of potentially 100+</strong>. Install ten coding skills with overlapping descriptions — a code-reviewer, a codex-grade-coding, a truth-first, all claiming code quality — and you have manufactured a selection problem, not stacked capability.</p>
+<p>The other half of the bill: <strong>what you want may not be a skill at all.</strong> The division of labor —</p>
+<ul>
+<li><strong>Skill</strong> = inject "how to do this kind of task" into the current conversation. For work with a stable procedure that must follow your rules.</li>
+<li><strong>Subagent</strong> = spawn a context-isolated worker and get only the conclusion back. For exploration that generates a lot of intermediate noise (grepping a whole repo for one definition) without polluting the main context.</li>
+<li><strong>MCP server</strong> = connect the agent to external capability and live data (current docs, a browser, a database). A skill cannot teach the model facts it doesn't have; MCP can.</li>
+</ul>
+<p>And a fourth option people forget: <strong>hooks</strong>. "Run lint before every commit" should be guaranteed by code, not written into a skill and left to the model's memory.</p>
+
+<h3>In practice</h3>
+<p>A usable decision order: <strong>must this happen every single time → hook; does it need outside data or capability → MCP; does it generate intermediate work the main context shouldn't keep → subagent; is it just "the model needs to know how" → skill.</strong></p>
+
+<div class="fail"><strong>Failure modes</strong>: packaging an API reference as a skill — it goes stale and costs tokens on every trigger; that is a job for a docs-retrieval MCP server. And the mirror error: exposing your team's code conventions as an MCP tool, when that is pure knowledge and belongs in a skill.</div>
+</div>
+
+<!-- ============ 5 ============ -->
+<div class="combo">
+<h3>// One-page buying card</h3>
+<p><strong>Start with three, no more</strong>: ① one methodology skill (if your work really is multi-step engineering); ② one high-frequency single-purpose skill (for most people, code review or commit/PR descriptions); ③ <code>skill-creator</code> — because you will end up writing your own.</p>
+<p><strong>Three-minute inspection before installing</strong>: does the description say when to use it, in third person · is SKILL.md under 500 lines · are references one level deep · does the degree of freedom match the task's fragility · are there validation scripts · can it name the three concrete failures it fixes.</p>
+<p><strong>Three questions for any ranking</strong>: what is counted, which pool, which month — and take names from the repo directory, never from an aggregator post.</p>
+<p><strong>Review two weeks after installing</strong>: how many times did it fire? was any of those a misfire? Delete anything that never fired — it only makes the remaining skills harder to select.</p>
+</div>
+
+<div class="glossary">
+<h3>// Glossary</h3>
+<dl>
+<dt>Agent Skill</dt>
+<dd>A folder containing a required <code>SKILL.md</code> (YAML frontmatter + Markdown body) plus optional reference files and executable scripts. The agent loads it on demand to learn how to do a class of task.</dd>
+<dt>SKILL.md / frontmatter</dt>
+<dd>The main file. Its YAML header requires <code>name</code> (≤64 chars, lowercase, digits, hyphens) and <code>description</code> (≤1,024 chars).</dd>
+<dt>progressive disclosure</dt>
+<dd>Only every skill's name and description is preloaded at startup; the body is read on trigger, bundled files only when needed, and scripts are executed without their contents entering context. This is why installing many skills doesn't blow up the context window.</dd>
+<dt>harness</dt>
+<dd>The shell an agent runs inside (Claude Code, Cursor, Codex CLI…). It decides how context is assembled, how tools are exposed, and how skills load — so the same skill can behave differently across harnesses.</dd>
+<dt>marketplace / plugin</dt>
+<dd>Distribution for skills. A plugin is the larger unit that can bundle skills, commands, and hooks; a marketplace is the directory listing those bundles, official or third-party.</dd>
+<dt>subagent</dt>
+<dd>A worker spawned by the main agent with its own isolated context, returning only conclusions. Used to contain exploration that would otherwise flood the main context.</dd>
+<dt>MCP (Model Context Protocol)</dt>
+<dd>An open protocol connecting agents to external tools and data sources. It supplies facts and actions the model lacks — complementary to what a skill supplies, which is knowledge and procedure.</dd>
+<dt>eval</dt>
+<dd>A set of "input + expected behavior" scenarios. The official advice is to establish a no-skill baseline first, then use it to measure whether the skill actually helps.</dd>
+</dl>
+</div>
+
+<div class="refs">
+<h3>// Further reading</h3>
+<ul>
+<li><a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices" target="_blank">Anthropic · Skill authoring best practices</a> — the source of every test in section 03: naming, descriptions, progressive disclosure, degrees of freedom, evals first</li>
+<li><a href="https://github.com/anthropics/skills" target="_blank">anthropics/skills</a> — official reference implementations plus <code>spec/</code> and <code>template/</code>; the authority on what a skill is actually called</li>
+<li><a href="https://github.com/obra/superpowers" target="_blank">obra/superpowers</a> — the flagship methodology skill; Skill 2 of this series takes it apart</li>
+<li><a href="https://code.claude.com/docs/en/skills" target="_blank">Claude Code · Skills docs</a> — creating, managing, and debugging skills inside Claude Code</li>
+<li><a href="claude-code-day17.en.html">This site · Day 17 · Claude Code Advanced</a> — the mechanics behind Skills / Subagents / Hooks / MCP</li>
+<li><a href="skills-library-day36.en.html">This site · Day 36 · Skills Library Governance</a> — the same buying tests scaled to an organization: intake, dedup, deprecation, metrics</li>
+</ul>
+</div>
+
+<footer>BigCat · Super Individual · Skill 01 · 2026-08-29</footer>
+</div>
+<script src="https://hub.cissychen.com/comments.js" defer></script>
+<script src="https://hub.cissychen.com/search.js" defer></script>
+<script src="https://hub.cissychen.com/index-button.js" defer></script>
+<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+</body>
+</html>

@@ -14,6 +14,12 @@ header .subtitle{font-size:0.9rem;color:#ff6ec4;margin-top:6px;font-family:"SF M
 .entry .week{flex-shrink:0;font-size:0.85rem;color:#ff6ec4;font-weight:700;min-width:60px}
 .entry .title{font-size:1.05rem;font-weight:600;color:#fff}
 .entry .topics{font-size:0.85rem;color:#a0a4b8;margin-left:auto;text-align:right}
+.group{display:flex;align-items:baseline;flex-wrap:wrap;gap:10px;margin:34px 0 16px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,0.08);font-size:0.95rem;font-weight:700;color:#fff;letter-spacing:1px}
+.group:first-child{margin-top:0}
+.group .tag{font-size:0.8rem;font-weight:400;color:#6a6e88;font-family:"SF Mono",Menlo,monospace;letter-spacing:0}
+.entry.skill{border-left-color:#ffd166}
+.entry.skill:hover{border-left-color:#ff6ec4}
+.entry.skill .week{color:#ffd166}
 footer{text-align:center;padding:40px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.entry{flex-direction:column;gap:4px}.entry .topics{margin-left:0;text-align:left}}
 </style></head><body>
@@ -21,6 +27,10 @@ footer{text-align:center;padding:40px 0 12px;font-size:0.82rem;color:#6a6e88}
 <div class="container">
 <header><h1>AI 超级个体实战</h1><p>Super Individual — BigCat's Power Stack</p><div class="subtitle">&gt; 工具栈 · Prompt 库 · 工作流自动化 · PKM</div></header>
 <div class="list">
+<div class="group">Skills 精选<span class="tag">— 市面上 top-rated 的 AI skills 与最佳实践 · 按分类每日更新</span></div>
+<a class="entry skill" href="coding-skills-roundup-skill1.html"><span class="week">S01</span><span class="title">AI 编码 Skills 榜单</span><span class="topics">三种形态别混比 · 官方检查表当选购单 · Context 税 · Skill/Subagent/MCP 分工</span></a>
+<!-- skill-entries -->
+<div class="group">AI 超级个体实战<span class="tag">— Day 1–59 · AI 工程全集 · 已完结</span></div>
 <a class="entry" href="prompt-eng-day1.html"><span class="week">D01</span><span class="title">Prompt Engineering</span><span class="topics">四层架构 · XML vs MD · CoT 边界 · Prefix Caching</span></a>
 <a class="entry" href="context-eng-day2.html"><span class="week">D02</span><span class="title">Context Engineering</span><span class="topics">Lost-in-the-Middle · 信息排布 · Chunk 设计 · Compaction</span></a>
 <a class="entry" href="harness-eng-day3.html"><span class="week">D03</span><span class="title">Harness Engineering</span><span class="topics">Agent Runtime · Tool Registry · Permission Gate · Loop Control</span></a>

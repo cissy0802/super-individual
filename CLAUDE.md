@@ -32,3 +32,38 @@ TOPICS.md 是本仓选题的**唯一真相源**。以下三条每次运行都适
 ```
 
 这样 CI 的 inject-comments 不会再对新页面追加自动提交。
+
+---
+
+# 系列二：「Skills 精选」（`*-skill{N}.html` · 真相源 `SKILLS.md`）
+
+本仓现在有**两个互不干扰的系列**，各自一套编号、一份路线图：
+
+| 系列 | 文件名 | 路线图 | 状态 |
+|---|---|---|---|
+| AI 超级个体实战（原） | `{slug}-day{N}.html` | `TOPICS.md` | Day 1–59 已收口 |
+| **Skills 精选（新）** | `{slug}-skill{N}.html` | `SKILLS.md` | 连载中 |
+
+**上面「自停 / 自愈 / 英文泄漏自查」三条规则对本系列同样成立**，只是把 `TOPICS.md` 换成 `SKILLS.md`、把 `*-day*.html` 换成 `*-skill*.html`：
+- `N_pub` = `ls *-skill*.html` 去 `.en.html`、去前导零取最大（注意 `skills-library-day36.html` / `skill-maintenance-day59.html` 属于 day 系列，不算）。
+- `N_top` = `SKILLS.md` 里 `^- Skill [0-9]+` 的最大编号。
+- `N_pub ≥ N_top` → 本次不生成、不改 `SKILLS.md`，发一条 PushNotification 请 BigCat 续单即可。
+
+## 选题：顺序走，不跳号
+
+`SKILLS.md` 按 `## C{n} · 分类` 分组，**节奏是「榜单开路 + 单点深挖」**：每类先一期 `[榜单]`，再 2–4 期 `[深挖]`，写完切下一类。**永远取 `SKILLS.md` 里第一个还没写的 `Skill N`**（不跨类轮询、不挑好写的写），`slug` 用表里给的英文短横线名，文件写成 `{slug}-skill{N}.html`。
+
+## 内容要求（和 day 系列不同的地方）
+
+- **只收真实存在的东西**：每个被点名的 skill / plugin / 仓库 / marketplace / 官方文档都要能给出链接，写进「延伸阅读」。**拿不准就不写**——绝不杜撰 skill 名、作者、星数、安装量、排名。这是本系列的生命线。
+- **数字必须挂来源和日期**：星数、安装量、榜位一律写成「据 <来源>，<年-月>」。这些数字天天变，不标日期就是错的。
+- **一手源优先**：官方文档（platform.claude.com / code.claude.com / 各家 docs）、GitHub 仓库本身 > SEO 聚合站。只有一份 SEO 站数据时，要写明「据某某 marketplace 的安装量榜」，别当客观事实讲。
+- **每期必须有诚实的代价**：这东西什么时候是负担、什么时候不如不装、它的失败模式是什么。不写软文。
+- **实践 > 工具**：每期要提炼出读者以后能自己复用的**判据**（怎么判断一个 skill 值不值得装、怎么验收），而不只是一份清单。工具会过时，判据不会。
+- 篇幅、版式、双语、术语随名即释、`.maxchars`（4000 CJK）等，与 day 系列完全一致：**直接复用最近一期 day 页的内联 `<style>` 与 section 结构**（`.week-tag` / `.intro` / `.section`+`.num`+`.claim` / `.fail` / `.res` / `.glossary` / `.refs` / `.thinking`）。
+- `.week-tag` 写成 `SKILL {N} / {分类} · {榜单|深挖}`，例如 `SKILL 01 / CODING · ROUNDUP`。
+
+## 发布
+
+- 更新 `index.html`：在 `<!-- skill-entries -->` 标记前插入新条目（`.week` 用 `S01`、`S02`…）；`index.en.html` 同理插入 `.en` 条目。**别插到 Day 归档那一组里去。**
+- `./publish.sh` 已支持 `skill` 这个 KIND，并且会同时守 `TOPICS.md` 与 `SKILLS.md` 不被改动。两个系列编号空间独立，`skill1` 不会和 `day1` 撞车。
