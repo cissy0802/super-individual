@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="zh-CN"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Skill 01 · AI 编码 Skills 榜单 — Super Individual</title>
 <style>
@@ -61,35 +62,29 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 </style></head>
 <body>
 <div class="container">
-
 <header>
 <span class="week-tag">SKILL 01 / CODING · ROUNDUP</span>
-<h1>AI 编码 Skills 榜单</h1>
-<h2>市面上被装得最多的那几个 — 三种形态 · 谁在榜上 · 什么时候不该装</h2>
+<h1 data-tts="2035bb71ab9ecda6">AI 编码 Skills 榜单</h1>
+<h2 data-tts="f6eaf58ab869d1ce">市面上被装得最多的那几个 — 三种形态 · 谁在榜上 · 什么时候不该装</h2>
 <div class="date">2026-08-29 · BigCat</div>
 <p class="pitch">「top rated」不是一个客观事实，是一个问句：你看的是哪个榜？三份榜单的量级能差三个数量级。</p>
 </header>
-
 <div class="xref">
 <a href="claude-code-day17.html">前置 → Day 17 Claude Code 高阶用法（Skills / Subagents / Hooks / MCP 各是什么）</a>
 </div>
-
 <div class="intro">
-<h3>// WHY THIS MATTERS</h3>
+<h3 data-tts="14e4b2c3ca4eea17">// WHY THIS MATTERS</h3>
 <p>2025 年 10 月 Claude Code 上线 plugin 系统之后，<strong>skill</strong>（一个装着 <code>SKILL.md</code> 的文件夹，按需被 agent 读进上下文）从一个小功能长成了一整个市场：官方 marketplace、几家第三方 marketplace、无数「2026 年最好用的 N 个 skill」榜单。问题是这些榜互相打架——同一个「最流行」的位置，有的榜给的是一个 27 万 star 的框架，有的榜给的是一个装机量 764 的小工具。<strong>本期先把编码类 skills 的地形画清楚：它们其实分三种形态，混在一张榜里比是没意义的；再把官方那份《skill authoring best practices》反过来用——它是写给作者的，但每一条都能当买家的验货标准。</strong>这一期是本系列的开篇，后面几期会把榜上排第一的那个逐一拆开。</p>
 </div>
-
 <!-- ============ 1 ============ -->
 <div class="section">
 <span class="num">// 01</span>
-<h2>先分形态：方法论型、单点工具型、官方参考型</h2>
+<h2 data-tts="842514fa452dbbde">先分形态：方法论型、单点工具型、官方参考型</h2>
 <div class="claim">论断：编码类 skill 有三种完全不同的东西，装机成本、收益曲线、失败模式都不一样。把它们放进同一张榜排名，等于把操作系统和螺丝刀一起比销量。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="92652554a5a3cc57">背景与原理</h3>
 <p><strong>① 方法论型（methodology-as-code）</strong>：不解决某一件具体的事，而是接管你的整个开发流程。代表是 <strong>Superpowers</strong>（作者 Jesse Vincent / @obra，MIT 许可）——它由十几个可组合的 Markdown skill 拼成一条强制流水线：头脑风暴 → 开 git worktree → 写计划 → subagent 分工实现 → 测试驱动开发（TDD）→ 代码审查 → 收尾合并。据其 GitHub 仓库页，2026-08 约 <strong>27.9 万 star</strong>；它 2025-10-09 与 Claude Code 的 plugin 系统同日发布，2026-01-15 被收进 Anthropic 官方 marketplace，另外还支持 Codex、Gemini CLI、Cursor、GitHub Copilot CLI 等多个 harness（harness=跑 agent 的那层壳，见术语表）。</p>
 <p><strong>② 单点工具型</strong>：一个 skill 干一件事，装完立刻能用。第三方 marketplace 的装机量榜基本被这类占满——据 Agensi 的安装量榜（2026-08）：<code>code-reviewer</code>（764 次安装）、<code>git-commit-writer</code>（232）、<code>humanize-writing</code>（192），往下是 <code>readme-generator</code>、<code>pr-description-writer</code>、<code>prompt-engineer</code>、<code>env-doctor</code>、<code>changelog-generator</code>、<code>truth-first</code>、<code>skill-creator</code> 等。</p>
 <p><strong>③ 官方参考型</strong>：Anthropic 自己的 <code>anthropics/skills</code> 仓库（2026-08 约 17.2 万 star），性质是「示范怎么写 skill」而不是「你该装什么」。它当前的 skills 目录里有 19 个，编码/产出相关的包括 <code>docx</code> / <code>pdf</code> / <code>pptx</code> / <code>xlsx</code> 四件套、<code>webapp-testing</code>、<code>mcp-builder</code>、<code>web-artifacts-builder</code>、<code>frontend-design</code>、<code>skill-creator</code>，另外还有 <code>spec/</code>（Agent Skills 规范）和 <code>template/</code>。</p>
-
 <div class="diagram">
 形态          代表              收益曲线          装机成本        最大风险
 ──────────────────────────────────────────────────────────────────────────
@@ -104,41 +99,31 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 ──────────────────────────────────────────────────────────────────────────
   正确用法是「叠」不是「选」：① 定骨架 · ② 补高频动作 · ③ 当你写自己的 skill 时的模板
 </div>
-
-<h3>实战示例</h3>
+<h3 data-tts="66d531b127216468">实战示例</h3>
 <p>三类的正确用法是<strong>叠</strong>而不是<strong>选</strong>：方法论型定流程骨架，单点工具型补高频动作，官方参考型当你自己写 skill 时的模板。真正要克制的是第二类——它单价低到你会一口气装十个，而代价在别处（见第 04 节）。</p>
-
 <div class="fail"><strong>失败模式</strong>：① 看到「27 万 star」就装 Superpowers 去写一个 50 行的脚本——强制 TDD + 两段式审查会让你为一件十分钟的事付一小时；② 把 <code>anthropics/skills</code> 当应用商店，整仓克隆进本地，其中大半（<code>algorithmic-art</code>、<code>slack-gif-creator</code>、<code>canvas-design</code>）跟你的工作毫无关系。</div>
-
 <div class="res"><strong>进阶资源</strong> · <a href="https://github.com/obra/superpowers" target="_blank">obra/superpowers</a>（仓库首页有完整的七段流程说明）</div>
 </div>
-
 <!-- ============ 2 ============ -->
 <div class="section">
 <span class="num">// 02</span>
-<h2>「top rated」是个问句：三份榜差三个数量级</h2>
+<h2 data-tts="5d5d92b46aab8c27">「top rated」是个问句：三份榜差三个数量级</h2>
 <div class="claim">论断：装机量榜、star 榜、编辑推荐榜量的是三件不同的事。不问「哪个榜、什么时候、怎么数的」，排名就是噪声——而 SEO 聚合站连官方 skill 的名字都会写错。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="36fd58a603ba4a64">背景与原理</h3>
 <p>把上一节的数字并排放：Superpowers 的 star 是<strong>六位数</strong>，第三方 marketplace 的榜首装机量是<strong>三位数</strong>。这不是「谁更受欢迎」，是<strong>分母完全不同</strong>——star 数着的是全 GitHub 的路人，装机量数的是某一个 marketplace 的注册用户，而「编辑推荐」数的是写稿人自己的偏好。三者不可比。</p>
 <p>更实际的问题是二手来源会错。写这一期时，几篇 2026 年的聚合文章都把官方仓库的 skill 说成 <code>artifacts-builder</code> 和 <code>slack-formatter</code>——去仓库目录一看，实际叫 <code>web-artifacts-builder</code> 和 <code>slack-gif-creator</code>，后者根本不是格式化 Slack 消息的，是做 GIF 的。名字错了意味着<strong>你照着装会装不上，让 agent 照着找会找不到</strong>。</p>
-
-<h3>实战示例</h3>
+<h3 data-tts="a4399deca88f9c26">实战示例</h3>
 <p>给自己立一条硬规矩：<strong>任何要写进配置、喂给 agent、或者转述给同事的 skill 名，都以仓库目录或官方 marketplace 页面为准</strong>，聚合文章只用来发现候选、不用来抄名字。读榜时补三个问题——量的是什么（star/装机/下载）？哪个池子？数据是哪个月的？三个都答不上来的榜，当灵感来源就好。</p>
-
 <div class="fail"><strong>失败模式</strong>：把某个 marketplace 的榜首当成「行业第一」写进团队规范；或者反过来，因为某个 skill「才 200 次安装」就否掉它——在一个几千人的 marketplace 里，200 次安装可能已经是该细分类目的天花板。</div>
 </div>
-
 <!-- ============ 3 ============ -->
 <div class="section">
 <span class="num">// 03</span>
-<h2>把官方的作者检查表，反过来当买家的验货单</h2>
+<h2 data-tts="ca207e21e5789f15">把官方的作者检查表，反过来当买家的验货单</h2>
 <div class="claim">论断：Anthropic 那份《Skill authoring best practices》是写给作者的，但它每一条都对应一个可以在三分钟内验证的购买判据——打开 SKILL.md 就能查。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="5fb02c37e14f2765">背景与原理</h3>
 <p>先讲清楚机制，判据才成立：agent 启动时<strong>只把所有 skill 的 <code>name</code> 和 <code>description</code> 预加载进系统提示词</strong>，正文 <code>SKILL.md</code> 要等这个 skill 被判定相关时才读，其余附带文件再按需读——这套叫<strong>渐进式披露</strong>（progressive disclosure）。所以：<strong>description 决定它会不会被触发，SKILL.md 的长度决定它触发之后吃掉你多少上下文。</strong>官方给的硬约束是 <code>name</code> ≤ 64 字符（小写字母、数字、连字符）、<code>description</code> ≤ 1024 字符，正文<strong>建议控制在 500 行以内</strong>。</p>
-
-<h3>实战示例</h3>
+<h3 data-tts="3d2a2dfcc5daf66a">实战示例</h3>
 <p>克隆下来先查这六条，任何一条不过就别装：</p>
 <ol>
 <li><strong>description 里有没有「什么时候用」</strong>：官方要求它同时写清<em>做什么</em>和<em>何时用</em>，且必须用第三人称（「Processes Excel files…」而不是「I can help you…」，因为它是被注入系统提示词的）。只写「Helps with code」这种，等于告诉模型「随便什么时候都可以用我」——它要么永不触发，要么到处乱触发。</li>
@@ -148,17 +133,14 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <li><strong>有没有可执行脚本 + 校验闭环</strong>：确定性操作应该是预置脚本而不是让模型现编——更可靠、更省 token，而且脚本执行的输出才计费、内容本身不进上下文。质量攸关的地方还应该有「跑校验 → 报错 → 修 → 再跑」的循环。</li>
 <li><strong>有没有 eval</strong>：官方的方法论是<strong>先写评估再写文档</strong>——先记录没有 skill 时模型在哪失败，建三个场景当基线，再写刚好够用的指令。一个连「它解决了哪三个具体失败」都说不出的 skill，你没法判断它有没有用。</li>
 </ol>
-
 <div class="res"><strong>进阶资源</strong> · Anthropic 官方 · <a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices" target="_blank">Skill authoring best practices</a>（含完整检查表与反模式）</div>
 </div>
-
 <!-- ============ 4 ============ -->
 <div class="section">
 <span class="num">// 04</span>
-<h2>装多了的代价：context 税、触发打架、以及本该用别的东西</h2>
+<h2 data-tts="9f18b2a250ae5467">装多了的代价：context 税、触发打架、以及本该用别的东西</h2>
 <div class="claim">论断：单个 skill 的边际成本看起来只有几十个 token 的元数据，但 skill 的真正成本不在启动，在于<strong>选择</strong>——描述重叠的 skill 越多，模型挑错的概率越高。</div>
-
-<h3>背景与原理</h3>
+<h3 data-tts="d0d1f7504fe30fc7">背景与原理</h3>
 <p>渐进式披露确实让「装 100 个 skill」在启动时几乎免费。但官方文档也点明了另一面：description 之所以关键，正是因为模型要<strong>从上百个候选里挑一个</strong>。装十个描述互相重叠的编码 skill（一个 code-reviewer、一个 codex-grade-coding、一个 truth-first，都声称自己管代码质量），你制造的是一个选择问题，而不是能力叠加。</p>
 <p>另一半代价是：<strong>你要的东西可能根本不该是 skill。</strong>三者的分工——</p>
 <ul>
@@ -167,24 +149,20 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <li><strong>MCP server</strong> = 给 agent 接上外部能力与实时数据（查最新文档、开浏览器、读数据库）。skill 教不会模型它不知道的事实，MCP 可以。</li>
 </ul>
 <p>还有第四个常被忽略的选项：<strong>hooks</strong>。「每次提交前都跑 lint」这种事该由钩子用代码保证，写进 skill 只是在祈祷模型记得。</p>
-
-<h3>实战示例</h3>
+<h3 data-tts="321c2ed13a018f29">实战示例</h3>
 <p>一个可执行的判断顺序：<strong>这件事每次都必须发生吗 → hook；需要外部数据或能力吗 → MCP；会产生大量不需要留在主上下文的中间过程吗 → subagent；只是「模型知道该怎么做就行」吗 → skill。</strong></p>
-
 <div class="fail"><strong>失败模式</strong>：把一份 API 文档做成 skill 塞进上下文——文档会过期，而且每次触发都吃 token；这是 MCP（文档检索类 server）的活。反过来，把团队的代码规范做成 MCP tool 也是错的，那本来就是纯知识，skill 才对。</div>
 </div>
-
 <!-- ============ 5 ============ -->
 <div class="combo">
-<h3>// 一页选购卡</h3>
+<h3 data-tts="10ad253102ddcc94">// 一页选购卡</h3>
 <p><strong>从三个装起，不要更多</strong>：① 一个方法论型（如果你的任务确实是多步骤的工程活）；② 一个高频单点型（多数人是 code review 或 commit/PR 描述）；③ <code>skill-creator</code>——因为你迟早要写自己的。</p>
 <p><strong>装之前三分钟验货</strong>：description 有没有写「何时用」且是第三人称 · SKILL.md 是否 &lt; 500 行 · 引用是否只有一层 · 自由度是否匹配任务脆弱性 · 有没有校验脚本 · 说不说得出它解决的三个具体失败。</p>
 <p><strong>读榜三问</strong>：量的是什么？哪个池子？哪个月的数？——名字一律以仓库目录为准，别抄聚合文章。</p>
 <p><strong>装完两周复查</strong>：这两周它触发过几次？有没有一次是误触发？没触发过的直接删——留着只会让别的 skill 更难被选中。</p>
 </div>
-
 <div class="glossary">
-<h3>// 术语表</h3>
+<h3 data-tts="fc8c26d310e0e074">// 术语表</h3>
 <dl>
 <dt>Agent Skill</dt>
 <dd>一个文件夹，里面必有 <code>SKILL.md</code>（YAML 头 + Markdown 正文），可选附带参考文档与可执行脚本。agent 按需把它读进上下文，用来学「怎么做某类任务」。</dd>
@@ -204,9 +182,8 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <dd>一组「输入 + 期望行为」的测试场景。官方建议先建无 skill 的基线，再用它衡量 skill 到底有没有带来提升。</dd>
 </dl>
 </div>
-
 <div class="refs">
-<h3>// 延伸阅读</h3>
+<h3 data-tts="4483452f9d976a8b">// 延伸阅读</h3>
 <ul>
 <li><a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices" target="_blank">Anthropic · Skill authoring best practices</a> — 本期第 03 节判据的全部出处：命名、描述、渐进式披露、自由度、eval 优先</li>
 <li><a href="https://github.com/anthropics/skills" target="_blank">anthropics/skills</a> — 官方参考实现 + <code>spec/</code> 规范 + <code>template/</code> 模板；查 skill 真名以这里为准</li>
@@ -216,12 +193,11 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <li><a href="skills-library-day36.html">本站 Day 36 · Skills Library 治理</a> — 把本期的个人选购判据放大到组织规模：准入、去重、废弃、度量</li>
 </ul>
 </div>
-
 <footer>BigCat · Super Individual · Skill 01 · 2026-08-29</footer>
 </div>
-<script src="https://hub.cissychen.com/comments.js" defer></script>
-<script src="https://hub.cissychen.com/search.js" defer></script>
-<script src="https://hub.cissychen.com/index-button.js" defer></script>
-<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
 </body>
 </html>
