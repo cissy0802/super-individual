@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Skills 精选 — Super Individual</title>
+<style>
+
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.7;min-height:100vh}
+.container{max-width:760px;margin:0 auto;padding:24px 20px 60px}
+header{text-align:center;padding:56px 0 40px}
+header h1{font-size:2rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:2px}
+header p{margin-top:8px;font-size:1rem;color:#a0a4b8}
+header .subtitle{font-size:0.9rem;color:#ff6ec4;margin-top:6px;font-family:"SF Mono",Menlo,monospace}
+.list{margin-top:32px}
+.entry{display:flex;align-items:baseline;gap:16px;padding:18px 20px;background:rgba(255,255,255,0.05);backdrop-filter:blur(10px);border-radius:10px;border:1px solid rgba(255,255,255,0.08);margin-bottom:14px;transition:all 0.15s;text-decoration:none;color:inherit;border-left:3px solid #ff6ec4}
+.entry:hover{transform:translateY(-2px);background:rgba(255,255,255,0.08);border-left-color:#7b61ff}
+.entry .week{flex-shrink:0;font-size:0.85rem;color:#ff6ec4;font-weight:700;min-width:60px}
+.entry .title{font-size:1.05rem;font-weight:600;color:#fff}
+.entry .topics{font-size:0.85rem;color:#a0a4b8;margin-left:auto;text-align:right}
+.group{display:flex;align-items:baseline;flex-wrap:wrap;gap:10px;margin:34px 0 16px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,0.08);font-size:0.95rem;font-weight:700;color:#fff;letter-spacing:1px}
+.group:first-child{margin-top:0}
+.group .tag{font-size:0.8rem;font-weight:400;color:#6a6e88;font-family:"SF Mono",Menlo,monospace;letter-spacing:0}
+footer{text-align:center;padding:40px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.entry{flex-direction:column;gap:4px}.entry .topics{margin-left:0;text-align:left}}
+.blurb{margin-top:26px;background:rgba(255,209,102,0.06);border-left:3px solid #ffd166;border-radius:8px;padding:18px 20px;font-size:0.92rem;color:#d8d6e8}
+.blurb p{margin-bottom:10px}
+.blurb p:last-child{margin-bottom:0}
+.blurb .rules{font-size:0.85rem;color:#a0a4b8;border-top:1px dashed rgba(255,255,255,0.10);padding-top:10px}
+.back{display:inline-block;margin-top:18px;font-size:0.85rem;color:#a0a4b8;text-decoration:none;border-bottom:1px dotted rgba(160,164,184,0.5)}
+.back:hover{color:#ff6ec4;border-bottom-color:#ff6ec4}
+.entry{border-left-color:#ffd166}
+.entry:hover{border-left-color:#ff6ec4}
+.entry .week{color:#ffd166}
+.entry.todo{opacity:0.5;background:rgba(255,255,255,0.02);border-left-color:rgba(255,255,255,0.14);border-style:dashed;cursor:default}
+.entry.todo:hover{transform:none;background:rgba(255,255,255,0.03)}
+.entry.todo .week{color:#6a6e88}
+.entry.todo .title{color:#a0a4b8;font-weight:500}
+
+</style></head><body>
+<a href="https://cissy0802.github.io/" style="position:fixed;top:14px;left:14px;font-size:0.82rem;color:inherit;opacity:0.55;text-decoration:none;padding:6px 12px;border:1px solid currentColor;border-radius:20px;z-index:100;backdrop-filter:blur(6px);transition:opacity 0.2s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.55">&larr; Hub</a>
+<div class="container">
+<header><h1>Skills 精选</h1><p>Skill Shelf — 市面上 top-rated 的 AI skills 与最佳实践</p><div class="subtitle">&gt; 榜单开路 · 单点深挖 · 按分类每日更新</div></header>
+<div class="blurb"><p>只收<strong>真实存在、真的被人用</strong>的 skills / plugins / rules / MCP servers，以及各家官方沉淀下来的 AI 使用最佳实践。每个分类<strong>先出一期榜单</strong>——这一类有哪些、谁排在前面、按什么判据选、什么时候不该装——再用 <strong>2–4 期深挖</strong>把值得的那几个逐一拆开。</p><p class="rules">三条硬规矩：拿不准就不写，每个名字都能给出链接 · 星数装机量一律挂来源和日期 · 每期都要有诚实的代价。留给你的是以后能自己复用的判据，不是一份清单。</p></div>
+<a class="back" href="index.html">&larr; AI 超级个体实战（Day 1–59 归档）</a>
+<div class="list">
+<div class="group">编码与代码库<span class="tag">— C1 · Coding &amp; Codebase</span></div>
+<a class="entry" href="coding-skills-roundup-skill1.html"><span class="week">S01</span><span class="title">AI 编码 Skills 榜单</span><span class="topics">三种形态别混比 · 官方检查表当选购单 · Context 税 · Skill/Subagent/MCP 分工</span></a>
+<!-- skill-entries -->
+<div class="entry todo"><span class="week">S02</span><span class="title">Superpowers 拆解</span><span class="topics">强制流水线 · Composable Skills 自动触发 · 跨 Harness · 小任务上的负担</span></div>
+<div class="entry todo"><span class="week">S03</span><span class="title">代码审查类 Skills</span><span class="topics">为什么审查是 Skill 的甜区 · 假阳性治理 · 和 CI 门禁怎么分工</span></div>
+<div class="entry todo"><span class="week">S04</span><span class="title">Git 工作流三件套</span><span class="topics">Commit / PR / Changelog · Diff 作为唯一输入 · 什么时候一条 hook 更合适</span></div>
+
+<div class="group">元技能：做 skill 的 skill<span class="tag">— C2 · Meta — Building Skills</span></div>
+<div class="entry todo"><span class="week">S05</span><span class="title">元技能榜单</span><span class="topics">造工具的工具 · 官方 spec 与 template · 为什么先写 eval 再写文档</span></div>
+<div class="entry todo"><span class="week">S06</span><span class="title">官方 Authoring 最佳实践精读</span><span class="topics">name/description 的触发机制 · 渐进式披露三模式 · 自由度阶梯 · 500 行的由来</span></div>
+<div class="entry todo"><span class="week">S07</span><span class="title">给 Skill 写 Eval</span><span class="topics">先建 baseline 再写 skill · 三个场景起步 · 双实例迭代法 · 怎么判断是真提升</span></div>
+<div class="entry todo"><span class="week">S08</span><span class="title">AGENTS.md 与跨 Harness 可移植性</span><span class="topics">一份指令喂多个 agent · 与 CLAUDE.md / Cursor rules 的关系 · 仓库级约定该写什么</span></div>
+
+<div class="group">工具连接层：MCP 与集成<span class="tag">— C3 · MCP &amp; Integrations</span></div>
+<div class="entry todo"><span class="week">S09</span><span class="title">MCP Server 榜单</span><span class="topics">按星数与真实使用量排 · 四条主线 · 每接一个 server 交多少 Context 税</span></div>
+<div class="entry todo"><span class="week">S10</span><span class="title">文档检索类 MCP</span><span class="topics">治的是训练截止日期这个病 · 何时不如直接贴文档</span></div>
+<div class="entry todo"><span class="week">S11</span><span class="title">浏览器自动化 MCP</span><span class="topics">Accessibility tree vs 截图 · 结构化快照为何更省更稳 · 测试与抓取的边界</span></div>
+<div class="entry todo"><span class="week">S12</span><span class="title">接 MCP 的安全边界</span><span class="topics">工具返回值即注入面 · 权限最小化与确认门 · 工具名冲突与全限定名</span></div>
+
+<div class="group">文档与办公产出<span class="tag">— C4 · Docs &amp; Deliverables</span></div>
+<div class="entry todo"><span class="week">S13</span><span class="title">办公产出类 Skills 榜单</span><span class="topics">docx / pdf / pptx / xlsx 四件套 · 为什么这类最快变现 · 模板型 Skill 的共同结构</span></div>
+<div class="entry todo"><span class="week">S14</span><span class="title">文档 Skill 怎么做到不坏文件</span><span class="topics">解包-改-校验-重打包 · 校验脚本当反馈闭环 · 确定性操作为什么要写成脚本</span></div>
+<div class="entry todo"><span class="week">S15</span><span class="title">品牌与风格类 Skill</span><span class="topics">把风格指南变成可执行约束 · 风格类 Skill 最难的是验收标准</span></div>
+
+<div class="group">写作与内容<span class="tag">— C5 · Writing &amp; Content</span></div>
+<div class="entry todo"><span class="week">S16</span><span class="title">写作类 Skills 榜单</span><span class="topics">去 AI 味 / 起草 / 摘要 / SEO 各解决什么 · 为什么这类口碑分歧最大</span></div>
+<div class="entry todo"><span class="week">S17</span><span class="title">「去 AI 味」类 Skill</span><span class="topics">它到底在删什么句式 · 把个人 voice 编成 Skill · 检测器军备竞赛的坑</span></div>
+<div class="entry todo"><span class="week">S18</span><span class="title">写作 Skill 的通用配方：Examples</span><span class="topics">三对样例胜过十条规则 · 样例怎么选、几个够</span></div>
+
+<div class="group">研究与信息<span class="tag">— C6 · Research &amp; Information</span></div>
+<div class="entry todo"><span class="week">S19</span><span class="title">研究类 Skills 榜单</span><span class="topics">深度研究 / 竞品情报 / 证据链 · 强研究 Skill 都留下可追溯的痕迹</span></div>
+<div class="entry todo"><span class="week">S20</span><span class="title">把研究流程写成 Workflow Skill</span><span class="topics">问题→方法→来源→证据→综合→存疑 · 引用核验作为反馈闭环</span></div>
+<div class="entry todo"><span class="week">S21</span><span class="title">来源接地与引用可信度</span><span class="topics">哪些内容模型几乎必编 · 工具接地怎么改判 · 二手聚合站不能当来源</span></div>
+
+<div class="group">数据与分析<span class="tag">— C7 · Data &amp; Analysis</span></div>
+<div class="entry todo"><span class="week">S22</span><span class="title">数据分析类 Skills 榜单</span><span class="topics">NL→SQL / 图表 / 异常检测 / 报告 · 为什么最依赖组织私有上下文</span></div>
+<div class="entry todo"><span class="week">S23</span><span class="title">按域拆 Reference 的 Skill 结构</span><span class="topics">一个 SKILL.md 挂多份领域文档 · Schema 与口径规则写在哪</span></div>
+<div class="entry todo"><span class="week">S24</span><span class="title">Plan-Validate-Execute 模式</span><span class="topics">先产出可机器校验的中间计划 · 批量与破坏性操作的标准打法</span></div>
+
+<div class="group">Agent 编排与自动化<span class="tag">— C8 · Agent Orchestration &amp; Automation</span></div>
+<div class="entry todo"><span class="week">S25</span><span class="title">编排类 Skills 与 Plugin 榜单</span><span class="topics">Subagent / Hooks / Slash / Plugin 各自的位置 · 什么时候一个 Skill 就够</span></div>
+<div class="entry todo"><span class="week">S26</span><span class="title">Subagent 与 Skill 怎么分工</span><span class="topics">上下文隔离 vs 指令注入 · 并行 fan-out 的收益与协调税</span></div>
+<div class="entry todo"><span class="week">S27</span><span class="title">Hooks 与确定性自动化</span><span class="topics">该由代码保证的别交给模型 · 把「每次都要做」的事钉死</span></div>
+<div class="entry todo"><span class="week">S28</span><span class="title">《Building Effective Agents》精读</span><span class="topics">Workflow 与 Agent 的分界 · 五种基础模式 · 能不上 Agent 就不上</span></div>
+
+<div class="group">安全 · 审查 · 治理<span class="tag">— C9 · Safety, Review &amp; Governance</span></div>
+<div class="entry todo"><span class="week">S29</span><span class="title">安全与治理类 Skills 榜单</span><span class="topics">密钥扫描 / 依赖审计 / 越权检查 / 输出校验 · 安全类必须 Fail-Closed</span></div>
+<div class="entry todo"><span class="week">S30</span><span class="title">装别人的 Skill 有多危险</span><span class="topics">Skill 即可执行指令与脚本 · 准入审查清单 · Marketplace 的信任层级</span></div>
+<div class="entry todo"><span class="week">S31</span><span class="title">「诚实优先」类 Skill</span><span class="topics">逼模型说不知道 · 把不确定性写进输出契约 · 怎么验收这类 Skill</span></div>
+
+<div class="group">个人生产力与知识管理<span class="tag">— C10 · Personal Productivity &amp; PKM</span></div>
+<div class="entry todo"><span class="week">S32</span><span class="title">个人生产力类 Skills 榜单</span><span class="topics">会议纪要 / 收件箱 / 笔记 / 日程 · 为什么这类最该自建</span></div>
+<div class="entry todo"><span class="week">S33</span><span class="title">从重复劳动里长出自己的 Skill</span><span class="topics">观察每次都要重新解释的东西 · 一次真实任务→一个 Skill 的最短路径</span></div>
+<div class="entry todo"><span class="week">S34</span><span class="title">个人 Skill 库的卫生</span><span class="topics">命名一致 · 去重 · 废弃 · 按使用度淘汰 · 什么时候该合并回 Prompt</span></div>
+
+</div>
+<footer>BigCat · Super Individual · Skills 精选 · 2026</footer>
+</div>
+<script src="https://hub.cissychen.com/comments.js" defer></script>
+<script src="https://hub.cissychen.com/search.js" defer></script>
+<script src="https://hub.cissychen.com/index-button.js" defer></script>
+<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+</body></html>

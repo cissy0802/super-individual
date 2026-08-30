@@ -17,9 +17,10 @@ header .subtitle{font-size:0.9rem;color:#ff6ec4;margin-top:6px;font-family:"SF M
 .group{display:flex;align-items:baseline;flex-wrap:wrap;gap:10px;margin:34px 0 16px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,0.08);font-size:0.95rem;font-weight:700;color:#fff;letter-spacing:1px}
 .group:first-child{margin-top:0}
 .group .tag{font-size:0.8rem;font-weight:400;color:#6a6e88;font-family:"SF Mono",Menlo,monospace;letter-spacing:0}
-.entry.skill{border-left-color:#ffd166}
-.entry.skill:hover{border-left-color:#ff6ec4}
-.entry.skill .week{color:#ffd166}
+.entry.series{border-left-color:#ffd166;background:linear-gradient(135deg,rgba(255,209,102,0.10),rgba(255,110,196,0.06))}
+.entry.series:hover{border-left-color:#ff6ec4}
+.entry.series .week{color:#ffd166;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;letter-spacing:1px}
+.entry.series .title{color:#ffd166}
 footer{text-align:center;padding:40px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.entry{flex-direction:column;gap:4px}.entry .topics{margin-left:0;text-align:left}}
 </style></head><body>
@@ -27,9 +28,7 @@ footer{text-align:center;padding:40px 0 12px;font-size:0.82rem;color:#6a6e88}
 <div class="container">
 <header><h1>Super Individual</h1><p>BigCat's Power Stack — Engineering depth for AI super-individuals</p><div class="subtitle">&gt; Prompt · Context · Harness · Agent · Eval · Tool Use</div></header>
 <div class="list">
-<div class="group">Skill Shelf<span class="tag">— Top-rated AI skills &amp; best practices, one category at a time</span></div>
-<a class="entry skill" href="coding-skills-roundup-skill1.en.html"><span class="week">S01</span><span class="title">Coding Skills Roundup</span><span class="topics">Three shapes, don't mix · The official checklist as a buying guide · Context tax · Skill vs subagent vs MCP</span></a>
-<!-- skill-entries -->
+<a class="entry series" href="skills.en.html"><span class="week">SERIES</span><span class="title">Skill Shelf →</span><span class="topics">Top-rated AI skills &amp; best practices · 10 categories · updated daily</span></a>
 <div class="group">Super Individual Daily<span class="tag">— Day 1–59 · the AI engineering set · complete</span></div>
 <a class="entry" href="prompt-eng-day1.en.html"><span class="week">D01</span><span class="title">Prompt Engineering</span><span class="topics">Four-layer arch · XML vs MD · CoT limits · Prefix caching</span></a>
 <a class="entry" href="context-eng-day2.en.html"><span class="week">D02</span><span class="title">Context Engineering</span><span class="topics">Lost-in-the-Middle · Layout · Chunk design · Compaction</span></a>

@@ -36,6 +36,15 @@ PADDED_N=$(echo "$PRIMARY" | grep -oE '[0-9]+' | tail -1)
 N=$((10#$PADDED_N))
 KIND=$(echo "$PRIMARY" | grep -oE '(day|week|book|issue|skill)[0-9]+(\.en)?\.html$' | grep -oE '^(day|week|book|issue|skill)')
 
+# Which listing page must reference the new content. A series with its own index
+# page (skill -> skills.html) is listed there, not in the site-root index.html.
+INDEX_ZH=index.html
+INDEX_EN=index.en.html
+if [ "$KIND" = "skill" ] && [ -f skills.html ]; then
+  INDEX_ZH=skills.html
+  [ -f skills.en.html ] && INDEX_EN=skills.en.html
+fi
+
 TITLE=$(grep -oE '<title>[^<]+' "$PRIMARY" | head -1 | sed 's|<title>||')
 [ -z "$TITLE" ] && TITLE="$PRIMARY"
 MSG="${MSG:-Add #$N: $TITLE}"
@@ -73,13 +82,13 @@ for F in $NEW_FILES; do
     fi
   fi
 
-  # Reference check: Chinese file must be in index.html, .en file in index.en.html (if exists)
+  # Reference check: Chinese file must be in $INDEX_ZH, .en file in $INDEX_EN (if exists)
   if echo "$F" | grep -q '\.en\.html$'; then
-    if [ -f index.en.html ]; then
-      grep -q "$F" index.en.html || { echo "ERROR: index.en.html does not reference $F"; exit 1; }
+    if [ -f "$INDEX_EN" ]; then
+      grep -q "$F" "$INDEX_EN" || { echo "ERROR: $INDEX_EN does not reference $F"; exit 1; }
     fi
   else
-    grep -q "$F" index.html || { echo "ERROR: index.html does not reference $F"; exit 1; }
+    grep -q "$F" "$INDEX_ZH" || { echo "ERROR: $INDEX_ZH does not reference $F"; exit 1; }
   fi
 
   # Shared scripts: CLAUDE.md asks new pages to carry the 4 tags themselves so the

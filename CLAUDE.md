@@ -63,7 +63,14 @@ TOPICS.md 是本仓选题的**唯一真相源**。以下三条每次运行都适
 - 篇幅、版式、双语、术语随名即释、`.maxchars`（4000 CJK）等，与 day 系列完全一致：**直接复用最近一期 day 页的内联 `<style>` 与 section 结构**（`.week-tag` / `.intro` / `.section`+`.num`+`.claim` / `.fail` / `.res` / `.glossary` / `.refs` / `.thinking`）。
 - `.week-tag` 写成 `SKILL {N} / {分类} · {榜单|深挖}`，例如 `SKILL 01 / CODING · ROUNDUP`。
 
-## 发布
+## 发布：本系列有自己的索引页 `skills.html`
 
-- 更新 `index.html`：在 `<!-- skill-entries -->` 标记前插入新条目（`.week` 用 `S01`、`S02`…）；`index.en.html` 同理插入 `.en` 条目。**别插到 Day 归档那一组里去。**
-- `./publish.sh` 已支持 `skill` 这个 KIND，并且会同时守 `TOPICS.md` 与 `SKILLS.md` 不被改动。两个系列编号空间独立，`skill1` 不会和 `day1` 撞车。
+站点根 `index.html` 只放**一张入口卡**指向 `skills.html`，**本系列的条目一律不写进 `index.html`**。中英两版分别是 `skills.html` / `skills.en.html`。
+
+`skills.html` 是 **roadmap-first** 的：`SKILLS.md` 里还没写的每一期，都已经作为**灰色占位行** `<div class="entry todo">…</div>`（无 href、`todo` 类）按分类预先列在那儿了。所以发布一期时：
+
+1. 按 `.week` 编号（`S01`、`S02`…）在 `skills.html` 里找到**本期那一行灰色占位行**，**原地**改成 `<a class="entry" href="{本期文件名}">`（去掉 `todo` 类、加 href，内部结构不变）。`skills.en.html` 同理换成 `.en.html` 文件名。
+2. **绝不要在末尾另 append 一行**（会重复）。只有当该期在 `skills.html` 里确实找不到灰行时，才 fallback append 到 `<!-- skill-entries -->` 标记前，且要 append 进它所属的 `## C{n}` 分类组里。
+3. **每次运行开头先对齐**：扫一遍 `SKILLS.md`，凡是 BigCat 新加、而 `skills.html` / `skills.en.html` 里还没有对应行的条目，按分类顺序补一条灰色占位行（两个页面都要补）。分类组标题 `.group` 也随之补齐。
+
+`./publish.sh` 已支持 `skill` 这个 KIND：它会自动把「index 引用检查」指向 `skills.html` / `skills.en.html`（而不是根 index），并同时守 `TOPICS.md` 与 `SKILLS.md` 不被改动。两个系列编号空间独立，`skill1` 不会和 `day1` 撞车。

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Skill Shelf — Super Individual</title>
+<style>
+
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.7;min-height:100vh}
+.container{max-width:760px;margin:0 auto;padding:24px 20px 60px}
+header{text-align:center;padding:56px 0 40px}
+header h1{font-size:2rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:2px}
+header p{margin-top:8px;font-size:1rem;color:#a0a4b8}
+header .subtitle{font-size:0.9rem;color:#ff6ec4;margin-top:6px;font-family:"SF Mono",Menlo,monospace}
+.list{margin-top:32px}
+.entry{display:flex;align-items:baseline;gap:16px;padding:18px 20px;background:rgba(255,255,255,0.05);backdrop-filter:blur(10px);border-radius:10px;border:1px solid rgba(255,255,255,0.08);margin-bottom:14px;transition:all 0.15s;text-decoration:none;color:inherit;border-left:3px solid #ff6ec4}
+.entry:hover{transform:translateY(-2px);background:rgba(255,255,255,0.08);border-left-color:#7b61ff}
+.entry .week{flex-shrink:0;font-size:0.85rem;color:#ff6ec4;font-weight:700;min-width:60px}
+.entry .title{font-size:1.05rem;font-weight:600;color:#fff}
+.entry .topics{font-size:0.85rem;color:#a0a4b8;margin-left:auto;text-align:right}
+.group{display:flex;align-items:baseline;flex-wrap:wrap;gap:10px;margin:34px 0 16px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,0.08);font-size:0.95rem;font-weight:700;color:#fff;letter-spacing:1px}
+.group:first-child{margin-top:0}
+.group .tag{font-size:0.8rem;font-weight:400;color:#6a6e88;font-family:"SF Mono",Menlo,monospace;letter-spacing:0}
+footer{text-align:center;padding:40px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.entry{flex-direction:column;gap:4px}.entry .topics{margin-left:0;text-align:left}}
+.blurb{margin-top:26px;background:rgba(255,209,102,0.06);border-left:3px solid #ffd166;border-radius:8px;padding:18px 20px;font-size:0.92rem;color:#d8d6e8}
+.blurb p{margin-bottom:10px}
+.blurb p:last-child{margin-bottom:0}
+.blurb .rules{font-size:0.85rem;color:#a0a4b8;border-top:1px dashed rgba(255,255,255,0.10);padding-top:10px}
+.back{display:inline-block;margin-top:18px;font-size:0.85rem;color:#a0a4b8;text-decoration:none;border-bottom:1px dotted rgba(160,164,184,0.5)}
+.back:hover{color:#ff6ec4;border-bottom-color:#ff6ec4}
+.entry{border-left-color:#ffd166}
+.entry:hover{border-left-color:#ff6ec4}
+.entry .week{color:#ffd166}
+.entry.todo{opacity:0.5;background:rgba(255,255,255,0.02);border-left-color:rgba(255,255,255,0.14);border-style:dashed;cursor:default}
+.entry.todo:hover{transform:none;background:rgba(255,255,255,0.03)}
+.entry.todo .week{color:#6a6e88}
+.entry.todo .title{color:#a0a4b8;font-weight:500}
+
+</style></head><body>
+<a href="https://cissy0802.github.io/" style="position:fixed;top:14px;left:14px;font-size:0.82rem;color:inherit;opacity:0.55;text-decoration:none;padding:6px 12px;border:1px solid currentColor;border-radius:20px;z-index:100;backdrop-filter:blur(6px);transition:opacity 0.2s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.55">&larr; Hub</a>
+<div class="container">
+<header><h1>Skill Shelf</h1><p>Top-rated AI skills &amp; best practices — one category at a time</p><div class="subtitle">&gt; Roundup first, then the deep dives</div></header>
+<div class="blurb"><p>Skills, plugins, rules and MCP servers that <strong>actually exist and are actually used</strong>, plus the best practices distilled by the vendors themselves. Each category opens with a <strong>roundup</strong> — what is out there, who ranks where, by what test, and when not to install any of it — followed by two to four <strong>deep dives</strong> into the entries worth the trouble.</p><p class="rules">House rules: nothing gets named unless it can be linked · every number carries its source and month · every issue states the honest cost · the takeaway is a test you can reuse, not a shopping list.</p></div>
+<a class="back" href="index.en.html">&larr; Super Individual Daily (Day 1–59 archive)</a>
+<div class="list">
+<div class="group">Coding &amp; Codebase<span class="tag">— C1</span></div>
+<a class="entry" href="coding-skills-roundup-skill1.en.html"><span class="week">S01</span><span class="title">Coding Skills Roundup</span><span class="topics">Three shapes · The author checklist as a buying guide · Context tax · Skill vs subagent vs MCP</span></a>
+<!-- skill-entries -->
+<div class="entry todo"><span class="week">S02</span><span class="title">Superpowers, Taken Apart</span><span class="topics">The enforced pipeline · Composable auto-triggering · Cross-harness · Overhead on small tasks</span></div>
+<div class="entry todo"><span class="week">S03</span><span class="title">Code Review Skills</span><span class="topics">Why review is the sweet spot · Taming false positives · Division of labor with CI gates</span></div>
+<div class="entry todo"><span class="week">S04</span><span class="title">Git Workflow Skills</span><span class="topics">Commit / PR / changelog · The diff as sole input · When a hook beats a skill</span></div>
+
+<div class="group">Meta — Building Skills<span class="tag">— C2</span></div>
+<div class="entry todo"><span class="week">S05</span><span class="title">Meta-Skills Roundup</span><span class="topics">Tools that build tools · The official spec and template · Why evals come before docs</span></div>
+<div class="entry todo"><span class="week">S06</span><span class="title">Official Authoring Best Practices</span><span class="topics">How name/description trigger · Three disclosure patterns · Degrees of freedom · Where 500 lines comes from</span></div>
+<div class="entry todo"><span class="week">S07</span><span class="title">Writing Evals for a Skill</span><span class="topics">Baseline first · Start with three scenarios · The two-instance loop · Telling a real gain from noise</span></div>
+<div class="entry todo"><span class="week">S08</span><span class="title">AGENTS.md &amp; Portability</span><span class="topics">One instruction file, many agents · Its relation to CLAUDE.md and Cursor rules · What belongs at repo level</span></div>
+
+<div class="group">MCP &amp; Integrations<span class="tag">— C3</span></div>
+<div class="entry todo"><span class="week">S09</span><span class="title">MCP Server Roundup</span><span class="topics">Ranked by stars and real usage · Four main lines · The context tax per server</span></div>
+<div class="entry todo"><span class="week">S10</span><span class="title">Docs-Retrieval MCP</span><span class="topics">Curing the training-cutoff problem · When pasting the doc is simply better</span></div>
+<div class="entry todo"><span class="week">S11</span><span class="title">Browser Automation MCP</span><span class="topics">Accessibility tree vs screenshots · Why structured snapshots win · Testing vs scraping</span></div>
+<div class="entry todo"><span class="week">S12</span><span class="title">The Security Edge of MCP</span><span class="topics">Tool output is an injection surface · Least privilege and confirmation gates · Name collisions</span></div>
+
+<div class="group">Docs &amp; Deliverables<span class="tag">— C4</span></div>
+<div class="entry todo"><span class="week">S13</span><span class="title">Office Deliverable Skills Roundup</span><span class="topics">The docx/pdf/pptx/xlsx set · Why this class pays off fastest · The shared shape of template skills</span></div>
+<div class="entry todo"><span class="week">S14</span><span class="title">How Doc Skills Avoid Corruption</span><span class="topics">Unpack-edit-validate-repack · The validator as feedback loop · Why deterministic steps belong in scripts</span></div>
+<div class="entry todo"><span class="week">S15</span><span class="title">Brand &amp; Style Skills</span><span class="topics">Turning a style guide into enforceable constraints · The hard part is acceptance criteria</span></div>
+
+<div class="group">Writing &amp; Content<span class="tag">— C5</span></div>
+<div class="entry todo"><span class="week">S16</span><span class="title">Writing Skills Roundup</span><span class="topics">De-slopping / drafting / summarizing / SEO · Why opinions diverge most here</span></div>
+<div class="entry todo"><span class="week">S17</span><span class="title">De-AI-ing Your Prose</span><span class="topics">Which constructions it actually deletes · Encoding your own voice · The detector arms race</span></div>
+<div class="entry todo"><span class="week">S18</span><span class="title">Examples Over Rules</span><span class="topics">Three pairs beat ten rules · How to pick examples and how many</span></div>
+
+<div class="group">Research &amp; Information<span class="tag">— C6</span></div>
+<div class="entry todo"><span class="week">S19</span><span class="title">Research Skills Roundup</span><span class="topics">Deep research / competitive intel / evidence chains · Strong ones leave an audit trail</span></div>
+<div class="entry todo"><span class="week">S20</span><span class="title">Research as a Workflow Skill</span><span class="topics">Question → method → sources → evidence → synthesis → caveats · Citation checks as the loop</span></div>
+<div class="entry todo"><span class="week">S21</span><span class="title">Source Grounding &amp; Citations</span><span class="topics">What models almost always fabricate · How tool grounding changes it · Aggregators are not sources</span></div>
+
+<div class="group">Data &amp; Analysis<span class="tag">— C7</span></div>
+<div class="entry todo"><span class="week">S22</span><span class="title">Data Skills Roundup</span><span class="topics">NL→SQL / charts / anomalies / reports · Why private context matters most here</span></div>
+<div class="entry todo"><span class="week">S23</span><span class="title">Domain-Split Reference Structure</span><span class="topics">One SKILL.md over many domain files · Where schemas and definitions live</span></div>
+<div class="entry todo"><span class="week">S24</span><span class="title">Plan-Validate-Execute</span><span class="topics">A machine-checkable plan before execution · The default for batch and destructive work</span></div>
+
+<div class="group">Agent Orchestration &amp; Automation<span class="tag">— C8</span></div>
+<div class="entry todo"><span class="week">S25</span><span class="title">Orchestration Roundup</span><span class="topics">Where subagents / hooks / slash commands / plugins each sit · When one skill suffices</span></div>
+<div class="entry todo"><span class="week">S26</span><span class="title">Subagents vs Skills</span><span class="topics">Context isolation vs instruction injection · Fan-out payoff and coordination tax</span></div>
+<div class="entry todo"><span class="week">S27</span><span class="title">Hooks &amp; Deterministic Automation</span><span class="topics">Don&#x27;t leave to the model what code can guarantee · Pinning down the every-time steps</span></div>
+<div class="entry todo"><span class="week">S28</span><span class="title">Building Effective Agents, Read Closely</span><span class="topics">Where workflow ends and agent begins · Five base patterns · Don&#x27;t reach for an agent</span></div>
+
+<div class="group">Safety, Review &amp; Governance<span class="tag">— C9</span></div>
+<div class="entry todo"><span class="week">S29</span><span class="title">Safety &amp; Governance Roundup</span><span class="topics">Secret scanning / dependency audit / privilege checks / output validation · Safety must fail closed</span></div>
+<div class="entry todo"><span class="week">S30</span><span class="title">How Risky Is Installing a Skill</span><span class="topics">A skill is executable instruction plus scripts · An intake checklist · Marketplace trust tiers</span></div>
+<div class="entry todo"><span class="week">S31</span><span class="title">Truth-First Skills</span><span class="topics">Making the model say I don&#x27;t know · Uncertainty in the output contract · How to accept-test it</span></div>
+
+<div class="group">Personal Productivity &amp; PKM<span class="tag">— C10</span></div>
+<div class="entry todo"><span class="week">S32</span><span class="title">Personal Productivity Roundup</span><span class="topics">Meeting notes / inbox / notes / calendar · Why this class should be homemade</span></div>
+<div class="entry todo"><span class="week">S33</span><span class="title">Growing a Skill From Repetition</span><span class="topics">Notice what you re-explain every time · The shortest path from one real task to one skill</span></div>
+<div class="entry todo"><span class="week">S34</span><span class="title">Skill Library Hygiene</span><span class="topics">Consistent naming · dedup · deprecation · retire by usage · when to fold it back into a prompt</span></div>
+
+</div>
+<footer>BigCat · Super Individual · Skill Shelf · 2026</footer>
+</div>
+<script src="https://hub.cissychen.com/comments.js" defer></script>
+<script src="https://hub.cissychen.com/search.js" defer></script>
+<script src="https://hub.cissychen.com/index-button.js" defer></script>
+<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+</body></html>
