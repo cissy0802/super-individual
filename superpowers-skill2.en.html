@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill 02 · Superpowers, Taken Apart — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head>
+<body>
+<div class="container">
+<header>
+<span class="week-tag">SKILL 02 / CODING · DEEP DIVE</span>
+<h1>Superpowers, Taken Apart</h1>
+<h2>A methodology nailed into a pipeline — fourteen skills, the install, and when it is pure overhead</h2>
+<div class="date">2026-09-04 · BigCat</div>
+<p class="pitch">The interesting part is not the seven-phase workflow. It is that Superpowers does not wait to be found relevant — it pushes its rules into every single session at startup. That is why it works, and it is also the bill.</p>
+</header>
+<div class="xref">
+<a href="coding-skills-roundup-skill1.en.html">Start here → Skill 01 Coding Skills Roundup (superpowers is the first row of that table)</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p><strong>superpowers</strong> (by Jesse Vincent, MIT; per the GitHub repo page, 2026-09, roughly <strong>282k stars / 25k forks</strong>; per the repo's <code>RELEASE-NOTES.md</code>, latest is v6.3.0, released 2026-08) is not one skill. It is <strong>fourteen skills that add up to a development methodology</strong>, plus a hook that injects it into every session. The thing it kills for you is simple: <strong>the agent starting to write code before it has understood the job.</strong> This issue names all fourteen, links each one, says when to skip it, then takes apart the mechanism that makes the rules stick — and what that enforcement costs on small tasks.</p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>What it kills for you: one command, fourteen skills</h2>
+<div class="claim">The claim: it does not treat "the model writes bad code." It treats "the model skipped thinking it through, skipped the tests, skipped verifying, and announced it was done." Each of those four has a skill sitting on it.</div>
+<h3>Installing it (per the repo README, 2026-09)</h3>
+<pre><code><span class="tag-com"># Claude Code: from the official plugin source</span>
+/plugin install superpowers@claude-plugins-official
+
+<span class="tag-com"># The README gives one line per harness:</span>
+Cursor:        /add-plugin superpowers
+Gemini CLI:    gemini extensions install https://github.com/obra/superpowers
+Copilot CLI:   copilot plugin install superpowers@superpowers-marketplace
+Devin CLI:     devin plugins install obra/superpowers
+Kimi Code:     /plugins install https://github.com/obra/superpowers
+
+<span class="tag-com"># First thing that runs: type no command at all, just say</span>
+<span class="tag-com">#   "I want to add X to this project"</span>
+<span class="tag-com"># It will not start coding. It will ask you questions. That is brainstorming firing.</span>
+</code></pre>
+<h3>Fourteen skills, and what each one kills</h3>
+<div class="diagram">skill (folder name under skills/)   what it kills for you         when to skip it
+──────────────────────────────────────────────────────────────────────────────
+brainstorming              coding before the ask is clear   the ask is one sentence
+writing-plans              plans that live only in context  throwaway scripts
+executing-plans            drift away from the plan         no plan document exists
+subagent-driven-development main context stuffed with detail one-file edits
+dispatching-parallel-agents serial waits on independent work tasks depend on each other
+test-driven-development    implementation before tests      prototypes, generated code
+systematic-debugging       guess a fix, try another fix     the error names the cause
+requesting-code-review     reviewing your own diff          strict CI plus human review
+receiving-code-review      cherry-picking review feedback   -- pairs with the above
+using-git-worktrees        experiments on the main branch   one branch per person already
+finishing-a-development-branch skipped tests at merge time  your own merge flow is stricter
+verification-before-completion "done" with nothing verified  prose output, nothing to verify
+writing-skills             ad hoc SKILL.md authoring        you are not writing skills
+using-superpowers          -- the dispatcher for all above  (cannot be disabled alone)
+──────────────────────────────────────────────────────────────────────────────
+Per the obra/superpowers skills/ directory, 2026-09. Each name is a real folder you can open.</div>
+<p>The seven-phase workflow is just those strung together: <strong>brainstorming to using-git-worktrees to writing-plans to subagent-driven-development to test-driven-development to requesting-code-review to finishing-a-development-branch</strong>. You install the whole plugin; there are no checkboxes.</p>
+<div class="fail"><strong>Failure mode</strong>: treating it as a "code gets better" upgrade pack. It does not change how well the model codes. It changes <strong>the order in which things happen</strong> — and if your order was already right, all you will feel is the slowdown.</div>
+<div class="res"><strong>Going deeper</strong> · <a href="https://github.com/obra/superpowers" target="_blank">obra/superpowers</a> · <a href="https://github.com/obra/superpowers/tree/main/skills" target="_blank">the skills/ directory (the fourteen real names live here)</a></div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>The mechanism: why the rules actually stick</h2>
+<div class="claim">The claim: an ordinary skill waits for the model to judge it relevant from its description. Superpowers does not take that bet — a SessionStart hook pastes its charter into the context at the top of every session.</div>
+<h3>Layer one: a hook, not progressive disclosure</h3>
+<p><code>hooks/hooks.json</code> in the repo registers a <strong>SessionStart</strong> hook matching three moments: <code>startup|clear|compact</code>. The <code>hooks/session-start</code> script reads the <strong>entire</strong> text of <code>skills/using-superpowers/SKILL.md</code> and injects it wrapped in an <code>&lt;EXTREMELY_IMPORTANT&gt;</code> tag. So "triggers automatically" is literal here: <strong>it is present before you ask for anything</strong>, and it comes back after you clear the context or after an auto-compaction.</p>
+<h3>Layer two: a contract written to be un-rationalizable</h3>
+<p>The injected <code>using-superpowers</code> is 63 lines, about 3.1 KB (per the repo file, 2026-09), and most of it is a <strong>table of excuses</strong> — every rationalization the model might use to skip the process, answered in advance. "This is just a simple question" becomes "questions are tasks." "Let me explore the codebase first" becomes "skills tell you HOW to explore." "The skill is overkill" becomes "simple things become complex." It also fixes precedence: <strong>process skills come before implementation skills</strong>, and <strong>your CLAUDE.md / AGENTS.md and direct instructions outrank any skill</strong>.</p>
+<h3>Layer three: review as an isolated subprocess</h3>
+<p><code>requesting-code-review</code> is the piece worth stealing on its own. The main agent does not read the diff. It captures <code>BASE_SHA</code> and <code>HEAD_SHA</code>, dispatches a <strong>general-purpose subagent</strong>, and fills the repo's <code>code-reviewer.md</code> template. The SKILL.md states the reasoning plainly: <strong>the reviewer gets precisely crafted context and never your session history</strong> — so it looks at the work product rather than at your train of thought, and the diff plus the whole evaluation stay in the subagent's context while only findings come back. <code>subagent-driven-development</code> scales that up: a fresh implementer per task, a review after each task, and one broad review of the whole branch at the end.</p>
+<div class="diagram">an ordinary skill                    superpowers
+────────────────────────────────────────────────────────────────
+preloads name + description only  →  injects all of using-superpowers
+model reads the body if relevant  →  live from turn one, replayed on compact
+may never fire once               →  you must speak up to NOT get it
+cost = tens of tokens of metadata →  cost = ~3.1 KB per session, floor</div>
+<div class="fail"><strong>Failure mode</strong>: assuming "installed but unused is free." That holds for description-triggered skills. It does not hold here — the hook runs every session.</div>
+<div class="res"><strong>Going deeper</strong> · <a href="https://github.com/obra/superpowers/blob/main/hooks/hooks.json" target="_blank">hooks/hooks.json</a> · <a href="https://github.com/obra/superpowers/blob/main/skills/using-superpowers/SKILL.md" target="_blank">using-superpowers/SKILL.md</a> · <a href="https://github.com/obra/superpowers/blob/main/skills/requesting-code-review/SKILL.md" target="_blank">requesting-code-review/SKILL.md</a></div>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Real use and its edges: which phases earn their keep</h2>
+<div class="claim">The claim: the payoff is concentrated in the first two phases and the last one — think it through, write the plan, verify before claiming done. The TDD and subagent phases in the middle pay off only in proportion to whether your project has a test suite that runs.</div>
+<h3>Brainstorming's three paths (the v6.3.0 change that matters)</h3>
+<p>The loudest early complaint was that asking a small question triggered a two-document ceremony. Per the repo's <code>RELEASE-NOTES.md</code> (v6.3.0, 2026-08), it now classifies the request first and <strong>says the classification out loud so you can override it</strong>: <strong>spike</strong> (a feasibility question whose output is an answer, not code you keep — two or three sentences, then go find out), <strong>bounded</strong> (a change to a flow that already exists in this repo — design presented in chat, no spec file), <strong>architectural</strong> (new subsystems — full questions, sectioned design, spec, then <code>writing-plans</code>). The rule is <strong>take the heavier path when in doubt, and the ratchet only goes up</strong>. What does not scale down is the approval gate: on all three paths it stops before implementing.</p>
+<h3>The rules hard enough to bite</h3>
+<ul>
+<li><strong><code>test-driven-development</code>'s iron law</strong>: no production code without a failing test first. Wrote the implementation first? <strong>Delete it and start over</strong> — not kept as reference, not adapted while writing tests. The only exceptions are throwaway prototypes, generated code and config files, and it is told to ask you first.</li>
+<li><strong><code>systematic-debugging</code>'s four phases</strong>: no fixes proposed before root-cause investigation is complete, and in multi-component systems it wants diagnostic logging at each boundary before anyone guesses. It explicitly says to use it <em>especially</em> under time pressure.</li>
+<li><strong><code>writing-plans</code>'s premise</strong>: write the plan for an engineer with no context for your codebase and questionable taste — tasks sliced to two to five minutes, exact file paths, how to verify each one, saved to <code>docs/superpowers/plans/</code>.</li>
+<li><strong><code>subagent-driven-development</code>'s execution discipline</strong>: once running it <strong>does not check in between tasks</strong>; plan conflicts get a recorded ruling and work continues. Only four things stop it — an irreversible or destructive operation, a security-sensitive action, a side effect outside the worktree (a merge, a push to a shared branch, a publish), and a plan broken beyond repair.</li>
+</ul>
+<p><strong>Where it fits</strong>: multi-file refactors, new subsystems, repos with a working test baseline, and any run where you want to walk away and let it work. <strong>Where it does not</strong>: copy changes, styling tweaks, one-off scripts, and bugs whose error message already names the cause.</p>
+<div class="fail"><strong>Failure mode</strong>: turning on the TDD iron law in a legacy repo with no test baseline. It will correctly insist on tests first, and your "add a field" task becomes half a day of test engineering. That is not the tool being wrong — but you should know where the bill lands first.</div>
+<div class="res"><strong>Going deeper</strong> · <a href="https://github.com/obra/superpowers/blob/main/skills/brainstorming/SKILL.md" target="_blank">brainstorming</a> · <a href="https://github.com/obra/superpowers/blob/main/skills/test-driven-development/SKILL.md" target="_blank">test-driven-development</a> · <a href="https://github.com/obra/superpowers/blob/main/skills/subagent-driven-development/SKILL.md" target="_blank">subagent-driven-development</a> · <a href="https://github.com/obra/superpowers/blob/main/RELEASE-NOTES.md" target="_blank">RELEASE-NOTES.md</a></div>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>The cost, and what you can do instead</h2>
+<div class="claim">The claim: the cost is not that the star count lies. The cost is that you give up the option of "let's be quick this time." And nearly every alternative can be lifted out of its own repository.</div>
+<h3>Three bills</h3>
+<ul>
+<li><strong>A standing context tax</strong>: about 3.1 KB of charter re-enters at every session start, every <code>/clear</code>, and after every auto-compaction. Small on its own, but it is <strong>non-negotiable and permanent</strong> — a different cost model from a skill that is free until it fires.</li>
+<li><strong>A time tax</strong>: a ten-minute change routed through clarify, worktree, plan, test-first, dispatch a reviewer can easily become an hour. The README calls it a software development methodology, not an accelerator, and that is honest.</li>
+<li><strong>Conflicting instructions</strong>: <code>using-superpowers</code> puts CLAUDE.md, AGENTS.md and your direct requests above skills — so the correct way to pause it is to <strong>say so in the repo conventions or in the request</strong> ("this is a spike, skip TDD"), not to hope it notices the task is small.</li>
+</ul>
+<h3>Four alternatives, lightest first</h3>
+<ol>
+<li><strong>Just use your harness's plan mode</strong>: Claude Code's <code>/plan</code> (see the official <a href="https://code.claude.com/docs/en/permission-modes" target="_blank">permission modes</a> docs) proposes before it touches disk. <strong>Kills</strong> acting before agreeing, at nearly zero cost. <strong>Where it runs out</strong>: no tests, no review, no trace that survives the session.</li>
+<li><strong>Copy the one or two skills you want</strong>: the repo is MIT, so drop <code>skills/systematic-debugging/</code> or <code>skills/test-driven-development/</code> into <code>~/.claude/skills/</code> as folders. They trigger from their own descriptions, with no hook attached. <strong>This is the entry route this issue recommends</strong> — most of the value, none of the standing tax. <strong>Where it runs out</strong>: when the un-skippable enforcement is exactly what you wanted.</li>
+<li><strong>Write the discipline into repo conventions</strong>: three to five lines in <code>CLAUDE.md</code> / <code>AGENTS.md</code>. <strong>Kills</strong> repeating yourself every session. <strong>Where it runs out</strong>: conventions are soft, and a model in a hurry skips soft things.</li>
+<li><strong>Grow your own</strong>: scaffold with <code>skill-creator</code> from the official <a href="https://github.com/anthropics/skills/tree/main/skills" target="_blank">anthropics/skills</a> repo, or read superpowers' own <code>writing-skills</code> as the model. <strong>Where it runs out</strong>: before you have accumulated the things you re-explain every time, what you write is an empty shell.</li>
+</ol>
+<div class="fail"><strong>Failure mode</strong>: installing it and then telling it "skip brainstorming, skip the tests" every session. You are paying for the hook and buying a process you switch off yourself. Uninstall and take route 2 instead.</div>
+<div class="res"><strong>Going deeper</strong> · <a href="https://code.claude.com/docs/en/permission-modes" target="_blank">Claude Code · permission and plan modes</a> · <a href="https://code.claude.com/docs/en/best-practices" target="_blank">Claude Code · best practices (when plan mode is worth it)</a> · <a href="https://github.com/obra/superpowers/blob/main/skills/writing-skills/SKILL.md" target="_blank">superpowers · writing-skills</a></div>
+</div>
+<!-- ============ 5 ============ -->
+<div class="combo">
+<h3>// THE ONE-PAGE BUYING CARD</h3>
+<p><strong>Install these three first (if you only want part of superpowers)</strong>: <code>skills/systematic-debugging/</code> + <code>skills/test-driven-development/</code> + <code>skills/verification-before-completion/</code> — three folders copied into <code>~/.claude/skills/</code>, each useful standalone, no SessionStart hook.</p>
+<p><strong>When the whole plugin is worth it</strong>: the work in front of you is a multi-file refactor or a new subsystem · the repo has a test suite that runs · you intend to let it work a long stretch instead of watching every step. All three, or it does not pay.</p>
+<p><strong>When to skip it</strong>: ten-minute changes · legacy repos with no test baseline · you already have strict CI and human review · your day is mostly copy and styling.</p>
+<p><strong>Review two weeks in</strong>: how many plans piled up in <code>docs/superpowers/plans/</code>, and how many did you actually go back and read? If the answer is none, your work never needed this layer.</p>
+</div>
+<div class="glossary">
+<h3>// GLOSSARY</h3>
+<dl>
+<dt>SessionStart hook</dt>
+<dd>An external command the harness runs at moments like a new session, <code>/clear</code>, or context compaction; its output is injected into the context. Superpowers uses one to place its charter in every session — the root of how it differs from an ordinary skill.</dd>
+<dt>subagent</dt>
+<dd>A context-isolated worker. The main agent hands it a precisely constructed task and materials — never its own session history — and only conclusions come back. Superpowers uses subagents for both implementation and code review.</dd>
+<dt>git worktree</dt>
+<dd>Multiple checkouts of one repository at once. Superpowers opens one before touching code so experiments and the test baseline stay off your main branch, then offers merge / PR / discard at the end.</dd>
+<dt>RED-GREEN-REFACTOR</dt>
+<dd>The TDD beat: write a failing test and <strong>watch it fail</strong>, write the minimum code to turn it green, then refactor while staying green. Superpowers makes "if you did not watch it fail, it does not count" a hard rule.</dd>
+<dt>spike / bounded / architectural</dt>
+<dd>Since v6.3.0, brainstorming's three classifications of an incoming request, deciding how much ceremony it gets: feasibility probe / small change to an existing flow / new subsystem. The classification is announced so you can override it, and it only ratchets up.</dd>
+</dl>
+</div>
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://github.com/obra/superpowers" target="_blank">obra/superpowers</a> — the README carries install commands for fourteen harnesses and the seven-phase walkthrough</li>
+<li><a href="https://github.com/obra/superpowers/tree/main/skills" target="_blank">superpowers · skills/ directory</a> — the source for all fourteen names used here; trust this over any aggregator</li>
+<li><a href="https://github.com/obra/superpowers/blob/main/hooks/hooks.json" target="_blank">superpowers · hooks/hooks.json</a> — what "triggers automatically" really is: SessionStart on startup / clear / compact</li>
+<li><a href="https://github.com/obra/superpowers/blob/main/RELEASE-NOTES.md" target="_blank">superpowers · RELEASE-NOTES.md</a> — v6.3.0 (2026-08) scaled brainstorming's ceremony to the size of the task</li>
+<li><a href="https://code.claude.com/docs/en/permission-modes" target="_blank">Claude Code · permission modes and /plan</a> — the lightest alternative route</li>
+<li><a href="https://github.com/anthropics/skills/tree/main/skills" target="_blank">anthropics/skills</a> — the official skills repo; <code>skill-creator</code> lives here</li>
+<li><a href="coding-skills-roundup-skill1.en.html">Skill 01 · Coding Skills Roundup</a> — where superpowers sits among ten installable candidates</li>
+<li><a href="claude-code-day17.en.html">Day 17 · Advanced Claude Code</a> — the mechanics under Skills / Subagents / Hooks / MCP</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Skill 02 · 2026-09-04</footer>
+</div>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
+</body></html>
