@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill 03 · Code Review Skills — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head>
+<body>
+<div class="container">
+<header>
+<span class="week-tag">SKILL 03 / CODING · DEEP DIVE</span>
+<h1>Code Review Skills</h1>
+<h2>Ten you can actually install — taming false positives, and how to split the job with CI gates</h2>
+<div class="date">2026-09-05 · BigCat</div>
+<p class="pitch">Review is the sweet spot for skills: you do it every day, and its output can be checked. The hard part was never getting a model to find faults. It is getting it to stop dumping twenty irrelevant ones in your lap.</p>
+</header>
+<div class="xref">
+<a href="coding-skills-roundup-skill1.en.html">Prerequisite → Skill 01 Coding Skills Roundup (code-reviewer is on that list)</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>You already let an agent write code. The next question is not whether it writes well — it is <strong>who looks at what it wrote</strong>. Everything in this category kills the same chore: <strong>it turns "read your own diff before you push", the step everybody skips, into one command.</strong> This issue names ten real, installable or readable items, each with the install and a "when not to install it"; the judgment criteria come in the second half, because tools rotate and the question of whether a finding counts does not.</p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>What it kills for you: ten installable options, table first</h2>
+<div class="claim">Claim: these ten are not ten competitors. They are four layers — read the diff locally, do a first pass in CI, handle security separately, and deal with what you do <em>after</em> a finding arrives. Pick one per layer; layers stack.</div>
+<div class="diagram">Item (real names per repo / official docs)      What it kills for you           When not to install
+─────────────────────────────────────────────────────────────────────────────────────────────
+/code-review (built into Claude Code)          reading your own diff pre-push   the change is one line
+Code Review GitHub App (Anthropic-hosted)      nobody does a first pass on PRs  $15-25 per review hurts
+/security-review + claude-code-security-review scanning left to reviewer luck   no external attack surface
+anthropics/skills - webapp-testing             "looks fine to me" as acceptance backend / pure library code
+superpowers - requesting-code-review           reviewing the diff you just wrote mandatory human review exists
+superpowers - receiving-code-review            accepting every finding wholesale findings are few and correct
+code-reviewer (Agensi)                         diff to a severity-ranked list   any of the above already runs
+github-pr-review (aidankinzett)                posting a review you never read  you do not review on GitHub
+The-PR-Agent/pr-agent                          zero automated pass in CI        another PR bot is installed
+claude-code-action (anthropics)                no way to call an agent in CI    you need no agent in CI
+─────────────────────────────────────────────────────────────────────────────────────────────
+Stars and install counts are in Further Reading, each tagged with its source and month</div>
+<h3>The installs (all copy-pasteable)</h3>
+<pre><code><span class="tag-com"># 1) Local: nothing to install, Claude Code ships it (/review is an alias)</span>
+/code-review                     <span class="tag-com"># commits ahead of upstream + working tree changes</span>
+/code-review high                <span class="tag-com"># broader coverage, at the price of less certain findings</span>
+/code-review --fix               <span class="tag-com"># apply the findings to your working tree afterwards</span>
+/code-review main...my-feature   <span class="tag-com"># also takes a PR number / branch / path</span>
+
+<span class="tag-com"># 2) CI: the security lane (official Action, per repo README, 2026-09)</span>
+- uses: anthropics/claude-code-security-review@main
+  with:
+    comment-pr: true
+    claude-api-key: ${{ secrets.CLAUDE_API_KEY }}
+
+<span class="tag-com"># 3) Third-party review skills: either route works</span>
+/plugin marketplace add aidankinzett/claude-git-pr-skill
+/plugin marketplace add levnikolaevich/claude-code-skills
+<span class="tag-com"># or the crudest route: copy the skill folder into ~/.claude/skills/</span>
+</code></pre>
+<p><strong>The first usage you can run right now</strong>: type <code>/code-review</code> on the uncommitted branch in front of you. It runs as a background subagent with its own context window, so it never crowds your conversation; when the findings land, you decide which ones to act on. <strong>Try it today — there is nothing to install.</strong></p>
+<div class="fail"><strong>Failure mode</strong>: treating these ten as candidates and picking "the best one". The local pass and the CI pass solve problems at different moments — local saves the round trip, CI saves the case where nobody looks at all. Security is its own lane; do not expect a general reviewer to cover it in passing.</div>
+<div class="res"><strong>Going deeper</strong> · <a href="https://code.claude.com/docs/en/code-review" target="_blank">Claude Code · Code Review docs</a> · <a href="https://github.com/anthropics/claude-code-security-review" target="_blank">anthropics/claude-code-security-review</a> · <a href="https://github.com/aidankinzett/claude-git-pr-skill" target="_blank">aidankinzett/claude-git-pr-skill</a></div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Mechanism: why review is the sweet spot for skills</h2>
+<div class="claim">Claim: whether a job is worth encoding as a skill comes down to two conditions — <strong>high frequency</strong> and <strong>an objective oracle</strong>. Code review has both, which is why the quality in this category is visibly higher than in writing or lifestyle skills.</div>
+<h3>Condition one: frequency, so the fixed cost amortizes</h3>
+<p>Writing a review checklist costs an hour, but it runs on every PR. Flip that around: a skill you use twice a year never earns back the time you spent writing it. That is why this category grows usable artifacts and "annual retrospective" skills do not.</p>
+<h3>Condition two: an oracle, so findings can be falsified</h3>
+<p>The oracle is whatever settles right and wrong: a test, a type check, one real execution. A finding backed by an oracle is a fact; one without is a preference. The official <code>webapp-testing</code> skill (<a href="https://github.com/anthropics/skills/tree/main/skills/webapp-testing" target="_blank">anthropics/skills</a>) exists to supply that oracle for frontend changes: drive Playwright, start the server via <code>scripts/with_server.py</code>, wait for <code>networkidle</code>, find selectors, screenshot, read console logs back. Its own rule is blunt — <strong>run the script with <code>--help</code> first, do not start by reading its source</strong>. You can also just copy the folder into <code>~/.claude/skills/</code>.</p>
+<h3>Why review belongs in an isolated context</h3>
+<p>Three teams landed on the same answer. Claude Code's <code>/code-review</code> runs <strong>as a background subagent with its own context window</strong> by default. Superpowers' <code>requesting-code-review</code> takes <code>BASE_SHA</code> / <code>HEAD_SHA</code>, dispatches a separate subagent and fills in the repo's <code>code-reviewer.md</code> template; its SKILL.md states the reason outright — <strong>the reviewer never inherits your session history</strong>. The hosted Code Review runs <strong>multiple agents in parallel, each hunting a different class of issue</strong>, then adds a <strong>verification step</strong> that checks candidates against actual code behavior to filter false positives before deduplicating, ranking by severity and posting on the exact lines (per official docs, 2026-09).</p>
+<div class="diagram">Reviewer inherits your session        Reviewer gets a constructed context
+──────────────────────────────────────────────────────────────────────
+knows why you wrote it that way  →   sees only what the code says
+so it leans toward agreeing      →   so it dares to say "this breaks"
+diff + reasoning fill your context → only a findings list comes back</div>
+<div class="fail"><strong>Failure mode</strong>: asking the agent that just wrote the code to review it in the same session. It already talked itself into this design once; all you get back is "looks good".</div>
+<div class="res"><strong>Going deeper</strong> · <a href="https://github.com/anthropics/skills/blob/main/skills/webapp-testing/SKILL.md" target="_blank">webapp-testing · SKILL.md</a> · <a href="https://github.com/obra/superpowers/blob/main/skills/requesting-code-review/SKILL.md" target="_blank">superpowers · requesting-code-review</a> · <a href="https://code.claude.com/docs/en/code-review" target="_blank">The hosted multi-agent + verification pipeline</a></div>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Real usage and limits: three knobs for false positives</h2>
+<div class="claim">Claim: review skills fail not because they miss bugs but because <strong>they find twenty that do not matter</strong>. Human tolerance for noise is tiny, and once a team has been buried by it, the next real finding gets ignored along with everything else.</div>
+<h3>Knob one: trade effort for false-positive rate</h3>
+<p><code>/code-review low</code> and <code>medium</code> report only the findings it is most confident in; <code>high</code> through <code>max</code> broaden coverage and may include less certain ones (per official docs, 2026-09). By default it <strong>reuses the level you typed last</strong> — so if it suddenly feels noisy, check whether you casually typed <code>max</code> last time.</p>
+<h3>Knob two: pin the calibration in REVIEW.md</h3>
+<p>The hosted reviewer reads <code>REVIEW.md</code> at the repo root (it reads <code>CLAUDE.md</code> too, but treats violations as nits). The four highest-value moves: <strong>redefine what counts as an Important finding</strong> (the default calibration targets production code; a docs repo or a prototype should narrow it), <strong>cap the nits</strong> ("report at most five, give the rest as a count in the summary"), <strong>write skip rules</strong> (generated code, lockfiles, anything CI already enforces such as lint and spellcheck), and <strong>raise the evidence bar</strong> ("behavior claims need a <code>file:line</code> citation, not an inference from naming"). One more, aimed at round trips: <strong>re-review convergence</strong> — "after the first review, Important findings only" — so a one-line fix does not reach round seven on style.</p>
+<div class="fail"><strong>Do not misremember this</strong>: the local <code>/code-review</code> follows <code>CLAUDE.md</code> but <strong>does not read <code>REVIEW.md</code></strong>. Assuming the file applies everywhere is a common trap.</div>
+<h3>Knob three: fix your own side of the exchange</h3>
+<p>The most underrated skill here is superpowers' <code>receiving-code-review</code>, which governs not the reviewer but <strong>the agent receiving the findings</strong>. The rule is "verify before implementing, ask before assuming": before touching anything, check two things — is this technically correct <strong>for this codebase</strong>, and would it break existing functionality? If yes, fix it; if not, push back with technical reasoning and point at a passing test. It explicitly <strong>forbids</strong> performative agreement like "You're absolutely right!" and asks you to state the fix instead. This matters more than any reviewer: <strong>a downstream that accepts everything converts every false positive into real code degradation.</strong></p>
+<h3>How to split the job with CI gates</h3>
+<p>One line: <strong>anything with a definite answer belongs to CI; anything requiring judgment belongs to the review agent.</strong> Formatting, lint, types, dependency advisories — gate those fail-closed, and forbid the review agent from repeating them (that is a skip rule in <code>REVIEW.md</code>). Meanwhile the hosted Code Review check run <strong>always completes with a neutral conclusion and never blocks a merge</strong>. If you do want a gate, the documented route is to parse the machine-readable severity counts from the check run output — shaped like <code>{"normal":2,"nit":1,"pre_existing":0}</code> — and decide in your own CI.</p>
+<div class="res"><strong>Going deeper</strong> · <a href="https://code.claude.com/docs/en/code-review" target="_blank">REVIEW.md options and check run output format</a> · <a href="https://github.com/obra/superpowers/blob/main/skills/receiving-code-review/SKILL.md" target="_blank">superpowers · receiving-code-review</a></div>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>The cost, and what you can do instead</h2>
+<div class="claim">Claim: the real price here is not tokens. It is <strong>the false sense of safety that comes from having installed a reviewer</strong> — plus, for the hosted option, a per-review bill.</div>
+<h3>Three bills</h3>
+<ul>
+<li><strong>Money</strong>: Anthropic's hosted Code Review is billed on token usage, and the official figure is <strong>$15-25 per review on average</strong>, scaling with PR size and complexity, completing in about 20 minutes (per official docs, 2026-09). Your trigger setting multiplies it: "review on every push" means that number times your push count. It is a research preview, available to Team and Enterprise plans only.</li>
+<li><strong>Noise</strong>: see the previous section. Default calibration with no <code>REVIEW.md</code>, at <code>max</code> effort, is the combination most likely to make a team give up.</li>
+<li><strong>Illusion</strong>: the reviewer does not block merges and promises no completeness. It is a layer you add, not the layer you replace humans with.</li>
+</ul>
+<h3>Four alternatives, light to heavy</h3>
+<ol>
+<li><strong>Just the local <code>/code-review</code></strong>: already on your machine, zero install, zero bill. <strong>Kills</strong> "found it after pushing"; <strong>not enough when</strong>: only you run it, so it never touches your colleagues' PRs.</li>
+<li><strong>Hang open-source <a href="https://github.com/The-PR-Agent/pr-agent" target="_blank">The-PR-Agent/pr-agent</a> in CI</strong> (MIT; per the GitHub repo page, 2026-09, about 12.9k stars; formerly Qodo's, since donated to the community and moved to the PR-Agent org): four commands — <code>/review</code>, <code>/describe</code>, <code>/improve</code>, <code>/ask</code> — via GitHub Action or <code>pip install pr-agent</code> locally, with a swappable model. <strong>Not enough when</strong>: it reads the PR, not your whole codebase.</li>
+<li><strong>Write your own workflow with <a href="https://github.com/anthropics/claude-code-action" target="_blank">anthropics/claude-code-action</a></strong> (per the GitHub repo page, 2026-09, about 8.8k stars): <code>claude /install-github-app</code> sets it up, then you hand it a <code>prompt</code> in a workflow. <strong>Not enough when</strong>: you now own the prompt and the trigger logic — which is exactly what the hosted product does for you.</li>
+<li><strong>Give security its own lane</strong>: <code>/security-review</code> locally plus <a href="https://github.com/anthropics/claude-code-security-review" target="_blank">claude-code-security-review</a> in CI (per the GitHub repo page, 2026-09, about 6.2k stars). It deliberately <strong>excludes</strong> the most false-positive-prone classes by default: denial of service, rate limiting, memory/CPU exhaustion, generic input validation with no proven impact, and open redirects. <strong>Not enough when</strong>: it only covers security — do not ask it about style.</li>
+</ol>
+<div class="fail"><strong>Failure mode</strong>: three bots on the same PR. They produce heavily overlapping findings in different words, and humans collapse all of them. <strong>One per layer</strong>: one local, one general in CI, one for security. That is the whole budget.</div>
+<div class="res"><strong>Going deeper</strong> · <a href="https://code.claude.com/docs/en/commands" target="_blank">Claude Code · commands reference (/code-review and its /review alias)</a> · <a href="https://code.claude.com/docs/en/github-actions" target="_blank">Claude Code · GitHub Actions</a></div>
+</div>
+<!-- ============ 5 ============ -->
+<div class="combo">
+<h3>// THE ONE-PAGE BUYING CARD</h3>
+<p><strong>Install these three first</strong>: (1) <code>/code-review</code> — already on your machine, run it once today; (2) <code>anthropics/claude-code-security-review</code> — five lines of YAML in CI, the best return on effort in this batch; (3) <code>superpowers/skills/receiving-code-review/</code> — copy that folder into <code>~/.claude/skills/</code>; it treats the habit you and your agent share of accepting everything.</p>
+<p><strong>Then add exactly one more</strong>: if you review on GitHub, take <code>github-pr-review</code> from <code>aidankinzett/claude-git-pr-skill</code> (MIT; per the repo page, 2026-09, about 50 stars), which forces you to read the whole review before it goes out. If you want CI fully automatic, take <code>The-PR-Agent/pr-agent</code>. If the budget is there and you are on Team or Enterprise, turn on Anthropic's hosted Code Review.</p>
+<p><strong>When not to install any of it</strong>: a one-person toy repo · you already have strict human review plus strict CI · your changes are mostly copy and config.</p>
+<p><strong>Two-week review</strong>: of the findings it reported, how many did you actually act on? Under thirty percent means it is time to write a <code>REVIEW.md</code> — not time to switch tools.</p>
+</div>
+<div class="glossary">
+<h3>// GLOSSARY</h3>
+<dl>
+<dt>oracle</dt>
+<dd>Whatever settles right from wrong: a test, a type check, one real run. A finding with an oracle behind it is a fact; one without is taste. This is what decides whether a job is worth encoding as a skill.</dd>
+<dt>forked subagent</dt>
+<dd>A copy with its own context window. <code>/code-review</code> runs this way by default: the review never crowds your main conversation, and only the conclusions come back.</dd>
+<dt>verification pass</dt>
+<dd>After candidate issues are found, each is checked against actual code behavior and dropped if it does not hold up. This is the hosted Code Review's main defense against false positives.</dd>
+<dt>REVIEW.md</dt>
+<dd>A review-only instruction file at the repo root, fed to the review pipeline alone (unlike <code>CLAUDE.md</code>, which shapes every session). Severity calibration, nit caps and skip rules live here.</dd>
+<dt>Important / Nit / Pre-existing</dt>
+<dd>The hosted Code Review's three severities: a bug to fix before merging, a minor issue worth fixing but not blocking, and a bug that already existed and was not introduced by this PR.</dd>
+<dt>pending review</dt>
+<dd>A GitHub mechanism: batch several comments into a draft and submit them at once. <code>github-pr-review</code> uses it as the gate that makes a human read the review before it is posted.</dd>
+</dl>
+</div>
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://code.claude.com/docs/en/code-review" target="_blank">Claude Code · Code Review</a> — first-hand source for most of this issue: the multi-agent plus verification pipeline, severity levels, every <code>REVIEW.md</code> option, the $15-25 per review pricing, and the machine-readable check run output</li>
+<li><a href="https://code.claude.com/docs/en/commands" target="_blank">Claude Code · commands reference</a> — the official entries for <code>/code-review</code> (with <code>/review</code> as an alias) and <code>/security-review</code></li>
+<li><a href="https://github.com/anthropics/claude-code-security-review" target="_blank">anthropics/claude-code-security-review</a> — the security review Action; the README carries the full YAML and the finding classes it deliberately excludes</li>
+<li><a href="https://github.com/anthropics/skills/tree/main/skills/webapp-testing" target="_blank">anthropics/skills · webapp-testing</a> — the official skill that supplies an oracle for frontend changes</li>
+<li><a href="https://github.com/obra/superpowers/blob/main/skills/receiving-code-review/SKILL.md" target="_blank">superpowers · receiving-code-review</a> — "verify before implementing"; its counterpart <a href="https://github.com/obra/superpowers/blob/main/skills/requesting-code-review/SKILL.md" target="_blank">requesting-code-review</a> explains the isolated-context rationale</li>
+<li><a href="https://github.com/aidankinzett/claude-git-pr-skill" target="_blank">aidankinzett/claude-git-pr-skill</a> — <code>github-pr-review</code>: pending reviews plus a human approval gate, MIT</li>
+<li><a href="https://github.com/levnikolaevich/claude-code-skills" target="_blank">levnikolaevich/claude-code-skills</a> — a third-party marketplace including a Review Suite (per the repo page, 2026-09, about 557 stars, MIT; check the README for which suite to install)</li>
+<li><a href="https://github.com/The-PR-Agent/pr-agent" target="_blank">The-PR-Agent/pr-agent</a> — open-source PR reviewer across several git providers and models</li>
+<li><a href="https://www.agensi.io/skills" target="_blank">Agensi · skills directory</a> — where <code>code-reviewer</code> lives; that page read 1,236 installs as of 2026-08 (the site was unreachable from our network while writing this issue, so the number is not re-verified)</li>
+<li><a href="superpowers-skill2.en.html">This site, Skill 02 · Superpowers, Taken Apart</a> — where review sits inside that pipeline</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Skill 03 · 2026-09-05</footer>
+</div>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
+</body></html>
