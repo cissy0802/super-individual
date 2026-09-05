@@ -64,8 +64,8 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <div class="container">
 <header>
 <span class="week-tag">SKILL 03 / CODING · DEEP DIVE</span>
-<h1>代码审查类 Skills</h1>
-<h2>十个能装的审查件 — 假阳性怎么治 · 和 CI 门禁怎么分工</h2>
+<h1 data-tts="6812b33e50231c29">代码审查类 Skills</h1>
+<h2 data-tts="b923cd1167d334e3">十个能装的审查件 — 假阳性怎么治 · 和 CI 门禁怎么分工</h2>
 <div class="date">2026-09-05 · BigCat</div>
 <p class="pitch">审查是 skill 最好使的一类活：每天都做，而且对错能验证。难的从来不是让它挑毛病，是让它别把二十条无关痛痒的意见糊你一脸。</p>
 </header>
@@ -73,13 +73,13 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <a href="coding-skills-roundup-skill1.html">前置 → Skill 01 编码类 Skills 榜单（code-reviewer 在表里）</a>
 </div>
 <div class="intro">
-<h3>// WHY THIS MATTERS</h3>
+<h3 data-tts="757a849bd053dbc8">// WHY THIS MATTERS</h3>
 <p>你已经在用 agent 写代码了。那么下一个问题不是「它写得好不好」，是<strong>谁来看它写了什么</strong>。这一类工具替你干掉的是同一件事：<strong>把「push 之前自己再读一遍 diff」这个人人都跳过的动作，变成一条命令。</strong>本期点名十个真实可装可读的条目，逐个给装法和「什么时候别装」；判据放后半程——因为工具会换，「这条意见到底算不算数」的判据不会。</p>
 </div>
 <!-- ============ 1 ============ -->
 <div class="section">
 <span class="num">// 01</span>
-<h2>它替你干掉什么：十个能装的，先给表</h2>
+<h2 data-tts="947c11c1872f7a45">它替你干掉什么：十个能装的，先给表</h2>
 <div class="claim">论断：这十个不是十个竞品，是四层——本地看 diff、CI 上做第一遍、专管安全、以及「你收到意见之后怎么办」。同层里挑一个，跨层可以叠。</div>
 <div class="diagram">条目（真名以仓库 / 官方文档为准）              替你干掉的那件事            什么时候别装
 ─────────────────────────────────────────────────────────────────────────────────────
@@ -95,7 +95,7 @@ The-PR-Agent/pr-agent                         CI 里一遍自动审查都没有 
 claude-code-action（anthropics）              CI 里叫不动 agent            不需要在 CI 里跑 agent
 ─────────────────────────────────────────────────────────────────────────────────────
 star / 装机量见文末延伸阅读，各自标注了来源与月份</div>
-<h3>装法（都是原样能敲的）</h3>
+<h3 data-tts="f337d54886d8cde6">装法（都是原样能敲的）</h3>
 <pre><code><span class="tag-com"># 1) 本地：不用装，Claude Code 自带（/review 是它的别名）</span>
 /code-review                     <span class="tag-com"># 审本分支领先 upstream 的提交 + 工作区改动</span>
 /code-review high                <span class="tag-com"># 覆盖更广，代价是可能报不太确定的</span>
@@ -120,13 +120,13 @@ star / 装机量见文末延伸阅读，各自标注了来源与月份</div>
 <!-- ============ 2 ============ -->
 <div class="section">
 <span class="num">// 02</span>
-<h2>机制：为什么「审查」是 skill 的甜区</h2>
+<h2 data-tts="897ea5f4b100fa1a">机制：为什么「审查」是 skill 的甜区</h2>
 <div class="claim">论断：一件活值不值得写成 skill，看两个条件——<strong>够高频</strong>、<strong>有客观 oracle</strong>。代码审查两条全占，所以这一类的成品质量明显高于写作类、生活类。</div>
-<h3>条件一：高频，所以固定成本摊得薄</h3>
+<h3 data-tts="6f5fb2153cd4c455">条件一：高频，所以固定成本摊得薄</h3>
 <p>写一份审查清单要一小时，但它每个 PR 都跑一次。反过来，那种一年用两次的 skill，你写它的时间永远赚不回来——这就是为什么「审查」这一类能长出这么多能用的东西，而「年度总结」类长不出来。</p>
-<h3>条件二：有 oracle，所以意见能被证伪</h3>
+<h3 data-tts="e33e80d9a325dc1e">条件二：有 oracle，所以意见能被证伪</h3>
 <p>oracle 就是「能判定对错的那个东西」：测试、类型检查、跑一遍真实行为。有 oracle 的意见是事实，没有的是口味。官方 <code>webapp-testing</code>（<a href="https://github.com/anthropics/skills/tree/main/skills/webapp-testing" target="_blank">anthropics/skills</a>）干的就是给前端改动补 oracle：用 Playwright 起服务（<code>scripts/with_server.py</code>）、等 <code>networkidle</code>、找选择器、截图、把 console 日志读回来。它自己说得很直白——<strong>先跑 <code>--help</code>，别一上来读源码</strong>。你也可以直接把这个文件夹拷进 <code>~/.claude/skills/</code>。</p>
-<h3>为什么审查要跑在隔离的上下文里</h3>
+<h3 data-tts="14359d1840c3267e">为什么审查要跑在隔离的上下文里</h3>
 <p>三家的做法撞到了同一个答案。Claude Code 的 <code>/code-review</code> 默认<strong>作为后台 subagent 跑，自带上下文窗口</strong>；superpowers 的 <code>requesting-code-review</code> 取 <code>BASE_SHA</code> / <code>HEAD_SHA</code> 后另派一个 subagent、用仓库里的 <code>code-reviewer.md</code> 填参数，SKILL.md 明写理由是<strong>审查者绝不继承你这一场的会话历史</strong>；托管版 Code Review 则是<strong>多个 agent 按不同问题类别并行看</strong>，然后加一步<strong>验证</strong>——拿候选去对真实代码行为，过滤掉假阳性，再去重、按严重度排、贴到具体行上（据官方文档，2026-09）。</p>
 <div class="diagram">审查者继承你的会话历史            审查者只拿到构造好的上下文
 ──────────────────────────────────────────────────────────────
@@ -139,31 +139,31 @@ diff 和推理占满主上下文    →      回来的只有一张结论清单</
 <!-- ============ 3 ============ -->
 <div class="section">
 <span class="num">// 03</span>
-<h2>真实用法与边界：假阳性治理的三个旋钮</h2>
+<h2 data-tts="47df90fd0d07afd4">真实用法与边界：假阳性治理的三个旋钮</h2>
 <div class="claim">论断：审查 skill 翻车九成不是因为「没找到 bug」，是因为<strong>找到了二十条都不重要的</strong>。人对噪声的容忍额度很低，一次被糊脸之后，下一次的真问题也会被整体忽略。</div>
-<h3>旋钮一：调 effort，换假阳性率</h3>
+<h3 data-tts="239f9d62b68483c9">旋钮一：调 effort，换假阳性率</h3>
 <p><code>/code-review low</code> / <code>medium</code> 只报最有把握的，<code>high</code> 到 <code>max</code> 覆盖更广、也会带上没那么确定的（据官方文档，2026-09）。默认它<strong>沿用你上次敲的等级</strong>，所以哪天觉得它变吵了，先想想是不是你上回顺手敲了 <code>max</code>。</p>
-<h3>旋钮二：用 REVIEW.md 把口径写死</h3>
+<h3 data-tts="2329e1e093ae342d">旋钮二：用 REVIEW.md 把口径写死</h3>
 <p>托管版读仓库根目录的 <code>REVIEW.md</code>（<code>CLAUDE.md</code> 也读，但违规只按 nit 记）。四条最值钱的写法：<strong>重定义什么算 🔴 Important</strong>（默认口径是奔着生产代码去的，文档仓、原型仓该收窄）；<strong>给 nit 封顶</strong>（「最多报五条，其余在总结里给个数」）；<strong>skip 规则</strong>（生成代码、lockfile、CI 已经在管的 lint 和拼写）；<strong>抬验证门槛</strong>（「行为断言必须给出 <code>file:line</code>，不许从命名推断」）。还有一条治往返的：<strong>再审收敛</strong>——「第一轮之后只报 Important」，免得一行改动因为风格问题走到第七轮。</p>
 <div class="fail"><strong>注意别记错</strong>：本地的 <code>/code-review</code> 跟着 <code>CLAUDE.md</code> 走，但<strong>不读 <code>REVIEW.md</code></strong>。以为写了就全局生效，是个常见的坑。</div>
-<h3>旋钮三：治你自己这一侧</h3>
+<h3 data-tts="65f58724bd6a446a">旋钮三：治你自己这一侧</h3>
 <p>最被低估的一个 skill 是 superpowers 的 <code>receiving-code-review</code>：它管的不是审查者，是<strong>收到意见的那个 agent</strong>。规矩是「先验证再实现，先问再假设」——实现之前先自查两件事：这条在<strong>本仓</strong>技术上成立吗？会不会弄坏现有功能？成立就改，不成立就用技术理由反驳、指向能跑的测试。它还明确<strong>禁止</strong>「你说得太对了！」这类表演式同意，要求直接说修法。这条规矩比任何审查器都重要：<strong>一个照单全收的下游，会把审查器的每一条假阳性都变成一次真实的代码劣化。</strong></p>
-<h3>和 CI 门禁怎么分工</h3>
+<h3 data-tts="5a8ff13f985b6c46">和 CI 门禁怎么分工</h3>
 <p>一条界线：<strong>有确定答案的交给 CI，需要判断的交给审查 agent。</strong>格式、lint、类型、依赖漏洞——这些 fail-closed 卡死，还不许审查 agent 再报一遍（写进 <code>REVIEW.md</code> 的 skip 规则）。而托管 Code Review 的 check run <strong>永远以 neutral 收尾，不阻塞合并</strong>；真要卡，官方给的做法是自己从 check run 输出里解析那行机器可读的严重度计数（形如 <code>{"normal":2,"nit":1,"pre_existing":0}</code>），在你自己的 CI 里判。</p>
 <div class="res"><strong>进阶资源</strong> · <a href="https://code.claude.com/docs/en/code-review" target="_blank">REVIEW.md 可调项与 check run 输出格式</a> · <a href="https://github.com/obra/superpowers/blob/main/skills/receiving-code-review/SKILL.md" target="_blank">superpowers · receiving-code-review</a></div>
 </div>
 <!-- ============ 4 ============ -->
 <div class="section">
 <span class="num">// 04</span>
-<h2>代价与替代品：不装它你还能怎么办</h2>
+<h2 data-tts="6c9ce02405d37853">代价与替代品：不装它你还能怎么办</h2>
 <div class="claim">论断：这一类最真实的代价不是 token，是<strong>「装了审查器」带来的安全错觉</strong>——以及托管方案那张按次结算的账单。</div>
-<h3>三笔账</h3>
+<h3 data-tts="9e90742cb5fcb5d3">三笔账</h3>
 <ul>
 <li><strong>钱</strong>：Anthropic 托管的 Code Review 按 token 计费，官方给的口径是<strong>每次平均 15–25 美元</strong>，随 PR 大小和复杂度浮动，平均 20 分钟跑完（据官方文档，2026-09）。触发策略直接乘上去：「每次 push 都审」就是把这个数乘以你的 push 次数。它是 research preview，且只对 Team / Enterprise 开放。</li>
 <li><strong>噪声</strong>：见上一节。没配 <code>REVIEW.md</code> 的默认口径 + <code>max</code> 等级，是最容易把团队劝退的组合。</li>
 <li><strong>错觉</strong>：审查器不阻塞合并、也不承诺完备。它是多加的一层，不是替掉人审的那一层。</li>
 </ul>
-<h3>四条替代路线，从轻到重</h3>
+<h3 data-tts="3464486328efb05a">四条替代路线，从轻到重</h3>
 <ol>
 <li><strong>只用本地 <code>/code-review</code></strong>：已经在你机器上了，零安装零账单。<strong>替你干掉</strong>「push 完才发现」；<strong>什么时候不够</strong>：只有你自己会跑，同事的 PR 它管不着。</li>
 <li><strong>CI 里挂开源的 <a href="https://github.com/The-PR-Agent/pr-agent" target="_blank">The-PR-Agent/pr-agent</a></strong>（MIT；据 GitHub 仓库页 2026-09，约 12.9k star；原属 Qodo，现已捐给社区、迁到 PR-Agent org）：<code>/review</code> <code>/describe</code> <code>/improve</code> <code>/ask</code> 四条命令，GitHub Action 或 <code>pip install pr-agent</code> 本地跑，模型可换。<strong>什么时候不够</strong>：它看的是 PR 本身，不是你整个代码库。</li>
@@ -175,14 +175,14 @@ diff 和推理占满主上下文    →      回来的只有一张结论清单</
 </div>
 <!-- ============ 5 ============ -->
 <div class="combo">
-<h3>// 一页选购卡</h3>
+<h3 data-tts="24eb5a0b1f720b0a">// 一页选购卡</h3>
 <p><strong>先装这三个</strong>：① <code>/code-review</code>——已经在你机器上了，今天就敲一次；② <code>anthropics/claude-code-security-review</code>——CI 里五行 yaml，是这批里投入产出比最高的；③ <code>superpowers/skills/receiving-code-review/</code>——把这个文件夹拷进 <code>~/.claude/skills/</code>，它治的是你和你的 agent 照单全收的毛病。</p>
 <p><strong>再加一个（挑一个，别都装）</strong>：在 GitHub 上审 PR 就用 <code>aidankinzett/claude-git-pr-skill</code> 的 <code>github-pr-review</code>（MIT；据仓库页 2026-09 约 50 star），它逼你在发出去之前先过目整份 review；要 CI 全自动就用 <code>The-PR-Agent/pr-agent</code>；预算够且是 Team/Enterprise，就直接开 Anthropic 托管的 Code Review。</p>
 <p><strong>什么时候别装</strong>：一个人的玩具仓库 · 已经有严格的人审 + 严格 CI · 你的改动主要是文案和配置。</p>
 <p><strong>装完两周复查</strong>：它报的意见你真的动手改了几条？低于三成就去写 <code>REVIEW.md</code>——不是换工具。</p>
 </div>
 <div class="glossary">
-<h3>// 术语表</h3>
+<h3 data-tts="0728edf35f6edd81">// 术语表</h3>
 <dl>
 <dt>oracle（判定器）</dt>
 <dd>能判定「对不对」的那个东西：一个测试、一次类型检查、一遍真实运行。有 oracle 的审查意见是事实，没有的只是口味——这决定了一类活值不值得写成 skill。</dd>
@@ -199,7 +199,7 @@ diff 和推理占满主上下文    →      回来的只有一张结论清单</
 </dl>
 </div>
 <div class="refs">
-<h3>// 延伸阅读</h3>
+<h3 data-tts="a0c09caa9e35919b">// 延伸阅读</h3>
 <ul>
 <li><a href="https://code.claude.com/docs/en/code-review" target="_blank">Claude Code · Code Review</a> — 本期大半事实的一手来源：多 agent + 验证轮、严重度分级、<code>REVIEW.md</code> 全部可调项、每次 15–25 美元的定价、check run 的机器可读输出</li>
 <li><a href="https://code.claude.com/docs/en/commands" target="_blank">Claude Code · 命令参考</a> — <code>/code-review</code>（<code>/review</code> 是别名）与 <code>/security-review</code> 的官方说明</li>
