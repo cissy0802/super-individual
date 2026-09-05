@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill 04 · Git 工作流三件套 — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head>
+<body>
+<div class="container">
+<header>
+<span class="week-tag">SKILL 04 / CODING · DEEP DIVE</span>
+<h1>Git 工作流三件套</h1>
+<h2>Commit / PR / Changelog — diff 只答得了「改了什么」</h2>
+<div class="date">2026-09-05 · BigCat</div>
+<p class="pitch">这是装机量最大的一类 skill，也是最容易被高估的一类：diff 里写着你改了什么，从来没写你为什么改。</p>
+</header>
+<div class="xref">
+<a href="code-review-skills-skill3.html">前置 → Skill 03 代码审查类 Skills（审查完，接下来就是提交这一段）</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>agent 帮你写完了代码、也审过了，接下来这一段谁都嫌烦：憋一句 commit message、写 PR 描述、发版前翻两百条提交凑 changelog。这一类工具替你干掉的就是这三件事。本期点名九个真实可装可读的条目，逐个给装法与「什么时候别装」；<strong>判据放后半程</strong>——因为这一类最要紧的判断只有一条：<strong>哪些活该交给 skill，哪些活其实该钉进一条 git 钩子里</strong>。</p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>它替你干掉什么：九个能装的，先给表</h2>
+<div class="claim">论断：这九个分三段——提交前（写 message）、提交后（PR 那一摊）、发版时（changelog）。同段里挑一个，跨段可以叠。</div>
+<div class="diagram">条目（真名以仓库目录为准）                     替你干掉的那件事              什么时候别装
+──────────────────────────────────────────────────────────────────────────────────
+git-commit-helper（davila7）                 盯着 diff 憋 message          团队本来就没有提交规范
+git-pushing（davila7）                       add / commit / push 三步手工   你需要挑着 stage
+gh-address-comments（davila7）               PR 页和编辑器之间来回切        意见就一两条
+gh-fix-ci（davila7）                         点进 Actions 一层层翻日志      CI 红的原因你一眼看得出
+github-pr-review（aidankinzett）             review 没过目就发到 PR 上      你不在 GitHub 上审
+finishing-a-development-branch（superpowers） 「写完了然后呢」的决策空转     只有一条主干、直接推
+using-git-worktrees（superpowers）           为并行任务反复 stash 切分支    你从不并行
+changelog-generator（Composio / davila7）     发版前翻两百条提交            已经在跑 release-please
+内置 create a pr / --from-pr（官方）           手写 PR 描述、找不回当时那场   —
+──────────────────────────────────────────────────────────────────────────────────
+本期不报 star 数：GitHub 页面抓取到的数字这次几处明显失真，宁可不写</div>
+<h3>装法（都是原样能敲的）</h3>
+<pre><code><span class="tag-com"># 1) 官方内置，零安装（据 Claude Code · Common workflows，2026-09）</span>
+create a pr                      <span class="tag-com"># 文档里给的原话，直接说这一句</span>
+claude --from-pr 1234            <span class="tag-com"># 回到当初开这个 PR 的那一场会话</span>
+claude --worktree feature-auth   <span class="tag-com"># 另开一场并行，互不踩</span>
+
+<span class="tag-com"># 2) superpowers（含 finishing-a-development-branch / using-git-worktrees）</span>
+/plugin install superpowers@claude-plugins-official
+
+<span class="tag-com"># 3) aidankinzett 那个 PR 审查件</span>
+/plugin marketplace add aidankinzett/claude-git-pr-skill
+
+<span class="tag-com"># 4) davila7 的 CLI，交互式挑组件（agent / command / hook / mcp / skill）</span>
+npx claude-code-templates@latest
+<span class="tag-com"># 最土也最通用的办法：把 SKILL.md 所在的文件夹整个拷进 ~/.claude/skills/</span>
+</code></pre>
+<p><strong>第一条立刻能跑的用法</strong>，一个字节都不用装——官方文档里就有这条管道：</p>
+<pre><code>git log --oneline -20 | claude -p <span class="tag-key">"summarize these recent commits"</span></code></pre>
+<p>把后半句换成「按 feature / fix / breaking 分组，写成给用户看的发版说明」，你就已经有了一个 changelog 生成器。<strong>先跑这一条，再决定要不要装那个 skill。</strong></p>
+<div class="fail"><strong>失败模式</strong>：九个一起装。它们的 description 会互相抢触发——你说一句「push this」，可能跳出来的是 <code>git-pushing</code>，而你本来只想看看 diff。<strong>一段一个</strong>。</div>
+<div class="res"><strong>进阶资源</strong> · <a href="https://code.claude.com/docs/en/common-workflows" target="_blank">Claude Code · Common workflows（create a pr / --from-pr / 管道用法）</a> · <a href="https://github.com/davila7/claude-code-templates/tree/main/cli-tool/components/skills/development" target="_blank">davila7 的 development skills 目录</a></div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>机制：diff 是唯一输入，这决定了它的天花板</h2>
+<div class="claim">论断：这一类 skill 全都只吃一样东西——<code>git diff --staged</code>。diff 是一份完备的「what」，同时是一份<strong>彻底空白的「why」</strong>。这条不对称解释了它所有的好用和所有的翻车。</div>
+<h3>diff 能做对的部分</h3>
+<p><code>git-commit-helper</code>（<a href="https://github.com/davila7/claude-code-templates/blob/main/cli-tool/components/skills/development/git-commit-helper/SKILL.md" target="_blank">SKILL.md</a>）的做法很典型：读 <code>git diff --staged</code> 与 <code>git status</code>，产出 <code>&lt;type&gt;(&lt;scope&gt;): &lt;description&gt;</code>，type 限定在 feat / fix / docs / style / refactor / test / chore，摘要 50 字符内、祈使句、句尾不加标点，并提示用 <code>git add -p</code> 把混在一起的改动拆开。<strong>这几件事 diff 里全有答案</strong>：类型看改了什么文件，scope 看目录，该不该拆看改动有几簇。所以这一段它做得比人稳——人会偷懒写「update」。</p>
+<h3>diff 里没有的那一半</h3>
+<p>同一份 SKILL.md 又要求「body 解释 reasoning，不只是动作」。而 reasoning 不在 diff 里。模型只能从代码反推动机，反推出来的通常是把 what 换个说法再讲一遍——这就是这类 skill 唯一真实的失败模式。</p>
+<div class="fail"><strong>可操作的推论</strong>：commit 类 skill 的正确时机是<strong>刚做完的那一刻</strong>，在还留着那场对话的会话里让它写。why 此刻在上下文里；隔天再补，它就只剩 diff 了。「攒一周再统一补提交信息」是这类工具最没用的用法。</div>
+<h3>链条越往下游，信息丢得越多</h3>
+<p>changelog 类的输入不是 diff，是 <strong>commit message</strong>。<code>changelog-generator</code>（<a href="https://github.com/ComposioHQ/awesome-claude-skills/blob/master/changelog-generator/SKILL.md" target="_blank">Composio</a> 与 davila7 都收了同一份）做六件事：按时间段或 tag 区间扫历史、分类、把开发者用词改写成用户用词、排版、<strong>过滤掉重构和测试这类内部提交</strong>、再套品牌口径。它的上限被你的提交质量死死卡住。</p>
+<div class="diagram">diff  ──→  commit message  ──→  changelog
+ ↑             ↑                    ↑
+what 完备     why 靠人补         只剩 message 里剩下的
+每往右一步都在丢信息，且丢掉的补不回来</div>
+<p>这就是 <strong>Conventional Commits 真正值钱的地方</strong>：<code>feat:</code> / <code>fix:</code> / <code>BREAKING CHANGE</code> 不是格式洁癖，是你在提交那一刻留给下游机器的结构化元数据。留了，changelog 和版本号就能算出来；没留，下游只能靠模型猜。</p>
+<div class="res"><strong>进阶资源</strong> · <a href="https://www.conventionalcommits.org/" target="_blank">Conventional Commits 规范</a> · <a href="https://github.com/davila7/claude-code-templates/blob/main/cli-tool/components/skills/development/changelog-generator/SKILL.md" target="_blank">changelog-generator · SKILL.md</a></div>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>真实用法与边界：约定用样例编码，危险动作用脚本钉死</h2>
+<div class="claim">论断：这一类 skill 好不好用，只看两件事——<strong>你们团队的口径有没有编进去</strong>，以及<strong>不可逆的那一步有没有交回给人</strong>。</div>
+<h3>把团队约定编进去：贴样例，别写条款</h3>
+<p>默认的 conventional commits 谁都能背，但你们仓库真正的口径是背不出来的：scope 该写包名还是模块名、多大的改动才算 feat、要不要挂 issue 号。<strong>最省事的做法是打开你们最近二十条大家都认可的提交，挑三到五条整段贴进 SKILL.md 当样例</strong>——三对真实的「diff 长这样 → message 这么写」比十条规则管用得多（这条配方 Skill 18 会单独拆）。放哪：团队共享就放进仓库的 <code>.claude/skills/</code> 跟着代码走，个人偏好放 <code>~/.claude/skills/</code>。</p>
+<h3>PR 那一摊：好 skill 都明写自己不管什么</h3>
+<ul>
+<li><code>github-pr-review</code>（<a href="https://github.com/aidankinzett/claude-git-pr-skill" target="_blank">aidankinzett/claude-git-pr-skill</a>，MIT）：用 <code>gh</code> 的 <strong>pending review</strong> 把多条评论攒成草稿，最后由你一次提交——闸门在人手上。</li>
+<li><code>gh-address-comments</code>（<a href="https://github.com/davila7/claude-code-templates/blob/main/cli-tool/components/skills/development/gh-address-comments/SKILL.md" target="_blank">SKILL.md</a>）：先查 <code>gh auth status</code>，再拉回 PR 上所有评论与 review 线程，<strong>编号列给你挑</strong>，你选哪几条它改哪几条。</li>
+<li><code>gh-fix-ci</code>（<a href="https://github.com/davila7/claude-code-templates/blob/main/cli-tool/components/skills/development/gh-fix-ci/SKILL.md" target="_blank">SKILL.md</a>）：<code>gh pr checks</code> → <code>gh run view --log</code> 把失败日志捞出来，先出修复计划、<strong>等你批准再动手</strong>；而且它的 description 里就写明——外部 check（比如 Buildkite）只报链接、<strong>标为 out of scope</strong>。这种「明写自己不管什么」是好 skill 的标志，比多管一摊值钱。</li>
+</ul>
+<h3>不可逆的一步，交回给人</h3>
+<p>superpowers 的 <code>finishing-a-development-branch</code>（<a href="https://github.com/obra/superpowers/blob/main/skills/finishing-a-development-branch/SKILL.md" target="_blank">SKILL.md</a>）是这一类里最该抄的一个。它先跑全量测试，<strong>测试没过就停，连菜单都不给你看</strong>；然后判断是普通仓库还是 worktree、确认基线分支（拿不准就问「这条分支是从 X 分出来的吧？」），最后给出恰好三条的菜单：本地合回去 / 推上去开 PR / 就这么放着我自己来——然后<strong>等人选</strong>。SKILL.md 把理由写死了：<strong>集成决策属于人</strong>。删除更狠，要你手打「discard」这个词才执行。</p>
+<p>另一条路是把动作钉进脚本。<code>git-pushing</code>（<a href="https://github.com/davila7/claude-code-templates/blob/main/cli-tool/components/skills/development/git-pushing/SKILL.md" target="_blank">SKILL.md</a>）要求一律走它自带的 <code>scripts/smart_commit.sh</code>，原话是「ALWAYS use the script — do NOT use manual git commands」。<strong>确定性的步骤写进脚本，模型只负责填那句 message</strong>，这是所有涉及 push 的 skill 都该照抄的结构。</p>
+<div class="fail"><strong>失败模式</strong>：让 agent 一路 <code>commit → push → 开 PR</code> 不停顿。push 是不可逆面，一旦推到共享分支，回滚的成本就不是你一个人的了。</div>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>代价与替代品：什么时候一条 hook 比 skill 更合适</h2>
+<div class="claim">论断：<strong>有确定答案的交给钩子，需要判断的才交给 skill。</strong>git 工作流里能被确定性工具接管的比例，比这一类 skill 的宣传口径高得多。</div>
+<h3>为什么钩子更可靠：skill 是建议，钩子是拒绝</h3>
+<p>skill 注入的是指令，模型可以不听、可以没被触发、可以这次听下次不听。钩子是代码，它在事件上无条件执行。Claude Code 的 hooks 文档把这层关系说得很清楚：<strong>「钩子可以拒绝这次调用，但它保持沉默并不等于批准。」</strong>—— <code>PreToolUse</code> 上挂一条模式匹配拦住 <code>git push --force</code>，比在 SKILL.md 里写十遍「不要强推」牢靠得多。</p>
+<h3>三件事，该让确定性工具做</h3>
+<ol>
+<li><strong>格式合规</strong> → <a href="https://github.com/conventional-changelog/commitlint" target="_blank">commitlint</a>（MIT）。<code>npm install --save-dev @commitlint/cli</code>，再按官方 local-setup 指南挂进 husky 的 <code>commit-msg</code> 钩子。<strong>替你干掉</strong>：靠 review 抓格式。<strong>什么时候别装</strong>：团队还没定下规范，先定规范再上工具。</li>
+<li><strong>changelog 与版本号</strong> → <a href="https://github.com/orhun/git-cliff" target="_blank">git-cliff</a>（Apache-2.0 / MIT 双授权，<code>cargo install git-cliff</code>，也有 npm / PyPI / Docker 分发）或 <a href="https://github.com/googleapis/release-please" target="_blank">release-please</a>（Apache-2.0，官方推荐用 <a href="https://github.com/googleapis/release-please-action" target="_blank">release-please-action</a>）。后者维护一个<strong>随提交持续更新的 release PR</strong>，你合并它就自动打 tag、发 release。<strong>什么时候别装</strong>：你的提交历史根本不守 conventional commits——这两个都从提交里解析，垃圾进垃圾出。</li>
+<li><strong>提交前的固定检查</strong> → 一条 pre-commit 钩子。davila7 的 CLI 直接给了现成的：<code>npx claude-code-templates@latest --hook git/pre-commit-validation --yes</code>。</li>
+</ol>
+<h3>那 skill 还剩什么</h3>
+<p>剩下的恰好是钩子做不了的：commit body 里那句 <strong>why</strong>、把一坨混着的改动<strong>拆成几个提交</strong>、PR 描述里「reviewer 该测哪几条路径」。这三件都需要判断，也都没有客观判定器。<strong>这才是这一类 skill 真正的地盘，其余的都该往下沉。</strong></p>
+<h3>三笔账</h3>
+<ul>
+<li><strong>触发冲突</strong>：<code>git-pushing</code> 的 description 明写了它响应「push changes」「commit and push」「push this」这类说法。装得多，这些短语就成了抢答现场。</li>
+<li><strong>双写打架</strong>：既让 skill 写 CHANGELOG，又让 release-please 维护 release PR，两边会互相覆盖。<strong>一个仓库只留一条 changelog 生产线。</strong></li>
+<li><strong>信任错位</strong>：skill 写的 message 你不看就提交，等于把仓库历史的质量交给了一个看不见 why 的读者。</li>
+</ul>
+<div class="res"><strong>进阶资源</strong> · <a href="https://code.claude.com/docs/en/hooks" target="_blank">Claude Code · Hooks（事件列表与「沉默不等于批准」）</a> · <a href="https://github.com/googleapis/release-please" target="_blank">release-please</a></div>
+</div>
+<!-- ============ 5 ============ -->
+<div class="combo">
+<h3>// 一页选购卡</h3>
+<p><strong>先装这三个</strong>：① 什么都别装，先敲 <code>git log --oneline -20 | claude -p "按 feature/fix/breaking 分组写发版说明"</code>——官方管道，今天就能试；② <code>commitlint</code> + husky 的 <code>commit-msg</code> 钩子，把格式这件有确定答案的事钉死，它是钩子不是 skill，正因如此才可靠；③ superpowers 的 <code>finishing-a-development-branch</code>（<code>/plugin install superpowers@claude-plugins-official</code>），它治的是「写完了然后呢」的空转，而且不可逆的那一步会交回给你。</p>
+<p><strong>再加一个（挑一个，别都装）</strong>：想要固定口径的提交信息 → <code>git-commit-helper</code>，装完立刻贴三条你们自己的样例进去；在 GitHub 上审 PR → <code>github-pr-review</code>；CI 老红 → <code>gh-fix-ci</code>；要正式发版 changelog → 用 <code>release-please</code> 或 <code>git-cliff</code>，<strong>而不是任何 skill</strong>。</p>
+<p><strong>什么时候别装</strong>：单人仓库直接 <code>git commit -m</code> · 已经在跑 release-please / changesets · 你的团队根本不读提交信息（那先解决这个）。</p>
+<p><strong>装完两周复查</strong>：它写的 commit message 你原样采用了几成？低于五成，去补样例，不是换工具。</p>
+</div>
+<div class="glossary">
+<h3>// 术语表</h3>
+<dl>
+<dt>Conventional Commits（约定式提交）</dt>
+<dd><code>&lt;type&gt;(&lt;scope&gt;): &lt;description&gt;</code> 的提交格式规范。它的意义不是整齐，是给下游机器留结构化元数据——版本号和 changelog 都靠它算。</dd>
+<dt>commit-msg 钩子</dt>
+<dd>git 在写完提交信息、正式落库之前触发的本地钩子。校验不通过就拒绝这次提交，是格式规范唯一真正管用的落点。</dd>
+<dt>release PR（发版 PR）</dt>
+<dd>release-please 的核心机制：它长期维护一个 PR，随新提交不断更新版本号与 CHANGELOG；你合并它，就等于发版。</dd>
+<dt>worktree（工作树）</dt>
+<dd>同一个仓库的另一份独立签出，各自在自己的分支上。用它并行开几场会话，改动互不覆盖，不用反复 stash。</dd>
+<dt>pending review（暂存评审）</dt>
+<dd>GitHub 的机制：多条评论先攒成草稿，最后一次性提交。<code>github-pr-review</code> 用它做「发出去之前先给人过目」的闸门。</dd>
+<dt>what 与 why</dt>
+<dd>diff 完整回答「改了什么」，完全不含「为什么改」。这一类 skill 所有的可靠与不可靠，都从这条不对称推出来。</dd>
+</dl>
+</div>
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://code.claude.com/docs/en/common-workflows" target="_blank">Claude Code · Common workflows</a> — 本期官方部分的一手来源：<code>create a pr</code>、<code>claude --from-pr</code>、<code>claude --worktree</code>，以及 <code>git log | claude -p</code> 那条管道</li>
+<li><a href="https://code.claude.com/docs/en/hooks" target="_blank">Claude Code · Hooks</a> — 完整事件列表，以及「钩子可以拒绝，沉默不等于批准」的原文</li>
+<li><a href="https://github.com/davila7/claude-code-templates/tree/main/cli-tool/components/skills/development" target="_blank">davila7/claude-code-templates · development skills</a> — <code>git-commit-helper</code> / <code>git-pushing</code> / <code>gh-address-comments</code> / <code>gh-fix-ci</code> / <code>changelog-generator</code> 都在这个目录下（MIT）</li>
+<li><a href="https://github.com/obra/superpowers/blob/main/skills/finishing-a-development-branch/SKILL.md" target="_blank">superpowers · finishing-a-development-branch</a> — 三选一菜单与「集成决策属于人」；同仓的 <a href="https://github.com/obra/superpowers/tree/main/skills/using-git-worktrees" target="_blank">using-git-worktrees</a> 管并行</li>
+<li><a href="https://github.com/aidankinzett/claude-git-pr-skill" target="_blank">aidankinzett/claude-git-pr-skill</a> — <code>github-pr-review</code>：pending review + 人工闸门，MIT</li>
+<li><a href="https://github.com/ComposioHQ/awesome-claude-skills/blob/master/changelog-generator/SKILL.md" target="_blank">ComposioHQ · changelog-generator</a> — 六步流程与「过滤内部提交」那一条</li>
+<li><a href="https://github.com/conventional-changelog/commitlint" target="_blank">conventional-changelog/commitlint</a> — 提交信息校验器，挂 <code>commit-msg</code> 钩子（MIT）</li>
+<li><a href="https://github.com/orhun/git-cliff" target="_blank">orhun/git-cliff</a> — 高度可定制的 changelog 生成器，按 Conventional Commits 解析（Apache-2.0 / MIT）</li>
+<li><a href="https://github.com/googleapis/release-please" target="_blank">googleapis/release-please</a> — 自动化 CHANGELOG、版本号与 GitHub release（Apache-2.0）</li>
+<li><a href="https://www.conventionalcommits.org/" target="_blank">Conventional Commits</a> — 规范本体</li>
+<li>关于常被引用的 <code>pr-description-writer</code>：它出现在 Agensi 的目录里，但该站本期从本机网络取不到，也没找到对应的公开仓库目录可以核名，<strong>因此本期不点它的名</strong>——PR 描述这一段用上面能核实的条目代替</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Skill 04 · 2026-09-05</footer>
+</div>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
+</body></html>

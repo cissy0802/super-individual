@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill 04 · Git Workflow Skills — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head>
+<body>
+<div class="container">
+<header>
+<span class="week-tag">SKILL 04 / CODING · DEEP DIVE</span>
+<h1>Git Workflow Skills</h1>
+<h2>Commit / PR / changelog — the diff only answers "what changed"</h2>
+<div class="date">2026-09-05 · BigCat</div>
+<p class="pitch">This is the most-installed category of skill, and the most overrated one. The diff records what you changed. It has never recorded why.</p>
+</header>
+<div class="xref">
+<a href="code-review-skills-skill3.en.html">Prerequisite → Skill 03 Code Review Skills (review first, then the shipping half)</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>Your agent wrote the code and something reviewed it. What follows is the part nobody enjoys: squeezing out a commit message, writing the PR description, trawling two hundred commits at release time to assemble a changelog. That is exactly what this category kills. This issue names nine real, installable or readable items with installs and a "when not to install it" for each. <strong>The criteria come in the second half</strong>, because in this category the important judgment is a single one: <strong>which of these jobs belongs to a skill, and which one actually belongs nailed into a git hook.</strong></p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>What it kills for you: nine installables, table first</h2>
+<div class="claim">Claim: these nine split into three stages — before the commit (writing the message), after it (the PR pile), and at release time (the changelog). Pick one per stage; stacking across stages is fine.</div>
+<div class="diagram">Item (name per the repo directory)             Kills this chore              When not to install
+──────────────────────────────────────────────────────────────────────────────────────
+git-commit-helper (davila7)                  staring at a diff for words    no commit convention yet
+git-pushing (davila7)                        add / commit / push by hand    you stage selectively
+gh-address-comments (davila7)                tabbing between PR and editor  only one or two comments
+gh-fix-ci (davila7)                          digging through Actions logs   the red is obvious to you
+github-pr-review (aidankinzett)              a review posted unread         you don't review on GitHub
+finishing-a-development-branch (superpowers)  the "now what?" stall          single trunk, direct push
+using-git-worktrees (superpowers)            stash-and-switch churn         you never work in parallel
+changelog-generator (Composio / davila7)      reading 200 commits at release release-please already runs
+built-in create a pr / --from-pr (official)   hand-writing PR descriptions   —
+──────────────────────────────────────────────────────────────────────────────────────
+No star counts this issue: the numbers scraped off GitHub pages were visibly wrong in several cases</div>
+<h3>Installs (all copy-pasteable as written)</h3>
+<pre><code><span class="tag-com"># 1) Built in, nothing to install (per Claude Code · Common workflows, 2026-09)</span>
+create a pr                      <span class="tag-com"># the docs' own wording — just say this</span>
+claude --from-pr 1234            <span class="tag-com"># reopen the session that created that PR</span>
+claude --worktree feature-auth   <span class="tag-com"># a parallel session that won't collide</span>
+
+<span class="tag-com"># 2) superpowers (ships finishing-a-development-branch, using-git-worktrees)</span>
+/plugin install superpowers@claude-plugins-official
+
+<span class="tag-com"># 3) aidankinzett's PR review skill</span>
+/plugin marketplace add aidankinzett/claude-git-pr-skill
+
+<span class="tag-com"># 4) davila7's CLI, interactive component picker (agent / command / hook / mcp / skill)</span>
+npx claude-code-templates@latest
+<span class="tag-com"># The crudest and most portable route: copy the SKILL.md folder into ~/.claude/skills/</span>
+</code></pre>
+<p><strong>The first thing you can run right now</strong>, with nothing installed — this pipe is straight out of the official docs:</p>
+<pre><code>git log --oneline -20 | claude -p <span class="tag-key">"summarize these recent commits"</span></code></pre>
+<p>Swap the second half for "group by feature / fix / breaking and write user-facing release notes" and you already have a changelog generator. <strong>Run that first, then decide whether the skill is worth installing.</strong></p>
+<div class="fail"><strong>Failure mode</strong>: installing all nine. Their descriptions compete for the same triggers — say "push this" and <code>git-pushing</code> may fire when all you wanted was to look at the diff. <strong>One per stage.</strong></div>
+<div class="res"><strong>Going deeper</strong> · <a href="https://code.claude.com/docs/en/common-workflows" target="_blank">Claude Code · Common workflows (create a pr / --from-pr / the pipe)</a> · <a href="https://github.com/davila7/claude-code-templates/tree/main/cli-tool/components/skills/development" target="_blank">davila7's development skills directory</a></div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Mechanism: the diff is the only input, and that sets the ceiling</h2>
+<div class="claim">Claim: every skill in this category eats exactly one thing — <code>git diff --staged</code>. A diff is a complete record of the <em>what</em> and a <strong>blank page for the <em>why</em></strong>. That asymmetry explains everything these tools do well and everything they get wrong.</div>
+<h3>The half the diff can answer</h3>
+<p><code>git-commit-helper</code> (<a href="https://github.com/davila7/claude-code-templates/blob/main/cli-tool/components/skills/development/git-commit-helper/SKILL.md" target="_blank">SKILL.md</a>) is typical: it reads <code>git diff --staged</code> and <code>git status</code>, then emits <code>&lt;type&gt;(&lt;scope&gt;): &lt;description&gt;</code> with type restricted to feat / fix / docs / style / refactor / test / chore, a summary under 50 characters, imperative mood, no trailing period — and it nudges you toward <code>git add -p</code> when unrelated changes are staged together. <strong>The diff holds all of that</strong>: type from which files moved, scope from the directory, splittability from how many clusters the change forms. This half it does more consistently than a human, because a human writes "update".</p>
+<h3>The half that isn't in there</h3>
+<p>The same SKILL.md also asks the body to "explain reasoning, not merely actions". Reasoning is not in the diff. The model can only infer motive from code, and what it infers is usually the <em>what</em> restated. That is the one real failure mode of this category.</p>
+<div class="fail"><strong>Actionable corollary</strong>: the right moment for a commit skill is <strong>immediately after the work</strong>, in the session that still holds the conversation. The why is in context right then; a day later only the diff remains. "Batch up a week and write the messages later" is the least useful way to use these tools.</div>
+<h3>Every step downstream loses information</h3>
+<p>Changelog tools don't eat the diff — they eat the <strong>commit messages</strong>. <code>changelog-generator</code> (the same file appears in <a href="https://github.com/ComposioHQ/awesome-claude-skills/blob/master/changelog-generator/SKILL.md" target="_blank">Composio's collection</a> and in davila7's) does six things: scan history over a date range or tag span, categorize, translate developer wording into user wording, format, <strong>filter out internal commits such as refactors and test changes</strong>, and apply a brand voice. Its ceiling is pinned by the quality of your commits.</p>
+<div class="diagram">diff  ──→  commit message  ──→  changelog
+ ↑             ↑                    ↑
+what: complete  why: only if you    only what survived
+                wrote it down       in the message
+Each hop drops information, and what drops cannot be recovered</div>
+<p>This is where <strong>Conventional Commits actually earns its keep</strong>: <code>feat:</code> / <code>fix:</code> / <code>BREAKING CHANGE</code> are not tidiness, they are structured metadata you leave for downstream machines at the moment of commit. Leave it and the changelog and the version number can be computed. Skip it and everything downstream is guessing.</p>
+<div class="res"><strong>Going deeper</strong> · <a href="https://www.conventionalcommits.org/" target="_blank">The Conventional Commits spec</a> · <a href="https://github.com/davila7/claude-code-templates/blob/main/cli-tool/components/skills/development/changelog-generator/SKILL.md" target="_blank">changelog-generator · SKILL.md</a></div>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Real usage and limits: encode conventions as examples, nail risky steps into scripts</h2>
+<div class="claim">Claim: whether one of these is usable comes down to two things — <strong>is your team's actual convention encoded in it</strong>, and <strong>does the irreversible step get handed back to a human</strong>.</div>
+<h3>Encoding the convention: paste examples, don't write clauses</h3>
+<p>Everyone can recite plain Conventional Commits. What nobody can recite is your repo's real convention: whether scope is the package or the module, how big a change has to be before it counts as a feat, whether the issue number goes in the footer. <strong>The cheapest fix is to open the last twenty commits your team is happy with, pick three to five, and paste them whole into SKILL.md as examples</strong> — three real "diff looked like this → message reads like this" pairs beat ten rules (Skill 18 takes this recipe apart on its own). Where to put it: <code>.claude/skills/</code> in the repo when the team shares it, <code>~/.claude/skills/</code> when it is your own taste.</p>
+<h3>The PR pile: good skills say what they do <em>not</em> cover</h3>
+<ul>
+<li><code>github-pr-review</code> (<a href="https://github.com/aidankinzett/claude-git-pr-skill" target="_blank">aidankinzett/claude-git-pr-skill</a>, MIT): uses the <code>gh</code> <strong>pending review</strong> mechanism to batch comments into a draft that you submit yourself. The gate stays in human hands.</li>
+<li><code>gh-address-comments</code> (<a href="https://github.com/davila7/claude-code-templates/blob/main/cli-tool/components/skills/development/gh-address-comments/SKILL.md" target="_blank">SKILL.md</a>): checks <code>gh auth status</code> first, pulls every comment and review thread on the PR, then <strong>numbers them and asks you to choose</strong> which ones it should act on.</li>
+<li><code>gh-fix-ci</code> (<a href="https://github.com/davila7/claude-code-templates/blob/main/cli-tool/components/skills/development/gh-fix-ci/SKILL.md" target="_blank">SKILL.md</a>): <code>gh pr checks</code> → <code>gh run view --log</code> to retrieve the failing logs, then a fix plan that <strong>waits for your approval</strong> before any code changes. And its own description states that external checks (Buildkite, say) get their URL reported and are <strong>marked out of scope</strong>. Declaring what you don't cover is a mark of a good skill — worth more than covering one more thing badly.</li>
+</ul>
+<h3>Hand the irreversible step back</h3>
+<p>Superpowers' <code>finishing-a-development-branch</code> (<a href="https://github.com/obra/superpowers/blob/main/skills/finishing-a-development-branch/SKILL.md" target="_blank">SKILL.md</a>) is the one worth copying. It runs the full test suite first and <strong>halts on failure without even showing the menu</strong>; detects whether you are in a normal repo or a worktree; confirms the base branch, asking "this branch split from X — is that correct?" when unsure; and then offers exactly three options: merge back locally / push and open a PR / leave it as-is. Then it <strong>waits for a person</strong>. The SKILL.md states the reason outright: <strong>integration decisions belong to the human</strong>. Deletion is stricter still — you must type the word "discard".</p>
+<p>The other route is nailing the action into a script. <code>git-pushing</code> (<a href="https://github.com/davila7/claude-code-templates/blob/main/cli-tool/components/skills/development/git-pushing/SKILL.md" target="_blank">SKILL.md</a>) requires everything to go through its bundled <code>scripts/smart_commit.sh</code>, in its own words: "ALWAYS use the script — do NOT use manual git commands." <strong>Deterministic steps into the script, the model only fills in the message</strong> — that structure is worth copying into anything that pushes.</p>
+<div class="fail"><strong>Failure mode</strong>: letting an agent run <code>commit → push → open PR</code> without a stop. Push is the irreversible surface; once it lands on a shared branch, undoing it is no longer only your problem.</div>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Costs and alternatives: when a hook beats a skill</h2>
+<div class="claim">Claim: <strong>anything with a determinate answer goes to a hook; only judgment goes to a skill.</strong> The share of a git workflow that a deterministic tool can simply take over is much larger than this category's marketing suggests.</div>
+<h3>Why hooks are more reliable: a skill advises, a hook refuses</h3>
+<p>A skill injects instructions. The model can ignore them, can fail to trigger on them, can follow them today and not tomorrow. A hook is code that runs unconditionally on an event. The Claude Code hooks docs put the relationship plainly: <strong>"The hook can deny the call, but staying silent doesn't approve it."</strong> A <code>PreToolUse</code> matcher that blocks <code>git push --force</code> is far sturdier than writing "never force-push" ten times in a SKILL.md.</p>
+<h3>Three jobs that belong to deterministic tools</h3>
+<ol>
+<li><strong>Format compliance</strong> → <a href="https://github.com/conventional-changelog/commitlint" target="_blank">commitlint</a> (MIT). <code>npm install --save-dev @commitlint/cli</code>, then wire it into husky's <code>commit-msg</code> hook per the project's local-setup guide. <strong>Kills</strong>: catching format problems in review. <strong>When not to</strong>: your team hasn't agreed on a convention yet — agree first, tool second.</li>
+<li><strong>Changelog and version numbers</strong> → <a href="https://github.com/orhun/git-cliff" target="_blank">git-cliff</a> (dual Apache-2.0 / MIT, <code>cargo install git-cliff</code>, also distributed via npm / PyPI / Docker) or <a href="https://github.com/googleapis/release-please" target="_blank">release-please</a> (Apache-2.0; the README recommends the <a href="https://github.com/googleapis/release-please-action" target="_blank">release-please-action</a>). The latter keeps a <strong>release PR that stays current as commits land</strong>; merging it tags and publishes the release. <strong>When not to</strong>: your history doesn't follow Conventional Commits — both parse commits, so garbage in, garbage out.</li>
+<li><strong>Fixed pre-commit checks</strong> → one pre-commit hook. davila7's CLI ships one ready to go: <code>npx claude-code-templates@latest --hook git/pre-commit-validation --yes</code>.</li>
+</ol>
+<h3>So what's left for a skill</h3>
+<p>Exactly what a hook cannot do: the <strong>why</strong> line in the commit body, <strong>splitting</strong> a tangled change into separate commits, and the "which paths should a reviewer exercise" part of a PR description. All three need judgment and none has an objective oracle. <strong>That is this category's real territory; everything else should sink down a layer.</strong></p>
+<h3>Three bills</h3>
+<ul>
+<li><strong>Trigger collisions</strong>: <code>git-pushing</code>'s description explicitly lists "push changes", "commit and push", "push this". Install several of these and those phrases become a race.</li>
+<li><strong>Double writes</strong>: a skill writing CHANGELOG while release-please maintains a release PR means two producers overwriting each other. <strong>One changelog production line per repo.</strong></li>
+<li><strong>Misplaced trust</strong>: committing a generated message unread hands your repo history to a writer who cannot see the why.</li>
+</ul>
+<div class="res"><strong>Going deeper</strong> · <a href="https://code.claude.com/docs/en/hooks" target="_blank">Claude Code · Hooks (event list and "silence isn't approval")</a> · <a href="https://github.com/googleapis/release-please" target="_blank">release-please</a></div>
+</div>
+<!-- ============ 5 ============ -->
+<div class="combo">
+<h3>// ONE-PAGE BUYING CARD</h3>
+<p><strong>Install these three first</strong>: ① nothing at all — run <code>git log --oneline -20 | claude -p "group by feature/fix/breaking and write release notes"</code>, an official pipe you can try today; ② <code>commitlint</code> on husky's <code>commit-msg</code> hook, nailing down the one part that has a determinate answer — it is a hook, not a skill, and that is precisely why it holds; ③ superpowers' <code>finishing-a-development-branch</code> (<code>/plugin install superpowers@claude-plugins-official</code>), which cures the "now what?" stall and hands the irreversible step back to you.</p>
+<p><strong>Then add one (one, not all)</strong>: want consistent commit messages → <code>git-commit-helper</code>, and paste three of your own commits into it the moment you install; reviewing PRs on GitHub → <code>github-pr-review</code>; CI keeps going red → <code>gh-fix-ci</code>; shipping a real release changelog → <code>release-please</code> or <code>git-cliff</code>, <strong>not a skill</strong>.</p>
+<p><strong>When not to install any of this</strong>: a solo repo where <code>git commit -m</code> is fine · release-please or changesets already running · a team that doesn't read commit messages at all (fix that first).</p>
+<p><strong>Review after two weeks</strong>: what share of its commit messages did you ship verbatim? Under half means go add examples, not switch tools.</p>
+</div>
+<div class="glossary">
+<h3>// GLOSSARY</h3>
+<dl>
+<dt>Conventional Commits</dt>
+<dd>The <code>&lt;type&gt;(&lt;scope&gt;): &lt;description&gt;</code> commit format. The point is not neatness — it is structured metadata for downstream machines, which is how version numbers and changelogs get computed.</dd>
+<dt>commit-msg hook</dt>
+<dd>The local git hook that fires after the message is written and before the commit lands. It can reject the commit, which makes it the only place a format convention actually holds.</dd>
+<dt>release PR</dt>
+<dd>Release-please's core mechanism: a long-lived PR that keeps updating the version bump and CHANGELOG as commits land. Merging it is the release.</dd>
+<dt>worktree</dt>
+<dd>A second independent checkout of the same repository, each on its own branch. Run parallel sessions in them and the edits never collide — no stash churn.</dd>
+<dt>pending review</dt>
+<dd>GitHub's mechanism for batching comments into a draft submitted all at once. <code>github-pr-review</code> uses it as the "a person looks before it ships" gate.</dd>
+<dt>what vs why</dt>
+<dd>A diff fully answers what changed and contains nothing about why. Everything reliable and unreliable about this category follows from that asymmetry.</dd>
+</dl>
+</div>
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://code.claude.com/docs/en/common-workflows" target="_blank">Claude Code · Common workflows</a> — the primary source for the official half of this issue: <code>create a pr</code>, <code>claude --from-pr</code>, <code>claude --worktree</code>, and the <code>git log | claude -p</code> pipe</li>
+<li><a href="https://code.claude.com/docs/en/hooks" target="_blank">Claude Code · Hooks</a> — the full event list and the "the hook can deny the call, but staying silent doesn't approve it" line</li>
+<li><a href="https://github.com/davila7/claude-code-templates/tree/main/cli-tool/components/skills/development" target="_blank">davila7/claude-code-templates · development skills</a> — <code>git-commit-helper</code>, <code>git-pushing</code>, <code>gh-address-comments</code>, <code>gh-fix-ci</code> and <code>changelog-generator</code> all live under this directory (MIT)</li>
+<li><a href="https://github.com/obra/superpowers/blob/main/skills/finishing-a-development-branch/SKILL.md" target="_blank">superpowers · finishing-a-development-branch</a> — the three-option menu and "integration decisions belong to the human"; <a href="https://github.com/obra/superpowers/tree/main/skills/using-git-worktrees" target="_blank">using-git-worktrees</a> in the same repo covers parallel work</li>
+<li><a href="https://github.com/aidankinzett/claude-git-pr-skill" target="_blank">aidankinzett/claude-git-pr-skill</a> — <code>github-pr-review</code>: pending review plus a human gate, MIT</li>
+<li><a href="https://github.com/ComposioHQ/awesome-claude-skills/blob/master/changelog-generator/SKILL.md" target="_blank">ComposioHQ · changelog-generator</a> — the six-step flow and the "filter internal commits" rule</li>
+<li><a href="https://github.com/conventional-changelog/commitlint" target="_blank">conventional-changelog/commitlint</a> — commit message linter for the <code>commit-msg</code> hook (MIT)</li>
+<li><a href="https://github.com/orhun/git-cliff" target="_blank">orhun/git-cliff</a> — highly customizable changelog generator that parses Conventional Commits (Apache-2.0 / MIT)</li>
+<li><a href="https://github.com/googleapis/release-please" target="_blank">googleapis/release-please</a> — automates CHANGELOG, version bumps and GitHub releases (Apache-2.0)</li>
+<li><a href="https://www.conventionalcommits.org/" target="_blank">Conventional Commits</a> — the specification itself</li>
+<li>On the frequently cited <code>pr-description-writer</code>: it appears in Agensi's directory, but that site was unreachable from this machine's network for this issue and no public repository directory could be found to confirm the name, <strong>so this issue does not name it</strong> — the PR-description stage is covered by verifiable items above instead</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Skill 04 · 2026-09-05</footer>
+</div>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
+</body></html>
