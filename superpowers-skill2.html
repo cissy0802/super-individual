@@ -64,8 +64,8 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <div class="container">
 <header>
 <span class="week-tag">SKILL 02 / CODING · DEEP DIVE</span>
-<h1>Superpowers 拆解</h1>
-<h2>把方法论钉成强制流水线 — 十四个 skill · 装法 · 它什么时候是负担</h2>
+<h1 data-tts="aaf9ecb12a1aad4a">Superpowers 拆解</h1>
+<h2 data-tts="f11bdb404f9904df">把方法论钉成强制流水线 — 十四个 skill · 装法 · 它什么时候是负担</h2>
 <div class="date">2026-09-04 · BigCat</div>
 <p class="pitch">它最有意思的地方不是那七段流程，是它根本不靠「模型觉得相关才读」——开场就把规矩灌进每一次会话。这既是它管用的原因，也是它的账单。</p>
 </header>
@@ -73,15 +73,15 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <a href="coding-skills-roundup-skill1.html">前置 → Skill 01 编码类 Skills 榜单（superpowers 在表里排第一行）</a>
 </div>
 <div class="intro">
-<h3>// WHY THIS MATTERS</h3>
+<h3 data-tts="edd3fecea37b83bf">// WHY THIS MATTERS</h3>
 <p><strong>superpowers</strong>（作者 Jesse Vincent，MIT；据 GitHub 仓库页 2026-09，约 <strong>28.2 万 star / 2.5 万 fork</strong>；据仓库 <code>RELEASE-NOTES.md</code>，最新 v6.3.0 发布于 2026-08）不是一个 skill，是 <strong>14 个 skill 组成的一套开发方法论</strong>，外加一个把它塞进每次会话的钩子。它替你干掉的那件事是：<strong>agent 一上来就动手写代码。</strong>本期把这 14 个逐个点名、给出各自的目录链接和该不该用的判断，再拆开它凭什么能强制生效——以及这份强制在小任务上收多少费。</p>
 </div>
 <!-- ============ 1 ============ -->
 <div class="section">
 <span class="num">// 01</span>
-<h2>它替你干掉什么：一条命令，十四个 skill</h2>
+<h2 data-tts="744c33c0596a6a5b">它替你干掉什么：一条命令，十四个 skill</h2>
 <div class="claim">论断：它治的不是「模型代码写得不好」，是「模型跳过了想清楚、跳过了测试、跳过了自查就宣布做完了」。这四件事各有一个 skill 顶着。</div>
-<h3>装法（据仓库 README，2026-09）</h3>
+<h3 data-tts="6ad53529236e5bcf">装法（据仓库 README，2026-09）</h3>
 <pre><code><span class="tag-com"># Claude Code：走官方 plugin 源</span>
 /plugin install superpowers@claude-plugins-official
 
@@ -96,7 +96,7 @@ Kimi Code:     /plugins install https://github.com/obra/superpowers
 <span class="tag-com">#   「我想给这个项目加一个 X」</span>
 <span class="tag-com"># 它不会开写，会先回你一串问题——那就是 brainstorming 起作用了。</span>
 </code></pre>
-<h3>十四个 skill，各自替你干掉什么</h3>
+<h3 data-tts="12cd5df3a6b8542f">十四个 skill，各自替你干掉什么</h3>
 <div class="diagram">skill（仓库 skills/ 目录下同名文件夹）  替你干掉的那件事              什么时候别用它
 ──────────────────────────────────────────────────────────────────────────────
 brainstorming              「还没问清就开写」          需求本来就一句话说得清
@@ -122,13 +122,13 @@ using-superpowers          —— 上面全部的调度入口      （不可单�
 <!-- ============ 2 ============ -->
 <div class="section">
 <span class="num">// 02</span>
-<h2>机制：它凭什么能强制生效</h2>
+<h2 data-tts="92d2c27c7ae0d690">机制：它凭什么能强制生效</h2>
 <div class="claim">论断：普通 skill 靠 description 被模型「觉得相关」才触发；superpowers 不赌这个——它用一个 SessionStart 钩子，每次开场把总则原文塞进上下文。</div>
-<h3>第一层：钩子，不是渐进式披露</h3>
+<h3 data-tts="5e2a4af189afee2e">第一层：钩子，不是渐进式披露</h3>
 <p>仓库里 <code>hooks/hooks.json</code> 注册的是 <strong>SessionStart</strong> 钩子，匹配 <code>startup|clear|compact</code> 三个时机；<code>hooks/session-start</code> 这个脚本把 <code>skills/using-superpowers/SKILL.md</code> 的<strong>全文</strong>读出来，包在 <code>&lt;EXTREMELY_IMPORTANT&gt;</code> 标签里注入。所以「自动触发」在这里是字面意思：<strong>你没提需求它就已经在了</strong>，而且清空上下文、压缩上下文之后还会再来一遍。</p>
-<h3>第二层：一份「不许绕过」的调用契约</h3>
+<h3 data-tts="07bc45ccf17fe54d">第二层：一份「不许绕过」的调用契约</h3>
 <p>被注入的 <code>using-superpowers</code> 只有 63 行、约 3.1 KB（据仓库文件，2026-09），内容基本是一张<strong>反例表</strong>——把模型可能用来跳过流程的借口逐条列出来堵死：「这只是个简单问题」→ 问题也是任务；「我得先看看代码」→ skill 会告诉你怎么看；「这个 skill 太重了」→ 简单的事会变复杂。它还定了优先级：<strong>流程类 skill 先于实现类 skill</strong>，以及 <strong>CLAUDE.md / AGENTS.md 与你的直接指令高于 skill</strong>。</p>
-<h3>第三层：把审查做成隔离的子进程</h3>
+<h3 data-tts="4875caca84363f55">第三层：把审查做成隔离的子进程</h3>
 <p><code>requesting-code-review</code> 的做法值得单拎出来：它不让主 agent 自己读 diff，而是取 <code>BASE_SHA</code> / <code>HEAD_SHA</code>，派一个 <strong>general-purpose subagent</strong>，用仓库里的 <code>code-reviewer.md</code> 模板填参数。SKILL.md 里明说了理由——<strong>审查者拿到的是精心构造的上下文，绝不继承你这一场的会话历史</strong>：一是让它盯产出而不是盯你的思路，二是 diff 和评审过程留在子上下文里，回来的只有结论。<code>subagent-driven-development</code> 把这条放大成「每个任务一个全新实现者 + 每任务一次审查 + 收尾一次整分支审查」。</p>
 <div class="diagram">普通 skill                        superpowers
 ────────────────────────────────────────────────────────────────
@@ -142,11 +142,11 @@ using-superpowers          —— 上面全部的调度入口      （不可单�
 <!-- ============ 3 ============ -->
 <div class="section">
 <span class="num">// 03</span>
-<h2>真实用法与边界：哪几段真的值，哪几段可以放手</h2>
+<h2 data-tts="d39f4fc6d5efed10">真实用法与边界：哪几段真的值，哪几段可以放手</h2>
 <div class="claim">论断：这套流水线的收益<strong>全部集中在前两段和最后一段</strong>——想清楚、写计划、验收。中间的 TDD 与 subagent 分工，收益取决于你的项目有没有跑得起来的测试。</div>
-<h3>brainstorming 的三条路（v6.3.0 后的关键改动）</h3>
+<h3 data-tts="3880ce9b6531fa37">brainstorming 的三条路（v6.3.0 后的关键改动）</h3>
 <p>早期版本被吐槽最多的就是「问个小问题也要走两份文档的仪式」。据仓库 <code>RELEASE-NOTES.md</code>（v6.3.0，2026-08），现在它先把请求分成三类并<strong>把分类说出来让你否决</strong>：<strong>spike</strong>（可行性问题，产出是答案不是代码，几句话过一下就动手）、<strong>bounded</strong>（改仓库里已有的流程，设计直接在对话里讲几段）、<strong>architectural</strong>（新子系统，走完整问答+设计文档+<code>writing-plans</code>）。规则是<strong>拿不准就走重的那条，且只能中途升级不能降级</strong>。但那道<strong>批准闸门在三条路上一样硬</strong>——它不会未经你点头就开写。</p>
-<h3>几条硬到会咬人的规矩</h3>
+<h3 data-tts="1d1f15b6f905f7ee">几条硬到会咬人的规矩</h3>
 <ul>
 <li><strong><code>test-driven-development</code> 的铁律</strong>：没有失败的测试就不许写实现代码；<strong>先写了实现的，删掉重来</strong>——不许留作参考、不许照着改。例外只有原型、生成代码、配置文件，而且要问过你。</li>
 <li><strong><code>systematic-debugging</code> 四阶段</strong>：没做完根因调查不许提修复方案，多组件系统还要求先加日志确认每个边界进出的数据。它明说「越急越要用」。</li>
@@ -160,15 +160,15 @@ using-superpowers          —— 上面全部的调度入口      （不可单�
 <!-- ============ 4 ============ -->
 <div class="section">
 <span class="num">// 04</span>
-<h2>代价与替代品：不装它你还能怎么办</h2>
+<h2 data-tts="36ce987313b2238e">代价与替代品：不装它你还能怎么办</h2>
 <div class="claim">论断：它的代价不是 star 数骗人，是<strong>你放弃了「这次快点」这个选项</strong>。而它的替代品几乎都能从它自己的仓库里拆出来。</div>
-<h3>三笔账</h3>
+<h3 data-tts="e92f5d27bdd6a429">三笔账</h3>
 <ul>
 <li><strong>固定 context 税</strong>：每次会话开场、每次 <code>/clear</code>、每次自动压缩之后，约 3.1 KB 的总则重新入场。单看不多，但它是<strong>不可协商的常驻项</strong>，和「装了不触发就免费」的普通 skill 是两种成本模型。</li>
 <li><strong>时间税</strong>：一件十分钟的活，走完「问清楚 → 开 worktree → 写计划 → 先写测试 → 派审查子代理」是很容易变成一小时的。README 自己的定位就是「软件开发方法论」，不是加速器。</li>
 <li><strong>口径冲突</strong>：<code>using-superpowers</code> 明确让 CLAUDE.md / AGENTS.md 与你的直接指令压过 skill——所以真要按下暂停，正确做法是<strong>在仓库约定或当场指令里写明</strong>（例如「这次是 spike，跳过 TDD」），而不是指望它自己看出来这活很小。</li>
 </ul>
-<h3>四条替代路线，从轻到重</h3>
+<h3 data-tts="f7886249608808be">四条替代路线，从轻到重</h3>
 <ol>
 <li><strong>只用 harness 自带的计划模式</strong>：Claude Code 的 <code>/plan</code>（见官方 <a href="https://code.claude.com/docs/en/permission-modes" target="_blank">permission modes</a> 文档）在动盘之前先给你计划。<strong>替你干掉</strong>「先斩后奏」这一件，成本近乎零；<strong>什么时候不够</strong>：它不管测试、不管审查、不跨会话留痕。</li>
 <li><strong>只抄你要的那一两个 skill</strong>：仓库是 MIT，把 <code>skills/systematic-debugging/</code> 或 <code>skills/test-driven-development/</code> 整个文件夹拷进 <code>~/.claude/skills/</code> 即可，靠 description 正常触发、不带钩子。<strong>这是本期最推荐的入门方式</strong>——拿到 80% 的价值，不交常驻 context 税。<strong>什么时候不够</strong>：你要的正是那种「不许绕过」的强制力。</li>
@@ -180,14 +180,14 @@ using-superpowers          —— 上面全部的调度入口      （不可单�
 </div>
 <!-- ============ 5 ============ -->
 <div class="combo">
-<h3>// 一页选购卡</h3>
+<h3 data-tts="b997442ee0c65b99">// 一页选购卡</h3>
 <p><strong>先装这三个（如果你只想要 superpowers 的一部分）</strong>：<code>skills/systematic-debugging/</code> + <code>skills/test-driven-development/</code> + <code>skills/verification-before-completion/</code>——三个文件夹拷进 <code>~/.claude/skills/</code>，各自独立可用，不带 SessionStart 钩子。</p>
 <p><strong>什么时候装整套</strong>：手上的活是多文件重构或新子系统 · 仓库有跑得起来的测试 · 你打算让它自己跑一长段而不是每步盯着。三条同时成立才划算。</p>
 <p><strong>什么时候别装</strong>：十分钟能改完的活 · 没有测试基座的老仓库 · 你已经有严格的 CI 与人审流程 · 你的主要工作是改文案和样式。</p>
 <p><strong>装完两周复查</strong>：<code>docs/superpowers/plans/</code> 里攒下几份计划？其中几份是你真的会回头读的？一份都没有，说明你的活根本不需要这一层。</p>
 </div>
 <div class="glossary">
-<h3>// 术语表</h3>
+<h3 data-tts="fc75c8a403b1362e">// 术语表</h3>
 <dl>
 <dt>SessionStart hook（会话开场钩子）</dt>
 <dd>harness 在新会话、<code>/clear</code>、上下文压缩这些时机调用的外部命令，其输出被注入上下文。superpowers 用它把总则塞进每一次会话，这是它区别于普通 skill 的根本。</dd>
@@ -202,7 +202,7 @@ using-superpowers          —— 上面全部的调度入口      （不可单�
 </dl>
 </div>
 <div class="refs">
-<h3>// 延伸阅读</h3>
+<h3 data-tts="34475c1703a2dabd">// 延伸阅读</h3>
 <ul>
 <li><a href="https://github.com/obra/superpowers" target="_blank">obra/superpowers</a> — 仓库首页有 14 个 harness 各自的安装命令与七段流程说明</li>
 <li><a href="https://github.com/obra/superpowers/tree/main/skills" target="_blank">superpowers · skills/ 目录</a> — 本期点名的 14 个 skill 的源头，名字与内容一律以这里为准</li>
