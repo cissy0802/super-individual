@@ -64,8 +64,8 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <div class="container">
 <header>
 <span class="week-tag">SKILL 04 / CODING · DEEP DIVE</span>
-<h1>Git 工作流三件套</h1>
-<h2>Commit / PR / Changelog — diff 只答得了「改了什么」</h2>
+<h1 data-tts="3cf67d31917d9db7">Git 工作流三件套</h1>
+<h2 data-tts="c9bfea58755c2275">Commit / PR / Changelog — diff 只答得了「改了什么」</h2>
 <div class="date">2026-09-05 · BigCat</div>
 <p class="pitch">这是装机量最大的一类 skill，也是最容易被高估的一类：diff 里写着你改了什么，从来没写你为什么改。</p>
 </header>
@@ -73,13 +73,13 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <a href="code-review-skills-skill3.html">前置 → Skill 03 代码审查类 Skills（审查完，接下来就是提交这一段）</a>
 </div>
 <div class="intro">
-<h3>// WHY THIS MATTERS</h3>
+<h3 data-tts="41bb61323941c454">// WHY THIS MATTERS</h3>
 <p>agent 帮你写完了代码、也审过了，接下来这一段谁都嫌烦：憋一句 commit message、写 PR 描述、发版前翻两百条提交凑 changelog。这一类工具替你干掉的就是这三件事。本期点名九个真实可装可读的条目，逐个给装法与「什么时候别装」；<strong>判据放后半程</strong>——因为这一类最要紧的判断只有一条：<strong>哪些活该交给 skill，哪些活其实该钉进一条 git 钩子里</strong>。</p>
 </div>
 <!-- ============ 1 ============ -->
 <div class="section">
 <span class="num">// 01</span>
-<h2>它替你干掉什么：九个能装的，先给表</h2>
+<h2 data-tts="839f154a61877f52">它替你干掉什么：九个能装的，先给表</h2>
 <div class="claim">论断：这九个分三段——提交前（写 message）、提交后（PR 那一摊）、发版时（changelog）。同段里挑一个，跨段可以叠。</div>
 <div class="diagram">条目（真名以仓库目录为准）                     替你干掉的那件事              什么时候别装
 ──────────────────────────────────────────────────────────────────────────────────
@@ -94,7 +94,7 @@ changelog-generator（Composio / davila7）     发版前翻两百条提交     
 内置 create a pr / --from-pr（官方）           手写 PR 描述、找不回当时那场   —
 ──────────────────────────────────────────────────────────────────────────────────
 本期不报 star 数：GitHub 页面抓取到的数字这次几处明显失真，宁可不写</div>
-<h3>装法（都是原样能敲的）</h3>
+<h3 data-tts="1d7be27eb9a6c73d">装法（都是原样能敲的）</h3>
 <pre><code><span class="tag-com"># 1) 官方内置，零安装（据 Claude Code · Common workflows，2026-09）</span>
 create a pr                      <span class="tag-com"># 文档里给的原话，直接说这一句</span>
 claude --from-pr 1234            <span class="tag-com"># 回到当初开这个 PR 的那一场会话</span>
@@ -119,14 +119,14 @@ npx claude-code-templates@latest
 <!-- ============ 2 ============ -->
 <div class="section">
 <span class="num">// 02</span>
-<h2>机制：diff 是唯一输入，这决定了它的天花板</h2>
+<h2 data-tts="20ed802efe9a0c4d">机制：diff 是唯一输入，这决定了它的天花板</h2>
 <div class="claim">论断：这一类 skill 全都只吃一样东西——<code>git diff --staged</code>。diff 是一份完备的「what」，同时是一份<strong>彻底空白的「why」</strong>。这条不对称解释了它所有的好用和所有的翻车。</div>
-<h3>diff 能做对的部分</h3>
+<h3 data-tts="6597c7de9e3d1526">diff 能做对的部分</h3>
 <p><code>git-commit-helper</code>（<a href="https://github.com/davila7/claude-code-templates/blob/main/cli-tool/components/skills/development/git-commit-helper/SKILL.md" target="_blank">SKILL.md</a>）的做法很典型：读 <code>git diff --staged</code> 与 <code>git status</code>，产出 <code>&lt;type&gt;(&lt;scope&gt;): &lt;description&gt;</code>，type 限定在 feat / fix / docs / style / refactor / test / chore，摘要 50 字符内、祈使句、句尾不加标点，并提示用 <code>git add -p</code> 把混在一起的改动拆开。<strong>这几件事 diff 里全有答案</strong>：类型看改了什么文件，scope 看目录，该不该拆看改动有几簇。所以这一段它做得比人稳——人会偷懒写「update」。</p>
-<h3>diff 里没有的那一半</h3>
+<h3 data-tts="a6822140d6be8ae2">diff 里没有的那一半</h3>
 <p>同一份 SKILL.md 又要求「body 解释 reasoning，不只是动作」。而 reasoning 不在 diff 里。模型只能从代码反推动机，反推出来的通常是把 what 换个说法再讲一遍——这就是这类 skill 唯一真实的失败模式。</p>
 <div class="fail"><strong>可操作的推论</strong>：commit 类 skill 的正确时机是<strong>刚做完的那一刻</strong>，在还留着那场对话的会话里让它写。why 此刻在上下文里；隔天再补，它就只剩 diff 了。「攒一周再统一补提交信息」是这类工具最没用的用法。</div>
-<h3>链条越往下游，信息丢得越多</h3>
+<h3 data-tts="8170882f653f5207">链条越往下游，信息丢得越多</h3>
 <p>changelog 类的输入不是 diff，是 <strong>commit message</strong>。<code>changelog-generator</code>（<a href="https://github.com/ComposioHQ/awesome-claude-skills/blob/master/changelog-generator/SKILL.md" target="_blank">Composio</a> 与 davila7 都收了同一份）做六件事：按时间段或 tag 区间扫历史、分类、把开发者用词改写成用户用词、排版、<strong>过滤掉重构和测试这类内部提交</strong>、再套品牌口径。它的上限被你的提交质量死死卡住。</p>
 <div class="diagram">diff  ──→  commit message  ──→  changelog
  ↑             ↑                    ↑
@@ -138,17 +138,17 @@ what 完备     why 靠人补         只剩 message 里剩下的
 <!-- ============ 3 ============ -->
 <div class="section">
 <span class="num">// 03</span>
-<h2>真实用法与边界：约定用样例编码，危险动作用脚本钉死</h2>
+<h2 data-tts="375ffcfab4e57d55">真实用法与边界：约定用样例编码，危险动作用脚本钉死</h2>
 <div class="claim">论断：这一类 skill 好不好用，只看两件事——<strong>你们团队的口径有没有编进去</strong>，以及<strong>不可逆的那一步有没有交回给人</strong>。</div>
-<h3>把团队约定编进去：贴样例，别写条款</h3>
+<h3 data-tts="a1736772048036fd">把团队约定编进去：贴样例，别写条款</h3>
 <p>默认的 conventional commits 谁都能背，但你们仓库真正的口径是背不出来的：scope 该写包名还是模块名、多大的改动才算 feat、要不要挂 issue 号。<strong>最省事的做法是打开你们最近二十条大家都认可的提交，挑三到五条整段贴进 SKILL.md 当样例</strong>——三对真实的「diff 长这样 → message 这么写」比十条规则管用得多（这条配方 Skill 18 会单独拆）。放哪：团队共享就放进仓库的 <code>.claude/skills/</code> 跟着代码走，个人偏好放 <code>~/.claude/skills/</code>。</p>
-<h3>PR 那一摊：好 skill 都明写自己不管什么</h3>
+<h3 data-tts="155bb7ed723627a4">PR 那一摊：好 skill 都明写自己不管什么</h3>
 <ul>
 <li><code>github-pr-review</code>（<a href="https://github.com/aidankinzett/claude-git-pr-skill" target="_blank">aidankinzett/claude-git-pr-skill</a>，MIT）：用 <code>gh</code> 的 <strong>pending review</strong> 把多条评论攒成草稿，最后由你一次提交——闸门在人手上。</li>
 <li><code>gh-address-comments</code>（<a href="https://github.com/davila7/claude-code-templates/blob/main/cli-tool/components/skills/development/gh-address-comments/SKILL.md" target="_blank">SKILL.md</a>）：先查 <code>gh auth status</code>，再拉回 PR 上所有评论与 review 线程，<strong>编号列给你挑</strong>，你选哪几条它改哪几条。</li>
 <li><code>gh-fix-ci</code>（<a href="https://github.com/davila7/claude-code-templates/blob/main/cli-tool/components/skills/development/gh-fix-ci/SKILL.md" target="_blank">SKILL.md</a>）：<code>gh pr checks</code> → <code>gh run view --log</code> 把失败日志捞出来，先出修复计划、<strong>等你批准再动手</strong>；而且它的 description 里就写明——外部 check（比如 Buildkite）只报链接、<strong>标为 out of scope</strong>。这种「明写自己不管什么」是好 skill 的标志，比多管一摊值钱。</li>
 </ul>
-<h3>不可逆的一步，交回给人</h3>
+<h3 data-tts="b574b689940ef92b">不可逆的一步，交回给人</h3>
 <p>superpowers 的 <code>finishing-a-development-branch</code>（<a href="https://github.com/obra/superpowers/blob/main/skills/finishing-a-development-branch/SKILL.md" target="_blank">SKILL.md</a>）是这一类里最该抄的一个。它先跑全量测试，<strong>测试没过就停，连菜单都不给你看</strong>；然后判断是普通仓库还是 worktree、确认基线分支（拿不准就问「这条分支是从 X 分出来的吧？」），最后给出恰好三条的菜单：本地合回去 / 推上去开 PR / 就这么放着我自己来——然后<strong>等人选</strong>。SKILL.md 把理由写死了：<strong>集成决策属于人</strong>。删除更狠，要你手打「discard」这个词才执行。</p>
 <p>另一条路是把动作钉进脚本。<code>git-pushing</code>（<a href="https://github.com/davila7/claude-code-templates/blob/main/cli-tool/components/skills/development/git-pushing/SKILL.md" target="_blank">SKILL.md</a>）要求一律走它自带的 <code>scripts/smart_commit.sh</code>，原话是「ALWAYS use the script — do NOT use manual git commands」。<strong>确定性的步骤写进脚本，模型只负责填那句 message</strong>，这是所有涉及 push 的 skill 都该照抄的结构。</p>
 <div class="fail"><strong>失败模式</strong>：让 agent 一路 <code>commit → push → 开 PR</code> 不停顿。push 是不可逆面，一旦推到共享分支，回滚的成本就不是你一个人的了。</div>
@@ -156,19 +156,19 @@ what 完备     why 靠人补         只剩 message 里剩下的
 <!-- ============ 4 ============ -->
 <div class="section">
 <span class="num">// 04</span>
-<h2>代价与替代品：什么时候一条 hook 比 skill 更合适</h2>
+<h2 data-tts="e1f94be39b8aa56d">代价与替代品：什么时候一条 hook 比 skill 更合适</h2>
 <div class="claim">论断：<strong>有确定答案的交给钩子，需要判断的才交给 skill。</strong>git 工作流里能被确定性工具接管的比例，比这一类 skill 的宣传口径高得多。</div>
-<h3>为什么钩子更可靠：skill 是建议，钩子是拒绝</h3>
+<h3 data-tts="8948da471b4629ba">为什么钩子更可靠：skill 是建议，钩子是拒绝</h3>
 <p>skill 注入的是指令，模型可以不听、可以没被触发、可以这次听下次不听。钩子是代码，它在事件上无条件执行。Claude Code 的 hooks 文档把这层关系说得很清楚：<strong>「钩子可以拒绝这次调用，但它保持沉默并不等于批准。」</strong>—— <code>PreToolUse</code> 上挂一条模式匹配拦住 <code>git push --force</code>，比在 SKILL.md 里写十遍「不要强推」牢靠得多。</p>
-<h3>三件事，该让确定性工具做</h3>
+<h3 data-tts="61324657c94d1dd0">三件事，该让确定性工具做</h3>
 <ol>
 <li><strong>格式合规</strong> → <a href="https://github.com/conventional-changelog/commitlint" target="_blank">commitlint</a>（MIT）。<code>npm install --save-dev @commitlint/cli</code>，再按官方 local-setup 指南挂进 husky 的 <code>commit-msg</code> 钩子。<strong>替你干掉</strong>：靠 review 抓格式。<strong>什么时候别装</strong>：团队还没定下规范，先定规范再上工具。</li>
 <li><strong>changelog 与版本号</strong> → <a href="https://github.com/orhun/git-cliff" target="_blank">git-cliff</a>（Apache-2.0 / MIT 双授权，<code>cargo install git-cliff</code>，也有 npm / PyPI / Docker 分发）或 <a href="https://github.com/googleapis/release-please" target="_blank">release-please</a>（Apache-2.0，官方推荐用 <a href="https://github.com/googleapis/release-please-action" target="_blank">release-please-action</a>）。后者维护一个<strong>随提交持续更新的 release PR</strong>，你合并它就自动打 tag、发 release。<strong>什么时候别装</strong>：你的提交历史根本不守 conventional commits——这两个都从提交里解析，垃圾进垃圾出。</li>
 <li><strong>提交前的固定检查</strong> → 一条 pre-commit 钩子。davila7 的 CLI 直接给了现成的：<code>npx claude-code-templates@latest --hook git/pre-commit-validation --yes</code>。</li>
 </ol>
-<h3>那 skill 还剩什么</h3>
+<h3 data-tts="47cd349de572830b">那 skill 还剩什么</h3>
 <p>剩下的恰好是钩子做不了的：commit body 里那句 <strong>why</strong>、把一坨混着的改动<strong>拆成几个提交</strong>、PR 描述里「reviewer 该测哪几条路径」。这三件都需要判断，也都没有客观判定器。<strong>这才是这一类 skill 真正的地盘，其余的都该往下沉。</strong></p>
-<h3>三笔账</h3>
+<h3 data-tts="bfc02007d1031f9d">三笔账</h3>
 <ul>
 <li><strong>触发冲突</strong>：<code>git-pushing</code> 的 description 明写了它响应「push changes」「commit and push」「push this」这类说法。装得多，这些短语就成了抢答现场。</li>
 <li><strong>双写打架</strong>：既让 skill 写 CHANGELOG，又让 release-please 维护 release PR，两边会互相覆盖。<strong>一个仓库只留一条 changelog 生产线。</strong></li>
@@ -178,14 +178,14 @@ what 完备     why 靠人补         只剩 message 里剩下的
 </div>
 <!-- ============ 5 ============ -->
 <div class="combo">
-<h3>// 一页选购卡</h3>
+<h3 data-tts="47143f945190a364">// 一页选购卡</h3>
 <p><strong>先装这三个</strong>：① 什么都别装，先敲 <code>git log --oneline -20 | claude -p "按 feature/fix/breaking 分组写发版说明"</code>——官方管道，今天就能试；② <code>commitlint</code> + husky 的 <code>commit-msg</code> 钩子，把格式这件有确定答案的事钉死，它是钩子不是 skill，正因如此才可靠；③ superpowers 的 <code>finishing-a-development-branch</code>（<code>/plugin install superpowers@claude-plugins-official</code>），它治的是「写完了然后呢」的空转，而且不可逆的那一步会交回给你。</p>
 <p><strong>再加一个（挑一个，别都装）</strong>：想要固定口径的提交信息 → <code>git-commit-helper</code>，装完立刻贴三条你们自己的样例进去；在 GitHub 上审 PR → <code>github-pr-review</code>；CI 老红 → <code>gh-fix-ci</code>；要正式发版 changelog → 用 <code>release-please</code> 或 <code>git-cliff</code>，<strong>而不是任何 skill</strong>。</p>
 <p><strong>什么时候别装</strong>：单人仓库直接 <code>git commit -m</code> · 已经在跑 release-please / changesets · 你的团队根本不读提交信息（那先解决这个）。</p>
 <p><strong>装完两周复查</strong>：它写的 commit message 你原样采用了几成？低于五成，去补样例，不是换工具。</p>
 </div>
 <div class="glossary">
-<h3>// 术语表</h3>
+<h3 data-tts="94181b9c5ba948ec">// 术语表</h3>
 <dl>
 <dt>Conventional Commits（约定式提交）</dt>
 <dd><code>&lt;type&gt;(&lt;scope&gt;): &lt;description&gt;</code> 的提交格式规范。它的意义不是整齐，是给下游机器留结构化元数据——版本号和 changelog 都靠它算。</dd>
@@ -202,7 +202,7 @@ what 完备     why 靠人补         只剩 message 里剩下的
 </dl>
 </div>
 <div class="refs">
-<h3>// 延伸阅读</h3>
+<h3 data-tts="aaa1eb8052a11008">// 延伸阅读</h3>
 <ul>
 <li><a href="https://code.claude.com/docs/en/common-workflows" target="_blank">Claude Code · Common workflows</a> — 本期官方部分的一手来源：<code>create a pr</code>、<code>claude --from-pr</code>、<code>claude --worktree</code>，以及 <code>git log | claude -p</code> 那条管道</li>
 <li><a href="https://code.claude.com/docs/en/hooks" target="_blank">Claude Code · Hooks</a> — 完整事件列表，以及「钩子可以拒绝，沉默不等于批准」的原文</li>
