@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill 06 · Reading the Official Authoring Guide — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head>
+<body>
+<div class="container">
+<header>
+<span class="week-tag">SKILL 06 / META · DEEP DIVE</span>
+<h1>Reading the Official Authoring Guide</h1>
+<h2>Six hard numbers on one docs page, and the physical reason behind each</h2>
+<div class="date">2026-09-07 · BigCat</div>
+<p class="pitch">64 / 1024 / 1536 / 500 / 100 / 3. Only two of those six will ever actually stop you. Mix them up and you'll economize in exactly the wrong place.</p>
+</header>
+<div class="xref">
+<a href="meta-skills-roundup-skill5.en.html">Prerequisite → Skill 05 Meta-Skills Roundup (this page was item ⑦ on that list; here we open it up)</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>How long should SKILL.md be? How many files? What makes a description trigger reliably? Anthropic answers all of it on one page — <strong>Skill authoring best practices</strong> — and answers in numbers. The problem is that the page runs several thousand words, and finishing it with only "be concise" in your head is the same as not reading it. <strong>This issue compresses it into one lookup table, then asks of every rule: why this number?</strong> Because once you know the mechanism, you know which rules bend and which ones break things. Every skill and doc named below is a link you can open; section 03 uses only skills that actually ship in the official repository, and section 04 covers where the guide itself will trip you up.</p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>What it takes off your plate: six numbers instead of a hunch</h2>
+<div class="claim">Claim: this page isn't a skill and can't be installed — but everything it points at can be. The real workflow is: copy the minimal skeleton, fill it in against the table, verify with two built-in commands. Ten minutes, and worth more than the six thousand words.</div>
+<div class="diagram">HARD CONSTRAINTS (source: platform.claude.com · Skill authoring best practices)
+────────────────────────────────────────────────────────────────────────────
+name          <= 64 chars · lowercase letters / digits / hyphens only
+              no XML tags · no reserved words "anthropic" or "claude"
+              gerund form recommended: processing-pdfs, analyzing-spreadsheets
+description   non-empty · <= 1024 chars · no XML tags · THIRD PERSON
+              must say both what it does AND when to use it
+body          under 500 lines — a soft guideline; nothing errors, it just
+              means it's time to split
+references    one level deep only · every reference links from SKILL.md
+reference >100 lines   put a table of contents at the top
+evaluations   at least 3 · tested on Haiku, Sonnet AND Opus
+────────────────────────────────────────────────────────────────────────────
+CLAUDE CODE ADDS ONE REAL CUTOFF (source: code.claude.com · Skills)
+description + when_to_use are truncated at 1,536 chars in the skill listing.
+Past that, text isn't merely deprioritized — it is cut. The listing budget
+scales at roughly 1% of the model's context window.
+────────────────────────────────────────────────────────────────────────────
+THE THREE LOADING LEVELS (source: platform.claude.com · Agent Skills overview)
+Level 1  metadata (name+description)  always, at startup  ~100 tokens / skill
+Level 2  SKILL.md body                when triggered      under 5k tokens
+Level 3  bundled files and scripts    only when used      0 until read;
+                                                          scripts bill output only</div>
+<h3>The first thing you can actually run</h3>
+<pre><code><span class="tag-com"># 1. Copy the official minimal skeleton (template/ holds exactly one file)</span>
+mkdir -p .claude/skills/analyzing-invoices
+curl -o .claude/skills/analyzing-invoices/SKILL.md \
+  https://raw.githubusercontent.com/anthropics/skills/main/template/SKILL.md
+
+<span class="tag-com"># 2. Fill in name / description per the table, then check the YAML (v2.1.233+)</span>
+/plugin validate
+
+<span class="tag-com"># 3. See what this skill costs you in the listing — that's your standing tax</span>
+/context
+
+<span class="tag-com"># 4. Want the evaluation machinery? Install the official skill-creator</span>
+/plugin install skill-creator@claude-plugins-official
+
+<span class="tag-com"># 5. Two weeks later, audit: which skills never fired (v2.1.252+, interactive)</span>
+/skill-doctor
+</code></pre>
+<div class="fail"><strong>Failure mode</strong>: treating 500 as the hard limit and 1,536 as the suggestion. It's the other way around. Blow past 500 lines and nothing happens — you just make Claude swallow the whole thing on every trigger. 1,536 is a real cut: the crucial trigger phrase you put at the end of your description may never have reached the model at all.</div>
+<div class="res"><strong>Go deeper</strong> · <a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices" target="_blank">Skill authoring best practices</a> · <a href="https://github.com/anthropics/skills/tree/main/template" target="_blank">anthropics/skills · template/</a> · <a href="https://code.claude.com/docs/en/skills" target="_blank">Claude Code · Skills</a></div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Mechanism: every number maps to something concrete that breaks</h2>
+<div class="claim">Claim: these constraints aren't stylistic fussiness. Third person, one level deep, scripts over generated code — each corresponds to a reproducible failure. Know the failure and you won't be tempted to break the rule.</div>
+<h3>Why the description must be third person</h3>
+<p>Because it is <strong>injected into the system prompt</strong>. The guide's own wording: an inconsistent point of view "can cause discovery problems." "Processes Excel files and generates reports" is right; "I can help you process Excel files" and "You can use this to process Excel files" are both wrong — a first-person blurb appearing inside a system prompt blurs the line between the model's own identity and a candidate tool. And the description is <strong>the only retrieval key you get</strong>: the docs state plainly that Claude uses it to pick the right skill "from potentially 100+ available Skills." However good your body text is, it never enters that round of selection.</p>
+<h3>Why references must stay one level deep</h3>
+<p>The guide reports a very specific observed behavior: with <strong>nested references</strong> (SKILL.md → advanced.md → details.md), Claude often doesn't read the file whole — it previews with something like <code>head -100</code> and walks away with incomplete information. So the rule isn't "don't nest too much," it's "every reference file links directly from SKILL.md." The same mechanism explains the neighboring rule: reference files over 100 lines need a table of contents at the top, because a partial read may be all you get, and a ToC at least tells the model what else is in there.</p>
+<h3>Why deterministic work belongs in a script</h3>
+<p>Look at the last row of the loading table: <strong>scripts execute through bash, their code never enters context, and only their output is billed.</strong> So shipping a <code>validate.py</code> versus having the model improvise validation code each time isn't a matter of taste — three things improve at once: reliability (it doesn't come out different every run), tokens (the code stays off the context window), and speed (nothing to generate). The guide also insists you state <strong>whether Claude should execute or read</strong>: "Run <code>analyze_form.py</code> to extract fields" and "See <code>analyze_form.py</code> for the extraction algorithm" are different instructions — the first is nearly free, the second costs you the whole file.</p>
+<h3>Degrees of freedom: narrow bridge or open field</h3>
+<p>The official analogy treats Claude as a robot walking a path. A <strong>narrow bridge with cliffs on both sides</strong> has exactly one safe route, so you give exact instructions and guardrails (low freedom). The doc's example is a database migration: "Run exactly this script: <code>python scripts/migrate.py --verify --backup</code>", immediately followed by "Do not modify the command or add additional flags." An <strong>open field with no hazards</strong> has many routes, so you give direction and get out of the way (high freedom) — the example is code review: analyze structure, check for bugs and edge cases, suggest readability improvements, verify project conventions. Four lines, not one concrete command. The middle rung is pseudocode or a parameterized script, for when a preferred pattern exists but variation is fine. <strong>The single criterion is how fragile the task is.</strong></p>
+<div class="fail"><strong>Failure mode</strong>: pinning a high-freedom task to a fixed procedure. Force code review into five mandatory steps and the model stops looking for what's peculiar about this repository. Invert it — tell a database migration to "use your judgment" — and it's only a matter of time. Ask first: if this goes wrong, can it be redone?</div>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>In practice: three disclosure patterns, each with a shipping example</h2>
+<div class="claim">Claim: the three progressive-disclosure patterns sound abstract on the page, but every one of them has a physical instance inside <code>anthropics/skills</code>. Copy the instance, not the page — because the paths in the docs' examples don't match the real skills.</div>
+<h3>Pattern 1: high-level guide with flat references</h3>
+<p>SKILL.md keeps only the quick start and hands everything else to sibling files — <code>FORMS.md</code>, <code>REFERENCE.md</code>, <code>EXAMPLES.md</code> — each read only when needed. Right for a skill that does one thing but has a few deep ends.</p>
+<h3>Pattern 2: split by domain — the shipping example is <code>claude-api</code></h3>
+<p>The doc's illustration is a BigQuery skill with <code>reference/finance.md</code>, <code>sales.md</code>, <code>product.md</code>, <code>marketing.md</code>, and a SKILL.md that is pure navigation. The reasoning is concrete: <strong>when someone asks about sales metrics, the model shouldn't be forced to load the finance and marketing schemas.</strong> The official <code>claude-api</code> skill is this structure in finished form (it ships bundled with Claude Code), split by language and by topic across a dozen-plus files. The guide even suggests putting grep commands in SKILL.md — <code>grep -i "revenue" reference/finance.md</code> — so the model can fish for itself. <strong>When not to</strong>: splitting a single-domain skill into many files just adds a round trip.</p>
+<h3>Pattern 3: conditional detail plus a feedback loop — the example is <code>docx</code></h3>
+<p>Basics live in the body, advanced branches hang off links: simple edits go straight to the XML; <strong>tracked changes</strong> → see REDLINING.md; <strong>OOXML internals</strong> → see OOXML.md. But the part of the real <code>docx</code> skill most worth stealing is its <strong>validation loop</strong> — unzip, run <code>scripts/merge_runs.py</code> to coalesce fragmented runs so text is findable, edit <code>word/document.xml</code> in place (with an explicit "do NOT reformat or pretty-print"), rezip, and then:</p>
+<pre><code>python scripts/office/validate.py out.docx --original doc.docx
+<span class="tag-com"># XSD checks; --auto-repair fixes common issues; add --author for redlining</span></code></pre>
+<p><strong>Note a real inconsistency here</strong>: the best-practices page writes that example command as <code>python ooxml/scripts/validate.py unpacked_dir/</code>, while the repository's own <code>skills/docx/SKILL.md</code> actually runs <code>scripts/office/validate.py out.docx --original doc.docx</code>. The path in the docs is <strong>illustrative</strong>, not runnable. Copy commands from the skill, not from the guide.</p>
+<h3>Two patterns that aren't structural but decide the outcome</h3>
+<ul>
+<li><strong>Workflow plus a copyable checklist</strong>: break complex operations into ordered steps and <strong>hand Claude a checklist it can paste into its reply and tick off</strong>. The guide gives two examples — one code-free (research synthesis: read sources → identify themes → cross-reference claims → structured summary → verify citations, and if citations are incomplete you return to step 3) and one with code (PDF forms: analyze → map → validate → fill → verify). What they share is that <strong>failure has a named destination</strong>, not a vague "try again."</li>
+<li><strong>The examples pattern</strong>: where output quality is a matter of feel — commit messages being the classic — three input/output pairs beat ten rules. The official trio covers feat, fix and chore, with the style summary added only at the end.</li>
+</ul>
+<h3>Boundary: a description can say when NOT to use it</h3>
+<p>The guide only tells you to write "what it does and when to use it." But look at the real thing — the <code>docx</code> description ends with: <strong>"Do NOT use for PDFs, spreadsheets, Google Docs, or general coding tasks unrelated to document generation."</strong> Negative triggers are a move the docs never mention and the shipping skills use anyway. Once your library holds several adjacent skills (docx / pdf / pptx / xlsx being the obvious set), stating what a skill is <em>not</em> for buys more accuracy than another positive keyword.</p>
+<div class="fail"><strong>Failure mode</strong>: putting time-sensitive information in SKILL.md. The guide calls this out by name — "before August 2025 use the old API, after that the new one" — because it is guaranteed to go stale. Write only the current method and fold the rest into a collapsed "Old patterns" section. Related anti-patterns: Windows backslash paths (always forward slashes), offering four libraries and letting the model choose (give a default plus one escape hatch), and inconsistent terminology (pick endpoint or URL or route, then never switch).</div>
+<div class="res"><strong>Go deeper</strong> · <a href="https://github.com/anthropics/skills/blob/main/skills/docx/SKILL.md" target="_blank">skills/docx/SKILL.md</a> (the validation loop and the negative trigger, verbatim) · <a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/claude-api-skill" target="_blank">Claude API skill</a> (domain splitting, finished)</div>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>The cost, and the alternative: after reading this, often the right move is not to write a skill</h2>
+<div class="claim">Claim: the most expensive advice on the page is the one nearly everyone skips — build evaluations before you write documentation. Skip it and you're solving imagined problems; honor it and it costs far more time than SKILL.md itself.</div>
+<h3>The five steps everyone skips</h3>
+<p>"Create evaluations BEFORE writing extensive documentation" is set in bold at the top of the evaluation section. The five steps: (1) run Claude on representative tasks with no skill and document the specific failures, (2) build three scenarios around those gaps, (3) measure the baseline, (4) write <strong>just enough</strong> content to close the gaps, (5) run the evals, compare against baseline, refine. One sentence of justification: this way you're solving actual problems.</p>
+<p><strong>There's a catch.</strong> The guide gives an evaluation JSON structure (<code>skills</code> / <code>query</code> / <code>files</code> / <code>expected_behavior</code>), then a Note immediately underneath says <strong>there is not currently a built-in way to run these evaluations</strong> — you build your own harness. So walking the five steps means writing a runner yourself, or installing <code>skill-creator</code>, which brings its own pipeline (<code>evals/evals.json</code> → <code>grading.json</code> → <code>benchmark.json</code>, running with-skill and without-skill groups side by side). The two tracks are not interchangeable; one eval file will not run everywhere.</p>
+<h3>The other skipped practice: Claude A and Claude B</h3>
+<p>The recommended iteration loop uses two instances: <strong>Claude A helps you write and refine the skill; Claude B, a fresh instance with the skill loaded, does real work with it.</strong> You watch where B stumbles and bring that back to A. The doc's own example is precise — "I asked B for a regional sales report and it wrote the query but forgot to filter out test accounts, even though the skill mentions this rule. Maybe it isn't prominent enough?" A might respond by reorganizing, or by hardening "always filter" into "MUST filter." <strong>The value is that it forces you to use observed behavior as evidence, instead of the feeling that things got better.</strong></p>
+<h3>The honest costs</h3>
+<ul>
+<li><strong>This page won't tell you whether to write one at all.</strong> It assumes you've decided. The more common right answer is not to: a one-off task is just a prompt; a deterministic step you always take belongs in a hook; a repo convention belongs in CLAUDE.md or AGENTS.md (Skill 8 in this series). A skill's cost is <strong>standing</strong> — roughly 100 tokens of metadata sitting in the system prompt forever, plus the dilution of every other skill's odds of being picked.</li>
+<li><strong>Hand-copying the frontmatter from this page is wasted effort.</strong> A Tip in the same document says it outright: Claude natively understands the skill format, you need no special system prompt and no "writing skills" skill — just ask, and you get a properly structured SKILL.md. The page's value is in its criteria, not its templates.</li>
+<li><strong>Cross-harness portability will bite you.</strong> The spec requires only <code>name</code> and <code>description</code>, but the fields Claude Code supports fill a whole table — <code>allowed-tools</code>, <code>disallowed-tools</code>, <code>paths</code>, <code>model</code>, <code>effort</code>, <code>context: fork</code>, <code>hooks</code>, <code>disable-model-invocation</code> and more, with <code>license</code> and <code>compatibility</code> flagged as Agent Skills spec fields. <strong>Write in Claude Code habits and your skill degrades silently elsewhere.</strong></li>
+<li><strong>Runtimes differ; don't hardcode dependencies.</strong> The docs are explicit: on the Claude API there is <strong>no network access and no runtime package installation</strong>, only preinstalled packages; in Claude Code skills have full network access but shouldn't install globally; on claude.ai network access varies with user and admin settings. The same skill is not equally runnable in all three.</li>
+<li><strong>Skills that call MCP need fully qualified tool names.</strong> The format is <code>ServerName:tool_name</code> — <code>BigQuery:bigquery_schema</code>, <code>GitHub:create_issue</code>. Drop the prefix and, with several MCP servers connected, the model may simply fail to find the tool. The official <code>mcp-builder</code> follows this rule throughout.</li>
+</ul>
+<div class="fail"><strong>Failure mode</strong>: writing it and walking away. <code>/skill-doctor</code> lists each skill's token cost and invocation frequency and flags the ones that <strong>never fired at all</strong> — usually not because they're useless, but because the description never made it through selection. Delete them or rewrite the description; leaving them is pure rent.</div>
+</div>
+<!-- ============ 5 ============ -->
+<div class="combo">
+<h3>// ONE-PAGE BUYING CARD</h3>
+<p><strong>Do these three first</strong>: (1) copy <a href="https://github.com/anthropics/skills/tree/main/template" target="_blank"><code>template/SKILL.md</code></a> into <code>.claude/skills/</code> as your standing stub — plain text, zero cost, never expires; (2) install <code>skill-creator</code> (<code>/plugin install skill-creator@claude-plugins-official</code>) for its baseline-comparison evaluation machinery, not for drafting; (3) make <code>/context</code> and <code>/skill-doctor</code> a fortnightly habit.</p>
+<p><strong>When copying structure</strong>: one thing with several deep ends → pattern 1 (flat <code>FORMS.md</code> / <code>REFERENCE.md</code>); several domains → copy the official <code>claude-api</code>; correctness that must hold → copy the official <code>docx</code> loop of unpack, edit, <code>scripts/office/validate.py</code>, repack. <strong>Take commands from the skill itself, never from an illustrative path in the docs.</strong></p>
+<p><strong>Numbers to keep handy</strong>: name &lt;= 64 · description &lt;= 1024 and third person · Claude Code listing truncates at 1,536 (a real cut) · body under 500 lines (a guideline) · references one level deep · reference files over 100 lines get a ToC · at least 3 evaluations · test on Haiku, Sonnet and Opus · ~100 tokens of standing metadata per skill · body under 5k tokens.</p>
+<p><strong>Order of operations</strong>: run the real task with no skill → write down the specific failures → build three scenarios → measure the baseline → write just enough → iterate against the baseline. <strong>Never documentation first.</strong></p>
+</div>
+<div class="glossary">
+<h3>// GLOSSARY</h3>
+<dl>
+<dt>progressive disclosure</dt>
+<dd>Layered loading: only name and description sit in context at startup; the SKILL.md body loads on trigger; bundled files load when read; scripts execute without their code entering context.</dd>
+<dt>frontmatter</dt>
+<dd>The YAML header at the top of SKILL.md. The spec requires only <code>name</code> and <code>description</code>; individual harnesses may add fields of their own.</dd>
+<dt>degrees of freedom</dt>
+<dd>How tightly the instructions pin the model down. The more fragile the task, the more exact the command (narrow bridge); the more open-ended, the more you give direction only (open field).</dd>
+<dt>feedback loop</dt>
+<dd>Run the validator, read the errors, fix, run again, and only proceed when it passes. The validator can be a script or a STYLE_GUIDE.md the model checks against.</dd>
+<dt>plan-validate-execute</dt>
+<dd>Have the model emit a machine-checkable intermediate plan, validate that, and only then execute. For batch, destructive or high-stakes operations.</dd>
+<dt>voodoo constant</dt>
+<dd>A magic number with no stated reason (<code>TIMEOUT = 47</code>). The guide asks that every configured value be justified: if you don't know the right value, how would Claude?</dd>
+</dl>
+</div>
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices" target="_blank">Anthropic · Skill authoring best practices</a> — the subject of this issue. Character limits, the 500-line guideline, one-level-deep references, the three freedom levels and the narrow-bridge analogy, workflow checklists, the examples pattern, the anti-pattern list, the five evaluation steps, the Claude A/B loop, and the closing checklist all live here</li>
+<li><a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview" target="_blank">Anthropic · Agent Skills overview</a> — the three loading levels and their costs (~100 tokens per skill, body under 5k, scripts billed on output only), per-platform runtime limits, and the security notes</li>
+<li><a href="https://code.claude.com/docs/en/skills" target="_blank">Claude Code · Skills</a> — the full frontmatter field table, the 1,536-character truncation and listing budget, <code>/skill-doctor</code> (v2.1.252+), <code>/plugin validate</code> (v2.1.233+), <code>/context</code>, and the skill directory hierarchy</li>
+<li><a href="https://github.com/anthropics/skills" target="_blank">anthropics/skills</a> — roughly 174.9k stars / 20.7k forks per the GitHub repository page, 2026-09; the top level holds only <code>skills/</code>, <code>spec/</code>, <code>template/</code> and the plugin manifest</li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/docx/SKILL.md" target="_blank">skills/docx/SKILL.md</a> — conditional disclosure plus a validation loop in the flesh: <code>scripts/office/validate.py</code>, <code>scripts/merge_runs.py</code>, and the negative trigger closing its description</li>
+<li><a href="https://github.com/anthropics/skills/tree/main/template" target="_blank">anthropics/skills · template/</a> — the officially sanctioned minimal skeleton; one SKILL.md, nothing else</li>
+<li><a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/claude-api-skill" target="_blank">Anthropic · Claude API skill</a> — "one SKILL.md pointing at many domain files," finished and shipping with Claude Code; Skill 23 in this series takes it apart</li>
+<li><a href="https://github.com/anthropics/skills/tree/main/skills/mcp-builder" target="_blank">skills/mcp-builder</a> — the official process for writing an MCP server, and the practical user of the fully-qualified <code>ServerName:tool_name</code> rule</li>
+<li><a href="https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills" target="_blank">Anthropic Engineering · Equipping agents for the real world with Agent Skills</a> — the architectural background the official overview page points to</li>
+<li><a href="meta-skills-roundup-skill5.en.html">This site · Skill 05 · Meta-Skills Roundup</a> — this page was item ⑦ on that list; install instructions for <code>skill-creator</code> and <code>mcp-builder</code>, and why the category splits into three layers</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Skill 06 · 2026-09-07</footer>
+</div>
+<script src="https://hub.cissychen.com/comments.js" defer></script>
+<script src="https://hub.cissychen.com/search.js" defer></script>
+<script src="https://hub.cissychen.com/index-button.js" defer></script>
+<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+</body></html>
