@@ -64,8 +64,8 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <div class="container">
 <header>
 <span class="week-tag">SKILL 07 / META · DEEP DIVE</span>
-<h1>给 Skill 写 Eval</h1>
-<h2>官方那句「先建评估再写文档」，现在终于有内置跑法了</h2>
+<h1 data-tts="1571d86e97590789">给 Skill 写 Eval</h1>
+<h2 data-tts="cc1524d5616a88c7">官方那句「先建评估再写文档」，现在终于有内置跑法了</h2>
 <div class="date">2026-09-08 · BigCat</div>
 <p class="pitch">你改了一版 SKILL.md，跑一次感觉更好了。这句「感觉」值多少钱？答案是零——除非你有基线、有断言、有重复次数。</p>
 </header>
@@ -73,14 +73,14 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <a href="skill-authoring-skill6.html">前置 → Skill 06 官方 Authoring 最佳实践精读（本期拆的是那一页里被跳过的评估章节）</a>
 </div>
 <div class="intro">
-<h3>// WHY THIS MATTERS</h3>
+<h3 data-tts="dde18b62a53f3863">// WHY THIS MATTERS</h3>
 <p>Anthropic 在 <strong>Skill authoring best practices</strong> 里把「<strong>先建评估，再写文档</strong>」加粗放在评估章节第一行，然后给了五步、给了 JSON 结构——紧接着一条 Note 说：<strong>目前没有内置的方式来跑这些评估，用户要自己搭。</strong>于是这一整节被绝大多数人跳过了。</p>
 <p>但这条 Note 现在已经落后于工具本身：Claude Code 的 <code>claude plugin eval</code> 已经是一个带基线对照、带多种打分器、带 HTML 报告的完整 runner（本文写稿时处于 early access）。<strong>本期把三条可走的路径全部点名、给命令、给实测到的文件结构，最后回答那个真问题：怎么知道一次改动是真提升，而不是模型今天心情好。</strong></p>
 </div>
 <!-- ============ 1 ============ -->
 <div class="section">
 <span class="num">// 01</span>
-<h2>它替你干掉什么：干掉「我觉得这版更好」</h2>
+<h2 data-tts="5e71d608e0383914">它替你干掉什么：干掉「我觉得这版更好」</h2>
 <div class="claim">论断：skill 的输出是非确定性的，所以单次对比毫无信息量。你需要的东西只有三件——一条基线、一组能机器判的断言、一个大于 1 的重复次数。下面三条路径都提供这三件，成本差一个数量级。</div>
 <div class="diagram">三条路径（按上手成本排序）
 ────────────────────────────────────────────────────────────────
@@ -95,7 +95,7 @@ C  skillOverrides 手动双跑     零依赖 · 官方文档自己推荐的兜�
   ① skill 有没有在该触发的 prompt 上被触发
   ② 触发之后，输出有没有真的变好
 「看见它触发了」只证明 Claude 找到了它，不证明它干了你想要的事。</div>
-<h3>第一条立刻能跑的用法</h3>
+<h3 data-tts="d70d60c3cc67f59e">第一条立刻能跑的用法</h3>
 <pre><code><span class="tag-com"># 路径 A：内置 runner。先长出一个用例骨架（在 plugin / skills 目录根下跑）</span>
 claude plugin eval init --bare my-first-case
 <span class="tag-com"># → 生成 evals/my-first-case/prompt.md 和 evals/my-first-case/graders/criteria.md</span>
@@ -122,24 +122,24 @@ claude plugin validate .claude/skills
 <!-- ============ 2 ============ -->
 <div class="section">
 <span class="num">// 02</span>
-<h2>机制：它凭什么能把「感觉」变成数字</h2>
+<h2 data-tts="01029553cd21c78b">机制：它凭什么能把「感觉」变成数字</h2>
 <div class="claim">论断：这套东西的全部有效性来自三个设计——强制跑一条没有 skill 的对照臂、把「触发」从分数里摘出来、以及打分器分成免费的和要花钱的两类。三条都不是花架子，各自堵死一种自欺。</div>
-<h3>① 对照臂：默认就跑，不是可选项</h3>
+<h3 data-tts="ba5d04f03becbf42">① 对照臂：默认就跑，不是可选项</h3>
 <p><code>claude plugin eval</code> 的 <code>--ablation</code> 默认值是 <code>with-without</code>——<strong>只要目标解析出一个 plugin，它就自动加跑一条「没有这个 plugin」的臂，然后报告分数差。</strong>为什么必须默认打开？因为模型本来就很强。你的 skill 说「写 commit message 要用 conventional commits」，模型不带 skill 也可能这么写——不跑对照臂，这一分你会算到自己头上。skill-creator 那边把同一件事说得更死：<strong>with-skill 和 baseline 两组必须「在同一个 turn 里 spawn」</strong>，不许先跑完带 skill 的、过两天再补基线。</p>
-<h3>② 触发 ≠ 质量：with-only 打分器不计入分数</h3>
+<h3 data-tts="5f35720a13a6306b">② 触发 ≠ 质量：with-only 打分器不计入分数</h3>
 <p>这是最见功力的一处。在 <code>with-without</code> 模式下，标了 <code>with-only</code> 的打分器（<strong>包括 <code>tool_used: Skill</code></strong>）被当成「plugin 有没有被点着」的<strong>指示器</strong>，而不是分数的一部分。理由很直白：没装 skill 的那条臂当然不可能触发 skill，把这条算进分差等于白送自己一分。<strong>触发率和输出质量必须分开量</strong>——skill-creator 为此专门有一个 description tuning 步骤，生成 should-trigger 和 should-not-trigger 两组 prompt，量命中率，然后反过来改 description。</p>
-<h3>③ 打分器分两类：先榨干免费的</h3>
+<h3 data-tts="b450e0c4f9268783">③ 打分器分两类：先榨干免费的</h3>
 <p>把一个非法的 <code>type</code> 塞进 grader，CLI 会把合法值全吐出来：<code>regex</code> | <code>tool_order</code> | <code>tool_used</code> | <code>file_exists</code> | <code>llm</code> | <code>baseline</code>。<strong>前四个是纯程序判定，不花钱也不引入方差；后两个是模型调用</strong>（<code>--judge-model</code> 默认 haiku）。这条分界线直接决定了你该怎么设计用例：<strong>能把成功标准写成「产出了 output.txt」「先 Read 后 Edit」「输出里出现了 feat(</strong>」的，就别写成一句让 LLM 去意会的「输出应当专业且清晰」。这也正是官方评估文档那条原则——<strong>宁可要更多题、判得糙一点，也不要更少题、人工精判。</strong></p>
-<h3>④ 重复次数：默认就是 3</h3>
+<h3 data-tts="c335e027fb441f22">④ 重复次数：默认就是 3</h3>
 <p><code>--runs</code> 的默认值是 <code>case.runs ?? 3</code>。单次跑赢在 agent 评估里几乎没有信息量，因为同一个 prompt 两次跑出的轨迹可能完全不同。skill-creator 把这一步做到了报表里：<code>python -m scripts.aggregate_benchmark</code> 产出的 <code>benchmark.json</code> / <code>benchmark.md</code>，给每种配置写的是 <strong>pass_rate、时间、token 的 mean ± stddev 以及 delta</strong>。<strong>看到 delta 先看 stddev</strong>——差值淹在标准差里的，那不叫提升。</p>
 <div class="fail"><strong>失败模式</strong>：断言写得太松，两条臂都 100% 通过，delta 恒等于 0，你以为 skill 没用，其实是题目没有区分度。skill-creator 的 <code>agents/analyzer.md</code> 专门要求做一遍 analyst pass，就是去抓这两种病：<strong>non-discriminating assertion</strong>（不管有没有 skill 都通过）和 <strong>high-variance eval</strong>（同配置跑三次结果乱跳，多半是题目本身 flaky）。</div>
 </div>
 <!-- ============ 3 ============ -->
 <div class="section">
 <span class="num">// 03</span>
-<h2>真实用法与边界：五步、三题、两个 Claude</h2>
+<h2 data-tts="6c8531cac7be2508">真实用法与边界：五步、三题、两个 Claude</h2>
 <div class="claim">论断：官方给的顺序是反直觉的——先跑失败、再写题、再量基线、最后才写 SKILL.md。顺序反过来，你写的是想象出来的需求。</div>
-<h3>五步（出处：Skill authoring best practices · Evaluation and iteration）</h3>
+<h3 data-tts="bb9661d6c6cedf39">五步（出处：Skill authoring best practices · Evaluation and iteration）</h3>
 <ol>
 <li><strong>找缺口</strong>：不带 skill 跑真实任务，记下具体是哪里失败、缺哪块上下文。</li>
 <li><strong>造题</strong>：就着这些缺口建三个场景。skill-creator 的说法是「<strong>2–3 个真实用户会说的 prompt</strong>」，并且明确要求先只写 prompt、<strong>断言留到跑的时候再补</strong>——因为你还不知道它会怎么错。</li>
@@ -147,10 +147,10 @@ claude plugin validate .claude/skills
 <li><strong>只写刚好够的字</strong>：够补缺口、够通过评估就停。</li>
 <li><strong>迭代</strong>：跑评估，对照基线，改。</li>
 </ol>
-<h3>Claude A / Claude B：为什么必须是新会话</h3>
+<h3 data-tts="18b8570cf17ae77f">Claude A / Claude B：为什么必须是新会话</h3>
 <p>官方推荐开两个实例：<strong>Claude A 帮你写和改 skill，Claude B 装着它去干真活</strong>，你把 B 的翻车现场带回给 A。文档举的例子很具体——「我让 B 出区域销售报表，它写了查询但忘了过滤测试账号，skill 里明明提了这条规则」，A 的回应可能是把 always 改成 MUST，或者调整章节顺序。</p>
 <p><strong>「fresh session」这四个字是硬要求，不是修辞</strong>：官方明说，写 skill 时留在会话里的上下文<strong>会掩盖 SKILL.md 本身的缺口</strong>——你以为它读懂了，其实它是记得你刚才口头说过。<code>claude plugin eval</code> 和 skill-creator 都用子代理跑用例，正是为了每条用例都拿到干净上下文。</p>
-<h3>三个工具各自量的是什么，别搞混</h3>
+<h3 data-tts="9cd87709bf25e053">三个工具各自量的是什么，别搞混</h3>
 <ul>
 <li><strong><code>claude plugin validate</code></strong>（v2.1.233+）——只查 frontmatter YAML 能不能解析。它抓的是一种极隐蔽的故障：<strong>YAML 挂了，skill 正文照样加载，但 metadata 是空的</strong>，于是 <code>/skill-name</code> 手动调还能用，自动触发永远不会发生。跑 eval 之前先跑它，五秒。</li>
 <li><strong><code>/skill-doctor</code></strong>（v2.1.252+）——量的是<strong>使用度和 context 开销</strong>，不是质量。它列出每个 skill 花了多少 context、被调用过几次，并标出<strong>从来没被触发过的</strong>。交互式会话里结果开在 <code>/plugin</code> 的 Stats 页，<code>-p</code> 非交互模式下直接打文本。<strong>注意它跑不了的地方</strong>：Remote Control 连接下会直接回「Skill usage reports are not available on this connection.」，得回到会话真正运行的那台机器的终端上跑。</li>
@@ -162,9 +162,9 @@ claude plugin validate .claude/skills
 <!-- ============ 4 ============ -->
 <div class="section">
 <span class="num">// 04</span>
-<h2>代价与替代品：eval 比 skill 贵，而且会腐坏</h2>
+<h2 data-tts="e1024120f901ba06">代价与替代品：eval 比 skill 贵，而且会腐坏</h2>
 <div class="claim">论断：一套认真的 skill eval，花的钱和时间通常超过写这个 skill 本身。所以真正的判据不是「该不该写 eval」，而是「这个 skill 值不值得一套 eval」——多数不值。</div>
-<h3>诚实的代价</h3>
+<h3 data-tts="6a81a0bbf7ea3fd2">诚实的代价</h3>
 <ul>
 <li><strong>账单是乘出来的。</strong>每条用例 = runs × 两条臂 × 每次一个完整 agent run，默认就是 3 × 2 = 6 次；<code>llm</code> 和 <code>baseline</code> 两种打分器还各是一次模型调用。<code>claude plugin eval</code> 给了 <code>--max-cost-usd</code> 做硬顶，撞顶时中止并<strong>返回部分结果（exit 2）</strong>，超支被限制在一次 agent run 内，且那一次的付费打分器会被跳过、免费打分器照常打分。<strong>第一次跑一定要带上它。</strong></li>
 <li><strong>紧和松都会骗你。</strong>断言写太紧 → 高方差、天天红；写太松 → 两臂同分、delta 恒零。这两种都表现为「eval 没用」，但病因相反，得靠 analyst pass 区分。</li>
@@ -173,7 +173,7 @@ claude plugin validate .claude/skills
 <li><strong>eval 会腐坏。</strong>模型换代之后，原来区分得开的题可能新模型不带 skill 也能全过——你的 delta 会自己缩到 0。官方要求在 Haiku / Sonnet / Opus 上各测一遍，本质上就是在提前暴露这件事。</li>
 <li><strong>没有子代理就没有基线。</strong>skill-creator 自己写明：在拿不到子代理的环境里，<strong>跳过定量 benchmark</strong>，因为基线对比在那种情况下不成立，只能退回人工定性反馈。别在那种环境里假装自己在做评估。</li>
 </ul>
-<h3>不装它你还能怎么办</h3>
+<h3 data-tts="02827f9c7c40911f">不装它你还能怎么办</h3>
 <ul>
 <li><strong><a href="https://github.com/promptfoo/promptfoo" target="_blank">promptfoo</a></strong> —— 通用的 prompt / agent / RAG 评估器，据 GitHub 仓库页 2026-09 约 2.49 万 star。装法 <code>npm install -g promptfoo</code>，起手 <code>promptfoo init --example getting-started</code>；支持 LLM-as-judge 断言，官方主打 CI 集成。<strong>什么时候别用</strong>：它不懂 Claude Code 的 skill 触发机制——它能评「这段 prompt 的输出好不好」，评不了「这个 skill 该不该被点着」。</li>
 <li><strong><a href="https://github.com/UKGovernmentBEIS/inspect_ai" target="_blank">Inspect AI</a></strong> —— 英国 AI Security Institute（AISI）的评估框架，据 GitHub 仓库页 2026-09 约 2.7 千 star；据 PyPI，最新版 0.3.263 发布于 2026-09-04。装法 <code>pip install inspect-ai</code>，自带 model-graded scorer 和两百多个预置评估。<strong>什么时候别用</strong>：它是研究级基建，为的是横评模型能力；拿它评一份 SKILL.md 是高射炮打蚊子。</li>
@@ -183,14 +183,14 @@ claude plugin validate .claude/skills
 </div>
 <!-- ============ 5 ============ -->
 <div class="combo">
-<h3>// 一页选购卡</h3>
+<h3 data-tts="8509a791185cc795">// 一页选购卡</h3>
 <p><strong>先做这三件</strong>：① <code>claude plugin validate .claude/skills</code>——五秒，先确认 frontmatter 没静默挂掉；② <code>claude plugin eval init --bare &lt;name&gt;</code> 生成骨架，把成功标准尽量写成 <code>regex</code> / <code>file_exists</code> / <code>tool_used</code> 这三种免费打分器，再 <code>claude plugin eval . --runs 3 --max-cost-usd &lt;你的上限&gt;</code>；③ 两周后跑一次 <code>/skill-doctor</code>，把从没被触发过的挑出来单独治 description。</p>
 <p><strong>按场景选路径</strong>：要一份能给人看的报表和 mean ± stddev → 装 <code>skill-creator@claude-plugins-official</code>；要进 CI、要 exit code → <code>claude plugin eval --threshold</code>（先确认 early access 已开通）；要评的是纯 prompt 质量而不是 skill 触发 → <code>promptfoo</code>；只是想知道有没有变好 → <code>skillOverrides: off</code> 开两个新会话手动跑。</p>
 <p><strong>读数备查</strong>：<code>--runs</code> 默认 3 · <code>--ablation</code> 默认 with-without · <code>--threshold</code> 默认 1.0 · <code>--judge-model</code> 默认 haiku · 免费打分器 <code>regex</code> / <code>tool_order</code> / <code>tool_used</code> / <code>file_exists</code>，收费的 <code>llm</code> / <code>baseline</code> · 用例目录默认 <code>evals/</code> · 结果默认落在 <code>evals/results/&lt;timestamp&gt;/</code>。</p>
 <p><strong>看报表的顺序</strong>：先看 stddev，再看 delta；delta 淹在 stddev 里就当没提升。两条臂都满分的题，删掉重写——它没有区分度。</p>
 </div>
 <div class="glossary">
-<h3>// 术语表</h3>
+<h3 data-tts="b8014bbfbad04096">// 术语表</h3>
 <dl>
 <dt>baseline arm / ablation（基线臂 · 消融）</dt>
 <dd>同一道题再跑一遍、但不给 skill 的那条对照。没有它，你量到的是模型本来就会的东西。</dd>
@@ -207,7 +207,7 @@ claude plugin validate .claude/skills
 </dl>
 </div>
 <div class="refs">
-<h3>// 延伸阅读</h3>
+<h3 data-tts="269a08b7c0ffa9d0">// 延伸阅读</h3>
 <ul>
 <li><a href="https://code.claude.com/docs/en/skills" target="_blank">Claude Code · Skills</a> — 「Evaluate and iterate on a skill」整节：基线对比的两件事、skill-creator 七步流程、<code>skillOverrides</code> 四档表、<code>/skill-doctor</code>（v2.1.252+）与它在 Remote Control 下的报错、<code>claude plugin validate</code>（v2.1.233+）</li>
 <li><a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices#evaluation-and-iteration" target="_blank">Anthropic · Skill authoring best practices</a> — evaluation-driven development 五步、评估 JSON 结构、那条「没有内置跑法」的 Note、Claude A / Claude B 迭代法、结尾 checklist 里的「至少三条评估 + Haiku/Sonnet/Opus 各测一遍」</li>
@@ -223,8 +223,8 @@ claude plugin validate .claude/skills
 </div>
 <footer>BigCat · Super Individual · Skill 07 · 2026-09-08</footer>
 </div>
-<script src="https://hub.cissychen.com/comments.js" defer></script>
-<script src="https://hub.cissychen.com/search.js" defer></script>
-<script src="https://hub.cissychen.com/index-button.js" defer></script>
-<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
 </body></html>
