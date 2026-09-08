@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill 07 · Writing Evals for a Skill — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head>
+<body>
+<div class="container">
+<header>
+<span class="week-tag">SKILL 07 / META · DEEP DIVE</span>
+<h1>Writing Evals for a Skill</h1>
+<h2>The official "build evaluations first" finally has a built-in runner</h2>
+<div class="date">2026-09-08 · BigCat</div>
+<p class="pitch">You revised your SKILL.md, ran it once, and it felt better. What is that feeling worth? Zero — unless you have a baseline, machine-checkable assertions, and a run count greater than one.</p>
+</header>
+<div class="xref">
+<a href="skill-authoring-skill6.en.html">Prerequisite → Skill 06 Reading the Official Authoring Guide (this issue opens up the evaluation section everybody skips)</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>Anthropic puts "<strong>Create evaluations BEFORE writing extensive documentation</strong>" in bold at the top of the evaluation section of <strong>Skill authoring best practices</strong>. Five steps follow, plus a JSON structure — and then a Note: <strong>there is not currently a built-in way to run these evaluations; users can create their own evaluation system.</strong> That is why the entire section gets skipped.</p>
+<p>The Note has fallen behind the tooling. Claude Code's <code>claude plugin eval</code> is now a complete runner with a baseline arm, several grader types, and an HTML report (in early access as of this writing). <strong>This issue names all three viable paths, gives the commands and the file layout I actually scaffolded, and then answers the real question: how do you know a change is a genuine improvement rather than the model having a good day?</strong></p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>What it takes off your plate: killing "I think this version is better"</h2>
+<div class="claim">Claim: skill output is non-deterministic, so a single side-by-side comparison carries no information. You need exactly three things — a baseline, a set of machine-checkable assertions, and a repeat count above one. All three paths below give you those. They differ in cost by an order of magnitude.</div>
+<div class="diagram">THREE PATHS (ordered by cost to get started)
+────────────────────────────────────────────────────────────────
+A  claude plugin eval        built-in CLI · a case is a directory
+                             ships a baseline arm · status: early access
+B  skill-creator             official plugin · subagent per case
+                             mean +/- stddev + HTML viewer · generally available
+C  skillOverrides, by hand   zero dependencies · the fallback the official
+                             docs themselves recommend · always available
+────────────────────────────────────────────────────────────────
+All three measure the same two things (source: code.claude.com · Skills)
+  1. does the skill fire on the prompts it should?
+  2. once it fires, does the output actually get better?
+"Seeing a skill trigger tells you Claude found it, not that it did
+what you intended."</div>
+<h3>The first thing you can actually run</h3>
+<pre><code><span class="tag-com"># Path A: the built-in runner. Scaffold a case skeleton from a plugin/skills root</span>
+claude plugin eval init --bare my-first-case
+<span class="tag-com"># -> writes evals/my-first-case/prompt.md and evals/my-first-case/graders/criteria.md</span>
+
+<span class="tag-com"># Fill them in, then run the current directory three times with a self-contained report</span>
+claude plugin eval . --runs 3 --report ./eval-report.html
+
+<span class="tag-com"># Path B: install the official skill-creator and let it drive the whole loop</span>
+/plugin marketplace add anthropics/claude-plugins-official
+/plugin install skill-creator@claude-plugins-official
+/reload-plugins
+<span class="tag-com"># then just say: evaluate my summarize-changes skill with skill-creator</span>
+
+<span class="tag-com"># Path C: the fallback. Turn the skill off in .claude/settings.local.json, rerun in a fresh session</span>
+<span class="tag-key">{ "skillOverrides": { "summarize-changes": "off" } }</span>
+
+<span class="tag-com"># Five-second checkup before any of this: did the frontmatter parse at all?</span>
+claude plugin validate .claude/skills
+</code></pre>
+<p>What <code>init --bare</code> emits is smaller than you would guess: <code>prompt.md</code> carries only <code>max_turns</code> and <code>allowed_tools</code> in its frontmatter, <code>graders/criteria.md</code> only <code>type</code> and <code>weight</code>, with a one-line TODO under each. <strong>A case is a directory, not a config file</strong>: one folder per case, holding a prompt and a <code>graders/</code> directory.</p>
+<div class="fail"><strong>Failure mode</strong>: as of this writing (Claude Code v2.1.263) <code>plugin eval</code> is still in early access. On an account without it, the command parses your flags and then exits, printing a single line — "<code>plugin eval</code> is currently in early access". It runs nothing, and it fails quietly enough that you may not notice. Do not depend on it silently in CI; confirm by hand that it really runs first.</div>
+<div class="res"><strong>Going deeper</strong> · <a href="https://code.claude.com/docs/en/skills" target="_blank">Claude Code · Skills, "Evaluate and iterate on a skill"</a> · <a href="https://github.com/anthropics/claude-plugins-official/tree/main/plugins/skill-creator" target="_blank">skill-creator on the official marketplace</a></div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>The mechanism: how a feeling becomes a number</h2>
+<div class="claim">Claim: everything that makes this work comes from three design decisions — always run an arm without the skill, keep "it fired" out of the score, and split graders into free ones and ones that cost money. None is decoration; each blocks a specific way of fooling yourself.</div>
+<h3>1. The baseline arm is on by default, not opt-in</h3>
+<p><code>--ablation</code> defaults to <code>with-without</code>: <strong>whenever a plugin resolves, the runner adds an arm with no plugin at all and reports the score delta.</strong> Why must this be the default? Because the model is already strong. Your skill says "write commit messages in conventional-commits form" — the model may well do that with no skill loaded. Without the second arm you would book that point to yourself. skill-creator states the same rule even more bluntly: the with-skill and baseline runs <strong>must be spawned "in the same turn"</strong>. No running the with-skill batch today and backfilling baselines next week.</p>
+<h3>2. Firing is not quality: with-only graders stay out of the score</h3>
+<p>This is the sharpest piece of the design. Under <code>with-without</code>, graders marked <code>with-only</code> — <strong>including <code>tool_used: Skill</code></strong> — count as an <strong>indicator</strong> that the plugin fired, not as part of the score. The reasoning is plain: the arm without the skill can never fire the skill, so folding that into the delta is a free point you award yourself. <strong>Trigger rate and output quality must be measured separately</strong>, which is exactly why skill-creator has a distinct description-tuning step: it generates should-trigger and should-not-trigger prompts, measures the hit rate, and proposes description edits.</p>
+<h3>3. Two classes of grader: exhaust the free ones first</h3>
+<p>Put an invalid <code>type</code> in a grader and the CLI lists every legal value: <code>regex</code> | <code>tool_order</code> | <code>tool_used</code> | <code>file_exists</code> | <code>llm</code> | <code>baseline</code>. <strong>The first four are pure program checks — free, and they add no variance. The last two are model calls</strong> (<code>--judge-model</code> defaults to haiku). That line decides how you design cases: <strong>if success can be stated as "produced output.txt", "read before it edited", or "the output contains feat(", do not restate it as a vague "the response should be professional and clear" for an LLM to interpret.</strong> It is also precisely the official evaluation principle — <strong>more questions with slightly weaker automated grading beats fewer questions graded by hand.</strong></p>
+<h3>4. The repeat count is 3 by default</h3>
+<p><code>--runs</code> defaults to <code>case.runs ?? 3</code>. A single winning run tells you almost nothing in agent evaluation, because the same prompt can produce wholly different trajectories twice in a row. skill-creator carries this into the report: <code>python -m scripts.aggregate_benchmark</code> produces <code>benchmark.json</code> and <code>benchmark.md</code> giving pass_rate, time and tokens per configuration as <strong>mean +/- stddev, plus the delta</strong>. <strong>Read the stddev before the delta</strong> — a difference drowned in the standard deviation is not an improvement.</p>
+<div class="fail"><strong>Failure mode</strong>: assertions so loose that both arms pass 100% of the time, the delta sits at zero, and you conclude the skill is useless — when in fact the questions have no discriminating power. skill-creator's <code>agents/analyzer.md</code> exists to force an analyst pass over exactly these two diseases: <strong>non-discriminating assertions</strong> (pass with or without the skill) and <strong>high-variance evals</strong> (three runs of one configuration scatter wildly, usually a flaky case rather than a flaky skill).</div>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Real usage and boundaries: five steps, three cases, two Claudes</h2>
+<div class="claim">Claim: the official ordering is counterintuitive — fail first, write cases second, measure the baseline third, and write SKILL.md last. Reverse it and you are documenting requirements you imagined.</div>
+<h3>The five steps (source: Skill authoring best practices · Evaluation and iteration)</h3>
+<ol>
+<li><strong>Identify gaps</strong>: run real tasks with no skill and write down exactly where it failed and what context was missing.</li>
+<li><strong>Create evaluations</strong>: build three scenarios around those gaps. skill-creator words it as "<strong>2-3 realistic test prompts — the kind of thing a real user would actually say</strong>", and explicitly says to write only the prompts first and <strong>draft the assertions later, while the runs are in flight</strong> — because you do not yet know how it will go wrong.</li>
+<li><strong>Establish baseline</strong>: measure performance without the skill.</li>
+<li><strong>Write minimal instructions</strong>: just enough to close the gaps and pass the evaluations, then stop.</li>
+<li><strong>Iterate</strong>: run the evaluations, compare against baseline, refine.</li>
+</ol>
+<h3>Claude A / Claude B, and why the session must be fresh</h3>
+<p>The official method is two instances: <strong>Claude A helps you write and revise the skill, Claude B has it loaded and does real work</strong>, and you carry B's failures back to A. The docs give a concrete case — "I asked B for a regional sales report; it wrote the query but forgot to filter out test accounts, even though the skill mentions that rule" — and A might respond by changing "always" to "MUST", or by reordering sections.</p>
+<p><strong>"Fresh session" is a hard requirement, not a flourish</strong>: the docs say plainly that context left over from authoring the skill <strong>will mask gaps in the written instructions</strong>. You think it understood the file; it actually remembers what you said out loud. Both <code>claude plugin eval</code> and skill-creator run cases in subagents for this reason — every case gets a clean context.</p>
+<h3>Three tools, three different measurements — do not confuse them</h3>
+<ul>
+<li><strong><code>claude plugin validate</code></strong> (v2.1.233+) — checks only that the frontmatter YAML parses. It catches a genuinely sneaky failure: <strong>the YAML breaks, the skill body still loads, but the metadata is empty</strong>, so <code>/skill-name</code> still works by hand while automatic triggering never happens again. Run it before any eval. Five seconds.</li>
+<li><strong><code>/skill-doctor</code></strong> (v2.1.252+) — measures <strong>usage and context cost</strong>, not quality. It lists what each skill costs in context and how often it was invoked, and flags the ones <strong>never invoked at all</strong>. In an interactive session the report opens in the <code>/plugin</code> manager's Stats tab; in non-interactive mode with <code>-p</code> it prints as text. <strong>Where it will not run</strong>: over a Remote Control connection it answers "Skill usage reports are not available on this connection." Run it in the terminal on the machine hosting the session.</li>
+<li><strong><code>skillOverrides</code></strong> — four visibility states (<code>on</code> / <code>name-only</code> / <code>user-invocable-only</code> / <code>off</code>) in <code>.claude/settings.local.json</code>; the <code>/skills</code> menu writes it for you (Space cycles, Esc saves). Use it as a poor man's ablation switch. <strong>Boundary: it has no effect on plugin skills</strong> — those go through <code>/plugin</code>.</li>
+</ul>
+<div class="fail"><strong>Failure mode</strong>: treating <code>/skill-doctor</code> as a quality evaluation. A skill that was "never invoked" is usually not useless — its description never survived selection. That is a <strong>triggering</strong> problem: fix the description and run the should-trigger set, do not rewrite the body. Conversely, a skill that fires every time and makes things worse every time looks perfectly healthy in <code>/skill-doctor</code>.</div>
+<div class="res"><strong>Going deeper</strong> · <a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices#evaluation-and-iteration" target="_blank">Evaluation and iteration (the five steps)</a> · <a href="https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md" target="_blank">skill-creator/SKILL.md (same-turn spawning, 2-3 cases, grading.json field names)</a></div>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>The cost, and the alternatives: evals cost more than skills, and they rot</h2>
+<div class="claim">Claim: a serious skill eval usually costs more time and money than writing the skill did. So the real question is not "should I write evals" but "does this skill deserve a suite" — and most do not.</div>
+<h3>The honest costs</h3>
+<ul>
+<li><strong>The bill multiplies.</strong> Per case: runs x two arms x one full agent run each — 3 x 2 = 6 by default. The <code>llm</code> and <code>baseline</code> graders each add a model call on top. <code>claude plugin eval</code> offers <code>--max-cost-usd</code> as a hard ceiling; on a breach it aborts and <strong>reports partial results (exit 2)</strong>, with the overrun bounded to a single agent run — and for that run the paid graders are skipped while the free ones still score it. <strong>Use it on your first run.</strong></li>
+<li><strong>Too tight and too loose both lie to you.</strong> Tight assertions give high variance and permanent red; loose ones give identical arms and a delta pinned to zero. Both present as "the evals are useless" while having opposite causes, which is what the analyst pass is for.</li>
+<li><strong>Early-access tooling does not belong in CI yet.</strong> <code>--threshold</code> (default 1.0, exit 1 below it) and <code>--json</code> are obviously built for pipelines — but the command exits immediately on an account without access. Confirm it runs under the CI identity before you wire a gate to it.</li>
+<li><strong>The docs contradict each other.</strong> The best-practices page still says "there is not currently a built-in way to run these evaluations", while the Claude Code docs carry a full evaluate-and-iterate section. <strong>When two official pages disagree, believe the command that runs.</strong></li>
+<li><strong>Evals rot.</strong> After a model generation turns over, cases that used to discriminate may pass without the skill too, and your delta shrinks to nothing on its own. The official requirement to test on Haiku, Sonnet and Opus is, in effect, a way to surface that early.</li>
+<li><strong>No subagents means no baseline.</strong> skill-creator says so itself: in environments without subagents, <strong>skip the quantitative benchmark</strong>, because baseline comparison is not meaningful there — fall back to qualitative human feedback. Do not pretend to be evaluating in that setting.</li>
+</ul>
+<h3>What to use instead</h3>
+<ul>
+<li><strong><a href="https://github.com/promptfoo/promptfoo" target="_blank">promptfoo</a></strong> — a general prompt / agent / RAG evaluator; per its GitHub repo page, 2026-09, roughly 24.9k stars. Install with <code>npm install -g promptfoo</code>, start with <code>promptfoo init --example getting-started</code>; it supports LLM-as-judge assertions and is built around CI integration. <strong>When not to use it</strong>: it knows nothing about Claude Code's skill triggering. It can score "is this output good", never "should this skill have fired".</li>
+<li><strong><a href="https://github.com/UKGovernmentBEIS/inspect_ai" target="_blank">Inspect AI</a></strong> — the evaluation framework from the UK AI Security Institute; per its GitHub repo page, 2026-09, roughly 2.7k stars, and per PyPI version 0.3.263 released 2026-09-04. Install with <code>pip install inspect-ai</code>; it ships model-graded scorers and over 200 prebuilt evaluations. <strong>When not to use it</strong>: it is research-grade infrastructure for comparing model capability. Pointing it at one SKILL.md is artillery against a mosquito.</li>
+<li><strong>The manual two-run</strong> — the fallback the official docs list themselves: a few realistic prompts, each run in a fresh session once with the skill and once with it turned off via <code>skillOverrides</code>, compared by eye. <strong>When that is enough</strong>: the skill is yours alone, the change was pure wording, or you only want to know whether it fires.</li>
+</ul>
+<div class="fail"><strong>Failure mode</strong>: building an eval suite for a one-off skill. The value of evaluation comes from <strong>reuse</strong> — it is there to catch regressions on every future edit. For a skill you will never touch again, the suite is pure loss.</div>
+</div>
+<!-- ============ 5 ============ -->
+<div class="combo">
+<h3>// THE ONE-PAGE BUYING CARD</h3>
+<p><strong>Do these three first</strong>: (1) <code>claude plugin validate .claude/skills</code> — five seconds to confirm the frontmatter did not silently break; (2) <code>claude plugin eval init --bare &lt;name&gt;</code> for the skeleton, push as much of your success criteria as possible into the free graders <code>regex</code> / <code>file_exists</code> / <code>tool_used</code>, then <code>claude plugin eval . --runs 3 --max-cost-usd &lt;your ceiling&gt;</code>; (3) two weeks later run <code>/skill-doctor</code> and treat the never-invoked ones as description problems.</p>
+<p><strong>Pick a path by situation</strong>: want a report a human can read, with mean +/- stddev → install <code>skill-creator@claude-plugins-official</code>; want CI and an exit code → <code>claude plugin eval --threshold</code> (confirm early access first); evaluating raw prompt quality rather than skill triggering → <code>promptfoo</code>; just want to know whether it got better → <code>skillOverrides: off</code> and two fresh sessions by hand.</p>
+<p><strong>Numbers to keep</strong>: <code>--runs</code> defaults to 3 · <code>--ablation</code> defaults to with-without · <code>--threshold</code> defaults to 1.0 · <code>--judge-model</code> defaults to haiku · free graders are <code>regex</code> / <code>tool_order</code> / <code>tool_used</code> / <code>file_exists</code>, paid ones are <code>llm</code> / <code>baseline</code> · cases live in <code>evals/</code> by default · results land in <code>evals/results/&lt;timestamp&gt;/</code>.</p>
+<p><strong>How to read the report</strong>: stddev before delta; a delta drowned in the stddev is not an improvement. Any case where both arms score full marks should be deleted and rewritten — it discriminates nothing.</p>
+</div>
+<div class="glossary">
+<h3>// GLOSSARY</h3>
+<dl>
+<dt>baseline arm / ablation</dt>
+<dd>The control run: the same case again, with no skill. Without it you are measuring what the model could already do.</dd>
+<dt>grader</dt>
+<dd>The rule that decides whether one run passed. Program-checked graders are free and add no variance; LLM graders cost money and bring their own noise.</dd>
+<dt>LLM-as-judge</dt>
+<dd>Having a second model score the output. For criteria like "professional" or "clear" that no regex can express.</dd>
+<dt>non-discriminating assertion</dt>
+<dd>An assertion that passes with or without the skill. It pins the delta at zero and makes a working skill look useless.</dd>
+<dt>variance</dt>
+<dd>How much repeated runs of one configuration scatter. It is usually large in agent evaluation, which is why the default is three runs and why you read the stddev.</dd>
+<dt>with-only grader</dt>
+<dd>A grader that only makes sense on the arm that has the skill (such as <code>tool_used: Skill</code>). It indicates firing and is excluded from the score delta.</dd>
+</dl>
+</div>
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://code.claude.com/docs/en/skills" target="_blank">Claude Code · Skills</a> — the whole "Evaluate and iterate on a skill" section: the two things a baseline comparison measures, skill-creator's seven-step loop, the four <code>skillOverrides</code> states, <code>/skill-doctor</code> (v2.1.252+) and its Remote Control error, <code>claude plugin validate</code> (v2.1.233+)</li>
+<li><a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices#evaluation-and-iteration" target="_blank">Anthropic · Skill authoring best practices</a> — the five steps of evaluation-driven development, the evaluation JSON structure, the "no built-in way to run these" Note, the Claude A / Claude B loop, and the closing checklist item "at least three evaluations, tested with Haiku, Sonnet and Opus"</li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md" target="_blank">anthropics/skills · skill-creator/SKILL.md</a> — the primary source for the loop: 2-3 test prompts, assertions drafted later, both arms spawned in the same turn, <code>python -m scripts.aggregate_benchmark</code>, <code>grading.json</code> requiring the exact fields <code>text</code>/<code>passed</code>/<code>evidence</code>, and <code>eval-viewer/generate_review.py</code>; the repo shows roughly 175.1k stars / 20.7k forks per its GitHub page, 2026-09</li>
+<li><a href="https://github.com/anthropics/skills/tree/main/skills/skill-creator" target="_blank">skill-creator directory</a> — <code>agents/grader.md</code> (scoring assertions), <code>agents/comparator.md</code> (blind A/B), <code>agents/analyzer.md</code> (finding non-discriminating and high-variance cases), <code>references/schemas.md</code> (the exact evals.json / grading.json structures), and <code>eval-viewer/</code></li>
+<li><a href="https://github.com/anthropics/claude-plugins-official/tree/main/plugins/skill-creator" target="_blank">claude-plugins-official · skill-creator</a> — the same plugin on the official marketplace; this is what <code>/plugin install skill-creator@claude-plugins-official</code> fetches</li>
+<li><a href="https://platform.claude.com/docs/en/test-and-evaluate/develop-tests" target="_blank">Anthropic · Define success criteria and build evaluations</a> — the three eval design principles; "prioritize volume over quality" is what should push you toward the free graders</li>
+<li><a href="https://github.com/promptfoo/promptfoo" target="_blank">promptfoo/promptfoo</a> — general prompt / agent / RAG evaluator; roughly 24.9k stars per its GitHub repo page, 2026-09; <code>npm install -g promptfoo</code></li>
+<li><a href="https://github.com/UKGovernmentBEIS/inspect_ai" target="_blank">UKGovernmentBEIS/inspect_ai</a> — the UK AISI evaluation framework; roughly 2.7k stars per its GitHub repo page, 2026-09; version 0.3.263 released 2026-09-04 per PyPI; <code>pip install inspect-ai</code></li>
+<li><a href="https://agentskills.io/skill-creation/evaluating-skills" target="_blank">Evaluating skill output quality</a> — the eval file format and full iteration workflow that the Claude Code docs point to (third-party site, cited by the official docs)</li>
+<li><a href="skill-authoring-skill6.en.html">This site · Skill 06 Reading the Official Authoring Guide</a> — this issue expands that page's evaluation section; the six hard numbers, the three disclosure patterns and the freedom ladder are over there</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Skill 07 · 2026-09-08</footer>
+</div>
+<script src="https://hub.cissychen.com/comments.js" defer></script>
+<script src="https://hub.cissychen.com/search.js" defer></script>
+<script src="https://hub.cissychen.com/index-button.js" defer></script>
+<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+</body></html>
