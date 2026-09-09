@@ -64,8 +64,8 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <div class="container">
 <header>
 <span class="week-tag">SKILL 08 / META · DEEP DIVE</span>
-<h1>AGENTS.md 与跨 Harness 可移植性</h1>
-<h2>一份仓库说明喂给二十个 agent——以及 Claude Code 为什么偏偏不读它</h2>
+<h1 data-tts="2d8245b6b5a00b7a">AGENTS.md 与跨 Harness 可移植性</h1>
+<h2 data-tts="e5b67ee3850abe62">一份仓库说明喂给二十个 agent——以及 Claude Code 为什么偏偏不读它</h2>
 <div class="date">2026-09-09 · BigCat</div>
 <p class="pitch">你的仓库里现在躺着 CLAUDE.md、AGENTS.md、.cursor/rules/、.github/copilot-instructions.md。四份文件说的是同一件事，而且已经开始互相矛盾了。</p>
 </header>
@@ -73,14 +73,14 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <a href="skill-authoring-skill6.html">相关 → Skill 06 官方 Authoring 最佳实践精读（skill 是按需加载，本期讲的是每次都进上下文的那一层）</a>
 </div>
 <div class="intro">
-<h3>// WHY THIS MATTERS</h3>
+<h3 data-tts="8ad6b7a86afd7b74">// WHY THIS MATTERS</h3>
 <p>AGENTS.md 是「给 agent 看的 README」：仓库根目录一个纯 Markdown 文件，没有 schema、没有必填字段，各家编码 agent 在干活前把它读进上下文。它现由 Linux Foundation 旗下的 <strong>Agentic AI Foundation</strong> 托管，规范仓库 <code>agentsmd/agents.md</code> 据 GitHub 仓库页 2026-09 约 <strong>2.42 万 star</strong>、MIT。</p>
 <p>但最该知道的一条是官方文档白纸黑字写着的：<strong>Claude Code 读 <code>CLAUDE.md</code>，不读 <code>AGENTS.md</code>。</strong>所以「换个文件名就通用了」是错的。本期点名各家真正读哪些文件、给出把它们接起来的具体命令，最后回答那个真问题：仓库级约定里，什么该写、什么不该写。</p>
 </div>
 <!-- ============ 1 ============ -->
 <div class="section">
 <span class="num">// 01</span>
-<h2>它替你干掉什么：干掉四份会打架的仓库说明</h2>
+<h2 data-tts="e2ac429ce65f9407">它替你干掉什么：干掉四份会打架的仓库说明</h2>
 <div class="claim">论断：多份指令文件的真正成本不是重复劳动，是漂移——你只改了其中一份，另外三份开始教 agent 用你半年前废弃的构建命令。解法是选一份当正本，其余用符号链接或导入指过去。</div>
 <div class="diagram">谁读什么（各家官方文档口径）
 ──────────────────────────────────────────────────────────────
@@ -94,7 +94,7 @@ Gemini CLI     GEMINI.md；context.fileName 可改成 ["AGENTS.md", …]
 Cursor         .cursor/rules/*.mdc · .cursorrules
 ──────────────────────────────────────────────────────────────
 结论：AGENTS.md 是最大公约数，但不是全集。</div>
-<h3>第一条立刻能跑的用法</h3>
+<h3 data-tts="3a8dc27b3275fc49">第一条立刻能跑的用法</h3>
 <pre><code><span class="tag-com"># 正本定为 AGENTS.md。Claude Code 侧官方给了两种接法——</span>
 <span class="tag-com"># ① 符号链接（不需要加 Claude 专属内容时最省事，成功时无输出）</span>
 ln -s AGENTS.md CLAUDE.md
@@ -123,24 +123,24 @@ ln -s AGENTS.md CLAUDE.md
 <!-- ============ 2 ============ -->
 <div class="section">
 <span class="num">// 02</span>
-<h2>机制：它凭什么有效——因为它几乎什么都没规定</h2>
+<h2 data-tts="ffd0cc40dbacfdd6">机制：它凭什么有效——因为它几乎什么都没规定</h2>
 <div class="claim">论断：AGENTS.md 能被二十家工具接受，恰恰因为它不是协议。没有 schema、没有校验、没有必填字段，接入成本只有「多读一个文件名」。真正有差异的不是格式，是各家的加载语义。</div>
-<h3>三种加载语义，别混着想</h3>
+<h3 data-tts="963d5e4b90cc9a45">三种加载语义，别混着想</h3>
 <ul>
 <li><strong>拼接（concatenation）</strong>：Claude Code 把工作目录及其所有上级目录里的 <code>CLAUDE.md</code>、<code>CLAUDE.local.md</code> 全部读出来<strong>拼进</strong>上下文，从文件系统根向下排序——离你启动位置越近的越靠后读。Codex 同理，从 git 根走到当前目录，再叠上全局 <code>~/.codex/AGENTS.md</code>。</li>
 <li><strong>就近生效（nearest-wins）</strong>：Copilot 的口径是目录树里<strong>最近</strong>的那份 AGENTS.md 生效，而不是全拼。</li>
 <li><strong>路径域（path-scoped）</strong>：只有当 agent 碰到匹配的文件时才加载。Claude Code 的 <code>.claude/rules/*.md</code> 用 YAML frontmatter 的 <code>paths:</code> 字段，Copilot 的 <code>.instructions.md</code> 用 <code>applyTo</code>，Cursor 的 <code>.mdc</code> 用 globs。<strong>AGENTS.md 本身没有这个能力</strong>——这是它作为最大公约数的代价。</li>
 </ul>
-<h3>一条容易被忽略的性质</h3>
+<h3 data-tts="fe7a851aee40fac6">一条容易被忽略的性质</h3>
 <p>Claude Code 官方明确说：CLAUDE.md 的内容是<strong>作为系统提示之后的一条用户消息</strong>送进去的，不是配置，也不强制执行。所以「我明明写了却不照做」不是 bug，是这层机制的本性。真要钉死某个动作——比如提交前必须跑 lint——官方给的答案是写成 <a href="https://code.claude.com/docs/en/hooks-guide" target="_blank">hook</a>，钩子在固定生命周期点以 shell 命令执行，不取决于模型怎么想。这条对 AGENTS.md 同样成立，而且更甚：跨 harness 时你连对方有没有 hook 机制都不知道。</p>
 <div class="res"><strong>进阶资源</strong> · <a href="https://code.claude.com/docs/en/memory#organize-rules-with-claude/rules/" target="_blank">Claude Code · .claude/rules/ 与 paths 前置字段</a> · <a href="https://docs.github.com/en/copilot/reference/custom-instructions-support" target="_blank">GitHub Docs · Copilot 各类自定义指令的支持矩阵</a></div>
 </div>
 <!-- ============ 3 ============ -->
 <div class="section">
 <span class="num">// 03</span>
-<h2>真实用法与边界：该写什么、不该写什么</h2>
+<h2 data-tts="6d764970bde7acdc">真实用法与边界：该写什么、不该写什么</h2>
 <div class="claim">论断：这个问题现在有官方判据了，而且它是个减法。Claude Code 的 <code>/doctor</code>（v2.1.206+）会给已提交的 CLAUDE.md 提瘦身建议，判据一句话：删掉模型能从代码库自己推出来的，留下它推不出来的。</div>
-<h3>官方瘦身判据（照抄可用）</h3>
+<h3 data-tts="e82d31ad03083f02">官方瘦身判据（照抄可用）</h3>
 <div class="diagram">/doctor 建议删掉                    /doctor 建议保留
 ──────────────────────────────────────────────────────────────
 目录结构树                          踩过的坑（pitfalls）
@@ -152,7 +152,7 @@ ln -s AGENTS.md CLAUDE.md
   目标 &lt; 200 行/文件；超过 4 MiB 直接跳过不读
   「更短的文件带来更好的遵循度」——这是官方原话不是玄学</div>
 <p>反过来说，判断一条该不该进 AGENTS.md，问三个问题：<strong>①</strong> 新来的同事需不需要被告知这件事？需要 → 写。<strong>②</strong> agent 自己 <code>grep</code> 一下就知道吗？知道 → 删。<strong>③</strong> 它只在某个子目录成立吗？是 → 挪到路径域规则里去（<code>.claude/rules/</code> 加 <code>paths:</code>），别占用每次会话的上下文。</p>
-<h3>三个边界</h3>
+<h3 data-tts="2edf302b2fb89030">三个边界</h3>
 <p><strong>嵌套不一定按你想的加载。</strong>Codex 的目录遍历是「git 根 → 当前目录」，不是「所有子目录」。openai/codex 的 issue <a href="https://github.com/openai/codex/issues/13288" target="_blank">#13288</a>（2026-03-02 提出，现已关闭）报的正是这件事：在仓库根启动、改 <code>go/</code> 下的代码时，<code>go/AGENTS.md</code> 不会被合并进来。Claude Code 的子目录 CLAUDE.md 则是<strong>按需加载</strong>——读到那个目录里的文件时才进上下文。同一份嵌套布局，在两个 harness 下行为不同。</p>
 <p><strong>monorepo 里会被别人的说明污染。</strong>Claude Code 给了 <code>claudeMdExcludes</code>（按 glob 匹配绝对路径），写进 <code>.claude/settings.local.json</code> 就只在你这台机器生效：</p>
 <pre><code><span class="tag-key">{ "claudeMdExcludes": ["**/monorepo/CLAUDE.md"] }</span></code></pre>
@@ -163,28 +163,28 @@ ln -s AGENTS.md CLAUDE.md
 <!-- ============ 4 ============ -->
 <div class="section">
 <span class="num">// 04</span>
-<h2>代价与替代品：一份文件喂多个 agent，喂的是最小公分母</h2>
+<h2 data-tts="0854ec56d04d8f41">代价与替代品：一份文件喂多个 agent，喂的是最小公分母</h2>
 <div class="claim">论断：AGENTS.md 只能承载「每次会话都进上下文的一段纯文本」。MCP server、hooks、subagent、skill、路径域规则——这些真正决定 agent 强弱的东西，它一个都带不走。可移植性是靠放弃能力换来的。</div>
-<h3>三条路，成本差一个数量级</h3>
+<h3 data-tts="a2b8921436b86d75">三条路，成本差一个数量级</h3>
 <ul>
 <li><strong>A · 一行符号链接</strong>（<code>ln -s AGENTS.md CLAUDE.md</code>）。零依赖、零维护、正本唯一。<em>什么时候不够</em>：各家需要不同措辞时（比如只想让 Claude 用 plan mode），链接没有插入点——改用 <code>@AGENTS.md</code> 导入再追加。</li>
 <li><strong>B · <a href="https://github.com/intellectronica/ruler" target="_blank">ruler</a></strong>（据 GitHub 仓库页 2026-09 约 <strong>2.9 千 star</strong>，MIT）。<em>替你干掉</em>：手工同步几十个 agent 的配置文件。<em>怎么用</em>：<code>npx @intellectronica/ruler apply</code>，正本放 <code>.ruler/AGENTS.md</code>，分发到 <code>CLAUDE.md</code>、<code>AGENTS.md</code>、<code>.aider.conf.yml</code> 等，README 列了 30 家目标（Copilot、Claude Code、Cursor、Windsurf、Cline、Aider、Codex CLI、Gemini CLI、Goose、Zed、Jules…），还能一并管 MCP 配置。<em>什么时候别装</em>：团队只用一两个 agent 时——它引入的生成产物和 CI 检查比省下的事还多。</li>
 <li><strong>C · <a href="https://github.com/dyoshikawa/rulesync" target="_blank">rulesync</a></strong>（据 GitHub 仓库页 2026-09 约 <strong>1.4 千 star</strong>，MIT）。<em>替你干掉</em>：同上，但它的强项在<strong>反向</strong>。<em>怎么用</em>：<code>npm install -g rulesync</code>；<code>rulesync import</code> 把已有配置吸进 <code>.rulesync/</code>，<code>rulesync convert --from cursor --to copilot,claudecode</code> 可以不采纳它的工作流、只做一次性格式转换；<code>rulesync generate</code> 才是常态分发。除 rules 外还覆盖 ignore、MCP、命令、subagent、skill、hooks。<em>什么时候别装</em>：只想做一次迁移的话，跑完 <code>convert</code> 就卸载，别把生成器留在仓库里。</li>
 </ul>
-<h3>不装任何东西，你还能怎么办</h3>
+<h3 data-tts="040237bc84497e8d">不装任何东西，你还能怎么办</h3>
 <p>把正本写成 <code>AGENTS.md</code>，Claude Code 侧 <code>ln -s</code>，Gemini CLI 侧改 <code>context.fileName</code>，Copilot 和 Codex 天然就读。这四步覆盖了绝大多数人的全部需求，成本是零。<strong>只有当「每家还要一段自己的话」成为常态时，生成器才开始划算</strong>——那时你要维护的不再是一份文件，而是一份模板加 N 份差异。</p>
 <div class="fail"><strong>诚实的代价</strong>：AGENTS.md 每次会话都进上下文，它是<strong>常驻税</strong>，不是按需加载。skill 只在被判定相关时才读进来，规则文件不是。所以每加一段都要问：这段话值不值得在你今年剩下的每一次对话里都出现一遍？大多数「最佳实践」不值得。</div>
 <div class="res"><strong>进阶资源</strong> · <a href="https://code.claude.com/docs/en/skills" target="_blank">Claude Code · Skills（按需加载那一层）</a> · <a href="https://code.claude.com/docs/en/hooks-guide" target="_blank">Claude Code · Hooks（该由代码保证的那一层）</a></div>
 </div>
 <div class="combo">
-<h3>// 一页选购卡</h3>
+<h3 data-tts="c86d6edd5e2135ad">// 一页选购卡</h3>
 <p><strong>先做这三件</strong>：① 把正本定成 <code>AGENTS.md</code>，Claude Code 侧跑 <code>ln -s AGENTS.md CLAUDE.md</code>，新开会话用 <code>/context</code> 验收 Memory files 里有它；② 跑 <code>/doctor</code>，按它的判据把目录树、依赖清单、架构综述删干净，只留坑、理由和反默认约定，压到 200 行以内；③ 把只在某个子目录成立的条目挪进 <code>.claude/rules/</code> 并加 <code>paths:</code> 前置字段，它们不再占用每次会话的上下文。</p>
 <p><strong>按场景选工具</strong>：只用 1–2 个 agent → 符号链接就够，别装生成器；要给十几家分发且各有差异 → <code>npx @intellectronica/ruler apply</code>（<code>.ruler/AGENTS.md</code> 当正本）；手上是一堆 Cursor <code>.mdc</code>、只想转一次格式 → <code>rulesync convert --from cursor --to copilot,claudecode</code>，转完卸载；要把整套 MCP、命令、subagent、skill 一起搬进 Claude Code → <code>/import</code>（v2.1.213+）；monorepo 里被别人的说明污染 → <code>claudeMdExcludes</code>。</p>
 <p><strong>读数备查</strong>：CLAUDE.md 目标 &lt; 200 行 · 超 4 MiB 跳过 · <code>@path</code> 导入最多四跳 · Gemini CLI 用 <code>context.fileName</code> 数组 · Copilot 就近生效、Codex 与 Claude Code 拼接生效 · <code>CLAUDE_CODE_NEW_INIT=1</code> 让 <code>/init</code> 也读 AGENTS.md。</p>
 <p><strong>一句话判据</strong>：模型 grep 一下就知道的，删；新同事需要被告知的，留；只在一个子目录成立的，挪进路径域规则。</p>
 </div>
 <div class="glossary">
-<h3>// 术语表</h3>
+<h3 data-tts="4df8de11e324b6e4">// 术语表</h3>
 <dl>
 <dt>harness（宿主）</dt>
 <dd>跑模型的那层外壳：Claude Code、Codex、Cursor、Copilot 各是一个 harness。同一个模型换 harness，读的文件和权限机制全变。</dd>
@@ -201,7 +201,7 @@ ln -s AGENTS.md CLAUDE.md
 </dl>
 </div>
 <div class="refs">
-<h3>// 延伸阅读</h3>
+<h3 data-tts="6292df00150014fd">// 延伸阅读</h3>
 <ul>
 <li><a href="https://code.claude.com/docs/en/memory" target="_blank">Claude Code · How Claude remembers your project</a> — 本期最主要的一手源：「Claude Code 读 CLAUDE.md 不读 AGENTS.md」的原文、<code>@AGENTS.md</code> 导入与 <code>ln -s</code> 两种接法、<code>/init</code> 与 <code>/import</code> 各读哪些旧规则、加载顺序、<code>claudeMdExcludes</code>、<code>.claude/rules/</code> 的 <code>paths:</code>、200 行与 4 MiB、<code>/doctor</code> 瘦身判据</li>
 <li><a href="https://github.com/agentsmd/agents.md" target="_blank">agentsmd/agents.md</a> — 规范本体与示例文件（dev 环境、测试、PR 约定三段式）；据 GitHub 仓库页 2026-09 约 2.42 万 star、MIT。站点 <a href="https://agents.md/" target="_blank">agents.md</a> 列出支持工具清单</li>
@@ -218,8 +218,8 @@ ln -s AGENTS.md CLAUDE.md
 </div>
 <footer>BigCat · Super Individual · Skill 08 · 2026-09-09</footer>
 </div>
-<script src="https://hub.cissychen.com/comments.js" defer></script>
-<script src="https://hub.cissychen.com/search.js" defer></script>
-<script src="https://hub.cissychen.com/index-button.js" defer></script>
-<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
 </body></html>
