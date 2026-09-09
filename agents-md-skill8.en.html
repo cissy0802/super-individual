@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill 08 · AGENTS.md and Cross-Harness Portability — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head>
+<body>
+<div class="container">
+<header>
+<span class="week-tag">SKILL 08 / META · DEEP DIVE</span>
+<h1>AGENTS.md and Cross-Harness Portability</h1>
+<h2>One repo brief for twenty agents — and why Claude Code is the one that does not read it</h2>
+<div class="date">2026-09-09 · BigCat</div>
+<p class="pitch">Your repository currently holds CLAUDE.md, AGENTS.md, .cursor/rules/, and .github/copilot-instructions.md. Four files saying the same thing, and they have already started contradicting each other.</p>
+</header>
+<div class="xref">
+<a href="skill-authoring-skill6.en.html">Related → Skill 06 Reading the Official Authoring Guide (skills load on demand; this issue covers the layer that enters context every single session)</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>AGENTS.md is a README for agents: one plain Markdown file at the repo root, no schema, no validation, no required fields, read into context by coding agents before they start work. It is now stewarded by the <strong>Agentic AI Foundation</strong> under the Linux Foundation, and the spec repo <code>agentsmd/agents.md</code> shows roughly <strong>24.2k stars</strong> and an MIT license per its GitHub page, 2026-09.</p>
+<p>The single most useful thing to know is stated plainly in the official docs: <strong>Claude Code reads <code>CLAUDE.md</code>, not <code>AGENTS.md</code>.</strong> So "just rename the file and it works everywhere" is wrong. This issue names what each tool actually reads, gives the exact commands that wire them together, and then answers the real question: in a repo-level brief, what belongs and what does not.</p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>What it takes off your plate: four repo briefs that fight each other</h2>
+<div class="claim">Claim: the real cost of multiple instruction files is not duplicated typing, it is drift — you update one of them and the other three keep teaching your agent a build command you abandoned six months ago. The fix is to pick one canonical file and point the rest at it with a symlink or an import.</div>
+<div class="diagram">WHO READS WHAT (per each vendor's own docs)
+──────────────────────────────────────────────────────────────
+Claude Code    CLAUDE.md / .claude/CLAUDE.md / CLAUDE.local.md
+               .claude/rules/*.md      &lt;- does NOT read AGENTS.md
+OpenAI Codex   AGENTS.md (git root -&gt; cwd) + ~/.codex/AGENTS.md
+GitHub Copilot AGENTS.md (nearest wins) · CLAUDE.md · GEMINI.md
+               .github/copilot-instructions.md
+               .github/instructions/**.instructions.md (applyTo)
+Gemini CLI     GEMINI.md; context.fileName can be ["AGENTS.md", ...]
+Cursor         .cursor/rules/*.mdc · .cursorrules
+──────────────────────────────────────────────────────────────
+AGENTS.md is the greatest common denominator, not the whole set.</div>
+<h3>The first thing you can run right now</h3>
+<pre><code><span class="tag-com"># Make AGENTS.md the canonical file. The Claude Code docs give two ways in --</span>
+<span class="tag-com"># (1) symlink: simplest when you need no Claude-specific text; prints nothing on success</span>
+ln -s AGENTS.md CLAUDE.md
+<span class="tag-com"># On Windows a symlink needs Administrator or Developer Mode; use (2) instead</span>
+
+<span class="tag-com"># (2) import: leaves you a place to append Claude-only instructions</span>
+<span class="tag-com"># contents of CLAUDE.md:</span>
+<span class="tag-key">@AGENTS.md</span>
+
+<span class="tag-key">## Claude Code</span>
+<span class="tag-key">Use plan mode for changes under src/billing/.</span>
+
+<span class="tag-com"># Verify: open a new session, run /context, confirm CLAUDE.md is under Memory files</span>
+
+<span class="tag-com"># Gemini CLI takes one setting to accept AGENTS.md (.gemini/settings.json)</span>
+<span class="tag-key">{ "context": { "fileName": ["AGENTS.md", "GEMINI.md"] } }</span>
+<span class="tag-com"># Inspect what got concatenated: /memory show      Rescan: /memory reload</span>
+
+<span class="tag-com"># Already have Cursor / Copilot rules and want them inside Claude Code</span>
+/import                <span class="tag-com"># v2.1.213+, also carries over MCP, commands, subagents, skills</span>
+</code></pre>
+<p>The difference between <code>/import</code> and <code>/init</code> is worth memorizing. <code>/init</code> <strong>reads your old rules and regenerates</strong> a CLAUDE.md — by default from <code>.cursor/rules/</code>, <code>.cursorrules</code> and <code>.github/copilot-instructions.md</code>; with <code>CLAUDE_CODE_NEW_INIT=1</code> it also reads <code>AGENTS.md</code>, <code>.devin/rules/</code>, <code>.windsurf/rules/</code> and <code>.clinerules</code>. <code>/import</code> <strong>appends a one-time copy</strong> and brings MCP servers, commands, subagents and skills along with it. The first one merges; the second one moves house.</p>
+<div class="fail"><strong>Failure mode</strong>: copying is more tempting than linking because it works immediately. Drift starts at that moment — three months later nobody can say which of the two files is current. The official wording for <code>/import</code> is literally "a one-time copy": it is a migration tool, not a sync tool.</div>
+<div class="res"><strong>Going deeper</strong> · <a href="https://code.claude.com/docs/en/memory" target="_blank">Claude Code · Memory, the AGENTS.md section</a> · <a href="https://github.com/agentsmd/agents.md" target="_blank">agentsmd/agents.md</a> · <a href="https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/gemini-md.md" target="_blank">Gemini CLI · GEMINI.md docs</a></div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>The mechanism: it works because it specifies almost nothing</h2>
+<div class="claim">Claim: AGENTS.md got adopted by twenty-odd tools precisely because it is not a protocol. No schema, no validation, no required fields — the cost of supporting it is one more filename to look for. What actually differs between tools is not the format but the loading semantics.</div>
+<h3>Three loading semantics; do not conflate them</h3>
+<ul>
+<li><strong>Concatenation</strong>: Claude Code reads <code>CLAUDE.md</code> and <code>CLAUDE.local.md</code> from your working directory and every directory above it and <strong>concatenates</strong> them, ordered from the filesystem root down — so the file closest to where you launched is read last. Codex does the same from the git root to the current directory, stacked on top of a global <code>~/.codex/AGENTS.md</code>.</li>
+<li><strong>Nearest wins</strong>: Copilot's stated behavior is that the <strong>nearest</strong> AGENTS.md in the directory tree takes precedence, rather than everything being merged.</li>
+<li><strong>Path-scoped</strong>: loaded only when the agent touches a matching file. Claude Code's <code>.claude/rules/*.md</code> use a <code>paths:</code> field in YAML frontmatter, Copilot's <code>.instructions.md</code> use <code>applyTo</code>, Cursor's <code>.mdc</code> use globs. <strong>AGENTS.md itself has no such capability</strong> — that is the price of being the common denominator.</li>
+</ul>
+<h3>A property that gets overlooked</h3>
+<p>The Claude Code docs are explicit: CLAUDE.md content is delivered <strong>as a user message after the system prompt</strong>. It is context, not enforced configuration. So "I wrote it down and it still ignores me" is not a bug, it is the nature of this layer. To pin an action down — lint must run before every commit, say — the documented answer is a <a href="https://code.claude.com/docs/en/hooks-guide" target="_blank">hook</a>, which fires as a shell command at a fixed lifecycle event regardless of what the model decides. The same holds for AGENTS.md, only more so: across harnesses you do not even know whether the other tool has hooks at all.</p>
+<div class="res"><strong>Going deeper</strong> · <a href="https://code.claude.com/docs/en/memory#organize-rules-with-claude/rules/" target="_blank">Claude Code · .claude/rules/ and the paths frontmatter</a> · <a href="https://docs.github.com/en/copilot/reference/custom-instructions-support" target="_blank">GitHub Docs · support matrix for Copilot custom instructions</a></div>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Real usage and limits: what belongs in the file and what does not</h2>
+<div class="claim">Claim: there is now an official answer to this, and it is subtractive. Claude Code's <code>/doctor</code> (v2.1.206+) proposes trims for a checked-in CLAUDE.md on one criterion: cut what the model can derive from the codebase, keep what it cannot.</div>
+<h3>The official trim criteria, verbatim enough to copy</h3>
+<div class="diagram">/doctor CUTS                        /doctor KEEPS
+──────────────────────────────────────────────────────────────
+directory layouts                   pitfalls
+dependency lists                    rationale
+architecture overviews              conventions that differ
+                                    from tool defaults
+                                    ^ the model cannot derive these
+──────────────────────────────────────────────────────────────
+HARD NUMBERS (Claude Code docs)
+  target under 200 lines per file; a file over 4 MiB is skipped
+  "Shorter files produce better adherence" -- their words, not folklore</div>
+<p>Turned around: to decide whether a line belongs in AGENTS.md, ask three questions. <strong>(1)</strong> Would a new teammate need to be told this? Yes → keep it. <strong>(2)</strong> Could the agent find it with one <code>grep</code>? Yes → delete it. <strong>(3)</strong> Is it true only inside one subdirectory? Yes → move it to a path-scoped rule (<code>.claude/rules/</code> with <code>paths:</code>) instead of spending context on it every session.</p>
+<h3>Three boundaries</h3>
+<p><strong>Nesting may not load the way you assume.</strong> Codex walks "git root to current directory", not "every subdirectory". Issue <a href="https://github.com/openai/codex/issues/13288" target="_blank">#13288</a> in openai/codex (opened 2026-03-02, now closed) reports exactly this: launched at the repo root and editing code under <code>go/</code>, the <code>go/AGENTS.md</code> is never merged in. Claude Code's subdirectory CLAUDE.md files, by contrast, are <strong>loaded on demand</strong> — they enter context when Claude reads a file in that directory. The same nested layout behaves differently under the two harnesses.</p>
+<p><strong>Monorepos get polluted by other teams' briefs.</strong> Claude Code offers <code>claudeMdExcludes</code>, matched as globs against absolute paths. Put it in <code>.claude/settings.local.json</code> and it stays on your machine:</p>
+<pre><code><span class="tag-key">{ "claudeMdExcludes": ["**/monorepo/CLAUDE.md"] }</span></code></pre>
+<p><strong>Personal preferences do not belong in the canonical file.</strong> <code>CLAUDE.local.md</code> (gitignore it) is for your sandbox URLs and test data. Across git worktrees it only exists in the one where you created it, so the docs suggest importing from your home directory instead: <code>@~/.claude/my-project-instructions.md</code>.</p>
+<div class="fail"><strong>Failure mode</strong>: when two rules contradict each other, the official line is that Claude "may pick one arbitrarily". Across harnesses this gets worse — AGENTS.md says pnpm, an unmaintained <code>.cursorrules</code> says npm, and you never learn which one won today. When you absorb old rule files, <strong>deleting the source</strong> matters more than the import itself.</div>
+<div class="res"><strong>Going deeper</strong> · <a href="https://code.claude.com/docs/en/memory#write-effective-instructions" target="_blank">Claude Code · writing effective instructions (size, structure, specificity, consistency)</a> · <a href="https://code.claude.com/docs/en/large-codebases" target="_blank">Claude Code · Monorepos and large repos</a></div>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>The cost and the alternatives: one file for many agents means the lowest common denominator</h2>
+<div class="claim">Claim: AGENTS.md can carry exactly one thing — a block of plain text that enters context every session. MCP servers, hooks, subagents, skills, path-scoped rules: none of what actually makes an agent strong travels with it. Portability is bought by giving capability up.</div>
+<h3>Three routes, an order of magnitude apart in cost</h3>
+<ul>
+<li><strong>A · one symlink</strong> (<code>ln -s AGENTS.md CLAUDE.md</code>). No dependencies, no maintenance, one canonical file. <em>When it stops being enough</em>: when tools need different wording (you want only Claude in plan mode, say) a symlink gives you no insertion point — switch to the <code>@AGENTS.md</code> import and append below it.</li>
+<li><strong>B · <a href="https://github.com/intellectronica/ruler" target="_blank">ruler</a></strong> (roughly 2.9k stars, MIT, per its GitHub repo page, 2026-09). <em>What it kills</em>: hand-syncing config files across dozens of agents. <em>How to use it</em>: <code>npx @intellectronica/ruler apply</code>, canonical text in <code>.ruler/AGENTS.md</code>, distributed to <code>CLAUDE.md</code>, <code>AGENTS.md</code>, <code>.aider.conf.yml</code> and more; the README lists 30 targets (Copilot, Claude Code, Cursor, Windsurf, Cline, Aider, Codex CLI, Gemini CLI, Goose, Zed, Jules and others) and it manages MCP config too. <em>When not to install it</em>: if your team uses one or two agents, the generated artifacts and the CI drift check cost more than they save.</li>
+<li><strong>C · <a href="https://github.com/dyoshikawa/rulesync" target="_blank">rulesync</a></strong> (roughly 1.4k stars, MIT, per its GitHub repo page, 2026-09). <em>What it kills</em>: the same problem, but its strength is the <strong>reverse</strong> direction. <em>How to use it</em>: <code>npm install -g rulesync</code>; <code>rulesync import</code> pulls existing configs into <code>.rulesync/</code>, and <code>rulesync convert --from cursor --to copilot,claudecode</code> does a one-shot format conversion without adopting its workflow at all; <code>rulesync generate</code> is the steady-state command. Beyond rules it covers ignore files, MCP, commands, subagents, skills and hooks. <em>When not to install it</em>: if you only need one migration, run <code>convert</code> and uninstall — do not leave a generator living in the repo.</li>
+</ul>
+<h3>What you can do without installing anything</h3>
+<p>Make <code>AGENTS.md</code> canonical, <code>ln -s</code> on the Claude Code side, change <code>context.fileName</code> on the Gemini CLI side, and Copilot and Codex read it natively. Those four steps cover almost everyone's needs at zero cost. <strong>A generator only starts paying for itself once "each tool also needs its own paragraph" becomes the norm</strong> — at that point you are no longer maintaining one file but a template plus N diffs.</p>
+<div class="fail"><strong>The honest cost</strong>: AGENTS.md enters context on every session. It is a <strong>standing tax</strong>, not on-demand loading. A skill is read in only when it is judged relevant; a rules file is not. So every paragraph you add has to answer one question: is this worth appearing in every single conversation you have for the rest of the year? Most "best practices" are not.</div>
+<div class="res"><strong>Going deeper</strong> · <a href="https://code.claude.com/docs/en/skills" target="_blank">Claude Code · Skills (the on-demand layer)</a> · <a href="https://code.claude.com/docs/en/hooks-guide" target="_blank">Claude Code · Hooks (the layer code should guarantee)</a></div>
+</div>
+<div class="combo">
+<h3>// ONE-PAGE BUYING CARD</h3>
+<p><strong>Do these three first</strong>: (1) make <code>AGENTS.md</code> canonical, run <code>ln -s AGENTS.md CLAUDE.md</code>, then open a new session and confirm it under Memory files with <code>/context</code>; (2) run <code>/doctor</code> and apply its criteria — delete the directory tree, the dependency list and the architecture overview, keep pitfalls, rationale and anti-default conventions, and get under 200 lines; (3) move anything that is only true inside one subdirectory into <code>.claude/rules/</code> with a <code>paths:</code> frontmatter, so it stops taxing every session.</p>
+<p><strong>Pick by situation</strong>: one or two agents → a symlink is enough, skip the generator; distributing to a dozen tools with per-tool differences → <code>npx @intellectronica/ruler apply</code> with <code>.ruler/AGENTS.md</code> as the source; a pile of Cursor <code>.mdc</code> files you just want converted once → <code>rulesync convert --from cursor --to copilot,claudecode</code>, then uninstall; moving a whole setup of MCP servers, commands, subagents and skills into Claude Code → <code>/import</code> (v2.1.213+); polluted by other teams in a monorepo → <code>claudeMdExcludes</code>.</p>
+<p><strong>Numbers to keep handy</strong>: target under 200 lines for CLAUDE.md · over 4 MiB is skipped · <code>@path</code> imports nest at most four hops · Gemini CLI takes an array in <code>context.fileName</code> · Copilot is nearest-wins while Codex and Claude Code concatenate · <code>CLAUDE_CODE_NEW_INIT=1</code> makes <code>/init</code> read AGENTS.md as well.</p>
+<p><strong>The criterion in one line</strong>: if one grep would tell the model, delete it; if a new teammate would need to be told, keep it; if it is true in only one subdirectory, move it into a path-scoped rule.</p>
+</div>
+<div class="glossary">
+<h3>// GLOSSARY</h3>
+<dl>
+<dt>harness</dt>
+<dd>The shell that runs the model: Claude Code, Codex, Cursor and Copilot are each a harness. Same model, different harness, and both the files it reads and the permission machinery change.</dd>
+<dt>context file</dt>
+<dd>An instruction file read into context at session start. AGENTS.md, CLAUDE.md and GEMINI.md are all of this kind; only the filename and the loading semantics differ.</dd>
+<dt>concatenation vs nearest-wins</dt>
+<dd>The two ways multiple matching files get handled: stack them all (Claude Code, Codex), or use only the closest one in the directory tree (Copilot's stated behavior for AGENTS.md).</dd>
+<dt>path-scoped rule</dt>
+<dd>A rule loaded only when the agent touches a matching file. <code>.claude/rules/</code> uses <code>paths:</code>, Copilot uses <code>applyTo</code>. The main lever for saving context.</dd>
+<dt>drift</dt>
+<dd>Several copies of one convention evolving separately until they contradict each other. The number-one disease of multi-instruction-file repos.</dd>
+<dt>lowest common denominator</dt>
+<dd>To be readable by every harness, the file can hold only plain text — no MCP, no hooks, no skills. This is what portability costs.</dd>
+</dl>
+</div>
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://code.claude.com/docs/en/memory" target="_blank">Claude Code · How Claude remembers your project</a> — the primary source for most of this issue: the sentence "Claude Code reads CLAUDE.md, not AGENTS.md", the <code>@AGENTS.md</code> import and <code>ln -s</code> recipes, which legacy rule files <code>/init</code> and <code>/import</code> each read, load order, <code>claudeMdExcludes</code>, the <code>paths:</code> field in <code>.claude/rules/</code>, the 200-line and 4 MiB numbers, and the <code>/doctor</code> trim criteria</li>
+<li><a href="https://github.com/agentsmd/agents.md" target="_blank">agentsmd/agents.md</a> — the spec itself plus a sample file (dev environment, testing, PR conventions); roughly 24.2k stars, MIT, per its GitHub repo page, 2026-09. The site <a href="https://agents.md/" target="_blank">agents.md</a> lists the supporting tools</li>
+<li><a href="https://aaif.io/projects/agents-md" target="_blank">Agentic AI Foundation · AGENTS.md project page</a> — governance: a project of the Linux Foundation's AAIF alongside MCP and goose</li>
+<li><a href="https://github.com/openai/codex/blob/main/docs/agents_md.md" target="_blank">openai/codex · docs/agents_md.md</a> — the Codex entry point, pointing at the official guide <a href="https://developers.openai.com/codex/guides/agents-md" target="_blank">Custom instructions with AGENTS.md</a> (concatenated from git root down to the current directory, stacked on <code>~/.codex/AGENTS.md</code>, with a byte cap on the total)</li>
+<li><a href="https://github.com/openai/codex/issues/13288" target="_blank">openai/codex · issue #13288</a> — "Codex doesn't load AGENTS.md in all the parent directories", opened 2026-03-02 and now closed; a real case of a subdirectory AGENTS.md never taking effect</li>
+<li><a href="https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/gemini-md.md" target="_blank">gemini-cli · docs/cli/gemini-md.md</a> — <code>context.fileName</code> accepts <code>["AGENTS.md", "CONTEXT.md", "GEMINI.md"]</code>; the hierarchical load order (<code>~/.gemini/GEMINI.md</code> → workspace and parents → just-in-time); <code>/memory show</code> and <code>/memory reload</code></li>
+<li><a href="https://docs.github.com/en/copilot/reference/custom-instructions-support" target="_blank">GitHub Docs · Support for different types of custom instructions</a> — Copilot's support for AGENTS.md / CLAUDE.md / GEMINI.md, <code>.github/copilot-instructions.md</code> and <code>.github/instructions/**.instructions.md</code>, with the per-surface matrix (coding agent, chat, code review)</li>
+<li><a href="https://github.com/intellectronica/ruler" target="_blank">intellectronica/ruler</a> — "apply the same rules to all coding agents"; <code>npx @intellectronica/ruler apply</code>, source in <code>.ruler/AGENTS.md</code>, 30 target agents, MCP config included; roughly 2.9k stars, MIT, per its GitHub repo page, 2026-09</li>
+<li><a href="https://github.com/dyoshikawa/rulesync" target="_blank">dyoshikawa/rulesync</a> — <code>npm install -g rulesync</code>; four commands (<code>init</code>, <code>generate</code>, <code>import</code>, <code>convert</code>) covering rules, ignore files, MCP, commands, subagents, skills and hooks; roughly 1.4k stars, MIT, per its GitHub repo page, 2026-09</li>
+<li><a href="https://code.claude.com/docs/en/hooks-guide" target="_blank">Claude Code · Hooks</a> — instruction files are context, not enforced configuration; anything that must happen belongs in a hook</li>
+<li><a href="skill-authoring-skill6.en.html">This site · Skill 06 Reading the Official Authoring Guide</a> — how to write the on-demand layer (skills); the complement to this issue's always-resident layer</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Skill 08 · 2026-09-09</footer>
+</div>
+<script src="https://hub.cissychen.com/comments.js" defer></script>
+<script src="https://hub.cissychen.com/search.js" defer></script>
+<script src="https://hub.cissychen.com/index-button.js" defer></script>
+<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+</body></html>
