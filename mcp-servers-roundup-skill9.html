@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill 09 · MCP Server 榜单 — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head>
+<body>
+<div class="container">
+<header>
+<span class="week-tag">SKILL 09 / MCP · ROUNDUP</span>
+<h1>MCP Server 榜单：十个真能装的</h1>
+<h2>四条主线 · 官方与社区的分界 · 每接一个交多少 Context 税</h2>
+<div class="date">2026-09-10 · BigCat</div>
+<p class="pitch">这份榜单最该先说的一句是坏消息：聚合站排在前排的 GitHub / Slack / Postgres MCP，官方两年前就归档了。你照着装，装到的是一具标本。</p>
+</header>
+<div class="xref">
+<a href="coding-skills-roundup-skill1.html">前置 → Skill 01 AI 编码 Skills 榜单（skill / subagent / MCP / hook 的分工）</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>前八期讲的都是 skill——往上下文里塞<strong>字</strong>。MCP 是另一件事：往上下文里塞<strong>工具</strong>。字读完就完了，工具会一直挂在那儿，每一轮对话都在收租。<strong>所以这一类的选购判据不是「有没有用」，是「值不值这份常驻开销」。</strong>下面十个条目全部能点开，星数是我 2026-09-10 当天在 GitHub 仓库页读到的；第 02 节讲四条主线为什么不能混着排，第 04 节把 context 税拆到每一项。</p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>先给清单：十个条目，装法都在下面</h2>
+<div class="claim">论断：MCP 榜单按星数排是没意义的——90.2k 星的那个仓库里，真正值得你装的东西可能一个都没有。所以这张表第一列是星数，但决定装不装的是后两列。</div>
+<div class="diagram">条目（GitHub 仓库）              星数    替你干掉的那件事              什么时候别装
+────────────────────────────────────────────────────────────────────────────────────
+① modelcontextprotocol/servers   90.2k  官方七件参考实现（见下）      你用 Claude Code：多半白装
+② upstash/context7               61.8k  「训练截止日期」这个病        文档就一页，直接贴更快
+③ ChromeDevTools/chrome-devtools 51.5k  性能追踪 / 网络 / 控制台日志  你只要点按钮填表单
+④ microsoft/playwright-mcp       37.0k  让模型看结构化快照而非截图    你已有 Playwright 测试脚本
+⑤ github/github-mcp-server       32.8k  PR / issue / CI 的读写        gh CLI 够用（官方推荐）
+⑥ modelcontextprotocol/registry   7.2k  「这个 server 是不是真的」    ——这个是查的，不是装的
+⑦ exa-labs/exa-mcp-server         5.0k  给 agent 一条真的搜索 + 抓取  你的 harness 自带联网搜索
+⑧ makenotion/notion-mcp-server    4.6k  把 Notion 页面当读写目标      你只是偶尔查一页
+⑨ supabase-community/supabase-mcp 2.9k  查表结构 / 跑迁移 / 看日志    生产库，且没开 read-only
+⑩ getsentry/sentry-mcp             845  把线上报错直接喂进修 bug 的会话 sentry-cli 已在你 CI 里
+────────────────────────────────────────────────────────────────────────────────────
+星数据 GitHub 各仓库页，2026-09。⑥ 是注册表不是 server；① 是一个仓库装七个 server。</div>
+<h3>怎么装（命令抄自各自官方页面）</h3>
+<pre><code><span class="tag-com"># ④ 浏览器：官方 README 给的就是这一条</span>
+claude mcp add playwright npx @playwright/mcp@latest
+
+<span class="tag-com"># ③ Chrome DevTools：官方给的是 JSON 配置</span>
+{"mcpServers":{"chrome-devtools":{"command":"npx","args":["-y","chrome-devtools-mcp@latest"]}}}
+
+<span class="tag-com"># ② Context7：官方 README 现在推的是这条安装器（--claude 指定客户端）</span>
+npx ctx7 setup
+
+<span class="tag-com"># ⑦ Exa：官方仓库给的是 Claude 插件市场这条</span>
+claude plugin install exa@claude-plugins-official
+
+<span class="tag-com"># ⑧ Notion / ⑨ Supabase：远程 HTTP，凭据走 OAuth，不落在你的配置文件里</span>
+claude mcp add --transport http notion https://mcp.notion.com/mcp
+claude mcp add --transport http supabase https://mcp.supabase.com/mcp
+
+<span class="tag-com"># ① 官方参考实现（举两个）</span>
+npx -y @modelcontextprotocol/server-filesystem /你/允许/的/目录
+uvx mcp-server-git
+
+<span class="tag-com"># 装完立刻做这两件事</span>
+/context   <span class="tag-com"># 看它占了多少</span>
+/mcp       <span class="tag-com"># 关掉这次用不上的</span>
+</code></pre>
+<h3>逐条说人话</h3>
+<ul>
+<li><strong>① modelcontextprotocol/servers</strong>：官方现在只留七个参考实现——Everything、Fetch、Filesystem、Git、Memory、Sequential Thinking、Time。<strong>Filesystem 的价值全在权限边界上</strong>：它必须至少给一个允许目录才肯启动，也支持客户端用 roots 动态覆盖。但对 Claude Code 用户，Filesystem 和 Git 基本是白装——Read/Edit 和 <code>git</code> 命令早就覆盖了。这个仓库真正的用处是<strong>当教材读</strong>：官方自己怎么定义工具边界。</li>
+<li><strong>② upstash/context7</strong>：把「某个库最新版的官方文档」现查现喂，治的是模型训练截止日期这个慢性病。它是本榜里星数第二高的，也是最容易被过度安装的——<strong>Skill 10 会单独深挖它，包括什么时候不如你自己贴一段文档进去。</strong></li>
+<li><strong>③ ChromeDevTools/chrome-devtools-mcp</strong>：官方一句话是「让你的编码 agent 控制并检查一个活的 Chrome」。它和 ④ 的分界很清楚：<strong>它能录性能 trace、看网络请求、读带 source map 的控制台报错</strong>，这三件 Playwright MCP 给不了。要查「为什么这页慢」，装它。</li>
+<li><strong>④ microsoft/playwright-mcp</strong>：官方描述是让模型「通过结构化的无障碍树快照与网页交互，绕开截图和视觉调优模型」。<strong>结构化快照比像素既省 token 又稳</strong>——这条是本系列 Skill 11 的正题。要跑端到端流程、填表、断言，装它。</li>
+<li><strong>⑤ github/github-mcp-server</strong>：官方托管一份远程实例在 <code>https://api.githubcopilot.com/mcp/</code>。它的关键不在能干什么，而在<strong>怎么收窄</strong>：文档里工具数超过一百，分成 context / repos / issues / pull_requests / users 等 toolset，用 <code>--toolsets</code> 挑，用 <code>--read-only</code> 一刀砍掉所有写操作。<strong>不收窄就装，是本榜里最贵的一次点击。</strong></li>
+<li><strong>⑥ modelcontextprotocol/registry</strong>：官方的社区注册表，自称是 MCP server 的应用商店，API 在 <code>registry.modelcontextprotocol.io</code>。<strong>它目前仍是 preview、v0.1 API 冻结中，可能还会重置数据</strong>——所以它现在的正确用法是「查这个名字是不是真的」，不是「照着榜单装」。Claude 侧还有一份人工审过的 <a href="https://claude.ai/directory" target="_blank">Anthropic Directory</a>。</li>
+<li><strong>⑦ exa-labs/exa-mcp-server</strong>：官方描述是「把 AI agent 接到 Exa 做网页搜索、内容抓取和多步研究」。装它的唯一理由是<strong>你的 harness 自己不带联网搜索</strong>；带了就别装，两套搜索工具会互相抢触发。</li>
+<li><strong>⑧ makenotion/notion-mcp-server</strong>：官方 Notion MCP。这里有一个别处学不到的细节：它专门提供了 <code>retrieve-page-markdown</code> / <code>update-page-markdown</code> 两个工具，用 Markdown 而不是 block JSON 读写页面，官方明说这<strong>对 AI agent 显著更省 token</strong>。这是「好 MCP server 长什么样」的一个标本——<strong>作者替你想过返回值的体积</strong>。</li>
+<li><strong>⑨ supabase-community/supabase-mcp</strong>：远程实例在 <code>https://mcp.supabase.com/mcp</code>。它给了两个开关：<code>readOnly</code> 排除所有会改数据的工具，<code>projectScoped</code> 把 <code>project_id</code> 从工具入参里拿掉、并砍掉账号级工具。<strong>连生产库时这两个都该开。</strong></li>
+<li><strong>⑩ getsentry/sentry-mcp</strong>：官方托管在 <code>https://mcp.sentry.dev</code>，Claude Code 侧可以 <code>claude plugin install sentry-mcp@sentry-mcp</code>。价值是把线上报错、堆栈、影响面直接搬进你正在修 bug 的那个会话，省掉「切浏览器复制粘贴」。星数只有 845——<strong>本榜里星数最低的一个，恰好也是官方出品、职责最窄的一个。这正是「别按星数排」的证据。</strong></li>
+</ul>
+<div class="res"><strong>进阶资源</strong> · <a href="https://code.claude.com/docs/en/mcp" target="_blank">Claude Code · MCP</a>（<code>claude mcp add</code> 三种 scope、<code>/mcp</code>、<code>mcp__server__tool</code> 命名的出处）</div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>为什么这十个不能混着比：四条主线加一个陷阱</h2>
+<div class="claim">论断：把 context7 和 github-mcp-server 放进同一个排行榜，就像把螺丝刀和挖掘机比马力。它们进入你上下文的方式、失效的方式、出事的方式都不一样。</div>
+<h3>四条主线</h3>
+<ol>
+<li><strong>文档检索（②⑦）</strong>——治「模型不知道新版本」。输入是你的问题，输出是一段文本，<strong>只读、无副作用、失败了最多是白花几百 token</strong>。这条线风险最低，也最容易装重复。</li>
+<li><strong>浏览器（③④）</strong>——治「模型看不见渲染结果」。它有副作用（会真的点、真的填），返回值可能极大，而且<strong>它读回来的网页内容是不可信输入</strong>。③ 偏诊断（性能、网络、控制台），④ 偏操作（无障碍树快照、点填断言），要装先想清楚你是哪一种。</li>
+<li><strong>代码托管（⑤）</strong>——治「模型看不到 PR 和 CI」。工具数量最多、权限最敏感，<strong>是唯一必须先想「怎么收窄」再想「装不装」的一类</strong>。官方文档自己的建议反而是：<code>gh</code> 这类 CLI 比 MCP 更省 context，因为它不额外挂一份工具清单。</li>
+<li><strong>业务系统与办公套件（⑧⑨⑩）</strong>——治「模型进不了你公司的那几个系统」。这条线的共同点是<strong>远程 HTTP + OAuth</strong>：凭据不落在你的配置文件里，但代价是你的数据要出你的机器。选它们的判据不是功能，是<strong>返回值体积可控性</strong>与<strong>有没有只读模式</strong>。</li>
+</ol>
+<div class="fail"><strong>那个陷阱</strong>：聚合站的「2026 最佳 MCP 服务器」里，GitHub、GitLab、Slack、Google Drive、Google Maps、PostgreSQL、Puppeteer、Redis、Sentry、SQLite、Brave Search 常年在榜。这些<strong>参考实现已经被官方移进 <code>modelcontextprotocol/servers-archived</code></strong>（GitHub 与 Sentry 各自有新的官方 server，即本榜⑤⑩；Brave 也被官方版取代）。抄名字前先看仓库是不是归档状态——这就是为什么本系列的硬规矩写着：<strong>名字以 GitHub 仓库目录或官方页面为准，聚合站只用来发现候选。</strong></div>
+<h3>还有一条不属于任何主线</h3>
+<p>官方参考实现（①里的 Filesystem / Git / Memory / Sequential Thinking / Time）是<strong>协议演示，不是产品</strong>。它们存在的意义是让你看懂「一个 server 该长什么样」。对已经有文件工具和 shell 的编码 harness，装它们等于给自己发一份重复的工具清单，然后每轮对话付一次钱。</p>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>三分钟验货：六条判据，用上面这十个当量尺</h2>
+<div class="claim">论断：判断一个 MCP server 值不值得接，不用读它的代码——读它的 README 里有没有回答这六个问题就够了。上面十个恰好各自示范了一条。</div>
+<ol>
+<li><strong>是不是官方出品，仓库归档了没有。</strong>看 owner：<code>github/</code>、<code>microsoft/</code>、<code>ChromeDevTools/</code>、<code>makenotion/</code>、<code>getsentry/</code> 是第一方；<code>modelcontextprotocol/servers-archived</code> 下的一律不装。星数高低不参与这一条判断。</li>
+<li><strong>有没有只读开关。</strong><code>github-mcp-server</code> 的 <code>--read-only</code>、<code>supabase-mcp</code> 的 <code>readOnly</code> 是正面样本。<strong>一个能改你数据、却没有只读模式的 server，是设计缺陷，不是功能丰富。</strong></li>
+<li><strong>工具能不能按组挑。</strong><code>--toolsets context,repos</code> 这种粒度决定了你交多少税。一个 server 把一百多个工具一次性全挂上、还不给关，就是把它的方便建立在你的上下文上。</li>
+<li><strong>返回值体积作者管不管。</strong>Notion 那两个 <code>*-markdown</code> 工具是标杆。反面是「返回整个 block JSON / 整张表 / 整份 trace」——Claude Code 里<strong>单次 MCP 输出默认上限 25000 token，超过 10000 就会警告</strong>，超限的内容会被落成文件再让模型自己去读。</li>
+<li><strong>本地 stdio 还是远程 HTTP，凭据放哪。</strong>本地：多一个常驻进程和启动延迟，数据不出机器。远程：OAuth 免管密钥，但数据要出去。<code>claude mcp add</code> 三种 scope 里，<strong><code>--scope project</code> 会写进仓库的 <code>.mcp.json</code> 并共享给全队</strong>，别把个人凭据写进去。</li>
+<li><strong>有没有 CLI 平替。</strong>这条是官方文档亲口说的：<code>gh</code>、<code>aws</code>、<code>gcloud</code>、<code>sentry-cli</code> 这类 CLI <strong>比 MCP server 更省 context，因为它们不附加任何逐工具清单</strong>，模型直接跑命令就行。<strong>能用 CLI 解决的，先别接 server。</strong></li>
+</ol>
+<div class="res"><strong>进阶资源</strong> · <a href="https://code.claude.com/docs/en/costs" target="_blank">Claude Code · Manage costs</a>（判据 4、6 与下一节 context 税的全部出处）</div>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>诚实的代价：Context 税到底收在哪一步</h2>
+<div class="claim">论断：现在的税比一年前轻了很多——工具定义默认延迟加载。但很多人算错了方向：<strong>真正的大头从来不是工具定义，是返回值。</strong></div>
+<h3>先说好消息</h3>
+<p>Claude Code 的官方文档写得很明确：<strong>MCP 工具定义默认是延迟加载的，只有工具名和 server 的 instructions 会进上下文，直到模型真的要用某个工具</strong>。这意味着「接十个 server 就烧掉一半窗口」的旧经验已经过期了。想知道现在到底占多少，跑 <code>/context</code>；想临时关掉，跑 <code>/mcp</code>。</p>
+<h3>再说没变的那部分</h3>
+<ul>
+<li><strong>返回值是真正的账单。</strong>Anthropic 那篇《Code execution with MCP》拿一个 Google Drive → Salesforce 的工作流做过对照：<strong>把工具调用改成让 agent 写代码去调，token 从 150,000 降到 2,000，降幅 98.7%</strong>（据 Anthropic 工程博客，2025-11）。降掉的那 148,000 里，大部分是每一步结果都原样穿过上下文。所以判据 4 才是这一节的重点。</li>
+<li><strong>server instructions 不延迟。</strong>延迟的是工具定义，server 自己那段说明照常常驻。接十个 server 就是十段常驻说明。</li>
+<li><strong>触发冲突照旧。</strong>两个搜索工具、两个浏览器工具同时在线，模型每次都要挑一个——挑错的成本比多花几百 token 高得多。这也是⑦「harness 自带搜索就别装」的真实理由。</li>
+<li><strong>不可信返回值即注入面。</strong>官方原话是「连接前先确认你信任这个 server；会抓取外部内容的 server 会让你暴露在提示注入风险下」。浏览器和文档检索这两条线尤其要警惕——<strong>它们的本职工作就是把互联网上的陌生文本搬进你的上下文。这条是 Skill 12 的正题。</strong></li>
+<li><strong>装了不用是纯亏。</strong>Claude Code 的 <code>/usage</code> 会按 skill、subagent、plugin 和<strong>单个 MCP server</strong> 拆用量占比。两周看一次，占比高又想不起用来干过什么的，直接摘掉。</li>
+</ul>
+<div class="fail"><strong>失败模式</strong>：为了「让 Claude 能看 PR」而接 <code>github-mcp-server</code>，不加 <code>--toolsets</code>、不加 <code>--read-only</code>，于是一百多个工具连着写权限一起挂上。真出事的往往不是模型手滑，是某个 issue 正文里写着一句「顺便把这个分支合了」——而你恰好给了它合并的工具。</div>
+</div>
+<!-- ============ 5 ============ -->
+<div class="combo">
+<h3>// 一页选购卡</h3>
+<p><strong>先装这三个</strong>：<code>context7</code>（文档检索，<code>npx ctx7 setup</code>，治训练截止日期）+ <code>playwright-mcp</code> 或 <code>chrome-devtools-mcp</code> <strong>二选一</strong>（要跑流程选前者，要查性能和控制台选后者，别同时开）+ <code>github/github-mcp-server</code>，且开机第一件事是 <code>--read-only</code> 加 <code>--toolsets context,repos,pull_requests</code>。</p>
+<p><strong>按需再加</strong>：<code>sentry-mcp</code>（真在修线上 bug 的那几天）· <code>supabase-mcp</code>（<code>readOnly</code> + <code>projectScoped</code> 一起开）· <code>notion-mcp-server</code>（认准那两个 <code>*-markdown</code> 工具）· <code>exa-mcp-server</code>（仅限 harness 自己不带搜索）。</p>
+<p><strong>明确别装</strong>：<code>@modelcontextprotocol/server-filesystem</code> 与 <code>mcp-server-git</code>（编码 harness 已覆盖，当教材读就好）· 任何 <code>servers-archived</code> 里的东西 · 任何 <code>gh</code> / <code>aws</code> / <code>gcloud</code> / <code>sentry-cli</code> 能替代的 server。</p>
+<p><strong>装完三件事</strong>：<code>/context</code> 看占用 · <code>/mcp</code> 关掉这次用不上的 · 两周一次用 <code>/usage</code> 查账，摘掉想不起用途的。<strong>硬数字备查</strong>：单次 MCP 输出默认上限 25000 token，超 10000 告警；<code>--scope project</code> 会写进仓库共享给全队。</p>
+</div>
+<div class="glossary">
+<h3>// 术语表</h3>
+<dl>
+<dt>MCP（Model Context Protocol，模型上下文协议）</dt>
+<dd>一套让模型连接外部工具与数据源的开放协议。skill 给模型的是指令，MCP 给模型的是可调用的工具。</dd>
+<dt>stdio / HTTP transport（传输方式）</dt>
+<dd>本地 stdio：在你机器上起一个进程，数据不出机器。远程 HTTP：连一个托管地址，走 OAuth，凭据不落在配置文件里。</dd>
+<dt>toolset（工具组）</dt>
+<dd>把一个 server 的上百个工具按主题分组，让你只开用得到的那几组。<code>github-mcp-server</code> 的 <code>--toolsets</code> 是范本。</dd>
+<dt>tool search（工具检索 / 延迟加载）</dt>
+<dd>Claude Code 默认行为：只把工具名和 server instructions 放进上下文，模型真要用某个工具时才加载它的完整定义。</dd>
+<dt>servers-archived</dt>
+<dd>官方参考实现的归档仓库。聚合站榜单里那批耳熟能详的名字，多半住在这儿。</dd>
+</dl>
+</div>
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://github.com/modelcontextprotocol/servers" target="_blank">modelcontextprotocol/servers</a> — 官方七件参考实现与 <code>servers-archived</code> 归档清单的出处（90.2k 星，2026-09）</li>
+<li><a href="https://github.com/upstash/context7" target="_blank">upstash/context7</a> — <code>npx ctx7 setup</code> 与 <code>--claude</code> 参数（61.8k 星，2026-09）；本系列 Skill 10 深挖</li>
+<li><a href="https://github.com/ChromeDevTools/chrome-devtools-mcp" target="_blank">ChromeDevTools/chrome-devtools-mcp</a> — 性能 trace / 网络 / source-map 控制台三项能力的原文（51.5k 星，2026-09）</li>
+<li><a href="https://github.com/microsoft/playwright-mcp" target="_blank">microsoft/playwright-mcp</a> — 「structured accessibility snapshots, bypassing the need for screenshots」原文与安装命令（37.0k 星，2026-09）；Skill 11 深挖</li>
+<li><a href="https://github.com/github/github-mcp-server" target="_blank">github/github-mcp-server</a> — <code>--toolsets</code>、<code>--read-only</code> 与远程实例 <code>api.githubcopilot.com/mcp/</code>（32.8k 星，2026-09）</li>
+<li><a href="https://github.com/modelcontextprotocol/registry" target="_blank">modelcontextprotocol/registry</a> — 官方注册表，仍在 preview 与 v0.1 API 冻结期（7.2k 星，2026-09）</li>
+<li><a href="https://github.com/exa-labs/exa-mcp-server" target="_blank">exa-labs/exa-mcp-server</a> — <code>claude plugin install exa@claude-plugins-official</code>（5.0k 星，2026-09）</li>
+<li><a href="https://github.com/makenotion/notion-mcp-server" target="_blank">makenotion/notion-mcp-server</a> — <code>retrieve-page-markdown</code> / <code>update-page-markdown</code> 与「显著更省 token」的说法出处（4.6k 星，2026-09）</li>
+<li><a href="https://github.com/supabase-community/supabase-mcp" target="_blank">supabase-community/supabase-mcp</a> — <code>readOnly</code> 与 <code>projectScoped</code> 两个开关的定义（2.9k 星，2026-09）</li>
+<li><a href="https://github.com/getsentry/sentry-mcp" target="_blank">getsentry/sentry-mcp</a> — 托管地址 <code>mcp.sentry.dev</code> 与插件安装命令（845 星，2026-09）</li>
+<li><a href="https://code.claude.com/docs/en/mcp" target="_blank">Claude Code · Connect to tools with MCP</a> — 三种 scope、<code>/mcp</code>、工具命名、以及「连接前先确认你信任这个 server」的安全警告</li>
+<li><a href="https://code.claude.com/docs/en/costs" target="_blank">Claude Code · Manage costs effectively</a> — 工具定义默认延迟加载、<code>/context</code>、CLI 比 MCP 更省 context、<code>/usage</code> 按 server 拆用量</li>
+<li><a href="https://www.anthropic.com/engineering/code-execution-with-mcp" target="_blank">Anthropic · Code execution with MCP</a> — 150,000 → 2,000 token、98.7% 降幅那组对照的原文（2025-11）</li>
+<li><a href="https://claude.ai/directory" target="_blank">Anthropic Directory</a> — 人工审过的连接器目录，比社区注册表更保守</li>
+<li><a href="coding-skills-roundup-skill1.html">本站 Skill 01 · AI 编码 Skills 榜单</a> — skill / subagent / MCP / hook 的分工</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Skill 09 · 2026-09-10</footer>
+</div>
+<script src="https://hub.cissychen.com/comments.js" defer></script>
+<script src="https://hub.cissychen.com/search.js" defer></script>
+<script src="https://hub.cissychen.com/index-button.js" defer></script>
+<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+</body></html>

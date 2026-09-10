@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill 09 · MCP Server Roundup — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head>
+<body>
+<div class="container">
+<header>
+<span class="week-tag">SKILL 09 / MCP · ROUNDUP</span>
+<h1>MCP Server Roundup: Ten You Can Actually Install</h1>
+<h2>Four distinct lines · Official vs community · What each one costs you in context</h2>
+<div class="date">2026-09-10 · BigCat</div>
+<p class="pitch">The bad news belongs at the top of this list: the GitHub, Slack and Postgres MCP servers that top every aggregator ranking were archived by the maintainers two years ago. Install from those lists and you install a specimen.</p>
+</header>
+<div class="xref">
+<a href="coding-skills-roundup-skill1.en.html">Start here → Skill 01 AI Coding Skills Roundup (skill / subagent / MCP / hook)</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>The first eight issues were about skills — text pushed into the context window. MCP is a different animal: it pushes <strong>tools</strong> in. Text is read once and done; tools sit there collecting rent on every single turn. <strong>So the buying criterion for this category is never "is it useful" but "is it worth the standing overhead."</strong> All ten entries below open in a browser, and every star count is what the GitHub repo page showed on 2026-09-10. Section 02 explains why the four lines cannot share one ranking; section 04 itemizes the context tax.</p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>The list first: ten entries, install commands below</h2>
+<div class="claim">Claim: ranking MCP servers by stars is meaningless — the 90.2k-star repo at the top may contain nothing you should install. Stars are column one here, but columns three and four decide.</div>
+<div class="diagram">Entry (GitHub repo)              Stars   What it takes off your plate       When NOT to install
+──────────────────────────────────────────────────────────────────────────────────────────
+1 modelcontextprotocol/servers   90.2k  Seven official reference servers    On Claude Code: mostly moot
+2 upstash/context7               61.8k  The training-cutoff disease         One-page docs: just paste them
+3 ChromeDevTools/chrome-devtools 51.5k  Perf traces / network / console     You only click and fill forms
+4 microsoft/playwright-mcp       37.0k  Structured snapshots, not pixels    You already script Playwright
+5 github/github-mcp-server       32.8k  PRs, issues, CI read and write      The gh CLI suffices (official advice)
+6 modelcontextprotocol/registry   7.2k  "Is this server even real?"         It is for lookups, not installs
+7 exa-labs/exa-mcp-server         5.0k  Real web search plus fetching       Your harness already searches
+8 makenotion/notion-mcp-server    4.6k  Notion pages as a read/write target You just read a page now and then
+9 supabase-community/supabase-mcp 2.9k  Schema, migrations, logs            Production DB with read-only off
+10 getsentry/sentry-mcp            845  Live errors straight into the fix   sentry-cli is already in your CI
+──────────────────────────────────────────────────────────────────────────────────────────
+Stars per each GitHub repo page, 2026-09. Entry 6 is a registry, not a server; entry 1 ships seven.</div>
+<h3>How to install (commands copied from each project's own page)</h3>
+<pre><code><span class="tag-com"># 4 Browser: this exact line is in the official README</span>
+claude mcp add playwright npx @playwright/mcp@latest
+
+<span class="tag-com"># 3 Chrome DevTools: the project ships a JSON config instead</span>
+{"mcpServers":{"chrome-devtools":{"command":"npx","args":["-y","chrome-devtools-mcp@latest"]}}}
+
+<span class="tag-com"># 2 Context7: the README now points at this installer (--claude targets the client)</span>
+npx ctx7 setup
+
+<span class="tag-com"># 7 Exa: the repo points at the Claude plugin marketplace</span>
+claude plugin install exa@claude-plugins-official
+
+<span class="tag-com"># 8 Notion / 9 Supabase: remote HTTP, OAuth, no secrets in your config file</span>
+claude mcp add --transport http notion https://mcp.notion.com/mcp
+claude mcp add --transport http supabase https://mcp.supabase.com/mcp
+
+<span class="tag-com"># 1 Official reference servers (two examples)</span>
+npx -y @modelcontextprotocol/server-filesystem /your/allowed/dir
+uvx mcp-server-git
+
+<span class="tag-com"># Do these two things the moment you finish installing</span>
+/context   <span class="tag-com"># see what it costs</span>
+/mcp       <span class="tag-com"># switch off what today's work does not need</span>
+</code></pre>
+<h3>Entry by entry, in plain words</h3>
+<ul>
+<li><strong>1. modelcontextprotocol/servers</strong> — seven reference servers remain: Everything, Fetch, Filesystem, Git, Memory, Sequential Thinking, Time. <strong>Filesystem's whole value is its permission boundary</strong>: it refuses to start without at least one allowed directory, and clients supporting roots can replace that list dynamically. But on Claude Code, Filesystem and Git are largely redundant — Read/Edit and plain <code>git</code> already cover them. The repo's real use is <strong>as a textbook</strong>: this is how the maintainers themselves draw a tool boundary.</li>
+<li><strong>2. upstash/context7</strong> — fetches the current official docs for a library on demand, treating the model's training cutoff as the chronic illness it is. Second-highest star count here, and the most over-installed. <strong>Skill 10 digs into it properly, including when pasting the doc yourself simply beats it.</strong></li>
+<li><strong>3. ChromeDevTools/chrome-devtools-mcp</strong> — the project's own line is that it "lets your coding agent control and inspect a live Chrome browser." The split from entry 4 is clean: <strong>this one records performance traces, inspects network requests, and reads console messages with source-mapped stack traces</strong>. Playwright MCP does none of those. Debugging "why is this page slow" is its territory.</li>
+<li><strong>4. microsoft/playwright-mcp</strong> — official description: it lets models "interact with web pages through structured accessibility snapshots, bypassing the need for screenshots or visually-tuned models." <strong>Structured snapshots are both cheaper in tokens and steadier than pixels</strong> — the subject of Skill 11. Install it to drive flows, fill forms, and assert.</li>
+<li><strong>5. github/github-mcp-server</strong> — a hosted remote instance lives at <code>https://api.githubcopilot.com/mcp/</code>. What matters is not the feature list but <strong>how you narrow it</strong>: the docs list 100+ tools grouped into context / repos / issues / pull_requests / users toolsets, selectable with <code>--toolsets</code>, and <code>--read-only</code> drops every write tool at once. <strong>Installing it unnarrowed is the most expensive click on this list.</strong></li>
+<li><strong>6. modelcontextprotocol/registry</strong> — the official community registry, described as an app store for MCP servers, with its API at <code>registry.modelcontextprotocol.io</code>. <strong>It is still in preview, its v0.1 API is frozen, and data resets remain possible</strong> — which makes it a place to check whether a name is real, not a shopping list. On the Claude side there is also the human-reviewed <a href="https://claude.ai/directory" target="_blank">Anthropic Directory</a>.</li>
+<li><strong>7. exa-labs/exa-mcp-server</strong> — described as connecting "AI agents to Exa for web search, content fetching, and multi-step research." The one good reason to install it is that <strong>your harness has no built-in web search</strong>. If it has one, skip: two search tools online at once fight over every trigger.</li>
+<li><strong>8. makenotion/notion-mcp-server</strong> — the official Notion server, and it carries a detail worth stealing: it ships <code>retrieve-page-markdown</code> and <code>update-page-markdown</code>, reading and writing pages as Markdown rather than block JSON, which the project states is <strong>significantly more token-efficient for AI agents</strong>. That is what a well-built server looks like — <strong>the author thought about the size of what comes back.</strong></li>
+<li><strong>9. supabase-community/supabase-mcp</strong> — hosted at <code>https://mcp.supabase.com/mcp</code>, with two switches worth knowing: <code>readOnly</code> excludes every mutating tool, and <code>projectScoped</code> omits <code>project_id</code> from tool schemas and drops account-level tools. <strong>Both belong on whenever a production project is in reach.</strong></li>
+<li><strong>10. getsentry/sentry-mcp</strong> — hosted at <code>https://mcp.sentry.dev</code>, installable on Claude Code with <code>claude plugin install sentry-mcp@sentry-mcp</code>. It moves live errors, stack traces and blast radius into the session where you are already fixing the bug. It has 845 stars — <strong>the lowest count here, and also the most narrowly scoped first-party server here. That is the argument against ranking by stars, in one row.</strong></li>
+</ul>
+<div class="res"><strong>Further reading</strong> · <a href="https://code.claude.com/docs/en/mcp" target="_blank">Claude Code · MCP</a> (source for the three <code>claude mcp add</code> scopes, <code>/mcp</code>, and <code>mcp__server__tool</code> naming)</div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Why these ten cannot share a ranking: four lines and one trap</h2>
+<div class="claim">Claim: putting context7 and github-mcp-server on one leaderboard is comparing a screwdriver to an excavator by horsepower. They enter your context differently, fail differently, and go wrong differently.</div>
+<h3>The four lines</h3>
+<ol>
+<li><strong>Docs retrieval (2, 7)</strong> — cures "the model does not know the new version." Input is a question, output is text: <strong>read-only, no side effects, and a failure costs a few hundred wasted tokens at worst</strong>. Lowest-risk line, and the easiest to install twice by accident.</li>
+<li><strong>Browser (3, 4)</strong> — cures "the model cannot see what rendered." It has side effects (it really clicks, really types), its returns can be enormous, and <strong>the web pages it reads back are untrusted input</strong>. Entry 3 leans diagnostic (performance, network, console); entry 4 leans operational (accessibility snapshots, click, fill, assert). Decide which you are before installing.</li>
+<li><strong>Code hosting (5)</strong> — cures "the model cannot see the PR or CI." Most tools, most sensitive permissions, and <strong>the only line where "how do I narrow this" comes before "should I install this."</strong> Note that the official docs themselves recommend the opposite move: a CLI like <code>gh</code> is more context-efficient than an MCP server precisely because it adds no per-tool listing.</li>
+<li><strong>Business systems and office suites (8, 9, 10)</strong> — cures "the model cannot reach the systems your company runs on." What they share is <strong>remote HTTP plus OAuth</strong>: no credentials in your config file, but your data leaves your machine. Pick on <strong>whether return size is controllable</strong> and <strong>whether a read-only mode exists</strong>, not on the feature matrix.</li>
+</ol>
+<div class="fail"><strong>The trap</strong>: every "best MCP servers of 2026" listicle still ranks GitHub, GitLab, Slack, Google Drive, Google Maps, PostgreSQL, Puppeteer, Redis, Sentry, SQLite and Brave Search. Those reference implementations were <strong>moved into <code>modelcontextprotocol/servers-archived</code></strong> (GitHub and Sentry each have a new first-party server — entries 5 and 10 above; Brave was replaced by an official one too). Check whether a repo is archived before copying its name. This is exactly why this series' house rule reads: <strong>take names from the GitHub repo tree or the official page; aggregators are for discovering candidates only.</strong></div>
+<h3>And one thing that belongs to no line</h3>
+<p>The official reference servers inside entry 1 — Filesystem, Git, Memory, Sequential Thinking, Time — are <strong>protocol demos, not products</strong>. They exist so you can see what a server ought to look like. On a coding harness that already has file tools and a shell, installing them hands the model a duplicate tool listing and bills you for it on every turn.</p>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Three-minute inspection: six tests, with these ten as the yardstick</h2>
+<div class="claim">Claim: deciding whether to connect an MCP server never requires reading its code. Whether its README answers these six questions is enough — and each of the ten above demonstrates one.</div>
+<ol>
+<li><strong>Is it first-party, and is the repo archived?</strong> Read the owner: <code>github/</code>, <code>microsoft/</code>, <code>ChromeDevTools/</code>, <code>makenotion/</code> and <code>getsentry/</code> are first-party; nothing under <code>modelcontextprotocol/servers-archived</code> gets installed. Star count plays no part in this test.</li>
+<li><strong>Is there a read-only switch?</strong> <code>--read-only</code> on github-mcp-server and <code>readOnly</code> on supabase-mcp are the positive samples. <strong>A server that can mutate your data and offers no read-only mode has a design defect, not a rich feature set.</strong></li>
+<li><strong>Can tools be selected by group?</strong> Granularity like <code>--toolsets context,repos</code> decides your tax bill. A server that mounts 100+ tools at once and gives you no way to trim is building its convenience on your context window.</li>
+<li><strong>Does the author care about return size?</strong> Notion's two <code>*-markdown</code> tools are the benchmark. The opposite is returning a whole block JSON tree, a whole table, a whole trace — on Claude Code, <strong>a single MCP tool result is capped at 25,000 tokens by default and triggers a warning above 10,000</strong>, with oversized output written to a file the model then has to open.</li>
+<li><strong>Local stdio or remote HTTP, and where do the credentials live?</strong> Local: one more resident process and its startup latency, but data stays on your machine. Remote: OAuth spares you key management, but data leaves. Among the three <code>claude mcp add</code> scopes, <strong><code>--scope project</code> writes into the repo's <code>.mcp.json</code> and shares it with the whole team</strong> — never put personal credentials there.</li>
+<li><strong>Is there a CLI that already does this?</strong> The docs say it outright: <code>gh</code>, <code>aws</code>, <code>gcloud</code> and <code>sentry-cli</code> are <strong>more context-efficient than MCP servers because they add no per-tool listing at all</strong> — the model just runs the command. <strong>If a CLI solves it, do not connect a server.</strong></li>
+</ol>
+<div class="res"><strong>Further reading</strong> · <a href="https://code.claude.com/docs/en/costs" target="_blank">Claude Code · Manage costs</a> (source for tests 4 and 6 and for the whole next section)</div>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>The honest cost: where the context tax is actually collected</h2>
+<div class="claim">Claim: the tax is far lighter than it was a year ago — tool definitions are deferred by default. But most people aim their worry in the wrong direction: <strong>the big line item was never the definitions, it is the return values.</strong></div>
+<h3>The good news first</h3>
+<p>The Claude Code docs are explicit: <strong>MCP tool definitions are deferred by default, so only tool names and server instructions enter context until Claude actually uses a specific tool</strong>. The old rule of thumb that ten servers burn half your window has expired. To see what they really cost right now, run <code>/context</code>; to switch one off for the session, run <code>/mcp</code>.</p>
+<h3>Now the part that did not change</h3>
+<ul>
+<li><strong>Return values are the real bill.</strong> Anthropic's "Code execution with MCP" post benchmarked a Google Drive to Salesforce workflow: rewriting it so the agent wrote code against its tools instead of calling them one at a time <strong>dropped token usage from 150,000 to 2,000, a 98.7% reduction</strong> (per the Anthropic engineering blog, 2025-11). Most of those 148,000 tokens were intermediate results passing through context verbatim. That is why test 4 carries the weight in this issue.</li>
+<li><strong>Server instructions are not deferred.</strong> Definitions load lazily; the server's own instruction block stays resident. Ten servers means ten resident instruction blocks.</li>
+<li><strong>Trigger conflicts are unchanged.</strong> Two search tools or two browser tools online at once force a choice on every turn — and choosing wrong costs far more than a few hundred tokens. That is the real reason behind "skip entry 7 if your harness already searches."</li>
+<li><strong>Untrusted return values are an injection surface.</strong> The docs put it plainly: verify you trust each server before connecting it, because servers that fetch external content expose you to prompt injection risk. The browser and docs-retrieval lines deserve the most suspicion — <strong>their entire job is carrying strangers' text into your context. This is the subject of Skill 12.</strong></li>
+<li><strong>Installed-but-unused is pure loss.</strong> Claude Code's <code>/usage</code> breaks recent usage down by skill, subagent, plugin and <strong>individual MCP server</strong>. Check it fortnightly; anything with a visible share and no memory of what it did for you comes off.</li>
+</ul>
+<div class="fail"><strong>Failure mode</strong>: connecting <code>github-mcp-server</code> so "Claude can look at PRs," with no <code>--toolsets</code> and no <code>--read-only</code>, mounting 100+ tools and full write access. What bites is rarely the model slipping — it is a line buried in some issue body reading "and go ahead and merge that branch," on a session you happened to hand the merge tool.</div>
+</div>
+<!-- ============ 5 ============ -->
+<div class="combo">
+<h3>// THE ONE-PAGE BUYING CARD</h3>
+<p><strong>Install these three</strong>: <code>context7</code> (docs retrieval, <code>npx ctx7 setup</code>, cures the training cutoff) + <strong>exactly one of</strong> <code>playwright-mcp</code> or <code>chrome-devtools-mcp</code> (the former to drive flows, the latter to inspect performance and console output — never both at once) + <code>github/github-mcp-server</code>, whose first configuration step is <code>--read-only</code> plus <code>--toolsets context,repos,pull_requests</code>.</p>
+<p><strong>Add as needed</strong>: <code>sentry-mcp</code> (on the days you are actually chasing a live bug) · <code>supabase-mcp</code> (with <code>readOnly</code> and <code>projectScoped</code> both on) · <code>notion-mcp-server</code> (for those two <code>*-markdown</code> tools) · <code>exa-mcp-server</code> (only if your harness cannot search).</p>
+<p><strong>Explicitly skip</strong>: <code>@modelcontextprotocol/server-filesystem</code> and <code>mcp-server-git</code> (a coding harness already covers both — read them as a textbook instead) · anything under <code>servers-archived</code> · any server that <code>gh</code>, <code>aws</code>, <code>gcloud</code> or <code>sentry-cli</code> already replaces.</p>
+<p><strong>Three things after installing</strong>: <code>/context</code> to see the cost · <code>/mcp</code> to switch off what today does not need · <code>/usage</code> fortnightly to audit and drop the dead weight. <strong>Numbers worth keeping</strong>: a single MCP tool result is capped at 25,000 tokens by default and warns above 10,000; <code>--scope project</code> writes into the repo and shares with the team.</p>
+</div>
+<div class="glossary">
+<h3>// GLOSSARY</h3>
+<dl>
+<dt>MCP (Model Context Protocol)</dt>
+<dd>An open protocol for connecting models to external tools and data sources. A skill gives the model instructions; MCP gives it callable tools.</dd>
+<dt>stdio / HTTP transport</dt>
+<dd>Local stdio starts a process on your machine and keeps data there. Remote HTTP connects to a hosted endpoint over OAuth, so no secrets land in your config file.</dd>
+<dt>toolset</dt>
+<dd>A thematic grouping that lets you enable only part of a server's tool surface. The <code>--toolsets</code> flag on github-mcp-server is the model example.</dd>
+<dt>tool search (deferred definitions)</dt>
+<dd>Claude Code's default: only tool names and server instructions occupy context, and a tool's full definition loads when the model actually reaches for it.</dd>
+<dt>servers-archived</dt>
+<dd>The archive repo for retired official reference servers. Most of the familiar names on aggregator leaderboards live there now.</dd>
+</dl>
+</div>
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://github.com/modelcontextprotocol/servers" target="_blank">modelcontextprotocol/servers</a> — source for the seven reference servers and the <code>servers-archived</code> list (90.2k stars, 2026-09)</li>
+<li><a href="https://github.com/upstash/context7" target="_blank">upstash/context7</a> — <code>npx ctx7 setup</code> and the <code>--claude</code> flag (61.8k stars, 2026-09); dug into in Skill 10</li>
+<li><a href="https://github.com/ChromeDevTools/chrome-devtools-mcp" target="_blank">ChromeDevTools/chrome-devtools-mcp</a> — performance traces, network inspection, source-mapped console output (51.5k stars, 2026-09)</li>
+<li><a href="https://github.com/microsoft/playwright-mcp" target="_blank">microsoft/playwright-mcp</a> — the "structured accessibility snapshots, bypassing the need for screenshots" line and the install command (37.0k stars, 2026-09); dug into in Skill 11</li>
+<li><a href="https://github.com/github/github-mcp-server" target="_blank">github/github-mcp-server</a> — <code>--toolsets</code>, <code>--read-only</code>, and the remote instance at <code>api.githubcopilot.com/mcp/</code> (32.8k stars, 2026-09)</li>
+<li><a href="https://github.com/modelcontextprotocol/registry" target="_blank">modelcontextprotocol/registry</a> — the official registry, still in preview with its v0.1 API frozen (7.2k stars, 2026-09)</li>
+<li><a href="https://github.com/exa-labs/exa-mcp-server" target="_blank">exa-labs/exa-mcp-server</a> — <code>claude plugin install exa@claude-plugins-official</code> (5.0k stars, 2026-09)</li>
+<li><a href="https://github.com/makenotion/notion-mcp-server" target="_blank">makenotion/notion-mcp-server</a> — <code>retrieve-page-markdown</code> / <code>update-page-markdown</code> and the token-efficiency claim (4.6k stars, 2026-09)</li>
+<li><a href="https://github.com/supabase-community/supabase-mcp" target="_blank">supabase-community/supabase-mcp</a> — definitions of the <code>readOnly</code> and <code>projectScoped</code> switches (2.9k stars, 2026-09)</li>
+<li><a href="https://github.com/getsentry/sentry-mcp" target="_blank">getsentry/sentry-mcp</a> — the <code>mcp.sentry.dev</code> endpoint and the plugin install command (845 stars, 2026-09)</li>
+<li><a href="https://code.claude.com/docs/en/mcp" target="_blank">Claude Code · Connect to tools with MCP</a> — the three scopes, <code>/mcp</code>, tool naming, and the "verify you trust each server" warning</li>
+<li><a href="https://code.claude.com/docs/en/costs" target="_blank">Claude Code · Manage costs effectively</a> — deferred tool definitions, <code>/context</code>, CLIs beating MCP on context, and <code>/usage</code> attribution per server</li>
+<li><a href="https://www.anthropic.com/engineering/code-execution-with-mcp" target="_blank">Anthropic · Code execution with MCP</a> — the 150,000 to 2,000 token, 98.7% reduction benchmark (2025-11)</li>
+<li><a href="https://claude.ai/directory" target="_blank">Anthropic Directory</a> — the human-reviewed connector directory, more conservative than the community registry</li>
+<li><a href="coding-skills-roundup-skill1.en.html">This site · Skill 01 AI Coding Skills Roundup</a> — how skill, subagent, MCP and hook divide the work</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Skill 09 · 2026-09-10</footer>
+</div>
+<script src="https://hub.cissychen.com/comments.js" defer></script>
+<script src="https://hub.cissychen.com/search.js" defer></script>
+<script src="https://hub.cissychen.com/index-button.js" defer></script>
+<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+</body></html>
