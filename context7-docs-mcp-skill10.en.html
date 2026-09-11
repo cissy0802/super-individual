@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill 10 · Docs-Retrieval MCP — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head>
+<body>
+<div class="container">
+<header>
+<span class="week-tag">SKILL 10 / MCP · DEEP DIVE</span>
+<h1>Docs-Retrieval MCP: Curing the Training-Cutoff Problem</h1>
+<h2>Context7 taken apart · First-party doc servers · When pasting the page beats retrieving it</h2>
+<div class="date">2026-09-11 · BigCat</div>
+<p class="pitch">The model confidently writes a parameter name. You go look it up. There is no such parameter. It is not lying — the version it remembers is the one that existed on the day its training stopped.</p>
+</header>
+<div class="xref">
+<a href="mcp-servers-roundup-skill9.en.html">Related → Skill 09 MCP Server Roundup (that issue mapped the whole field and the context tax; this one drills into the documentation line alone)</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>Documentation-retrieval servers are the least controversial category in MCP: they do not touch your files, do not call paid APIs, do not need write access. They pull a chunk of official documentation into context, and nothing else. The illness they treat is equally narrow — <strong>model knowledge has a cutoff date, and the libraries you depend on ship every week</strong>.</p>
+<p>The best-known member is <a href="https://github.com/upstash/context7" target="_blank">Context7</a> (roughly <strong>61.9k stars</strong>, MIT, per its GitHub repo page, 2026-09). But the point of this issue is a distinction: <strong>a general aggregator that indexes every library is a different animal from the first-party doc servers run by Microsoft, AWS, Cloudflare and Anthropic themselves</strong>. The aggregator is broad, and its index quality is not yours to control; the first-party ones are narrow, but what they return is the source. Nine installable items follow, and the last section answers the question most worth asking: when you should install none of them.</p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>What it takes off your plate: "let me go check the docs and get back to you"</h2>
+<div class="claim">Claim: what it replaces is not your search engine, it is <strong>the thirty seconds you spend tabbing out mid-conversation, copying a paragraph, and pasting it back</strong>. The real win is not the time saved — it is that the model now holds version-specific source text instead of its memory of some older release.</div>
+<h3>The first thing you can actually run</h3>
+<pre><code><span class="tag-com"># 1. The official zero-auth one, useful for proving the plumbing works</span>
+claude mcp add --transport http claude-code-docs https://code.claude.com/docs/mcp
+claude mcp list          <span class="tag-com"># expect a ✔ Connected line</span>
+
+<span class="tag-com"># 2. Context7: one command; it asks whether you want CLI+Skills or MCP mode</span>
+npx ctx7 setup --claude  <span class="tag-com"># Node 18+; OAuth sign-in generates an API key</span>
+npx ctx7 remove          <span class="tag-com"># the undo</span>
+
+<span class="tag-com"># Wiring MCP mode by hand means this URL, key in the Authorization header</span>
+<span class="tag-key">https://mcp.context7.com/mcp</span>
+
+<span class="tag-com"># Your first prompt (the slash syntax names the library, skipping the lookup):</span>
+<span class="tag-key">Implement email/password sign-up with Supabase. use library /supabase/supabase</span>
+<span class="tag-com"># Want a specific release? Just say it: "How do I set up Next.js 14 middleware?"</span>
+</code></pre>
+<p>Two details are worth noticing. First, <code>ctx7 setup</code> now offers <strong>two modes</strong>: CLI + Skills, which installs a skill that teaches the agent to shell out to <code>ctx7 library</code> and <code>ctx7 docs</code> and needs <strong>no MCP at all</strong>, or the traditional MCP server. That is a live example of something this series keeps returning to — the same capability can ship as a server or as a skill plus a CLI. Second, the README calls the API key "recommended", not required; the free key buys higher rate limits.</p>
+<div class="fail"><strong>Failure mode</strong>: installing it, adding no trigger rule, then complaining that the agent never uses it. Context7's own fix is a line in <code>CLAUDE.md</code>: "Always use Context7 when I need library/API documentation, code generation, setup or configuration steps without me having to explicitly ask." The skill route from <code>ctx7 setup</code> wires this up for you; hand-wired MCP does not.</div>
+<div class="res"><strong>Primary sources</strong> · <a href="https://github.com/upstash/context7" target="_blank">upstash/context7 README</a> (every command and tool name above is copied from it) · <a href="https://code.claude.com/docs/en/mcp-quickstart" target="_blank">Claude Code · Connect to MCP servers</a> (where the <code>claude-code-docs</code> command comes from)</div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Mechanism: it works because it splits "look it up" into two steps</h2>
+<div class="claim">Claim: nearly every server in this category has the same shape — <strong>resolve a library name from natural language into a stable ID, then fetch fragments using that ID plus your question</strong>. What makes it work is not the crawling; it is that step two retrieves rather than dumping the whole page.</div>
+<div class="diagram">CONTEXT7'S TWO TOOLS (copied from the official README)
+──────────────────────────────────────────────────────────────
+resolve-library-id   query + libraryName   ->  /vercel/next.js
+query-docs           libraryId + query     ->  relevant doc chunks
+──────────────────────────────────────────────────────────────
+THE SAME SHAPE ELSEWHERE
+  Microsoft Learn   microsoft_docs_search  ->  microsoft_docs_fetch
+  AWS Docs          search_documentation   ->  read_documentation
+  GitMCP            search_*_documentation ->  fetch_*_documentation
+  Ref               ref_search_documentation -> ref_read_url
+──────────────────────────────────────────────────────────────
+Locate first, fetch second. The fetch always carries your question.</div>
+<h3>Why the question has to travel with the fetch</h3>
+<p>Because a full doc page routinely runs twenty or thirty thousand tokens and the model needs one section of it. Ref's author states the case bluntly — <strong>"Models get dumber as you put in more tokens"</strong> — and the server returns roughly the most relevant 5k tokens of a page instead of the usual 20k+ full fetch (per its GitHub README, 2026-09). Microsoft Learn hands you the dial directly: append <code>?maxTokenBudget=2000</code> to the endpoint and search responses are truncated to that budget.</p>
+<h3>The property people miss: the index is not yours</h3>
+<p>Context7's README carries two disclaimers that matter: <strong>library documentation is community-contributed, with no guarantee of accuracy, completeness or security</strong>, and <strong>only the MCP server itself is open source — the API backend, parsing engine and crawling engine are private</strong>. That is not a knock on it; it is the shared structure of every aggregator. The quality of what you retrieve depends on what someone else's crawler happened to capture. First-party servers (learn.microsoft.com, AWS, Cloudflare, code.claude.com) do not have this problem, because the docs and the service ship from the same building.</p>
+<div class="fail"><strong>Failure mode</strong>: reading "Context7 has nothing on that" as "that API does not exist". Three different things produce that answer — the library was never indexed, it was indexed but that page was not crawled, or it was crawled but retrieval missed. None of the three means non-existent.</div>
+<div class="res"><strong>Going deeper</strong> · <a href="https://github.com/ref-tools/ref-tools-mcp" target="_blank">ref-tools/ref-tools-mcp</a> (source of the token-efficiency argument) · <a href="https://github.com/MicrosoftDocs/mcp" target="_blank">MicrosoftDocs/mcp</a> (the <code>maxTokenBudget</code> documentation)</div>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Real usage and limits: nine items, installed in three tiers</h2>
+<div class="claim">Claim: do not pick by star count. Pick by <strong>who owns the thing you are looking up</strong>. If a first-party server covers it, never let an aggregator relay it for you.</div>
+<h3>Tier one · First-party (use it whenever it covers your question)</h3>
+<ul>
+<li><strong><a href="https://code.claude.com/docs/mcp" target="_blank">Claude Code docs MCP</a></strong>. <em>Takes off your plate</em>: digging through Claude Code's own configuration docs. <em>How to install</em>: <code>claude mcp add --transport http claude-code-docs https://code.claude.com/docs/mcp</code> — no auth, no configuration, and the official docs use it as the first server to practise on. <em>When not to install</em>: if you never touch hooks, settings or MCP config, you will not reach for it once a year.</li>
+<li><strong><a href="https://github.com/MicrosoftDocs/mcp" target="_blank">Microsoft Learn MCP</a></strong> (roughly <strong>1.9k stars</strong>, MIT + CC-BY-4.0, per its GitHub repo page, 2026-09). <em>Takes off your plate</em>: Azure and .NET APIs, regional availability, quotas. <em>How to install</em>: point any client at <code>https://learn.microsoft.com/api/mcp</code>, free, no key; three tools — <code>microsoft_docs_search</code>, <code>microsoft_docs_fetch</code>, <code>microsoft_code_sample_search</code>. <em>When not to install</em>: outside the Microsoft stack it is pure dead weight.</li>
+<li><strong><a href="https://github.com/awslabs/mcp/tree/main/src/aws-documentation-mcp-server" target="_blank">AWS Documentation MCP</a></strong> (parent repo awslabs/mcp shows roughly <strong>9.7k stars</strong> per its GitHub repo page, 2026-09). <em>Takes off your plate</em>: finding one row in a service-quota table buried in thousands of pages. <em>How to install</em>: <code>uvx awslabs.aws-documentation-mcp-server@latest</code> (needs uv and Python 3.10+); its <code>search_table</code> tool exists precisely to filter large quota and pricing tables without reading the whole page. <em>When not to install</em>: anything a single <code>aws</code> CLI call answers. For AWS China regions, set <code>AWS_DOCUMENTATION_PARTITION</code> to <code>aws-cn</code>.</li>
+<li><strong><a href="https://github.com/cloudflare/mcp" target="_blank">Cloudflare MCP</a></strong> (roughly <strong>825 stars</strong>, Apache-2.0, per its GitHub repo page, 2026-09). <em>Takes off your plate</em>: Workers and D1 documentation, plus API calls. <em>How to install</em>: <code>https://mcp.cloudflare.com/mcp</code>; the documentation tool is simply named <code>docs</code>. <em>When not to install</em>: note that this is <strong>not</strong> a pure docs server — it advertises "2500 endpoints in 1k tokens, powered by Code Mode", and sitting next to <code>docs</code> is an <code>execute</code> tool that can change your live configuration. If you only want documentation, do not casually attach write access along with it.</li>
+</ul>
+<h3>Tier two · General aggregators (broad coverage, someone else's index)</h3>
+<ul>
+<li><strong><a href="https://github.com/upstash/context7" target="_blank">Context7</a></strong>. See section 01. <em>When not to install</em>: when your question is "how should I think about this concept" rather than "how do I call this API", the fragments it returns tend to arrive as confetti.</li>
+<li><strong><a href="https://github.com/ref-tools/ref-tools-mcp" target="_blank">Ref</a></strong> (roughly <strong>1.2k stars</strong>, MIT, per its GitHub repo page, 2026-09). <em>Takes off your plate</em>: the same job, plus <strong>private documentation</strong> — that is its genuine difference from Context7. <em>How to install</em>: HTTP mode at <code>https://api.ref.tools/mcp?apiKey=YOUR_API_KEY</code>, or <code>npx ref-tools-mcp@latest</code> with <code>REF_API_KEY</code> set. <em>When not to install</em>: it requires signing up for a key, and for purely public documentation that step buys you nothing.</li>
+</ul>
+<h3>Tier three · Repository-shaped (when there is no docs site at all)</h3>
+<ul>
+<li><strong><a href="https://github.com/idosal/git-mcp" target="_blank">GitMCP</a></strong> (roughly <strong>8.4k stars</strong>, Apache-2.0, per its GitHub repo page, 2026-09). <em>Takes off your plate</em>: reading one specific GitHub repo's README and source. <em>How to install</em>: the URL is the configuration — <code>https://gitmcp.io/{owner}/{repo}</code> pins one repo, <code>https://gitmcp.io/docs</code> is the generic endpoint; tool names are generated per repo, and there is a <code>search_*_code</code> that searches the code directly. <em>When not to install</em>: if the repo has no documentation, all it can hand you is grep output.</li>
+<li><strong><a href="https://github.com/mcp/cognitionai/deepwiki" target="_blank">DeepWiki MCP</a></strong> (from Cognition; listed in the MCP registry as a remote no-auth server). <em>Takes off your plate</em>: the "how is this unfamiliar monorepo even organised" question. <em>How to install</em>: <code>https://mcp.deepwiki.com/mcp</code>, free, no auth, public repos only; three tools — <code>read_wiki_structure</code>, <code>read_wiki_contents</code>, <code>ask_question</code>. <em>When not to install</em>: what it returns is a Devin-generated wiki, which is <strong>second-hand interpretation, not source</strong> — trust it for orientation, verify details against the code.</li>
+</ul>
+<div class="fail"><strong>Failure mode</strong>: installing all three tiers, so four tools compete to answer the same question, the model picks one each time, and you never know whether today's answer came from first-party documentation or from some crawler's cache. <strong>One per tier</strong> is the basic discipline here.</div>
+<div class="res"><strong>Going deeper</strong> · <a href="https://github.com/idosal/git-mcp" target="_blank">GitMCP (config snippets for every client)</a> · <a href="https://github.com/MicrosoftDocs/mcp" target="_blank">Microsoft Learn CLI: <code>npx @microsoft/learn-cli search</code> (same tools, no MCP client needed)</a></div>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Cost and alternatives: when pasting the page is simply better</h2>
+<div class="claim">Claim: the overhead of documentation retrieval is not in the tool definitions, it is in <strong>the return values</strong> — every hit pours a few thousand tokens of unfamiliar text into context. If you keep retrieving the same section of the same page, you are paying repeatedly for something that should have been cached once.</div>
+<h3>Three ways to install nothing at all</h3>
+<ul>
+<li><strong>llms.txt</strong> (<a href="https://github.com/AnswerDotAI/llms-txt" target="_blank">AnswerDotAI/llms-txt</a>, proposed by Jeremy Howard; roughly <strong>2.6k stars</strong>, Apache-2.0, per its GitHub repo page, 2026-09). More and more docs sites publish this index file at a root path, and the Claude Code docs site has one of its own: <a href="https://code.claude.com/docs/llms.txt" target="_blank">code.claude.com/docs/llms.txt</a>. <strong>Put that URL in <code>CLAUDE.md</code> and let the built-in fetch tool pull pages on demand</strong> — zero cost, no tool slot consumed.</li>
+<li><strong>Pin the version.</strong> One line in <code>CLAUDE.md</code> — "this project is on X 4.x, do not write 3.x-style code" — blocks a large share of version confusion. That is the disease many people are actually trying to treat when they reach for a retrieval server.</li>
+<li><strong>Just paste it.</strong> If one page gets consulted five times in a session, pasting it once is both cheaper and steadier than retrieving it five times. Retrieval earns its keep when you do not know in advance which page you need.</li>
+</ul>
+<h3>The honest costs</h3>
+<ul>
+<li><strong>Its entire job is moving external text into your context.</strong> The official Claude Code wording: servers that fetch external content expose you to prompt-injection risk. Aggregators especially — you have no idea what sits on the page their crawler captured. This is the subject of Skill 12.</li>
+<li><strong>Commands drift.</strong> A year ago Context7 installed as <code>npx @upstash/context7-mcp</code> and its tool was <code>get-library-docs</code>; today it is <code>npx ctx7 setup</code> and <code>query-docs</code>. A great many tutorials are still frozen on the old version — <strong>read the project's own README before installing anything, never a blog post</strong>.</li>
+<li><strong>Installed and unused is a pure loss.</strong> Last issue gave the routine: <code>/context</code> for what it occupies, <code>/usage</code> every two weeks for the bill, and remove anything whose purpose you cannot recall. This category is unusually prone to becoming that zombie.</li>
+</ul>
+<div class="fail"><strong>The honest cost</strong>: this is the category most likely to feel great and change nothing. There is really only one test — <strong>in the past week, did it stop you making one version mistake?</strong> If you cannot answer, uninstall it.</div>
+<div class="res"><strong>Going deeper</strong> · <a href="https://code.claude.com/docs/en/mcp" target="_blank">Claude Code · MCP reference (scopes, auth, disabling)</a> · <a href="https://code.claude.com/docs/llms.txt" target="_blank">code.claude.com/docs/llms.txt (a real llms.txt in the wild)</a></div>
+</div>
+<div class="combo">
+<h3>// THE ONE-PAGE BUYING CARD</h3>
+<p><strong>Install these three first</strong>: (1) <code>claude-code-docs</code> — <code>claude mcp add --transport http claude-code-docs https://code.claude.com/docs/mcp</code>, zero auth, and it proves your MCP plumbing works; (2) <code>context7</code> — <code>npx ctx7 setup --claude</code>, plus that trigger line in <code>CLAUDE.md</code>; (3) whichever first-party server matches your main cloud — <code>https://learn.microsoft.com/api/mcp</code> for Azure/.NET, <code>uvx awslabs.aws-documentation-mcp-server@latest</code> for AWS, <code>https://mcp.cloudflare.com/mcp</code> for Cloudflare.</p>
+<p><strong>Add on demand</strong>: <code>gitmcp.io/{owner}/{repo}</code> for the days you are chewing through an undocumented repo · <code>mcp.deepwiki.com/mcp</code> to get a map of an unfamiliar codebase · <code>Ref</code> only when what you need to search is private documentation.</p>
+<p><strong>Explicitly do not install</strong>: a second server in a tier you already cover (no aggregator on top of a first-party server) · anything added "just in case I ever need to look that up" · the stale <code>@upstash/context7-mcp</code> command copied from an old blog post.</p>
+<p><strong>The one-line test</strong>: use whoever owns the thing you are looking up; reach for an aggregator only when ownership is unclear; and when one page gets consulted five times, paste it.</p>
+</div>
+<div class="glossary">
+<h3>// GLOSSARY</h3>
+<dl>
+<dt>training cutoff</dt>
+<dd>The last date reflected in a model's parametric knowledge. APIs shipped after it, parameters renamed after it, patterns deprecated after it — the model does not know, and will confidently write the old shape anyway.</dd>
+<dt>library ID</dt>
+<dd>The stable address an aggregator assigns each library, such as <code>/vercel/next.js</code>. Naming it directly in a prompt skips the fuzzy-matching step.</dd>
+<dt>first-party docs server</dt>
+<dd>A retrieval service run by the authors of the documentation. The difference from an aggregator is not features, it is the absence of a third-party crawler in the middle.</dd>
+<dt>token budget</dt>
+<dd>A dial capping how much a single call returns. Microsoft Learn's <code>?maxTokenBudget=2000</code> is a rare case of exposing it to the user directly.</dd>
+<dt>llms.txt</dt>
+<dd>A Markdown index file at a site or docs root that tells a model which pages exist, as a linked list. Requires no server of any kind.</dd>
+<dt>injection surface</dt>
+<dd>Any channel that carries untrusted external text into context. Documentation retrieval is one by definition.</dd>
+</dl>
+</div>
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://github.com/upstash/context7" target="_blank">upstash/context7</a> — the primary source for this issue: <code>npx ctx7 setup</code>, the CLI+Skills and MCP modes, the parameters of <code>resolve-library-id</code> and <code>query-docs</code>, the slash syntax for naming a library, the example trigger rule, and the two disclaimers about community contribution and the private parsing engine; roughly 61.9k stars, MIT, per its GitHub repo page, 2026-09</li>
+<li><a href="https://code.claude.com/docs/en/mcp-quickstart" target="_blank">Claude Code · Connect to MCP servers</a> — where the <code>claude-code-docs</code> command and the phrase "hosted server with full-text search over the Claude Code docs" come from; also the <code>claude mcp list</code> status table and the troubleshooting checklist</li>
+<li><a href="https://github.com/MicrosoftDocs/mcp" target="_blank">MicrosoftDocs/mcp</a> — the <code>https://learn.microsoft.com/api/mcp</code> endpoint, the three-tool parameter table, the experimental <code>?maxTokenBudget=</code>, and <code>@microsoft/learn-cli</code> for using the same tools without an MCP client; roughly 1.9k stars per its GitHub repo page, 2026-09</li>
+<li><a href="https://github.com/awslabs/mcp/tree/main/src/aws-documentation-mcp-server" target="_blank">awslabs/mcp · aws-documentation-mcp-server</a> — the <code>uvx</code> config snippet, six tools including <code>search_table</code>, and the <code>AWS_DOCUMENTATION_PARTITION</code> switch between global and China documentation</li>
+<li><a href="https://github.com/cloudflare/mcp" target="_blank">cloudflare/mcp</a> — <code>https://mcp.cloudflare.com/mcp</code>, the <code>docs</code> / <code>search</code> / <code>execute</code> tools, and what <code>?codemode=false</code> changes; roughly 825 stars, Apache-2.0, per its GitHub repo page, 2026-09</li>
+<li><a href="https://github.com/idosal/git-mcp" target="_blank">idosal/git-mcp</a> — the three URL shapes, dynamic tool naming, and config snippets per client; roughly 8.4k stars, Apache-2.0, per its GitHub repo page, 2026-09</li>
+<li><a href="https://github.com/mcp/cognitionai/deepwiki" target="_blank">MCP registry · DeepWiki (CognitionAI)</a> — "Devin-generated docs for any public repo", the <code>/mcp</code> endpoint and the deprecating <code>/sse</code> one, the three tool names, remote no-auth</li>
+<li><a href="https://github.com/ref-tools/ref-tools-mcp" target="_blank">ref-tools/ref-tools-mcp</a> — HTTP and stdio wiring, <code>ref_search_documentation</code> and <code>ref_read_url</code>, private documentation support, and the argument for returning only the most relevant 5k tokens; roughly 1.2k stars, MIT, per its GitHub repo page, 2026-09</li>
+<li><a href="https://github.com/AnswerDotAI/llms-txt" target="_blank">AnswerDotAI/llms-txt</a> — the llms.txt proposal and format; roughly 2.6k stars, Apache-2.0, per its GitHub repo page, 2026-09. A live sample: <a href="https://code.claude.com/docs/llms.txt" target="_blank">code.claude.com/docs/llms.txt</a></li>
+<li><a href="mcp-servers-roundup-skill9.en.html">This site · Skill 09 MCP Server Roundup</a> — how the context tax is actually computed, and the <code>/context</code> and <code>/usage</code> audit routine; this issue expands its first line</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Skill 10 · 2026-09-11</footer>
+</div>
+<script src="https://hub.cissychen.com/comments.js" defer></script>
+<script src="https://hub.cissychen.com/search.js" defer></script>
+<script src="https://hub.cissychen.com/index-button.js" defer></script>
+<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+</body></html>
