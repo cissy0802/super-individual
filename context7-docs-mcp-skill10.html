@@ -64,8 +64,8 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <div class="container">
 <header>
 <span class="week-tag">SKILL 10 / MCP · DEEP DIVE</span>
-<h1>文档检索类 MCP：治训练截止日期这个病</h1>
-<h2>Context7 拆解 · 一方文档服务 · 什么时候不如直接把文档贴进去</h2>
+<h1 data-tts="ff06040599d0f2d3">文档检索类 MCP：治训练截止日期这个病</h1>
+<h2 data-tts="7fa37575aa4815eb">Context7 拆解 · 一方文档服务 · 什么时候不如直接把文档贴进去</h2>
 <div class="date">2026-09-11 · BigCat</div>
 <p class="pitch">模型言之凿凿地写了一个参数名，你去查，没有这个参数。它不是在编——它记得的那一版，是它训练截止那天的那一版。</p>
 </header>
@@ -73,16 +73,16 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <a href="mcp-servers-roundup-skill9.html">相关 → Skill 09 MCP Server 榜单（上期给的是全景与 Context 税，本期只钻文档检索这一条线）</a>
 </div>
 <div class="intro">
-<h3>// WHY THIS MATTERS</h3>
+<h3 data-tts="cab45bf6952d60b2">// WHY THIS MATTERS</h3>
 <p>文档检索类 MCP 是所有 server 里最没有争议的一类：它不改你的文件、不调用付费 API、不需要写权限，只把一段官方文档搬进上下文。它治的病也很单一——<strong>模型知识有截止日期，而你依赖的库每周都在发版</strong>。</p>
 <p>这一类里最出名的是 <a href="https://github.com/upstash/context7" target="_blank">Context7</a>（据 GitHub 仓库页 2026-09 约 <strong>6.19 万 star</strong>、MIT）。但本期要说的重点是：<strong>Context7 这种「什么库都能查」的聚合服务，和微软、AWS、Cloudflare、Anthropic 自己跑的一方文档服务，是两种东西</strong>。前者覆盖广、索引质量不由你掌控；后者窄、但那就是原文。九个可以今天就装上的条目在下面，最后一节回答那个最该问的问题：什么时候这些一个都不用装。</p>
 </div>
 <!-- ============ 1 ============ -->
 <div class="section">
 <span class="num">// 01</span>
-<h2>它替你干掉什么：干掉「我去翻一下文档再回来告诉你」</h2>
+<h2 data-tts="a575eb899fd1561b">它替你干掉什么：干掉「我去翻一下文档再回来告诉你」</h2>
 <div class="claim">论断：它替掉的不是搜索引擎，是<strong>你在对话中途切出去、复制一段文档、再贴回来</strong>的那三十秒。真正的收益不在省时间，在于模型拿到的是带版本号的原文，而不是它对某个旧版本的记忆。</div>
-<h3>第一条立刻能跑的用法</h3>
+<h3 data-tts="9a1bc00da0542e1f">第一条立刻能跑的用法</h3>
 <pre><code><span class="tag-com"># ① 官方零鉴权的那个，拿来先验通链路（Claude Code 文档全文检索）</span>
 claude mcp add --transport http claude-code-docs https://code.claude.com/docs/mcp
 claude mcp list          <span class="tag-com"># 期望看到 ✔ Connected</span>
@@ -105,7 +105,7 @@ npx ctx7 remove          <span class="tag-com"># 后悔了就这条</span>
 <!-- ============ 2 ============ -->
 <div class="section">
 <span class="num">// 02</span>
-<h2>机制：它凭什么有效——因为它把「查」拆成了两步</h2>
+<h2 data-tts="d38139e3e1ec8f32">机制：它凭什么有效——因为它把「查」拆成了两步</h2>
 <div class="claim">论断：这类 server 几乎都是同一个形状：<strong>先把自然语言里的库名解析成一个稳定 ID，再拿这个 ID 加你的问题去取片段</strong>。有效的不是抓取，是第二步做了检索而不是整页塞进来。</div>
 <div class="diagram">Context7 的两个工具（抄自官方 README）
 ──────────────────────────────────────────────────────────────
@@ -119,9 +119,9 @@ query-docs           libraryId + query     →  相关文档片段
   Ref               ref_search_documentation → ref_read_url
 ──────────────────────────────────────────────────────────────
 先定位、后取回。取回那步永远带着你的问题。</div>
-<h3>为什么非得带着问题去取</h3>
+<h3 data-tts="8ca9f05aca7d6675">为什么非得带着问题去取</h3>
 <p>因为整页文档动辄两三万 token，而模型只需要其中一段。Ref 的作者把这件事说得最直白：<strong>「Models get dumber as you put in more tokens」</strong>，所以它只返回一页里最相关的约 5k token，而不是常见的 20k+ 整页（据其 GitHub README，2026-09）。Microsoft Learn 干脆把这个旋钮交给你：在端点后面加 <code>?maxTokenBudget=2000</code>，搜索结果会被截断到你给的预算内。</p>
-<h3>一条容易被忽略的性质：索引不在你手里</h3>
+<h3 data-tts="bdfd10e412a1bbd2">一条容易被忽略的性质：索引不在你手里</h3>
 <p>Context7 的 README 自己写着两句很重要的免责：<strong>库文档是社区贡献的，无法保证准确、完整与安全</strong>；<strong>开源的只是 MCP server 本体，API 后端、解析引擎、爬虫引擎都是私有的</strong>。这不是黑它——这是所有聚合型服务的共同结构：你查到的东西好不好，取决于别人的爬虫那天抓到了什么。一方服务（learn.microsoft.com、AWS、Cloudflare、code.claude.com）没有这个问题，因为文档和服务是同一家出的。</p>
 <div class="fail"><strong>失败模式</strong>：把「Context7 说没有」当成「这个库没有这个 API」。它答不上来有三种可能——库没被收录、收录了但那一页没被抓到、抓到了但检索没命中。三种都不是「不存在」。</div>
 <div class="res"><strong>进阶资源</strong> · <a href="https://github.com/ref-tools/ref-tools-mcp" target="_blank">ref-tools/ref-tools-mcp</a>（token 效率那段论述的出处） · <a href="https://github.com/MicrosoftDocs/mcp" target="_blank">MicrosoftDocs/mcp</a>（<code>maxTokenBudget</code> 的文档）</div>
@@ -129,21 +129,21 @@ query-docs           libraryId + query     →  相关文档片段
 <!-- ============ 3 ============ -->
 <div class="section">
 <span class="num">// 03</span>
-<h2>真实用法与边界：九个条目，分三层装</h2>
+<h2 data-tts="573f18ddfc2939bf">真实用法与边界：九个条目，分三层装</h2>
 <div class="claim">论断：不要按「哪个 star 多」选，按<strong>你要查的东西归谁管</strong>选。一方文档服务能查到的，就别让聚合服务转一手。</div>
-<h3>第一层 · 一方官方（能查到就优先用它）</h3>
+<h3 data-tts="8c124e72b683349d">第一层 · 一方官方（能查到就优先用它）</h3>
 <ul>
 <li><strong><a href="https://code.claude.com/docs/mcp" target="_blank">Claude Code 文档 MCP</a></strong>。<em>替你干掉</em>：翻 Claude Code 自己的配置文档。<em>怎么装</em>：<code>claude mcp add --transport http claude-code-docs https://code.claude.com/docs/mcp</code>，无鉴权、无配置，官方拿它当第一个练手 server。<em>什么时候别装</em>：你不写 hooks / settings / MCP 配置的话，它一年也用不上一次。</li>
 <li><strong><a href="https://github.com/MicrosoftDocs/mcp" target="_blank">Microsoft Learn MCP</a></strong>（据 GitHub 仓库页 2026-09 约 <strong>1.9 千 star</strong>，MIT + CC-BY-4.0）。<em>替你干掉</em>：查 Azure / .NET 的 API、区域可用性、配额。<em>怎么装</em>：端点 <code>https://learn.microsoft.com/api/mcp</code>，免费无 key；三个工具 <code>microsoft_docs_search</code> / <code>microsoft_docs_fetch</code> / <code>microsoft_code_sample_search</code>。<em>什么时候别装</em>：不碰微软栈就是纯占位。</li>
 <li><strong><a href="https://github.com/awslabs/mcp/tree/main/src/aws-documentation-mcp-server" target="_blank">AWS Documentation MCP</a></strong>（父仓 awslabs/mcp 据 GitHub 仓库页 2026-09 约 <strong>9.7 千 star</strong>）。<em>替你干掉</em>：在几千页 AWS 文档里翻服务配额表。<em>怎么装</em>：<code>uvx awslabs.aws-documentation-mcp-server@latest</code>（需 uv + Python 3.10+）；它的 <code>search_table</code> 专治「不读整页也要查配额/价格表里某一行」。<em>什么时候别装</em>：<code>aws</code> CLI 一条命令能答的别走它。国内用 AWS 中国区要把 <code>AWS_DOCUMENTATION_PARTITION</code> 设成 <code>aws-cn</code>。</li>
 <li><strong><a href="https://github.com/cloudflare/mcp" target="_blank">Cloudflare MCP</a></strong>（据 GitHub 仓库页 2026-09 约 <strong>825 star</strong>，Apache-2.0）。<em>替你干掉</em>：查 Workers / D1 的文档，顺带调 API。<em>怎么装</em>：<code>https://mcp.cloudflare.com/mcp</code>，文档工具就叫 <code>docs</code>。<em>什么时候别装</em>：注意它<strong>不是</strong>纯文档服务——它自称「2500 endpoints in 1k tokens, powered by Code Mode」，<code>docs</code> 旁边挂着能真的改你线上配置的 <code>execute</code>。只想查文档就别顺手把写权限接上。</li>
 </ul>
-<h3>第二层 · 通用聚合（覆盖广，索引是别人的）</h3>
+<h3 data-tts="2fb14e8bf67b836a">第二层 · 通用聚合（覆盖广，索引是别人的）</h3>
 <ul>
 <li><strong><a href="https://github.com/upstash/context7" target="_blank">Context7</a></strong>。见 01 节。<em>什么时候别装</em>：你要的是「这个概念怎么理解」而不是「这个 API 怎么调」时，它给的片段反而碎。</li>
 <li><strong><a href="https://github.com/ref-tools/ref-tools-mcp" target="_blank">Ref</a></strong>（据 GitHub 仓库页 2026-09 约 <strong>1.2 千 star</strong>，MIT）。<em>替你干掉</em>：同上，外加<strong>私有文档</strong>——这是它相对 Context7 的真差异。<em>怎么装</em>：HTTP 模式 <code>https://api.ref.tools/mcp?apiKey=YOUR_API_KEY</code>，或 <code>npx ref-tools-mcp@latest</code> 配 <code>REF_API_KEY</code>。<em>什么时候别装</em>：要注册拿 key，纯查公开文档的话这一步是白付的成本。</li>
 </ul>
-<h3>第三层 · 仓库型（没有官方文档站的时候）</h3>
+<h3 data-tts="7847593d10f3ff6e">第三层 · 仓库型（没有官方文档站的时候）</h3>
 <ul>
 <li><strong><a href="https://github.com/idosal/git-mcp" target="_blank">GitMCP</a></strong>（据 GitHub 仓库页 2026-09 约 <strong>8.4 千 star</strong>，Apache-2.0）。<em>替你干掉</em>：读某个具体 GitHub 仓库的 README 和源码。<em>怎么装</em>：URL 本身就是配置，<code>https://gitmcp.io/{owner}/{repo}</code> 指向单仓库，<code>https://gitmcp.io/docs</code> 是通用端点；工具名按仓库动态生成，还有一个 <code>search_*_code</code> 直接搜代码。<em>什么时候别装</em>：仓库压根没写文档时，它能给你的只是 grep 结果。</li>
 <li><strong><a href="https://github.com/mcp/cognitionai/deepwiki" target="_blank">DeepWiki MCP</a></strong>（Cognition 出品，MCP 注册表列为 remote no-auth server）。<em>替你干掉</em>：面对一个陌生大仓库时的「这玩意儿整体是怎么组织的」。<em>怎么装</em>：<code>https://mcp.deepwiki.com/mcp</code>，免费无鉴权，仅限公开仓库；三个工具 <code>read_wiki_structure</code> / <code>read_wiki_contents</code> / <code>ask_question</code>。<em>什么时候别装</em>：它返回的是 Devin 生成的 wiki，是<strong>二手解读不是原文</strong>——定位可以信，细节要回源码核。</li>
@@ -154,15 +154,15 @@ query-docs           libraryId + query     →  相关文档片段
 <!-- ============ 4 ============ -->
 <div class="section">
 <span class="num">// 04</span>
-<h2>代价与替代品：什么时候不如直接贴文档</h2>
+<h2 data-tts="08086be43d10fabf">代价与替代品：什么时候不如直接贴文档</h2>
 <div class="claim">论断：文档检索的开销不在工具定义，在<strong>返回值</strong>——每次命中都往上下文里灌几千 token 的陌生文本。如果你反复查的是同一份文档的同一段，检索就是在为一件本该缓存的事持续付费。</div>
-<h3>三种不装任何东西的做法</h3>
+<h3 data-tts="a1a3fdb87fa5e441">三种不装任何东西的做法</h3>
 <ul>
 <li><strong>llms.txt</strong>（<a href="https://github.com/AnswerDotAI/llms-txt" target="_blank">AnswerDotAI/llms-txt</a>，Jeremy Howard 提出；据 GitHub 仓库页 2026-09 约 <strong>2.6 千 star</strong>，Apache-2.0）。越来越多文档站在根路径放了这个索引文件，Claude Code 官方文档站自己就有一份：<a href="https://code.claude.com/docs/llms.txt" target="_blank">code.claude.com/docs/llms.txt</a>。<strong>把这个 URL 写进 <code>CLAUDE.md</code>，让内建的抓取工具按需取</strong>，成本是零，不占工具位。</li>
 <li><strong>把版本号钉死</strong>。<code>CLAUDE.md</code> 里一行「本项目用 X 4.x，别用 3.x 的写法」，能挡掉一大半版本错乱——很多人接检索服务，其实要治的是这个。</li>
 <li><strong>直接贴</strong>。同一份文档在一个会话里要用五次，把那一页贴进上下文一次，比检索五次更省也更稳。检索的价值在「事先不知道要查哪一页」。</li>
 </ul>
-<h3>诚实的代价</h3>
+<h3 data-tts="d2481d7a9ccc41f7">诚实的代价</h3>
 <ul>
 <li><strong>它的本职工作就是把外部文本搬进你的上下文。</strong>Claude Code 官方原话是：会抓取外部内容的 server 会让你暴露在提示注入风险下。聚合服务尤其——你不知道它的爬虫抓到的那页上写着什么。这条是 Skill 12 的正题。</li>
 <li><strong>命令会变。</strong>Context7 一年前的装法是 <code>npx @upstash/context7-mcp</code>、工具叫 <code>get-library-docs</code>；现在是 <code>npx ctx7 setup</code>、工具叫 <code>query-docs</code>。网上大量教程还停在旧版——<strong>装任何 server 前先看它自己的 README，别抄博客</strong>。</li>
@@ -172,14 +172,14 @@ query-docs           libraryId + query     →  相关文档片段
 <div class="res"><strong>进阶资源</strong> · <a href="https://code.claude.com/docs/en/mcp" target="_blank">Claude Code · MCP 参考（作用域、鉴权、禁用）</a> · <a href="https://code.claude.com/docs/llms.txt" target="_blank">code.claude.com/docs/llms.txt（一份真实的 llms.txt）</a></div>
 </div>
 <div class="combo">
-<h3>// 一页选购卡</h3>
+<h3 data-tts="9d00d535d02678d2">// 一页选购卡</h3>
 <p><strong>先装这三个</strong>：① <code>claude-code-docs</code>（<code>claude mcp add --transport http claude-code-docs https://code.claude.com/docs/mcp</code>，零鉴权，顺带验通你的 MCP 链路）；② <code>context7</code>（<code>npx ctx7 setup --claude</code>，并在 <code>CLAUDE.md</code> 加那句触发规则）；③ 你主力云厂商的那一个——Azure/.NET 选 <code>https://learn.microsoft.com/api/mcp</code>，AWS 选 <code>uvx awslabs.aws-documentation-mcp-server@latest</code>，Cloudflare 选 <code>https://mcp.cloudflare.com/mcp</code>。</p>
 <p><strong>按需再加</strong>：<code>gitmcp.io/{owner}/{repo}</code>（啃一个没文档的仓库那几天）· <code>mcp.deepwiki.com/mcp</code>（陌生大仓库先看地图）· <code>Ref</code>（只有当你要检索的是私有文档时才值那个 key）。</p>
 <p><strong>明确别装</strong>：同一层里的第二个（一方文档服务已覆盖就别再挂聚合服务）· 任何只为「万一要查」而装的 · 抄自旧博客的 <code>@upstash/context7-mcp</code> 老命令。</p>
 <p><strong>一句话判据</strong>：查的东西归谁管，就用谁家的服务；查不到归属的才上聚合；同一页要查五次的，直接贴。</p>
 </div>
 <div class="glossary">
-<h3>// 术语表</h3>
+<h3 data-tts="dff522cc67b6647f">// 术语表</h3>
 <dl>
 <dt>training cutoff（训练截止日期）</dt>
 <dd>模型参数里知识的最后更新时间。它之后发布的 API、改名的参数、废弃的写法，模型一概不知道，却会用旧版本的样子自信地写出来。</dd>
@@ -196,7 +196,7 @@ query-docs           libraryId + query     →  相关文档片段
 </dl>
 </div>
 <div class="refs">
-<h3>// 延伸阅读</h3>
+<h3 data-tts="a7ef4f083bab3473">// 延伸阅读</h3>
 <ul>
 <li><a href="https://github.com/upstash/context7" target="_blank">upstash/context7</a> — 本期主角的一手源：<code>npx ctx7 setup</code>、CLI+Skills 与 MCP 两种模式、<code>resolve-library-id</code> / <code>query-docs</code> 的参数、斜杠语法点名库、触发规则示例，以及那两条关于社区贡献与私有解析引擎的免责声明；据 GitHub 仓库页 2026-09 约 6.19 万 star、MIT</li>
 <li><a href="https://code.claude.com/docs/en/mcp-quickstart" target="_blank">Claude Code · Connect to MCP servers</a> — <code>claude-code-docs</code> 那条命令与「hosted server with full-text search over the Claude Code docs」的原文；另含 <code>claude mcp list</code> 的状态表与排错清单</li>
@@ -212,8 +212,8 @@ query-docs           libraryId + query     →  相关文档片段
 </div>
 <footer>BigCat · Super Individual · Skill 10 · 2026-09-11</footer>
 </div>
-<script src="https://hub.cissychen.com/comments.js" defer></script>
-<script src="https://hub.cissychen.com/search.js" defer></script>
-<script src="https://hub.cissychen.com/index-button.js" defer></script>
-<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
 </body></html>
