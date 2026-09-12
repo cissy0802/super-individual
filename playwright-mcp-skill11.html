@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill 11 · 浏览器自动化 MCP — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head><body>
+<div class="container">
+<header>
+<span class="week-tag">SKILL 11 / MCP · DEEP DIVE</span>
+<h1>浏览器自动化 MCP：让模型读结构，别让它猜像素</h1>
+<h2>Playwright MCP 拆解 · accessibility tree vs 截图 · 测试与抓取的分界</h2>
+<div class="date">2026-09-12 · BigCat</div>
+<p class="pitch">同一句「点那个登录按钮」，截图路线要模型从一张图里算出它在 (412, 318)；快照路线只要它说出 <code>ref=e47</code>。一个在赌，一个在指。</p>
+</header>
+<div class="xref">
+<a href="context7-docs-mcp-skill10.html">相关 → Skill 10 文档检索类 MCP（上期是只读的一类，本期这一类能点、能填、能提交）</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>文档检索类 MCP 只往上下文里搬文本；浏览器自动化类给出去的是<strong>一双能点、能填、能提交的手</strong>。这是所有 MCP 类别里权限跨度最大的一类，也是最容易看着很酷、装完没用上的一类。</p>
+<p>主角是 <a href="https://github.com/microsoft/playwright-mcp" target="_blank">Playwright MCP</a>（据 GitHub 仓库页 2026-09 约 <strong>3.7 万 star</strong>，Apache-2.0）。但真正值得你花三分钟搞懂的不是它的装法，而是它和一切「截图 + 坐标」方案的分野：<strong>它交给模型的是无障碍树，不是像素</strong>。下面九个条目都能今天装上，最后一节回答那个最该问的问题——什么时候这些一个都别装。</p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>它替你干掉什么：干掉「我自己开个浏览器点一遍」那一圈</h2>
+<div class="claim">论断：它替掉的不是测试框架，是<strong>你改完前端后切到浏览器、刷新、点三下、把 console 报错复制回来</strong>的那一圈往返。真正的收益是模型第一次有了客观 oracle——它能自己看见自己改坏了没有。</div>
+<h3>第一条立刻能跑的用法</h3>
+<pre><code><span class="tag-com"># ① 装（官方 README 给的就是这条）</span>
+claude mcp add playwright npx @playwright/mcp@latest
+
+<span class="tag-com"># ② 更克制的装法：profile 只留在内存里，不落盘，指定浏览器</span>
+npx @playwright/mcp@latest --isolated --browser chrome
+
+<span class="tag-com"># ③ 第一句话这么说（先起好本地服务，再让它自己看）：</span>
+<span class="tag-key">打开 http://localhost:5173，先 browser_snapshot 看一眼页面结构，
+点「登录」，填 demo / demo，提交后把 console 里的报错原样贴给我。</span>
+</code></pre>
+<p>注意这句话里没有「截个图给我看」。官方给 <code>browser_snapshot</code> 写的工具描述是一句大白话：<strong>「Capture accessibility snapshot of the current page, this is better than screenshot」</strong>；而 <code>browser_take_screenshot</code> 的描述直接堵死了另一条路：<strong>「You can&#39;t perform actions based on the screenshot, use browser_snapshot for actions」</strong>。截图在这套设计里只负责给人看，不负责给模型指路。</p>
+<div class="fail"><strong>失败模式</strong>：装完直接说「测一下我的站」。服务没起、URL 没给，模型会自己 navigate 到一个它「记得」的地址，然后认真地汇报一个不存在页面的结论。先起服务、先给 URL——这也是官方 <code>webapp-testing</code> skill 里 <code>with_server.py</code> 存在的全部理由。</div>
+<div class="res"><strong>一手源</strong> · <a href="https://github.com/microsoft/playwright-mcp" target="_blank">microsoft/playwright-mcp README</a>（命令、工具描述、flag 均抄自此处）</div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>机制：它凭什么有效——因为它把「这个按钮」变成了一个可引用的名字</h2>
+<div class="claim">论断：两条路线的差别不在精度，在<strong>失败方式</strong>。坐标点错了你不知道，模型会继续往下走；<code>ref</code> 找不到会当场报错。前者悄悄产出假结论，后者停下来。</div>
+<div class="diagram">两条路线
+────────────────────────────────────────────────────────────
+截图路线   screenshot ──► 模型看图 ──► 猜坐标 (412,318) ──► click_at
+           需要 vision 模型 · 换分辨率/滚动一下全废 · 错了不报错
+
+快照路线   accessibility tree ──► role + name + ref=e47 ──► click(ref)
+           纯文本 · 模型能引用 · ref 失效立即抛错
+────────────────────────────────────────────────────────────
+官方 Key Features 的三句原话：
+  Fast and lightweight. Uses Playwright's accessibility tree, not pixel-based input.
+  LLM-friendly. No vision models needed, operates purely on structured data.
+  Deterministic tool application. Avoids ambiguity common with screenshot-based approaches.
+────────────────────────────────────────────────────────────</div>
+<h3>为什么它顺带还更省</h3>
+<p>无障碍树是文本，模型能在后续每一步里直接引用其中的节点；截图是图片，既要 vision 能力，又无法被 grep、无法被下一句话指名。省 token 只是结果，<strong>可引用</strong>才是原因。</p>
+<h3>但快照不是万能的</h3>
+<p>canvas、WebGL、纯图形的画布、以及「这两个元素有没有对齐」这类视觉回归问题，无障碍树里根本没有对应节点。这就是 <code>--caps=vision</code>（坐标交互）和截图工具至今还在的原因——它们是补集，不是备份。<a href="https://github.com/ChromeDevTools/chrome-devtools-mcp" target="_blank">chrome-devtools-mcp</a> 同时提供 <code>take_snapshot</code> 与 <code>take_screenshot</code>，也是同一个分工。</p>
+<div class="fail"><strong>失败模式</strong>：让模型「看截图判断样式对不对」。它能告诉你「看起来挺整齐」，但那句话没有任何约束力。样式回归要么上真正的视觉对比工具，要么写断言，别指望一句自然语言描述。</div>
+<div class="res"><strong>进阶资源</strong> · <a href="https://github.com/microsoft/playwright/tree/main/packages/extension#readme" target="_blank">Playwright MCP Chrome 扩展（<code>--extension</code> 连到你已登录的浏览器）</a></div>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>真实用法与边界：九个条目，分三层装</h2>
+<div class="claim">论断：这一类最常见的错误不是选错工具，是<strong>把测试和抓取混着装</strong>——于是「打开一个页面」有四个工具抢答，你永远不知道这次跑的是哪条链路。</div>
+<h3>第一层 · 本地驱动（先把这层装对）</h3>
+<ul>
+<li><strong><a href="https://github.com/microsoft/playwright-mcp" target="_blank">@playwright/mcp</a></strong>。<em>替你干掉</em>：改完前端自己点一遍。<em>怎么装</em>：见 01 节；能力分组 <code>vision</code> / <code>pdf</code> / <code>devtools</code> / <code>config</code> / <code>network</code> / <code>storage</code> / <code>testing</code> <strong>全是 opt-in</strong>，用 <code>--caps=</code> 按需开，默认只给核心那一组。<em>什么时候别装</em>：你没有能在本地跑起来的页面时，它是纯占位。</li>
+<li><strong><a href="https://github.com/ChromeDevTools/chrome-devtools-mcp" target="_blank">chrome-devtools-mcp</a></strong>（据 GitHub 仓库页 2026-09 约 <strong>5.17 万 star / 3.6 千 fork</strong>，Apache-2.0）。<em>替你干掉</em>：手动录 performance trace、翻 Network 面板对着瀑布图发呆。<em>怎么装</em>：<code>npx -y chrome-devtools-mcp@latest</code>，需 Node LTS + Chrome 稳定版；独有工具是 <code>performance_start_trace</code> / <code>performance_stop_trace</code> / <code>performance_analyze_insight</code> / <code>list_network_requests</code> / <code>get_network_request</code> / <code>lighthouse_audit</code> / <code>emulate</code>（CPU 与网络降速）。<em>什么时候别装</em>：只想点页面的话别装——它的 <code>click</code> / <code>fill</code> / <code>navigate_page</code> / <code>take_snapshot</code> 和上一个大面积重叠，两个常驻就是让模型抛硬币。另有两条要知情：默认会上报使用统计（<code>--no-usage-statistics</code> 关掉），性能工具可能把 trace 相关 URL 发给 Google CrUX API。</li>
+<li><strong><code>--extension</code> 模式</strong>（<a href="https://github.com/microsoft/playwright/tree/main/packages/extension#readme" target="_blank">Playwright 扩展</a>，Chrome/Edge）。<em>替你干掉</em>：为了让 agent 看到登录后的页面而重新走一遍登录流程。<em>怎么装</em>：装扩展后 <code>npx @playwright/mcp@latest --extension</code>，直接接管你正在用的那个浏览器实例。<em>什么时候别装</em>：那个浏览器里还开着网银和公司后台的时候——它接管的是整个实例，不是一个标签页。</li>
+</ul>
+<h3>第二层 · 同样的能力，但不接 server</h3>
+<ul>
+<li><strong>Playwright Agents</strong>（<a href="https://github.com/microsoft/playwright/blob/main/docs/src/test-agents-js.md" target="_blank">官方文档源文件</a>）。<em>替你干掉</em>：每次都让模型从零把流程重点一遍。<em>怎么装</em>：<code>npx playwright init-agents --loop=claude</code>（另有 <code>vscode</code> / <code>codex</code> / <code>opencode</code>），生成三个角色——<strong>planner</strong> 探索应用产出 Markdown 测试计划、<strong>generator</strong> 把计划变成 Playwright 测试文件、<strong>healer</strong> 跑测试并自动修复失败用例，落在 <code>specs/</code> 与 <code>tests/</code> 里。<em>什么时候别用</em>：一次性排查、根本不打算留下回归测试时，这套是负担。</li>
+<li><strong><a href="https://github.com/anthropics/skills/tree/main/skills/webapp-testing" target="_blank">anthropics/skills · webapp-testing</a></strong>（据 GitHub 仓库页 2026-09 约 <strong>17.6 万 star</strong>）。<em>替你干掉</em>：MCP 连接本身——它让模型直接写 Playwright Python 脚本。<em>怎么装</em>：<code>/plugin install example-skills@anthropic-agent-skills</code>；核心是 <code>scripts/with_server.py</code>（<code>--server "npm run dev" --port 5173</code> 起服务再跑脚本）和一棵决策树：静态 HTML 直接读文件找选择器，动态应用<strong>先 <code>page.wait_for_load_state(&#39;networkidle&#39;)</code> 再 inspect</strong>。<em>什么时候别用</em>：你要跨多轮对话保持同一个浏览器上下文时，server 形态更省事。</li>
+<li><strong><a href="https://github.com/browser-use/browser-use" target="_blank">browser-use</a></strong>（据 GitHub 仓库页 2026-09 约 <strong>11.4 万 star</strong>，MIT）。<em>替你干掉</em>：多步骤的自主浏览任务（「去这个站找到 X 再填个表」）。<em>怎么装</em>：<code>uv add browser-use</code> 做库用，或 <code>browser-use skill install</code> 把它作为 skill 装给现有 agent——<strong>又一个同一能力做成 skill 而非 server 的例子</strong>。<em>什么时候别装</em>：可控性要求高的场景。自主 agent 的长处是完成率，短处正是你无法预知它点了什么。</li>
+</ul>
+<h3>第三层 · 远程浏览器与抓取（边界在这一层）</h3>
+<ul>
+<li><strong><a href="https://github.com/browserbase/stagehand" target="_blank">Stagehand</a></strong>（据 GitHub 仓库页 2026-09 约 <strong>2.42 万 star</strong>，MIT）。<em>替你干掉</em>：为一次性提取手写一堆脆弱选择器。<em>怎么装</em>：<code>npm i @browserbasehq/stagehand</code>；三件套 <code>act()</code> 执行自然语言动作、<code>observe()</code> 找可操作元素、<code>extract()</code> 按 Zod schema 取结构化数据，可以和普通 Playwright locator 混写。<em>什么时候别装</em>：选择器本来就稳定时，直接写 locator 更快、更便宜、更可复现。</li>
+<li><strong><a href="https://github.com/browserbase/mcp-server-browserbase" target="_blank">Browserbase MCP</a></strong>（托管端点 <code>https://mcp.browserbase.com/mcp</code>，六个工具 <code>start</code> / <code>end</code> / <code>navigate</code> / <code>act</code> / <code>observe</code> / <code>extract</code>）。<em>替你干掉</em>：本地没有、也不想装浏览器时的那台机器。<em>怎么装</em>：托管端点需 <code>BROWSERBASE_API_KEY</code> + <code>BROWSERBASE_PROJECT_ID</code>。<em>什么时候别装</em>：先知情——它的开源仓库<strong>已于 2026-07-20 归档</strong>，README 自称不代表其现行生产服务。要用就用托管端点并去官网核当前文档，别照着归档仓库配。</li>
+<li><strong><a href="https://github.com/firecrawl/firecrawl-mcp-server" target="_blank">firecrawl-mcp</a></strong>（据 GitHub 仓库页 2026-09 约 <strong>7.4 千 star</strong>，MIT）。<em>替你干掉</em>：把一批别人的网页变成干净 markdown。<em>怎么装</em>：<code>npx -y firecrawl-mcp</code> 配 <code>FIRECRAWL_API_KEY</code>；工具 <code>firecrawl_scrape</code> / <code>firecrawl_search</code> / <code>firecrawl_crawl</code> / <code>firecrawl_map</code> / <code>firecrawl_interact</code>。<em>什么时候别装</em>：你要的是「在我自己的应用里点一遍」——那是测试，不是抓取，用第一层。</li>
+<li><strong>反面教材：<a href="https://github.com/modelcontextprotocol/servers-archived/tree/main/src/puppeteer" target="_blank">@modelcontextprotocol/server-puppeteer</a></strong>。<em>替你干掉</em>：什么也不。它是 MCP 早期的参考实现，<strong>已于 2025-05-29 随 servers-archived 归档为只读</strong>。之所以点名，是因为网上大量教程还在教 <code>npx -y @modelcontextprotocol/server-puppeteer</code>——照抄博客不看仓库状态的典型代价。</li>
+</ul>
+<h3>测试与抓取的分界线</h3>
+<p><strong>你的应用、你有源码、需要断言</strong> → 第一层或第二层，产出应该是一个能重跑的 <code>.spec.ts</code>。<strong>别人的站、只要数据、没有断言</strong> → 第三层，产出是数据。判断标准很简单：<strong>这次跑完，有没有东西值得留下来明天再跑一次？</strong>有就是测试，没有就是抓取。</p>
+<div class="fail"><strong>失败模式</strong>：三层一起常驻。<code>playwright-mcp</code> 的 <code>browser_navigate</code>、<code>chrome-devtools-mcp</code> 的 <code>navigate_page</code>、Browserbase 的 <code>navigate</code>、Firecrawl 的 <code>firecrawl_scrape</code> 全在候选里，模型每次挑一个。<strong>同一层里只留一个</strong>，这是上一期就给过的纪律。</div>
+<div class="res"><strong>进阶资源</strong> · <a href="https://github.com/ChromeDevTools/chrome-devtools-mcp/blob/main/docs/tool-reference.md" target="_blank">chrome-devtools-mcp · 完整工具参考</a> · <a href="https://github.com/anthropics/skills/blob/main/skills/webapp-testing/SKILL.md" target="_blank">webapp-testing · SKILL.md</a></div>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>代价与替代品：它不是安全边界，这句是官方自己写的</h2>
+<div class="claim">论断：文档检索类最坏的结果是查错一个参数；浏览器自动化类最坏的结果是<strong>在你登录的会话里点下了一个不该点的按钮</strong>。这一类的代价不在 token，在权限。</div>
+<h3>三条要知情的红线</h3>
+<ul>
+<li><strong>官方原话：「Playwright MCP is not a security boundary」</strong>。它还带一个明确标注为 RCE 等价的工具 <code>browser_run_code_unsafe</code>（在 server 进程里执行任意 JavaScript）——默认不开，也别去开。</li>
+<li><strong>chrome-devtools-mcp 的免责同样直白</strong>：它把浏览器实例里的内容暴露给 MCP 客户端，可以检查、调试、修改浏览器或 DevTools 里的<strong>任何</strong>数据；官方建议别在里面放你不愿意共享的敏感信息。</li>
+<li><strong>页面正文就是注入面</strong>。模型读到的每一个字都来自那个页面，包括藏在 DOM 里写给 AI 看的指令。Claude Code 官方文档在 MCP 页上写着：会抓取外部内容的 server 会让你暴露在提示注入风险下。这是下一期 Skill 12 的正题。</li>
+</ul>
+<h3>能立刻拧的四个旋钮</h3>
+<ul>
+<li><code>--isolated</code>：profile 只留在内存，不落盘；要登录态就配 <code>--storage-state</code> 显式给一份。</li>
+<li><code>--allowed-origins</code> / <code>--blocked-origins</code>：分号分隔的白/黑名单，把浏览器能访问的域钉死。</li>
+<li><strong>别开</strong> <code>--allow-unrestricted-file-access</code>：它放开的是工作区之外的文件。</li>
+<li><code>--caps=</code> 只开这次要用的那一组。七个能力分组全是 opt-in，这个默认值本身就是一条建议。</li>
+</ul>
+<h3>三种什么都不装的做法</h3>
+<ul>
+<li><strong><code>npx playwright codegen</code></strong>：你自己点一遍，它录成代码。一次性验证用它比接 server 快得多。</li>
+<li><strong>把测试写进 CI</strong>：真正该重复跑的东西属于 CI，不属于每次对话。这也是 Playwright Agents 让 generator 产出 <code>.spec.ts</code> 的理由。</li>
+<li><strong>贴 HTML</strong>：静态页面直接把源码贴进去，比起一个浏览器实例的开销，这一条常常被忘掉——官方 <code>webapp-testing</code> 的决策树第一问就是它。</li>
+</ul>
+<div class="fail"><strong>诚实的代价</strong>：这一类是最容易「装完演示一次就再没用过」的。判据只有一条——<strong>过去一周，它有没有替你发现过一个你自己没看见的前端问题？</strong>答不上来就摘掉，它占的工具位比文档检索类贵得多。</div>
+<div class="res"><strong>进阶资源</strong> · <a href="https://code.claude.com/docs/en/mcp" target="_blank">Claude Code · MCP（作用域、鉴权、提示注入警告）</a></div>
+</div>
+<div class="combo">
+<h3>// 一页选购卡</h3>
+<p><strong>先装这三个</strong>：① <code>claude mcp add playwright npx @playwright/mcp@latest</code>（先不加 <code>--caps</code>，核心组够用）；② 要看性能和网络那天才加 <code>npx -y chrome-devtools-mcp@latest</code>，<strong>且不与 ① 同时常驻</strong>；③ <code>npx playwright init-agents --loop=claude</code>，把探索沉淀成 <code>tests/</code> 里的 <code>.spec.ts</code>。</p>
+<p><strong>按需再加</strong>：<code>npx @playwright/mcp@latest --extension</code>（需要登录态的那一天）· <code>https://mcp.browserbase.com/mcp</code>（本地跑不动浏览器时）· <code>npx -y firecrawl-mcp</code>（抓别人的站）· <code>@browserbasehq/stagehand</code>（一次性结构化提取）· <code>browser-use skill install</code>（要的是自主完成率而非可控性）。</p>
+<p><strong>明确别装</strong>：<code>@modelcontextprotocol/server-puppeteer</code>（2025-05-29 已归档）· 第一层和第三层同时常驻 · <code>--allow-unrestricted-file-access</code> · 为「万一要截个图」而开的 <code>--caps=vision</code>。</p>
+<p><strong>一句话判据</strong>：能用 <code>ref</code> 指的就别用坐标点；这次跑完有东西值得明天再跑一次，就把它写成测试，别每次让模型重走一遍。</p>
+</div>
+<div class="glossary">
+<h3>// 术语表</h3>
+<dl>
+<dt>accessibility tree（无障碍树）</dt>
+<dd>浏览器为读屏软件维护的页面结构树，每个节点带 role（按钮/链接/输入框）与可读名称。它天生就是「给非视觉使用者的页面描述」，正好也是给模型的。</dd>
+<dt>snapshot ref（快照引用）</dt>
+<dd>快照里给每个可交互节点分配的短标识（如 <code>e47</code>）。模型后续动作引用它而不是坐标；它失效时会当场报错，而不是静默点空。</dd>
+<dt>capability（能力分组 / <code>--caps</code>）</dt>
+<dd>Playwright MCP 把工具按用途分组，默认只开核心组，vision / pdf / devtools / network / storage 等需显式开启。少开一组就是少交一份工具税。</dd>
+<dt>extension mode（扩展模式）</dt>
+<dd>不新起浏览器，而是接管你正在用的那个实例，因此自带登录态。便利与风险是同一件事。</dd>
+<dt>performance trace（性能轨迹）</dt>
+<dd>DevTools 录制的一段运行时数据，含主线程、渲染与网络时序。它是 chrome-devtools-mcp 相对通用自动化 server 的真差异。</dd>
+<dt>act / observe / extract</dt>
+<dd>Stagehand 与 Browserbase 那一系的三件套：执行动作、找出可操作元素、按 schema 取数据。抓取侧的通用形状。</dd>
+<dt>networkidle</dt>
+<dd>页面网络请求静默一段时间后的状态。动态应用不等这一步就去读 DOM，是这一类最高频的假阴性来源。</dd>
+</dl>
+</div>
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://github.com/microsoft/playwright-mcp" target="_blank">microsoft/playwright-mcp</a> — 本期主角的一手源：<code>claude mcp add</code> 命令、三条 Key Features 原话、<code>browser_snapshot</code> 与 <code>browser_take_screenshot</code> 的工具描述、七个 <code>--caps</code> 分组、<code>--isolated</code> / <code>--extension</code> / <code>--storage-state</code> / <code>--allowed-origins</code> 等 flag，以及「not a security boundary」那句；据 GitHub 仓库页 2026-09 约 3.7 万 star、Apache-2.0</li>
+<li><a href="https://github.com/ChromeDevTools/chrome-devtools-mcp" target="_blank">ChromeDevTools/chrome-devtools-mcp</a> — <code>npx -y chrome-devtools-mcp@latest</code>、Node LTS + Chrome 稳定版要求、使用统计与 CrUX 上报的说明、暴露浏览器内容的免责原文；据 GitHub 仓库页 2026-09 约 5.17 万 star / 3.6 千 fork、Apache-2.0</li>
+<li><a href="https://github.com/ChromeDevTools/chrome-devtools-mcp/blob/main/docs/tool-reference.md" target="_blank">chrome-devtools-mcp · Tool Reference</a> — 按 Input / Navigation / Emulation / Performance / Network / Debugging 分类的完整工具名单，本期引用的 <code>performance_*</code> 与 <code>lighthouse_audit</code> 出处</li>
+<li><a href="https://github.com/microsoft/playwright/blob/main/docs/src/test-agents-js.md" target="_blank">Playwright Agents 文档源文件</a> — planner / generator / healer 三角色的职责原文、<code>npx playwright init-agents --loop=</code> 的四个取值、生成的 <code>specs/</code> 与 <code>tests/</code> 结构</li>
+<li><a href="https://github.com/anthropics/skills/tree/main/skills/webapp-testing" target="_blank">anthropics/skills · webapp-testing</a> — 官方的「不接 MCP 也能测」路线：<code>with_server.py</code> 的多服务用法、静态/动态决策树、<code>networkidle</code> 那条硬规矩</li>
+<li><a href="https://github.com/browser-use/browser-use" target="_blank">browser-use/browser-use</a> — 自主浏览 agent 路线，<code>uv add browser-use</code> 与 <code>browser-use skill install</code> 两种形态；据 GitHub 仓库页 2026-09 约 11.4 万 star、MIT</li>
+<li><a href="https://github.com/browserbase/stagehand" target="_blank">browserbase/stagehand</a> — <code>act()</code> / <code>observe()</code> / <code>extract()</code> 的 API 与 Zod schema 用法、与原生 Playwright locator 混写的做法；据 GitHub 仓库页 2026-09 约 2.42 万 star、MIT</li>
+<li><a href="https://github.com/browserbase/mcp-server-browserbase" target="_blank">browserbase/mcp-server-browserbase</a> — 托管端点与六个工具名；仓库页顶部的归档声明（2026-07-20，且注明不代表其现行生产服务）本身就是本期那条「先看仓库状态再抄命令」的证据</li>
+<li><a href="https://github.com/firecrawl/firecrawl-mcp-server" target="_blank">firecrawl/firecrawl-mcp-server</a> — 抓取侧的代表：<code>firecrawl_scrape</code> / <code>search</code> / <code>crawl</code> / <code>map</code> / <code>interact</code> 与 key 的配置方式；据 GitHub 仓库页 2026-09 约 7.4 千 star、MIT</li>
+<li><a href="https://github.com/modelcontextprotocol/servers-archived/tree/main/src/puppeteer" target="_blank">modelcontextprotocol/servers-archived · puppeteer</a> — 早期参考实现的归档页（2025-05-29 起只读），七个 <code>puppeteer_*</code> 工具名留作对照</li>
+<li><a href="context7-docs-mcp-skill10.html">本站 Skill 10 · 文档检索类 MCP</a> — 「同一层里只留一个」那条纪律与 Context 税的算法出处</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Skill 11 · 2026-09-12</footer>
+</div>
+<script src="https://hub.cissychen.com/comments.js" defer></script>
+<script src="https://hub.cissychen.com/search.js" defer></script>
+<script src="https://hub.cissychen.com/index-button.js" defer></script>
+<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+</body></html>
