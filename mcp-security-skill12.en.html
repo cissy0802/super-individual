@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill 12 · The Security Edge of MCP — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head><body>
+<div class="container">
+<header>
+<span class="week-tag">SKILL 12 / MCP · DEEP DIVE</span>
+<h1>The Security Edge of MCP: Tool Descriptions and Tool Output Are Both Written by Someone Else</h1>
+<h2>Three hard rules from the spec · Vetting before install, fences at runtime · Name collisions and fully-qualified names</h2>
+<div class="date">2026-09-13 · BigCat</div>
+<p class="pitch">You think you installed a set of functions. What the model sees is a block of prose someone else wrote, pasted verbatim into its context — and it finished reading that prose <strong>before</strong> you called a single tool.</p>
+</header>
+<div class="xref">
+<a href="playwright-mcp-skill11.en.html">Related → Skill 11, Browser Automation MCP (that issue ended on &ldquo;the page body is an injection surface&rdquo;; this issue is that sentence in full)</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>The last three issues treated MCP as capability: doc retrieval moves text in, browser automation hands over a pair of hands. This one flips the view. <strong>Every server you connect splices a stranger's prose into the model's system prompt, and usually hands it one of your credentials on the way in.</strong></p>
+<p>There is no single star skill this time. The subject is <strong>one defense line that runs from before-install to running</strong>: vet with <a href="https://github.com/modelcontextprotocol/inspector" target="_blank">MCP Inspector</a> and <a href="https://github.com/snyk/agent-scan" target="_blank">agent-scan</a>, fence with <a href="https://github.com/trailofbits/mcp-context-protector" target="_blank">mcp-context-protector</a> or a container gateway, then close it off with client-side permission rules. Eleven named, installable or readable items below; the selection criteria come in the back half.</p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>What it kills for you: finding out only after install that a server can read your SSH key</h2>
+<div class="claim">Claim: MCP security is not an abstract risk. It is a concrete question <strong>you can answer tonight with two commands</strong>. Almost nobody has ever opened up the servers they installed to see which tools got exposed and what the descriptions actually say.</div>
+<h3>The first thing you can run right now</h3>
+<pre><code><span class="tag-com"># (1) See what it actually hands the model (official debugger: Web UI / CLI / TUI)</span>
+npx @modelcontextprotocol/inspector
+
+<span class="tag-com"># (2) Scan every server and skill already on the machine</span>
+export SNYK_TOKEN=...
+uvx snyk-agent-scan@latest
+
+<span class="tag-com"># (3) Shrink the blast radius on the spot: read-only, plus only the toolsets you need</span>
+<span class="tag-key">github-mcp-server --read-only --toolsets repos,issues</span>
+</code></pre>
+<p>The point of (1) is not &ldquo;it connected.&rdquo; It is <strong>reading, one by one, the description text that <code>tools/list</code> returns</strong>. That text lands in the model's context verbatim; the server author wrote it, you did not. Step (2) hides a trap worth calling out: plenty of tutorials still teach <code>uvx mcp-scan@latest</code>. That repo, <code>invariantlabs-ai/mcp-scan</code>, is now <code>snyk/agent-scan</code>, the package is <code>snyk-agent-scan</code>, and it wants a <code>SNYK_TOKEN</code>. <strong>Check the repo's current state before copying a command</strong> — a lesson this series paid for once already last issue.</p>
+<div class="fail"><strong>Failure mode</strong>: using star count as a trust signal. Stars measure usefulness, not trustworthiness — and a server that is clean today can ship a new version tomorrow that replaces every description. That is the definition of the rug pull in the next section.</div>
+<div class="res"><strong>Primary sources</strong> · <a href="https://github.com/modelcontextprotocol/inspector" target="_blank">modelcontextprotocol/inspector</a> (per the GitHub repo page, 2026-09: ~10.9k stars, MIT) · <a href="https://github.com/snyk/agent-scan" target="_blank">snyk/agent-scan</a> (per the GitHub repo page, 2026-09: ~3.0k stars, Apache-2.0)</div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Mechanism: why a tool description is an attack surface, not documentation</h2>
+<div class="claim">Claim: in ordinary software a function signature is for the compiler. In MCP <strong>the tool description is a natural-language instruction for the model</strong>. The difference: get the first one wrong and compilation fails; get the second one wrong and it gets followed.</div>
+<div class="diagram">How someone else's prose enters an ordinary session
+──────────────────────────────────────────────────────────
+Before you call any tool at all
+  server ──tools/list──► names + descriptions + input schemas ──► system prompt
+                         ↑ already steering the model here (line jumping)
+
+After one tool call
+  server ──result────► arbitrary text ──► context
+                       ↑ web page body / issue body / someone's PR description
+──────────────────────────────────────────────────────────
+Three variants already reproduced (invariantlabs-ai/mcp-injection-experiments)
+  direct-poisoning.py  instructions hidden in a description: also read ~/.ssh/id_rsa
+  shadowing.py         one server rewrites another server's tool behavior
+  whatsapp-takeover.py benign on install, malicious on a later load (sleeper rug pull)
+──────────────────────────────────────────────────────────</div>
+<h3>What the spec itself says</h3>
+<p>The MCP specification (revision 2026-07-28), in <code>server/tools.mdx</code>, gives two sentences that carry most of this issue's theory: <strong>&ldquo;clients MUST consider tool annotations to be untrusted unless they come from trusted servers&rdquo;</strong> and <strong>&ldquo;there SHOULD always be a human in the loop with the ability to deny tool invocations.&rdquo;</strong> Note the reach of the first one — what is untrusted is not only the return value, but also the server's own label saying &ldquo;this tool of mine is read-only.&rdquo;</p>
+<p>The overview section reduces it to three principles: users must explicitly consent to and understand all data access and operations; hosts must obtain explicit consent before exposing user data to servers; and <strong>&ldquo;Tools represent arbitrary code execution and must be treated with appropriate caution.&rdquo;</strong> Tools equal arbitrary code execution — that is the spec's own wording, not this site's rhetoric.</p>
+<div class="fail"><strong>Failure mode</strong>: assuming &ldquo;I only install read-only servers, so I'm fine.&rdquo; A read-only server can still deliver hostile text into the context, which <strong>the other, writable server you installed</strong> then acts on. The danger is the combination, not any single tool — scanners call this a toxic flow.</div>
+<div class="res"><strong>Primary sources</strong> · <a href="https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/docs/specification/2026-07-28/server/tools.mdx" target="_blank">MCP spec 2026-07-28 · Tools security section</a> · <a href="https://github.com/invariantlabs-ai/mcp-injection-experiments" target="_blank">mcp-injection-experiments (three reproducible scripts)</a></div>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Real usage and limits: eleven items across three layers</h2>
+<div class="claim">Claim: these layers differ in cost by an order of magnitude. <strong>Layer three is nearly free and can be finished tonight, yet most people start agonizing at layer two.</strong> Get the order backwards and security stalls forever at &ldquo;once I have time to stand up a gateway.&rdquo;</div>
+<h3>Layer 1 · Vet before you install</h3>
+<ul>
+<li><strong><a href="https://github.com/modelcontextprotocol/inspector" target="_blank">MCP Inspector</a></strong>. <em>Kills</em>: trusting a server on vibes. <em>How</em>: <code>npx @modelcontextprotocol/inspector</code>; Web UI, CLI and TUI, with <code>--format json</code> on the CLI so it fits in CI. <em>When not to</em>: it is a debugger, not a defense — it shows you things, it blocks nothing.</li>
+<li><strong><a href="https://github.com/snyk/agent-scan" target="_blank">snyk/agent-scan</a></strong> (formerly <code>invariantlabs-ai/mcp-scan</code>). <em>Kills</em>: reading every description by hand. <em>How</em>: <code>uvx snyk-agent-scan@latest</code> (the 0.5.x line is <code>uvx snyk-agent-scan@0.5.17</code>), with <code>SNYK_TOKEN</code> set. It scans installed servers and skills and flags prompt injection, tool poisoning, tool shadowing, toxic flows, dangerous words in descriptions, plus hardcoded secrets and suspicious download URLs inside skills. <em>When not to</em>: when you are not willing to ship your local inventory off for cloud analysis — that is the price it pays for coverage.</li>
+<li><strong><a href="https://github.com/modelcontextprotocol/registry" target="_blank">MCP Registry</a></strong> (per the GitHub repo page, 2026-09: ~7.2k stars). <em>Kills</em>: installing from a blog link with no idea who published the package. <em>How</em>: check namespace ownership — publishing to <code>io.github.&lt;user&gt;/&lt;server&gt;</code> requires authenticating as that GitHub user, and a custom domain has to clear a DNS or HTTP challenge. <em>When not to lean on it</em>: it is still <strong>preview</strong> (per the repo README, in preview since 2025-09-08, with breaking changes and data resets explicitly possible), and ownership proof is not a code audit.</li>
+<li><strong><a href="https://github.com/invariantlabs-ai/mcp-injection-experiments" target="_blank">mcp-injection-experiments</a></strong>. <em>Kills</em>: treating these attacks as folklore. <em>How</em>: ten minutes reading three scripts — <code>direct-poisoning.py</code>, <code>shadowing.py</code>, <code>whatsapp-takeover.py</code>. <em>When not to</em>: do not run them on your working machine; reading the code is the whole point.</li>
+</ul>
+<h3>Layer 2 · Fences at runtime</h3>
+<ul>
+<li><strong><a href="https://github.com/trailofbits/mcp-context-protector" target="_blank">mcp-context-protector</a></strong> (per the GitHub repo page, 2026-09: ~224 stars, Apache-2.0). <em>Kills</em>: the rug pull — the description you audited today, quietly swapped tomorrow. <em>How</em>: <code>uv sync</code>, then wrap the downstream server with <code>mcp-context-protector.sh --command "&lt;downstream server command&gt;"</code>. It does trust-on-first-use pinning of server instructions, tool descriptions and input schemas, then blocks semantic changes until you approve them; it also strips ANSI control characters used for visual deception, and <code>--guardrail-provider LlamaFirewall</code> adds quarantining of suspicious tool responses. <em>When not to</em>: if you only connect first-party servers and your client already has approval gates, this layer buys little.</li>
+<li><strong><a href="https://github.com/docker/mcp-gateway" target="_blank">docker/mcp-gateway</a></strong> (per the GitHub repo page, 2026-09: ~1.6k stars, MIT). <em>Kills</em>: a pile of <code>npx</code> processes running bare in your home directory. <em>How</em>: <code>docker mcp gateway run</code> (with <code>--profile</code> / <code>--port</code> / <code>--transport</code>); one container per server, secrets through <code>docker mcp secret</code>, and per-profile enable/disable of individual tools. <em>When not to</em>: with one or two local servers, the container and image upkeep costs more than it returns.</li>
+<li><strong><a href="https://github.com/stacklok/toolhive" target="_blank">ToolHive</a></strong> (per the GitHub repo page, 2026-09: ~2.2k stars, Apache-2.0). <em>Kills</em>: everyone on the team installing their own set, nobody knowing who connected what. <em>How</em>: container isolation plus permission profiles, encrypted secrets and network egress control, shipped as a desktop app, a CLI and a Kubernetes Operator, with IdP-backed identity and audit logging. <em>When not to</em>: solo on one machine — it solves an organizational problem, and alone you just carry the weight.</li>
+</ul>
+<h3>Layer 3 · Client-side permissions (cheapest; do this one first)</h3>
+<ul>
+<li><strong>Fully-qualified names plus deny rules</strong>. MCP itself does not guarantee tool names are unique across servers, which is exactly the soil shadowing grows in. <a href="https://code.claude.com/docs/en/mcp" target="_blank">Claude Code</a>'s answer is to rename every tool to <code>mcp__&lt;server&gt;__&lt;tool&gt;</code> (characters outside <code>A-Z a-z 0-9 _ -</code> become <code>_</code>; the plugin form is <code>mcp__plugin_&lt;plugin&gt;_&lt;server&gt;__&lt;tool&gt;</code>), and permission rules, hook matchers and a subagent's <code>tools</code> list all address tools by that name. <em>How</em>: <code>"deny": ["mcp__*"]</code> turns off every MCP tool in one line; <code>"deny": ["mcp__database__drop_table"]</code> names a single one.</li>
+<li><strong>Allow globs must be anchored to a server</strong>. <code>mcp__github__get_*</code> works, while an unanchored allow such as <code>"*"</code> or <code>"mcp__*"</code> is <strong>skipped with a warning</strong>. Worth copying as a design idea: an allow must name a concrete server, so a newly connected server cannot slip into your allowlist. Also: settings files skip any <code>mcp__</code> rule containing parentheses, so parameter-level matching has to go through <code>--disallowedTools</code>.</li>
+<li><strong><code>--strict-mcp-config</code> and <code>disabledMcpjsonServers</code></strong>. <em>Kills</em>: cloning a repo and silently connecting the servers in its <code>.mcp.json</code>. An interactive session does prompt for approval, but <code>-p</code>, the Agent SDK and cloud sessions <strong>load them without prompting</strong>. <code>--strict-mcp-config</code> restricts the session to configs you passed explicitly; <code>disabledMcpjsonServers</code> rejects a server by name in every session type. <em>When</em>: every CI and unattended run, unconditionally.</li>
+<li><strong><code>requiresUserInteraction</code> (self-restraint on the server side)</strong>. <em>Kills</em>: an irreversible operation waved through by auto mode. <em>How</em>: the server author sets <code>_meta["anthropic/requiresUserInteraction"]</code> to the JSON boolean <code>true</code> on the tool's <code>tools/list</code> entry; that tool then prompts on every call, and <code>acceptEdits</code>, <code>auto</code> and <code>bypassPermissions</code> cannot suppress it, nor can a matching allow rule. <em>Limits</em>: in <code>dontAsk</code> mode it becomes an outright deny, and an <code>allow</code> from <code>--permission-prompt-tool</code> is converted to a deny.</li>
+<li><strong><a href="https://github.com/github/github-mcp-server" target="_blank">github/github-mcp-server</a></strong> (per the GitHub repo page, 2026-09: ~32.9k stars, MIT). <em>Kills</em>: handing over write access just to read issues. <em>How</em>: <code>--read-only</code> (or <code>GITHUB_READ_ONLY</code>) — the README states write tools are skipped <strong>even if explicitly requested</strong>; <code>--toolsets</code> (or <code>GITHUB_TOOLSETS</code>) defaults to <code>context,repos,issues,pull_requests,users</code>, and only <code>all</code> opens everything. <em>When not to</em>: drop <code>--read-only</code> on the day you genuinely want it opening PRs, then put it back.</li>
+</ul>
+<h3>One more layer that belongs to the protocol, not to tooling</h3>
+<p>If you <strong>write</strong> servers rather than only installing them, the MUSTs in <code>basic/authorization/security-considerations.mdx</code> are the bar: a server <strong>MUST NOT</strong> pass through the token it received from the client to a downstream API; it MUST validate token audience and accept only tokens issued specifically to itself; clients MUST include the <code>resource</code> parameter, MUST implement PKCE, and MUST <strong>refuse to proceed</strong> when PKCE support cannot be verified; and a proxy server using a static client ID MUST obtain user consent for each dynamically registered client — the clause that exists to kill the confused deputy.</p>
+<div class="res"><strong>Primary sources</strong> · <a href="https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/docs/specification/2026-07-28/basic/authorization/security-considerations.mdx" target="_blank">MCP spec 2026-07-28 · Authorization security considerations</a> · <a href="https://code.claude.com/docs/en/permissions" target="_blank">Claude Code · permission rule syntax</a></div>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Costs and alternatives: the one to know is &ldquo;MCP servers do not run in the sandbox&rdquo;</h2>
+<div class="claim">Claim: the sandbox you configured for Bash does not reach MCP. That is not an oversight, it is <strong>a boundary written into the docs</strong> — and most people assume turning on <code>/sandbox</code> covered both.</div>
+<h3>Three honest costs</h3>
+<ul>
+<li><strong>The sandbox governs Bash, not MCP</strong>. Claude Code's sandboxing doc says the quiet part out loud when explaining why sandboxed commands may not rewrite config files: a command that could edit <code>.mcp.json</code> or <code>.claude/</code> could <strong>grant itself permissions, or add a hook or MCP server that Claude Code runs outside the sandbox</strong>. In other words, those files need protecting precisely because MCP servers are not bound by it. Your isolation boundary is a container or a VM, not <code>/sandbox</code>.</li>
+<li><strong>A scan is only true at the moment you scan</strong>. Tool poisoning can be caught statically; a sleeper rug pull cannot, because its first version is clean. Layer one (scanning) and layer two (pinning plus change alerts) are complements, not alternatives. Scanning alone means you were safe on install day.</li>
+<li><strong>Every layer adds friction</strong>. A gateway is another hop, pinning means re-approving on every upgrade, <code>requiresUserInteraction</code> prompts every single time. Security measures usually die of annoyance rather than of being bypassed — which is why order matters: do the zero-cost layer-three items first, and only add layer two when an external server arrives.</li>
+</ul>
+<h3>Three ways to connect nothing at all</h3>
+<ul>
+<li><strong>Replace the server with a script</strong>. Last issue had the example: the official <code>webapp-testing</code> skill replaces an entire browser server with Python scripts. A script's permissions are fixed by you, not decided by description text.</li>
+<li><strong>Replace a remote server with local read-only</strong>. For most servers you use one or two read endpoints; after <code>--read-only</code> and <code>--toolsets</code>, the remaining surface is usually just &ldquo;the return value contains hostile prose.&rdquo;</li>
+<li><strong>Replace always-on with just-in-time</strong>. Connect it for the hour you need it, then <code>claude mcp remove</code>. Tool tax and attack surface both bill by the minute; this is the most underrated move of the three.</li>
+</ul>
+<div class="fail"><strong>The honest cost</strong>: not one fence in this issue solves the root problem — that a model reads a sentence and does what it says. All of them only <strong>shrink the consequences of doing what it says</strong>. Which leaves exactly one criterion: <strong>assume every character this server returns was written by an attacker — what is the most it can cost me?</strong> If the answer contains &ldquo;private repos,&rdquo; &ldquo;production database&rdquo; or &ldquo;payments,&rdquo; that server should not be online alongside anything else.</div>
+<div class="res"><strong>Further reading</strong> · <a href="https://code.claude.com/docs/en/sandboxing" target="_blank">Claude Code · sandboxing (filesystem and network isolation, protected paths)</a> · <a href="https://code.claude.com/docs/en/security" target="_blank">Claude Code · security (prompt injection safeguards and the MCP section)</a></div>
+</div>
+<div class="combo">
+<h3>// ONE-PAGE BUYING CARD</h3>
+<p><strong>Do these three tonight (zero cost)</strong>: (1) <code>npx @modelcontextprotocol/inspector</code> and read the full tool descriptions of everything already installed; (2) put <code>"deny": ["mcp__*"]</code> in settings and re-allow tool by tool as <code>mcp__&lt;server&gt;__&lt;tool&gt;</code>, always anchoring the allow to a concrete server; (3) give <code>github-mcp-server</code> <code>--read-only --toolsets repos,issues</code>, and lift it only on the day you need writes.</p>
+<p><strong>Add on the day an external server arrives</strong>: <code>uvx snyk-agent-scan@latest</code> (scan before install) · <code>mcp-context-protector.sh --command ...</code> (pinning plus change alerts) · <code>docker mcp gateway run</code> (container isolation and secrets) · <a href="https://github.com/modelcontextprotocol/registry" target="_blank">MCP Registry</a> for namespace ownership.</p>
+<p><strong>Teams and CI</strong>: turn on <code>--strict-mcp-config</code> and <code>disabledMcpjsonServers</code> unconditionally (unattended runs never show the approval prompt) · ToolHive for central control and audit · if you write servers, follow the MUSTs in <code>security-considerations.mdx</code>.</p>
+<p><strong>Explicitly don't</strong>: treat stars as trust · copy <code>uvx mcp-scan@latest</code> from a blog (the repo moved to <code>snyk/agent-scan</code>) · believe a tool's self-declared annotations · assume <code>/sandbox</code> covers MCP.</p>
+<p><strong>One-line criterion</strong>: assume every character this server returns was written by an attacker — what can it cost you? If the answer is big enough, don't leave it online next to your write access.</p>
+</div>
+<div class="glossary">
+<h3>// GLOSSARY</h3>
+<dl>
+<dt>tool poisoning</dt>
+<dd>Hiding instructions for the model inside a tool description. The client UI usually shows only the tool name and a one-line summary; the full description text is visible to the model alone.</dd>
+<dt>line jumping</dt>
+<dd>A malicious server steering the model <strong>before you invoke any tool</strong>, because what <code>tools/list</code> returns enters the context at the start of the session. The mcp-context-protector README lists it as a primary target.</dd>
+<dt>tool shadowing</dt>
+<dd>One server rewriting another server's tool behavior through its own descriptions. The protocol does not guarantee cross-server name uniqueness; the fully-qualified <code>mcp__&lt;server&gt;__&lt;tool&gt;</code> is the client-side answer.</dd>
+<dt>rug pull</dt>
+<dd>Clean on the first version, hostile on a later one. Static scanning cannot catch it; configuration pinning and change alerts can.</dd>
+<dt>toxic flow</dt>
+<dd>Every tool individually compliant, yet the combination forms a &ldquo;read something private, write somewhere external&rdquo; path. The danger is the flow, not the node.</dd>
+<dt>confused deputy</dt>
+<dd>An intermediary with ambient authority tricked into acting for an attacker. The spec's remedy: a proxy server must obtain user consent for each dynamically registered client.</dd>
+<dt>token passthrough</dt>
+<dd>A server forwarding the client's token unchanged to a downstream API. The spec says <strong>MUST NOT</strong> — it bypasses audience validation and rate limiting, and corrupts auditing.</dd>
+<dt>fully-qualified tool name</dt>
+<dd>A tool's unique name once the client prefixes it with its server. It is also the unit permission rules, hook matchers and subagent tool lists are written in.</dd>
+</dl>
+</div>
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/docs/specification/2026-07-28/server/tools.mdx" target="_blank">MCP spec 2026-07-28 · Tools · Security Considerations</a> — source of &ldquo;clients MUST consider tool annotations to be untrusted&rdquo; and &ldquo;SHOULD always be a human in the loop,&rdquo; plus the client duty to validate tool results before passing them to the LLM</li>
+<li><a href="https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/docs/specification/2026-07-28/basic/authorization/security-considerations.mdx" target="_blank">MCP spec 2026-07-28 · Authorization · Security Considerations</a> — the nine section headings and every MUST quoted here: audience binding, token theft, PKCE/S256, confused deputy, access token privilege restriction (including the MUST NOT on passthrough)</li>
+<li><a href="https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/docs/specification/2026-07-28/index.mdx" target="_blank">MCP spec 2026-07-28 · Security and Trust &amp; Safety</a> — the three key principles verbatim, including &ldquo;Tools represent arbitrary code execution&rdquo;</li>
+<li><a href="https://github.com/modelcontextprotocol/inspector" target="_blank">modelcontextprotocol/inspector</a> — <code>npx @modelcontextprotocol/inspector</code>, the Web UI / CLI / TUI split and <code>--format json</code>; per the GitHub repo page, 2026-09: ~10.9k stars, MIT</li>
+<li><a href="https://github.com/snyk/agent-scan" target="_blank">snyk/agent-scan</a> — formerly <code>invariantlabs-ai/mcp-scan</code>: <code>uvx snyk-agent-scan@latest</code>, <code>SNYK_TOKEN</code>, and the list of MCP and skill risks it covers; per the GitHub repo page, 2026-09: ~3.0k stars, Apache-2.0</li>
+<li><a href="https://github.com/trailofbits/mcp-context-protector" target="_blank">trailofbits/mcp-context-protector</a> — first-hand description of trust-on-first-use pinning, semantic change blocking, ANSI control character filtering and <code>--guardrail-provider LlamaFirewall</code>; per the GitHub repo page, 2026-09: ~224 stars, Apache-2.0</li>
+<li><a href="https://github.com/invariantlabs-ai/mcp-injection-experiments" target="_blank">invariantlabs-ai/mcp-injection-experiments</a> — the three reproducible scripts <code>direct-poisoning.py</code> / <code>shadowing.py</code> / <code>whatsapp-takeover.py</code>, the evidence behind this issue's attack chain</li>
+<li><a href="https://github.com/docker/mcp-gateway" target="_blank">docker/mcp-gateway</a> — <code>docker mcp gateway run</code>, profiles with per-tool enable/disable, and <code>docker mcp secret</code>; per the GitHub repo page, 2026-09: ~1.6k stars, MIT</li>
+<li><a href="https://github.com/stacklok/toolhive" target="_blank">stacklok/toolhive</a> — container isolation, permission profiles, secrets and network egress control across desktop / CLI / Kubernetes Operator; per the GitHub repo page, 2026-09: ~2.2k stars, Apache-2.0</li>
+<li><a href="https://github.com/modelcontextprotocol/registry" target="_blank">modelcontextprotocol/registry</a> — namespace ownership verification (GitHub OAuth/OIDC, DNS, HTTP) and the preview status statement; per the GitHub repo page, 2026-09: ~7.2k stars</li>
+<li><a href="https://github.com/github/github-mcp-server" target="_blank">github/github-mcp-server</a> — <code>--read-only</code> / <code>GITHUB_READ_ONLY</code>, <code>--toolsets</code> / <code>GITHUB_TOOLSETS</code> and the default toolset list; per the GitHub repo page, 2026-09: ~32.9k stars, MIT</li>
+<li><a href="https://code.claude.com/docs/en/mcp" target="_blank">Claude Code · MCP</a> — fully-qualified naming rules, scopes and <code>.mcp.json</code> approval behavior, <code>--strict-mcp-config</code>, <code>requiresUserInteraction</code>, and organization ask / blocked controls on connector tools</li>
+<li><a href="https://code.claude.com/docs/en/permissions" target="_blank">Claude Code · permissions</a> — the <code>mcp__*</code> deny glob, the rule that allow globs must be anchored to a server segment, skipped <code>mcp__</code> rules containing parentheses, and <code>--disallowedTools</code></li>
+<li><a href="https://code.claude.com/docs/en/sandboxing" target="_blank">Claude Code · sandboxing</a> — the protected-paths section, source of &ldquo;a command that could edit <code>.mcp.json</code> could add an MCP server that runs outside the sandbox&rdquo;</li>
+<li><a href="playwright-mcp-skill11.en.html">This site · Skill 11 · Browser Automation MCP</a> — &ldquo;the page body is an injection surface&rdquo; and the <code>--allowed-origins</code> / <code>--isolated</code> knobs, the client-side counterpart to layer three here</li>
+</ul>
+</div>
+<div class="thinking">
+<h3>// THINK IT THROUGH</h3>
+<details><summary>Of the servers you have installed right now, how many have you personally read the full tool descriptions for?</summary>
+<div>If the answer is zero, the first command in this issue is tonight's homework. The summary your client shows and the description the model reads are frequently not the same text.</div></details>
+<details><summary>Hanging a read-only server and a writable server in the same session — do the risks add, or multiply?</summary>
+<div>They multiply. Individually compliant, jointly fatal: that is why the term toxic flow exists. The one that reads something private and the one that can write outward form a path the moment they are online together.</div></details>
+<details><summary>If a server's safety rests on its promise that it is read-only, what are you still missing?</summary>
+<div>An enforcement point that does not depend on its self-declaration. That is exactly why the spec marks annotations untrusted: read-only should come either from it having no write tools, or from an external switch like <code>--read-only</code> — never from a label.</div></details>
+</div>
+<footer>BigCat · Super Individual · Skill 12 · 2026-09-13</footer>
+</div>
+<script src="https://hub.cissychen.com/comments.js" defer></script>
+<script src="https://hub.cissychen.com/search.js" defer></script>
+<script src="https://hub.cissychen.com/index-button.js" defer></script>
+<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+</body></html>
