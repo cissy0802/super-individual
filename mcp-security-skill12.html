@@ -63,8 +63,8 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <div class="container">
 <header>
 <span class="week-tag">SKILL 12 / MCP · DEEP DIVE</span>
-<h1>接 MCP 的安全边界：工具描述和返回值，都是别人写给模型看的</h1>
-<h2>规范里的三条硬约束 · 装前验货与运行时围栏 · 工具名冲突与全限定名</h2>
+<h1 data-tts="2f0ab1d7762e0b40">接 MCP 的安全边界：工具描述和返回值，都是别人写给模型看的</h1>
+<h2 data-tts="abcce4da57a4e619">规范里的三条硬约束 · 装前验货与运行时围栏 · 工具名冲突与全限定名</h2>
 <div class="date">2026-09-13 · BigCat</div>
 <p class="pitch">你以为你装的是一组函数。模型看到的是一段别人写的、会被原样读进上下文的文本——而且在你调用任何工具<strong>之前</strong>就已经读完了。</p>
 </header>
@@ -72,16 +72,16 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <a href="playwright-mcp-skill11.html">相关 → Skill 11 浏览器自动化 MCP（上期结尾那句「页面正文就是注入面」，本期是正题）</a>
 </div>
 <div class="intro">
-<h3>// WHY THIS MATTERS</h3>
+<h3 data-tts="7347ea77f815035e">// WHY THIS MATTERS</h3>
 <p>前三期把 MCP 当能力讲：文档检索搬文本，浏览器自动化给出一双手。本期换个视角——<strong>每接一个 server，你就把一段陌生人写的文字接进了模型的系统提示，还顺手给了它一份你的凭据</strong>。</p>
 <p>这一期没有「主角 skill」，主角是<strong>一条从装之前到跑起来的防线</strong>：先用 <a href="https://github.com/modelcontextprotocol/inspector" target="_blank">MCP Inspector</a> 和 <a href="https://github.com/snyk/agent-scan" target="_blank">agent-scan</a> 验货，再用 <a href="https://github.com/trailofbits/mcp-context-protector" target="_blank">mcp-context-protector</a> 或容器网关把它围起来，最后用客户端权限规则收口。十一个条目全部可装可读，判据在后半程。</p>
 </div>
 <!-- ============ 1 ============ -->
 <div class="section">
 <span class="num">// 01</span>
-<h2>它替你干掉什么：干掉「装完才发现它能读我 SSH 私钥」</h2>
+<h2 data-tts="58ac52d06cff38f1">它替你干掉什么：干掉「装完才发现它能读我 SSH 私钥」</h2>
 <div class="claim">论断：MCP 的安全问题不是抽象风险，是一个<strong>你今晚就能跑两条命令查出来</strong>的具体问题。绝大多数人从没打开看过自己装的 server 到底暴露了哪些工具、描述里写了什么。</div>
-<h3>第一条立刻能跑的用法</h3>
+<h3 data-tts="3dca8c512ab514f9">第一条立刻能跑的用法</h3>
 <pre><code><span class="tag-com"># ① 先看它到底给了模型什么（官方调试器，Web UI / CLI / TUI 三种界面）</span>
 npx @modelcontextprotocol/inspector
 
@@ -99,7 +99,7 @@ uvx snyk-agent-scan@latest
 <!-- ============ 2 ============ -->
 <div class="section">
 <span class="num">// 02</span>
-<h2>机制：为什么「工具描述」是攻击面，而不是文档</h2>
+<h2 data-tts="33175b034b05181b">机制：为什么「工具描述」是攻击面，而不是文档</h2>
 <div class="claim">论断：普通软件里，函数签名是给编译器看的；MCP 里，<strong>工具描述是给模型看的自然语言指令</strong>。两者的区别在于：前者说错了会编译失败，后者说错了会被照做。</div>
 <div class="diagram">一次普通会话里，别人写的文字是怎么进来的
 ──────────────────────────────────────────────────────────
@@ -116,7 +116,7 @@ uvx snyk-agent-scan@latest
   shadowing.py         描述里改写别的 server 的工具行为
   whatsapp-takeover.py 先装好人，之后的版本再变脸（sleeper rug pull）
 ──────────────────────────────────────────────────────────</div>
-<h3>规范自己怎么说</h3>
+<h3 data-tts="21515ba7de011a88">规范自己怎么说</h3>
 <p>MCP 规范（2026-07-28 版）在 <code>server/tools.mdx</code> 里给了两句几乎是本期全部理论的话：<strong>「clients MUST consider tool annotations to be untrusted unless they come from trusted servers」</strong>，以及<strong>「there SHOULD always be a human in the loop with the ability to deny tool invocations」</strong>。注意第一句的措辞——不可信的不只是返回值，连 server 自己标注的「我这个工具是只读的」也不可信。</p>
 <p>规范总则那一节把它归到三条原则：用户须明确同意并理解所有数据访问与操作；宿主在把用户数据暴露给 server 前须取得同意；<strong>「Tools represent arbitrary code execution and must be treated with appropriate caution」</strong>。工具等于任意代码执行——这是规范原话，不是本站的修辞。</p>
 <div class="fail"><strong>失败模式</strong>：以为「我只装只读的 server 就安全了」。只读 server 照样能把恶意文本送进上下文，然后由<strong>你装的另一个可写 server</strong> 去执行。危险的是组合，不是单个工具——扫描器把这种叫 toxic flow。</div>
@@ -125,22 +125,22 @@ uvx snyk-agent-scan@latest
 <!-- ============ 3 ============ -->
 <div class="section">
 <span class="num">// 03</span>
-<h2>真实用法与边界：十一个条目，三层防线</h2>
+<h2 data-tts="afaf885324d1ff06">真实用法与边界：十一个条目，三层防线</h2>
 <div class="claim">论断：这三层的成本差一个数量级。<strong>第三层几乎免费、今天就能做完，绝大多数人却从第二层开始纠结</strong>。顺序反了，安全就永远停在「等我有空搭个网关」。</div>
-<h3>第一层 · 装之前验货</h3>
+<h3 data-tts="b953c731f22dd1b3">第一层 · 装之前验货</h3>
 <ul>
 <li><strong><a href="https://github.com/modelcontextprotocol/inspector" target="_blank">MCP Inspector</a></strong>。<em>替你干掉</em>：凭直觉信任一个 server。<em>怎么装</em>：<code>npx @modelcontextprotocol/inspector</code>，Web UI / CLI / TUI 三种界面，CLI 支持 <code>--format json</code> 可进 CI。<em>什么时候别装</em>：它是调试器不是防护，别指望它拦住什么——它只让你看见。</li>
 <li><strong><a href="https://github.com/snyk/agent-scan" target="_blank">snyk/agent-scan</a></strong>（原 <code>invariantlabs-ai/mcp-scan</code>）。<em>替你干掉</em>：逐个人肉读描述。<em>怎么装</em>：<code>uvx snyk-agent-scan@latest</code>（0.5.x 线为 <code>uvx snyk-agent-scan@0.5.17</code>），需 <code>SNYK_TOKEN</code>；它扫已装的 server 与 skill，标记提示注入、tool poisoning、tool shadowing、toxic flow、描述里的危险词、以及 skill 里的硬编码密钥与可疑下载地址。<em>什么时候别装</em>：不接受把本地配置清单送去做云端分析时——这是它换来覆盖面的代价。</li>
 <li><strong><a href="https://github.com/modelcontextprotocol/registry" target="_blank">MCP Registry</a></strong>（据 GitHub 仓库页 2026-09 约 7.2 千 star）。<em>替你干掉</em>：从一条博客链接去装一个不知道谁发布的包。<em>怎么用</em>：查命名空间归属——发布到 <code>io.github.&lt;user&gt;/&lt;server&gt;</code> 必须以该 GitHub 身份认证，自定义域名要过 DNS 或 HTTP 挑战。<em>什么时候别依赖它</em>：它至今仍是 <strong>preview</strong>（据仓库 README，预览版自 2025-09-08 起，官方明说可能有破坏性变更与数据重置），归属校验不等于代码审计。</li>
 <li><strong><a href="https://github.com/invariantlabs-ai/mcp-injection-experiments" target="_blank">mcp-injection-experiments</a></strong>。<em>替你干掉</em>：把攻击当传说。<em>怎么用</em>：三个脚本读十分钟——<code>direct-poisoning.py</code>、<code>shadowing.py</code>、<code>whatsapp-takeover.py</code>。<em>什么时候别碰</em>：别在日常工作机上跑，读代码就够。</li>
 </ul>
-<h3>第二层 · 运行时围栏</h3>
+<h3 data-tts="2701fadb80a5984d">第二层 · 运行时围栏</h3>
 <ul>
 <li><strong><a href="https://github.com/trailofbits/mcp-context-protector" target="_blank">mcp-context-protector</a></strong>（据 GitHub 仓库页 2026-09 约 224 star，Apache-2.0）。<em>替你干掉</em>：rug pull——今天审过的描述，明天换了你不知道。<em>怎么装</em>：<code>uv sync</code> 后用 <code>mcp-context-protector.sh --command "&lt;下游 server 命令&gt;"</code> 把它包在中间；它对 server instructions、工具描述、入参 schema 做<strong>首次信任即固定</strong>，之后语义有变就拦下等你批；顺带过滤用于视觉欺骗的 ANSI 控制字符，加 <code>--guardrail-provider LlamaFirewall</code> 还能隔离可疑的工具返回值。<em>什么时候别装</em>：你只接官方自家 server 且客户端已有审批门时，这层收益有限。</li>
 <li><strong><a href="https://github.com/docker/mcp-gateway" target="_blank">docker/mcp-gateway</a></strong>（据 GitHub 仓库页 2026-09 约 1.6 千 star，MIT）。<em>替你干掉</em>：一堆 <code>npx</code> 起的进程裸跑在你的 home 目录里。<em>怎么装</em>：<code>docker mcp gateway run</code>（可加 <code>--profile</code> / <code>--port</code> / <code>--transport</code>），每个 server 一个容器，密钥走 <code>docker mcp secret</code>，可按 profile 逐个启停具体工具。<em>什么时候别装</em>：只接一两个本地 server 时，容器与镜像的运维税大于收益。</li>
 <li><strong><a href="https://github.com/stacklok/toolhive" target="_blank">ToolHive</a></strong>（据 GitHub 仓库页 2026-09 约 2.2 千 star，Apache-2.0）。<em>替你干掉</em>：团队里每个人各装各的、无人知道谁接了什么。<em>怎么用</em>：容器隔离 + 权限档案 + 加密密钥 + 网络出口控制，有桌面端、CLI 与 Kubernetes Operator 三种形态，配合 IdP 做身份与审计。<em>什么时候别装</em>：个人单机——它解决的是组织问题，一个人用纯属负重。</li>
 </ul>
-<h3>第三层 · 客户端权限（最便宜，先做这层）</h3>
+<h3 data-tts="e6e77f2cc5eba6cf">第三层 · 客户端权限（最便宜，先做这层）</h3>
 <ul>
 <li><strong>全限定名 + deny 规则</strong>。MCP 协议本身不保证工具名跨 server 唯一，这正是 shadowing 的土壤；<a href="https://code.claude.com/docs/en/mcp" target="_blank">Claude Code</a> 的做法是把每个工具重命名为 <code>mcp__&lt;server&gt;__&lt;tool&gt;</code>（<code>A-Z a-z 0-9 _ -</code> 之外的字符换成 <code>_</code>；plugin 形态是 <code>mcp__plugin_&lt;plugin&gt;_&lt;server&gt;__&lt;tool&gt;</code>），权限规则、hook matcher、subagent 的 <code>tools</code> 用的都是这个名字。<em>怎么用</em>：<code>"deny": ["mcp__*"]</code> 一条关掉全部 MCP 工具；<code>"deny": ["mcp__database__drop_table"]</code> 点名封杀。</li>
 <li><strong>allow glob 必须锚定 server 段</strong>。<code>mcp__github__get_*</code> 有效，而 <code>"*"</code> / <code>"mcp__*"</code> 这类不锚定的 allow 会<strong>被直接跳过并告警</strong>。这个设计值得抄：允许必须点名到具体 server，新接进来的 server 蹭不进你的允许列表。另：settings 文件里带括号的 <code>mcp__</code> 规则会被跳过，要按参数匹配得用 <code>--disallowedTools</code>。</li>
@@ -148,22 +148,22 @@ uvx snyk-agent-scan@latest
 <li><strong><code>requiresUserInteraction</code>（server 侧的自我约束）</strong>。<em>替你干掉</em>：一个不可逆操作被 <code>auto</code> 模式一路放行。<em>怎么用</em>：写 server 的人在 <code>tools/list</code> 条目的 <code>_meta["anthropic/requiresUserInteraction"]</code> 里置 JSON 布尔 <code>true</code>，该工具每次调用都弹确认，<code>acceptEdits</code> / <code>auto</code> / <code>bypassPermissions</code> 都盖不住，allow 规则也跳不过。<em>边界</em>：<code>dontAsk</code> 模式下它变成直接拒绝；<code>--permission-prompt-tool</code> 给的 allow 会被转成 deny。</li>
 <li><strong><a href="https://github.com/github/github-mcp-server" target="_blank">github/github-mcp-server</a></strong>（据 GitHub 仓库页 2026-09 约 3.29 万 star，MIT）。<em>替你干掉</em>：为了读 issue 而交出写权限。<em>怎么用</em>：<code>--read-only</code>（或 <code>GITHUB_READ_ONLY</code>）——README 写明写操作会被跳过，<strong>即使被显式请求</strong>；<code>--toolsets</code>（或 <code>GITHUB_TOOLSETS</code>）默认只给 <code>context,repos,issues,pull_requests,users</code>，<code>all</code> 才全开。<em>什么时候别这么配</em>：确实要它开 PR 那天再去掉 <code>--read-only</code>，然后加回来。</li>
 </ul>
-<h3>还有一层不属于工具，属于协议</h3>
+<h3 data-tts="dd5c11db8aabe0a6">还有一层不属于工具，属于协议</h3>
 <p>如果你<strong>写</strong> server 而不只是装，规范 <code>basic/authorization/security-considerations.mdx</code> 里那几条 MUST 是硬门槛：server <strong>MUST NOT</strong> 把从客户端收到的 token 直接透传给下游 API；server MUST 校验 token 的受众、只接受发给自己的 token；客户端 MUST 带上 <code>resource</code> 参数、MUST 实现 PKCE 并在无法确认对方支持时<strong>拒绝继续</strong>；用静态 client ID 的代理型 server，MUST 对每个动态注册的客户端单独取得用户同意（这条治的就是 confused deputy）。</p>
 <div class="res"><strong>一手源</strong> · <a href="https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/docs/specification/2026-07-28/basic/authorization/security-considerations.mdx" target="_blank">MCP 规范 2026-07-28 · 授权安全考量</a> · <a href="https://code.claude.com/docs/en/permissions" target="_blank">Claude Code · 权限规则语法</a></div>
 </div>
 <!-- ============ 4 ============ -->
 <div class="section">
 <span class="num">// 04</span>
-<h2>代价与替代品：最该知道的一条是「MCP server 不在沙箱里」</h2>
+<h2 data-tts="423d9c23bfd5a3ae">代价与替代品：最该知道的一条是「MCP server 不在沙箱里」</h2>
 <div class="claim">论断：你为 Bash 配的沙箱，管不到 MCP。这不是疏漏，是<strong>写在文档里的边界</strong>——而大多数人以为开了 <code>/sandbox</code> 就一起罩住了。</div>
-<h3>三条诚实的代价</h3>
+<h3 data-tts="6146e46a2564993c">三条诚实的代价</h3>
 <ul>
 <li><strong>沙箱管的是 Bash，不是 MCP</strong>。Claude Code 的沙箱文档在讲「为什么禁止沙箱内命令改写配置文件」时把话说透了：能改 <code>.mcp.json</code> 或 <code>.claude/</code> 的命令，可以<strong>给自己加权限，或者加一个跑在沙箱之外的 hook 或 MCP server</strong>。换句话说，沙箱之所以要保护这些文件，正是因为 MCP server 本身不受它约束。你的隔离边界在容器或虚拟机，不在 <code>/sandbox</code>。</li>
 <li><strong>扫描只在扫的那一刻有效</strong>。tool poisoning 能被静态扫出来，sleeper rug pull 不能——它的第一版是干净的。所以第一层（扫描）和第二层（固定 + 变更告警）是互补关系，不是二选一。只做扫描等于只在装机那天安全。</li>
 <li><strong>每一层都在加摩擦</strong>。网关多一跳、pinning 每次升级都要重新批、<code>requiresUserInteraction</code> 每次都弹窗。安全措施最常见的死法不是被绕过，是被嫌烦关掉——所以顺序很重要：先做第三层那几条零成本的，第二层只在接外部 server 时才上。</li>
 </ul>
-<h3>三种「什么都不接」的替代品</h3>
+<h3 data-tts="c925dc611cf1305a">三种「什么都不接」的替代品</h3>
 <ul>
 <li><strong>把 server 换成一个脚本</strong>。上一期已经给过例子：官方 <code>webapp-testing</code> 用 Python 脚本替掉了一整个浏览器 server。脚本的权限由你写死，不由描述文本决定。</li>
 <li><strong>把远程 server 换成本地只读</strong>。很多 server 你只用它一两个读接口——<code>--read-only</code> 加 <code>--toolsets</code> 之后，剩下的攻击面通常只剩「返回值里有坏话」这一种。</li>
@@ -173,7 +173,7 @@ uvx snyk-agent-scan@latest
 <div class="res"><strong>进阶资源</strong> · <a href="https://code.claude.com/docs/en/sandboxing" target="_blank">Claude Code · 沙箱（文件系统与网络隔离，受保护路径清单）</a> · <a href="https://code.claude.com/docs/en/security" target="_blank">Claude Code · 安全（提示注入防护与 MCP 一节）</a></div>
 </div>
 <div class="combo">
-<h3>// 一页选购卡</h3>
+<h3 data-tts="a05da070656d1bab">// 一页选购卡</h3>
 <p><strong>先做这三件（今晚，零成本）</strong>：① <code>npx @modelcontextprotocol/inspector</code> 逐个读一遍已装 server 的工具描述；② 在设置里写死 <code>"deny": ["mcp__*"]</code> 再按 <code>mcp__&lt;server&gt;__&lt;tool&gt;</code> 逐个放行，allow 一律锚定到具体 server；③ 给 <code>github-mcp-server</code> 加 <code>--read-only --toolsets repos,issues</code>，要写那天再摘。</p>
 <p><strong>接外部 server 那天再加</strong>：<code>uvx snyk-agent-scan@latest</code>（装前扫）· <code>mcp-context-protector.sh --command ...</code>（描述固定 + 变更告警）· <code>docker mcp gateway run</code>（容器隔离与密钥）· <a href="https://github.com/modelcontextprotocol/registry" target="_blank">MCP Registry</a> 查命名空间归属。</p>
 <p><strong>团队与 CI</strong>：<code>--strict-mcp-config</code> 和 <code>disabledMcpjsonServers</code> 无条件开（无人值守时批准框不会弹）· ToolHive 做集中管控与审计 · 写 server 就照 <code>security-considerations.mdx</code> 那几条 MUST 来。</p>
@@ -181,7 +181,7 @@ uvx snyk-agent-scan@latest
 <p><strong>一句话判据</strong>：假设这个 server 每一个字都是攻击者写的——它能让我损失什么？答案够大就别让它和你的写权限同时在线。</p>
 </div>
 <div class="glossary">
-<h3>// 术语表</h3>
+<h3 data-tts="ddcf83a188f794a6">// 术语表</h3>
 <dl>
 <dt>tool poisoning（工具投毒）</dt>
 <dd>把给模型的指令藏进工具描述里。用户在客户端界面上看到的往往只是工具名和一句摘要，完整描述文本只有模型读得到。</dd>
@@ -202,7 +202,7 @@ uvx snyk-agent-scan@latest
 </dl>
 </div>
 <div class="refs">
-<h3>// 延伸阅读</h3>
+<h3 data-tts="146f6d2dbe677621">// 延伸阅读</h3>
 <ul>
 <li><a href="https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/docs/specification/2026-07-28/server/tools.mdx" target="_blank">MCP 规范 2026-07-28 · Tools · Security Considerations</a> — 「clients MUST consider tool annotations to be untrusted」与「SHOULD always be a human in the loop」两句原话出处，以及「验证工具返回值后再交给 LLM」那条客户端责任</li>
 <li><a href="https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/docs/specification/2026-07-28/basic/authorization/security-considerations.mdx" target="_blank">MCP 规范 2026-07-28 · Authorization · Security Considerations</a> — 九节标题与本期引用的全部 MUST：受众绑定、令牌盗用、PKCE/S256、混淆代理、访问令牌权限限制（含 MUST NOT 透传）</li>
@@ -222,7 +222,7 @@ uvx snyk-agent-scan@latest
 </ul>
 </div>
 <div class="thinking">
-<h3>// 想一想</h3>
+<h3 data-tts="8dfded89fa75354d">// 想一想</h3>
 <details><summary>你现在装着的 server 里，有几个是你亲眼读过工具描述全文的？</summary>
 <div>如果答案是零，那本期第一条命令就是今晚的作业。客户端界面显示的摘要和模型读到的描述，往往不是同一段文本。</div></details>
 <details><summary>把「只读 server」和「可写 server」同时挂在一个会话里，风险是相加还是相乘？</summary>
@@ -232,8 +232,8 @@ uvx snyk-agent-scan@latest
 </div>
 <footer>BigCat · Super Individual · Skill 12 · 2026-09-13</footer>
 </div>
-<script src="https://hub.cissychen.com/comments.js" defer></script>
-<script src="https://hub.cissychen.com/search.js" defer></script>
-<script src="https://hub.cissychen.com/index-button.js" defer></script>
-<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
 </body></html>
