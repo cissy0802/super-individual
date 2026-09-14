@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill 13 · Office Deliverable Skills Roundup — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head>
+<body>
+<div class="container">
+<header>
+<span class="week-tag">SKILL 13 / DOCS · ROUNDUP</span>
+<h1>Office Deliverable Skills: Ten You Can Actually Install</h1>
+<h2>Two versions of the same four · Why this class pays off fastest · The shared shape of template skills</h2>
+<div class="date">2026-09-14 · BigCat</div>
+<p class="pitch">Cold water first: the four document skills you enjoy on claude.ai cannot be installed in Claude Code. The docs say so in plain text. What you can install is an open-source namesake that is not quite the same thing.</p>
+</header>
+<div class="xref">
+<a href="coding-skills-roundup-skill1.en.html">Start here → Skill 01 AI Coding Skills Roundup (three shapes, never one ranking)</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>Everything in the first twelve issues pays off days later. Office deliverables do not: <strong>they hand you a file, and whether it opens is objective, immediate, and requires trusting nobody</strong>. That is exactly why this is the easiest class in the whole skill ecosystem to cash in — an oracle exists, so the model can correct itself. All ten entries below open in a browser and every install command is copied from its own official page. Section 02 explains why these ten are really three different kinds of thing; section 04 lays out the bill. <strong>This table is not ranked by stars</strong> — the office category has only a handful of serious entries, and a star ranking would just tell you the loudest one goes first.</p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>The list first: ten entries, install commands below</h2>
+<div class="claim">Claim: read the last column first. Failures in this category come almost entirely from installing twice or installing the wrong version — almost never from installing too little.</div>
+<div class="diagram">Entry                        Source             What it kills for you            When not to install
+──────────────────────────────────────────────────────────────────────────────────────────────────
+1 skills/docx                anthropics/skills  Word create / edit XML / changes  On claude.ai or the API (pre-built)
+2 skills/pptx                anthropics/skills  Deck generation + thumbs + check  No LibreOffice on the machine
+3 skills/xlsx                anthropics/skills  Formulas / recalc / messy tables  You only need a CSV
+4 skills/pdf                 anthropics/skills  Merge split / forms / OCR         Just reading a page: markitdown
+5 Pre-built four (skill_id)  Claude API         Same, zero install, maintained    You are in Claude Code (not offered)
+6 skills/doc-coauthoring     anthropics/skills  Three-stage long-doc co-writing   You need format, not content
+7 skills/internal-comms      anthropics/skills  Status / newsletter / FAQ formats Your house style differs from its four
+8 skills/theme-factory       anthropics/skills  Ten color+font themes, applied    You already have a brand file
+9 skills/brand-guidelines    anthropics/skills  Style guide as executable rules   It ships Anthropic's own palette
+10 microsoft/markitdown      microsoft          Office / PDF read as Markdown     You write but never read
+──────────────────────────────────────────────────────────────────────────────────────────────────
+1,2,3,4,6,7,8,9 live in one repo, split across two plugins (below). Entry 5 shares their names, not their code.</div>
+<h3>How to install (commands copied from each official page)</h3>
+<pre><code><span class="tag-com"># 1-4 in Claude Code: one command for all four (marketplace is anthropic-agent-skills)</span>
+/plugin marketplace add anthropics/skills
+/plugin install document-skills@anthropic-agent-skills
+
+<span class="tag-com"># 6-9 ship in the other plugin, together (plus skill-creator, mcp-builder and more)</span>
+/plugin install example-skills@anthropic-agent-skills
+
+<span class="tag-com"># 5 on the Claude API: not "installed" but named in the container, with code execution on</span>
+container: { skills: [ { type: "anthropic", skill_id: "pptx" } ] }
+<span class="tag-com"># Only four skill_ids exist: pptx / xlsx / docx / pdf</span>
+
+<span class="tag-com"># 10 markitdown: the reading half, installed with pip</span>
+pip install 'markitdown[all]'
+<span class="tag-com"># Only need three formats? Do not pull the lot:</span>
+pip install 'markitdown[pdf, docx, pptx]'
+<span class="tag-com"># There is an MCP build too, exposing exactly one tool: convert_to_markdown(uri)</span>
+pip install markitdown-mcp
+
+<span class="tag-com"># Two things to do right after installing</span>
+/skills          <span class="tag-com"># see the list, switch off what today does not need</span>
+/skill-doctor    <span class="tag-com"># per-skill token cost and invocation frequency (v2.1.252+)</span>
+</code></pre>
+<h3>One by one, in plain words</h3>
+<ul>
+<li><strong>1 docx</strong>: not "call a library and get a Word file". The top layer of <code>SKILL.md</code> is a decision tree — <strong>create</strong> means a Node script using the <code>docx</code> package, <strong>edit</strong> means unzip, change <code>word/document.xml</code>, rezip, <strong>read</strong> means one line of <code>pandoc -t markdown</code>. The real value is <code>scripts/merge_runs.py</code>: Word shreds a sentence into a chain of runs, and without merging them first, nine find-and-replace attempts out of ten silently miss. It also ships <code>accept_changes.py</code> for tracked changes and <code>comment.py</code> for comments, which touch six cross-linked files at once.</li>
+<li><strong>2 pptx</strong>: create via <code>pptxgenjs</code>, edit by unzipping XML, read via <code>markitdown</code> or a thumbnail grid from <code>scripts/thumbnail.py</code>. Its gotcha list is unusually honest: <strong>set the layout before adding slides</strong> (the default is 10 x 5.625 inches, not 13.3), <strong>hex colors carry no <code>#</code></strong>, and shadow option objects must never be reused across calls. Always finish with <code>scripts/office/validate.py</code>, which checks schema, relationships and charts.</li>
+<li><strong>3 xlsx</strong>: <code>openpyxl</code> writes formulas, <code>pandas</code> loads bulk data, <code>markitdown</code> gives a quick look — and the step that matters is running <code>scripts/recalc.py</code> afterwards, because <strong>openpyxl writes formulas but never computes them</strong>. Skip it and you ship a sheet full of <code>=</code> signs and no numbers. Its stated limits are worth copying down: <strong>no spilling array functions</strong> (<code>XLOOKUP</code>, <code>FILTER</code>, <code>UNIQUE</code>, <code>SEQUENCE</code>; use <code>INDEX</code>+<code>MATCH</code>), post-2007 functions need the <code>_xlfn.</code> prefix to survive recalculation, <code>data_only=True</code> loads cached values and destroys formulas on save, and external links are stripped on re-save.</li>
+<li><strong>4 pdf</strong>: the broadest of the four — <code>pypdf</code> or <code>qpdf</code> for merge, split and rotate, <code>pdfplumber</code> for text and tables, <code>reportlab</code> for new files, <code>pytesseract</code> plus <code>pdf2image</code> for OCR on scans, and a separate <code>FORMS.md</code> for filling forms. <strong>It is the only one of the four that never unzips OOXML</strong>, which also makes it the only one that does not depend on LibreOffice.</li>
+<li><strong>5 the pre-built four</strong>: Anthropic-hosted, ready on claude.ai, named on the API by <code>skill_id</code>. Two hard constraints: <strong>the code execution tool is required</strong> (skills run inside its container) and <strong>that container has no network access and no runtime package installation</strong>. <strong>The docs state plainly that Claude Code does not offer the pre-built document skills.</strong> So the answer to "it works in the browser, why not in my terminal" is right here: what you want is entries 1-4.</li>
+<li><strong>6 doc-coauthoring</strong>: the only entry on this list that <strong>bundles no scripts at all</strong>. What it gives you is a process — transfer your domain knowledge first, draft section by section, then test the result against a fresh reader who lacks your background. Its relationship to entry 1 is <strong>content versus container</strong>: think it through with this one, then pour it into Word with docx.</li>
+<li><strong>7 internal-comms</strong>: four house-style files — <code>3p-updates.md</code> (progress, plans, problems), <code>company-newsletter.md</code>, <code>faq-answers.md</code>, <code>general-comms.md</code> — and you load the one that matches. <strong>Its description is strikingly personal</strong>: help me write internal communications in the formats my company likes to use. That phrasing is a signal: <strong>the right move with this class is to fork it and drop in your own house style, not to install it as is.</strong></li>
+<li><strong>8 theme-factory</strong>: ten preset themes (Ocean Depths, Modern Minimalist, Midnight Galaxy and others), with a <code>theme-showcase.pdf</code> so you can look before choosing, plus on-the-fly generation of new ones. It is a clean specimen of separating style from content: a theme is just hex values paired with fonts, applicable to slides, docs or landing pages alike.</li>
+<li><strong>9 brand-guidelines</strong>: <strong>note that it ships Anthropic's own brand</strong> — primary <code>#141413</code>, Poppins for headings, Lora for body, with background-aware color choice and fallbacks to Arial and Georgia. <strong>Installing it unchanged hangs someone else's sign over your shop</strong>; the right use is as a template with your palette swapped in. Skill 15 of this series digs into that class on its own.</li>
+<li><strong>10 markitdown</strong>: officially "a Python tool for converting files and office documents to Markdown", eating PDF, Word, Excel, PowerPoint, images (EXIF and OCR), audio (transcription), HTML, CSV, JSON, XML, ZIP and EPub. <strong>It is not a skill; it is the lower-level tool the four keep calling</strong> — the "read" step in entries 2 and 3 is literally this. It stands alone perfectly well, and it is the only entry here that works in every environment.</li>
+</ul>
+<div class="res"><strong>Going deeper</strong> · <a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview" target="_blank">Agent Skills · Overview</a> (source for entry 5's two constraints, the three-level progressive disclosure table, and the line about Claude Code not offering pre-built document skills)</div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Why these ten cannot share one ranking: three kinds of thing, one table</h2>
+<div class="claim">Claim: entry 1 differs from entry 6 more than it differs from markitdown. One hands the model scripts, one hands it a process, and one is not a skill at all.</div>
+<h3>Three shapes</h3>
+<ol>
+<li><strong>Deterministic, script-bearing (1, 2, 3, 4)</strong> — the shared structure is: a decision tree in <code>SKILL.md</code>, deterministic operations in <code>scripts/</code>, and <strong>a validation script closing the feedback loop</strong>. The criterion here is "which specific trap do its scripts catch for me", not "how well is it written". <strong>The price is environment dependencies</strong>: entry 2's validation chain needs LibreOffice, entry 4's OCR needs tesseract.</li>
+<li><strong>Pure process (6, 7, 8, 9)</strong> — not a line of code, only prose and examples. The criterion is whether its examples are the kind you actually want. <strong>Entries 7 and 9 are conspicuously templates rather than products</strong>: one ships another company's status-report conventions, the other another company's palette.</li>
+<li><strong>Lower-level tool (10)</strong> — it takes no part in skill triggering; skills call it. It sits in this table only because in real work it always shows up alongside entries 1 through 4.</li>
+</ol>
+<div class="fail"><strong>The trap</strong>: entries 1-4 and entry 5 share names and capabilities but are two different things. Entry 5 is the closed, Anthropic-hosted pre-built version, live on claude.ai and the API; entries 1-4 are same-named open-source implementations whose frontmatter reads <strong><code>license: Proprietary</code> (full terms in each LICENSE.txt), in a repo whose README states they are "provided for demonstration and educational purposes only"</strong>. Uploading the open-source copy on claude.ai means two descriptions competing for one job, and you pay that trigger conflict for nothing.</div>
+<h3>And one thing that fits no shape</h3>
+<p>"Template skill" sounds like a category of tool. It is really a <strong>structure</strong>: one decision tree, a set of reference files read on demand, and a checking step that can tell right from wrong. Entries 1-4 are that structure applied to file formats; entries 7 and 9 are the same structure applied to prose. <strong>Once you see it, your own contract templates and quote sheets are built exactly the same way.</strong></p>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Three-minute inspection: six criteria, with these ten as the yardstick</h2>
+<div class="claim">Claim: you do not need to run an office skill to judge it. Three minutes inside SKILL.md is enough, and each of the ten above demonstrates one criterion.</div>
+<ol>
+<li><strong>Is there a step that can tell right from wrong?</strong> Entry 2's <code>validate.py</code>, entry 3's <code>recalc.py</code> and entry 1's <code>soffice</code> conversion check are the positive samples. <strong>A document skill with no validation step is asking a model to write a binary format blind</strong> — and the most expensive bug in this class is "the file was produced, but it will not open".</li>
+<li><strong>Are deterministic operations scripts, or improvised?</strong> Merging runs, recalculating formulas, accepting tracked changes: single correct answers, no judgement required. <strong>As scripts they cost fewer tokens and cannot drift</strong> (the code never enters context; only its output does). A SKILL.md that is all "you could write code like this" with no <code>scripts/</code> has handed the model work it should never have been given.</li>
+<li><strong>Does it admit its limits?</strong> Entry 3 puts "no spilling array functions" and "<code>data_only=True</code> destroys formulas" in the body, and that half page buys more trust than anything else on this list. <strong>A skill that lists only what it can do leaves you to discover the rest by stepping on it.</strong></li>
+<li><strong>Is it shipping a process, or someone's preferences?</strong> Entry 6 gives a process you use as is; entries 7 and 9 give Anthropic's own conventions and palette, and <strong>those you fork rather than install</strong>. The tell is easy: read the description, and treat anything containing "my company" or "Anthropic's official" as a template.</li>
+<li><strong>Are environment dependencies stated up front?</strong> Entries 2 and 3 need LibreOffice to convert and recalculate; entry 4 needs tesseract for OCR. <strong>Check the machine your agent runs on before installing</strong> — this failure never announces itself as "the skill is bad", it announces itself as a command-not-found you cannot parse.</li>
+<li><strong>Does it even exist in your environment?</strong> This one is specific to the office class: <strong>the same capability reaches claude.ai, the API and Claude Code by three different roads</strong> (pre-built, <code>skill_id</code>, plugin install), and they do not interoperate — the docs devote a section to custom skills not syncing across surfaces. Ask "where will I use this" before you install anything.</li>
+</ol>
+<div class="res"><strong>Going deeper</strong> · <a href="https://code.claude.com/docs/en/skills" target="_blank">Claude Code · Skills</a> (source for the five storage locations, <code>/plugin install</code>, <code>/skills</code> and <code>/skill-doctor</code>)</div>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>The honest cost: what the bill for this class looks like</h2>
+<div class="claim">Claim: the context tax here is light — too light to be worth economizing. The real cost sits elsewhere: environment, version, and assuming that installed means handled.</div>
+<h3>The light part first</h3>
+<p>The docs are specific: <strong>only name and description stay resident, roughly 100 tokens per skill; the body is read when triggered, usually under 5k tokens; bundled files cost nothing until read</strong> (per the platform.claude.com Agent Skills documentation, 2026-09). Claude Code adds a sharper number: <strong>the combined skill descriptions are truncated at 1,536 characters</strong> — which means that once you install enough of them, <strong>descriptions past the cut are simply gone and those skills stop triggering at all</strong>. That is far worse than a few hundred tokens. Use <code>/skill-doctor</code> for real per-skill token cost and invocation frequency, and switch off via <code>/plugin</code> anything whose purpose you cannot recall.</p>
+<h3>Now the heavy part</h3>
+<ul>
+<li><strong>Environment dependencies are a real gate.</strong> The full chain for entries 1, 2 and 3 wants LibreOffice (<code>soffice</code>); seeing entry 2's output also wants <code>pdftoppm</code>; entry 4's OCR wants tesseract. <strong>On a clean CI box, half of this suite is mute.</strong></li>
+<li><strong>The API container has no network and no package installs.</strong> Entry 5 runs inside the code execution sandbox: <strong>no external calls, no runtime installation, pre-installed packages only</strong>. An office skill of your own that targets the API must keep its dependencies inside that list.</li>
+<li><strong>The license is not MIT.</strong> Entries 1-4 carry <code>license: Proprietary</code> in frontmatter, and the repo README adds "for demonstration and educational purposes only". <strong>Read LICENSE.txt before adapting any of it into a commercial product</strong> — this series will meet that question again.</li>
+<li><strong>Installed is not the same as understood.</strong> Entry 3's limit list is the best example: not knowing it rejects <code>XLOOKUP</code> leaves you puzzling over a sheet full of <code>#NAME?</code>. <strong>The learning cost in this class is not in installation; it is in the half page of limits the author was honest enough to write down.</strong></li>
+<li><strong>Trigger conflicts, as ever.</strong> Entries 1 and 10 can both "read a docx"; entries 6 and 7 can both "write a document". <strong>Two descriptions for one capability means the model chooses every time</strong> — which is the concrete reason not to re-upload the open-source copy on claude.ai.</li>
+</ul>
+<div class="fail"><strong>Failure mode</strong>: you ask for "a quarterly report as xlsx". The model dutifully writes a screen of openpyxl formulas, the file appears, you open it — and every cell is <code>0</code> or blank, because <strong>openpyxl does not compute and nobody ran <code>recalc.py</code></strong>. The nastiest part is the shape of the bug: the file opens, the formatting is right, only the numbers are wrong, and they are wrong very quietly.</div>
+</div>
+<!-- ============ 5 ============ -->
+<div class="combo">
+<h3>// ONE-PAGE BUYING CARD</h3>
+<p><strong>Install these three first</strong> (Claude Code): <code>document-skills@anthropic-agent-skills</code> (one command for <code>docx</code>, <code>pptx</code>, <code>xlsx</code>, <code>pdf</code>) + <code>markitdown</code> (<code>pip install 'markitdown[all]'</code>, the reading half) + <code>theme-factory</code> (inside the <code>example-skills</code> plugin; browse <code>theme-showcase.pdf</code> before picking). Install LibreOffice first, or the validation chain in entries 2 and 3 stays mute.</p>
+<p><strong>Add when needed</strong>: <code>doc-coauthoring</code> (long documents whose difficulty is thinking, not formatting) · <code>internal-comms</code> (<strong>fork it and drop in your own house style</strong>) · <code>brand-guidelines</code> (<strong>read it as a template and replace <code>#141413</code> with your own primary</strong>) · <code>markitdown-mcp</code> (only if another agent needs to convert files remotely).</p>
+<p><strong>Explicitly do not install</strong>: a second, hand-uploaded copy of the open-source four on claude.ai or the API (entry 5 is already live; a duplicate description only steals triggers) · entry 2's <code>validate.py</code> on a machine without LibreOffice · <code>brand-guidelines</code> untouched (that palette is Anthropic's, not yours).</p>
+<p><strong>Three things after installing</strong>: <code>/skills</code> for the list · <code>/skill-doctor</code> for token cost and invocation frequency · and remember that <strong>merged descriptions are truncated at 1,536 characters</strong>, so when triggering gets sluggish, suspect that before you suspect the model.</p>
+</div>
+<div class="glossary">
+<h3>// GLOSSARY</h3>
+<dl>
+<dt>OOXML (Office Open XML)</dt>
+<dd>What .docx, .pptx and .xlsx really are: a zip archive full of XML. "Editing a document" means unzip, change XML, rezip.</dd>
+<dt>progressive disclosure</dt>
+<dd>Skills load in three levels: name and description always resident (about 100 tokens), SKILL.md read on trigger, bundled files read only when referenced.</dd>
+<dt>skill_id</dt>
+<dd>The identifier that names a pre-built skill on the Claude API. The office class has exactly four — <code>pptx</code>, <code>xlsx</code>, <code>docx</code>, <code>pdf</code> — and all require the code execution tool.</dd>
+<dt>recalc</dt>
+<dd>openpyxl writes formula text into cells but computes nothing. LibreOffice has to run once to produce cached values, or the recipient opens an empty grid.</dd>
+<dt>merge runs</dt>
+<dd>Word stores one sentence as several runs. Without merging them first, find-and-replace over the XML misses every sentence that was split.</dd>
+</dl>
+</div>
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://github.com/anthropics/skills" target="_blank">anthropics/skills</a> — source for entries 1-4 and 6-9; <code>/plugin marketplace add anthropics/skills</code>, the two plugin names, and the "demonstration and educational purposes only" disclaimer</li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/docx/SKILL.md" target="_blank">skills/docx · SKILL.md</a> — the create/edit/read decision tree plus <code>merge_runs.py</code>, <code>accept_changes.py</code>, <code>comment.py</code></li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/pptx/SKILL.md" target="_blank">skills/pptx · SKILL.md</a> — the pptxgenjs layout and hex-color gotchas, <code>thumbnail.py</code>, <code>validate.py</code></li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/xlsx/SKILL.md" target="_blank">skills/xlsx · SKILL.md</a> — <code>recalc.py</code>, and the original wording of the spilling-array, <code>_xlfn.</code> and <code>data_only=True</code> limits</li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/pdf/SKILL.md" target="_blank">skills/pdf · SKILL.md</a> — how pypdf, pdfplumber, reportlab and pytesseract divide the work, plus <code>FORMS.md</code></li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/theme-factory/SKILL.md" target="_blank">skills/theme-factory · SKILL.md</a> — the ten theme names and <code>theme-showcase.pdf</code></li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/brand-guidelines/SKILL.md" target="_blank">skills/brand-guidelines · SKILL.md</a> — <code>#141413</code>, Poppins and Lora, and the fallback behaviour; Skill 15 digs in</li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/internal-comms/SKILL.md" target="_blank">skills/internal-comms · SKILL.md</a> — the four house-style files and that "my company" description</li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/doc-coauthoring/SKILL.md" target="_blank">skills/doc-coauthoring · SKILL.md</a> — the three-stage co-writing process, the only entry here with no scripts</li>
+<li><a href="https://github.com/microsoft/markitdown" target="_blank">microsoft/markitdown</a> — the supported-format list and <code>pip install 'markitdown[all]'</code>; <a href="https://github.com/microsoft/markitdown/tree/main/packages/markitdown-mcp" target="_blank">markitdown-mcp</a> exposes exactly one tool, <code>convert_to_markdown(uri)</code></li>
+<li><a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview" target="_blank">Agent Skills · Overview</a> — the pre-built four and their <code>skill_id</code>s, "Claude Code does not offer pre-built document skills", the no-network no-install container, and the three-level token cost table (2026-09)</li>
+<li><a href="https://code.claude.com/docs/en/skills" target="_blank">Claude Code · Skills</a> — five storage locations, <code>/skills</code>, <code>/skill-doctor</code>, and the 1,536-character truncation of merged descriptions (2026-09)</li>
+<li><a href="coding-skills-roundup-skill1.en.html">This site · Skill 01 AI Coding Skills Roundup</a> — three shapes, never one ranking; this issue reuses the same yardstick</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Skill 13 · 2026-09-14</footer>
+</div>
+<script src="https://hub.cissychen.com/comments.js" defer></script>
+<script src="https://hub.cissychen.com/search.js" defer></script>
+<script src="https://hub.cissychen.com/index-button.js" defer></script>
+<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+</body></html>

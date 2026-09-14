@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill 13 · 办公产出类 Skills 榜单 — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head>
+<body>
+<div class="container">
+<header>
+<span class="week-tag">SKILL 13 / DOCS · ROUNDUP</span>
+<h1>办公产出类 Skills 榜单：十个真能装的</h1>
+<h2>四件套的两个版本 · 为什么这类最快变现 · 模板型 Skill 的共同结构</h2>
+<div class="date">2026-09-14 · BigCat</div>
+<p class="pitch">这份榜单第一句就得泼盆冷水：你在 claude.ai 上用得很爽的那四个文档 skill，在 Claude Code 里装不到——官方文档白纸黑字写着不提供。你能装的是 GitHub 上那份同名但另一码事的开源版。</p>
+</header>
+<div class="xref">
+<a href="coding-skills-roundup-skill1.html">前置 → Skill 01 AI 编码 Skills 榜单（三种形态别混着比）</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>前十二期讲的东西，收益都要过几天才看得出来。办公产出类不一样：<strong>它交付的是一个文件，能不能打开是客观的、当场的、不用你信任何人</strong>。这也是它成为整个 skill 生态里最容易变现的一类的原因——有 oracle，模型就能自己纠错。下面十个条目全部能点开，装法抄自各自官方页面；第 02 节讲这十个为什么分属三种完全不同的东西，第 04 节把代价摊开。<strong>本表不按星数排</strong>——办公类的头部就那么几个，星数排出来只会让你误以为最热的就该先装。</p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>先给清单：十个条目，装法都在下面</h2>
+<div class="claim">论断：这张表最该先看的是最后一列。办公类 skill 的失败几乎全发生在「装重了」和「装错版本」上，不是「装少了」。</div>
+<div class="diagram">条目                          出处            替你干掉的那件事                什么时候别装
+──────────────────────────────────────────────────────────────────────────────────────────
+① skills/docx                 anthropics/skills  Word 新建 / 改 XML / 追踪修订     你在 claude.ai 或 API 上（已预置）
+② skills/pptx                 anthropics/skills  幻灯片生成 + 缩略图 + 校验        机器上没有 LibreOffice
+③ skills/xlsx                 anthropics/skills  公式 / 重算 / 脏表格清洗          你只要一张 CSV
+④ skills/pdf                  anthropics/skills  合并拆分 / 表单填写 / OCR         只是读一页文字，markitdown 更快
+⑤ 预置四件套（skill_id）      Claude API         同上，但零安装、官方维护          你在 Claude Code 里（官方不提供）
+⑥ skills/doc-coauthoring      anthropics/skills  长文档的三段式共写流程            你要的是格式，不是内容
+⑦ skills/internal-comms       anthropics/skills  周报 / 简报 / FAQ 的公司体例      你公司体例和它给的四份不一样
+⑧ skills/theme-factory        anthropics/skills  十套配色字体，一句话套到产出上    你已有品牌规范文件
+⑨ skills/brand-guidelines     anthropics/skills  把风格指南变成可执行约束          它装的是 Anthropic 自家的色卡
+⑩ microsoft/markitdown        microsoft         把 Office / PDF 读成 Markdown     你只写不读
+──────────────────────────────────────────────────────────────────────────────────────────
+①②③④⑥⑦⑧⑨ 同在 anthropics/skills 一个仓库，分属两个插件（见下）。⑤ 和①②③④同名不同物。</div>
+<h3>怎么装（命令抄自各自官方页面）</h3>
+<pre><code><span class="tag-com"># ①②③④ Claude Code：一条命令拿到四件套（marketplace 名是 anthropic-agent-skills）</span>
+/plugin marketplace add anthropics/skills
+/plugin install document-skills@anthropic-agent-skills
+
+<span class="tag-com"># ⑥⑦⑧⑨ 在另一个插件里，一起装（还捎带 skill-creator、mcp-builder 等）</span>
+/plugin install example-skills@anthropic-agent-skills
+
+<span class="tag-com"># ⑤ Claude API：不是「装」，是在 container 里点名，且必须开 code execution 工具</span>
+container: { skills: [ { type: "anthropic", skill_id: "pptx" } ] }
+<span class="tag-com"># skill_id 只有四个：pptx / xlsx / docx / pdf</span>
+
+<span class="tag-com"># ⑩ markitdown：读的那一半，pip 装</span>
+pip install 'markitdown[all]'
+<span class="tag-com"># 只要三种格式就别装全：</span>
+pip install 'markitdown[pdf, docx, pptx]'
+<span class="tag-com"># 它还有个 MCP 版，只暴露一个工具 convert_to_markdown(uri)</span>
+pip install markitdown-mcp
+
+<span class="tag-com"># 装完立刻做这两件事</span>
+/skills          <span class="tag-com"># 看清单，关掉这次用不上的</span>
+/skill-doctor    <span class="tag-com"># 看每个 skill 的 token 成本与调用频次（v2.1.252+）</span>
+</code></pre>
+<h3>逐条说人话</h3>
+<ul>
+<li><strong>① docx</strong>：它不是「调个库生成 Word」。<code>SKILL.md</code> 第一层是决策树——<strong>新建</strong>就写 Node 脚本用 <code>docx</code> 包；<strong>编辑</strong>就解包改 <code>word/document.xml</code> 再重打包；<strong>只读</strong>就一条 <code>pandoc -t markdown</code>。真正值钱的是 <code>scripts/merge_runs.py</code>：Word 会把一句话切成一串 run，不先合并，查找替换十次有九次替换不到。另有 <code>accept_changes.py</code> 处理追踪修订、<code>comment.py</code> 处理批注（要同时改六个互相链接的文件）。</li>
+<li><strong>② pptx</strong>：新建走 <code>pptxgenjs</code>，编辑走解包改 XML，读用 <code>markitdown</code> 或 <code>scripts/thumbnail.py</code> 出缩略图网格。它的坑写得比谁都实在：<strong>先设 layout 再加页</strong>（默认 10×5.625 英寸不是 13.3）、<strong>十六进制色不带 <code>#</code></strong>、阴影配置对象不能跨调用复用。生成完必跑 <code>scripts/office/validate.py</code>，查 schema、关系、图表。</li>
+<li><strong>③ xlsx</strong>：<code>openpyxl</code> 写公式、<code>pandas</code> 灌数据、<code>markitdown</code> 快速看一眼，最关键的是写完公式跑 <code>scripts/recalc.py</code>——<strong>openpyxl 只写公式不算值</strong>，不重算你交出去的是一张全是 <code>=</code> 号没有数的表。它老实交代的限制值得抄下来：<strong>不支持会溢出的数组函数</strong>（<code>XLOOKUP</code> / <code>FILTER</code> / <code>UNIQUE</code> / <code>SEQUENCE</code>，改用 <code>INDEX</code>+<code>MATCH</code>）、2007 年后的新函数要带 <code>_xlfn.</code> 前缀、<code>data_only=True</code> 读的是缓存值且一存盘就把公式毁了、外部链接重存会被剥掉。</li>
+<li><strong>④ pdf</strong>：覆盖面最宽的一个——合并拆分转页用 <code>pypdf</code> 或 <code>qpdf</code>，抽文字抽表格用 <code>pdfplumber</code>，新建用 <code>reportlab</code>，扫描件 OCR 用 <code>pytesseract</code>+<code>pdf2image</code>，表单填写另开一份 <code>FORMS.md</code>。<strong>它是四件套里唯一不靠 OOXML 解包的</strong>，所以也是唯一不依赖 LibreOffice 的。</li>
+<li><strong>⑤ 预置四件套</strong>：官方托管版，在 claude.ai 和 API 上开箱即用，API 侧按 <code>skill_id</code> 点名。两条硬限制要记住：<strong>必须搭 code execution 工具</strong>（skill 就跑在它的容器里），而<strong>那个容器没有网络、也不能运行时装包</strong>。<strong>官方文档明说：Claude Code 不提供预置文档 skill。</strong>所以「我在网页版用得好好的，为什么终端里没有」的答案就在这——你要的是①②③④。</li>
+<li><strong>⑥ doc-coauthoring</strong>：整个榜里唯一<strong>一个脚本都不带</strong>的。它给的是流程：先把领域知识掏给模型，再一节一节写，最后拿「新读者」视角回测盲区。它和①的关系是<strong>内容 vs 容器</strong>——先用它把话想清楚，再用 docx 装进 Word 里。</li>
+<li><strong>⑦ internal-comms</strong>：四份体例文件 <code>3p-updates.md</code>（进展/计划/问题）、<code>company-newsletter.md</code>、<code>faq-answers.md</code>、<code>general-comms.md</code>，用哪种读哪份。<strong>它的 description 写得极其个人化</strong>——「帮我用我公司喜欢的格式写内部沟通」。这句是个信号：<strong>这类 skill 的正确用法是 fork 一份塞自己公司的体例，不是原样装。</strong></li>
+<li><strong>⑧ theme-factory</strong>：十套预设主题（Ocean Depths、Modern Minimalist、Midnight Galaxy 等），带一份 <code>theme-showcase.pdf</code> 让你先看再选，也能现生成新主题。它是「样式与内容分离」的干净样本：主题只是一堆色值与字体配对，套在幻灯片、文档、落地页上都行。</li>
+<li><strong>⑨ brand-guidelines</strong>：<strong>注意它装的是 Anthropic 自己的品牌</strong>——主色 <code>#141413</code>、标题 Poppins、正文 Lora，还带按背景自动选色和字体回退（Arial / Georgia）。<strong>照装等于把别人家的门头挂到你店上</strong>；它的正确用途是当模板，把里面的色卡换成你的。本系列 Skill 15 单独深挖这一类。</li>
+<li><strong>⑩ markitdown</strong>：官方描述是「把文件和办公文档转成 Markdown 的 Python 工具」，PDF / Word / Excel / PPT / 图片（EXIF + OCR）/ 音频（转写）/ HTML / CSV / JSON / XML / ZIP / EPub 都吃。<strong>它不是 skill，是四件套里被反复调用的那个底层工具</strong>——②③的「读」这一步直接就是它。单装也完全成立，且是本榜里唯一在任何环境都能用的。</li>
+</ul>
+<div class="res"><strong>进阶资源</strong> · <a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview" target="_blank">Agent Skills · Overview</a>（⑤的两条硬限制、三层渐进披露、以及「Claude Code 不提供预置文档 skill」的原文出处）</div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>为什么这十个不能混着比：三种东西挤在一张表里</h2>
+<div class="claim">论断：①和⑥的差别，比①和 markitdown 的差别还大。一个给模型脚本，一个给模型流程，一个压根不是 skill。</div>
+<h3>三种形态</h3>
+<ol>
+<li><strong>带脚本的确定性型（①②③④）</strong>——共同结构是：<code>SKILL.md</code> 放决策树，<code>scripts/</code> 放确定性操作，再挂一个<strong>校验脚本当反馈闭环</strong>。这类的判据是「它的脚本替我兜住了哪个具体的坑」，不是「它文档写得好不好」。<strong>代价是环境依赖</strong>：②的校验链要 LibreOffice，④的 OCR 要 tesseract。</li>
+<li><strong>纯流程型（⑥⑦⑧⑨）</strong>——一行代码都没有，全是文字与样例。这类的判据是「它的样例是不是我要的那种」。<strong>⑦⑨尤其明显地是模板而不是成品</strong>：一个装的是别人公司的周报体例，一个装的是别人公司的色卡。</li>
+<li><strong>底层工具（⑩）</strong>——它不参与 skill 的触发机制，是被 skill 调用的。把它和①②③④放一张表，只是因为你实际干活时它们总是一起出现。</li>
+</ol>
+<div class="fail"><strong>那个陷阱</strong>：①②③④ 和 ⑤ 同名同能力，但是两个东西。⑤ 是 Anthropic 托管的闭源预置版，在 claude.ai / API 上开着；①②③④ 是开源仓库里的同名实现，<strong>license 写的是 Proprietary（详见各自 LICENSE.txt），且仓库 README 明写「仅供演示与教学用途」</strong>。在 claude.ai 上再手动传一份开源版，等于给同一件事挂两份描述，白交触发冲突的税。</div>
+<h3>还有一条不属于任何形态</h3>
+<p>「模板型 skill」这个说法容易被当成一类工具，其实它是个<strong>结构</strong>：一份决策树 + 一批按需读的 reference + 一个能判对错的校验步骤。①②③④是它在文件格式上的实例，⑦⑨是它在文风上的实例。<strong>看懂这个结构，你自己公司那套合同模板、报价单模板，做法完全一样。</strong></p>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>三分钟验货：六条判据，用上面这十个当量尺</h2>
+<div class="claim">论断：办公类 skill 好不好，不用跑，打开 SKILL.md 翻三分钟就知道。上面十个恰好各自示范了一条。</div>
+<ol>
+<li><strong>有没有一个能判对错的校验步骤。</strong>②的 <code>validate.py</code>、③的 <code>recalc.py</code>、①的 <code>soffice</code> 转换验证是正面样本。<strong>没有校验步骤的文档类 skill，本质是让模型盲写二进制格式</strong>——这一类最贵的 bug 就是「文件生成了，但打不开」。</li>
+<li><strong>确定性操作是脚本还是让模型现编。</strong>合并 run、重算公式、接受修订这些事，答案唯一、不需要判断力，<strong>写成脚本既省 token 又不会跑偏</strong>（脚本代码不进上下文，只有输出进）。SKILL.md 里如果全是「你可以这样写代码……」而没有 <code>scripts/</code>，它就是把不该给模型的活给了模型。</li>
+<li><strong>老实交代限制没有。</strong>③把「不支持溢出数组函数」「<code>data_only=True</code> 会毁公式」写进正文，是这十个里最能建立信任的一段。<strong>一个只讲能做什么、不讲做不到什么的 skill，你得自己去踩它没写的那些坑。</strong></li>
+<li><strong>装的是流程还是别人的偏好。</strong>⑥给的是流程，你拿来即用；⑦⑨给的是 Anthropic 自己的体例和色卡，<strong>你该 fork 而不是装</strong>。分辨方法很简单：读 description，出现「my company」「Anthropic's official」这类词的，都是模板。</li>
+<li><strong>环境依赖有没有写在明处。</strong>②③要 LibreOffice 才能转换与重算，④的 OCR 要 tesseract。<strong>装之前先确认你跑 agent 的那台机器有这些</strong>——这类失败不报「skill 不好用」，报的是一句你看不懂的命令找不到。</li>
+<li><strong>它在你这个环境里到底存不存在。</strong>这是办公类独有的一条：<strong>同一个能力在 claude.ai、API、Claude Code 上是三条不同的路</strong>（预置、<code>skill_id</code>、插件安装），而且不互通——官方文档专门列了一节说自定义 skill 不跨端同步。装之前先问「我在哪儿用」。</li>
+</ol>
+<div class="res"><strong>进阶资源</strong> · <a href="https://code.claude.com/docs/en/skills" target="_blank">Claude Code · Skills</a>（五个存放位置、<code>/plugin install</code>、<code>/skills</code> 与 <code>/skill-doctor</code> 的出处）</div>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>诚实的代价：这类 Skill 的账单长什么样</h2>
+<div class="claim">论断：办公类的 context 税很轻——轻到不值得省。真正的代价在别处：环境、版本、和「装了就以为万事大吉」。</div>
+<h3>先说轻的那部分</h3>
+<p>官方文档给的数字很明确：<strong>每个 skill 常驻上下文的只有 name 和 description，约 100 token；正文触发时才读，通常 5k token 以内；bundled 文件不读就不花钱</strong>（据 platform.claude.com «Agent Skills» 文档，2026-09）。Claude Code 侧还有一条更具体的：<strong>所有 skill 描述合起来在 1,536 字符处被截断</strong>——注意这意味着装得太多时，<strong>排在后面的 skill 描述会被切掉，它就再也触发不了了</strong>。这比多花几百 token 严重得多。用 <code>/skill-doctor</code> 看每个 skill 的实际 token 成本与调用频次，想不起用途的就 <code>/plugin</code> 关掉。</p>
+<h3>再说重的那部分</h3>
+<ul>
+<li><strong>环境依赖是真门槛。</strong>①②③的完整链路要 LibreOffice（<code>soffice</code>），②看效果还要 <code>pdftoppm</code>，④的 OCR 要 tesseract。<strong>在一台干净的 CI 机器上，这四件套有一半功能是哑的。</strong></li>
+<li><strong>API 容器没网、不能装包。</strong>⑤跑在 code execution 的沙箱里，<strong>无网络访问、不能运行时安装依赖，只能用预装包</strong>。你自己写的办公类 skill 要上 API，依赖必须落在那份预装清单内。</li>
+<li><strong>license 不是 MIT。</strong>①②③④的 frontmatter 写的是 <code>license: Proprietary</code>，仓库 README 还有一句「仅供演示与教学用途」。<strong>拿去改造进商业产品前先读 LICENSE.txt</strong>——这条本系列以后还会遇到很多次。</li>
+<li><strong>「装了」不等于「会用」。</strong>③的限制清单是最好的例子：你不知道它不支持 <code>XLOOKUP</code>，就会一直纳闷为什么表里是 <code>#NAME?</code>。<strong>这类 skill 的学习成本不在安装，在它老实写下来的那半页限制。</strong></li>
+<li><strong>触发冲突照旧。</strong>①和⑩都能「读 docx」，⑥和⑦都能「写一份文档」。<strong>同类能力挂两份描述，模型每次都要挑</strong>——这也是别在 claude.ai 上重复传开源版的实际理由。</li>
+</ul>
+<div class="fail"><strong>失败模式</strong>：让模型「生成一个季度汇报的 xlsx」，它用 openpyxl 老老实实写了一屏公式，文件也生成了，你打开一看全是 <code>0</code> 或空白——因为 <strong>openpyxl 不算值，没人跑 <code>recalc.py</code></strong>。这个 bug 最恶心的地方是：文件能打开、格式也对、只有数是错的，而错得很安静。</div>
+</div>
+<!-- ============ 5 ============ -->
+<div class="combo">
+<h3>// 一页选购卡</h3>
+<p><strong>先装这三个</strong>（Claude Code 场景）：<code>document-skills@anthropic-agent-skills</code>（一条命令拿到 <code>docx</code>/<code>pptx</code>/<code>xlsx</code>/<code>pdf</code>）+ <code>markitdown</code>（<code>pip install 'markitdown[all]'</code>，读的那一半）+ <code>theme-factory</code>（在 <code>example-skills</code> 插件里，十套现成主题，先看 <code>theme-showcase.pdf</code> 再挑）。装完先装 LibreOffice，否则②③的校验链是哑的。</p>
+<p><strong>按需再加</strong>：<code>doc-coauthoring</code>（要写长文档、且难点在想清楚而不在排版时）· <code>internal-comms</code>（<strong>fork 一份换成你公司的体例</strong>）· <code>brand-guidelines</code>（<strong>当模板读，把 <code>#141413</code> 换成你的主色</strong>）· <code>markitdown-mcp</code>（仅当你要让别的 agent 远程转文件）。</p>
+<p><strong>明确别装</strong>：在 claude.ai 或 API 上再手动传一份开源版四件套（预置的⑤已经开着，重复挂描述只会抢触发）· 在没有 LibreOffice 的机器上指望 <code>pptx</code> 的 <code>validate.py</code> · 原封不动的 <code>brand-guidelines</code>（那是 Anthropic 的色卡，不是你的）。</p>
+<p><strong>装完三件事</strong>：<code>/skills</code> 看清单 · <code>/skill-doctor</code> 查 token 成本与调用频次 · 记住<strong>描述合并后在 1,536 字符处截断</strong>，装到触发变迟钝时，先怀疑这条而不是怀疑模型。</p>
+</div>
+<div class="glossary">
+<h3>// 术语表</h3>
+<dl>
+<dt>OOXML（Office Open XML，办公开放 XML）</dt>
+<dd>.docx / .pptx / .xlsx 的真身：一个 zip 包，里面装着一堆 XML。所谓「编辑文档」就是解包、改 XML、重打包。</dd>
+<dt>progressive disclosure（渐进披露）</dt>
+<dd>skill 分三层加载：name+description 常驻（约 100 token）→ SKILL.md 触发时读 → bundled 文件用到才读。</dd>
+<dt>skill_id</dt>
+<dd>Claude API 里点名预置 skill 的标识，办公类只有四个：<code>pptx</code> / <code>xlsx</code> / <code>docx</code> / <code>pdf</code>，且必须搭 code execution 工具。</dd>
+<dt>recalc（重算）</dt>
+<dd>openpyxl 只把公式文本写进单元格，不计算结果。要靠 LibreOffice 跑一遍才有缓存值，否则别人打开看到的是空的。</dd>
+<dt>merge runs（合并文本片段）</dt>
+<dd>Word 会把一句话切成多个 run 存。不先合并，对 XML 做查找替换就会漏掉被切开的那些。</dd>
+</dl>
+</div>
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://github.com/anthropics/skills" target="_blank">anthropics/skills</a> — ①②③④⑥⑦⑧⑨ 的出处；<code>/plugin marketplace add anthropics/skills</code>、两个插件名与「仅供演示与教学用途」免责声明</li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/docx/SKILL.md" target="_blank">skills/docx · SKILL.md</a> — 新建/编辑/只读决策树，<code>merge_runs.py</code> / <code>accept_changes.py</code> / <code>comment.py</code></li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/pptx/SKILL.md" target="_blank">skills/pptx · SKILL.md</a> — pptxgenjs 的 layout 与十六进制色坑、<code>thumbnail.py</code>、<code>validate.py</code></li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/xlsx/SKILL.md" target="_blank">skills/xlsx · SKILL.md</a> — <code>recalc.py</code>，以及溢出数组函数 / <code>_xlfn.</code> 前缀 / <code>data_only=True</code> 三条限制的原文</li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/pdf/SKILL.md" target="_blank">skills/pdf · SKILL.md</a> — pypdf / pdfplumber / reportlab / pytesseract 分工与 <code>FORMS.md</code></li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/theme-factory/SKILL.md" target="_blank">skills/theme-factory · SKILL.md</a> — 十套主题名与 <code>theme-showcase.pdf</code></li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/brand-guidelines/SKILL.md" target="_blank">skills/brand-guidelines · SKILL.md</a> — <code>#141413</code>、Poppins / Lora 与字体回退；本系列 Skill 15 深挖</li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/internal-comms/SKILL.md" target="_blank">skills/internal-comms · SKILL.md</a> — 四份体例文件与那句「my company」的 description</li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/doc-coauthoring/SKILL.md" target="_blank">skills/doc-coauthoring · SKILL.md</a> — 三段式共写流程，全榜唯一不带脚本的一个</li>
+<li><a href="https://github.com/microsoft/markitdown" target="_blank">microsoft/markitdown</a> — 支持格式清单与 <code>pip install 'markitdown[all]'</code>；<a href="https://github.com/microsoft/markitdown/tree/main/packages/markitdown-mcp" target="_blank">markitdown-mcp</a> 只暴露 <code>convert_to_markdown(uri)</code> 一个工具</li>
+<li><a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview" target="_blank">Agent Skills · Overview</a> — 预置四件套与 <code>skill_id</code>、「Claude Code 不提供预置文档 skill」、API 容器无网络不可装包、三层 token 成本表（2026-09）</li>
+<li><a href="https://code.claude.com/docs/en/skills" target="_blank">Claude Code · Skills</a> — 五个存放位置、<code>/skills</code>、<code>/skill-doctor</code>、描述合并在 1,536 字符截断（2026-09）</li>
+<li><a href="coding-skills-roundup-skill1.html">本站 Skill 01 · AI 编码 Skills 榜单</a> — 三种形态别混着比，本期沿用了同一把尺</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Skill 13 · 2026-09-14</footer>
+</div>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
+</body></html>
