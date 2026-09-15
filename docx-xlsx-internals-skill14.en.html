@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill 14 · How Document Skills Avoid Corrupting Files — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head><body>
+<div class="container">
+<header>
+<span class="week-tag">SKILL 14 / DOCS · DEEP DIVE</span>
+<h1>How Document Skills Avoid Corrupting Files</h1>
+<h2>Unpack-edit-validate-repack · The XSD as oracle · Why deterministic steps must be scripts</h2>
+<div class="date">2026-09-15 · BigCat</div>
+<p class="pitch">Last issue gave you the shortlist of office skills. This one opens the <code>scripts/</code> directories of the docx, pptx and xlsx skills. What is actually valuable in there is not the few hundred words of prompt in SKILL.md — it is the dozen Python scripts you can lift out and run without the skill at all.</p>
+</header>
+<div class="xref">
+<a href="office-skills-roundup-skill13.en.html">Prerequisite → Skill 13 Office Deliverable Skills Roundup (two versions of the same four)</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>When a <code>.docx</code> refuses to open, nobody says "the model hallucinated." They just conclude your tooling does not work. Office deliverables are the easiest class in the whole skill ecosystem precisely because they have an <strong>objective oracle</strong>: the file either matches the schema or it does not, and no human judgement is involved. This issue traces how that oracle gets wired back into the loop: <code>unzip → merge_runs → edit XML → zip -Xr → validate.py</code>. Every step names a real script path you can take away one at a time.</p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>What it removes: the "I edited it, is it broken?" gap</h2>
+<div class="claim">Claim: it does not remove "writing XML." Hand-editing OOXML was never the hard part. The hard part is that after you edit, nothing tells you which byte is now non-conformant — you find out when Word pops up "there is a problem with the contents."</div>
+<h3>Installing</h3>
+<pre><code><span class="tag-com"># Claude Code: the four live in the document-skills plugin</span>
+/plugin marketplace add anthropics/skills
+/plugin install document-skills@anthropic-agent-skills
+
+<span class="tag-com"># Want only the scripts, not the skill? Clone it — scripts/ stands alone</span>
+git clone https://github.com/anthropics/skills
+
+<span class="tag-com"># System dependencies, as docx/SKILL.md lists them:</span>
+<span class="tag-com"># docx (npm, preinstalled) · pandoc · LibreOffice (soffice) · pdftoppm (Poppler)</span>
+</code></pre>
+<h3>The first thing you can actually run (straight from docx/SKILL.md)</h3>
+<pre><code>unzip -q doc.docx -d unpacked/
+find unpacked -type l -delete              <span class="tag-com"># strip symlinks</span>
+python scripts/merge_runs.py unpacked/     <span class="tag-com"># coalesce fragmented runs first</span>
+<span class="tag-com"># edit unpacked/word/document.xml by hand — do NOT reformat</span>
+(cd unpacked &amp;&amp; rm -f ../out.docx &amp;&amp; zip -Xr ../out.docx .)
+python scripts/office/validate.py out.docx --original doc.docx</code></pre>
+<p>Not one of those six lines is decoration. <code>find -type l -delete</code> keeps symlinks out of the archive. <code>merge_runs.py</code> decides whether you can find a whole sentence in the XML at all. <code>zip -Xr</code> run from <em>inside</em> the directory matters because zipping the folder itself adds a directory level and Word rejects the result. <code>--original</code> gives the validator a baseline.</p>
+<div class="fail"><strong>The three classic ways to break this</strong>: running <code>zip -r unpacked/</code> from outside (extra directory level) · letting an editor "format XML" before saving (whitespace lands in <code>w:t</code> and the text silently changes) · skipping <code>merge_runs.py</code> and then concluding the sentence you searched for is not in the document.</div>
+<div class="res"><strong>Primary source</strong> · <a href="https://github.com/anthropics/skills/blob/main/skills/docx/SKILL.md" target="_blank">anthropics/skills · skills/docx/SKILL.md</a> (source of the commands and dependency list above)</div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Mechanism: what works is the XSD layer, not the prompt</h2>
+<div class="claim">Claim: these skills never try to teach the model OOXML. They compress "conformant or not" into an exit code and let the model run into it and correct itself.</div>
+<h3>Where the validator lives</h3>
+<div class="diagram">skills/docx/scripts/
+├── merge_runs.py          coalesce fragmented runs (run before editing)
+├── accept_changes.py      accept all tracked changes
+├── comment.py             insert / reply to comments
+└── office/                ← one package shared by docx · pptx · xlsx
+    ├── validate.py        single entry point; the exit code is the verdict
+    ├── soffice.py         LibreOffice wrapper (convert to PDF / other formats)
+    ├── validators/        base.py · docx.py · pptx.py · redlining.py
+    └── schemas/           ISO-IEC29500-4_2016 · ECMA 4th edition · mce · microsoft</div>
+<p><code>validate.py</code> takes either an unpacked directory or a packed file, plus four switches: <code>--original</code> to baseline against the source, <code>--auto-repair</code> to fix in place, <code>--author NAME</code> to turn on redline validation, and <code>-v</code>. Exit codes: <strong>0 all checks passed, 1 validation failed, 2 argument or file error</strong>. That is the signal you can drop straight into a loop.</p>
+<h3>What it actually repairs and checks</h3>
+<ul>
+<li><strong>Schema validation</strong>: docx and pptx are checked part by part against the XSDs under <code>schemas/</code>. This is the closest machine-readable proxy for "will this file still open."</li>
+<li><strong>Two concrete auto-repairs</strong>: <code>paraId</code> / <code>durableId</code> values that exceed the range OOXML allows, and <code>w:t</code> elements carrying whitespace without <code>xml:space="preserve"</code>. Both are high-frequency side effects of editing XML by hand.</li>
+<li><strong>Redline validation</strong>: pass <code>--author</code> and it diffs against the original, flagging <strong>every text difference that was not recorded as <code>&lt;w:ins&gt;</code> or <code>&lt;w:del&gt;</code></strong>. "Pretending to leave a trail" finally has a checker.</li>
+</ul>
+<h3>Why merge_runs comes before the edit</h3>
+<p>Word splits a single sentence into a dozen <code>&lt;w:r&gt;</code> elements — spell-check state, language marks and rsids all cut in mid-phrase. So the string "the quick brown fox" does not exist contiguously in the XML, a literal search misses, and the model starts guessing at positions. That guessing is where corruption actually begins. Coalescing first kills a whole class of hallucination at the source.</p>
+<div class="fail"><strong>xlsx is not on this line</strong>: <code>validate.py</code> explicitly skips xlsx and performs no schema validation on it. You think you "ran the validator" and nothing was checked — the xlsx oracle is <code>recalc.py</code> in the next section.</div>
+<div class="res"><strong>Primary source</strong> · <a href="https://github.com/anthropics/skills/blob/main/skills/docx/scripts/office/validate.py" target="_blank">scripts/office/validate.py</a> · <a href="https://github.com/anthropics/skills/tree/main/skills/docx/scripts/office/schemas" target="_blank">scripts/office/schemas (where the XSDs come from)</a></div>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Real usage and limits: three pipelines, three unrelated oracles</h2>
+<div class="claim">Claim: docx, pptx and xlsx look like siblings and are verified in completely different ways. Miss that and you will keep "passing validation" on a format that is never validated.</div>
+<h3>docx · oracle = XSD plus redline diff</h3>
+<pre><code>python scripts/accept_changes.py in.docx out.docx         <span class="tag-com"># accept every tracked change</span>
+python scripts/comment.py unpacked/ "Numbers disagree here"  <span class="tag-com"># directory mode, for XML edits</span>
+python scripts/comment.py unpacked/ "Agreed" --parent 0       <span class="tag-com"># reply to comment 0</span>
+python scripts/comment.py contract.docx "One question" -o annotated.docx
+python scripts/office/validate.py out.docx --original doc.docx --author "BigCat"</code></pre>
+<p>In directory mode <code>comment.py</code> prints the <code>&lt;w:commentRangeStart&gt;</code> / <code>&lt;w:commentRangeEnd&gt;</code> / <code>&lt;w:commentReference&gt;</code> snippet for you to place inside <code>word/document.xml</code>: the anchor point is a judgement call left to you, while the numbering and relationship bookkeeping is done by the script. That split is the whole design in miniature.</p>
+<h3>pptx · oracle = XSD plus relationships and content types</h3>
+<pre><code>python scripts/thumbnail.py template.pptx template-thumbs   <span class="tag-com"># see layouts; always pass arg 2</span>
+python3 -c "import sys,zipfile; zipfile.ZipFile(sys.argv[1]).extractall('unpacked')" deck.pptx
+python scripts/add_slide.py unpacked/ slide2.xml --after slide2.xml   <span class="tag-com"># duplicate, never by hand</span>
+<span class="tag-com"># reorder / delete = edit &lt;p:sldIdLst&gt; in ppt/presentation.xml</span>
+python scripts/clean.py unpacked/                            <span class="tag-com"># drop orphaned slides/media/rels</span>
+(cd unpacked &amp;&amp; rm -f ../out.pptx &amp;&amp; zip -Xr ../out.pptx .)
+python scripts/office/validate.py out.pptx --original deck.pptx</code></pre>
+<p>Two hard rules: running <code>add_slide.py</code> against a <code>.pptx</code> directly <strong>requires <code>-o</code></strong> or it rewrites your input, and a template-derived deck <strong>requires <code>--original</code></strong> or the template's own inherited errors will bury yours.</p>
+<h3>xlsx · oracle = recalculation, not schema</h3>
+<pre><code>python scripts/recalc.py output.xlsx [timeout_seconds]   <span class="tag-com"># default 30</span>
+<span class="tag-com"># LibreOffice evaluates every formula, rewrites the file in place, returns JSON:</span>
+<span class="tag-com"># status(success|errors_found) · total_formulas · total_errors · error_summary</span></code></pre>
+<div class="fail"><strong>A counter-intuitive trap</strong>: <code>errors_found</code> <strong>exits 0</strong>. Only a JSON body carrying an <code>error</code> key — meaning nothing was recalculated at all — exits non-zero. So <strong>a clean exit code is not a clean workbook</strong>; you have to read the JSON. And a green recalc only proves the formulas <em>evaluate</em>, never that they are <em>right</em> — write two or three formulas and check the values they pull before you build out the whole sheet.</div>
+<h3>Finish with the same three QA layers</h3>
+<pre><code><span class="tag-com"># 1. File QA</span>
+python scripts/office/validate.py out.pptx --original src.pptx
+<span class="tag-com"># 2. Content QA: read it back, hunt placeholders</span>
+markitdown out.pptx | grep -iE "\bx{3,}\b|lorem|ipsum|\bTODO|\[insert"
+<span class="tag-com"># 3. Visual QA: to PDF, then to images, then actually look</span>
+python scripts/office/soffice.py --headless --convert-to pdf out.pptx
+pdftoppm -jpeg -r 150 out.pdf slide &amp;&amp; ls -1 slide-*.jpg</code></pre>
+<p>Each layer catches something the others cannot: schema catches "will not open," grep catches "xxx / TODO / insert title here" surviving into the final file, images catch overflowing text boxes and white-on-white. Drop one and you lose that class entirely — the three do not overlap.</p>
+<div class="res"><strong>Primary sources</strong> · <a href="https://github.com/anthropics/skills/blob/main/skills/pptx/SKILL.md" target="_blank">skills/pptx/SKILL.md</a> · <a href="https://github.com/anthropics/skills/blob/main/skills/xlsx/SKILL.md" target="_blank">skills/xlsx/SKILL.md</a> · <a href="https://github.com/microsoft/markitdown" target="_blank">microsoft/markitdown</a> (<code>pip install 'markitdown[all]'</code>; per the GitHub repo page, 2026-09: ~184k stars, MIT)</div>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Costs and alternatives: this pipeline is not cheap</h2>
+<div class="claim">Claim: the price is an entire stack of system dependencies. Without LibreOffice you lose the xlsx oracle and all visual QA at once — and the half that survives will let you believe you are still verifying something.</div>
+<h3>Four honest costs</h3>
+<ul>
+<li><strong>Heavy dependencies</strong>. LibreOffice + pandoc + Poppler + Node is routine inside a container, far less obviously worth it on a laptop just to recalculate one workbook. And an incomplete install does not fail loudly; it <strong>degrades silently</strong>, which is worse.</li>
+<li><strong>openpyxl round-trips are lossy</strong>. Straight from the docs: <em>openpyxl does currently not read all possible items in an Excel file so images and charts will be lost from existing files if they are opened and saved with the same name.</em> (openpyxl 3.1.5, per PyPI 2024-06). xlsx/SKILL.md adds two traps from the same root: loading with <code>data_only=True</code> and then saving replaces every formula with a literal <strong>permanently</strong>, and an <code>.xlsm</code> loses its macros unless you pass <code>keep_vba=True</code>. This is where "not corrupting the file" most often fails — quietly.</li>
+<li><strong>Generator libraries cannot open existing files</strong>. <a href="https://github.com/dolanmiu/docx" target="_blank">dolanmiu/docx</a> (<code>npm install docx</code>, docs at docx.js.org) only constructs documents; it cannot read an existing <code>.docx</code>. Editing via unpack is not laziness, it is the only road.</li>
+<li><strong>Passing validation is not being correct</strong>. XSD governs structure; it will happily approve a structurally perfect piece of nonsense. That is why the grep and the rendered images in section 03 are not optional — the real oracle has three layers, so do not keep only the cheapest one.</li>
+</ul>
+<h3>Four ways to not take this road at all</h3>
+<ul>
+<li><strong>Just reading once</strong> → <code>markitdown file.xlsx</code> or <code>pandoc -t markdown file.docx</code>. Unpacking is for editing, not for looking.</li>
+<li><strong>Generating from scratch</strong> → docx (npm) for Word, <a href="https://github.com/gitbrent/PptxGenJS" target="_blank">gitbrent/PptxGenJS</a> (<code>npm install pptxgenjs</code>; per the GitHub repo page, 2026-09: ~6.2k stars, MIT) for slides. Still run validate and visual QA afterwards — you just never touch unpacking.</li>
+<li><strong>You only need one table</strong> → CSV. Dragging a whole OOXML pipeline in for two columns of data is the most common over-engineering in this series.</li>
+<li><strong>On claude.ai or the API</strong> → the four are preinstalled as <code>skill_id</code> values, zero setup (see <a href="office-skills-roundup-skill13.en.html">Skill 13</a>). This pipeline is for Claude Code and self-hosted environments.</li>
+</ul>
+<div class="fail"><strong>The cost in one line</strong>: what this really sells you is a boundary — deterministic operations belong to scripts, judgement belongs to the model. Draw that line wrong (let the model improvise zip flags, relationship IDs, slide numbering) and it will corrupt files anyway, only more subtly.</div>
+<div class="res"><strong>Going deeper</strong> · <a href="https://openpyxl.readthedocs.io/en/stable/tutorial.html" target="_blank">openpyxl · Tutorial (source of the lossy round-trip sentence)</a> · <a href="https://github.com/anthropics/skills/tree/main/skills/docx/scripts" target="_blank">skills/docx/scripts (every script named here)</a></div>
+</div>
+<div class="combo">
+<h3>// ONE-PAGE BUYING CARD</h3>
+<p><strong>Take these three scripts even if you never install the skills</strong>: <code>scripts/office/validate.py</code> (exit code is the verdict; docx and pptx) · <code>scripts/recalc.py</code> (the only xlsx oracle) · <code>scripts/merge_runs.py</code> (mandatory before editing docx).</p>
+<p><strong>By format</strong>: docx = <code>unzip</code> → <code>merge_runs.py</code> → edit <code>word/document.xml</code> → <code>zip -Xr</code> → <code>validate.py --original</code>. pptx = <code>thumbnail.py</code> to read layouts → <code>add_slide.py</code> to duplicate → <code>clean.py</code> to drop orphans → <code>validate.py --original</code>. xlsx = write with openpyxl → <code>recalc.py</code> → <strong>read the JSON body</strong>.</p>
+<p><strong>Always finish with all three layers</strong>: <code>validate.py</code> (file) · <code>markitdown | grep</code> (content) · <code>soffice.py</code> + <code>pdftoppm</code> (visual). In that order.</p>
+<p><strong>Explicitly do not</strong>: hand-copy slide XML to duplicate a slide · zip from outside <code>unpacked</code> · treat <code>recalc</code>'s exit 0 as "no errors" · omit <code>--original</code> on template-derived files · save a workbook you loaded with <code>data_only=True</code> · assume <code>validate.py</code> checked your xlsx.</p>
+<p><strong>The one-line test</strong>: <strong>is anything watching this step that can exit non-zero?</strong> If not, do not let the model perform it — make it a script, or cut it from the process.</p>
+</div>
+<div class="glossary">
+<h3>// GLOSSARY</h3>
+<dl>
+<dt>OOXML (Office Open XML)</dt>
+<dd>What docx / pptx / xlsx really are: a zip archive of XML parts plus media. Unpack-edit-repack works only because of this.</dd>
+<dt>Part and [Content_Types].xml</dt>
+<dd>Each XML file in the package is a part; <code>[Content_Types].xml</code> at the root declares what kind each one is. Together with the <code>_rels/</code> relationship files it forms a ledger — adding or deleting files without updating the ledger is the most common way to corrupt a document.</dd>
+<dt>Run (<code>&lt;w:r&gt;</code>)</dt>
+<dd>A stretch of uniformly formatted text in Word. One sentence is routinely split across a dozen runs; that is what <code>merge_runs.py</code> puts back together.</dd>
+<dt>rsid</dt>
+<dd>A marker Word attaches per editing session. It is a leading cause of fragmented runs and carries no meaning for content.</dd>
+<dt>XSD (XML Schema Definition)</dt>
+<dd>A machine-readable description of what counts as valid XML. <code>schemas/</code> ships ISO-IEC29500-4:2016 and the ECMA 4th edition, plus the mce and microsoft extension sets.</dd>
+<dt>MCE (Markup Compatibility)</dt>
+<dd>The OOXML mechanism (<code>mc:AlternateContent</code>) that lets newer features degrade gracefully in older readers. It is also why validation cannot rely on a single schema set.</dd>
+<dt>Redlining</dt>
+<dd>Recording edits inside the document as <code>&lt;w:ins&gt;</code> / <code>&lt;w:del&gt;</code>. <code>validate.py --author</code> checks that every text difference actually left such a trail.</dd>
+<dt>Lossy round-trip</dt>
+<dd>Reading a file and writing it back while some content silently disappears — openpyxl and charts or images, for instance. It does not raise, so knowing is the only defence.</dd>
+</dl>
+</div>
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/docx/SKILL.md" target="_blank">anthropics/skills · skills/docx/SKILL.md</a> — source of the six-line edit workflow, the tracked-changes validation and the dependency list (docx / pandoc / LibreOffice / pdftoppm)</li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/pptx/SKILL.md" target="_blank">skills/pptx/SKILL.md</a> — arguments for <code>thumbnail.py</code>, <code>add_slide.py</code> and <code>clean.py</code>, plus the original wording of the file / content / visual QA trio</li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/xlsx/SKILL.md" target="_blank">skills/xlsx/SKILL.md</a> — the <code>recalc.py</code> JSON fields and exit-code contract, the two-pass <code>load_workbook</code> read, plus <code>keep_vba</code>, merged cells and quoting traps</li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/docx/scripts/office/validate.py" target="_blank">scripts/office/validate.py</a> — four switches, three exit codes, the two auto-repairs, and the fact that xlsx is skipped, all in one file</li>
+<li><a href="https://github.com/anthropics/skills/tree/main/skills/docx/scripts/office" target="_blank">scripts/office/</a> — the package shared by all three skills: <code>soffice.py</code>, <code>validators/</code> (base · docx · pptx · redlining), <code>schemas/</code></li>
+<li><a href="https://github.com/anthropics/skills/tree/main/skills/docx/scripts/office/schemas" target="_blank">scripts/office/schemas/</a> — ISO-IEC29500-4_2016 and ECMA 4th edition XSDs, plus mce and microsoft extensions</li>
+<li><a href="https://github.com/microsoft/markitdown" target="_blank">microsoft/markitdown</a> — the read-back tool behind the content QA layer, <code>pip install 'markitdown[all]'</code>; per the GitHub repo page, 2026-09: ~184k stars, MIT</li>
+<li><a href="https://openpyxl.readthedocs.io/en/stable/tutorial.html" target="_blank">openpyxl · Tutorial</a> — where "images and charts will be lost from existing files" comes from; version 3.1.5 per PyPI 2024-06</li>
+<li><a href="https://github.com/dolanmiu/docx" target="_blank">dolanmiu/docx</a> — the JS library for generating Word files (docs at docx.js.org); it cannot open existing files, which is why editing must unpack</li>
+<li><a href="https://github.com/gitbrent/PptxGenJS" target="_blank">gitbrent/PptxGenJS</a> — the JS library for generating decks, <code>npm install pptxgenjs</code>; per the GitHub repo page, 2026-09: ~6.2k stars, MIT</li>
+<li><a href="office-skills-roundup-skill13.en.html">Skill 13 · Office Deliverable Skills Roundup</a> — the two versions of the four (open-source on GitHub vs preinstalled <code>skill_id</code>) and ten ways to install them; the prerequisite for this issue</li>
+</ul>
+</div>
+<div class="thinking">
+<h3>// THINK IT THROUGH</h3>
+<details><summary>Why are document skills the easiest class to get right, and writing skills the hardest?</summary>
+<div>Because the former have an oracle nobody argues with: the schema passes or it does not, the file opens or it does not. Acceptance criteria for writing differ per person, so all you can do is approximate them with examples. Before making anything a skill, ask whether something can exit non-zero on it.</div></details>
+<details><summary>What is the difference between putting <code>zip -Xr</code> in SKILL.md as a prompt and wrapping it in a script?</summary>
+<div>The failure mode. As a prompt, the model eventually picks different flags, and the ways it can be wrong are unbounded. As a script it either runs or errors. Deterministic operations belong to code — of everything in these three skills, that is the principle applied most consistently.</div></details>
+<details><summary>Is <code>recalc.py</code> returning <code>errors_found</code> with exit 0 a bug?</summary>
+<div>No. "The workbook contains <code>#REF!</code>" and "recalculation itself failed" are different events: the first needs a human to look, the second needs the pipeline to stop. Collapsing them into one exit code would be the real bug. The price is that you must read the JSON body — one line of documentation traded for one class of false negative.</div></details>
+</div>
+<footer>BigCat · Super Individual · Skill 14 · 2026-09-15</footer>
+</div>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
+</body></html>
