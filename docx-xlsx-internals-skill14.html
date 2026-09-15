@@ -63,8 +63,8 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <div class="container">
 <header>
 <span class="week-tag">SKILL 14 / DOCS · DEEP DIVE</span>
-<h1>文档类 Skill 凭什么「不坏文件」</h1>
-<h2>解包-改-校验-重打包 · 把 XSD 当 oracle · 确定性操作为什么必须写成脚本</h2>
+<h1 data-tts="fd50efff3d7144bd">文档类 Skill 凭什么「不坏文件」</h1>
+<h2 data-tts="227c28f298efd0fb">解包-改-校验-重打包 · 把 XSD 当 oracle · 确定性操作为什么必须写成脚本</h2>
 <div class="date">2026-09-15 · BigCat</div>
 <p class="pitch">上一期给了办公四件套的清单。这一期把 docx / pptx / xlsx 三个 skill 的 <code>scripts/</code> 目录拆开看：它们真正值钱的不是 SKILL.md 里那几百字提示词，是那十来个你可以单独拿走、脱离 skill 也能跑的 Python 脚本。</p>
 </header>
@@ -72,15 +72,15 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <a href="office-skills-roundup-skill13.html">前置 → Skill 13 办公产出类 Skills 榜单（四件套的两个版本）</a>
 </div>
 <div class="intro">
-<h3>// WHY THIS MATTERS</h3>
+<h3 data-tts="d9e58133eda12a22">// WHY THIS MATTERS</h3>
 <p>一个 <code>.docx</code> 打不开，用户不会说「模型幻觉了」，只会觉得你这套东西不能用。办公产出类之所以是 skill 生态里最容易见效的一类，就在于它有<strong>客观 oracle</strong>——文件要么符合 schema，要么不符合，不需要任何人的主观判断。本期拆的就是这个 oracle 怎么被接回循环里：<code>unzip → merge_runs → 改 XML → zip -Xr → validate.py</code>。每一步都点名到具体脚本路径，你可以一个一个拿走用。</p>
 </div>
 <!-- ============ 1 ============ -->
 <div class="section">
 <span class="num">// 01</span>
-<h2>它替你干掉什么：干掉「改完不知道有没有坏」</h2>
+<h2 data-tts="2f2de94d6448f430">它替你干掉什么：干掉「改完不知道有没有坏」</h2>
 <div class="claim">论断：它干掉的不是「写 XML」。手改 OOXML 从来不算难，难的是改完没有任何东西告诉你哪一处不合规——你只能在 Word 弹出「内容有问题」时才知道。</div>
-<h3>怎么装</h3>
+<h3 data-tts="36a3eda8dd4a7f46">怎么装</h3>
 <pre><code><span class="tag-com"># Claude Code：四件套在 document-skills 这个插件里</span>
 /plugin marketplace add anthropics/skills
 /plugin install document-skills@anthropic-agent-skills
@@ -91,7 +91,7 @@ git clone https://github.com/anthropics/skills
 <span class="tag-com"># 系统依赖（docx/SKILL.md 自己列的四项）</span>
 <span class="tag-com"># docx（npm，环境预装）· pandoc · LibreOffice（soffice）· pdftoppm（Poppler）</span>
 </code></pre>
-<h3>第一条立刻能跑的用法（照抄 docx/SKILL.md 的编辑流程）</h3>
+<h3 data-tts="8da776a6f5af9d2a">第一条立刻能跑的用法（照抄 docx/SKILL.md 的编辑流程）</h3>
 <pre><code>unzip -q doc.docx -d unpacked/
 find unpacked -type l -delete              <span class="tag-com"># 剥掉符号链接</span>
 python scripts/merge_runs.py unpacked/     <span class="tag-com"># 先把碎掉的 run 合并</span>
@@ -105,9 +105,9 @@ python scripts/office/validate.py out.docx --original doc.docx</code></pre>
 <!-- ============ 2 ============ -->
 <div class="section">
 <span class="num">// 02</span>
-<h2>机制：有效的不是提示词，是那一层 XSD</h2>
+<h2 data-tts="25d4d2ecd2296755">机制：有效的不是提示词，是那一层 XSD</h2>
 <div class="claim">论断：这三个 skill 没打算把模型「教会」OOXML。它们做的是把「合不合规」压成一个退出码，让模型自己撞上去、自己改回来。</div>
-<h3>校验器长在哪</h3>
+<h3 data-tts="d2eea33527310bed">校验器长在哪</h3>
 <div class="diagram">skills/docx/scripts/
 ├── merge_runs.py          合并碎 run（编辑前必跑）
 ├── accept_changes.py      接受全部修订
@@ -118,13 +118,13 @@ python scripts/office/validate.py out.docx --original doc.docx</code></pre>
     ├── validators/        base.py · docx.py · pptx.py · redlining.py
     └── schemas/           ISO-IEC29500-4_2016 · ecma 第四版 · mce · microsoft</div>
 <p><code>validate.py</code> 接受一个解包目录或一个打包文件，另有四个开关：<code>--original</code> 拿原件做基线、<code>--auto-repair</code> 自动修、<code>--author NAME</code> 开修订校验、<code>-v</code> 详细输出。退出码：<strong>0 全过、1 校验失败、2 参数或文件错</strong>——这就是可以直接写进循环的那个信号。</p>
-<h3>它到底修什么、查什么</h3>
+<h3 data-tts="1baf5ef57b8aedbb">它到底修什么、查什么</h3>
 <ul>
 <li><strong>schema 校验</strong>：docx 与 pptx 拿 <code>schemas/</code> 里的 XSD 逐个 part 校。这是「文件还能不能打开」这件事最接近真相的判据。</li>
 <li><strong>auto-repair 的两类具体问题</strong>：<code>paraId</code> / <code>durableId</code> 超出 OOXML 允许的取值范围；<code>w:t</code> 上带空白却缺 <code>xml:space="preserve"</code>。两个都是手改 XML 的高频副作用。</li>
 <li><strong>redlining 校验</strong>：给了 <code>--author</code> 就逐字比对原件，<strong>凡是文本变了却没有被 <code>&lt;w:ins&gt;</code>/<code>&lt;w:del&gt;</code> 记录下来的，都算错</strong>。「假装留了痕」这件事从此有人管。</li>
 </ul>
-<h3>为什么 merge_runs 要排在编辑之前</h3>
+<h3 data-tts="8e9280b8fac5e11c">为什么 merge_runs 要排在编辑之前</h3>
 <p>Word 会把一句话切成十几个 <code>&lt;w:r&gt;</code>：拼写检查、语言标记、rsid 都会在中间插刀。于是 XML 里根本不存在「the quick brown fox」这个连续字符串，模型按字面查找必然扑空——然后它会开始瞎猜位置，那才是真正坏文件的起点。先合并再编辑，是把一类幻觉从源头掐掉。</p>
 <div class="fail"><strong>xlsx 不在这条线上</strong>：<code>validate.py</code> 对 xlsx 明确跳过、不做 schema 校验。你以为「跑过校验了」，其实什么都没校——xlsx 的 oracle 是下一节的 <code>recalc.py</code>。</div>
 <div class="res"><strong>一手源</strong> · <a href="https://github.com/anthropics/skills/blob/main/skills/docx/scripts/office/validate.py" target="_blank">scripts/office/validate.py</a> · <a href="https://github.com/anthropics/skills/tree/main/skills/docx/scripts/office/schemas" target="_blank">scripts/office/schemas（XSD 出处）</a></div>
@@ -132,16 +132,16 @@ python scripts/office/validate.py out.docx --original doc.docx</code></pre>
 <!-- ============ 3 ============ -->
 <div class="section">
 <span class="num">// 03</span>
-<h2>真实用法与边界：三条产线，三种完全不同的 oracle</h2>
+<h2 data-tts="e80f57fa2741a4da">真实用法与边界：三条产线，三种完全不同的 oracle</h2>
 <div class="claim">论断：docx / pptx / xlsx 三个 skill 长得像，验收方式却毫不相干。搞错了这件事，你会在一个根本没有校验的格式上反复「校验通过」。</div>
-<h3>docx 线 · oracle = XSD + 修订比对</h3>
+<h3 data-tts="798a55511d25b9bb">docx 线 · oracle = XSD + 修订比对</h3>
 <pre><code>python scripts/accept_changes.py in.docx out.docx         <span class="tag-com"># 接受全部修订</span>
 python scripts/comment.py unpacked/ "这里口径不一致"        <span class="tag-com"># 目录模式（编辑 XML 时用这个）</span>
 python scripts/comment.py unpacked/ "同意" --parent 0       <span class="tag-com"># 回复第 0 条</span>
 python scripts/comment.py contract.docx "问一句" -o annotated.docx
 python scripts/office/validate.py out.docx --original doc.docx --author "BigCat"</code></pre>
 <p>目录模式下 <code>comment.py</code> 会把 <code>&lt;w:commentRangeStart&gt;</code> / <code>&lt;w:commentRangeEnd&gt;</code> / <code>&lt;w:commentReference&gt;</code> 三个片段打印出来给你放进 <code>word/document.xml</code>——批注的挂载点由人决定，编号与关系文件的记账由脚本做。这个分工是整套设计的缩影。</p>
-<h3>pptx 线 · oracle = XSD + 关系与内容类型</h3>
+<h3 data-tts="7d521e43a57f44ce">pptx 线 · oracle = XSD + 关系与内容类型</h3>
 <pre><code>python scripts/thumbnail.py template.pptx template-thumbs   <span class="tag-com"># 先看版式，第二个参数务必给</span>
 python3 -c "import sys,zipfile; zipfile.ZipFile(sys.argv[1]).extractall('unpacked')" deck.pptx
 python scripts/add_slide.py unpacked/ slide2.xml --after slide2.xml   <span class="tag-com"># 复制页，别手抄</span>
@@ -150,12 +150,12 @@ python scripts/clean.py unpacked/                            <span class="tag-co
 (cd unpacked &amp;&amp; rm -f ../out.pptx &amp;&amp; zip -Xr ../out.pptx .)
 python scripts/office/validate.py out.pptx --original deck.pptx</code></pre>
 <p>两条硬规矩：<code>add_slide.py</code> 直接作用在 <code>.pptx</code> 上时<strong>必须带 <code>-o</code></strong>，否则原地改写输入；模板派生的 deck <strong>必须带 <code>--original</code></strong>，否则模板自带的报错会把你自己的错淹掉。</p>
-<h3>xlsx 线 · oracle = 重算，不是 schema</h3>
+<h3 data-tts="56542b6b7c2c2356">xlsx 线 · oracle = 重算，不是 schema</h3>
 <pre><code>python scripts/recalc.py output.xlsx [timeout_seconds]   <span class="tag-com"># 默认 30 秒</span>
 <span class="tag-com"># LibreOffice 算完每一个公式并原地重写文件，返回 JSON：</span>
 <span class="tag-com"># status(success|errors_found) · total_formulas · total_errors · error_summary</span></code></pre>
 <div class="fail"><strong>这里有个反直觉的坑</strong>：<code>errors_found</code> 的退出码<strong>是 0</strong>；只有 JSON 里出现 <code>error</code> 键（= 压根没重算成）才非零退出。所以<strong>干净的退出码不等于干净的工作簿</strong>，必须去读 JSON 正文。另外 <code>recalc</code> 全绿只证明公式<strong>能算</strong>，不证明它<strong>算得对</strong>——所以先写两三条公式核一下口径，再动手铺整张表。</div>
-<h3>收尾统一走三层 QA</h3>
+<h3 data-tts="ae4732faf75e1482">收尾统一走三层 QA</h3>
 <pre><code><span class="tag-com"># ① 文件 QA</span>
 python scripts/office/validate.py out.pptx --original src.pptx
 <span class="tag-com"># ② 内容 QA：读回来，抓占位符</span>
@@ -169,16 +169,16 @@ pdftoppm -jpeg -r 150 out.pdf slide &amp;&amp; ls -1 slide-*.jpg</code></pre>
 <!-- ============ 4 ============ -->
 <div class="section">
 <span class="num">// 04</span>
-<h2>代价与替代品：这套流水线不便宜</h2>
+<h2 data-tts="9df8f29d6d56aba8">代价与替代品：这套流水线不便宜</h2>
 <div class="claim">论断：它的代价是一整套系统依赖。没有 LibreOffice，xlsx 的 oracle 和全部视觉 QA 会一起消失，而剩下那半套会让你误以为还在验收。</div>
-<h3>四条诚实的代价</h3>
+<h3 data-tts="4c6c4860a0b1d920">四条诚实的代价</h3>
 <ul>
 <li><strong>依赖重</strong>。LibreOffice + pandoc + Poppler + Node，容器里装是标配，笔记本上为重算一次公式装一个 LibreOffice 就未必划算。装不全的后果不是报错退出，是<strong>静默降级</strong>——这比报错危险。</li>
 <li><strong>openpyxl 的往返是有损的</strong>。官方文档原话：<em>openpyxl does currently not read all possible items in an Excel file so images and charts will be lost from existing files if they are opened and saved with the same name.</em>（openpyxl 3.1.5，据 PyPI 2024-06）。xlsx/SKILL.md 又补了两条同源的坑：<code>data_only=True</code> 读出来再保存，会把每一条公式<strong>永久</strong>替换成字面值；<code>.xlsm</code> 不带 <code>keep_vba=True</code> 就丢宏。这是「不坏文件」这件事最容易破功的地方，而且它不报错。</li>
 <li><strong>生成库开不了旧文件</strong>。<a href="https://github.com/dolanmiu/docx" target="_blank">dolanmiu/docx</a>（<code>npm install docx</code>，文档在 docx.js.org）只能生成与构造，读不进现成的 <code>.docx</code>。docx 编辑走解包路线不是偷懒，是没有别的路。</li>
 <li><strong>校验通过 ≠ 内容对</strong>。XSD 只管结构，它不会拦下一份结构完美的空话。所以第 03 节那条 grep 和那几张图不能省——真正的 oracle 分三层，别只留最便宜的一层。</li>
 </ul>
-<h3>四种「不走这条路」的替代品</h3>
+<h3 data-tts="f1263d6c03ca8536">四种「不走这条路」的替代品</h3>
 <ul>
 <li><strong>只读一遍</strong> → <code>markitdown file.xlsx</code> 或 <code>pandoc -t markdown file.docx</code>。解包是为了改，不是为了看。</li>
 <li><strong>从零生成</strong> → docx（npm）写 Word、<a href="https://github.com/gitbrent/PptxGenJS" target="_blank">gitbrent/PptxGenJS</a>（<code>npm install pptxgenjs</code>，据 GitHub 仓库页 2026-09 约 6.2 千 star、MIT）写 PPT。生成完照样走 validate 与视觉 QA，但不必碰解包。</li>
@@ -189,7 +189,7 @@ pdftoppm -jpeg -r 150 out.pdf slide &amp;&amp; ls -1 slide-*.jpg</code></pre>
 <div class="res"><strong>进阶资源</strong> · <a href="https://openpyxl.readthedocs.io/en/stable/tutorial.html" target="_blank">openpyxl · Tutorial（有损往返那句原话的出处）</a> · <a href="https://github.com/anthropics/skills/tree/main/skills/docx/scripts" target="_blank">skills/docx/scripts（本期全部脚本）</a></div>
 </div>
 <div class="combo">
-<h3>// 一页选购卡</h3>
+<h3 data-tts="b0d9ada941cd30d1">// 一页选购卡</h3>
 <p><strong>先拿这三个脚本（哪怕你完全不用这套 skill）</strong>：<code>scripts/office/validate.py</code>（退出码即结论，docx/pptx 通用）· <code>scripts/recalc.py</code>（xlsx 唯一的 oracle）· <code>scripts/merge_runs.py</code>（编辑 docx 之前必跑）。</p>
 <p><strong>按格式走</strong>：docx = <code>unzip</code> → <code>merge_runs.py</code> → 改 <code>word/document.xml</code> → <code>zip -Xr</code> → <code>validate.py --original</code>；pptx = <code>thumbnail.py</code> 看版式 → <code>add_slide.py</code> 复制页 → <code>clean.py</code> 清孤儿 → <code>validate.py --original</code>；xlsx = openpyxl 写 → <code>recalc.py</code> 重算 → <strong>读 JSON 正文</strong>。</p>
 <p><strong>收尾三层</strong>：<code>validate.py</code>（文件）· <code>markitdown | grep</code>（内容）· <code>soffice.py</code> + <code>pdftoppm</code>（视觉）。三层都要，顺序别反。</p>
@@ -197,7 +197,7 @@ pdftoppm -jpeg -r 150 out.pdf slide &amp;&amp; ls -1 slide-*.jpg</code></pre>
 <p><strong>一句话判据</strong>：<strong>你这一步有没有一个能退出非零的东西在看着？</strong>没有，就别让模型做这一步——把它写成脚本，或者把它从流程里删掉。</p>
 </div>
 <div class="glossary">
-<h3>// 术语表</h3>
+<h3 data-tts="f128028b49da388d">// 术语表</h3>
 <dl>
 <dt>OOXML（Office Open XML）</dt>
 <dd>docx / pptx / xlsx 的真身：一个 zip 包，里面是一堆 XML part 加媒体文件。「解包-改-重打包」之所以成立，全靠这一点。</dd>
@@ -218,7 +218,7 @@ pdftoppm -jpeg -r 150 out.pdf slide &amp;&amp; ls -1 slide-*.jpg</code></pre>
 </dl>
 </div>
 <div class="refs">
-<h3>// 延伸阅读</h3>
+<h3 data-tts="f0b7bf72737fcd45">// 延伸阅读</h3>
 <ul>
 <li><a href="https://github.com/anthropics/skills/blob/main/skills/docx/SKILL.md" target="_blank">anthropics/skills · skills/docx/SKILL.md</a> — 本期编辑流程六行命令、tracked changes 校验、依赖清单（docx / pandoc / LibreOffice / pdftoppm）的出处</li>
 <li><a href="https://github.com/anthropics/skills/blob/main/skills/pptx/SKILL.md" target="_blank">skills/pptx/SKILL.md</a> — <code>thumbnail.py</code> / <code>add_slide.py</code> / <code>clean.py</code> 的参数，以及文件 QA + 内容 QA + 视觉 QA 三层的原始写法</li>
@@ -234,7 +234,7 @@ pdftoppm -jpeg -r 150 out.pdf slide &amp;&amp; ls -1 slide-*.jpg</code></pre>
 </ul>
 </div>
 <div class="thinking">
-<h3>// 想一想</h3>
+<h3 data-tts="76fef3846b18478d">// 想一想</h3>
 <details><summary>为什么「文档类」是 skill 最容易做好的一类，而「写作类」最难？</summary>
 <div>因为前者有一个不需要商量的 oracle：schema 过不过、文件开不开得了。后者的验收标准每个人都不一样，于是只能靠样例去逼近。判断一类任务适不适合做成 skill，先问「有没有一个能退出非零的东西」。</div></details>
 <details><summary>把 <code>zip -Xr</code> 这种命令写进 SKILL.md 当提示词，和把它包成一个脚本，差别在哪？</summary>
