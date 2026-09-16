@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill 15 · Turning a Style Guide Into Executable Constraints — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head><body>
+<div class="container">
+<header>
+<span class="week-tag">SKILL 15 / DOCS · DEEP DIVE</span>
+<h1>Brand and Style Skills: Turning a Style Guide Into Constraints</h1>
+<h2>brand-guidelines is one SKILL.md and nothing else · theme-factory's ten cards · How to review a category with no oracle</h2>
+<div class="date">2026-09-16 · BigCat</div>
+<p class="pitch">Last issue's protagonist was the schema: a file is valid or it isn't, and an exit code says so. This one is the opposite — no script can judge whether something "looks like us". The official <code>brand-guidelines</code> skill ships exactly two files, <code>SKILL.md</code> and <code>LICENSE.txt</code>, with not one line of code. So why does it work at all?</p>
+</header>
+<div class="xref">
+<a href="docx-xlsx-internals-skill14.en.html">Prerequisite → Skill 14 How Document Skills Avoid Corrupting Files (the category that has an oracle)</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>Style is the first subjective category that actually ships. It has no objective oracle, but it does have a <strong>decidable middle layer</strong>: hex values, font names and size thresholds are things you can grep for. This issue is about how that layer gets built. brand-guidelines compresses a brand into seven hex codes and two font names. theme-factory collapses the choice into ten cards. frontend-design takes a third route — no numbers at all, just a list of what not to look like.</p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>What it removes: re-pasting your palette every single time</h2>
+<div class="claim">Claim: it does not remove taste, it removes restatement. The brand rules already exist in some PDF; the real cost is that every new conversation starts with you retyping them, slightly differently each time.</div>
+<h3>How to install</h3>
+<pre><code><span class="tag-com"># The official style skills all live in the example-skills plugin</span>
+/plugin marketplace add anthropics/skills
+/plugin install example-skills@anthropic-agent-skills
+
+<span class="tag-com"># Want just one? Copy it into your personal skills directory</span>
+git clone https://github.com/anthropics/skills
+cp -r skills/skills/brand-guidelines ~/.claude/skills/
+
+<span class="tag-com"># For post-processing decks and docs (thumbnail.py and validate.py live here)</span>
+/plugin install document-skills@anthropic-agent-skills
+</code></pre>
+<h3>Everything brand-guidelines actually specifies</h3>
+<ul>
+<li><strong>Core colors</strong>: Dark <code>#141413</code> (body text, dark backgrounds) · Light <code>#faf9f5</code> (light backgrounds, text on dark) · Mid Gray <code>#b0aea5</code> · Light Gray <code>#e8e6dc</code></li>
+<li><strong>Accents</strong>: Orange <code>#d97757</code> (primary) · Blue <code>#6a9bcc</code> (secondary) · Green <code>#788c5d</code> (tertiary)</li>
+<li><strong>Type</strong>: Poppins for headings (Arial fallback) · Lora for body (Georgia fallback)</li>
+<li><strong>Application rules</strong>: <strong>24pt and larger counts as a heading</strong> and takes Poppins, everything else takes Lora; non-text shapes cycle orange → blue → green; colors are applied through python-pptx's <code>RGBColor</code></li>
+</ul>
+<p>That is the whole skill. No scripts, no reference directory, no template files. <strong>Which is precisely the part worth stealing</strong>: the floor for a usable style skill is compressing the guide into one decidable table — seven colors, two fonts, one size threshold, one cycling rule.</p>
+<div class="fail"><strong>When not to install it</strong>: when you want <em>your own company's</em> brand. These hex codes are Anthropic's, so installing it as-is stamps someone else's identity on your output. The right move is to copy it and swap the values — with no scripts inside, forking costs almost nothing.</div>
+<div class="res"><strong>Primary source</strong> · <a href="https://github.com/anthropics/skills/blob/main/skills/brand-guidelines/SKILL.md" target="_blank">anthropics/skills · skills/brand-guidelines/SKILL.md</a> (where the seven colors, two fonts, 24pt threshold and cycling rule come from)</div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Mechanism: there are only three ways to write a style skill</h2>
+<div class="claim">Claim: adjectives in a skill file are the same as writing nothing. The three forms that work each swap "looks good" for something else — for numbers, for a menu, for a list of prohibitions.</div>
+<h3>Form one · Numeric: compress the brand into greppable constants</h3>
+<p><code>brand-guidelines</code> is the reference implementation. Three design moves are worth lifting: <strong>(a)</strong> every constraint is a literal, so hex codes and font names leave no room for interpretation; <strong>(b)</strong> every constraint carries a degradation path (Poppins→Arial, Lora→Georgia), because a style rule has to stay executable when the font is missing, or it breaks on the first new machine; <strong>(c)</strong> it names the execution layer, stating that colors go through <code>RGBColor</code>, which turns "apply the brand" into a post-processing pass instead of improvisation during generation.</p>
+<h3>Form two · Menu: narrow to a finite set first, then execute</h3>
+<p><code>theme-factory</code> does not guess your taste; it hands the choice back to a human. Its SKILL.md prescribes four steps: <strong>display <code>theme-showcase.pdf</code> unmodified → ask which theme → get explicit confirmation → only then apply that theme's colors and fonts</strong>. The ten presets are one markdown file each under <code>themes/</code>: <code>ocean-depths</code> · <code>sunset-boulevard</code> · <code>forest-canopy</code> · <code>modern-minimalist</code> · <code>golden-hour</code> · <code>arctic-frost</code> · <code>desert-rose</code> · <code>tech-innovation</code> · <code>botanical-garden</code> · <code>midnight-galaxy</code>, each holding a palette with hex codes plus a font pairing. You can generate a new theme on the fly, but it has to follow the same file structure and be shown for review first.</p>
+<div class="fail"><strong>When not to install it</strong>: when you already have a brand book. theme-factory solves "nobody has decided what this should look like". On a team that has decided, it just asks a question that already has an answer.</div>
+<h3>Form three · Prohibition list: say what not to look like</h3>
+<p><code>frontend-design</code> gives you zero hex codes. What it gives is a callout of <strong>five clusters of default AI looks</strong>: cream backgrounds with terracotta accents, dark backgrounds with bright accents, broadsheet layouts, SaaS card kits, and template chrome. Its process is inverted too — draft a design plan first (color, type, layout, principles), check it against the brief for distinctiveness, and only then write code. <code>web-artifacts-builder</code> plays the same card, naming its own "AI slop" list: excessive centering, purple gradients, uniformly rounded corners, and the Inter typeface.</p>
+<p>Prohibition lists work because the failure mode is concentrated: the model does not fail randomly, it <strong>slides systematically toward the same defaults</strong>. Block those few exits and what remains stops reading as a template. <em>When not to install</em>: non-visual work — it will push the model into a design pass even when you only wanted a paragraph rewritten.</p>
+<div class="res"><strong>Primary sources</strong> · <a href="https://github.com/anthropics/skills/blob/main/skills/theme-factory/SKILL.md" target="_blank">skills/theme-factory/SKILL.md</a> and <a href="https://github.com/anthropics/skills/tree/main/skills/theme-factory/themes" target="_blank">themes/</a> (the four steps and the ten theme filenames) · <a href="https://github.com/anthropics/skills/blob/main/skills/frontend-design/SKILL.md" target="_blank">skills/frontend-design/SKILL.md</a> (the five clusters and the two-pass process)</div>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Real usage and limits: four production lines, and a review with no exit code</h2>
+<div class="claim">Claim: installing a style skill in the wrong slot is more common than installing the wrong brand. Deck post-processing, web implementation, pure visual output and building a brand from zero are not the same job.</div>
+<h3>Where each line lands</h3>
+<ul>
+<li><strong>Deck and document post-processing</strong> → <code>brand-guidelines</code> (your forked copy) plus <code>pptx</code> from <code>document-skills</code>. Generate content first, apply the brand second, then run <code>python scripts/thumbnail.py deck.pptx</code> for a labeled grid of every slide and look at it. <em>When not to install</em>: if you never build decks — the image-conversion command below lifts out on its own, no need for all of document-skills.</li>
+<li><strong>Web and artifacts</strong> → direction from <code>frontend-design</code>, implementation from <code>web-artifacts-builder</code>: <code>scripts/init-artifact.sh</code> scaffolds a React 18 + TypeScript + Vite + Tailwind + shadcn/ui project, and <code>scripts/bundle-artifact.sh</code> collapses it into a single self-contained HTML file. <em>When not to install</em>: if you only need a static page, that bundling chain is pure overhead.</li>
+<li><strong>Pure visual output</strong> (posters, covers) → <code>canvas-design</code>, which forces two steps: first write an aesthetic manifesto as a <code>.md</code> file (name the movement in one or two words, then four to six paragraphs on what it is), then produce the <code>.pdf</code> or <code>.png</code> from it, using its bundled <code>canvas-fonts</code> directory, with text kept to roughly a tenth of the composition. <em>When not to install</em>: if you need an interface, it will turn your buttons into artwork.</li>
+<li><strong>No brand at all yet</strong> → <code>cofoundy/brand-skills</code>, fifteen skills chained from naming to brand book (<code>naming</code> · <code>brand-positioning</code> · <code>brand-voice</code> · <code>brand-guidelines</code> · <code>brand-audit</code> among them). Install with <code>npx skills add cofoundy/brand-skills</code>, or <code>/plugin marketplace add cofoundy/brand-skills</code> plus <code>/plugin install brand-skills@brand-skills</code>. Per its GitHub page, about 35 stars as of 2026-09, MIT. <em>When not to install</em>: you already have a brand book — what you lack is execution, not another generated one.</li>
+</ul>
+<h3>No oracle: three workable approximations</h3>
+<ol>
+<li><strong>Turn values into checkable items.</strong> Every hex code, font name and size threshold in the skill can be searched for in the output. One <code>grep -o '#[0-9a-fA-F]\{6\}' out.html | sort -u</code> shows whether an off-palette color slipped in — the closest thing this category has to an exit code.</li>
+<li><strong>Convert the visual back into images.</strong> The chain in the <code>pptx</code> skill lifts out whole: <code>scripts/office/soffice.py --headless --convert-to pdf deck.pptx</code>, then <code>pdftoppm -jpeg -r 150 output.pdf slide</code>, then walk every image against a fixed checklist — overflow, overlap, alignment, contrast, leftover placeholders. The checklist has to be fixed, or the judgment is not reproducible.</li>
+<li><strong>Replace adjectives with examples.</strong> Three input/output pairs beat ten rules; this is the recipe shared with writing skills, and Skill 18 takes it apart on its own.</li>
+</ol>
+<div class="fail"><strong>The limit</strong>: none of the three judges whether the design is any good. They only judge whether a written constraint was violated. Aesthetic judgment stays with people — a style skill was never meant to choose the direction, only to guarantee the chosen direction gets executed every time.</div>
+<div class="res"><strong>Primary sources</strong> · <a href="https://github.com/anthropics/skills/blob/main/skills/pptx/SKILL.md" target="_blank">skills/pptx/SKILL.md</a> (thumbnail / soffice / pdftoppm and the visual QA checklist) · <a href="https://github.com/cofoundy/brand-skills" target="_blank">cofoundy/brand-skills</a> (the fifteen skills and both install paths)</div>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Costs and alternatives: most people should not install one</h2>
+<div class="claim">Claim: with fewer than three style rules, a skill is over-engineering. Its entire value comes from having more rules than you can bear to restate — and that bar is higher than it sounds.</div>
+<h3>Four honest costs</h3>
+<ul>
+<li><strong>You are installing someone else's brand.</strong> The official palette belongs to Anthropic; using it unforked stamps another company's identity on your work.</li>
+<li><strong>The trigger is wide.</strong> Its description says any artifact that may benefit from the look and feel — so it can show up to colorize a plain table you wanted plain. Narrow the description, or make it manual-invocation only.</li>
+<li><strong>The context tax is continuous.</strong> Per the Claude Code docs, a skill's description always sits in context, and once invoked its body <strong>stays in context and costs tokens on every following turn</strong>; auto-compaction keeps only the first 5,000 tokens of each skill's most recent invocation, 25,000 across all skills. Style skills are rarely short, and what they crowd out is your actual working context.</li>
+<li><strong>Subjective review stretches the loop.</strong> No exit code means more rounds, so cost per unit of output is structurally higher than in the document category.</li>
+</ul>
+<h3>Four ways to not install it</h3>
+<ul>
+<li><strong>Put it in CLAUDE.md or AGENTS.md.</strong> When there are three rules (primary color, font, no gradients), a repo-level convention is cheaper and steadier than a skill.</li>
+<li><strong>Use a design token file.</strong> Turn colors and fonts into CSS variables or a theme JSON, and leave one line in the prompt: read it, use it. Style now lives in the codebase instead of the model's memory.</li>
+<li><strong>Just pick a theme-factory preset.</strong> With no brand to honor, choosing one of ten cards is far more controllable than free improvisation.</li>
+<li><strong>Use <code>skill-creator</code> to encode your own book</strong> (it ships in example-skills too). This is the route this issue actually recommends: copy the structure of brand-guidelines, fill in your own values.</li>
+</ul>
+</div>
+<div class="combo">
+<h3>// ONE-PAGE BUYING CARD</h3>
+<p><strong>Install these three first</strong>: (1) <code>brand-guidelines</code> — but <code>cp -r</code> it and replace the seven hex codes and two font names with yours; treat it as a template, not a finished product. (2) <code>pptx</code> from <code>document-skills</code> — not mainly because it builds decks, but for <code>scripts/thumbnail.py</code>, the slide grid that is the only half of style review you can automate. (3) <code>frontend-design</code> — the prohibition list for web work; nearly all of its value is in those five "do not look like this" clusters.</p>
+<p><strong>Fourth, conditionally</strong>: install <code>web-artifacts-builder</code> only if you build claude.ai artifacts (two scripts plus shadcn/ui); install <code>canvas-design</code> only for posters and covers. If you have no brand yet, run <code>brand-voice</code> and <code>brand-guidelines</code> from <code>cofoundy/brand-skills</code> to produce one, then come back and turn it into your own numeric skill.</p>
+<p><strong>When to install none of them</strong>: your style rules fit in three lines. Put them in CLAUDE.md — the context you save is worth more than the typing.</p>
+</div>
+<div class="glossary">
+<h3>// GLOSSARY</h3>
+<dl>
+<dt>oracle</dt>
+<dd>The thing that can independently rule a result right or wrong. For document skills it is the XSD; style has none, and every technique here is a stand-in for it.</dd>
+<dt>post-processing</dt>
+<dd>Generating content first and applying style in a separate pass. brand-guidelines takes this route, which lets content and style be revised and checked independently.</dd>
+<dt>fallback font</dt>
+<dd>What takes over when the target typeface is missing (Poppins→Arial, Lora→Georgia). A style constraint without a fallback stops working on the next machine.</dd>
+<dt>design token</dt>
+<dd>Colors, sizes and spacing extracted into named variables. It is how style moves into the codebase, and the main way to make a style skill thinner.</dd>
+<dt>AI slop</dt>
+<dd>The cluster of defaults an unconstrained model keeps sliding toward — purple gradients, uniform rounded corners, Inter, everything centered. Prohibition-list skills exist to block exactly this.</dd>
+</dl>
+</div>
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/brand-guidelines/SKILL.md" target="_blank">anthropics/skills · skills/brand-guidelines/SKILL.md</a> — source for the seven hex codes, Poppins/Lora, the 24pt threshold, accent cycling and <code>RGBColor</code>; the directory holds only this file and LICENSE.txt</li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/theme-factory/SKILL.md" target="_blank">skills/theme-factory/SKILL.md</a> — the showcase → ask → confirm → apply sequence, and the structure a custom theme must follow</li>
+<li><a href="https://github.com/anthropics/skills/tree/main/skills/theme-factory/themes" target="_blank">skills/theme-factory/themes/</a> — the ten theme files themselves; copying one and swapping in your palette is the fastest start</li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/frontend-design/SKILL.md" target="_blank">skills/frontend-design/SKILL.md</a> — the five default-look clusters, typographic rules such as line lengths under 80 characters, and the plan-then-build pass</li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/web-artifacts-builder/SKILL.md" target="_blank">skills/web-artifacts-builder/SKILL.md</a> — <code>init-artifact.sh</code>, <code>bundle-artifact.sh</code> and the "AI slop" callout list</li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/canvas-design/SKILL.md" target="_blank">skills/canvas-design/SKILL.md</a> — the manifesto-then-artwork two-step and how <code>canvas-fonts</code> is used</li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/pptx/SKILL.md" target="_blank">skills/pptx/SKILL.md</a> — the visual QA chain (thumbnail.py · soffice.py · pdftoppm) and the per-slide checklist</li>
+<li><a href="https://github.com/anthropics/skills/blob/main/.claude-plugin/marketplace.json" target="_blank">anthropics/skills · marketplace.json</a> — the marketplace is named <code>anthropic-agent-skills</code>; all five official skills named here ship in the <code>example-skills</code> plugin</li>
+<li><a href="https://code.claude.com/docs/en/skills" target="_blank">Claude Code Docs · Skills</a> — descriptions always loaded, bodies billed every turn after invocation, the 5,000 / 25,000 token compaction budget, and the <code>~/.claude/skills/</code> vs <code>.claude/skills/</code> install locations</li>
+<li><a href="https://github.com/cofoundy/brand-skills" target="_blank">cofoundy/brand-skills</a> — a fifteen-skill brand pipeline; per its GitHub page, about 35 stars as of 2026-09, MIT</li>
+<li><a href="docx-xlsx-internals-skill14.en.html">Skill 14 on this site · How Document Skills Avoid Corrupting Files</a> — what the category with an oracle looks like, the control group for this issue</li>
+</ul>
+</div>
+<div class="thinking">
+<h3>// THINK IT THROUGH</h3>
+<details><summary>brand-guidelines has no code at all. Why isn't that laziness?</summary>
+<div>Because the job has no deterministic algorithm to begin with. Document skills script their deterministic steps because those steps should be identical every time; in style work the executor is the model itself, and the guide only has to be compressed into literals that cannot be reinterpreted. The lazy version is writing "keep it professional and modern" — a line that can be neither executed nor checked.</div></details>
+<details><summary>Numeric form or prohibition list — which do you write first?</summary>
+<div>The prohibitions. Numbers only cover the cases you thought of, while the directions a model drifts in are few and easy to enumerate. In practice: three to five prohibitions as the floor, then harden the recurring problems into numbers over time.</div></details>
+<details><summary>How do you tell whether your own style skill is still worth keeping?</summary>
+<div>Two numbers: how many rounds of verbal correction you still need with it installed, and how long its body is. If corrections have not dropped, the rules were written as adjectives. If the body is long and it fires constantly, the context it eats may exceed what it saves — time to split it into a design token file plus one line of reference.</div></details>
+</div>
+<footer>BigCat · Super Individual · Skill 15 · 2026-09-16</footer>
+</div>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
+</body></html>
