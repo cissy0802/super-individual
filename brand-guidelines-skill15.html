@@ -63,8 +63,8 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <div class="container">
 <header>
 <span class="week-tag">SKILL 15 / DOCS · DEEP DIVE</span>
-<h1>品牌与风格类 Skill：把风格指南变成可执行约束</h1>
-<h2>brand-guidelines 全仓只有一个 SKILL.md · theme-factory 的十张主题卡 · 没有 oracle 的一类怎么验收</h2>
+<h1 data-tts="a0003354646c2ea9">品牌与风格类 Skill：把风格指南变成可执行约束</h1>
+<h2 data-tts="267d5fb8df4cc3df">brand-guidelines 全仓只有一个 SKILL.md · theme-factory 的十张主题卡 · 没有 oracle 的一类怎么验收</h2>
 <div class="date">2026-09-16 · BigCat</div>
 <p class="pitch">上一期的主角是 schema：文件合不合规，退出码说了算。这一期恰恰相反——「像不像我们家」没有任何脚本能判。官方 <code>brand-guidelines</code> 整个 skill 只有 <code>SKILL.md</code> 和 <code>LICENSE.txt</code> 两个文件、一行脚本都没有，它凭什么还管用？</p>
 </header>
@@ -72,15 +72,15 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <a href="docx-xlsx-internals-skill14.html">前置 → Skill 14 文档类 Skill 怎么做到不坏文件（有 oracle 的那一类）</a>
 </div>
 <div class="intro">
-<h3>// WHY THIS MATTERS</h3>
+<h3 data-tts="43eab4235de7992f">// WHY THIS MATTERS</h3>
 <p>风格类是「主观任务」里最先能落地的一档：它没有客观 oracle，却有<strong>可判定的中间层</strong>——色号、字体名、字号阈值这些东西是能被 grep 的。本期拆的就是这层中间层怎么造：brand-guidelines 把品牌压成七个 hex 加两个字体名，theme-factory 把选择权收敛成十张卡，frontend-design 走第三条路——不给数值，给一份「别长成这样」的否定清单。</p>
 </div>
 <!-- ============ 1 ============ -->
 <div class="section">
 <span class="num">// 01</span>
-<h2>它替你干掉什么：干掉「每次都要重贴一遍色号」</h2>
+<h2 data-tts="721f7bfb07f646e4">它替你干掉什么：干掉「每次都要重贴一遍色号」</h2>
 <div class="claim">论断：它干掉的不是审美，是复述。品牌规范本来就写在某个 PDF 里，真正的成本是每开一个新对话你都要重贴一遍，而且每次贴得都不太一样。</div>
-<h3>怎么装</h3>
+<h3 data-tts="36a3eda8dd4a7f46">怎么装</h3>
 <pre><code><span class="tag-com"># 官方这几个风格类 skill 都在 example-skills 这个 plugin 里</span>
 /plugin marketplace add anthropics/skills
 /plugin install example-skills@anthropic-agent-skills
@@ -92,7 +92,7 @@ cp -r skills/skills/brand-guidelines ~/.claude/skills/
 <span class="tag-com"># 后处理 PPT / Word 还要这个（thumbnail.py 与 validate.py 在里面）</span>
 /plugin install document-skills@anthropic-agent-skills
 </code></pre>
-<h3>它规定了什么：brand-guidelines 的全部硬约束</h3>
+<h3 data-tts="48749961121d8b14">它规定了什么：brand-guidelines 的全部硬约束</h3>
 <ul>
 <li><strong>主色</strong>：Dark <code>#141413</code>（正文与深底）· Light <code>#faf9f5</code>（浅底、深底上的字）· Mid Gray <code>#b0aea5</code> · Light Gray <code>#e8e6dc</code></li>
 <li><strong>强调色</strong>：Orange <code>#d97757</code>（主）· Blue <code>#6a9bcc</code>（次）· Green <code>#788c5d</code>（三级）</li>
@@ -106,14 +106,14 @@ cp -r skills/skills/brand-guidelines ~/.claude/skills/
 <!-- ============ 2 ============ -->
 <div class="section">
 <span class="num">// 02</span>
-<h2>机制：风格类 skill 只有三种写法</h2>
+<h2 data-tts="4006001c01f6ffd9">机制：风格类 skill 只有三种写法</h2>
 <div class="claim">论断：形容词写进 skill 等于没写。有效的三种写法各自把「好看」换成了别的东西——换成数值、换成选单、换成否定清单。</div>
-<h3>写法一 · 数值型：把品牌压成可 grep 的常量</h3>
+<h3 data-tts="2a61126be71f28f8">写法一 · 数值型：把品牌压成可 grep 的常量</h3>
 <p><code>brand-guidelines</code> 是这一型的范本。它的三个设计动作值得单独拎出来：<strong>（a）</strong> 全部约束都是字面量，hex 与字体名不存在解释空间；<strong>（b）</strong> 每条约束都带降级路径（Poppins→Arial、Lora→Georgia），风格规则必须在字体缺失时仍然可执行，否则第一次换机器就崩；<strong>（c）</strong> 绑定执行层，明确说颜色走 <code>RGBColor</code>，于是「套品牌」变成生成之后的一道后处理，而不是生成过程中的即兴发挥。</p>
-<h3>写法二 · 选单型：先收敛到有限集合，再执行</h3>
+<h3 data-tts="38b1d183578fb695">写法二 · 选单型：先收敛到有限集合，再执行</h3>
 <p><code>theme-factory</code> 不猜你的口味，它把选择权交回给人。SKILL.md 规定的流程是四步：<strong>原样展示 <code>theme-showcase.pdf</code> → 问用户要哪个 → 拿到明确确认 → 才把该主题的颜色与字体应用上去</strong>。十个预置主题各是 <code>themes/</code> 下的一个 md 文件：<code>ocean-depths</code> · <code>sunset-boulevard</code> · <code>forest-canopy</code> · <code>modern-minimalist</code> · <code>golden-hour</code> · <code>arctic-frost</code> · <code>desert-rose</code> · <code>tech-innovation</code> · <code>botanical-garden</code> · <code>midnight-galaxy</code>，每个文件里是一组带 hex 的配色加一对字体搭配。不满意可以现场生成新主题，但要按同样的结构写文件、并先给人过目。</p>
 <div class="fail"><strong>什么时候别装</strong>：你有品牌手册的时候。theme-factory 解决的是「没人规定该长什么样」，装在有规范的团队里，它只会多问你一遍那个已经有答案的问题。</div>
-<h3>写法三 · 否定清单型：不说该长什么样，说别长成什么样</h3>
+<h3 data-tts="69e61df9c4f98922">写法三 · 否定清单型：不说该长什么样，说别长成什么样</h3>
 <p><code>frontend-design</code> 一个 hex 都不给，给的是<strong>五簇 AI 默认长相</strong>的点名：奶油底配赭红、深底配亮色、broadsheet 式排版、SaaS 卡片套件、模板 chrome。流程也是反过来的——先出一份 design plan（配色、字体、布局、原则），拿它对着 brief 检查一遍是否够独特，然后才写代码。<code>web-artifacts-builder</code> 用的是同一招，它的「AI slop」清单点名：过度居中、紫色渐变、全都一样的圆角、Inter 字体。</p>
 <p>否定清单之所以有效，是因为模型的失败模式高度集中：它不会随机地丑，它会<strong>系统性地滑向同一组默认值</strong>。堵住这几个出口，剩下的空间自然就不像模板了。<em>什么时候别装</em>：非视觉任务——它会让模型在你只想改一段文案时，也先来一轮设计方案。</p>
 <div class="res"><strong>一手源</strong> · <a href="https://github.com/anthropics/skills/blob/main/skills/theme-factory/SKILL.md" target="_blank">skills/theme-factory/SKILL.md</a> 与 <a href="https://github.com/anthropics/skills/tree/main/skills/theme-factory/themes" target="_blank">themes/</a>（四步流程与十个主题文件名）· <a href="https://github.com/anthropics/skills/blob/main/skills/frontend-design/SKILL.md" target="_blank">skills/frontend-design/SKILL.md</a>（五簇默认长相与两遍流程）</div>
@@ -121,16 +121,16 @@ cp -r skills/skills/brand-guidelines ~/.claude/skills/
 <!-- ============ 3 ============ -->
 <div class="section">
 <span class="num">// 03</span>
-<h2>真实用法与边界：四条产线，和一个没有退出码的验收</h2>
+<h2 data-tts="a9075473521122da">真实用法与边界：四条产线，和一个没有退出码的验收</h2>
 <div class="claim">论断：风格类 skill 装错位置比装错品牌更常见。同样是「把东西做好看」，PPT 后处理、网页实现、纯视觉产出、从零造品牌，用的根本不是一个东西。</div>
-<h3>四条产线各自的落点</h3>
+<h3 data-tts="8e9f2de49a9463a4">四条产线各自的落点</h3>
 <ul>
 <li><strong>PPT / 文档后处理</strong> → <code>brand-guidelines</code>（改过 hex 的那份）配 <code>document-skills</code> 里的 <code>pptx</code>。先生成内容，再套品牌，最后用 <code>python scripts/thumbnail.py deck.pptx</code> 出一张带编号的缩略图网格来看。<em>什么时候别装</em>：你根本不做 PPT——下面那条转图命令可以单独拿走，不必装整个 document-skills。</li>
 <li><strong>网页 / artifact</strong> → 方向交给 <code>frontend-design</code>，实现交给 <code>web-artifacts-builder</code>：<code>scripts/init-artifact.sh</code> 起一个 React 18 + TypeScript + Vite + Tailwind + shadcn/ui 的项目，<code>scripts/bundle-artifact.sh</code> 把它压成单个自包含 HTML。<em>什么时候别装</em>：你只要一个静态页，这套打包链是纯负担。</li>
 <li><strong>纯视觉产出</strong>（海报、封面）→ <code>canvas-design</code>：它强制两步走，先写一份 <code>.md</code> 的美学宣言（给这套风格起个一到两词的名字、四到六段说清它是什么），再据此产出 <code>.pdf</code> / <code>.png</code>，字体取自它自带的 <code>canvas-fonts</code> 目录，成品里文字只占约一成。<em>什么时候别装</em>：你要的是界面而不是作品，它会把按钮也做成艺术品。</li>
 <li><strong>手上根本没有品牌</strong> → <code>cofoundy/brand-skills</code>：十五个 skill 串成一条从命名到品牌手册的流水线（<code>naming</code> · <code>brand-positioning</code> · <code>brand-voice</code> · <code>brand-guidelines</code> · <code>brand-audit</code> 等），装法 <code>npx skills add cofoundy/brand-skills</code>，或 <code>/plugin marketplace add cofoundy/brand-skills</code> + <code>/plugin install brand-skills@brand-skills</code>。据该仓 GitHub 页面，2026-09 约 35 star、MIT。<em>什么时候别装</em>：你已经有手册了——那你缺的是执行，不是再生成一份。</li>
 </ul>
-<h3>没有 oracle，怎么验收：三种可操作的近似</h3>
+<h3 data-tts="886f74a86301ec9b">没有 oracle，怎么验收：三种可操作的近似</h3>
 <ol>
 <li><strong>把数值做成可检查项</strong>。风格 skill 里凡是 hex、字体名、字号阈值，产物里都能直接搜。一条 <code>grep -o '#[0-9a-fA-F]\{6\}' out.html | sort -u</code> 就能看出有没有混进规范外的颜色——这是风格类唯一接近退出码的东西。</li>
 <li><strong>把视觉转成图再看</strong>。<code>pptx</code> skill 给的那条链可以整条借走：<code>scripts/office/soffice.py --headless --convert-to pdf deck.pptx</code> 转 PDF，再 <code>pdftoppm -jpeg -r 150 output.pdf slide</code> 出图，然后对着固定清单逐张过——溢出、重叠、对齐、对比度、占位符残留。清单固定，判断才可复现。</li>
@@ -142,16 +142,16 @@ cp -r skills/skills/brand-guidelines ~/.claude/skills/
 <!-- ============ 4 ============ -->
 <div class="section">
 <span class="num">// 04</span>
-<h2>代价与替代品：多数人其实不需要装</h2>
+<h2 data-tts="df6eb58955222409">代价与替代品：多数人其实不需要装</h2>
 <div class="claim">论断：风格规则少于三条时，skill 是过度工程——它的全部价值在于「规则多到你复述不动」，而这个门槛比想象中高。</div>
-<h3>四条诚实的代价</h3>
+<h3 data-tts="9741720523d1e0d2">四条诚实的代价</h3>
 <ul>
 <li><strong>装的是别人的品牌</strong>。官方那份的色号属于 Anthropic，不 fork 就用，等于把自家产物打上别人的 logo。</li>
 <li><strong>触发过宽</strong>。它的 description 写的是「任何可能受益于该观感的 artifact」，于是你只想要一张朴素表格时，它也可能来上色。真嫌烦就把 description 收窄，或改成只手动调用。</li>
 <li><strong>context 税是持续的</strong>。据 Claude Code 官方文档，skill 的 description 常驻上下文，正文在被调用后<strong>留在上下文里、之后每一轮都计费</strong>；自动压缩时每个 skill 只保留最近一次调用的前 5,000 token、所有 skill 合计 25,000。风格类通常不短，它挤掉的是你真正的工作上下文。</li>
 <li><strong>主观验收拖长回合</strong>。没有退出码就意味着来回多轮，单位产出的成本天然高于文档类。</li>
 </ul>
-<h3>四种「不装它」的替代品</h3>
+<h3 data-tts="40eda9bb539fc6bf">四种「不装它」的替代品</h3>
 <ul>
 <li><strong>写进 CLAUDE.md 或 AGENTS.md</strong>。规则就三条（主色、字体、别用渐变）时，一段仓库级约定比一个 skill 更省也更稳。</li>
 <li><strong>设计令牌文件</strong>。把颜色字体做成 CSS 变量或一份主题 JSON，提示词里只留一句「读它、用它」。风格进了代码库，就不再依赖模型记性。</li>
@@ -160,13 +160,13 @@ cp -r skills/skills/brand-guidelines ~/.claude/skills/
 </ul>
 </div>
 <div class="combo">
-<h3>// 一页选购卡</h3>
+<h3 data-tts="7e5a9ca8b5c6a6e5">// 一页选购卡</h3>
 <p><strong>先装这三个</strong>：① <code>brand-guidelines</code>——但必须 <code>cp -r</code> 一份、把七个 hex 和两个字体名换成你们的，当模板用而不是当成品用；② <code>document-skills</code> 里的 <code>pptx</code>——你要的不只是它会做 PPT，是 <code>scripts/thumbnail.py</code> 那张缩略图网格，它是风格类唯一能自动化的那半步验收；③ <code>frontend-design</code>——网页方向上的否定清单，装它的收益几乎全来自那五簇「别长成这样」。</p>
 <p><strong>第四个候补</strong>：做 claude.ai artifact 才装 <code>web-artifacts-builder</code>（两条脚本 + shadcn/ui）；出海报封面才装 <code>canvas-design</code>；手上还没有品牌，先跑 <code>cofoundy/brand-skills</code> 的 <code>brand-voice</code> 和 <code>brand-guidelines</code> 生成一份，再回来做成自己的数值型 skill。</p>
 <p><strong>一个都别装的情况</strong>：你的风格规则不超过三条——写进 CLAUDE.md，省下的 context 比省下的打字多得多。</p>
 </div>
 <div class="glossary">
-<h3>// 术语表</h3>
+<h3 data-tts="4e0ace5d539c35dc">// 术语表</h3>
 <dl>
 <dt>oracle（判据源）</dt>
 <dd>能独立判定对错的那个东西。文档类的 oracle 是 XSD，风格类没有——本期讲的全部手法，都是在造它的近似替身。</dd>
@@ -181,7 +181,7 @@ cp -r skills/skills/brand-guidelines ~/.claude/skills/
 </dl>
 </div>
 <div class="refs">
-<h3>// 延伸阅读</h3>
+<h3 data-tts="e896f113f5bafc4b">// 延伸阅读</h3>
 <ul>
 <li><a href="https://github.com/anthropics/skills/blob/main/skills/brand-guidelines/SKILL.md" target="_blank">anthropics/skills · skills/brand-guidelines/SKILL.md</a> — 七个 hex、Poppins/Lora、24pt 阈值、accent 轮换与 <code>RGBColor</code> 的原文；整个 skill 目录下只有它和 LICENSE.txt</li>
 <li><a href="https://github.com/anthropics/skills/blob/main/skills/theme-factory/SKILL.md" target="_blank">skills/theme-factory/SKILL.md</a> — 展示 showcase → 问 → 确认 → 应用 的四步流程，以及自造主题要遵守的结构</li>
@@ -197,7 +197,7 @@ cp -r skills/skills/brand-guidelines ~/.claude/skills/
 </ul>
 </div>
 <div class="thinking">
-<h3>// 想一想</h3>
+<h3 data-tts="0e430963febf2dd2">// 想一想</h3>
 <details><summary>brand-guidelines 一行脚本都没有，为什么不算「偷懒」？</summary>
 <div>因为它要做的事本来就没有确定性算法可言。文档类把确定性操作写成脚本，是因为那些步骤每次都该一模一样；风格类的执行者是模型本身，规范只要被压成不可解释的字面量就够了。真偷懒的写法是写「保持专业、现代的观感」——那句话既不能执行也不能验。</div></details>
 <details><summary>数值型和否定清单型，该先写哪个？</summary>
