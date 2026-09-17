@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill 16 · Writing Skills Roundup — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head>
+<body>
+<div class="container">
+<header>
+<span class="week-tag">SKILL 16 / WRITING · ROUNDUP</span>
+<h1>Writing Skills: Ten You Can Actually Install</h1>
+<h2>De-slopping / drafting / house style / SEO — and why opinions diverge most in this category</h2>
+<div class="date">2026-09-17 · BigCat</div>
+<p class="pitch">Office skills enjoy a luxury: if the file won't open, it's wrong, and the model can correct itself. Writing skills have no such thing — this is the one category in the whole ecosystem with no objective oracle. Every item below is clickable, and the same crack that runs through them explains why.</p>
+</header>
+<div class="xref">
+<a href="office-skills-roundup-skill13.en.html">Prerequisite → Skill 13 · Office Output Skills (what a category with an oracle looks like)</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>Writing is the most contested skill category, for a simple reason: <strong>you cannot prove one draft is better than another</strong>. Office skills have "does the file open." Coding skills have "do the tests pass." Writing has "I think so." The consequence is visible — the same function exists as a dozen identically-named implementations on GitHub, with star counts ranging from 49 to 49.4k. Install commands below are copied from each project's own page. Section 02 shows these ten are four different kinds of thing, section 03 gives six checks you can run without executing anything, and section 04 lays out the costs.</p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>The shortlist first: ten rows, install commands below</h2>
+<div class="claim">Claim: read the last column first. Failures in this category come almost entirely from installing three things that do the same job, and from mistaking someone else's taste for a universal rule.</div>
+<div class="diagram">Item                                Source                     Kills for you                        Skip it when
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+1. stop-slop                        boraoztunc/skills          7 listed classes of AI phrasing      You write specs / API docs
+2. blader/humanizer                 blader                     25 patterns + rewrite-critique-final Already running 1 or 3
+3. Aboudjem/humanizer-skill         Aboudjem                   55 patterns + 0-100 score + local CLI You want a rewrite, not a score
+4. humanize-writing                 Agensi marketplace         High-install listing of the same job You already installed one from GitHub
+5. doc-coauthoring                  anthropics/skills          The co-writing process for long docs You need edits, not a blank page
+6. internal-comms                   anthropics/skills          House format for updates / FAQs      Your company's format differs
+7. better-writing                   boraoztunc/skills          Buttons, errors, empty-state copy    You write prose, not interfaces
+8. copywriting · copy-editing       coreyhaines31/marketingskills  Landing-page and homepage copy    You only write technical docs
+9. seo-audit · programmatic-seo     boraoztunc/skills          On-site SEO checks and bulk pages    The site isn't live yet
+   claude-seo                       AgriciDaniel               Full SEO suite, 25 sub-skills        You just need three meta tags
+10. claude-writing-skills           nadiem99                   Eight-stage editorial pipeline       You don't run a publication
+    creative-writing-skills         haowjy                     Serial fiction + continuity memory   You write non-fiction
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+1-4 are four implementations of one job (see section 02). The gap between 5-6 and 7-8 is process versus taste.</div>
+<h3>How to install (commands copied from each project's own page)</h3>
+<pre><code><span class="tag-com"># 1. stop-slop — a single file, the lightest item here</span>
+mkdir -p ~/.claude/skills/stop-slop
+curl -o ~/.claude/skills/stop-slop/SKILL.md \
+  https://raw.githubusercontent.com/boraoztunc/skills/main/stop-slop/SKILL.md
+<span class="tag-com"># Same repo, other skills: swap the directory name. Don't clone the whole thing.</span>
+
+<span class="tag-com"># 2. blader/humanizer — invoke with /humanizer once installed</span>
+npx skills add blader/humanizer --global
+
+<span class="tag-com"># 3. Aboudjem/humanizer-skill — the only one with a recomputable score</span>
+npx skills add Aboudjem/humanizer-skill
+
+<span class="tag-com"># 5, 6. Both official ones ship in the example-skills plugin</span>
+/plugin marketplace add anthropics/skills
+/plugin install example-skills@anthropic-agent-skills
+
+<span class="tag-com"># 8. The marketing bundle (note: this pulls in 50 skills at once)</span>
+npx skills add coreyhaines31/marketingskills
+
+<span class="tag-com"># 9. Full SEO suite</span>
+/plugin marketplace add AgriciDaniel/claude-seo
+/plugin install claude-seo@agricidaniel-claude-seo
+/seo setup
+
+<span class="tag-com"># 10. Two pipelines — non-fiction and fiction</span>
+npx skills add nadiem99/claude-writing-skills
+/plugin marketplace add haowjy/creative-writing-skills
+
+<span class="tag-com"># Do these two things immediately after installing</span>
+/skills          <span class="tag-com"># review the list, disable what this project won't use</span>
+/skill-doctor    <span class="tag-com"># token cost and invocation counts per skill</span>
+</code></pre>
+<h3>Item by item, plainly</h3>
+<ul>
+<li><strong>1. stop-slop</strong>: the description is one line — "Remove AI writing patterns from prose." Its value is that <strong>it lists what to delete in seven classes</strong>: throat-clearing openers ("Here's the thing:"), emphasis crutches ("Full stop," "Let that sink in"), business jargon (unpack / lean into / deep dive / circle back), adverbs (every -ly plus really / just / literally), meta-commentary ("as we'll see"), false agency ("the decision emerges"), and binary contrasts ("not because X, but because Y"). The file shows before/after rewrites. <strong>One file, one curl, the lightest thing here.</strong></li>
+<li><strong>2. blader/humanizer</strong>: <strong>49.4k stars per its GitHub repo page, 2026-09</strong>, the best-known of the bunch. Twenty-five patterns in five groups (staging instead of stating / rhythm by rule / inflation and borrowed authority / formatting by rule / leftover draft elements). Invoke it with <code>/humanizer</code>; the output comes in three parts — rewrite, self-critique, final. Its framing is worth keeping: a language model writes whatever is most likely to come next, not a sentence it meant. <strong>It states plainly that it never invents facts</strong> — the one promise a rewriting skill owes you.</li>
+<li><strong>3. Aboudjem/humanizer-skill</strong>: <strong>245 stars per its GitHub repo page, 2026-09</strong>. The longest pattern list (55 across five categories) and five voices (casual / professional / technical / warm / blunt), but what makes it unique here is <strong>a 0-100 AI-tell score plus a dependency-free Node metrics CLI</strong>: it scores text and diffs versions. It also fact-checks the rewrite against the original for numbers, URLs, dates and acronyms. MIT, no telemetry, nothing leaves the machine.</li>
+<li><strong>4. humanize-writing</strong>: the listing on the Agensi marketplace; Skill 17 digs into this one. The point to take here is that <strong>"humanize / humanizer / humanize-writing" is not a skill's name, it's a genre's name</strong>. Findable implementations include blader, Aboudjem, gencharitaci/humanize-skills, and entries from lguz, jpeggdev and shir-danishyar on skills.sh. <strong>Check which repository you are installing.</strong></li>
+<li><strong>5. doc-coauthoring</strong>: official, and the only item here that <strong>bundles no scripts and no reference files at all</strong>. It gives three stages: info-dump your background to the model (team discussions, architecture details, stakeholder concerns), then work section by section through "ask → brainstorm 5-20 options → curate → check gaps → draft → refine," then <strong>reader-test</strong> by handing it to a subagent or a fresh Claude instance and watching where comprehension breaks. It treats a different disease than prose quality: <strong>the context still stuck in your head</strong>.</li>
+<li><strong>6. internal-comms</strong>: four format files — <code>examples/3p-updates.md</code> (progress / plans / problems), <code>company-newsletter.md</code>, <code>faq-answers.md</code>, <code>general-comms.md</code> — read as needed. <strong>Its description is written in first person</strong>: write internal comms "using the formats that my company likes to use." That line is the usage note: <strong>fork it and swap the examples for your own, don't install it as-is.</strong></li>
+<li><strong>7. better-writing</strong>: the name misleads. This is <strong>UX copy</strong> — button labels, form errors, placeholders, settings, empty states. All twelve rules are checkable: start buttons with a verb ("Save draft," not "OK"), <strong>label toggles for their ON state</strong> rather than the negative, put error text beside the failing field and say what to do, use one vocabulary across a multi-step flow, make link text meaningful out of context. <strong>This is the closest thing here to a writing skill with objective criteria</strong> — interface copy can be judged against the interaction itself.</li>
+<li><strong>8. copywriting · copy-editing</strong>: from <code>coreyhaines31/marketingskills</code> (<strong>50.7k stars and 7.7k forks per its GitHub repo page, 2026-09</strong>). The first writes landing and home page copy, the second reworks existing copy. The same repo carries <code>cold-email</code>, <code>emails</code>, <code>social</code>, <code>marketing-psychology</code> and about fifty directories in total. <strong>Which is also the problem</strong>: one <code>npx skills add</code> pulls in fifty descriptions, all competing for Claude Code's 1,536-character description budget. If you want two, take two.</li>
+<li><strong>9. seo-audit · programmatic-seo · claude-seo</strong>: the first two live in <code>boraoztunc/skills</code> (<strong>347 stars per its GitHub repo page, 2026-09</strong>), alongside <code>schema-markup</code> and <code>content-strategy</code>. For the full suite there's <code>AgriciDaniel/claude-seo</code> (<strong>17.1k stars per its GitHub repo page, 2026-09</strong>): 25 sub-skills and 18 subagents spanning technical SEO, schema, GEO/AEO, backlinks and reporting. <strong>The core needs zero API keys</strong>; PageSpeed Insights, Search Console and GA4 are optional enrichment, and DataForSEO-class extensions want your own accounts. It is the odd one out here — section 02 explains why.</li>
+<li><strong>10. Two pipelines</strong>: <code>nadiem99/claude-writing-skills</code> (<strong>2 stars per its GitHub repo page, 2026-09</strong>) breaks one Substack publication's editorial process into eight stages — interview → outline → draft → coach → edit → source-check → top-edit → repurpose — plus setup / research / status as support. <strong>Low stars don't mean not worth reading</strong>: it's the most literal example of turning your own process into skills, and Skill 33 returns to it. On the fiction side, <code>haowjy/creative-writing-skills</code> (<strong>468 stars per its GitHub repo page, 2026-09</strong>) uses <code>story-memory</code>, <code>character-sim</code> and <code>reader-sim</code> for continuity, character consistency and reader reaction — <strong>the hard part of a long serial is remembering chapter three, not choosing words.</strong></li>
+</ul>
+<div class="res"><strong>Further reading</strong> · <a href="https://github.com/anthropics/skills/tree/main/skills" target="_blank">anthropics/skills directory</a> (trust the repo folder names for spelling; SEO aggregators get them wrong constantly)</div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Why these ten don't compare: four different things in one table</h2>
+<div class="claim">Claim: the gap between item 5 and item 7 is wider than the gap between item 7 and stop-slop. One gives you a process, one gives you someone's taste, one gives you a deletion list.</div>
+<h3>Four shapes</h3>
+<ol>
+<li><strong>Subtractive (1-4)</strong> — text in, rewritten text out. The shared structure is <strong>a list of what to delete</strong>, running from 7 classes to 55 entries. <strong>This is the only branch of writing skills that can be checked mechanically</strong>: to see whether it fired, count the <code>-ly</code> endings and the em dashes. Item 3 simply turned that into a score.</li>
+<li><strong>Process (5, 10)</strong> — these don't tell you how to write a sentence, they tell you <strong>what to do in what order</strong>. The reader-test in item 5 and <code>source-check</code> in item 10 are the same move: forcing an external checkpoint into a subjective task.</li>
+<li><strong>Taste (6, 7, 8)</strong> — you're installing a person's or a company's preferences. Item 6 is Anthropic's internal comms format, item 8 is one marketer's copy doctrine, item 7 is a UI copy convention. <strong>This branch should be forked and replaced, never installed as-is.</strong> (Skill 15 hit the same trap with <code>brand-guidelines</code>.)</li>
+<li><strong>Technical checks (9)</strong> — filed under "writing," but <strong>it doesn't belong to this category</strong>: whether schema validates, what the page speed score is, whether a title exceeds its length — all objective. <strong>It behaves like the office category from Skill 13</strong>, and should be judged by those criteria.</li>
+</ol>
+<div class="fail"><strong>The trap</strong>: <code>jooray/humanizer</code> and <code>blader/humanizer</code> share a name, a description and a function — the first is a fork of the second, with Slovak and Czech added. <strong>Per their GitHub repo pages, 2026-09: 49 stars versus 49.4k.</strong> A thousandfold difference, invisible at a glance. Installing writing skills by searching for a name is the most dangerous habit in this category — <strong>it has the most same-named forks, and no run result will ever tell you that you got the wrong one.</strong></div>
+<h3>Where the crack runs</h3>
+<p>Lay the four shapes side by side and it's clear: <strong>the more mechanically checkable, the less contested</strong>. Nobody argues about item 9, rarely about item 7; items 1-3 argue about deleting too much versus too little; items 6 and 8 argue about whose taste gets to win. <strong>The disagreement in this category isn't a quality problem, it's a property of the category</strong> — when the acceptance criterion is "I think so," install counts only measure whose marketing worked.</p>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Three-minute inspection: six criteria, measured against these ten</h2>
+<div class="claim">Claim: you can't judge a writing skill by running it once, but three minutes inside SKILL.md filters out eighty percent. Each of the ten above happens to demonstrate one criterion.</div>
+<ol>
+<li><strong>Is what it deletes or changes written as a list?</strong> Item 1 lists seven classes with before/after pairs, item 2 lists 25, item 3 lists 55. <strong>Anything promising "more natural, flowing prose" without a list should be skipped</strong> — that's your own sentence handed back in different words.</li>
+<li><strong>Is there a recomputable signal?</strong> Item 3's 0-100 score and local CLI are the only case here of turning subjective acceptance into a number. <strong>Having a score doesn't make the score right</strong>, but it makes "did this change actually help?" comparable — the same requirement Skill 07 imposed on evals.</li>
+<li><strong>Does it promise not to touch facts?</strong> Item 2 states it never invents facts; item 3 explicitly checks numbers, URLs, dates and acronyms. <strong>The most expensive bug in rewriting is "23%" polished into "nearly a quarter"</strong> — smoother, and a different number. If SKILL.md doesn't make that promise, keep it away from anything with data in it.</li>
+<li><strong>Process or someone's taste?</strong> One glance at the description settles it: first person ("my company," "the formats I like") means template, not product — item 6 is the textbook case. <strong>Templates get forked and replaced; installing the original hangs someone else's voice under your name.</strong></li>
+<li><strong>Star counts are least trustworthy here.</strong> Item 10's non-fiction pipeline has 2 stars and more substance than plenty of four-figure "writing assistants"; <code>jooray/humanizer</code> and <code>blader/humanizer</code> differ a thousandfold in stars and are the same thing. <strong>With no run result to vouch for anything, stars are pure reach.</strong> Go by the repo directory name and the body of SKILL.md.</li>
+<li><strong>Does it collide with what you already have?</strong> Items 1-4 compete for one trigger surface: the model picks one each time, and you don't control which. <strong>Keep exactly one per job</strong> — this matters more in writing than anywhere else, because the collision doesn't throw an error, it just makes your voice different every time.</li>
+</ol>
+<div class="res"><strong>Further reading</strong> · <a href="https://code.claude.com/docs/en/skills" target="_blank">Claude Code · Skills</a> (install locations, <code>/skills</code>, <code>/skill-doctor</code>, and the 1,536-character truncation of merged descriptions, 2026-09)</div>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>The honest costs: what the bill looks like</h2>
+<div class="claim">Claim: the token tax here is cheap. What's expensive is the absence of a stopping condition — once installed, you can't tell whether it's helping you or you're adapting to it.</div>
+<h3>No oracle means no reason to stop</h3>
+<p>Office skills have the luxury: if the file won't open it's wrong, and the model fixes itself. Writing has nothing like it. <strong>You will find yourself asking for one more version, round after round, with no version any closer to anything</strong> — because "done" is undefined. That's the real cost of this category, and it's why <code>Aboudjem/humanizer-skill</code>'s 0-100 score is worth something even imperfect: <strong>it draws a stopping line.</strong></p>
+<h3>Subtractive skills delete structure you needed</h3>
+<p>The "not X but Y," the -ly adverbs and the meta-commentary that <code>stop-slop</code> removes <strong>are often precision itself</strong> in a spec, an API doc or a contract clause. In "this parameter applies only in async mode," the word "only" is not filler; delete it and the meaning changes. <strong>Subtractive skills fit prose and marketing copy, not technical writing</strong> — and the trigger mechanism does not know the difference, so you have to.</p>
+<h3>The rest of the bill</h3>
+<ul>
+<li><strong>The description budget really does overflow.</strong> Item 8's <code>marketingskills</code> installs 50 skills at once; item 9's <code>claude-seo</code> carries 25 sub-skills. Claude Code merges all descriptions and <strong>truncates at 1,536 characters</strong>, after which the ones at the back can never fire — <strong>and it doesn't warn you</strong>, it just quietly stops working. If you want two skills, copy two <code>SKILL.md</code> files.</li>
+<li><strong>Same-name forks are a supply-chain problem.</strong> A skill is executable instruction written by someone else, and this category has so many identically-named implementations that search cannot separate them. <strong>"Installed the one that looked like it" is the norm here, not the accident.</strong> Skill 30 covers vetting properly; for now: check whether the repo is a fork and when it last shipped a commit.</li>
+<li><strong>De-slopping is an arms race.</strong> Detectors and rewriters chase each other; a phrase list that works this year may not next. The lists in items 1-3 are <strong>snapshots of an observation</strong>, not linguistic law. Skill 17 opens that pit on its own.</li>
+<li><strong>Taste skills assimilate you quietly.</strong> Write landing pages with <code>copywriting</code> for three months and you'll start treating that author's doctrine as universal truth. <strong>Read this kind once as reference and rewrite the parts you agree with as your own rules</strong>, rather than leaving it on the trigger chain making judgments for you.</li>
+</ul>
+<div class="fail"><strong>Failure mode</strong>: you ask <code>blader/humanizer</code> to polish a quarterly commentary. It turns "up 23.4% year over year" into "growth approaching a quarter," and "as of June 30, 2026" into "mid-year." It genuinely no longer reads like AI, and the data is genuinely wrong now. <strong>The nasty part: the prose improved, the tone got more natural, only the facts broke — and they broke pleasantly.</strong></div>
+</div>
+<!-- ============ 5 ============ -->
+<div class="combo">
+<h3>// ONE-PAGE BUYING CARD</h3>
+<p><strong>Install these three first</strong>: <code>stop-slop</code> (one <code>curl</code> into <code>~/.claude/skills/stop-slop/</code>, seven listed classes, lightest option) + <code>Aboudjem/humanizer-skill</code> (<code>npx skills add Aboudjem/humanizer-skill</code>, when you need a recomputable stopping line — don't run it alongside stop-slop) + <code>doc-coauthoring</code> (<code>/plugin install example-skills@anthropic-agent-skills</code>, because the hard part of a long doc is thinking it through).</p>
+<p><strong>Add as needed</strong>: <code>internal-comms</code> (<strong>fork it and replace the four files in <code>examples/</code> with your company's</strong>) · <code>better-writing</code> (building product UI — its twelve rules double as an acceptance checklist) · <code>copywriting</code> / <code>copy-editing</code> (<strong>copy just those two directories, don't <code>npx skills add</code> all of marketingskills</strong>) · <code>AgriciDaniel/claude-seo</code> (the site is really doing SEO) · <code>nadiem99/claude-writing-skills</code> or <code>haowjy/creative-writing-skills</code> (you are genuinely publishing a series).</p>
+<p><strong>Explicitly don't</strong>: run <code>stop-slop</code> + <code>blader/humanizer</code> + <code>humanize-writing</code> together (three descriptions fighting for one trigger, and your voice changes every time) · pull 50 skills from <code>marketingskills</code> for two pages of copy · leave a subtractive skill enabled in a technical-docs repo (the adverbs it strips are your precision) · install on name recognition (check for a fork first — <code>jooray/humanizer</code> and <code>blader/humanizer</code> differ a thousandfold in stars).</p>
+<p><strong>Three things after installing</strong>: <code>/skills</code> and keep exactly one subtractive skill · <code>/skill-doctor</code> for token cost and invocation counts · set yourself a stopping line (item 3's score, or "ship after two revisions"), <strong>because this category will revise forever.</strong></p>
+</div>
+<div class="glossary">
+<h3>// GLOSSARY</h3>
+<dl>
+<dt>oracle</dt>
+<dd>Anything that mechanically decides whether output is correct. Office skills have "does the file open," coding has "do the tests pass." Writing has none — the source of every conclusion here.</dd>
+<dt>AI slop / AI tell</dt>
+<dd>The recognizable constructions models overproduce: throat-clearing openers, forced triads, em-dash overuse, "not X but Y." Exactly what subtractive skills delete.</dd>
+<dt>false agency</dt>
+<dd>Giving actions to inanimate subjects: "the decision emerges," "the culture shifts." The human who actually did it has been hidden.</dd>
+<dt>progressive disclosure</dt>
+<dd>Skills load in layers: name and description stay resident, SKILL.md is read on trigger, bundled files only when used. Which is why the scarce resource is the description budget.</dd>
+<dt>fork</dt>
+<dd>A copy of someone else's repository. Same-named forks are rampant in this category — check the repo page for the "forked from" line before installing.</dd>
+</dl>
+</div>
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://github.com/boraoztunc/skills" target="_blank">boraoztunc/skills</a> — source of items 1, 7 and 9; single-file <code>curl</code> install and the full directory list (347 stars, 2026-09); <a href="https://github.com/boraoztunc/skills/blob/main/stop-slop/SKILL.md" target="_blank">stop-slop · SKILL.md</a> for the seven classes and before/after pairs; <a href="https://github.com/boraoztunc/skills/blob/main/better-writing/SKILL.md" target="_blank">better-writing · SKILL.md</a> for the twelve UX copy rules</li>
+<li><a href="https://github.com/blader/humanizer" target="_blank">blader/humanizer</a> — 25 patterns in five groups, the three-part <code>/humanizer</code> output, and "never invents facts" (49.4k stars, 2026-09)</li>
+<li><a href="https://github.com/jooray/humanizer" target="_blank">jooray/humanizer</a> — a fork of the above with Slovak and Czech added (49 stars, 2026-09); the trap from section 02, in the flesh</li>
+<li><a href="https://github.com/Aboudjem/humanizer-skill" target="_blank">Aboudjem/humanizer-skill</a> — 55 patterns, five voices, a 0-100 AI-tell score and a dependency-free metrics CLI, all local with no telemetry (245 stars, 2026-09)</li>
+<li><a href="https://github.com/gencharitaci/humanize-skills" target="_blank">gencharitaci/humanize-skills</a> — yet another implementation of the same job; together with <a href="https://www.agensi.io/skills/humanize-writing" target="_blank">Agensi · humanize-writing</a>, evidence that "humanize" is a genre, not a name</li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/doc-coauthoring/SKILL.md" target="_blank">skills/doc-coauthoring · SKILL.md</a> — context transfer → section-by-section co-writing → reader test; the only item here with no bundled files</li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/internal-comms/SKILL.md" target="_blank">skills/internal-comms · SKILL.md</a> — the four format files under <code>examples/</code> and that first-person description</li>
+<li><a href="https://github.com/coreyhaines31/marketingskills" target="_blank">coreyhaines31/marketingskills</a> — <code>copywriting</code>, <code>copy-editing</code>, <code>cold-email</code> and about fifty directories, plus the <code>npx skills add</code> install (50.7k stars, 7.7k forks, 2026-09)</li>
+<li><a href="https://github.com/AgricIDaniel/claude-seo" target="_blank">AgriciDaniel/claude-seo</a> — 25 sub-skills and 18 subagents, zero API keys for the core, free Google endpoints as optional enrichment (17.1k stars, 2026-09)</li>
+<li><a href="https://github.com/nadiem99/claude-writing-skills" target="_blank">nadiem99/claude-writing-skills</a> — the eight-stage editorial pipeline; the plainest example of encoding your own process as skills (2 stars, 2026-09)</li>
+<li><a href="https://github.com/haowjy/creative-writing-skills" target="_blank">haowjy/creative-writing-skills</a> — <code>story-memory</code>, <code>character-sim</code>, <code>reader-sim</code>; in long fiction the hard part is continuity (468 stars, 2026-09)</li>
+<li><a href="https://code.claude.com/docs/en/skills" target="_blank">Claude Code · Skills</a> — install locations, <code>/skills</code> and <code>/skill-doctor</code>, and the 1,536-character description truncation (2026-09)</li>
+<li><a href="office-skills-roundup-skill13.en.html">Skill 13 · Office Output Skills Roundup</a> — what a category with an oracle looks like; the reference point used throughout this issue</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Skill 16 · 2026-09-17</footer>
+</div>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
+</body></html>
