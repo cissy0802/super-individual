@@ -64,8 +64,8 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <div class="container">
 <header>
 <span class="week-tag">SKILL 16 / WRITING · ROUNDUP</span>
-<h1>写作类 Skills 榜单：十个真能装的</h1>
-<h2>去 AI 味 / 起草 / 体例 / SEO 各解决什么 · 为什么这一类口碑分歧最大</h2>
+<h1 data-tts="f64ae7cb1a533a5a">写作类 Skills 榜单：十个真能装的</h1>
+<h2 data-tts="0178931f8e88f3e7">去 AI 味 / 起草 / 体例 / SEO 各解决什么 · 为什么这一类口碑分歧最大</h2>
 <div class="date">2026-09-17 · BigCat</div>
 <p class="pitch">办公类 skill 有个奢侈品：文件打不开就是错，模型能自己纠。写作类没有——它是整个生态里唯一没有客观 oracle 的一类。本期十个条目全部能点开，同时告诉你这条裂缝把它们撕成了几派。</p>
 </header>
@@ -73,13 +73,13 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <a href="office-skills-roundup-skill13.html">前置 → Skill 13 办公产出类 Skills 榜单（有 oracle 的那一类长什么样）</a>
 </div>
 <div class="intro">
-<h3>// WHY THIS MATTERS</h3>
+<h3 data-tts="00fb0ccba3fd64ac">// WHY THIS MATTERS</h3>
 <p>写作类争议最大，原因不复杂：<strong>你没法证明一版文字比另一版好</strong>。办公类有「文件能不能打开」，编码类有「测试过不过」，写作类只剩「我觉得」。后果是可见的：同一个功能在 GitHub 上有十几份同名实现，星数从 49 到 49.4k 都有。下面十个条目装法全部抄自各自官方页面；第 02 节讲它们分属四种东西，第 03 节给六条不用跑就能验货的判据，第 04 节摊开代价。</p>
 </div>
 <!-- ============ 1 ============ -->
 <div class="section">
 <span class="num">// 01</span>
-<h2>先给清单：十行表，装法都在下面</h2>
+<h2 data-tts="6d266f2092ab746c">先给清单：十行表，装法都在下面</h2>
 <div class="claim">论断：这张表最该先看最后一列。写作类 skill 的翻车几乎全发生在「装了三个干同一件事的」和「把别人的口味当成了通用规则」上。</div>
 <div class="diagram">条目                                出处                       替你干掉的那件事                  什么时候别装
 ──────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -97,7 +97,7 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
    creative-writing-skills          haowjy                     小说连载 + 连续性记忆（虚构）     你写的是非虚构
 ──────────────────────────────────────────────────────────────────────────────────────────────────────────
 ①②③④ 是同一件事的四份实现（见第 02 节）。⑤⑥ 与 ⑦⑧ 的差别是「流程」对「口味」。</div>
-<h3>怎么装（命令抄自各自官方页面）</h3>
+<h3 data-tts="e46ee19ce745b362">怎么装（命令抄自各自官方页面）</h3>
 <pre><code><span class="tag-com"># ① stop-slop —— 单文件，最轻的一个</span>
 mkdir -p ~/.claude/skills/stop-slop
 curl -o ~/.claude/skills/stop-slop/SKILL.md \
@@ -130,7 +130,7 @@ npx skills add nadiem99/claude-writing-skills
 /skills          <span class="tag-com"># 看清单，关掉这次用不上的</span>
 /skill-doctor    <span class="tag-com"># 看 token 成本与调用频次</span>
 </code></pre>
-<h3>逐条说人话</h3>
+<h3 data-tts="72a524f52d5079f2">逐条说人话</h3>
 <ul>
 <li><strong>① stop-slop</strong>：description 一句话：「Remove AI writing patterns from prose」。它值钱在<strong>把要删的东西列成了七类清单</strong>：清嗓式开头（「Here's the thing:」）、强调拐杖（「Full stop」「Let that sink in」）、商业黑话（unpack / lean into / deep dive / circle back）、副词（所有 -ly 加 really / just / literally）、元评论（「as we'll see」）、虚假主语（「the decision emerges」）、二元对比（「not because X, but because Y」）。文件里给了改写前后对照。<strong>单文件、一条 curl，本榜最轻。</strong></li>
 <li><strong>② blader/humanizer</strong>：<strong>据 GitHub 仓库页，2026-09 为 49.4k 星</strong>，是这一类最出名的。25 个模式分五组（把话「摆出来」而不是说出来 / 按规则造节奏 / 充气与借来的权威 / 按规则排版 / 草稿残渣），装完用 <code>/humanizer</code> 调，输出是<strong>初稿改写 → 自我批评 → 定稿</strong>三段。README 里那句判断值得记住：模型写的是「统计上最可能接下去的东西」，不是有意图的句子。<strong>它明写从不编造事实</strong>——这是改写类 skill 最该承诺的一条。</li>
@@ -148,9 +148,9 @@ npx skills add nadiem99/claude-writing-skills
 <!-- ============ 2 ============ -->
 <div class="section">
 <span class="num">// 02</span>
-<h2>为什么这十个不能混着比：四种东西挤在一张表里</h2>
+<h2 data-tts="8569aff23684b374">为什么这十个不能混着比：四种东西挤在一张表里</h2>
 <div class="claim">论断：⑤和⑦的差别，比⑦和 stop-slop 的差别还大。一个给你流程，一个给你别人的口味，一个给你一张删除清单。</div>
-<h3>四种形态</h3>
+<h3 data-tts="0d2be2bd14229574">四种形态</h3>
 <ol>
 <li><strong>减法型（①②③④）</strong>——输入是已有文本，输出是改写后的文本。共同结构是<strong>一张「要删什么」的清单</strong>，从 7 类到 55 条不等。<strong>这一支是写作类唯一能被机械验收的</strong>：想知道有没有生效，数一数 <code>-ly</code> 和破折号就行，③干脆把它做成了分数。</li>
 <li><strong>流程型（⑤⑩）</strong>——不告诉你怎么写句子，告诉你<strong>先做什么再做什么</strong>。⑤的「新读者回测」和⑩的 <code>source-check</code> 是同一个思路：给主观任务硬塞一个外部检查点。</li>
@@ -158,13 +158,13 @@ npx skills add nadiem99/claude-writing-skills
 <li><strong>技术检查型（⑨）</strong>——挂在「写作」名下，其实<strong>不属于这一类</strong>：schema 过不过校验、页面速度多少分、标题长度超没超，全是客观的。<strong>它更像上一期的办公类</strong>，判据也该照那套用。</li>
 </ol>
 <div class="fail"><strong>那个陷阱</strong>：<code>jooray/humanizer</code> 和 <code>blader/humanizer</code> 同名、同描述、同功能，前者是后者的 fork（多加了斯洛伐克语和捷克语）。<strong>据 GitHub 仓库页，2026-09 前者 49 星、后者 49.4k 星。</strong>差一千倍，肉眼看不出来。在写作类里搜名字装 skill 是最危险的习惯——<strong>这一类同名分叉最多，而且没有任何运行结果能告诉你装错了。</strong></div>
-<h3>裂缝在哪</h3>
+<h3 data-tts="4a98bdea2f518b6d">裂缝在哪</h3>
 <p>四种形态摆开就看清了：<strong>越能被机械验收的，争议越小</strong>。⑨没人吵，⑦很少吵，①②③吵的是「删多了还是删少了」，⑥⑧吵的是「凭什么按你的口味来」。<strong>写作类 skill 的口碑分歧不是质量问题，是这一类的属性</strong>——当验收标准是「我觉得」，装机量就只反映谁的营销做得好。</p>
 </div>
 <!-- ============ 3 ============ -->
 <div class="section">
 <span class="num">// 03</span>
-<h2>三分钟验货：六条判据，用上面这十个当量尺</h2>
+<h2 data-tts="bbb5b2f52504e51f">三分钟验货：六条判据，用上面这十个当量尺</h2>
 <div class="claim">论断：写作类没法靠跑一遍来判断好坏，但打开 SKILL.md 翻三分钟能筛掉八成。上面十个恰好各自示范了一条。</div>
 <ol>
 <li><strong>它要删/要改的东西，有没有列成清单。</strong>①列了七类并给出改写前后对照，②列了 25 个，③列了 55 个。<strong>只写「让文字更自然流畅」而不给清单的，一律别装</strong>——那是把你已经会说的话换个说法还给你。</li>
@@ -179,13 +179,13 @@ npx skills add nadiem99/claude-writing-skills
 <!-- ============ 4 ============ -->
 <div class="section">
 <span class="num">// 04</span>
-<h2>诚实的代价：这类 Skill 的账单长什么样</h2>
+<h2 data-tts="ed3e7f416c482695">诚实的代价：这类 Skill 的账单长什么样</h2>
 <div class="claim">论断：写作类的 token 税不贵，贵的是它没有收敛条件——装上以后，你分不清是它在帮你，还是你在适应它。</div>
-<h3>没有 oracle，就没有停下来的理由</h3>
+<h3 data-tts="c0e3f5f97ba840b8">没有 oracle，就没有停下来的理由</h3>
 <p>办公类 skill 有个奢侈品：文件打不开就是错，模型自己能纠。写作类没有。<strong>你会一轮一轮让它再改一版，而每一版都不比上一版更接近任何东西</strong>——因为没有「完成」的定义。这是本类最真实的代价，也是 <code>Aboudjem/humanizer-skill</code> 那个 0-100 分即使不完美也值钱的原因：<strong>它至少画出了一条停止线。</strong></p>
-<h3>减法型会删掉你需要的结构</h3>
+<h3 data-tts="5673b471d36c982c">减法型会删掉你需要的结构</h3>
 <p><code>stop-slop</code> 要删的「not X but Y」「所有 -ly 副词」「元评论」，在规范文档、API 文档、合同条款里<strong>常常正是精确性本身</strong>。「这个参数仅在异步模式下生效」的「仅」不是赘余，删了意思就变。<strong>减法型的适用面是散文和营销文案，不是技术写作</strong>——触发机制不认这个区别，你得自己认。</p>
-<h3>其余几笔</h3>
+<h3 data-tts="e2adf8362ab94ff7">其余几笔</h3>
 <ul>
 <li><strong>描述预算是真的会被挤爆。</strong>⑧的 <code>marketingskills</code> 一次装 50 个 skill、⑨的 <code>claude-seo</code> 带 25 个子 skill。Claude Code 把所有描述合并后<strong>在 1,536 字符处截断</strong>，排在后面的就再也触发不了了——<strong>而它不报错</strong>，只是安静地不工作。要两个 skill 就只拷两个 <code>SKILL.md</code>。</li>
 <li><strong>同名分叉是供应链问题。</strong>skill 是别人写的可执行指令，而这一类同名实现多到搜索分不清，<strong>「装到了长得像的那一份」是常态而非意外</strong>。Skill 30 专讲准入审查，这里先记一条：装之前看仓库是不是 fork、上次提交是什么时候。</li>
@@ -196,14 +196,14 @@ npx skills add nadiem99/claude-writing-skills
 </div>
 <!-- ============ 5 ============ -->
 <div class="combo">
-<h3>// 一页选购卡</h3>
+<h3 data-tts="5b69a2c4081926a9">// 一页选购卡</h3>
 <p><strong>先装这三个</strong>：<code>stop-slop</code>（<code>curl</code> 单文件到 <code>~/.claude/skills/stop-slop/</code>，七类清单、最轻）+ <code>Aboudjem/humanizer-skill</code>（<code>npx skills add Aboudjem/humanizer-skill</code>，要一条能复算的停止线时用它，别和 stop-slop 同时挂）+ <code>doc-coauthoring</code>（<code>/plugin install example-skills@anthropic-agent-skills</code>，长文档的难点在想清楚）。</p>
 <p><strong>按需再加</strong>：<code>internal-comms</code>（<strong>fork 一份把 <code>examples/</code> 四份换成你公司的</strong>）· <code>better-writing</code>（做产品界面时，12 条规则直接当验收单）· <code>copywriting</code> / <code>copy-editing</code>（<strong>只拷这两个目录，别 <code>npx skills add</code> 整个 marketingskills</strong>）· <code>AgriciDaniel/claude-seo</code>（站点真要做 SEO）· <code>nadiem99/claude-writing-skills</code> 或 <code>haowjy/creative-writing-skills</code>（你真在连载）。</p>
 <p><strong>明确别装</strong>：<code>stop-slop</code> + <code>blader/humanizer</code> + <code>humanize-writing</code> 同时挂（三份描述抢一个触发，文风每次都变）· 只为两页文案拖回 50 个 skill 的 <code>marketingskills</code> · 在技术文档仓库里常开减法型（它删的副词正是你的精确性）· 搜到名字就装（先看是不是 fork——<code>jooray/humanizer</code> 与 <code>blader/humanizer</code> 差一千倍星）。</p>
 <p><strong>装完三件事</strong>：<code>/skills</code> 看清单只留一个减法型 · <code>/skill-doctor</code> 查 token 成本与调用频次 · 给自己定一条停止线（③的分数，或者「改两版就交」），<strong>否则这一类可以无限改下去。</strong></p>
 </div>
 <div class="glossary">
-<h3>// 术语表</h3>
+<h3 data-tts="b7a5deada5bade8d">// 术语表</h3>
 <dl>
 <dt>oracle（判对错的依据）</dt>
 <dd>能机械判定输出对不对的东西。办公类是「文件能否打开」，编码类是「测试过不过」。写作类没有——本期所有结论的源头。</dd>
@@ -218,7 +218,7 @@ npx skills add nadiem99/claude-writing-skills
 </dl>
 </div>
 <div class="refs">
-<h3>// 延伸阅读</h3>
+<h3 data-tts="87c51453166efea1">// 延伸阅读</h3>
 <ul>
 <li><a href="https://github.com/boraoztunc/skills" target="_blank">boraoztunc/skills</a> — ①⑦⑨ 的出处，单文件 <code>curl</code> 装法与目录清单（347 星，2026-09）；<a href="https://github.com/boraoztunc/skills/blob/main/stop-slop/SKILL.md" target="_blank">stop-slop · SKILL.md</a> 七类清单与改写前后对照；<a href="https://github.com/boraoztunc/skills/blob/main/better-writing/SKILL.md" target="_blank">better-writing · SKILL.md</a> 12 条 UX 文案规则</li>
 <li><a href="https://github.com/blader/humanizer" target="_blank">blader/humanizer</a> — 25 个模式五分组、<code>/humanizer</code> 的三段输出、「从不编造事实」（49.4k 星，2026-09）</li>
