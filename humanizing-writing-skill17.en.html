@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill 17 · De-Slopping Skills — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head>
+<body>
+<div class="container">
+<header>
+<span class="week-tag">SKILL 17 / WRITING · DEEP DIVE</span>
+<h1>De-Slopping Skills: What They Actually Delete</h1>
+<h2>25 patterns / 55 patterns / eight categories · the one non-English list · and why "beat the detector" is a fight you shouldn't pick</h2>
+<div class="date">2026-09-18 · BigCat</div>
+<p class="pitch">Every skill in this family is called some variant of "humanize," which makes it sound like taste in a bottle. Open any of their SKILL.md files and you find something mechanical instead: a named list of sentence patterns, deleted one by one. This issue takes apart four implementations you can actually click, and answers the question everyone has — will this get me past an AI detector?</p>
+</header>
+<div class="xref">
+<a href="writing-skills-roundup-skill16.en.html">Prerequisite → Skill 16 · Writing Skills Roundup (where this category sits in the whole)</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>One disclosure first. The roadmap named the Agensi marketplace entry <code>humanize-writing</code> as this issue's subject, but this site <strong>could not open agensi.io</strong> this time. If it can't be verified, its install counts and rankings don't get cited here — <a href="https://www.agensi.io/skills/humanize-writing" target="_blank">the link is below</a>, go look yourself. The thing worth remembering is that <strong>humanize / humanizer / humanize-writing is not one skill's name, it's the generic term for a category</strong>. So the four subjects below are all named by their GitHub repository path. If the path doesn't match, you didn't install the same thing.</p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>What it removes for you: turning "this reads like AI" into a deletable list</h2>
+<div class="claim">Claim: what it kills isn't the editing pass — it's the state of not being able to name what's wrong. Aesthetic judgment gets demoted to pattern matching, and pattern matching is something you can check.</div>
+<p>When you edit an AI draft yourself, most of the time goes into "something's off and I can't say what." This category breaks that sentence into named items. Not "make it flow naturally" — "pattern 8: the dash used as a universal connector, delete it." The four implementations differ in granularity, not in structure.</p>
+<div class="diagram">Implementation               List size                Its one distinctive thing        Skip it when
+──────────────────────────────────────────────────────────────────────────────────────────────────────────
+blader/humanizer             25 patterns, groups A–E  states "does not make things up"  you already run any sibling
+hardikpandya/stop-slop       8 categories + swap table  references/ files you can copy  you write specs / API docs
+Aboudjem/humanizer-skill     55 patterns, 8 categories  0–100 score + local zero-dep CLI  you want one rewrite, no score
+gencharitaci/humanize-skills 20 languages x 10 modes   the only non-English catalog      you only write English
+──────────────────────────────────────────────────────────────────────────────────────────────────────────
+Stars, per each project's own GitHub page, 2026-09: blader 49.7k / stop-slop 17.3k / Aboudjem 245 / gencharitaci 0</div>
+<h3>How to install (commands copied from each project's own page)</h3>
+<pre><code><span class="tag-com"># (1) blader/humanizer — the best known one; invoke with /humanizer</span>
+npx skills add blader/humanizer --global
+
+<span class="tag-com"># (2) hardikpandya/stop-slop — this is upstream (Skill 16's boraoztunc copy is a mirror)</span>
+git clone https://github.com/hardikpandya/stop-slop ~/.claude/skills/stop-slop
+
+<span class="tag-com"># (3) Aboudjem/humanizer-skill — the only one with a recomputable score</span>
+npx skills add Aboudjem/humanizer-skill
+<span class="tag-com"># Claude Code plugin form: claude plugin install humanizer@10x</span>
+
+<span class="tag-com"># (4) gencharitaci/humanize-skills — install this one for its language catalogs</span>
+npx skills add gencharitaci/humanize-skills
+</code></pre>
+<h3>The first thing you can actually run</h3>
+<p>Don't start by asking a model to rewrite anything. <strong>Run (3)'s local CLI first</strong> — plain Node, zero dependencies, no network calls, and the only thing in this category that <strong>produces a result without spending model tokens</strong>:</p>
+<pre><code><span class="tag-com"># Score a draft (0–100 AI-tell score, five verdict bands)</span>
+node cli/index.js score examples/blog-post/before.md
+
+<span class="tag-com"># Diff before/after and check that numbers, URLs, dates, versions, acronyms survived</span>
+node cli/index.js compare --before draft.md --after final.md --check-facts
+</code></pre>
+<p>Run it on something you shipped last week. <strong>If the score already looks fine, you can skip this whole category</strong> — what you save is the description budget every installed skill charges you on every turn.</p>
+<div class="res"><strong>Further reading</strong> · <a href="https://github.com/blader/humanizer/blob/main/SKILL.md" target="_blank">blader/humanizer · SKILL.md</a> (all 25 patterns with their groupings and the four-step flow; MIT, v3.0.0)</div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Mechanism: why it works, and the opposite answers two authors gave</h2>
+<div class="claim">Claim: everything that works here is mechanical — a list, a self-critique pass, and a fidelity guard. And on the question "how long should the list be," the same codebase's author and forker reached opposite conclusions, which tells you this category has no ground truth.</div>
+<h3>Three layers</h3>
+<ol>
+<li><strong>A named list demotes taste to lookup.</strong> <code>blader/humanizer</code>'s 25 patterns come in five groups: A, staging instead of stating ("not X but Y", sayings that sound deep, a staged run-up before the point); B, rhythm by rule (forced triads, repeated sentence openings, dashes as the universal connector); C, inflation and borrowed authority; D, formatting by rule (bold as decoration, decorative headings); E, leftovers from chat and draft (chatbot residue, knowledge-limit disclaimers). <strong>The first five are strong enough to justify an edit on a single sighting.</strong> The model doesn't have to judge quality — only to find matches.</li>
+<li><strong>Self-critique is a cheap second pass.</strong> The output runs in four steps: mark the tells, draft the rewrite, check that draft, write the final. That third step costs almost nothing and catches a real share of the damage, because rewriting introduces fresh slop of its own.</li>
+<li><strong>The fidelity layer guards the expensive bug.</strong> <code>blader/humanizer</code>'s README is explicit: a name, number, date, quote or citation must come from the source or the writer, and if a detail is missing the skill asks rather than inventing one. <code>Aboudjem</code> turned that promise into an executable <code>--check-facts</code>. The worst failure in rewriting isn't a worse draft — it's a better-sounding one. "Up 23.4% year over year" becomes "growth approaching a quarter," which reads better and is no longer the same number.</li>
+</ol>
+<div class="fail"><strong>More patterns isn't better, and nobody knows what the right number is</strong>: <code>blader/humanizer</code>'s v3.0.0 release notes say it "consolidated 35 patterns into 25." Its fork <code>jooray/humanizer</code> (<strong>49 stars per its GitHub page, 2026-09</strong>, against upstream's 49.7k) <strong>explicitly refused that merge</strong>, on the grounds that taking it wholesale "would now drop #26–54," and hand-ported selected fixes instead while keeping all 54 patterns plus Slovak and Czech support. <strong>The author and the forker of one codebase gave opposite answers, and neither has evidence.</strong> Every list in this category is a snapshot of one moment's observation, not a law of language.</div>
+<h3>What makes stop-slop the lightest one</h3>
+<p><code>hardikpandya/stop-slop</code> (<strong>17.3k stars per its GitHub page, 2026-09</strong>; SKILL.md carries v2.0.0 and an internal date of 2026-03-17) splits into <code>SKILL.md</code> plus three <code>references/</code> files: <code>phrases.md</code>, <code>structures.md</code>, <code>examples.md</code>. Its eight categories are throat-clearing openers, emphasis crutches, business jargon, adverbs, meta-commentary, performative emphasis, telling instead of showing, and vague declaratives. <strong>The key detail is that <code>phrases.md</code> is a two-column swap table</strong> (navigate → handle, address), which means you can use it without installing anything — paste the table into your own prompt. It also ships a five-dimension score (directness, rhythm, trust, authenticity, density, 1–10 each), with revision warranted below 35/50. That stopping line is exactly what <code>blader</code>'s version lacks.</p>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Real use and limits: other languages, and three places to encode your voice</h2>
+<div class="claim">Claim: all three lists above are English sentence patterns, and they mostly idle on text in another language. That's the one case in this issue where a specific repo is genuinely irreplaceable.</div>
+<h3>Non-English slop is a different table</h3>
+<p>"Delete every -ly adverb" and "cut the em dashes" do nothing to a Chinese, Japanese or Turkish draft. <code>gencharitaci/humanize-skills</code> (CC BY 4.0, 0 stars) is the only one here with per-language catalogs: <code>references/languages/</code> holds 20 files — <code>zh.md</code>, <code>ja.md</code>, <code>ko.md</code>, <code>ar.md</code>, <code>ru.md</code>, <code>tr.md</code> and the rest — plus a <code>modes/</code> directory with ten purpose modes. The Chinese catalog is concrete enough to use as a checklist straight off: overused vocabulary, reflexive marketing superlatives, sentence-pattern tells (the repeated "not merely X, but rather Y" construction; false-depth reveals of the "at bottom, the real question is…" kind; guided-tour openers like "let us now dive deep into…"), punctuation and number conventions, false-positive carve-outs and one worked before/after example.</p>
+<div class="fail"><strong>Look before you install</strong>: the Chinese catalog is written in traditional characters, so writers working in simplified have to convert it or accept missed matches. And the repo has 0 stars and 3 commits — <strong>its value is the table, not the project's maturity</strong>. The sound move is to read the file, take the ten entries you actually commit, and paste those, rather than hanging the whole thing on your trigger chain.</div>
+<h3>Encoding your own voice: three layers, don't pick the wrong one</h3>
+<p>"Write like me" and "stop sounding like AI" are different jobs. The second runs on lists; the first runs on examples — and which layer you put it in decides when it applies:</p>
+<ul>
+<li><strong>Output style (official; present every turn)</strong> — a Markdown file in <code>~/.claude/output-styles/</code> or the project's <code>.claude/output-styles/</code>, with <code>name</code>, <code>description</code> and <code>keep-coding-instructions</code> in frontmatter, switched via <code>/output-style &lt;name&gt;</code>. <strong>It changes Claude Code's default instructions themselves and ships with every request.</strong> Tone and format defaults belong here.</li>
+<li><strong>Skill (loaded on demand)</strong> — pulled in only when this particular turn needs a passage cleaned. The humanizers all live in this layer, and they <strong>should</strong>: you don't want every reply de-slopped.</li>
+<li><strong>CLAUDE.md (project convention)</strong> — repository-level house style that travels with the repo, not with you.</li>
+</ul>
+<p>The rule in one line: <strong>"I re-explain this every turn" goes in an output style; "I need this occasionally" goes in a skill; "this only holds in this repo" goes in CLAUDE.md.</strong> Writing your tone default as a skill hands it to a trigger you don't control — and a voice that changes every time is worse than one that's consistently wrong.</p>
+<h3>Three hard limits</h3>
+<ul>
+<li><strong>Don't leave a subtractive skill running over specs, API docs or contracts.</strong> In "this parameter applies only in async mode," the "only" is not filler; <code>stop-slop</code>'s "cut the adverbs" cuts the precision.</li>
+<li><strong>Anything with numbers in it gets <code>--check-facts</code></strong> after the rewrite, or doesn't get rewritten at all.</li>
+<li><strong>Keep exactly one sibling installed.</strong> All four compete for the same trigger surface; which one the model picks is not up to you, and the symptom isn't an error — it's a voice that changes on every run.</li>
+</ul>
+<div class="res"><strong>Further reading</strong> · <a href="https://code.claude.com/docs/en/output-styles" target="_blank">Claude Code · Output styles</a> (file locations, frontmatter fields, and the comparison table against CLAUDE.md, skills and subagents, 2026-09)</div>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Costs and alternatives: if the goal is beating a detector, don't take that fight</h2>
+<div class="claim">Claim: detectors never measured who wrote it — they measure how unsurprising the prose is. A humanizer is a natural adversarial example against that, which is why the trick works, why it won't keep working, and why it pins your delivery standard to something that flipped within two years.</div>
+<h3>Three things you can check</h3>
+<ul>
+<li><strong>OpenAI shut down its own detector.</strong> The AI Text Classifier launched <strong>2023-01-31</strong> and was withdrawn <strong>2023-07-20</strong> for a low rate of accuracy. On its challenge set it correctly flagged <strong>26%</strong> of AI-written text while labeling <strong>9%</strong> of human text as AI. <strong>The company that builds the models could not build a reliable detector for them</strong> — that's the floor of this conversation.</li>
+<li><strong>The false positives land on specific people.</strong> Liang and colleagues, in <em>Patterns</em> (2023), ran 7 detectors over 91 TOEFL essays by non-native English writers and measured an <strong>average false-positive rate of 61.3%</strong>; prompting a model to rewrite the same essays in a native-speaker register dropped it to <strong>11.6%</strong>. <strong>Read that carefully</strong>: a metric a polish pass can move that far was never measuring authorship.</li>
+<li><strong>The conclusions are still turning over.</strong> At the 2026 EACL student research workshop, Al Ali, Helcl and Libovický redid the experiment in Czech across three detector families and <strong>found no systematic bias against non-native speakers</strong>. That doesn't mean detectors are fixed; it means <strong>findings in this area flip every couple of years</strong>, and your delivery standard shouldn't be attached to them.</li>
+</ul>
+<div class="fail"><strong>Failure mode</strong>: using a humanizer to chase a detector score pushes you toward writing that sounds less like you, because what it optimizes is sentence-length variance and vocabulary distribution — statistics, not your judgment. <strong>Worse, it assimilates you.</strong> Run it for three months and you start treating those 25 patterns as writing truth, when they are one person's 2026 observations about English prose.</div>
+<h3>What to do instead of installing one</h3>
+<ul>
+<li><strong>Move the table into your prompt.</strong> <code>stop-slop</code>'s <code>references/phrases.md</code> is already a two-column swap table; paste it into an output style or CLAUDE.md and you get <strong>zero trigger cost, always on, and no contention with other skills</strong>. Best value in this issue.</li>
+<li><strong>Use examples instead of rules.</strong> The official <a href="https://github.com/anthropics/skills/blob/main/skills/brand-guidelines/SKILL.md" target="_blank"><code>brand-guidelines</code></a> and <a href="https://github.com/anthropics/skills/blob/main/skills/doc-coauthoring/SKILL.md" target="_blank"><code>doc-coauthoring</code></a> skills hand over sample passages rather than lists of prohibitions — three before/after pairs usually beat ten rules. Skill 18 is entirely about that recipe.</li>
+<li><strong>Three rules of your own will do.</strong> Read your last five pieces, find the three constructions that annoy you most, write them down. <strong>They beat any 55-item list</strong>, because those three are the ones you actually commit.</li>
+</ul>
+</div>
+<!-- ============ 5 ============ -->
+<div class="combo">
+<h3>// ONE-PAGE BUYING CARD</h3>
+<p><strong>If you install only one</strong>: <code>npx skills add blader/humanizer --global</code> — 25 patterns, a four-step self-critique flow, and an explicit no-fabrication promise; the default choice for English prose. <strong>If you want a recomputable stopping line</strong>, take <code>Aboudjem/humanizer-skill</code> instead and start with <code>node cli/index.js score &lt;something you shipped&gt;</code>. If the score looks fine, don't install anything.</p>
+<p><strong>Add by situation</strong>: writing in another language → take just the relevant file from <code>gencharitaci/humanize-skills</code>'s <code>references/languages/</code> (the Chinese one is in traditional characters; convert it, then keep ten entries) · want zero trigger cost → move <code>hardikpandya/stop-slop</code>'s <code>references/phrases.md</code> into <code>~/.claude/output-styles/</code> · want "like me" rather than "not like AI" → an output style plus three example pairs, the <code>brand-guidelines</code> route.</p>
+<p><strong>Explicitly don't</strong>: run <code>blader/humanizer</code>, <code>stop-slop</code> and <code>Aboudjem/humanizer-skill</code> at the same time (one trigger surface, a voice that shifts every run) · leave one on in a technical-docs repo (the adverbs it cuts are your precision) · install one to beat an AI detector (see the three items in section 04) · install by name from a search — <code>jooray/humanizer</code> and <code>blader/humanizer</code> share a name and a description, differ by a thousandfold in stars, and no longer ship the same list.</p>
+<p><strong>Three things after installing</strong>: run <code>/skills</code> and confirm only one sibling is live · run <code>--check-facts</code> on anything numeric, or keep it away from those passages · set yourself a stopping line (Aboudjem's score, or stop-slop's 35/50), <strong>because this category will let you revise forever.</strong></p>
+</div>
+<div class="glossary">
+<h3>// GLOSSARY</h3>
+<dl>
+<dt>AI tell</dt>
+<dd>A recognizable construction models produce at high frequency. The lists in this category enumerate them, from 8 categories to 55 patterns.</dd>
+<dt>perplexity</dt>
+<dd>A measure of how surprising a passage is to a model. A core detector feature: flatter reads as more machine-like — and non-native writing is also flat, which is where the false positives come from.</dd>
+<dt>burstiness</dt>
+<dd>Variation in sentence length. Human writing swings; models stay even. This is the statistic a humanizer optimizes, which makes it an adversarial example against detectors by construction.</dd>
+<dt>false positive</dt>
+<dd>Human writing judged to be AI-written. Liang et al. measured 61.3% on average over non-native essays in 2023.</dd>
+<dt>output style</dt>
+<dd>A Claude Code configuration layer that replaces the default instructions and ships with every request — a different thing from an on-demand skill.</dd>
+</dl>
+</div>
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://github.com/blader/humanizer" target="_blank">blader/humanizer</a> — 25 patterns in five groups, the four-step flow, "does not make things up"; v3.0.0 notes record "consolidated 35 patterns into 25" (49.7k stars, 4.0k forks, MIT, 2026-09)</li>
+<li><a href="https://github.com/jooray/humanizer" target="_blank">jooray/humanizer</a> — a fork of the above that refused the consolidation, kept all 54 patterns and added Slovak and Czech (49 stars, 2026-09); the physical object behind section 02's "opposite answers"</li>
+<li><a href="https://github.com/hardikpandya/stop-slop" target="_blank">hardikpandya/stop-slop</a> — the upstream repo: eight categories, three <code>references/</code> files, and a five-dimension 35/50 stopping line (17.3k stars, 1.3k forks, 2026-09; SKILL.md carries v2.0.0 / 2026-03-17)</li>
+<li><a href="https://github.com/Aboudjem/humanizer-skill" target="_blank">Aboudjem/humanizer-skill</a> — 55 patterns, 5 voice modes, a 0–100 AI-tell score, and a zero-dependency local CLI with <code>--check-facts</code> (245 stars, 38 forks, MIT, 2026-09)</li>
+<li><a href="https://github.com/gencharitaci/humanize-skills/tree/main/skills/humanize-skills/references/languages" target="_blank">humanize-skills · references/languages/</a> — 20 per-language slop catalogs, the only non-English lists in this issue, plus ten purpose modes (CC BY 4.0)</li>
+<li><a href="https://code.claude.com/docs/en/output-styles" target="_blank">Claude Code · Output styles</a> — file locations, <code>keep-coding-instructions</code>, and the comparison table against CLAUDE.md, skills and subagents (2026-09)</li>
+<li><a href="https://openai.com/index/new-ai-classifier-for-indicating-ai-written-text/" target="_blank">OpenAI · AI Text Classifier</a> — the 2023-01-31 launch post, annotated with its 2023-07-20 withdrawal for low accuracy; 26% caught, 9% falsely flagged</li>
+<li><a href="https://www.sciencedirect.com/science/article/pii/S2666389923001307" target="_blank">Liang et al., Patterns (2023)</a> — GPT detectors are biased against non-native English writers: 7 detectors, 91 TOEFL essays, 61.3% false positives falling to 11.6% after a register rewrite</li>
+<li><a href="https://aclanthology.org/2026.eacl-srw.20/" target="_blank">Al Ali, Helcl &amp; Libovický, EACL SRW (2026)</a> — the Czech replication across three detector families, finding no systematic bias; the two-year reversal in the flesh</li>
+<li><a href="https://www.agensi.io/skills/humanize-writing" target="_blank">Agensi · humanize-writing</a> — the identically-named entry the roadmap points at; not reachable from here this time, so none of its figures are cited</li>
+<li><a href="writing-skills-roundup-skill16.en.html">Skill 16 · Writing Skills Roundup</a> — where this category sits among writing skills, and six non-humanize entries worth knowing</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Skill 17 · 2026-09-18</footer>
+</div>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
+</body></html>

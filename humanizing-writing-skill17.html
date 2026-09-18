@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill 17 · 「去 AI 味」类 Skill — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head>
+<body>
+<div class="container">
+<header>
+<span class="week-tag">SKILL 17 / WRITING · DEEP DIVE</span>
+<h1>「去 AI 味」类 Skill：它到底在删什么</h1>
+<h2>25 条 / 55 条 / 八类清单 · 中文那份 zh.md · 为什么「过检测器」是你不该打的仗</h2>
+<div class="date">2026-09-18 · BigCat</div>
+<p class="pitch">这一类 skill 的名字全叫 humanize，听上去像玄学。但打开任意一份 SKILL.md 你会发现，它干的是一件极其机械的事：拿着一张具名句式清单，逐条删。本期拆开四份能点开的实现，顺带回答那个所有人都想问的问题——它能让我过 AI 检测器吗。</p>
+</header>
+<div class="xref">
+<a href="writing-skills-roundup-skill16.html">前置 → Skill 16 写作类 Skills 榜单（这一类在全局里的位置）</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>先说一句本期的账：路线图给这期定的主角是 Agensi marketplace 上那个 <code>humanize-writing</code>，但本站这次<strong>没能打开 agensi.io 的页面</strong>，既然核不了，它的安装量、榜位数字本期一个都不引。<a href="https://www.agensi.io/skills/humanize-writing" target="_blank">链接照给</a>，你自己去看。真正要记住的是：<strong>humanize / humanizer / humanize-writing 不是某个 skill 的专名，是一类东西的通名</strong>。所以下面四份主角全部按 GitHub 仓库目录点名——名字对不上，装的就不是同一个东西。</p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>它替你干掉什么：把「读着像 AI」翻译成一张可执行的删除清单</h2>
+<div class="claim">论断：它干掉的不是「润色」这道工序，是「说不清哪里不对」这个状态。审美判断在这里被降级成了模式匹配，而模式匹配你能验收。</div>
+<p>你自己改一遍 AI 初稿，八成时间花在「总觉得别扭但说不上来」。这类 skill 把那句「说不上来」拆成了具名条目——不是「让文字更自然」，是「第 8 条：破折号当万能连接符，删」。四份实现的清单粒度不同，但结构是同一个。</p>
+<div class="diagram">实现                        清单规模              独有的东西                      什么时候别装
+─────────────────────────────────────────────────────────────────────────────────────────────────────
+blader/humanizer            25 条 · 分 A–E 五组   明写「从不编造事实」            你已经装了同类任意一份
+hardikpandya/stop-slop      八类 · 带两列替换表   references/ 三份词表可直接抄    你写规范 / API 文档
+Aboudjem/humanizer-skill    55 条 · 分八类        0–100 分 + 零依赖本地 CLI      你只要改一次，不要分数
+gencharitaci/humanize-skills 20 种语言 × 10 种模式 中文清单 zh.md（本期唯一）      你只写英文
+─────────────────────────────────────────────────────────────────────────────────────────────────────
+星数（据各自 GitHub 仓库页，2026-09）：blader 49.7k / stop-slop 17.3k / Aboudjem 245 / gencharitaci 0</div>
+<h3>怎么装（命令抄自各自官方页面）</h3>
+<pre><code><span class="tag-com"># ① blader/humanizer —— 最出名的一份，装完用 /humanizer 调</span>
+npx skills add blader/humanizer --global
+
+<span class="tag-com"># ② hardikpandya/stop-slop —— 上游在这儿（Skill 16 给的 boraoztunc 是转载）</span>
+git clone https://github.com/hardikpandya/stop-slop ~/.claude/skills/stop-slop
+
+<span class="tag-com"># ③ Aboudjem/humanizer-skill —— 唯一带可复算分数的</span>
+npx skills add Aboudjem/humanizer-skill
+<span class="tag-com"># Claude Code 插件版：claude plugin install humanizer@10x</span>
+
+<span class="tag-com"># ④ gencharitaci/humanize-skills —— 冲着 zh.md 去的</span>
+npx skills add gencharitaci/humanize-skills
+</code></pre>
+<h3>第一条立刻能跑的用法</h3>
+<p>别急着让模型改稿。<strong>先跑 ③ 的本地 CLI</strong>——它是纯 Node、零依赖、不出网，是这一类里唯一<strong>不消耗模型就能出结果</strong>的东西：</p>
+<pre><code><span class="tag-com"># 给一篇稿子打分（0–100 的 AI-tell 分数，五档评语）</span>
+node cli/index.js score examples/blog-post/before.md
+
+<span class="tag-com"># 改写前后对比，并核对数字 / URL / 日期 / 版本号 / 缩写有没有被改掉</span>
+node cli/index.js compare --before draft.md --after final.md --check-facts
+</code></pre>
+<p>拿你上周发出去的一篇稿跑一遍分数。<strong>如果分数已经不难看，这一类你整个可以不装</strong>——省下的是每次触发都要交的那份描述预算。</p>
+<div class="res"><strong>进阶资源</strong> · <a href="https://github.com/blader/humanizer/blob/main/SKILL.md" target="_blank">blader/humanizer · SKILL.md</a>（25 条的完整分组与四步流程，MIT，v3.0.0）</div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>机制：它凭什么有效，以及两位作者给出的相反答案</h2>
+<div class="claim">论断：有效的部分全在「清单 + 自批 + 保真」这三件机械事上。而「清单该多长」这个问题，同一份代码的上下游给出了完全相反的结论——这正说明这一类没有 ground truth。</div>
+<h3>三层机制</h3>
+<ol>
+<li><strong>具名清单把审美降级成检索。</strong><code>blader/humanizer</code> 的 25 条分五组：A 摆姿态而不说事（「不是 X，而是 Y」「装深刻的格言」「铺垫半天才进正题」）、B 按规则造节奏（三连排比、开头句式重复、破折号当万能连接符）、C 充气与借来的权威、D 按规则排版（粗体当装饰、装饰性小标题）、E 聊天残渣（「作为 AI 我…」、知识截止免责声明）。<strong>前五条强到「见一次就改」</strong>。模型不需要判断好不好，只需要找得到。</li>
+<li><strong>自批是廉价的第二遍。</strong>它的输出分四步：标记 tell → 出草稿 → 回头查草稿 → 定稿。中间那道「查自己刚写的」几乎不要钱，却能捞回相当一部分——因为改写过程本身会引入新的 AI 腔。</li>
+<li><strong>保真层管住最贵的那个 bug。</strong><code>blader/humanizer</code> 在 README 里写死：名字、数字、日期、引文、出处必须来自原文或作者，缺了就问，<strong>不许编</strong>。<code>Aboudjem</code> 把这句话做成了可执行的 <code>--check-facts</code>。改写类最恶心的失败不是改烂了，是改好听了——「同比增长 23.4%」润色成「增速接近四分之一」，读感更好，数字已经不是那个数字。</li>
+</ol>
+<div class="fail"><strong>条数不是越多越好，而且没人知道多少算对</strong>：<code>blader/humanizer</code> 的 v3.0.0 版本说明写着「把 35 条合并成了 25 条」；而它的 fork <code>jooray/humanizer</code>（<strong>据 GitHub 仓库页，2026-09 为 49 星</strong>，上游 49.7k）明确<strong>拒绝跟进这次合并</strong>，理由是合过来「就会丢掉 #26–54」，于是手工挑着移植、保留全部 54 条，另加了斯洛伐克语和捷克语。<strong>同一份代码的作者与分叉者，对「清单该多长」给出了相反答案，而两边都拿不出证据。</strong>这一类的所有清单都是某一时刻的观察快照，不是语言学定律。</div>
+<h3>那 stop-slop 凭什么最轻</h3>
+<p><code>hardikpandya/stop-slop</code>（<strong>据 GitHub 仓库页，2026-09 为 17.3k 星</strong>，v2.0.0、SKILL.md 内标注更新于 2026-03-17）把内容拆成 <code>SKILL.md</code> + <code>references/</code> 三份（<code>phrases.md</code> 词表、<code>structures.md</code> 句式、<code>examples.md</code> 前后对照）。它的八类是：清嗓式开头、强调拐杖、商业黑话、副词、元评论、表演式强调、告知而非展示、空泛断言。<strong>关键在 <code>phrases.md</code> 是一张两列替换表</strong>（navigate → handle / address），所以它不装也能用——把表抄进你的 prompt 就是了。它另给一套五维打分（直白、节奏、可信、真实、密度，各 1–10），低于 35/50 才动手，这是 <code>blader</code> 那份没有的停止线。</p>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>真实用法与边界：中文稿怎么办，以及把 voice 编进去的三条路</h2>
+<div class="claim">论断：上面三份清单几乎全是英文句式，对中文稿基本不生效。这是中文写作者最该先知道的一条，也是本期唯一一个「非它不可」的条目所在。</div>
+<h3>中文的 AI 腔是另一张表</h3>
+<p>「删掉所有 -ly 副词」「少用破折号」搬到中文稿上是空转。<code>gencharitaci/humanize-skills</code>（CC BY 4.0，0 星）是本期唯一带中文清单的：<code>references/languages/zh.md</code>，同目录还有 ja / ko / ar 等 20 份，外加 <code>modes/</code> 十种用途模式。它的中文条目具体到能直接当检查表用：</p>
+<ul>
+<li><strong>高频词</strong>：深入、见证、格局、凸显、关键的、错综复杂、细致入微、赋能、生态、闭环、底层逻辑、长期主义。</li>
+<li><strong>反射性夸赞</strong>：领先、卓越、极致、革命性、全方位、沉浸式、世界级。</li>
+<li><strong>句式</strong>：「不是……而是……」「不只是……更是……」连用；「真正的问题是……」「归根结底……」「本质上……」这类假纵深揭示；「让我们深入探讨……」「下面我们来拆解……」这类导游式开头；自问自答。</li>
+<li>还管全角半角、数字写法这些体例细节，并给了误报豁免和一段前后对照。</li>
+</ul>
+<div class="fail"><strong>装之前先看一眼</strong>：<code>zh.md</code> 的词表以<strong>繁体写成</strong>，简体写作者要么自己转一遍，要么接受它偶尔漏判。另外这仓 0 星、3 次提交——<strong>它值钱在那张表，不在它是个成熟项目</strong>。真正稳妥的用法是把 <code>zh.md</code> 读一遍、挑你真犯的十条抄走，而不是整份挂上触发链。</div>
+<h3>把个人 voice 编进去：三条路，别选错</h3>
+<p>「让它写得像我」和「让它别像 AI」是两件事。后者靠清单，前者靠样例，而放在哪一层决定了它什么时候生效：</p>
+<ul>
+<li><strong>output style（官方，每一轮都在）</strong>——Markdown 文件放 <code>~/.claude/output-styles/</code> 或项目 <code>.claude/output-styles/</code>，frontmatter 写 <code>name</code> / <code>description</code> / <code>keep-coding-instructions</code>，用 <code>/output-style &lt;name&gt;</code> 切换。<strong>它改的是 Claude Code 的默认指令本身、随每个请求发出</strong>。语气和格式的默认值该放这儿。</li>
+<li><strong>skill（按需触发）</strong>——只在这次要清洗一段文字时才加载。<code>humanizer</code> 们全属于这一层，也<strong>该</strong>属于这一层：你不会希望每条回复都被去一遍 AI 味。</li>
+<li><strong>CLAUDE.md（项目约定）</strong>——仓库层面的体例，跟着仓库走，不跟着你走。</li>
+</ul>
+<p>判据一句话：<strong>「我每次都要重新说一遍」的放 output style，「偶尔要做一次」的放 skill，「这个仓库才成立」的放 CLAUDE.md。</strong>把语气默认值写成 skill，等于把它交给触发器决定生不生效——而文风每次不一样，比一直不对更糟。</p>
+<h3>三条硬边界</h3>
+<ul>
+<li><strong>技术文档、规范、合同里别常开减法型。</strong>「仅在异步模式下生效」的「仅」不是赘余，<code>stop-slop</code> 的「删所有副词」删的正是精确性。</li>
+<li><strong>带数字的段落，改完必跑 <code>--check-facts</code></strong>，或者干脆别让它碰。</li>
+<li><strong>同类只留一份。</strong>四份实现抢同一个触发面，模型挑哪个你控制不了，表现不是报错，是文风每次都变。</li>
+</ul>
+<div class="res"><strong>进阶资源</strong> · <a href="https://code.claude.com/docs/en/output-styles" target="_blank">Claude Code · Output styles</a>（文件位置、frontmatter 字段、与 CLAUDE.md / skill / subagent 的分工表，2026-09）</div>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>代价与替代品：如果你的目标是「过检测器」，这仗你不该打</h2>
+<div class="claim">论断：检测器测的从来不是「谁写的」，是「这段文字够不够平淡」。humanizer 天生是它的对抗样本——所以这个用法一定有效，也一定不稳定，而且把你的交付标准挂在了一个两年就翻盘的东西上。</div>
+<h3>三份可查的证据</h3>
+<ul>
+<li><strong>OpenAI 关掉了自己的检测器。</strong>AI Text Classifier <strong>2023-01-31 上线、2023-07-20 下线</strong>，官方理由是准确率太低。它在挑战集上只认出 <strong>26%</strong> 的 AI 文本，同时把 <strong>9%</strong> 的人类文本误判为 AI。<strong>造模型的那家自己做不出可靠检测器</strong>，这是这个话题的地板。</li>
+<li><strong>误报砸在特定人群头上。</strong>Liang 等人 2023 年发在《Patterns》的研究，拿 7 个检测器跑 91 篇非母语者的 TOEFL 作文，<strong>平均误报率 61.3%</strong>；而同一批文章提示模型改写成「母语者风格」之后，误报率掉到 <strong>11.6%</strong>。<strong>注意这条的真正含义</strong>：能被「润色」拉下来的那个指标，本来就不是在测作者身份。</li>
+<li><strong>结论还在翻。</strong>2026 年 EACL 学生研讨会上，Al Ali、Helcl、Libovický 在捷克语上重做了这个实验，查了三个检测器家族，<strong>没有发现针对非母语者的系统性偏见</strong>。这不代表「检测器修好了」，代表<strong>这一类结论两年一变</strong>——你不该把交付标准挂在上面。</li>
+</ul>
+<div class="fail"><strong>失败模式</strong>：用 humanizer 刷检测器分数，会把你推向「越写越不像自己」。因为它优化的是句长起伏和词汇分布这些统计量，不是你的判断。<strong>更糟的是它会同化你</strong>——连着用三个月，你会开始默认那 25 条是写作真理，而它只是某个人 2026 年对英文散文的观察。</div>
+<h3>不装它你还能怎么办</h3>
+<ul>
+<li><strong>把词表搬进 prompt。</strong><code>stop-slop</code> 的 <code>references/phrases.md</code> 本来就是两列替换表，抄进 output style 或 CLAUDE.md，<strong>零触发成本、永远在、还不会和别的 skill 抢触发</strong>。这是本期性价比最高的一条。</li>
+<li><strong>用样例代替规则。</strong>官方 <a href="https://github.com/anthropics/skills/blob/main/skills/brand-guidelines/SKILL.md" target="_blank"><code>brand-guidelines</code></a> 和 <a href="https://github.com/anthropics/skills/blob/main/skills/doc-coauthoring/SKILL.md" target="_blank"><code>doc-coauthoring</code></a> 的做法是给样例段而不是列禁令——三对「改前/改后」通常比十条规则管用，下一期 Skill 18 专讲这个配方。</li>
+<li><strong>自己写三条就够。</strong>翻你最近五篇稿，找出你自己最烦的三个句式，写成三行。<strong>它比任何一份 55 条清单都准</strong>，因为那三条是你真犯的。</li>
+</ul>
+</div>
+<!-- ============ 5 ============ -->
+<div class="combo">
+<h3>// 一页选购卡</h3>
+<p><strong>只装一个的话</strong>：<code>npx skills add blader/humanizer --global</code>（25 条清单 + 四步自批 + 明写不编造事实，英文散文的默认选择）。<strong>要一条能复算的停止线</strong>就换 <code>Aboudjem/humanizer-skill</code>，装完先跑 <code>node cli/index.js score &lt;你上周那篇&gt;</code>——分数不难看就别装了。</p>
+<p><strong>按场景加</strong>：写中文 → 只取 <code>gencharitaci/humanize-skills</code> 的 <code>references/languages/zh.md</code>（繁体，先转简体，挑十条抄走）· 想零触发成本 → 把 <code>hardikpandya/stop-slop</code> 的 <code>references/phrases.md</code> 两列表搬进 <code>~/.claude/output-styles/</code> · 要的是「像我」而不是「不像 AI」 → 走 output style + 三对样例（<code>brand-guidelines</code> 的路子）。</p>
+<p><strong>明确别装</strong>：<code>blader/humanizer</code> + <code>stop-slop</code> + <code>Aboudjem/humanizer-skill</code> 同时挂（抢同一触发面，文风每次都变）· 在技术文档仓库里常开（它删的副词正是你的精确性）· 为了过 AI 检测器而装（见第 04 节三份证据）· 搜到名字就装——<code>jooray/humanizer</code> 与 <code>blader/humanizer</code> 同名同描述，星数差一千倍，清单还不是同一份。</p>
+<p><strong>装完三件事</strong>：<code>/skills</code> 确认同类只剩一个 · 带数字的稿子跑 <code>--check-facts</code> 或不让它碰 · 给自己定停止线（Aboudjem 的分数，或 stop-slop 的 35/50），<strong>否则这一类可以无限改下去。</strong></p>
+</div>
+<div class="glossary">
+<h3>// 术语表</h3>
+<dl>
+<dt>AI tell（AI 痕迹）</dt>
+<dd>模型高频产出的可识别句式。这一类 skill 的清单列的就是它，从 8 类到 55 条不等。</dd>
+<dt>perplexity（困惑度）</dt>
+<dd>模型对一段文字「意外程度」的度量。检测器的核心特征之一：越平淡越像机器——非母语者写作也平淡，误报由此而来。</dd>
+<dt>burstiness（句长起伏）</dt>
+<dd>句子长短的波动幅度。人类写作起伏大，模型偏均匀。humanizer 优化的正是这个统计量，所以它天然是检测器的对抗样本。</dd>
+<dt>false positive（误报）</dt>
+<dd>把人写的判成 AI 写的。Liang 等人 2023 年在非母语者作文上测到平均 61.3%。</dd>
+<dt>output style（输出风格）</dt>
+<dd>Claude Code 的一层配置：改的是默认指令本身、随每个请求发出。与按需触发的 skill 是两回事。</dd>
+</dl>
+</div>
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://github.com/blader/humanizer" target="_blank">blader/humanizer</a> — 25 条五分组、四步流程、「从不编造事实」；v3.0.0 版本说明记着「35 条合并为 25 条」（49.7k 星、4.0k fork、MIT，2026-09）</li>
+<li><a href="https://github.com/jooray/humanizer" target="_blank">jooray/humanizer</a> — 上一条的 fork，拒绝跟进合并、保留全部 54 条并加斯洛伐克语/捷克语（49 星，2026-09）；第 02 节那个「相反答案」的实物</li>
+<li><a href="https://github.com/hardikpandya/stop-slop" target="_blank">hardikpandya/stop-slop</a> — 上游仓库，八类清单 + <code>references/</code> 三份词表 + 五维 35/50 停止线（17.3k 星、1.3k fork，2026-09；SKILL.md 内标 v2.0.0 / 2026-03-17）</li>
+<li><a href="https://github.com/Aboudjem/humanizer-skill" target="_blank">Aboudjem/humanizer-skill</a> — 55 条、5 种 voice、0–100 AI-tell 分数、零依赖本地 CLI 与 <code>--check-facts</code>（245 星、38 fork、MIT，2026-09）</li>
+<li><a href="https://github.com/gencharitaci/humanize-skills/blob/main/skills/humanize-skills/references/languages/zh.md" target="_blank">humanize-skills · zh.md</a> — 本期唯一的中文 AI 腔清单（高频词 / 夸赞词 / 句式 / 体例 / 误报豁免），同目录另有 19 种语言（CC BY 4.0）</li>
+<li><a href="https://code.claude.com/docs/en/output-styles" target="_blank">Claude Code · Output styles</a> — 文件位置、<code>keep-coding-instructions</code>、与 CLAUDE.md / skill / subagent 的分工对照表（2026-09）</li>
+<li><a href="https://openai.com/index/new-ai-classifier-for-indicating-ai-written-text/" target="_blank">OpenAI · AI Text Classifier</a> — 2023-01-31 上线公告，页面标注 2023-07-20 因准确率过低下线；26% 命中 / 9% 误报</li>
+<li><a href="https://www.sciencedirect.com/science/article/pii/S2666389923001307" target="_blank">Liang et al., Patterns (2023)</a> — GPT detectors are biased against non-native English writers：7 个检测器 × 91 篇 TOEFL 作文，误报 61.3% → 改写后 11.6%</li>
+<li><a href="https://aclanthology.org/2026.eacl-srw.20/" target="_blank">Al Ali, Helcl &amp; Libovický, EACL SRW (2026)</a> — 捷克语上的重做，三个检测器家族，未发现系统性偏见；两年翻盘的实例</li>
+<li><a href="https://www.agensi.io/skills/humanize-writing" target="_blank">Agensi · humanize-writing</a> — 路线图指定的同名条目；本期未能打开核实，故不引用其任何数字</li>
+<li><a href="writing-skills-roundup-skill16.html">本站 Skill 16 · 写作类 Skills 榜单</a> — 这一类在写作 skill 全局里的位置，以及另外六个非 humanize 的条目</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Skill 17 · 2026-09-18</footer>
+</div>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
+</body></html>
