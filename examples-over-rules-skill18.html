@@ -64,8 +64,8 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <div class="container">
 <header>
 <span class="week-tag">SKILL 18 / WRITING · DEEP DIVE</span>
-<h1>写作 Skill 的通用配方：样例压过规则</h1>
-<h2>三对胜过十条 · 每条规则配 1–3 对（上限就是 3） · 以及官方那个叫 examples/ 的目录里其实没有样例</h2>
+<h1 data-tts="efad500da891abbf">写作 Skill 的通用配方：样例压过规则</h1>
+<h2 data-tts="1cf542792e16cae8">三对胜过十条 · 每条规则配 1–3 对（上限就是 3） · 以及官方那个叫 examples/ 的目录里其实没有样例</h2>
 <div class="date">2026-09-19 · BigCat</div>
 <p class="pitch">「写得简洁点」是一条规则，它在你脑子里有取值，在模型那儿没有。样例模式解决的就是这件事：不描述标准，直接把标准的两个端点贴出来。本期把四份能点开的实物拆开数了一遍——包括一个数得出来的答案：一条规则该配几对样例。</p>
 </header>
@@ -73,19 +73,19 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <a href="humanizing-writing-skill17.html">前置 → Skill 17 「去 AI 味」类 Skill（本期的样例实物多半出自那几份清单）</a>
 </div>
 <div class="intro">
-<h3>// WHY THIS MATTERS</h3>
+<h3 data-tts="3dcf4c751f34af58">// WHY THIS MATTERS</h3>
 <p>先交代一笔账。路线图给本期定的范本是官方 <code>brand-guidelines</code> 与 <code>doc-coauthoring</code> 里的「样例段」。两份我都拉下来逐行读了：<strong><code>brand-guidelines</code> 全文 73 行，一个样例都没有</strong>；<code>doc-coauthoring</code> 375 行，里面的样例是写给<strong>人</strong>看的，教你怎么回话，不是给模型看的范文。所以可抄的模板不在这两份里——它在官方 best-practices 文档的「Examples pattern」一节，和两个社区 skill 的实物里。<strong>而这个落差本身就是本期第一条判据：不是所有 skill 都该有样例。</strong>下面的行数、对数全是我今天从 main 分支原文数的，不是从聚合站抄的。</p>
 </div>
 <!-- ============ 1 ============ -->
 <div class="section">
 <span class="num">// 01</span>
-<h2>它替你干掉什么：让形容词有取值</h2>
+<h2 data-tts="4d9a3ec68e8ca2fe">它替你干掉什么：让形容词有取值</h2>
 <div class="claim">论断：样例干掉的不是「写规则」这道工序，是「形容词没有取值」这个病。「简洁」「有力」「别营销腔」这些词，你和模型的取值范围不一样，而一对 before/after 把范围钉死在纸面上。</div>
 <p><strong>照抄这一节就够开工</strong>：官方 <a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices" target="_blank">Skill authoring best practices</a> 的「Examples pattern」给了一份完整范本，主题是 commit message，正好<strong>三对</strong>，形式是 <code>Input:</code> 一句自然语言描述 / <code>Output:</code> 一段代码块，三对之后用一句「Follow this style: type(scope): brief description, then detailed explanation.」收口。该节的结论原文是：</p>
 <pre><code>Examples convey the desired style and level of detail to Claude
 more clearly than descriptions alone.</code></pre>
 <p>（据 platform.claude.com 该页，2026-09。）<strong>它替你干掉的是</strong>「写个好 commit message」这种没法验收的要求——三段可比对的实物一贴，验收标准就在那儿了。</p>
-<h3>怎么用</h3>
+<h3 data-tts="075112f4dc27a3d4">怎么用</h3>
 <p>官方 <code>skill-creator</code>（<a href="https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md" target="_blank">anthropics/skills · skill-creator</a>）里有一份精简版的同名段落，可以直接抄结构。它还多给了一句提醒：<em>「if "Input" and "Output" are in the examples you might want to deviate a little」</em>——别把 <code>Input:</code> / <code>Output:</code> 这两个字面量原样留在成品里，模型会连标签一起学走。</p>
 <div class="fail"><strong>第一条立刻能跑的用法</strong>：打开你最近一篇<strong>被退回重写过</strong>的稿子，原稿贴进 Before、定稿贴进 After，中间补一行「这次改了什么」。一对就能用，不用等凑齐三对。真实退稿比现编的样例强，理由见第 03 节。</div>
 <div class="res"><strong>进阶资源</strong> · <a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices" target="_blank">Anthropic · Skill authoring best practices</a>（「Common patterns」章下并列 Template pattern / Examples pattern / Conditional workflow pattern 三节，2026-09）</div>
@@ -93,47 +93,47 @@ more clearly than descriptions alone.</code></pre>
 <!-- ============ 2 ============ -->
 <div class="section">
 <span class="num">// 02</span>
-<h2>机制：规则给禁区的名字，样例给禁区的边界</h2>
+<h2 data-tts="8ff5c7ba17681dad">机制：规则给禁区的名字，样例给禁区的边界</h2>
 <div class="claim">论断：规则和样例不是二选一。<code>blader/humanizer</code> 把两者焊成了一个四槽单元，那才是本期最该抄走的最小件。</div>
-<h3>四槽单元 · blader/humanizer</h3>
+<h3 data-tts="d4332112b8b2afeb">四槽单元 · blader/humanizer</h3>
 <p><a href="https://github.com/blader/humanizer" target="_blank">blader/humanizer</a>（MIT，SKILL.md 内标 v3.0.0）装法是 <code>npx skills add blader/humanizer --global</code>，去掉 <code>--global</code> 就只装当前项目，装完喊 <code>/humanizer</code>。它列了 25 条编号句式，<strong>每条的写法固定四槽</strong>：<code>Watch for:</code>（怎么认出来）· <code>Problem:</code>（为什么算病）· <code>Before:</code> · <code>After:</code>。前两槽是规则，后两槽是样例，规则负责命名，样例负责划界。第 1 条 Not X but Y 的实物长这样：</p>
 <pre><code>Before: It's not just about the beat riding under the vocals;
         it's part of the aggression and atmosphere.
 After:  The heavy beat adds to the aggressive tone.</code></pre>
 <p>（据该仓库 main 分支 SKILL.md，2026-09。）<strong>它替你干掉的是</strong>「这句读着像 AI」这种说不清的判断——四槽一贴，判断降级成模式匹配。<strong>什么时候别装</strong>：技术文档仓库里常开别装，它删的副词正是你要的精确性（这条 Skill 17 已经展开过）。</p>
-<h3>多加一行注解 · stop-slop</h3>
+<h3 data-tts="1568d02a98dfdfee">多加一行注解 · stop-slop</h3>
 <p><a href="https://github.com/boraoztunc/skills/blob/main/stop-slop/SKILL.md" target="_blank">boraoztunc/skills · stop-slop</a>（393 行）走的是另一条路：句式清单在前，末尾挂一个独立的 <code>## Examples</code> 块，<strong>5 对</strong>，而且每对后面多一行 <code>Changes:</code>，例如「Removed opener, binary contrast structure, and emphasis crutch.」</p>
 <div class="fail"><strong>这一行才是让样例可迁移的东西</strong>：只给 before/after，模型可能学成「短句好」；补上 <code>Changes:</code>，它学到的是「删的是开场白和二元对比」。<strong>大多数人写样例时正好漏掉这一行。</strong>用法就是抄它那个三行结构（Before / After / Changes）。<strong>什么时候别装</strong>：它和 <code>humanizer</code> 抢同一个触发面，两个同时挂文风每次都变，挑一个。</div>
-<h3>官方对样例本身的三条标准</h3>
+<h3 data-tts="c3f841508ef36809">官方对样例本身的三条标准</h3>
 <p>官方 <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices" target="_blank">Prompting best practices</a> 的「Use examples effectively」一节给了三条：<strong>relevant</strong>（贴近你真实的活）· <strong>diverse</strong>（要覆盖边角、彼此拉开，原文的理由是「vary enough that Claude doesn't pick up unintended patterns」）· <strong>structured</strong>（用 <code>&lt;example&gt;</code> 标签包起来，让模型能把样例和指令分开）。页面给的数量建议是 <strong>3–5 对</strong>（据 platform.claude.com 该页，2026-09）。</p>
-<h3>反例：什么时候一条规则就够</h3>
+<h3 data-tts="8bec93f35663c142">反例：什么时候一条规则就够</h3>
 <p><a href="https://github.com/anthropics/skills/blob/main/skills/brand-guidelines/SKILL.md" target="_blank">anthropics/skills · brand-guidelines</a> 全文 73 行，<strong>零样例</strong>。它的约束是 <code>#d97757</code>、<code>#141413</code>、标题用 Poppins、正文用 Lora——<strong>hex code 不需要样例，它本身就是验收标准。</strong>一条约束能一句话写死取值的，写规则；写不死的，才轮到样例。这就是第 03 节那张判据表的第一行。</p>
 </div>
 <!-- ============ 3 ============ -->
 <div class="section">
 <span class="num">// 03</span>
-<h2>真实用法与边界：几个够、怎么选、放哪</h2>
+<h2 data-tts="03cadb4fff5af277">真实用法与边界：几个够、怎么选、放哪</h2>
 <div class="claim">论断：「几个够」有一个能数出来的答案，而且答案不是总量——是<strong>每条规则 1–3 对，上限就是 3</strong>。</div>
-<h3>几个够：把实物数一遍</h3>
+<h3 data-tts="8ba473ec91ff0030">几个够：把实物数一遍</h3>
 <p>我把 <code>blader/humanizer</code> 的 27 个二级段全数了一遍（据 main 分支 SKILL.md，2026-09）：25 条句式里，<strong>14 条各配 1 对、9 条各配 2 对、2 条各配 3 对</strong>，另外 2 个纯流程段（Voice / What to return）0 对。<strong>没有任何一条超过 3 对。</strong>和官方「3–5 examples」的口径合起来读就清楚了：3–5 说的是一次判断里模型能用上的总量，落到单条规则上，实际是 1–3——<strong>句式越难认的配 2–3 对，一眼能认的配 1 对就停。</strong></p>
 <div class="fail"><strong>作者自己在做减法</strong>：<code>blader/humanizer</code> 的 README changelog 里，v2.9.1 那条写着删掉了「a repeated long example」。样例不是越多越好，多出来的那对只是在交 token 税。</div>
-<h3>怎么选：从退稿里选，别现造</h3>
+<h3 data-tts="b1f59f42f984bb0a">怎么选：从退稿里选，别现造</h3>
 <p><code>skill-creator</code> 把这个坑写在了正文里（据 main 分支 SKILL.md，2026-09）：<em>「if the skill you and the user are codeveloping works only for those examples, it's useless」</em>。它警告的正是拿两三个样例反复迭代迭出来的过拟合——你和模型一起把那几段打磨到完美，换一篇就废。<strong>解法是选材：从你真实退回过、真实改过的稿子里取</strong>，再按官方那三条过一遍（relevant / diverse / structured）。</p>
-<h3>放哪：SKILL.md 里最贵的就是样例</h3>
+<h3 data-tts="2a2970d2d1cf7a65">放哪：SKILL.md 里最贵的就是样例</h3>
 <p>官方给的上限是 SKILL.md 正文 500 行，而样例是其中字数最多、最难压的部分。解法是 progressive disclosure——样例挪进子文件，SKILL.md 只留路由。<a href="https://github.com/anthropics/skills/blob/main/skills/internal-comms/SKILL.md" target="_blank">anthropics/skills · internal-comms</a> 是这个做法的极端实物：<strong>SKILL.md 只有 32 行</strong>，正文就是一张路由表，按通讯类型分别去读 <code>examples/3p-updates.md</code>（46 行）· <code>examples/company-newsletter.md</code>（65 行）· <code>examples/faq-answers.md</code>（29 行）· <code>examples/general-comms.md</code>（15 行）。<strong>它替你干掉的是</strong>「写周报/公司通讯每次都要重新解释格式」；<strong>怎么用</strong>是把它整份拷进你的 skill 目录再换掉四份格式；<strong>什么时候别装</strong>——它的取数完全指望 Slack / Drive / 日历 MCP，这些没接就只剩排版。</p>
 <div class="fail"><strong>但这里必须说实话</strong>：那个目录虽然叫 <code>examples/</code>，装的<strong>不是</strong> input/output 对，是每类通讯的<strong>格式规格</strong>。<code>company-newsletter.md</code> 里那个 <code>## Example Formats</code> 节，内容字面就是「<code>- Announcement 1 / - Announcement 2 / - Announcement 3</code>」——给的是骨架，不是范文。为什么？<strong>真实的公司内部通讯不能进公开仓库。</strong>这不是偷懒，是硬约束，而且你有同一条约束：别把客户稿和内部稿塞进 public repo 当样例。</div>
-<h3>被忽略的反向用法：给人看的样例</h3>
+<h3 data-tts="e9090eae864d8be0">被忽略的反向用法：给人看的样例</h3>
 <p><a href="https://github.com/anthropics/skills/blob/main/skills/doc-coauthoring/SKILL.md" target="_blank">anthropics/skills · doc-coauthoring</a>（375 行）的样例全在输入侧。Step 3 Curation 那节直接列了四条<strong>回话范例</strong>：「Keep 1,4,7,9」「Remove 3 (duplicates 1)」「Remove 6 (audience already knows this)」「Combine 11 and 12」。原文写明要 request brief justifications，目的是 learn priorities for the next sections——<strong>它用样例教的是人，好让人的反馈变成它能学的形式。</strong><strong>怎么用</strong>：任何需要你反复给反馈的 skill，都值得加三条回话范例；<strong>什么时候别装</strong>：它是个从头陪写长文档的全流程 skill，你只想润色一段的话，开它是杀鸡用牛刀。</p>
 </div>
 <!-- ============ 4 ============ -->
 <div class="section">
 <span class="num">// 04</span>
-<h2>代价与替代品：三笔账，第三笔没有解</h2>
+<h2 data-tts="ab4e548ebf604dc7">代价与替代品：三笔账，第三笔没有解</h2>
 <div class="claim">论断：样例要付的是过拟合、token、同化三笔账。前两笔官方都给了解法，第三笔没有——而且它不报错。</div>
 <p><strong>第一笔，过拟合。</strong>官方自己写进了 <code>skill-creator</code>（上一节引过）。解法有：样例要 diverse，写完拿一个没见过的任务试一遍。</p>
 <p><strong>第二笔，token。</strong>样例是 SKILL.md 里最占地方的部分，撞 500 行上限的多半是它。解法是 <code>internal-comms</code> 那个 32 行路由表——样例进子目录，用到哪份读哪份。</p>
 <div class="fail"><strong>第三笔，同化——这笔没有解。</strong>样例会变成天花板：模型不会交出比你那段 After 更好的句子，因为它优化的就是「像那段」。你挑的样例是你半年前的水平，半年后它还在按那个水平交付，而且一切正常、没有任何报错。<strong>唯一能做的是定期换样例。</strong><code>blader/humanizer</code> 从 35 条合并成 25 条、又删掉一个长样例，走的正是这条路——<strong>样例库和 skill 一样会过期，只是过期了不会告诉你。</strong></div>
-<h3>不写样例，你还能怎么办</h3>
+<h3 data-tts="76db71255646b747">不写样例，你还能怎么办</h3>
 <ol>
 <li><strong>写规则</strong>——约束能一句话写死取值时。实物是 <code>brand-guidelines</code>：73 行、零样例、全是 hex code 和字体名，这是对的做法。</li>
 <li><strong>写模板</strong>——官方 best-practices 的 Template pattern：给输出骨架而不是范文。严格版原文用 <em>ALWAYS use this exact template structure</em>，宽松版用 <em>a sensible default format, but use your best judgment</em>。<code>internal-comms</code> 里那个 <code>## Example Formats</code> 其实就是这一类。</li>
@@ -141,14 +141,14 @@ After:  The heavy beat adds to the aggressive tone.</code></pre>
 </ol>
 </div>
 <div class="combo">
-<h3>// 选购卡</h3>
+<h3 data-tts="ffb8db5a4c218085">// 选购卡</h3>
 <p><strong>先抄这三样</strong>（都是具体文件，不是方法论）：① <strong>结构</strong>抄官方 <a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices" target="_blank">best-practices 的「Examples pattern」节</a>——三对、Input/Output、末尾一句 follow this style 收口。② <strong>单元</strong>抄 <code>blader/humanizer</code> 的四槽：<code>Watch for</code> / <code>Problem</code> / <code>Before</code> / <code>After</code>，每条规则配 1–3 对。③ <strong>注解</strong>抄 <code>boraoztunc/skills</code> 的 <code>stop-slop</code>：每对后面加一行 <code>Changes:</code>，写明这次删了什么。</p>
 <p><strong>目录怎么摆</strong>：照 <code>internal-comms</code>——SKILL.md 只留路由表，样例全进子目录。但别学它把格式规格命名成 <code>examples/</code>，那个目录名骗了不少人。</p>
 <p><strong>明确别写样例</strong>：约束是 hex code / 字体名 / 固定命令这种一句话能写死的（<code>brand-guidelines</code> 零样例是对的）· 你手上只有两稿而且是同一个人同一天写的（diverse 不满足，必过拟合）· 样例含客户或公司内部内容而仓库是公开的（<code>internal-comms</code> 没有真范文就是这个原因）。</p>
 <p><strong>写完自检三问</strong>：这条约束机器能验吗？能 → 写脚本。能一句话写死取值吗？能 → 写规则。都不能、但你拿得出两稿对照吗？→ 写样例，并且<strong>补上那行 <code>Changes:</code></strong>。</p>
 </div>
 <div class="glossary">
-<h3>// 术语表</h3>
+<h3 data-tts="09eb2225a3fb2710">// 术语表</h3>
 <dl>
 <dt>few-shot / multishot（少样本提示）</dt>
 <dd>在指令里塞几对做好的输入输出，让模型照着办。样例模式就是把这招固化进 SKILL.md。官方给的数量是 3–5 对。</dd>
@@ -163,7 +163,7 @@ After:  The heavy beat adds to the aggressive tone.</code></pre>
 </dl>
 </div>
 <div class="refs">
-<h3>// 延伸阅读</h3>
+<h3 data-tts="4bd3a04b696de4be">// 延伸阅读</h3>
 <ul>
 <li><a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices" target="_blank">Anthropic · Skill authoring best practices</a> — 「Examples pattern」节给的 commit message 三对范本；同章另有 Template pattern 与 Conditional workflow pattern；检查表里那条 <em>Examples are concrete, not abstract</em>（2026-09）</li>
 <li><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices" target="_blank">Anthropic · Prompting best practices</a> — 「Use examples effectively」节：relevant / diverse / structured 三条标准、<code>&lt;example&gt;</code> 标签、3–5 对的数量建议（2026-09）</li>
@@ -179,8 +179,8 @@ After:  The heavy beat adds to the aggressive tone.</code></pre>
 </div>
 <footer>BigCat · Super Individual · Skill 18 · 2026-09-19</footer>
 </div>
-<script src="https://hub.cissychen.com/comments.js" defer></script>
-<script src="https://hub.cissychen.com/search.js" defer></script>
-<script src="https://hub.cissychen.com/index-button.js" defer></script>
-<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
 </body></html>
