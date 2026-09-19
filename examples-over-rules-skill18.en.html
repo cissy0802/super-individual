@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill 18 · Examples Over Rules — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head>
+<body>
+<div class="container">
+<header>
+<span class="week-tag">SKILL 18 / WRITING · DEEP DIVE</span>
+<h1>Examples Over Rules: The Recipe Behind Writing Skills</h1>
+<h2>Three pairs beat ten rules · 1–3 pairs per rule, and 3 is the ceiling · plus: the official directory named examples/ contains no examples</h2>
+<div class="date">2026-09-19 · BigCat</div>
+<p class="pitch">"Write it more concisely" is a rule. It has a value in your head and no value at all in the model's. The examples pattern fixes exactly that: stop describing the standard, paste both endpoints of it instead. This issue takes apart four artifacts you can open and counts them — including a countable answer to how many example pairs one rule deserves.</p>
+</header>
+<div class="xref">
+<a href="humanizing-writing-skill17.en.html">Prerequisite → Skill 17 · De-Slopping Skills (most of this issue's example artifacts come from those lists)</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>One disclosure first. The roadmap named the "example sections" inside the official <code>brand-guidelines</code> and <code>doc-coauthoring</code> skills as this issue's template. I pulled both and read them line by line: <strong><code>brand-guidelines</code> is 73 lines and contains zero examples</strong>; <code>doc-coauthoring</code> is 375 lines and its examples are written for the <strong>human</strong>, teaching you how to reply — not model-facing sample prose. So the template isn't in those two. It's in the "Examples pattern" section of the official best-practices doc, and in two community skills you can open. <strong>And that gap is this issue's first criterion: not every skill should have examples.</strong> Every line count and pair count below was counted today from the main branch, not copied from an aggregator.</p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>What it kills for you: giving adjectives a value</h2>
+<div class="claim">The claim: examples don't replace writing rules. They cure a specific disease — adjectives with no assigned value. "Concise," "punchy," "no marketing voice" resolve differently in your head than in the model's, and one before/after pair pins the range down on paper.</div>
+<p><strong>Copy this one section and you can start</strong>: the "Examples pattern" in the official <a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices" target="_blank">Skill authoring best practices</a> is a complete template. The subject is commit messages, there are exactly <strong>three pairs</strong>, the form is <code>Input:</code> one line of natural-language description and <code>Output:</code> a code block, and it closes with a single line: "Follow this style: type(scope): brief description, then detailed explanation." The section's own conclusion reads:</p>
+<pre><code>Examples convey the desired style and level of detail to Claude
+more clearly than descriptions alone.</code></pre>
+<p>(Per platform.claude.com, that page, 2026-09.) <strong>What it kills</strong> is a requirement like "write a good commit message" that nobody can accept or reject. Paste three comparable artifacts and the acceptance criterion is sitting right there.</p>
+<h3>How to use it</h3>
+<p>The official <code>skill-creator</code> (<a href="https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md" target="_blank">anthropics/skills · skill-creator</a>) carries a condensed version of the same section you can copy structurally. It adds one warning: <em>"if 'Input' and 'Output' are in the examples you might want to deviate a little"</em> — don't leave those two literals in the shipped skill, or the model learns the labels along with the style.</p>
+<div class="fail"><strong>The first thing you can actually run</strong>: open a piece you recently had to <strong>rewrite after it was sent back</strong>. The original goes in Before, the accepted version goes in After, and you add one line for what changed. One pair is enough to start; you don't need three. A real rejected draft beats an invented example, for reasons in section 03.</div>
+<div class="res"><strong>Further reading</strong> · <a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices" target="_blank">Anthropic · Skill authoring best practices</a> (the "Common patterns" chapter puts Template pattern, Examples pattern and Conditional workflow pattern side by side, 2026-09)</div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Mechanism: rules name the forbidden zone, examples draw its border</h2>
+<div class="claim">The claim: rules and examples aren't an either/or. <code>blader/humanizer</code> welds them into a four-slot unit, and that unit is the single most copyable thing in this issue.</div>
+<h3>The four-slot unit · blader/humanizer</h3>
+<p><a href="https://github.com/blader/humanizer" target="_blank">blader/humanizer</a> (MIT, SKILL.md declares v3.0.0) installs with <code>npx skills add blader/humanizer --global</code>; drop <code>--global</code> for the current project only, and it answers to <code>/humanizer</code>. It lists 25 numbered sentence patterns, and <strong>every one uses the same four slots</strong>: <code>Watch for:</code> (how to spot it) · <code>Problem:</code> (why it counts as a fault) · <code>Before:</code> · <code>After:</code>. The first two slots are the rule, the last two are the example. The rule names the thing; the example draws its border. Pattern 1, Not X but Y, ships this:</p>
+<pre><code>Before: It's not just about the beat riding under the vocals;
+        it's part of the aggression and atmosphere.
+After:  The heavy beat adds to the aggressive tone.</code></pre>
+<p>(Per that repo's main-branch SKILL.md, 2026-09.) <strong>What it kills</strong> is the unfalsifiable judgment "this reads like AI" — with four slots on the page, judgment drops to pattern matching. <strong>When not to install it</strong>: not as an always-on skill in a technical-docs repo, where the adverbs it strips are the precision you need (Skill 17 covered this).</p>
+<h3>Add one annotation line · stop-slop</h3>
+<p><a href="https://github.com/boraoztunc/skills/blob/main/stop-slop/SKILL.md" target="_blank">boraoztunc/skills · stop-slop</a> (393 lines) takes the other route: the pattern lists come first, and a standalone <code>## Examples</code> block sits at the end with <strong>five pairs</strong> — each followed by a <code>Changes:</code> line, e.g. "Removed opener, binary contrast structure, and emphasis crutch."</p>
+<div class="fail"><strong>That line is what makes an example transferable.</strong> Given before/after alone, the model may learn "short sentences are good." Given the <code>Changes:</code> line, it learns "what got cut was the throat-clearing opener and the binary contrast." <strong>It is also the line most people skip when they write their own examples.</strong> The move is to copy that three-line unit: Before / After / Changes. <strong>When not to install it</strong>: it competes with <code>humanizer</code> for the same trigger surface — run both and your voice changes every pass. Pick one.</div>
+<h3>The official criteria for the examples themselves</h3>
+<p>The "Use examples effectively" section of the official <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices" target="_blank">Prompting best practices</a> gives three: <strong>relevant</strong> (mirror your actual use case) · <strong>diverse</strong> (cover edge cases and, in its own words, "vary enough that Claude doesn't pick up unintended patterns") · <strong>structured</strong> (wrap them in <code>&lt;example&gt;</code> tags so the model can tell examples from instructions). The recommended count on that page is <strong>3–5</strong> (per platform.claude.com, that page, 2026-09).</p>
+<h3>The counter-case: when one rule is strictly better</h3>
+<p><a href="https://github.com/anthropics/skills/blob/main/skills/brand-guidelines/SKILL.md" target="_blank">anthropics/skills · brand-guidelines</a> is 73 lines with <strong>zero examples</strong>. Its constraints are <code>#d97757</code>, <code>#141413</code>, Poppins for headings, Lora for body text — <strong>a hex code needs no example, because it already is the acceptance criterion.</strong> If a constraint's value can be written down in one line, write the rule. Only what resists that gets an example. That's line one of the checklist in section 03.</p>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Real usage and limits: how many, how to pick, where to put them</h2>
+<div class="claim">The claim: "how many is enough" has an answer you can count, and it isn't a total — it's <strong>1–3 pairs per rule, with 3 as the hard ceiling</strong>.</div>
+<h3>How many: count the artifact</h3>
+<p>I counted all 27 second-level sections in <code>blader/humanizer</code> (per main-branch SKILL.md, 2026-09). Across its 25 sentence patterns: <strong>14 carry one pair, 9 carry two, 2 carry three</strong>, plus 2 procedural sections (Voice / What to return) with none. <strong>Not one pattern exceeds three pairs.</strong> Read alongside the official "3–5 examples" guidance, the picture resolves: 3–5 is the total a model can hold for one judgment; per individual rule it lands at 1–3. <strong>Patterns that are hard to spot earn two or three; the obvious ones stop at one.</strong></p>
+<div class="fail"><strong>The author is actively subtracting.</strong> In <code>blader/humanizer</code>'s README changelog, the v2.9.1 entry records removing "a repeated long example." More pairs is not better; the extra pair is just paying token rent.</div>
+<h3>How to pick: take them from rejected drafts, don't invent them</h3>
+<p><code>skill-creator</code> writes this trap into its own body (per main-branch SKILL.md, 2026-09): <em>"if the skill you and the user are codeveloping works only for those examples, it's useless."</em> That is exactly the overfitting you get from polishing two or three examples in a loop — you and the model perfect those passages, and the skill dies on the fourth. <strong>The fix is sourcing: take them from drafts you actually sent back and actually revised</strong>, then run them past the three official criteria (relevant / diverse / structured).</p>
+<h3>Where to put them: examples are the most expensive thing in a SKILL.md</h3>
+<p>The official ceiling is 500 lines of SKILL.md body, and examples are the bulkiest, least compressible part of it. The remedy is progressive disclosure: move examples into sub-files and leave a router in SKILL.md. <a href="https://github.com/anthropics/skills/blob/main/skills/internal-comms/SKILL.md" target="_blank">anthropics/skills · internal-comms</a> is the extreme artifact of this: <strong>its SKILL.md is 32 lines</strong>, and the body is a routing table — by communication type, go read <code>examples/3p-updates.md</code> (46 lines) · <code>examples/company-newsletter.md</code> (65) · <code>examples/faq-answers.md</code> (29) · <code>examples/general-comms.md</code> (15). <strong>What it kills</strong> is re-explaining your status-report format every single week. <strong>How to use it</strong>: copy the whole thing into your skills directory and swap those four format files for yours. <strong>When not to install it</strong>: its whole gathering step assumes Slack / Drive / Calendar MCP access — without those, all you get is formatting.</p>
+<div class="fail"><strong>Now the honest part.</strong> That directory is named <code>examples/</code>, but what it holds is <strong>not</strong> input/output pairs — it's a format spec per communication type. The <code>## Example Formats</code> section inside <code>company-newsletter.md</code> literally reads "<code>- Announcement 1 / - Announcement 2 / - Announcement 3</code>". It gives you a skeleton, not sample prose. Why? <strong>Real internal company comms can't go into a public repository.</strong> That's a constraint, not laziness — and it's yours too: don't stuff client or internal drafts into a public repo as examples.</div>
+<h3>The overlooked inversion: examples aimed at the human</h3>
+<p><a href="https://github.com/anthropics/skills/blob/main/skills/doc-coauthoring/SKILL.md" target="_blank">anthropics/skills · doc-coauthoring</a> (375 lines) puts all its examples on the input side. Its Step 3, Curation, simply lists four <strong>sample replies</strong>: "Keep 1,4,7,9" · "Remove 3 (duplicates 1)" · "Remove 6 (audience already knows this)" · "Combine 11 and 12." The text says to request brief justifications in order to learn priorities for the next sections — <strong>it uses examples to train the human, so the human's feedback arrives in a form it can learn from.</strong> <strong>How to use it</strong>: any skill that needs repeated feedback from you deserves three sample replies. <strong>When not to install it</strong>: it's a full co-authoring workflow from a blank page; if you only want a paragraph polished, this is a sledgehammer.</p>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Costs and alternatives: three bills, and the third has no fix</h2>
+<div class="claim">The claim: examples cost you overfitting, tokens, and assimilation. The docs give you a fix for the first two. There is none for the third — and it never raises an error.</div>
+<p><strong>Bill one: overfitting.</strong> Anthropic wrote the warning into <code>skill-creator</code> itself (quoted above). Fixes exist: keep examples diverse, and test the finished skill on a task it has never seen.</p>
+<p><strong>Bill two: tokens.</strong> Examples take up the most room in a SKILL.md, and they're usually what pushes you past 500 lines. The fix is the <code>internal-comms</code> 32-line routing table: examples go to sub-files, and only the relevant one gets read.</p>
+<div class="fail"><strong>Bill three: assimilation — and this one has no fix.</strong> Examples become a ceiling. The model will not hand you a better sentence than your After, because "resembling that passage" is precisely what it optimizes. The pairs you chose reflect your standard six months ago, and six months later it is still delivering at that standard, quietly, with nothing failing. <strong>The only countermeasure is rotating your examples.</strong> <code>blader/humanizer</code> consolidating 35 patterns into 25, then deleting a long example, is that countermeasure in action — <strong>an example library expires like anything else, it just doesn't tell you when.</strong></div>
+<h3>What to do instead of examples</h3>
+<ol>
+<li><strong>Write a rule</strong> — when the constraint's value fits in one line. The artifact is <code>brand-guidelines</code>: 73 lines, zero examples, nothing but hex codes and font names. That is the correct call.</li>
+<li><strong>Write a template</strong> — the Template pattern in the official best-practices: give the output skeleton, not sample prose. The strict version reads <em>ALWAYS use this exact template structure</em>; the loose one offers <em>a sensible default format, but use your best judgment</em>. The <code>## Example Formats</code> block in <code>internal-comms</code> is this pattern, not the examples one.</li>
+<li><strong>Write a validator</strong> — the official feedback loop (run validator → fix → repeat). Anything a script can check should not be taught by example; examples earn their cost only where machines can't verify.</li>
+</ol>
+</div>
+<div class="combo">
+<h3>// WHAT TO COPY FIRST</h3>
+<p><strong>Copy these three</strong> (specific files, not methodology): ① <strong>Structure</strong> — the <a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices" target="_blank">"Examples pattern" section of the official best-practices</a>: three pairs, Input/Output, one "follow this style" line to close. ② <strong>Unit</strong> — the four slots from <code>blader/humanizer</code>: <code>Watch for</code> / <code>Problem</code> / <code>Before</code> / <code>After</code>, at 1–3 pairs per rule. ③ <strong>Annotation</strong> — the <code>Changes:</code> line from <code>boraoztunc/skills</code>'s <code>stop-slop</code>, naming what each pair actually removed.</p>
+<p><strong>How to lay out the directory</strong>: follow <code>internal-comms</code> — SKILL.md holds only the routing table, examples live in sub-files. Just don't copy its naming: calling a folder of format specs <code>examples/</code> has misled plenty of readers.</p>
+<p><strong>Explicitly do NOT write examples when</strong>: the constraint is a hex code, a font name or a fixed command that fits in one line (<code>brand-guidelines</code> is right to ship zero) · all you have is two drafts by the same person on the same day (diversity fails, overfitting guaranteed) · the examples contain client or internal material and the repo is public (this is exactly why <code>internal-comms</code> ships no real prose).</p>
+<p><strong>Three questions before you ship</strong>: can a machine verify this constraint? Then write a script. Can its value be written down in one line? Then write a rule. Neither, but you can produce two comparable drafts? Then write an example — <strong>and add that <code>Changes:</code> line.</strong></p>
+</div>
+<div class="glossary">
+<h3>// GLOSSARY</h3>
+<dl>
+<dt>few-shot / multishot prompting</dt>
+<dd>Putting a handful of worked input/output pairs in the instructions so the model follows suit. The examples pattern freezes this into a SKILL.md. The official count is 3–5.</dd>
+<dt>Examples pattern</dt>
+<dd>A section under "Common patterns" in the official best-practices: when output quality depends on having seen a model answer, ship input/output pairs.</dd>
+<dt>Template pattern</dt>
+<dd>Its neighbour in the same chapter: ship the output skeleton (section names, placeholders) rather than sample prose. It constrains structure, not voice.</dd>
+<dt>progressive disclosure</dt>
+<dd>SKILL.md keeps only the router; detail lives in sub-files and is read on demand. The 32-line body of <code>internal-comms</code> is the extreme case.</dd>
+<dt>overfitting</dt>
+<dd>The skill works only on the handful of examples you polished it against, and dies on anything else. <code>skill-creator</code> writes this warning into its own body.</dd>
+</dl>
+</div>
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices" target="_blank">Anthropic · Skill authoring best practices</a> — the three-pair commit-message template in "Examples pattern"; Template pattern and Conditional workflow pattern in the same chapter; and the checklist line <em>Examples are concrete, not abstract</em> (2026-09)</li>
+<li><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices" target="_blank">Anthropic · Prompting best practices</a> — "Use examples effectively": the relevant / diverse / structured criteria, <code>&lt;example&gt;</code> tags, and the 3–5 count (2026-09)</li>
+<li><a href="https://github.com/blader/humanizer" target="_blank">blader/humanizer</a> — the four-slot unit in the flesh (Watch for / Problem / Before / After); 38 pairs across 25 patterns, distributed 14×1 / 9×2 / 2×3, never more than three; MIT, SKILL.md declares v3.0.0 (per main branch, 2026-09)</li>
+<li><a href="https://github.com/boraoztunc/skills/blob/main/stop-slop/SKILL.md" target="_blank">boraoztunc/skills · stop-slop</a> — 393 lines; the closing <code>## Examples</code> block holds five pairs, each with a <code>Changes:</code> annotation. That line is the thing worth stealing</li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/internal-comms/SKILL.md" target="_blank">anthropics/skills · internal-comms</a> — a 32-line SKILL.md plus four <code>examples/</code> sub-files (46 / 65 / 29 / 15 lines); the folder says examples but holds format specs, which is this issue's honest caveat</li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/doc-coauthoring/SKILL.md" target="_blank">anthropics/skills · doc-coauthoring</a> — 375 lines; the four sample replies in Step 3 Curation are the reference case for human-facing examples</li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/brand-guidelines/SKILL.md" target="_blank">anthropics/skills · brand-guidelines</a> — the 73-line, zero-example counter-case: when the constraint is a hex code, a rule strictly beats an example</li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md" target="_blank">anthropics/skills · skill-creator</a> — a condensed "Examples pattern" section, plus the overfitting warning: <em>works only for those examples, it's useless</em></li>
+<li><a href="humanizing-writing-skill17.en.html">Skill 17 · De-Slopping Skills</a> — where the humanizer and stop-slop lists come from, and the limits of each</li>
+<li><a href="skill-authoring-skill6.en.html">Skill 06 · Skill Authoring Best Practices</a> — the source of the 500-line ceiling, progressive disclosure and the degrees-of-freedom ladder</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Skill 18 · 2026-09-19</footer>
+</div>
+<script src="https://hub.cissychen.com/comments.js" defer></script>
+<script src="https://hub.cissychen.com/search.js" defer></script>
+<script src="https://hub.cissychen.com/index-button.js" defer></script>
+<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+</body></html>
