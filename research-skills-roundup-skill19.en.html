@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill 19 · Research Skills Roundup — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head>
+<body>
+<div class="container">
+<header>
+<span class="week-tag">SKILL 19 / RESEARCH · ROUNDUP</span>
+<h1>Research Skills: Ten You Can Actually Install</h1>
+<h2>Retrieval layer / process layer / posture layer — and why strong research skills leave an audit trail</h2>
+<div class="date">2026-09-20 · BigCat</div>
+<p class="pitch">Research is the category most easily faked by looking like research: numbered citations, confidence markers, a counter-evidence section. Format reads as credible far more readily than content does. All ten items below open in a browser, and the test is single: does it leave behind something you can check afterwards?</p>
+</header>
+<div class="xref">
+<a href="mcp-servers-roundup-skill9.en.html">Prerequisite → Skill 9 MCP Servers Roundup (the general ledger for items 6-10)</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>Writing has no oracle. Research has half of one: <strong>whether a citation opens, whether the date is right, whether the sentence is actually what that source said</strong> — a machine can settle the first two. So the real divide in this category is not who writes the deepest report, but <strong>who leaves a second, checkable ledger alongside it</strong>: a citation registry, source-type labels, and the sources that were dropped along with why. Install commands below are copied from each project's own page. Section 02 explains why these ten belong to three layers and cannot be compared as one list, section 03 gives six things you can check in three minutes with SKILL.md open, and section 04 lays out the costs.</p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>The list first: ten rows, installs below</h2>
+<div class="claim">Claim: read columns two and three across. Failures in this category almost all come from installing two process-layer skills and zero retrieval — the skill governs the procedure tightly, but the eyes it calls are still the default ones.</div>
+<div class="diagram">Item                            From                          What it takes off your hands   When not to install
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+1  deep-research trio           daymade/claude-code-skills    Citation registry, frozen      You just want an answer
+2  claude-deep-research-skill   199-biotechnologies           8 phases + 2 check scripts     You want no Python deps
+3  Deep-Research-skills         Weizhena                      Outline first, you approve     You hate being stopped
+4  agent-research-skills        lingzhi227                    31 skills, whole paper cycle   You write no papers
+5  discernment-nudge            anthropics/skills             3 questions on what to verify  You want answers only
+6  paper-search-mcp             openags                       20+ academic sources at once   You search web, not papers
+7  arxiv-mcp-server             blazickjp                     Papers on disk + BibTeX        You keep no local archive
+8  exa-mcp-server               exa-labs                      Web search in 2 tool slots     You have another retriever
+9  firecrawl-mcp-server         firecrawl                     Crawling + change monitoring   You only wanted a search
+10 tavily-mcp                   tavily-ai                     search / extract / map / crawl You never traverse a site
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+1-4 are four implementations of the process layer; pick one. 6-10 are retrieval; pick one or two. 5 goes with anything.</div>
+<h3>How to install (commands copied from each project's own page)</h3>
+<pre><code><span class="tag-com"># 1 — 59 directories in that repo. Copy the two or three you want, not all of it.</span>
+/plugin marketplace add daymade/claude-code-skills
+git clone --depth 1 https://github.com/daymade/claude-code-skills /tmp/dcs
+cp -r /tmp/dcs/deep-research /tmp/dcs/competitors-analysis /tmp/dcs/fact-checker ~/.claude/skills/
+
+<span class="tag-com"># 2 — note: also named deep-research, same target directory as 1. Pick one.</span>
+git clone https://github.com/199-biotechnologies/claude-deep-research-skill.git ~/.claude/skills/deep-research
+
+<span class="tag-com"># 3 — clone the repo first, then copy. English and Chinese sets, plus Codex / OpenCode variants.</span>
+cp -r skills/research-en/* ~/.claude/skills/
+cp agents/web-search-agent.md ~/.claude/agents/
+cp -r agents/web-search-modules ~/.claude/agents/
+pip install pyyaml
+
+<span class="tag-com"># 4 — pulls in 31 skills at once. Worth it only if you write papers.</span>
+npx skills add lingzhi227/agent-research-skills -g -a claude-code
+
+<span class="tag-com"># 5 — official, and a plugin of its own: it is not inside example-skills.</span>
+/plugin marketplace add anthropics/skills
+/plugin install discernment-nudge@anthropic-agent-skills
+
+<span class="tag-com"># 6 — one project, two forms. This is the skill install; MCP install is in the repo.</span>
+uv tool install paper-search-mcp
+mkdir -p ~/.claude/skills/paper-search
+curl -fsSL https://raw.githubusercontent.com/openags/paper-search-mcp/main/claude-code/SKILL.md \
+  -o ~/.claude/skills/paper-search/SKILL.md
+
+<span class="tag-com"># 7-10 — the retrieval layer. Pick one, at most two.</span>
+uvx arxiv-mcp-server                                   <span class="tag-com"># 7 into mcpServers; papers land in ~/.arxiv-mcp-server/papers</span>
+claude plugin install exa@claude-plugins-official      <span class="tag-com"># 8 two tools by default</span>
+env FIRECRAWL_API_KEY=fc-YOUR_API_KEY npx -y firecrawl-mcp   <span class="tag-com"># 9 twenty-five tools by default</span>
+npx -y tavily-mcp@latest                               <span class="tag-com"># 10 four tools, API key required</span>
+
+<span class="tag-com"># Do this immediately after installing</span>
+/skill-doctor    <span class="tag-com"># context cost and invocation frequency per skill</span>
+</code></pre>
+<h3>Item by item</h3>
+<ul>
+<li><strong>1. The daymade trio</strong> (<strong>1.4k stars per the GitHub repo page, 2026-09</strong>, MIT): the most carefully built evidence chain on this list. The <code>deep-research</code> SKILL.md pins the procedure to phases P0-P7, and the hinge is <strong>P3, where it builds a citation registry — deduplicating, numbering, and recording every dropped source with the reason it was dropped. Once the registry is final, the draft may cite only from it.</strong> Three hard rules follow: reopen the original for every load-bearing claim; <strong>never invent a URL</strong>, every locator comes from an actual retrieval; mark <code>[Unverified]</code> or omit rather than speculate. In the same repo, <code>competitors-analysis</code> demands that repository-level findings come from locally cloned code while market-level claims cite a source, and <code>fact-checker</code> only proposes corrections for your approval. <strong>The catch: 59 directories, so installing the lot means 59 descriptions in context every turn.</strong></li>
+<li><strong>2. 199-biotechnologies/claude-deep-research-skill</strong> (<strong>1.0k stars per the GitHub repo page, 2026-09</strong>, MIT): an eight-phase pipeline with a loop-back — Scope, Plan, Retrieve, Triangulate, outline refinement, Synthesize, Critique (which can jump back), Refine, Package. What makes it singular is <strong>two check scripts that actually run</strong>: <code>validate_report.py</code> (nine checks) and <code>verify_citations.py</code> (DOI / URL / hallucination detection), inside a validate-fix-retry loop capped at three cycles, with a floor of "10+ sources, 3+ per major claim". Multi-provider search needs <code>search-cli</code> and your own key for something like Brave.</li>
+<li><strong>3. Weizhena/Deep-Research-skills</strong> (<strong>2.2k stars per the GitHub repo page, 2026-09</strong>, MIT): the only one that makes <strong>the human gate its first phase</strong>. It produces an outline only — which items to investigate, which fields to collect for each — and waits for you to add, cut and approve before phase two searches item by item and consolidates into one markdown report. The repo carries <code>research-en</code> and <code>research-zh</code> plus a Codex build, so <strong>portability across harnesses is its selling point</strong>. The price is a manual <code>cp</code> install, an extra <code>web-search-agent</code> to copy, and <code>pip install pyyaml</code>.</li>
+<li><strong>4. lingzhi227/agent-research-skills</strong> (<strong>350 stars per the GitHub repo page, 2026-09</strong>): 31 skills spanning the whole academic lifecycle — <code>literature-search</code> and <code>novelty-assessment</code>, then <code>experiment-design</code>, <code>paper-writing-section</code>, <code>related-work-writing</code>, then <code>self-review</code>, <code>rebuttal-writing</code>, <code>slide-generation</code>. Discovery runs against four APIs: Semantic Scholar, arXiv, OpenAlex and CrossRef. <strong>It is the list's example of "the narrower the domain, the more sense a bulk install makes"</strong>: a pipeline if you write papers, 31 wasted descriptions if you do not.</li>
+<li><strong>5. discernment-nudge</strong>: from the official <code>anthropics/skills</code> (<strong>177k stars on that repo per its GitHub page, 2026-09</strong>) — the lightest item here and the most underrated. It does no research; it changes <strong>the posture in which you receive an answer</strong>. After a substantive answer you might act on, it appends two or three follow-up questions tied to specifics in what was just produced, to help you check key facts, probe assumptions and notice missing context — at most once per conversation. Most of its description is spent on <strong>when not to fire</strong>: trivial how-tos, purely educational explanations, formatting or assembly work, code you will run, creative writing, and anything you already asked it to double-check. <strong>That "when not to" clause being longer than the rest is itself a model for writing skills.</strong></li>
+<li><strong>6. openags/paper-search-mcp</strong> (<strong>2.7k stars per the GitHub repo page, 2026-09</strong>, MIT): one project in two forms — an MCP server, or a Claude Code skill called <code>paper-search</code>, and <strong>the skill form needs no MCP configuration at all</strong>. It covers more than twenty sources including arXiv, PubMed, bioRxiv, medRxiv, Semantic Scholar, OpenAlex, CrossRef, Europe PMC, dblp, Zenodo, HAL and SSRN, on a free-first strategy: <strong>most sources need no key</strong>, while Semantic Scholar, CORE and Unpaywall are steadier with one.</li>
+<li><strong>7. blazickjp/arxiv-mcp-server</strong> (<strong>3.2k stars per the GitHub repo page, 2026-09</strong>, Apache-2.0): 19 tools, running locally. Its value is that <strong>the trail is physical</strong> — papers land in <code>~/.arxiv-mcp-server/papers</code> and stay there, you can read a named section of the original LaTeX instead of a summary of a summary, BibTeX comes straight out of arXiv metadata, and topic watches are built in. <strong>The core needs no external search service</strong>; a Semantic Scholar key only makes citation lookups more reliable.</li>
+<li><strong>8. exa-labs/exa-mcp-server</strong> (<strong>5.0k stars per the GitHub repo page, 2026-09</strong>, MIT): <strong>exposes only <code>web_search_exa</code> and <code>web_fetch_exa</code> by default</strong>, with <code>agent_run</code> and others behind an explicit switch. The hosted endpoint works anonymously under rate limits; a key or OAuth lifts them. <strong>On the tool-slot budget it is the most restrained item here</strong> — compare it with item 9.</li>
+<li><strong>9. firecrawl/firecrawl-mcp-server</strong> (<strong>7.5k stars per the GitHub repo page, 2026-09</strong>, MIT; the org was formerly mendableai): the most starred and the most sprawling — <strong>25 tools by default</strong>: scrape, map, crawl and search, a set of <code>firecrawl_research_*</code> paper tools, plus eight <code>firecrawl_monitor_*</code> ones. <strong>Those eight are where the competitive-intelligence thread finally lands on real tooling</strong>: create a watch, run a check, see which page of a site changed. The cloud API needs a key; <code>FIRECRAWL_API_URL</code> points it at a self-hosted instance instead.</li>
+<li><strong>10. tavily-ai/tavily-mcp</strong> (<strong>2.4k stars per the GitHub repo page, 2026-09</strong>, MIT): four tools — <code>tavily-search</code>, <code>tavily-extract</code>, <code>tavily-map</code>, <code>tavily-crawl</code>. The tool count sits between items 8 and 9, which makes it the middle option when you need whole-site traversal but not twenty-five tool definitions. A key is required.</li>
+</ul>
+<div class="res"><strong>Further resources</strong> · <a href="https://github.com/anthropics/skills/tree/main/skills" target="_blank">anthropics/skills directory</a> (check real names against repo directories; aggregator sites get them wrong often)</div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Why these ten do not compare: three layers, not one row</h2>
+<div class="claim">Claim: retrieval decides <strong>what you can get</strong>, process decides <strong>what trail you leave</strong>, posture decides <strong>how you receive the conclusion</strong>. They complement each other, and almost everyone installs only the middle one.</div>
+<div class="diagram">  Posture    5  discernment-nudge          -> makes you look back once it has answered
+               ^
+  Process    1-4  deep-research family      -> decompose, dispatch, register, counter-check
+               ^                               (it does not go online by itself)
+  Retrieval  6-10  MCP servers              -> where web / paper / whole-site bytes come from
+</div>
+<p><strong>One common install is simply wrong</strong>: items 1 and 2 together. Both target <code>~/.claude/skills/deep-research</code>, so the names collide; and even after you rename a directory, the two descriptions compete for the same trigger ("research this topic", "write a report on"), so which procedure runs is a coin flip. <strong>Pick exactly one process-layer skill. That one is not negotiable.</strong></p>
+<p><strong>The reverse is more common still</strong>: a carefully chosen process layer and no retrieval at all. Item 1's rule about reopening originals for load-bearing claims then lands on default web search, which surfaces the same aggregator pages as before. <strong>No procedure is stricter than the eyes it calls.</strong> Papers mean items 6 and 7; watching a competitor's site means item 9's <code>firecrawl_monitor_*</code>; wanting accurate search without burning tool slots means item 8.</p>
+<p>Item 4 is a third kind of thing: <strong>not general research but a disciplinary pipeline</strong>. Pointed at market research it feels wrong, because <code>rebuttal-writing</code> and <code>latex-formatting</code> will never fire in that context while still costing description budget every turn. The test is easy: <strong>does your output carry a bibliography? If yes, install it; if no, do not.</strong></p>
+<div class="fail"><strong>What failure looks like</strong>: items 1, 2 and 3 installed together, three process layers taking turns on one trigger, and not a single retrieval server. The symptom is "every report comes out in a different shape, but the citations are always the same three aggregators" — <strong>that is not a weak model, that is three procedures all pointed at one pair of eyes.</strong></div>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Three-minute check: six things to look for in SKILL.md</h2>
+<div class="claim">Claim: research is luckier than writing — it has half an oracle. Whether a citation opens and whether a date is right are machine-checkable. So every criterion here circles one question: <strong>does this thing leave a ledger you can audit afterwards?</strong></div>
+<ol>
+<li><strong>Is there a citation ledger separate from the prose?</strong> Item 1 builds one at P3 — numbered, deduplicated, and <strong>recording dropped sources with the reason they were dropped</strong> — and the draft may cite only from it once frozen. Without that layer, citations are decoration on the prose: you cannot audit what it used or what it threw away.</li>
+<li><strong>Does uncertainty have an exit?</strong> Look for <code>[Unverified]</code>, confidence markers, an explicit "say you could not find it". <strong>A research skill that is not allowed to output "I do not know" will encode uncertainty as certainty</strong>, because you left it only one exit.</li>
+<li><strong>Is there a dating convention?</strong> Item 1 fixes <code>AS_OF</code> at P0 and requires a source date on every time-sensitive claim. <strong>Without it, last year's figure and this year's get written into the same sentence as equals.</strong></li>
+<li><strong>Is there a check a machine can run?</strong> Item 2's <code>verify_citations.py</code> tests whether a DOI or URL exists; <code>validate_report.py</code> runs nine checks. This is the only thing in the category that <strong>catches errors without reading the content</strong>. <span class="tag-key">Mind its boundary, though — see section 04.</span></li>
+<li><strong>Where can a human intervene?</strong> Item 3 makes outline approval a blocking first phase. <strong>The most expensive research error is direction, and direction is only cheap to fix in the first few minutes.</strong> A skill that involves you only at "please review the report" has no gate at all.</li>
+<li><strong>What tools does it assume you have?</strong> The easiest one to miss. Read what retrieval the SKILL.md refers to: bundled scripts (item 4's four academic APIs, item 2's <code>search-cli</code>), or an MCP server it assumes you already installed? <strong>When that assumption fails it does not error — it degrades quietly.</strong></li>
+</ol>
+<p class="res">If three of these six have no answer, what you have bought is the <strong>layout</strong> of research, not research.</p>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>The honest costs: where it is expensive, and where it fools you</h2>
+<div class="claim">Claim: research is the most expensive skill category, and expensive in ways you do not see — tokens burn inside subagents you never read, and trust burns on the single impression that it looked thorough.</div>
+<h3>Money</h3>
+<p>Anthropic published its own numbers: <strong>per its engineering post "How we built our multi-agent research system", 2025-06</strong>, Research runs an orchestrator-worker pattern — a lead agent plans, spawns subagents that work in parallel with their own context windows, and merges their findings with a separate citation pass. The return was a <strong>90.2%</strong> improvement on their internal research eval for an Opus 4 lead with Sonnet 4 subagents; the price is <strong>roughly 15x the tokens of an ordinary chat interaction</strong>, and the same post is explicit that this architecture is a poor fit for tightly interdependent work such as coding. Items 1 and 2, with their lead-plus-subagents structure, spend exactly that. <strong>Budget a deep report like a compile, not like a question.</strong></p>
+<h3>Tool slots</h3>
+<p>Item 9 ships 25 tool definitions by default; item 8 ships 2. Those definitions sit in context every turn whether or not you use them. <strong>Count tools before installing a second retrieval server</strong> — and the same arithmetic applies to item 1's 59 directories and item 4's 31 skills, where a bulk install is a description tax paid each turn. Run <code>/skill-doctor</code> afterwards: it reports the context cost and invocation frequency of every skill you have.</p>
+<h3>Where it fools you</h3>
+<div class="fail"><strong>Citation verification is not fact verification.</strong> <code>verify_citations.py</code> can confirm that a DOI exists and a URL resolves, <strong>but it does not check whether the sentence is what that source said</strong>. A link that is real, numbered neatly, and does not actually support the claim attached to it is this category's most frequent false positive — and it passes every automated check by construction.</div>
+<p>The second trap is that <strong>format reads as more credible than content</strong>. Numbered citations, confidence markers and a "counter-evidence" section are all visual signals of rigor. A skill that only applies the layout, without ever reopening an original, produces something indistinguishable on screen from real work. The six criteria in section 03 are, at bottom, one question asked six ways: <strong>is there a ledger behind this layout?</strong></p>
+<p>Third, nearly all of these default to the open web, so <strong>second-hand aggregators get treated as sources</strong> — Skill 21 on this site takes that apart on its own.</p>
+</div>
+<div class="combo">
+<h3>// ONE-PAGE BUYING CARD</h3>
+<p><strong>Install these three first</strong>: <code>deep-research</code> from <code>daymade/claude-code-skills</code> (<strong>copy that one directory, not all 59</strong>; you are buying the P3 citation registry and the <code>[Unverified]</code> exit) + <code>exa-mcp-server</code> (<code>claude plugin install exa@claude-plugins-official</code>, two tool slots, a decent pair of eyes for the process layer) + <code>discernment-nudge</code> (<code>/plugin install discernment-nudge@anthropic-agent-skills</code>, official, lightest here, fires once per conversation).</p>
+<p><strong>Add as needed</strong>: <code>openags/paper-search-mcp</code> (papers, most sources key-free) · <code>blazickjp/arxiv-mcp-server</code> (when you want BibTeX and papers archived on disk) · <code>Weizhena/Deep-Research-skills</code> (<strong>swap it in for the process layer above when you want a human gate at the outline</strong>) · <code>199-biotechnologies/claude-deep-research-skill</code> (when you want checks that actually run, like <code>verify_citations.py</code>) · item 9's <code>firecrawl_monitor_*</code> (when you really are watching a competitor's site) · <code>tavily-mcp</code> (site map and crawl without twenty-five tools) · <code>lingzhi227/agent-research-skills</code> (when you genuinely write papers).</p>
+<p><strong>Explicitly do not install</strong>: items 1 and 2 at once (same <code>~/.claude/skills/deep-research</code> directory, same trigger) · a process layer with no retrieval server at all (a strict procedure wired to default eyes) · <code>firecrawl-mcp</code>'s 25 tools for a one-off search · all 31 skills of <code>agent-research-skills</code> when you write no papers.</p>
+<p><strong>Three things after installing</strong>: run <code>/skill-doctor</code> and count tool slots and context cost · walk your chosen process layer through the six checks in section 03 · <strong>set yourself one floor — for any number you will act on, open the citation yourself.</strong></p>
+</div>
+<div class="glossary">
+<h3>// GLOSSARY</h3>
+<dl>
+<dt>citation registry</dt>
+<dd>A source list kept separate from the prose: deduplicated, numbered, with dropped sources and reasons recorded. Once frozen, the draft cites only from it. The first criterion in this issue.</dd>
+<dt>evidence family</dt>
+<dd>Several reports derived from one filing or one study count as a single source. Not collapsing them turns one source into five and manufactures fake corroboration.</dd>
+<dt>AS_OF</dt>
+<dd>The cutoff date fixed at the start of a research run. Every time-sensitive claim carries its source date, so last year's figure is not silently read as this year's.</dd>
+<dt>orchestrator-worker</dt>
+<dd>A lead agent decomposes the task across subagents with independent context windows, then merges results. The standard deep-research architecture, and the origin of the 15x token figure.</dd>
+<dt>tool-slot budget</dt>
+<dd>Every MCP server's tool definitions sit in context permanently. Exa ships 2 by default, Firecrawl 25 — the number that actually matters when choosing a retrieval layer.</dd>
+</dl>
+</div>
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://github.com/daymade/claude-code-skills" target="_blank">daymade/claude-code-skills</a> — source of item 1, with the <code>/plugin marketplace add</code> install and the 59-directory listing (1.4k stars, 2026-09); <a href="https://github.com/daymade/claude-code-skills/blob/main/deep-research/SKILL.md" target="_blank">deep-research · SKILL.md</a> for P0-P7, the P3 registry, <code>[Unverified]</code> and evidence families; <a href="https://github.com/daymade/claude-code-skills/blob/main/competitors-analysis/SKILL.md" target="_blank">competitors-analysis · SKILL.md</a> for "repository findings must come from local clones"</li>
+<li><a href="https://github.com/199-biotechnologies/claude-deep-research-skill" target="_blank">199-biotechnologies/claude-deep-research-skill</a> — eight phases, <code>validate_report.py</code> (nine checks) and <code>verify_citations.py</code> (DOI/URL/hallucination), with a three-cycle validate-fix-retry loop (1.0k stars, MIT, 2026-09)</li>
+<li><a href="https://github.com/Weizhena/Deep-Research-skills" target="_blank">Weizhena/Deep-Research-skills</a> — outline-first human gate, <code>research-en</code> / <code>research-zh</code> and the Codex / OpenCode variants (2.2k stars, MIT, 2026-09)</li>
+<li><a href="https://github.com/lingzhi227/agent-research-skills" target="_blank">lingzhi227/agent-research-skills</a> — 31 skills across the paper lifecycle, discovery over Semantic Scholar / arXiv / OpenAlex / CrossRef (350 stars, 2026-09)</li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/discernment-nudge/SKILL.md" target="_blank">skills/discernment-nudge · SKILL.md</a> — official; two to three follow-ups, once per conversation, and a "when not to fire" clause longer than the rest</li>
+<li><a href="https://github.com/openags/paper-search-mcp" target="_blank">openags/paper-search-mcp</a> — skill and MCP forms, twenty-plus academic sources, free-first key policy (2.7k stars, MIT, 2026-09)</li>
+<li><a href="https://github.com/blazickjp/arxiv-mcp-server" target="_blank">blazickjp/arxiv-mcp-server</a> — 19 tools; papers on disk, section-level LaTeX reads, BibTeX from arXiv metadata (3.2k stars, Apache-2.0, 2026-09)</li>
+<li><a href="https://github.com/exa-labs/exa-mcp-server" target="_blank">exa-labs/exa-mcp-server</a> — only <code>web_search_exa</code> and <code>web_fetch_exa</code> by default; hosted endpoint usable anonymously (5.0k stars, MIT, 2026-09)</li>
+<li><a href="https://github.com/firecrawl/firecrawl-mcp-server" target="_blank">firecrawl/firecrawl-mcp-server</a> — 25 tools by default, including eight <code>firecrawl_monitor_*</code> site-change watchers and the <code>firecrawl_research_*</code> set (7.5k stars, MIT, 2026-09)</li>
+<li><a href="https://github.com/tavily-ai/tavily-mcp" target="_blank">tavily-ai/tavily-mcp</a> — <code>tavily-search</code>, <code>extract</code>, <code>map</code> and <code>crawl</code> (2.4k stars, MIT, 2026-09)</li>
+<li><a href="https://www.anthropic.com/engineering/multi-agent-research-system" target="_blank">Anthropic · How we built our multi-agent research system</a> — the orchestrator-worker architecture, the 90.2% internal eval gain, roughly 15x tokens, and why tightly coupled work should not go multi-agent (2025-06)</li>
+<li><a href="https://code.claude.com/docs/en/skills" target="_blank">Claude Code · Skills</a> — install locations, descriptions always in context while bodies load on demand, and <code>/skill-doctor</code> for context cost and invocation frequency (2026-09)</li>
+<li><a href="mcp-servers-roundup-skill9.en.html">Skill 9 · MCP Servers Roundup</a> — the general ledger for the retrieval layer; the tool-slot budget was worked out there</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Skill 19 · 2026-09-20</footer>
+</div>
+<script src="https://hub.cissychen.com/comments.js" defer></script>
+<script src="https://hub.cissychen.com/search.js" defer></script>
+<script src="https://hub.cissychen.com/index-button.js" defer></script>
+<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+</body></html>
