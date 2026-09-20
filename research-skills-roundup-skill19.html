@@ -64,8 +64,8 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <div class="container">
 <header>
 <span class="week-tag">SKILL 19 / RESEARCH · ROUNDUP</span>
-<h1>研究类 Skills 榜单：十个真能装的</h1>
-<h2>检索层 / 流程层 / 姿态层 各解决什么 · 强研究 skill 都留下可追溯的痕迹</h2>
+<h1 data-tts="9bf909cb04819914">研究类 Skills 榜单：十个真能装的</h1>
+<h2 data-tts="54c65c828536e60a">检索层 / 流程层 / 姿态层 各解决什么 · 强研究 skill 都留下可追溯的痕迹</h2>
 <div class="date">2026-09-20 · BigCat</div>
 <p class="pitch">研究类是最容易被「看起来像研究」骗过去的一类：编号引用、置信度标注、反面证据小节——格式的可信度远高于内容。本期十个条目全部能点开，判据只有一条：它有没有留下让你事后能查的痕迹。</p>
 </header>
@@ -73,13 +73,13 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <a href="mcp-servers-roundup-skill9.html">前置 → Skill 9 MCP server 榜单（本期⑥—⑩那一层的通用账本）</a>
 </div>
 <div class="intro">
-<h3>// WHY THIS MATTERS</h3>
+<h3 data-tts="036a7182a493ce8d">// WHY THIS MATTERS</h3>
 <p>写作类没有 oracle，研究类有半个：<strong>引用能不能打开、日期对不对、这句话是不是那篇文章说的</strong>，前两件机器就能判。所以这一类真正的分水岭不是「谁写得深」，而是<strong>谁在报告之外还留下了一份可复查的账</strong>——引用登记表、证据来源标签、被丢弃的源和丢弃理由。下面十个条目装法全抄自各自官方页面；第 02 节讲它们分属三层、不能混着比，第 03 节给六条打开 SKILL.md 三分钟就能验的判据，第 04 节摊开代价。</p>
 </div>
 <!-- ============ 1 ============ -->
 <div class="section">
 <span class="num">// 01</span>
-<h2>先给清单：十行表，装法都在下面</h2>
+<h2 data-tts="5c260bee51138628">先给清单：十行表，装法都在下面</h2>
 <div class="claim">论断：这张表最该横着看第二列和第三列。研究类的翻车几乎全发生在「装了两个流程层、零个检索层」——skill 把流程管得很严，可它调用的那只眼睛还是默认的。</div>
 <div class="diagram">条目                            出处                          替你干掉的那件事                什么时候别装
 ────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -95,7 +95,7 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 ⑩ tavily-mcp                    tavily-ai                     search / extract / map / crawl  你不需要整站遍历
 ────────────────────────────────────────────────────────────────────────────────────────────────────────
 ①②③④ 是流程层的四份实现，挑一个；⑥⑦⑧⑨⑩ 是检索层，按你查什么挑一到两个；⑤ 谁都能加。</div>
-<h3>怎么装（命令抄自各自官方页面）</h3>
+<h3 data-tts="e46ee19ce745b362">怎么装（命令抄自各自官方页面）</h3>
 <pre><code><span class="tag-com"># ① 仓库 59 个目录，别整装——只拷你要的那两三个</span>
 /plugin marketplace add daymade/claude-code-skills
 git clone --depth 1 https://github.com/daymade/claude-code-skills /tmp/dcs
@@ -132,7 +132,7 @@ npx -y tavily-mcp@latest                               <span class="tag-com"># �
 <span class="tag-com"># 装完立刻做这件事</span>
 /skill-doctor    <span class="tag-com"># 看每个 skill 的 context 成本与调用频次</span>
 </code></pre>
-<h3>逐条说人话</h3>
+<h3 data-tts="ac0ed2e039bc8b48">逐条说人话</h3>
 <ul>
 <li><strong>① daymade 的三件套</strong>（<strong>据 GitHub 仓库页，2026-09 为 1.4k 星</strong>，MIT）：本榜证据链做得最细的一个。<code>deep-research</code> 的 SKILL.md 把流程钉成 P0–P7，关键在 <strong>P3 先建「引用登记表」——去重、编号、记下被丢弃的源和理由，登记表一旦定稿，P5 只许从这张表里引</strong>。另有三条硬规矩：每个承重论断必须回头重开原文；<strong>绝不臆造 URL</strong>，每个定位符都来自真实抓取；证据不足就标 <code>[Unverified]</code> 或干脆略过。同仓 <code>competitors-analysis</code> 要求「仓库层面的结论必须来自本地 clone 的代码，市场层面的说法必须给来源」，<code>fact-checker</code> 只提修改建议、要你点头。<strong>缺点是这仓有 59 个目录，整装等于把 59 份描述塞进每一轮。</strong></li>
 <li><strong>② 199-biotechnologies/claude-deep-research-skill</strong>（<strong>据 GitHub 仓库页，2026-09 为 1.0k 星</strong>，MIT）：8 段流水线，带回环——Scope → Plan → Retrieve → Triangulate → 提纲精修 → Synthesize → Critique（可回跳）→ Refine → Package。它独一份的地方是<strong>两个真跑的校验脚本</strong>：<code>validate_report.py</code>（9 项检查）与 <code>verify_citations.py</code>（DOI / URL / 幻觉检测），外加「校验→修→重试，最多 3 轮」的闭环，质量线写死为「至少 10 个来源、每个主要论断 3 个以上」。多源检索要额外装 <code>search-cli</code> 并自带 Brave 之类的 key。</li>
@@ -150,7 +150,7 @@ npx -y tavily-mcp@latest                               <span class="tag-com"># �
 <!-- ============ 2 ============ -->
 <div class="section">
 <span class="num">// 02</span>
-<h2>为什么这十个不能混着比：它们是三层，不是一排</h2>
+<h2 data-tts="2e740735fcb6d09b">为什么这十个不能混着比：它们是三层，不是一排</h2>
 <div class="claim">论断：检索层决定你<strong>能拿到什么</strong>，流程层决定你<strong>留下什么痕迹</strong>，姿态层决定你<strong>怎么接收结论</strong>。三者是互补关系，可绝大多数人只装了中间那层。</div>
 <div class="diagram">     姿态层  ⑤ discernment-nudge          → 答完之后逼你回头看
        ↑
@@ -166,7 +166,7 @@ npx -y tavily-mcp@latest                               <span class="tag-com"># �
 <!-- ============ 3 ============ -->
 <div class="section">
 <span class="num">// 03</span>
-<h2>三分钟验货：打开 SKILL.md 看这六条</h2>
+<h2 data-tts="b0e92e111228bad4">三分钟验货：打开 SKILL.md 看这六条</h2>
 <div class="claim">论断：研究类比写作类幸运——它有半个 oracle。引用能不能打开、日期对不对，机器就能判。所以判据全部围绕一件事：<strong>这东西有没有留下让你事后能查的账。</strong></div>
 <ol>
 <li><strong>有没有一份独立于正文的引用账本？</strong> ①在 P3 建登记表、编号去重、<strong>记录被丢弃的源和丢弃理由</strong>，且登记表定稿后正文只许从表里引。没有这层的，引用就是正文的装饰品——你没法查它引了什么、又扔了什么。</li>
@@ -181,26 +181,26 @@ npx -y tavily-mcp@latest                               <span class="tag-com"># �
 <!-- ============ 4 ============ -->
 <div class="section">
 <span class="num">// 04</span>
-<h2>诚实的代价：这一类贵在哪、骗你在哪</h2>
+<h2 data-tts="d860370969859230">诚实的代价：这一类贵在哪、骗你在哪</h2>
 <div class="claim">论断：研究类是最贵的一类 skill，而且贵得不显眼——token 花在你看不见的 subagent 里，信任成本花在「它看起来查得很细」这一念之差上。</div>
-<h3>钱</h3>
+<h3 data-tts="11a60b4d0bd31608">钱</h3>
 <p>Anthropic 自己公开过账：<strong>据其工程博客《How we built our multi-agent research system》，2025-06</strong>，Research 走的是 orchestrator-worker——主 agent 拆题、并行开若干带独立上下文的 subagent、最后合并并单独跑一遍引用。收益是 Opus 4 主 + Sonnet 4 子的组合在内部研究评测上比单个 Opus 4 高 <strong>90.2%</strong>；代价是<strong>大约 15 倍于一次普通对话的 token</strong>，而且这篇明说了它不适合紧耦合的任务（比如写代码）。①②那种「主 agent + subagents」的流程层，花的就是这笔钱。<strong>一份深研报告的成本，你该按一次编译而不是一次提问来预期。</strong></p>
-<h3>工具位</h3>
+<h3 data-tts="66283cc79356193a">工具位</h3>
 <p>⑨默认 25 个工具定义，⑧默认 2 个。这些定义每一轮都在上下文里，不管你用不用。<strong>装两个检索 MCP 之前先数工具数</strong>——同理①那仓 59 个目录、④那 31 个 skill，整装的代价是每轮都交的描述税。装完跑 <code>/skill-doctor</code>，它会给出每个 skill 的 context 成本和调用频次。</p>
-<h3>骗你的地方</h3>
+<h3 data-tts="ab76d22d7ef8e57d">骗你的地方</h3>
 <div class="fail"><strong>引用核验 ≠ 事实核验。</strong> <code>verify_citations.py</code> 能确认这个 DOI 存在、这个 URL 打得开，<strong>但它不检查「这句话是不是那篇文章说的」</strong>。一条链接真实、编号规整、却支撑不住它挂着的那句论断——这是研究类最高频的假阳性，而它恰好能通过所有自动校验。</div>
 <p>第二个陷阱是<strong>格式的可信度高于内容</strong>：编号引用、置信度标注、「反面证据」小节，都是取信于人的视觉信号。一个只会套版式、不会真的重开原文的 skill，产出和真研究在屏幕上长得一模一样。第 03 节那六条判据，本质上就是在问<strong>「这份版式背后有没有账」</strong>。</p>
 <p>第三，这类 skill 绝大多数默认吃公开网页，<strong>二手聚合站会被当成来源</strong>——本站 Skill 21 会单独拆这件事。</p>
 </div>
 <div class="combo">
-<h3>// 一页选购卡</h3>
+<h3 data-tts="89eed19ebd619ddd">// 一页选购卡</h3>
 <p><strong>先装这三个</strong>：<code>daymade/claude-code-skills</code> 的 <code>deep-research</code>（<strong>只拷这一个目录，别整装 59 个</strong>；要的是它的 P3 引用登记表和 <code>[Unverified]</code> 出口）+ <code>exa-mcp-server</code>（<code>claude plugin install exa@claude-plugins-official</code>，默认只占 2 个工具位，给流程层配一只像样的眼睛）+ <code>discernment-nudge</code>（<code>/plugin install discernment-nudge@anthropic-agent-skills</code>，官方，最轻，一次对话只追问一次）。</p>
 <p><strong>按需再加</strong>：<code>openags/paper-search-mcp</code>（查论文，多数源免 key）· <code>blazickjp/arxiv-mcp-server</code>（要 BibTeX、要论文落盘留档）· <code>Weizhena/Deep-Research-skills</code>（<strong>想在大纲处卡一道人工闸门时换掉上面的流程层</strong>）· <code>199-biotechnologies/claude-deep-research-skill</code>（想要 <code>verify_citations.py</code> 那种能跑的校验）· <code>firecrawl-mcp-server</code> 的 <code>firecrawl_monitor_*</code>（真的在盯竞品站点）· <code>tavily-mcp</code>（要整站 map/crawl 但不想上 25 个工具）· <code>lingzhi227/agent-research-skills</code>（你真在写论文）。</p>
 <p><strong>明确别装</strong>：①和②同时挂（同名目录 <code>~/.claude/skills/deep-research</code>，且抢同一个触发词）· 装了流程层却一个检索 MCP 都没有（严格的流程配默认的眼睛）· 为一次搜索上 <code>firecrawl-mcp</code> 的 25 个工具 · 不写论文却整装 <code>agent-research-skills</code> 的 31 个 skill。</p>
 <p><strong>装完三件事</strong>：<code>/skill-doctor</code> 数工具位与 context 成本 · 拿第 03 节六条把手里这个流程层过一遍 · <strong>给自己留一条底线——凡是你要拿去做决定的数字，亲手点开那条引用。</strong></p>
 </div>
 <div class="glossary">
-<h3>// 术语表</h3>
+<h3 data-tts="1f5ac3930bd309d5">// 术语表</h3>
 <dl>
 <dt>citation registry（引用登记表）</dt>
 <dd>独立于正文的一张源清单：去重、编号、记下丢弃的源与理由，冻结后正文只许从表里引。本期第一判据。</dd>
@@ -215,7 +215,7 @@ npx -y tavily-mcp@latest                               <span class="tag-com"># �
 </dl>
 </div>
 <div class="refs">
-<h3>// 延伸阅读</h3>
+<h3 data-tts="7bad180d227819f7">// 延伸阅读</h3>
 <ul>
 <li><a href="https://github.com/daymade/claude-code-skills" target="_blank">daymade/claude-code-skills</a> — ①的出处，<code>/plugin marketplace add</code> 装法与 59 个目录清单（1.4k 星，2026-09）；<a href="https://github.com/daymade/claude-code-skills/blob/main/deep-research/SKILL.md" target="_blank">deep-research · SKILL.md</a> P0–P7、P3 引用登记表、<code>[Unverified]</code> 与证据家族；<a href="https://github.com/daymade/claude-code-skills/blob/main/competitors-analysis/SKILL.md" target="_blank">competitors-analysis · SKILL.md</a> 「仓库结论必须来自本地 clone」</li>
 <li><a href="https://github.com/199-biotechnologies/claude-deep-research-skill" target="_blank">199-biotechnologies/claude-deep-research-skill</a> — 8 段流水线、<code>validate_report.py</code>（9 项）与 <code>verify_citations.py</code>（DOI/URL/幻觉检测）、校验-修-重试三轮闭环（1.0k 星，MIT，2026-09）</li>
@@ -234,8 +234,8 @@ npx -y tavily-mcp@latest                               <span class="tag-com"># �
 </div>
 <footer>BigCat · Super Individual · Skill 19 · 2026-09-20</footer>
 </div>
-<script src="https://hub.cissychen.com/comments.js" defer></script>
-<script src="https://hub.cissychen.com/search.js" defer></script>
-<script src="https://hub.cissychen.com/index-button.js" defer></script>
-<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
 </body></html>
