@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill 20 · Research as a Workflow Skill — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head>
+<body>
+<div class="container">
+<header>
+<span class="week-tag">SKILL 20 / RESEARCH · DEEP-DIVE</span>
+<h1>Writing Your Research Process as a Workflow Skill</h1>
+<h2>Anyone can copy the six-line checklist — but citation verification is the only step a machine can run for you</h2>
+<div class="date">2026-09-21 · BigCat</div>
+<p class="pitch">Last issue was about picking a ready-made research skill. This one is about writing the process yourself. The leads: two validation scripts that actually run, and a six-line checklist buried in the official best-practices page that almost nobody notices.</p>
+</header>
+<div class="xref">
+<a href="research-skills-roundup-skill19.en.html">Prerequisite → Skill 19 Research Skills Roundup (where all three implementations here come from)</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>One of last issue's six tests was "is there a check a machine can run?" This issue follows that thread. <strong>Citation verification is the only step in a research process whose correctness can be settled automatically</strong> — whether a link opens, whether a DOI exists, whether an in-text number has a matching bibliography entry. None of that requires reading the content. Pin it to the end of a checklist, make failure jump back, and you have a workflow skill. The official best-practices page splits these two ideas across "Use workflows for complex tasks" and "Implement feedback loops"; <code>199-biotechnologies/claude-deep-research-skill</code> turned them into two Python scripts that actually run. This issue bolts the two together.</p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>What it kills for you: skipped steps you cannot see afterwards</h2>
+<div class="claim">Claim: the most expensive error in a research report is not a wrong sentence. It is "it skipped the verification step and you could not tell." A checklist makes skipping visible; a validation script makes skipping throw an error.</div>
+<h3>The official six lines can be copied wholesale</h3>
+<p>In <a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices" target="_blank">Skill authoring best practices</a>, under "Use workflows for complex tasks," the first example happens to be research — and it is from the "skills without code" family:</p>
+<pre><code><span class="tag-com"># Verbatim from the docs: Research synthesis workflow</span>
+Research Progress:
+- [ ] Step 1: Read all source documents
+- [ ] Step 2: Identify key themes
+- [ ] Step 3: Cross-reference claims
+- [ ] Step 4: Create structured summary
+- [ ] Step 5: Verify citations
+</code></pre>
+<p>The five lines are not the point. The sentence after them is: <em>If citations are incomplete, return to Step 3.</em> — <strong>the last step has to jump back on failure, or the checklist is typography, not a loop.</strong> The docs' own verdict on this pattern: <em>Clear steps prevent Claude from skipping critical validation.</em></p>
+<h3>Then install the two scripts</h3>
+<pre><code><span class="tag-com"># The lead: the one implementation here that makes "validate -> fix -> rerun" a real script</span>
+git clone https://github.com/199-biotechnologies/claude-deep-research-skill.git ~/.claude/skills/deep-research
+pip install -r ~/.claude/skills/deep-research/requirements.txt
+
+<span class="tag-com"># First thing that runs: you don't need it to write a report — point it at any markdown you already have</span>
+python ~/.claude/skills/deep-research/scripts/verify_citations.py --report report.md --strict
+python ~/.claude/skills/deep-research/scripts/validate_report.py --report report.md
+</code></pre>
+<p><strong>This is the one command to run first.</strong> <code>verify_citations.py</code> needs no API key (it uses the free doi.org resolver); exit code 0 passes, 1 fails. Feed it that AI-written market scan you produced last week and you will most likely see a few dead links immediately.</p>
+<p><strong>What it actually checks</strong> (per <code>scripts/verify_citations.py</code> on the repo's main branch, 2026-09): whether each DOI resolves at doi.org and returns metadata; whether the title/year in your report matches that metadata above 50% similarity, flagging mismatches; whether URLs return HTTP 200 to a HEAD request; plus a set of hallucination heuristics — generic academic title templates like "A Study of…", tbd/todo placeholders, pre-2000 papers that mention AI or GPT, future-dated years, and recent works carrying neither a DOI nor a URL. Under <code>--strict</code>, any suspicious or unverified entry fails the run.</p>
+<p><strong>The other half is structure.</strong> <code>validate_report.py</code> runs 9 checks: executive summary present and between 50 and 400 words, 8 required sections present, in-text citations matched to bibliography entries, entry numbering consecutive with no gaps, no TBD/TODO, no signs of truncated generation, total length above 500 words, at least 10 unique sources, and internal markdown links resolving.</p>
+<div class="res"><strong>Source</strong> · <a href="https://github.com/199-biotechnologies/claude-deep-research-skill" target="_blank">199-biotechnologies/claude-deep-research-skill</a> (per the GitHub repo page, 2026-09: 1.1k stars, MIT, v2.3.1)</div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Mechanism: the checklist prevents skipping, the script makes it fail loudly</h2>
+<div class="claim">Claim: this works because it replaces the vaguest sentence in research — "I checked" — with a fact that carries an exit code.</div>
+<div class="diagram">question -> method -> sources -> evidence -> synthesis -> caveats
+                          |                        ^
+                          +--- citation registry --+   &lt;- machine-checkable intermediate
+                                    |
+                         verify_citations.py  -> exit 1 jumps back; nothing proceeds
+</div>
+<h3>Three parts, each named in the docs</h3>
+<ol>
+<li><strong>Workflow / checklist.</strong> Break a complex task into ordered steps and have the model copy the checklist into its response, ticking items off. This treats skipping.</li>
+<li><strong>Feedback loop.</strong> The docs phrase it as <em>Run validator → fix errors → repeat</em>, with the instruction <em>Only proceed when validation passes</em>. This treats "ran the check, ignored the result."</li>
+<li><strong>Plan-validate-execute.</strong> Produce a machine-checkable intermediate artifact, validate it, then execute. The docs frame this for batch and destructive operations — <strong>research is the same family: once a report is drafted, the error gets copied dozens of times.</strong></li>
+</ol>
+<h3>In research, that intermediate artifact is the citation registry</h3>
+<p>The <code>deep-research</code> skill in <a href="https://github.com/daymade/claude-code-skills" target="_blank">daymade/claude-code-skills</a> puts it at P3: merge sources by evidence family, number them <code>[n]</code> by first appearance, tag each with a type (official / academic / secondary-industry / journalism / community) and an accessibility label, and <strong>record dropped sources with the reason they were dropped — those sources may not reappear when drafting at P5</strong>. Two more rules in the same SKILL.md are worth lifting on their own: set <code>AS_OF</code> explicitly at P0, attach a publication date to every time-sensitive claim and downgrade confidence as it ages; and one hard prohibition, written verbatim — <em>Lead agent never invents URLs; every locator must come from an actual retrieval.</em></p>
+<h3>Why verification should be a different role</h3>
+<p>Anthropic's Research system exits the research loop and hands all gathered material plus the report to a separate <strong>CitationAgent</strong>, which identifies where each citation belongs (per Anthropic's engineering post "How we built our multi-agent research system," 2025-06). The logic is plain: <strong>an agent that both writes and verifies is verifying its own recollection; a separate role holds nothing but the sources and the draft.</strong></p>
+<div class="fail"><strong>The most common half-built version</strong>: a checklist with no jump-back at the end. The model will dutifully tick all five boxes, including "Step 5: Verify citations" — <strong>ticking a box is not checking. A validation step with no exit code is the same as no validation step.</strong></div>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Real usage and limits: three ways in, one hard line</h2>
+<div class="claim">Claim: you do not have to build this from scratch. Three existing implementations each solve one stretch, and assembling beats authoring — but not one of them can tell you whether a sentence is actually what that source said.</div>
+<h3>By increasing effort</h3>
+<ul>
+<li><strong>Copy the checklist only.</strong> Paste those five lines plus the <em>return to Step 3</em> jump-back into your own SKILL.md or CLAUDE.md. Zero dependencies, usable today, and enough for a one-off investigation.</li>
+<li><strong>Take the scripts only.</strong> The two <code>.py</code> files do not depend on the surrounding process; they run against any markdown report regardless of who wrote it. <strong>Whether you want the process and whether you want the scripts are separate decisions.</strong></li>
+<li><strong>Borrow the registry and the gate.</strong> From <code>daymade/claude-code-skills</code> (per the GitHub repo page, 2026-09: 1.4k stars, 70+ skill directories, MIT) take the P3 registry — <strong>copy the single <code>deep-research</code> directory, do not install the whole marketplace</strong>. From <a href="https://github.com/Weizhena/Deep-Research-skills" target="_blank">Weizhena/Deep-Research-skills</a> (per the GitHub repo page, 2026-09: 2.2k stars, MIT) take the two-phase human gate: phase one produces only an outline and waits for your approval, phase two searches item by item. It ships English and Chinese sets and installs on Codex and OpenCode too; the cost is a manual <code>cp -r skills/research-en/* ~/.claude/skills/</code> plus <code>pip install pyyaml</code>.</li>
+</ul>
+<h3>Wiring verification to something real</h3>
+<p><strong><a href="https://github.com/54yyyu/zotero-mcp" target="_blank">54yyyu/zotero-mcp</a></strong> (per the GitHub repo page, 2026-09: 5.1k stars, MIT): <code>uv tool install zotero-mcp-server</code>, then <code>zotero-mcp setup</code>. It upgrades verification from "the link opens" to "this one is in my library and I have read it": add papers by DOI, URL, ISBN or BibTeX, read full text and specific PDF page ranges, pull BibTeX directly, and optionally install the scite extra for citation tallies and <strong>retraction alerts</strong> — retraction is the cell that pure web checking cannot fill. <strong>When not to install it</strong>: you do not use Zotero, or your sources are web pages rather than literature, in which case it is just tool-slot cost.</p>
+<p><strong>Where the originals come from</strong>: <a href="https://github.com/openags/paper-search-mcp" target="_blank"><code>openags/paper-search-mcp</code></a> (twenty-odd academic sources, most needing no key) and <a href="https://github.com/blazickjp/arxiv-mcp-server" target="_blank"><code>blazickjp/arxiv-mcp-server</code></a> (papers land on disk, read the original section by section, emit BibTeX) were covered last issue. One line to add here: a validation script can only tell you the DOI exists. To judge whether a sentence is what that paper said, you have to fetch the paper.</p>
+<h3>How to accept what you assembled</h3>
+<p><a href="https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md" target="_blank">skill-creator in anthropics/skills</a> (<code>/plugin marketplace add anthropics/skills</code>) supplies a ready procedure: test cases live in <code>evals/evals.json</code>; every case <strong>spawns two subagents in the same turn — one with the skill, one without as baseline</strong>; results are graded per assertion by <code>agents/grader.md</code>, aggregated by <code>python -m scripts.aggregate_benchmark</code> into pass_rate, time and token figures with mean and standard deviation, and finally served by <code>eval-viewer/generate_review.py</code> as a page you review by hand. It also carries a line worth taping to a wall: <em>do not force assertions onto subjective outputs</em>. Research sits exactly half and half — <strong>write citation verification as assertions, and leave the quality of the conclusions to a human.</strong></p>
+<div class="fail"><strong>The hard line of this section: citation verification is not fact verification.</strong> <code>verify_citations.py</code> can confirm that a DOI exists and a URL returns 200. <strong>It does not check whether the sentence is what that source said.</strong> A real link attached to a claim it does not support is the highest-frequency false positive in this category, and it passes every automated check. Which is why Step 3 in the checklist — cross-reference claims — can be neither skipped nor automated.</div>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Costs and alternatives: three bills, and three cheaper roads</h2>
+<div class="claim">Claim: this costs you false positives, latency, and money. The first two have fixes; the third you can only decline to pay.</div>
+<h3>One: false positives</h3>
+<p>Hallucination detection is heuristic. It treats title templates like "A Study of…" and "Recent Advances in…" as suspicious signals — and real papers are named exactly that. Under <code>--strict</code> those fail the run outright, so you spend time "fixing" a citation that was fine. <strong>Run it once without <code>--strict</code>, read the list, judge it yourself, and only then decide whether it belongs in the pipeline.</strong></p>
+<h3>Two: latency</h3>
+<p>Every citation means a network request: DOI content negotiation against doi.org, a HEAD request per URL, a 10-second timeout, and a 0.5-second rate limit between entries. Fifty citations is minutes. <strong>Keep it out of every conversation turn; run it once before you ship.</strong></p>
+<h3>Three: cost</h3>
+<p>Process-layer skills are usually orchestrator-plus-subagents. Per Anthropic's engineering post "How we built our multi-agent research system," 2025-06: an Opus 4 lead with Sonnet 4 subagents outperformed a single Opus 4 by <strong>90.2%</strong> on their internal research eval, at the cost of <strong>roughly 15x the tokens of an ordinary chat</strong>, and the post states plainly that the structure does not suit tightly coupled tasks. <strong>Price a deep research report like a compile, not like a question.</strong></p>
+<h3>If you do not write this skill, what else</h3>
+<ol>
+<li><strong>Paste the six lines into the prompt.</strong> Enough for a one-off investigation; do not create a directory for a single task.</li>
+<li><strong>Keep the validation script as a standalone CLI tool.</strong> It depends on no skill. Run it by hand before shipping and you have collected eighty percent of the benefit.</li>
+<li><strong>Write one minimal rule into CLAUDE.md</strong>: any number you will act on must carry a source and <strong>that source page's own date</strong>. It needs no tooling and stops most accidents.</li>
+</ol>
+</div>
+<div class="combo">
+<h3>// ONE-PAGE PICK LIST</h3>
+<p><strong>Do these three first</strong>: (1) Copy the five-line Research synthesis workflow checklist from "Use workflows for complex tasks" in the official best-practices page, together with the <em>return to Step 3</em> jump-back. (2) <code>git clone https://github.com/199-biotechnologies/claude-deep-research-skill.git ~/.claude/skills/deep-research</code>, use only <code>scripts/verify_citations.py</code> at first, and point it at a report you have already finished. (3) Lift the P3 citation registry section from <code>deep-research</code> in <code>daymade/claude-code-skills</code>, including "record dropped sources with reasons" and the <code>AS_OF</code> date rule.</p>
+<p><strong>Add as needed</strong>: <code>Weizhena/Deep-Research-skills</code> (you want a human gate at the outline) · <code>54yyyu/zotero-mcp</code> (verification should hit your own library; you want retraction alerts) · <code>openags/paper-search-mcp</code> and <code>blazickjp/arxiv-mcp-server</code> (you need the originals back to check against) · <code>skill-creator</code> in <code>anthropics/skills</code> (you want a baseline comparison before accepting the workflow).</p>
+<p><strong>Explicitly do not</strong>: wire <code>--strict</code> straight into a pipeline without a human pass · put <code>verify_citations.py</code> in every conversation turn · create a skill directory for a one-off investigation · <strong>assume that passing citation verification means the facts were checked</strong>.</p>
+</div>
+<div class="glossary">
+<h3>// GLOSSARY</h3>
+<dl>
+<dt>workflow / checklist pattern</dt>
+<dd>The official best-practices approach: write a multi-step task as a tickable checklist the model copies into its response. The docs say plainly that it prevents skipping critical validation.</dd>
+<dt>feedback loop</dt>
+<dd>Run validator, fix, rerun, and proceed only once it passes. In a research process, that validator is citation verification.</dd>
+<dt>plan-validate-execute</dt>
+<dd>Produce a machine-checkable intermediate plan, validate it, then execute. Here the intermediate artifact is the citation registry.</dd>
+<dt>citation registry</dt>
+<dd>A source ledger kept separately from the prose: deduplicated and numbered, tagged by type, recording dropped sources and why. Once frozen, the prose may cite only from it.</dd>
+<dt>AS_OF</dt>
+<dd>An "as of" date fixed explicitly at the start of the process. Every time-sensitive claim carries a source date, and anything past its freshness window gets a confidence downgrade.</dd>
+<dt>CitationAgent</dt>
+<dd>The separate agent in Anthropic's Research system responsible for placing citations: after the research loop ends, it reads the raw material and the draft and identifies where each citation belongs.</dd>
+<dt>baseline eval</dt>
+<dd>Running the same prompt once with the skill and once without, then comparing. Skip this and you cannot tell whether the skill helped or the model could already do it.</dd>
+</dl>
+</div>
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices" target="_blank">Anthropic · Skill authoring best practices</a> — the five-line Research synthesis workflow and <em>return to Step 3</em> under "Use workflows for complex tasks"; validator → fix → repeat under "Implement feedback loops"; plan-validate-execute under "Create verifiable intermediate outputs" (2026-09)</li>
+<li><a href="https://github.com/199-biotechnologies/claude-deep-research-skill" target="_blank">199-biotechnologies/claude-deep-research-skill</a> — this issue's lead. Nine stages from SCOPE and PLAN through RETRIEVE, TRIANGULATE and on to PACKAGE; a hard quality bar of 10+ sources and 3+ per major claim; unsupported statements marked <code>[Unverified]</code> (per the repo page, 2026-09: 1.1k stars, MIT, v2.3.1)</li>
+<li><a href="https://github.com/199-biotechnologies/claude-deep-research-skill/blob/main/scripts/verify_citations.py" target="_blank">scripts/verify_citations.py</a> — DOI resolution, title/year similarity, URL HEAD requests, hallucination heuristics; <code>--strict</code> and exit codes 0/1; the README's own line, <em>No API keys — uses free DOI resolver and heuristics</em></li>
+<li><a href="https://github.com/199-biotechnologies/claude-deep-research-skill/blob/main/scripts/validate_report.py" target="_blank">scripts/validate_report.py</a> — the 9 structural checks and their thresholds (summary 50–400 words, 10+ sources, 500+ words total, no gaps in numbering)</li>
+<li><a href="https://github.com/daymade/claude-code-skills" target="_blank">daymade/claude-code-skills · deep-research</a> — the P0–P7 pipeline; the P3 citation registry and source governance; the <code>AS_OF</code> rule; <em>Lead agent never invents URLs</em> (per the repo page, 2026-09: 1.4k stars, 70+ directories, MIT)</li>
+<li><a href="https://github.com/Weizhena/Deep-Research-skills" target="_blank">Weizhena/Deep-Research-skills</a> — two phases: outline first and wait for approval, then search item by item; install paths for Claude Code, Codex and OpenCode (per the repo page, 2026-09: 2.2k stars, MIT)</li>
+<li><a href="https://github.com/54yyyu/zotero-mcp" target="_blank">54yyyu/zotero-mcp</a> — <code>uv tool install zotero-mcp-server</code>; BibTeX and PDF page ranges, adding items by DOI or ISBN, optional scite citation tallies and retraction alerts (per the repo page, 2026-09: 5.1k stars, MIT)</li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md" target="_blank">anthropics/skills · skill-creator</a> — <code>evals/evals.json</code>, same-turn dual runs against a baseline, <code>agents/grader.md</code>, <code>scripts.aggregate_benchmark</code>, <code>eval-viewer/generate_review.py</code></li>
+<li><a href="https://code.claude.com/docs/en/skills" target="_blank">Claude Code Docs · Skills</a> — "seeing a skill trigger tells you Claude found it, not that it did what you intended"; why baselines and fresh sessions matter</li>
+<li><a href="research-skills-roundup-skill19.en.html">Skill 19 · Research Skills Roundup</a> — the full list of the process-layer implementations and retrieval MCPs used here, with the tests for choosing between them</li>
+<li><a href="skill-eval-skill7.en.html">Skill 07 · Writing Evals for a Skill</a> — where the two-instance iteration method and "build the baseline before you write the skill" come from</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Skill 20 · 2026-09-21</footer>
+</div>
+<script src="https://hub.cissychen.com/comments.js" defer></script>
+<script src="https://hub.cissychen.com/search.js" defer></script>
+<script src="https://hub.cissychen.com/index-button.js" defer></script>
+<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+</body></html>

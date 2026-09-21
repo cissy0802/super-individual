@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill 20 · 把研究流程写成 Workflow Skill — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head>
+<body>
+<div class="container">
+<header>
+<span class="week-tag">SKILL 20 / RESEARCH · DEEP-DIVE</span>
+<h1>把研究流程写成 Workflow Skill</h1>
+<h2>六步清单谁都能抄 · 但只有「引用核验」这一步机器能替你跑</h2>
+<div class="date">2026-09-21 · BigCat</div>
+<p class="pitch">上一期讲怎么挑现成的研究 skill。这期讲怎么把研究流程写成一个——主角是两个真能跑的校验脚本，以及官方 best-practices 里那段几乎没人注意的六行清单。</p>
+</header>
+<div class="xref">
+<a href="research-skills-roundup-skill19.html">前置 → Skill 19 研究类 Skills 榜单（本期三份实现的来路）</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>上一期的六条判据里有一条是「有没有机器能跑的校验」。这期沿着那条往下走。<strong>研究流程里唯一能自动判对错的环节是引用核验</strong>——链接打不打得开、DOI 存不存在、正文编号在不在参考文献表里，这三件事不用读内容就能判。把它钉在一份清单的末尾，再让它失败时回跳，你就有了一个 workflow skill。官方 best-practices 把这两件事分写在「Use workflows for complex tasks」和「Implement feedback loops」两节，<code>199-biotechnologies/claude-deep-research-skill</code> 则把它做成了两个真能跑的 Python 脚本。本期把这两样拼起来。</p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>它替你干掉什么：模型跳步，而你事后看不出来</h2>
+<div class="claim">论断：一份研究报告最贵的错不是写错，是「它跳过了核对那一步，而你看不出来」。清单让跳步变得可见，校验脚本让跳步变得会报错。</div>
+<h3>官方那六行可以整段抄走</h3>
+<p>在 <a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices" target="_blank">Skill authoring best-practices</a>「Use workflows for complex tasks」节里，官方给的第一个例子恰好就是研究，而且是「不含代码的 skill」那一类：</p>
+<pre><code><span class="tag-com"># 官方原文示例：Research synthesis workflow</span>
+Research Progress:
+- [ ] Step 1: Read all source documents
+- [ ] Step 2: Identify key themes
+- [ ] Step 3: Cross-reference claims
+- [ ] Step 4: Create structured summary
+- [ ] Step 5: Verify citations
+</code></pre>
+<p>关键不在这五行，在它后面那句：<em>If citations are incomplete, return to Step 3.</em> —— <strong>末尾这步失败要回跳，清单才是闭环，否则只是排版。</strong>官方对这段的评语是 <em>Clear steps prevent Claude from skipping critical validation.</em></p>
+<h3>然后装上那两个脚本</h3>
+<pre><code><span class="tag-com"># 主角：本期唯一把「校验→修→重跑」做成真脚本的实现</span>
+git clone https://github.com/199-biotechnologies/claude-deep-research-skill.git ~/.claude/skills/deep-research
+pip install -r ~/.claude/skills/deep-research/requirements.txt
+
+<span class="tag-com"># 第一条立刻能跑的用法：不用等它写报告，先拿它验你手上任何一份 md</span>
+python ~/.claude/skills/deep-research/scripts/verify_citations.py --report report.md --strict
+python ~/.claude/skills/deep-research/scripts/validate_report.py --report report.md
+</code></pre>
+<p><strong>这是本期最该先跑的一条命令。</strong><code>verify_citations.py</code> 不要任何 API key（走 doi.org 的免费解析），退出码 0 过 / 1 不过。拿你上周那份 AI 写的调研报告喂进去，多半当场就能看见几条打不开的链接。</p>
+<p><strong>它到底验什么</strong>（据仓库 main 分支 <code>scripts/verify_citations.py</code>，2026-09）：DOI 能否在 doi.org 解析并取回元数据；报告里写的标题/年份与元数据相似度低于 50% 判 mismatch；URL 发 HEAD 看是否 200；外加一组幻觉启发式——「A Study of…」这类通用学术标题模板、tbd/todo 占位、2000 年前的论文却提到 AI/GPT、未来年份、近年文献却既无 DOI 也无 URL。<code>--strict</code> 下任何一条可疑或未验证都判失败。</p>
+<p><strong>另一半是结构</strong>：<code>validate_report.py</code> 跑 9 项检查——Executive Summary 在不在、字数是否落在 50–400、8 个必需章节齐不齐、正文引用编号有没有对应条目、编号连不连续、有没有 TBD/TODO、有没有生成被截断的痕迹、全文是否低于 500 词、去重来源是否少于 10 个、内部链接是否有效。</p>
+<div class="res"><strong>出处</strong> · <a href="https://github.com/199-biotechnologies/claude-deep-research-skill" target="_blank">199-biotechnologies/claude-deep-research-skill</a>（据 GitHub 仓库页，2026-09 为 1.1k 星，MIT，版本 2.3.1）</div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>机制：清单负责不跳步，脚本负责会报错</h2>
+<div class="claim">论断：这套东西之所以有效，是因为它把研究里最含糊的一句话——「我核过了」——换成了一个有退出码的事实。</div>
+<div class="diagram">问题 → 方法 → 来源 → 证据 → 综合 → 存疑
+                      │                 ↑
+                      └── 引用登记表 ────┘   ← 可机器校验的中间产物
+                              │
+                     verify_citations.py  → 退出码 1 就回跳，不许往下走
+</div>
+<h3>三个零件，官方各给了名字</h3>
+<ol>
+<li><strong>workflow / checklist</strong>：把复杂任务拆成有序步骤，并让模型把清单抄进回复里逐条勾。治的是跳步。</li>
+<li><strong>feedback loop</strong>：官方写成 <em>Run validator → fix errors → repeat</em>，并强调 <em>Only proceed when validation passes</em>。治的是「跑了校验但不理会结果」。</li>
+<li><strong>plan-validate-execute</strong>：先产出一份可机器校验的中间产物，验过了再执行。官方给的场景是批量与破坏性操作——<strong>研究其实是同一类：一旦成稿，错误就被抄了几十遍。</strong></li>
+</ol>
+<h3>研究流程里那份中间产物是引用登记表</h3>
+<p><a href="https://github.com/daymade/claude-code-skills" target="_blank">daymade/claude-code-skills</a> 的 <code>deep-research</code> 把它放在 P3：按证据家族合并来源、按首次出现编 <code>[n]</code>、给每条打上类型（official / academic / secondary-industry / journalism / community）与可达性标签，并<strong>记下被丢弃的源和丢弃理由，且这些源在 P5 起草时不得再出现</strong>。同一份 SKILL.md 里另有两条值得单抄：P0 显式设 <code>AS_OF</code> 日期、所有时效性论断都挂来源日期并按新鲜度降置信；以及一句写死的禁令——<em>Lead agent never invents URLs; every locator must come from an actual retrieval.</em></p>
+<h3>为什么核验该换个角色来做</h3>
+<p>Anthropic 的 Research 系统在研究循环结束后，把全部资料连同报告交给一个独立的 <strong>CitationAgent</strong>，由它去定位每条引用该挂在哪（据 Anthropic 工程博客《How we built our multi-agent research system》，2025-06）。道理很朴素：<strong>同一个 agent 既写又验，验的是自己的记忆；换个角色，它手上就只剩原文和成稿两份东西。</strong></p>
+<div class="fail"><strong>最常见的半成品</strong>：清单写了，末尾没有回跳。模型会老老实实把五个框都勾上，包括「Step 5: Verify citations」那个——<strong>勾框不等于核过。没有退出码的校验步，和没写是一样的。</strong></div>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>真实用法与边界：三条落法，一条死线</h2>
+<div class="claim">论断：你不必从零写。三份现成实现各解决一段，挑着拼比自己造快得多——但没有一份能替你判「这句话是不是那篇文章说的」。</div>
+<h3>按投入从小到大</h3>
+<ul>
+<li><strong>只抄清单</strong>：把官方那五行连同 <em>return to Step 3</em> 的回跳贴进自己的 SKILL.md 或 CLAUDE.md。零依赖，今天就能用，一次性调研到此为止。</li>
+<li><strong>只要脚本</strong>：上一节那两个 <code>.py</code> 不依赖它的流程，对任何 markdown 报告都能跑，和谁写的无关。<strong>要流程还是只要脚本，可以分开决定。</strong></li>
+<li><strong>借登记表与闸门</strong>：<code>daymade/claude-code-skills</code>（据 GitHub 仓库页，2026-09 为 1.4k 星、70+ 个 skill 目录，MIT）拿它的 P3 登记表——<strong>只拷 <code>deep-research</code> 一个目录，别整装</strong>；<a href="https://github.com/Weizhena/Deep-Research-skills" target="_blank">Weizhena/Deep-Research-skills</a>（据 GitHub 仓库页，2026-09 为 2.2k 星，MIT）拿它的两阶段人工闸门——第一阶段只产出大纲、等你点头，第二阶段才逐条开搜。后者中英各一套，Codex 与 OpenCode 也能装；代价是手工 <code>cp -r skills/research-en/* ~/.claude/skills/</code> 外加 <code>pip install pyyaml</code>。</li>
+</ul>
+<h3>把核验接到真东西上</h3>
+<p><strong><a href="https://github.com/54yyyu/zotero-mcp" target="_blank">54yyyu/zotero-mcp</a></strong>（据 GitHub 仓库页，2026-09 为 5.1k 星，MIT）：<code>uv tool install zotero-mcp-server</code>，再 <code>zotero-mcp setup</code>。它把核验从「链接能打开」升级到「这条在我库里、我读过」：按 DOI / URL / ISBN / BibTeX 加论文，读 PDF 全文与指定页范围，直接取 BibTeX，可选装 scite 扩展拿引用计数与<strong>撤稿提醒</strong>——撤稿是纯网页核验给不了的那一格。<strong>什么时候别装</strong>：你不用 Zotero，或你的来源本来就是网页而非文献，那它只是多占工具位。</p>
+<p><strong>原文从哪来</strong>：<a href="https://github.com/openags/paper-search-mcp" target="_blank"><code>openags/paper-search-mcp</code></a>（二十余个学术源，多数不要 key）与 <a href="https://github.com/blazickjp/arxiv-mcp-server" target="_blank"><code>blazickjp/arxiv-mcp-server</code></a>（论文落盘、按节读原文、出 BibTeX）上期已拆过，这里只补一句——校验脚本只能告诉你这个 DOI 存在；要判断「这句话是不是那篇文章说的」，你得把原文真的取回来。</p>
+<h3>怎么验收你拼出来的这套</h3>
+<p><a href="https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md" target="_blank">anthropics/skills 的 skill-creator</a>（<code>/plugin marketplace add anthropics/skills</code>）给了现成的做法：测试用例存 <code>evals/evals.json</code>；每条用例<strong>同一轮里开两个 subagent——一个带 skill、一个不带作 baseline</strong>；跑完让 <code>agents/grader.md</code> 逐条判定，再 <code>python -m scripts.aggregate_benchmark</code> 聚合出 pass_rate、时间、token 的均值与标准差，最后 <code>eval-viewer/generate_review.py</code> 起个页面让你人工过一遍。它还有一句该贴墙上的话：<em>主观产出别硬上断言</em>。研究类正好一半一半——<strong>引用核验写成断言，结论质量留给人看。</strong></p>
+<div class="fail"><strong>这一节的死线：引用核验 ≠ 事实核验。</strong><code>verify_citations.py</code> 能确认 DOI 存在、URL 返回 200，<strong>它不检查这句话是不是那篇文章说的</strong>。一条真实链接挂着一句它并不支撑的论断——这是研究类最高频的假阳性，而它能通过全部自动校验。所以清单里 Step 3（cross-reference claims）那一步既不能省，也没法自动化。</div>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>代价与替代品：三笔账，和三条更便宜的路</h2>
+<div class="claim">论断：这套东西的代价是误杀、很慢、很贵。前两笔有解，第三笔只能选择不付。</div>
+<h3>一、误杀</h3>
+<p>幻觉检测是启发式的：它把「A Study of…」「Recent Advances in…」这类标题模板当可疑信号，可真有论文就叫这个名字。<code>--strict</code> 下这类直接判失败，于是你花时间去「修」一条本来没错的引用。<strong>建议先不带 <code>--strict</code> 跑一遍看清单，人判完再决定要不要把它接进流水线。</strong></p>
+<h3>二、慢</h3>
+<p>每条引用都要发网络请求：DOI 走 doi.org 内容协商，URL 发 HEAD，超时 10 秒，条目之间还有 0.5 秒限速。50 条引用就是分钟级。<strong>别把它放进每轮对话，放在交稿前跑一次。</strong></p>
+<h3>三、贵</h3>
+<p>流程层多半是 orchestrator + subagents 的结构。据 Anthropic 工程博客《How we built our multi-agent research system》，2025-06：Opus 4 主 agent 配 Sonnet 4 子 agent 的组合，在其内部研究评测上比单个 Opus 4 高 <strong>90.2%</strong>，代价是<strong>约 15 倍于一次普通对话的 token</strong>，且该文明说这种结构不适合紧耦合任务。<strong>一份深研报告的成本按一次编译预期，不是按一次提问。</strong></p>
+<h3>不写这个 skill，你还能怎么办</h3>
+<ol>
+<li><strong>六行清单贴进 prompt。</strong>一次性调研这就够了，别为一次任务建目录。</li>
+<li><strong>把校验脚本单独留着当命令行工具。</strong>它不依赖任何 skill，交稿前手动跑一次，收益的八成就到手了。</li>
+<li><strong>只写一条最小约束进 CLAUDE.md</strong>：凡是要拿去做决定的数字，必须挂来源与<strong>来源页自己的日期</strong>。这条不用任何工具，也拦得住大多数事故。</li>
+</ol>
+</div>
+<div class="combo">
+<h3>// 一页选购卡</h3>
+<p><strong>先做这三件</strong>：① 抄官方 best-practices「Use workflows for complex tasks」那五行 Research synthesis workflow 清单，连同末尾 <em>return to Step 3</em> 的回跳。② <code>git clone https://github.com/199-biotechnologies/claude-deep-research-skill.git ~/.claude/skills/deep-research</code>，先只用 <code>scripts/verify_citations.py</code>，拿它验一份你已经写完的报告。③ 从 <code>daymade/claude-code-skills</code> 的 <code>deep-research</code> 抄走 P3 引用登记表那一段（含「记录被丢弃的源与理由」和 <code>AS_OF</code> 日期规则）。</p>
+<p><strong>按需再加</strong>：<code>Weizhena/Deep-Research-skills</code>（要在大纲处卡一道人工闸门）· <code>54yyyu/zotero-mcp</code>（核验要接自己的文献库、要撤稿提醒）· <code>openags/paper-search-mcp</code> 与 <code>blazickjp/arxiv-mcp-server</code>（要把原文真的取回来核）· <code>anthropics/skills</code> 的 <code>skill-creator</code>（要给这套流程做 baseline 对比验收）。</p>
+<p><strong>明确别做</strong>：把 <code>--strict</code> 直接接进流水线而没人工过一遍 · 把 <code>verify_citations.py</code> 放进每轮对话 · 为一次性调研新建一个 skill 目录 · <strong>以为过了引用核验就等于事实核对过了</strong>。</p>
+</div>
+<div class="glossary">
+<h3>// 术语表</h3>
+<dl>
+<dt>workflow / checklist pattern（清单模式）</dt>
+<dd>官方 best-practices 的写法：把多步任务写成一份可勾选清单，让模型抄进回复里逐条推进。原话是它能防止模型跳过关键校验。</dd>
+<dt>feedback loop（反馈闭环）</dt>
+<dd>跑校验 → 改 → 再跑，直到通过才往下走。研究流程里那个校验就是引用核验。</dd>
+<dt>plan-validate-execute</dt>
+<dd>先产出可机器校验的中间计划，验过再执行。本期对应的中间产物是引用登记表。</dd>
+<dt>citation registry（引用登记表）</dt>
+<dd>独立于正文的一份来源账：去重编号、打类型标签、记下被丢弃的源与理由，定稿后正文只许从表里引。</dd>
+<dt>AS_OF</dt>
+<dd>在流程开头显式定下的「截至日期」。所有时效性论断都要挂来源日期，超出新鲜度窗口的要降置信。</dd>
+<dt>CitationAgent</dt>
+<dd>Anthropic Research 系统里负责引用归位的独立 agent：研究循环结束后读原始资料与成稿，定位每条引用该挂哪儿。</dd>
+<dt>baseline eval（基线对比）</dt>
+<dd>同一个提示分别在「带 skill」和「不带 skill」下各跑一次再比。不做这一步，你无法区分是 skill 有用还是模型本来就会。</dd>
+</dl>
+</div>
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices" target="_blank">Anthropic · Skill authoring best practices</a> — 「Use workflows for complex tasks」的 Research synthesis workflow 五行清单与 <em>return to Step 3</em>；「Implement feedback loops」的 validator → fix → repeat；「Create verifiable intermediate outputs」的 plan-validate-execute（2026-09）</li>
+<li><a href="https://github.com/199-biotechnologies/claude-deep-research-skill" target="_blank">199-biotechnologies/claude-deep-research-skill</a> — 本期主角。SCOPE→PLAN→RETRIEVE→TRIANGULATE→…→PACKAGE 九段，质量线写死「至少 10 个来源、每个主要论断 3 个以上」，不确定处标 <code>[Unverified]</code>（据仓库页，2026-09 为 1.1k 星，MIT，v2.3.1）</li>
+<li><a href="https://github.com/199-biotechnologies/claude-deep-research-skill/blob/main/scripts/verify_citations.py" target="_blank">scripts/verify_citations.py</a> — DOI 解析、标题年份相似度、URL HEAD、幻觉启发式；<code>--strict</code> 与退出码 0/1；README 原话 <em>No API keys — uses free DOI resolver and heuristics</em></li>
+<li><a href="https://github.com/199-biotechnologies/claude-deep-research-skill/blob/main/scripts/validate_report.py" target="_blank">scripts/validate_report.py</a> — 9 项结构检查与各自阈值（摘要 50–400 词、来源 ≥10、全文 ≥500 词、编号不得有缺口）</li>
+<li><a href="https://github.com/daymade/claude-code-skills" target="_blank">daymade/claude-code-skills · deep-research</a> — P0–P7 流程；P3 引用登记表与来源治理；<code>AS_OF</code> 规则；<em>Lead agent never invents URLs</em>（据仓库页，2026-09 为 1.4k 星、70+ 目录，MIT）</li>
+<li><a href="https://github.com/Weizhena/Deep-Research-skills" target="_blank">Weizhena/Deep-Research-skills</a> — 两阶段：先出大纲等人点头，再逐条开搜；Claude Code / Codex / OpenCode 三套装法（据仓库页，2026-09 为 2.2k 星，MIT）</li>
+<li><a href="https://github.com/54yyyu/zotero-mcp" target="_blank">54yyyu/zotero-mcp</a> — <code>uv tool install zotero-mcp-server</code>；读 BibTeX 与 PDF 页范围、按 DOI/ISBN 入库、可选 scite 引用计数与撤稿提醒（据仓库页，2026-09 为 5.1k 星，MIT）</li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md" target="_blank">anthropics/skills · skill-creator</a> — <code>evals/evals.json</code>、同轮双跑 baseline、<code>agents/grader.md</code>、<code>scripts.aggregate_benchmark</code>、<code>eval-viewer/generate_review.py</code></li>
+<li><a href="https://code.claude.com/docs/en/skills" target="_blank">Claude Code Docs · Skills</a> — 「看到 skill 触发只说明找到了它，不说明它做对了」；baseline 对比与 fresh session 的必要性</li>
+<li><a href="research-skills-roundup-skill19.html">本站 Skill 19 · 研究类 Skills 榜单</a> — 本期三份流程层实现与检索层 MCP 的完整清单与选购判据</li>
+<li><a href="skill-eval-skill7.html">本站 Skill 07 · 给 skill 写 eval</a> — 双实例迭代法与「先建 baseline 再写 skill」的出处</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Skill 20 · 2026-09-21</footer>
+</div>
+<script src="https://hub.cissychen.com/comments.js" defer></script>
+<script src="https://hub.cissychen.com/search.js" defer></script>
+<script src="https://hub.cissychen.com/index-button.js" defer></script>
+<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+</body></html>
