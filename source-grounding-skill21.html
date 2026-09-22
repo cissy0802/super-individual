@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill 21 · 来源接地与引用可信度 — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head>
+</head>
+<body>
+<div class="container">
+<header>
+<span class="week-tag">SKILL 21 / RESEARCH · DEEP-DIVE</span>
+<h1>来源接地与引用可信度</h1>
+<h2>模型最会编的三样东西是 URL、引文和日期 · 治它的不是「请认真点」，是让它指得回去</h2>
+<div class="date">2026-09-22 · BigCat</div>
+<p class="pitch">上一期把引用核验钉进了研究清单。这期往下一层：为什么核验之前，先得让模型的每一句话都有个能指回去的位置——以及官方已经把这件事做进 API 的哪几个字段里。</p>
+</header>
+<div class="xref">
+<a href="research-workflow-skill-skill20.html">前置 → Skill 20 把研究流程写成 Workflow Skill（引用核验那一步的出处）</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>上期结尾留了一条死线：<strong>引用核验 ≠ 事实核验</strong>——链接返回 200，不代表那句话是那篇文章说的。本期就从这条线往下走。接地（grounding）要解决的不是「模型知不知道」，而是<strong>「它说的这句，在哪份材料的第几个字」</strong>。这件事有三档答案：写进 prompt（最便宜、最不可靠）、装一个 skill（可移植、仍靠模型自觉）、用官方 API 字段（模型根本没机会编）。本期把这三档各点名几个真东西，最后给一张在它们之间取舍的判据表。</p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>它替你干掉什么：那三样它几乎必编的东西</h2>
+<div class="claim">论断：模型编造的分布极不均匀。<strong>URL、逐字引文、日期</strong>这三样，是它在没有工具时编得最理直气壮的三样——因为它们格式规整、长得像它见过的一万条。</div>
+<h3>官方文档已经点名了治法</h3>
+<p><a href="https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-hallucinations" target="_blank">Reduce hallucinations</a> 这页给了三条基本策略，每条都配一段可以整段抄走的 prompt：<strong>① 允许它说「我不知道」</strong>（原话 <em>This simple technique can drastically reduce false information</em>）；<strong>② 长文先逐字摘引再分析</strong>（超过 2 万 token 的文档尤其）；<strong>③ 写完回头给每句话找一条支撑引文，找不到就删</strong>——官方那段示例狠在最后一句：<em>remove that claim from the press release and mark where it was removed with empty [] brackets.</em> 另有四条进阶：chain-of-thought verification、best-of-N verification、iterative refinement、external knowledge restriction。<strong>这页免费、零依赖，是本期最该先读的东西。</strong></p>
+<h3>然后装这两个 skill</h3>
+<pre><code><span class="tag-com"># 官方出品：答完之后逼你回头看</span>
+/plugin marketplace add anthropics/skills
+<span class="tag-com"># discernment-nudge 在 skills/ 目录下，19 个官方 skill 之一</span>
+
+<span class="tag-com"># 第一条立刻能跑的用法：让它先把引文摘出来，再让你自己挑</span>
+<span class="tag-com"># 「先从这份文档里逐字摘出与 X 相关的原文，摘不到就说『没有相关引文』；</span>
+<span class="tag-com">#  然后只基于这些引文作答，逐条标编号。」</span>
+</code></pre>
+<p><strong><a href="https://github.com/anthropics/skills/blob/main/skills/discernment-nudge/SKILL.md" target="_blank">discernment-nudge</a></strong>（官方）：它不核验，它<strong>让你去核验</strong>。答完之后在回复末尾追加 <em>A few things worth a second look:</em> 加 2–3 个短问题，每个都指向回复里某个具体元素，而且写成「你可以照着原样问我」的样子。设计上有两条硬约束值得抄：<strong>一次对话最多提一次</strong>；以及一串明确的不触发场景——创意写作、闲聊、简单查询、纯解释性问题，还有<strong>「用户已经要求你核验、标注来源或标出不确定」时不要再提</strong>。<strong>什么时候别装</strong>：你要的是答案而不是追问，或者你已经在流水线里接了自动核验——它只会多一段你不会读的文字。</p>
+<p><strong><a href="https://www.agensi.io/skills/truth-first" target="_blank">truth-first</a></strong>（Agensi marketplace）：解决的是另一半——<strong>不许在没跑过的情况下声称「已完成」</strong>，要求先真实读取文件内容、配置、系统状态，再下结论。<strong>诚实交代</strong>：agensi.io 本期从本机网络被出口策略挡住，打不开页面，所以<strong>本期不给它的装机量数字，也不照抄它的安装命令</strong>——只记下它的定位。想要同一件事但能读到源码的，看下一节点名的两个 GitHub 实现。</p>
+<div class="res"><strong>出处</strong> · <a href="https://github.com/anthropics/skills/tree/main/skills" target="_blank">anthropics/skills · skills/</a>（据仓库目录页，2026-09 共 19 个 skill 目录，<code>discernment-nudge</code> 在列）</div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>机制：能不能指回去，是个工程问题不是态度问题</h2>
+<div class="claim">论断：prompt 里写「请标注来源」，得到的是模型「生成」的来源；官方 Citations 得到的是 API「解析」出来的位置。这两者的可靠性不在一个量级。</div>
+<div class="diagram">prompt 说「请标来源」   →  模型生成一串看起来像引用的字符  → 可能不存在
+skill 说「先摘引文」     →  模型生成引文 + 自己检查        → 靠自觉，可跳过
+citations:{enabled:true} →  API 解析出 char/page/block 位置 → 指针必然有效
+</div>
+<h3>官方 Citations：把引用从「生成」改成「解析」</h3>
+<p>在每个 document 上加 <code>"citations": {"enabled": true}</code>，回复里的文本块就会带上 citation 对象。<a href="https://platform.claude.com/docs/en/build-with-claude/citations" target="_blank">官方文档</a>对比 prompt 方案时那句话是本期的核心：<em>citations are guaranteed to contain valid pointers to the provided documents.</em> 三件工程细节：</p>
+<ul>
+<li><strong>位置类型随文档类型变</strong>：纯文本切句，给 <code>char_location</code>（字符下标，0 起）；PDF 抽文本后切句，给 <code>page_location</code>（页码，1 起）；custom content 不再切分，给 <code>content_block_location</code>（块下标）。</li>
+<li><strong><code>cited_text</code> 不计入输出 token</strong>，回传时也不计入输入 token。所以「让它输出逐字引文」这件事，用 API 字段反而比用 prompt 便宜。</li>
+<li><strong>边界</strong>：只支持文本引用，图片不行；扫描件 PDF 抽不出文本就<strong>不可引</strong>；<code>title</code> 与 <code>context</code> 会喂给模型但不算可引内容；citations 必须在一次请求里的<strong>全部</strong> document 上要么都开要么都不开。</li>
+</ul>
+<h3>两个 server tool 各自的接地方式</h3>
+<p><strong><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool" target="_blank">web_search</a></strong>：<code>{"type":"web_search_20250305","name":"web_search","max_uses":5}</code>。<strong>引用是强制开的</strong>——官方原话 <em>Citations are always enabled for web search</em>，每条 <code>web_search_result_location</code> 带 <code>url</code> / <code>title</code> / <code>cited_text</code>（至多 150 字符），这三个字段同样不计 token。可用 <code>allowed_domains</code> 白名单把搜索钉在官方域上。<strong>什么时候别装</strong>：稳定知识别开——它按 <strong>$10 / 1000 次搜索</strong>计费，外加搜回来的内容全算输入 token。</p>
+<p><strong><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-fetch-tool" target="_blank">web_fetch</a></strong>：本身<strong>不额外收费</strong>，但引用<strong>默认关</strong>，要自己写 <code>"citations": {"enabled": true}</code>。它有一条机制堪称本期最漂亮的设计：<strong>模型只能取回「此前在对话里出现过」的 URL</strong>——用户消息里的、客户端工具结果里的、前一次搜索或抓取结果里的。只出现在模型自己输出里的 URL 取不到，报 <code>url_not_in_prior_context</code>。<strong>它编的链接，物理上访问不了。</strong>（这条设计的本意是防数据外泄，官方对此有一段 Warning：在模型会处理不可信输入又同时接触敏感数据的环境里别开——参见本站 Skill 12。）用 <code>max_content_tokens</code> 卡住长文；一篇 100 kB 文档约 25000 token，一份 500 kB PDF 约 125000 token。</p>
+<div class="fail"><strong>最常见的错觉</strong>：以为「我在 prompt 里要求它标来源了」就等于接地了。<strong>没有接地的引用，只是一串格式正确的字符。</strong>官方之所以要把 <code>cited_text</code> 做成由 API 抽取而不是由模型输出，正是因为模型输出的那一份本质上仍然是生成的。</div>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>真实用法与边界：四个候选，四条判据</h2>
+<div class="claim">论断：上面点名的东西解决的不是同一件事。先看你要挡住哪一类编造，再决定装哪个——装错类别，成本全付了、事故照发。</div>
+<h3>另外两个可以读源码的实现</h3>
+<p><strong><a href="https://github.com/daymade/claude-code-skills/blob/main/fact-checker/SKILL.md" target="_blank">daymade/claude-code-skills · fact-checker</a></strong>（MIT）：拿一份已经写完的文档，逐条挑出事实性论断去核——上下文窗口大小、定价、版本号、发布日期、benchmark 分数这一类。它写死了一个来源优先级：<strong>产品官方页 &gt; API 文档 &gt; 官方博客公告 &gt; GitHub releases</strong>，明说对第三方聚合站要留神。核不了的标 <strong>❓ Unverifiable</strong> 并建议改成限定语气，而且<strong>改动必须经你点头才落盘</strong>。<strong>什么时候别装</strong>：主观判断、付费墙后的来源、有争议的事实——它自己声明这三类它做不了。</p>
+<p><strong><a href="https://github.com/geigermatic/claude-craft/blob/main/skills/verify-claim/SKILL.md" target="_blank">geigermatic/claude-craft · verify-claim</a></strong>（MIT，6 个 skill 之一）：治的是它所谓 <em>the single most expensive failure mode of AI-assisted coding: confident wrongness</em>。做法是把断言变成可跑的证据：先把论断写成单一、可证伪的一句，再配一个核验手段（读文件 / grep / curl），跑完只报三种结论——<strong>Verified / Refuted / Inconclusive</strong>，带 <code>file:line</code>，而且<em>不许提前概括</em>（grep 出 3 条就报 3 条）。<strong>什么时候别装</strong>：它自己划了线——刚读过的文件里显而易见的事、错了也不疼的小事，别走这套流程。</p>
+<p><strong><a href="https://github.com/michaelwjohnson/claude-skills" target="_blank">michaelwjohnson/claude-skills · check-claims</a></strong>：三件套 <code>occams-razor</code> / <code>check-claims</code> / <code>writing-review</code>，<code>claude plugin marketplace add michaelwjohnson/claude-skills</code> 后逐个装。它的顺序论有意思——<strong>先跑剃刀再查事实</strong>，理由是「删改会改变哪些论断还承重，而且删完会留下本身往往就是错的孤儿句」。<strong>诚实的代价</strong>：据 GitHub 仓库页，2026-09 该仓 <strong>0 星、0 fork、main 上 11 次提交</strong>——<strong>它的价值在于那条顺序论可以直接抄进你自己的流程，不在于它被验证过</strong>。同理，<a href="https://github.com/frmoretto/source-of-truth-creator" target="_blank">frmoretto/source-of-truth-creator</a>（CC BY 4.0）那张「过度自信陷阱」清单（未标注的估算、自评偏差、以缺席为证、示意数据当实测、过期未标）值得当检查表读，但据其仓库页 2026-09 仅 3 星、2 次提交——<strong>当读物，不当依赖。</strong></p>
+<h3>判据：按「你要挡住哪一类编造」选</h3>
+<ol>
+<li><strong>编的是链接/引文位置</strong> → 只有 API 字段挡得住。文档在你手上用 Citations，网页用 <code>web_search</code>（强制引用）或 <code>web_fetch</code>（自己开）。skill 在这一格无能为力。</li>
+<li><strong>编的是数字与版本</strong> → <code>fact-checker</code>，它的来源优先级就是为这格写的；再叠上期的 <a href="https://github.com/199-biotechnologies/claude-deep-research-skill/blob/main/scripts/verify_citations.py" target="_blank"><code>verify_citations.py</code></a> 把链接层扫一遍。</li>
+<li><strong>编的是「我跑过了 / 我确认了」</strong> → <code>verify-claim</code> 或 <code>truth-first</code>，它们要的是工具输出作证据，不是措辞。</li>
+<li><strong>你自己不会去复核</strong> → <code>discernment-nudge</code>。它唯一的产出就是三个该复核的点，治的是人不是模型。</li>
+</ol>
+<div class="fail"><strong>这一节的死线：二手聚合站不能当来源。</strong>本期核名时就撞上两次——SEO 站把 <code>source-of-truth-creator</code> 的失效模式数写成 6 个，仓库自己列的是 8 个；另一处把官方 <code>web-artifacts-builder</code> 写成 <code>artifacts-builder</code>。<strong>聚合站用来发现候选，名字、数字、条目数一律回 GitHub 目录或官方页核。</strong></div>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>代价与替代品：接地不免费，而且有一格永远空着</h2>
+<div class="claim">论断：接地能证明「这句话出自这里」，永远证不了「这里说得对」。把这格当成已解决，才是真正的事故来源。</div>
+<h3>三笔账</h3>
+<ul>
+<li><strong>钱</strong>：<code>web_search</code> $10 / 1000 次搜索，外加内容进 context 的输入 token；<code>web_fetch</code> 不收工具费，但一份 500 kB 的 PDF 就是约 125000 输入 token。Citations 本身只让输入 token 略增（系统提示与切分），输出侧反而省。</li>
+<li><strong>改造成本</strong>：Citations 和两个 server tool 是 <strong>API 层</strong>的东西，得改代码；skill 是<strong>指令层</strong>的东西，放进目录就生效。手上只有 Claude Code、没有自己的 API 调用时，<strong>你能用的只有 skill 那一档</strong>——这是最容易被忽略的一条选型约束。</li>
+<li><strong>噪音</strong>：核验类 skill 会把「不确定」标得到处都是。<code>fact-checker</code> 的 ❓ 与 <code>verify-claim</code> 的 Inconclusive 都是诚实的，但一篇满是限定语的稿子也是没法用的稿子。<strong>只对要拿去做决定的论断开这套。</strong></li>
+</ul>
+<h3>不装任何东西，你还能怎么办</h3>
+<ol>
+<li><strong>抄那三段官方 prompt。</strong>「允许说不知道」「先摘引文再分析」「找不到支撑引文就删掉并留空 []」——零成本，覆盖掉大半。</li>
+<li><strong>给 CLAUDE.md 加一条硬规矩</strong>：凡是要拿去做决定的数字，必须挂来源与<strong>来源页自己的日期</strong>；名字一律以 GitHub 目录或官方页为准。（本仓这条规矩就是这么写的，本期正是靠它拦下了上一节那两处错名。）</li>
+<li><strong>把「取回来」当成硬前提</strong>：没真的 fetch 过的 URL 不许出现在成稿里。<code>web_fetch</code> 的 <code>url_not_in_prior_context</code> 是把这条做成了错误码——你也可以只把它做成自己的一条规矩。</li>
+</ol>
+<div class="fail"><strong>那一格永远空着</strong>：Citations 保证指针指得回去，<code>verify_citations.py</code> 保证 DOI 能解析，<code>web_fetch</code> 保证链接真取过——<strong>没有一样能判断那段被正确引用的原文，是否支撑你写下的那句结论。</strong>这一步至今只能人做。</div>
+</div>
+<div class="combo">
+<h3>// 一页选购卡</h3>
+<p><strong>先做这三件</strong>：① 读 <a href="https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-hallucinations" target="_blank">Reduce hallucinations</a>，把「允许说不知道」和「找不到支撑引文就删并留空 []」两段 prompt 抄进你的模板。② <code>/plugin marketplace add anthropics/skills</code>，先只开 <code>discernment-nudge</code>，让它每次对话提醒你一次该复核什么。③ 你手上有文档要问的话，在 API 调用里给每个 document 加 <code>"citations": {"enabled": true}</code>——这是全场唯一能给出「必然有效的指针」的一档。</p>
+<p><strong>按需再加</strong>：<code>web_search</code>（要时效信息，且接受 $10/1000 次）· <code>web_fetch</code> + <code>citations.enabled</code>（已有 URL 要逐段引，且环境可信）· <code>daymade/claude-code-skills</code> 的 <code>fact-checker</code>（稿子里数字版本多）· <code>geigermatic/claude-craft</code> 的 <code>verify-claim</code>（挡「我跑过了」）· <code>truth-first</code>（同上，Agensi marketplace，装前自己打开 SKILL.md 读一遍）· <code>199-biotechnologies/claude-deep-research-skill</code> 的 <code>verify_citations.py</code>（交稿前扫链接层）。</p>
+<p><strong>明确别做</strong>：在 prompt 里写「请标注来源」就当接地了 · 把 <code>michaelwjohnson/claude-skills</code>（0 星）或 <code>source-of-truth-creator</code>（3 星）当成验证过的依赖而不是读物 · 照抄二手聚合站给的名字与数字 · <strong>以为过了接地与引用核验，结论就核对过了</strong>。</p>
+</div>
+<div class="glossary">
+<h3>// 术语表</h3>
+<dl>
+<dt>grounding（接地）</dt>
+<dd>让输出的每句话都能指回某份具体材料的某个具体位置。它管的是「可定位」，不管「对不对」。</dd>
+<dt>Citations（官方引用功能）</dt>
+<dd>在 document 上设 <code>citations.enabled</code> 后，API 把引用解析成带位置的结构化对象。官方原话：指针必然有效。</dd>
+<dt>char_location / page_location / content_block_location</dt>
+<dd>三种引用位置类型，分别对应纯文本（字符下标）、PDF（页码）、custom content（内容块下标）。</dd>
+<dt>cited_text</dt>
+<dd>被引原文，由 API 抽取而非模型生成，不计入输入或输出 token。</dd>
+<dt>url_not_in_prior_context</dt>
+<dd><code>web_fetch</code> 的错误码：该 URL 此前没在对话里出现过。模型自己编的链接因此取不回来。</dd>
+<dt>load-bearing claim（承重论断）</dt>
+<dd><code>verify-claim</code> 的说法：你打算照着行动、错了要付真实代价的那种论断。只有这类值得走完整核验流程。</dd>
+<dt>Verified / Refuted / Inconclusive</dt>
+<dd>核验的三种结论。第三种最重要——它是「没查到」而不是「不成立」，混为一谈就会把缺证据当成反证。</dd>
+</dl>
+</div>
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-hallucinations" target="_blank">Anthropic · Reduce hallucinations</a> — 三条基本策略（允许说不知道 / 先摘逐字引文 / 找不到支撑引文就删并留空 []）与四条进阶（chain-of-thought、best-of-N、iterative refinement、external knowledge restriction），每条附可抄的 prompt（2026-09）</li>
+<li><a href="https://platform.claude.com/docs/en/build-with-claude/citations" target="_blank">Anthropic · Citations</a> — <code>citations.enabled</code>；三种位置类型与索引起点；<code>cited_text</code> 不计 token；图片与扫描件 PDF 不可引；同一请求内必须全开或全关（2026-09）</li>
+<li><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool" target="_blank">Anthropic · Web search tool</a> — <em>Citations are always enabled for web search</em>；<code>web_search_result_location</code> 四字段；<code>allowed_domains</code> / <code>blocked_domains</code>；$10 / 1000 次搜索（2026-09）</li>
+<li><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-fetch-tool" target="_blank">Anthropic · Web fetch tool</a> — URL 校验与 <code>url_not_in_prior_context</code>；citations 默认关；<code>max_content_tokens</code>；数据外泄 Warning；无额外工具费（2026-09）</li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/discernment-nudge/SKILL.md" target="_blank">anthropics/skills · discernment-nudge</a> — <em>A few things worth a second look:</em> 的 2–3 问；一次对话最多一次；创意写作/闲聊/简单查询与「用户已要求核验」时不触发</li>
+<li><a href="https://github.com/daymade/claude-code-skills/blob/main/fact-checker/SKILL.md" target="_blank">daymade/claude-code-skills · fact-checker</a> — 官方源四级优先；核不了标 ❓ Unverifiable；改动需人工确认（MIT）</li>
+<li><a href="https://github.com/geigermatic/claude-craft/blob/main/skills/verify-claim/SKILL.md" target="_blank">geigermatic/claude-craft · verify-claim</a> — 承重论断；Verified/Refuted/Inconclusive；<code>file:line</code> 与「不许提前概括」；低风险场景明确不用（MIT，仓库共 6 个 skill）</li>
+<li><a href="https://github.com/michaelwjohnson/claude-skills" target="_blank">michaelwjohnson/claude-skills</a> — <code>occams-razor</code> / <code>check-claims</code> / <code>writing-review</code> 与「剃刀先于查证」的顺序论（据仓库页，2026-09 为 0 星、11 次提交，MIT）</li>
+<li><a href="https://www.agensi.io/skills/truth-first" target="_blank">Agensi · truth-first</a> — 不许在未实际读取状态/未跑过的情况下声称完成（本期该站被出口策略挡住，未能核页面自身数据）</li>
+<li><a href="research-workflow-skill-skill20.html">本站 Skill 20 · 把研究流程写成 Workflow Skill</a> — <code>verify_citations.py</code> 与引用登记表的完整拆解</li>
+<li><a href="mcp-security-skill12.html">本站 Skill 12 · 接 MCP 的安全边界</a> — 不可信工具返回值即注入面，对应 <code>web_fetch</code> 的那段 Warning</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Skill 21 · 2026-09-22</footer>
+</div>
+<script src="https://hub.cissychen.com/comments.js" defer></script>
+<script src="https://hub.cissychen.com/search.js" defer></script>
+<script src="https://hub.cissychen.com/index-button.js" defer></script>
+<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+</body></html>

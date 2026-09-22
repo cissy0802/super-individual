@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill 21 · Source Grounding &amp; Citation Credibility — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head>
+</head>
+<body>
+<div class="container">
+<header>
+<span class="week-tag">SKILL 21 / RESEARCH · DEEP-DIVE</span>
+<h1>Source Grounding &amp; Citation Credibility</h1>
+<h2>The three things a model fabricates most are URLs, quotes and dates · The fix is not "please be careful", it is making it point back</h2>
+<div class="date">2026-09-22 · BigCat</div>
+<p class="pitch">Last issue nailed citation checking to the end of a research checklist. This one goes a layer down: before you can verify a citation, every sentence needs a position it can point back to — and the official API already has fields that do exactly that.</p>
+</header>
+<div class="xref">
+<a href="research-workflow-skill-skill20.en.html">Prerequisite → Skill 20 Research as a Workflow Skill (where the citation-check step comes from)</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>Last issue ended on a hard line: <strong>citation checking is not fact checking</strong>. A link returning 200 does not mean the sentence came from that page. This issue picks up there. Grounding does not ask "does the model know this". It asks <strong>"which document, which character offset, does this sentence come from"</strong>. There are three tiers of answer: put it in the prompt (cheapest, least reliable), install a skill (portable, still relies on the model's diligence), or use official API fields (the model never gets a chance to invent anything). Below, real items in each tier, and at the end a set of criteria for choosing between them.</p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>What it kills for you: the three things it almost always invents</h2>
+<div class="claim">Claim: fabrication is not evenly distributed. <strong>URLs, verbatim quotes and dates</strong> are what a model invents most confidently without tools — they are regular in shape and look like ten thousand it has seen.</div>
+<h3>The official docs already name the fix</h3>
+<p><a href="https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-hallucinations" target="_blank">Reduce hallucinations</a> gives three basic strategies, each with a prompt you can lift whole: <strong>(1) let it say "I don't know"</strong> — the page's own words: <em>This simple technique can drastically reduce false information</em>; <strong>(2) extract verbatim quotes before analyzing</strong> (for documents over 20k tokens especially); <strong>(3) after drafting, find a supporting quote for every claim and delete the ones that have none</strong> — the sharp part of that example is its last line: <em>remove that claim from the press release and mark where it was removed with empty [] brackets.</em> Four advanced ones follow: chain-of-thought verification, best-of-N verification, iterative refinement, external knowledge restriction. <strong>Free, zero dependencies, and the first thing to read this issue.</strong></p>
+<h3>Then install these two skills</h3>
+<pre><code><span class="tag-com"># Official: makes you look back once it has answered</span>
+/plugin marketplace add anthropics/skills
+<span class="tag-com"># discernment-nudge lives under skills/, one of 19 official skill dirs</span>
+
+<span class="tag-com"># First usable move: have it pull the quotes first, then you pick</span>
+<span class="tag-com"># "Extract exact quotes from this document relevant to X. If you can't find</span>
+<span class="tag-com">#  relevant quotes, say 'No relevant quotes found.' Then answer using only</span>
+<span class="tag-com">#  those quotes, referencing them by number."</span>
+</code></pre>
+<p><strong><a href="https://github.com/anthropics/skills/blob/main/skills/discernment-nudge/SKILL.md" target="_blank">discernment-nudge</a></strong> (official): it does not verify — it <strong>makes you verify</strong>. After answering, it appends <em>A few things worth a second look:</em> plus 2–3 short questions, each tied to a specific element of the reply and phrased so you could ask them back verbatim. Two hard constraints are worth copying: <strong>offer the nudge at most once per conversation</strong>, and an explicit skip list — creative writing, casual chat, simple lookups, purely educational questions, and <strong>whenever the user has already asked you to verify, cite, or flag uncertainty</strong>. <strong>When not to install it</strong>: you want answers, not follow-up questions, or you already have automated verification in the pipeline — then it is just text you will not read.</p>
+<p><strong><a href="https://www.agensi.io/skills/truth-first" target="_blank">truth-first</a></strong> (Agensi marketplace) covers the other half: <strong>no claiming "done" without having actually run it</strong>. It demands real reads of file contents, configuration and system state before a conclusion. <strong>Full disclosure</strong>: agensi.io was blocked by this machine's egress policy for this issue, so the page could not be opened — which means <strong>no install-count figure and no copied install command here</strong>, only its position on the map. If you want the same job with source you can read, see the two GitHub implementations in the next section.</p>
+<div class="res"><strong>Source</strong> · <a href="https://github.com/anthropics/skills/tree/main/skills" target="_blank">anthropics/skills · skills/</a> (per the repo directory listing, 2026-09: 19 skill directories, <code>discernment-nudge</code> among them)</div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Mechanism: pointing back is an engineering problem, not an attitude problem</h2>
+<div class="claim">Claim: "please cite your sources" in a prompt gets you sources the model <em>generated</em>. Official Citations gets you locations the API <em>parsed</em>. These are not in the same reliability class.</div>
+<div class="diagram">prompt: "cite sources"   ->  model generates citation-shaped text  -> may not exist
+skill: "quote first"     ->  model quotes, then checks itself     -> diligence, skippable
+citations:{enabled:true} ->  API parses char/page/block locations -> pointer always valid
+</div>
+<h3>Official Citations: turning citation from generation into parsing</h3>
+<p>Set <code>"citations": {"enabled": true}</code> on each document and the reply's text blocks come back carrying citation objects. The <a href="https://platform.claude.com/docs/en/build-with-claude/citations" target="_blank">official doc</a>'s comparison against prompt-based approaches is this issue's core line: <em>citations are guaranteed to contain valid pointers to the provided documents.</em> Three engineering details:</p>
+<ul>
+<li><strong>Location type follows document type</strong>: plain text is chunked into sentences and yields <code>char_location</code> (0-indexed character offsets); PDFs have text extracted then chunked and yield <code>page_location</code> (1-indexed pages); custom content is not chunked further and yields <code>content_block_location</code>.</li>
+<li><strong><code>cited_text</code> does not count toward output tokens</strong>, and does not count toward input tokens when passed back. So "make it output verbatim quotes" is actually cheaper as an API field than as a prompt.</li>
+<li><strong>Limits</strong>: text citations only, no images; a scanned PDF with no extractable text is <strong>not citable</strong>; <code>title</code> and <code>context</code> are passed to the model but are not citable content; citations must be enabled on <strong>all or none</strong> of the documents in a request.</li>
+</ul>
+<h3>Two server tools, two ways of grounding</h3>
+<p><strong><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool" target="_blank">web_search</a></strong>: <code>{"type":"web_search_20250305","name":"web_search","max_uses":5}</code>. <strong>Citations are forced on</strong> — the doc's words: <em>Citations are always enabled for web search</em>. Each <code>web_search_result_location</code> carries <code>url</code>, <code>title</code> and <code>cited_text</code> (up to 150 characters), and those fields likewise cost no tokens. Use <code>allowed_domains</code> to pin searching to official domains. <strong>When not to use it</strong>: stable knowledge. It bills at <strong>$10 per 1,000 searches</strong>, plus every retrieved page counting as input tokens.</p>
+<p><strong><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-fetch-tool" target="_blank">web_fetch</a></strong>: <strong>no additional charge</strong>, but citations are <strong>off by default</strong> — you set <code>"citations": {"enabled": true}</code> yourself. It also has the prettiest mechanism in this issue: <strong>it can only fetch URLs that already appeared earlier in the conversation</strong> — in user messages, in client-side tool results, or in prior search/fetch results. A URL that exists only in the model's own output cannot be fetched; the tool returns <code>url_not_in_prior_context</code>. <strong>A link it invented is physically unreachable.</strong> (The design intent is exfiltration defense; the docs carry a Warning against enabling it where the model handles untrusted input alongside sensitive data — see Skill 12 on this site.) Cap long pages with <code>max_content_tokens</code>: a 100 kB doc runs about 25,000 tokens, a 500 kB PDF about 125,000.</p>
+<div class="fail"><strong>The common illusion</strong>: believing that "I asked it to cite sources in the prompt" equals grounding. <strong>An ungrounded citation is just a correctly formatted string.</strong> The reason the API extracts <code>cited_text</code> rather than letting the model emit it is precisely that the model-emitted version is still, fundamentally, generated.</div>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Real use and limits: four candidates, four criteria</h2>
+<div class="claim">Claim: the items above do not solve the same problem. Decide which class of fabrication you are blocking first — pick the wrong class and you pay the full cost while the incident still happens.</div>
+<h3>Two more implementations whose source you can read</h3>
+<p><strong><a href="https://github.com/daymade/claude-code-skills/blob/main/fact-checker/SKILL.md" target="_blank">daymade/claude-code-skills · fact-checker</a></strong> (MIT): takes a finished document and pulls out factual claims to check — context window sizes, pricing, version numbers, release dates, benchmark scores. It hardcodes a source hierarchy: <strong>product official pages &gt; API documentation &gt; official blog announcements &gt; GitHub releases</strong>, and says explicitly to be careful with third-party aggregators. Whatever it cannot check gets marked <strong>❓ Unverifiable</strong> with a recommendation to soften the wording, and <strong>no correction lands without your explicit approval</strong>. <strong>When not to install it</strong>: subjective claims, paywalled sources, genuinely disputed facts — it declares all three out of scope itself.</p>
+<p><strong><a href="https://github.com/geigermatic/claude-craft/blob/main/skills/verify-claim/SKILL.md" target="_blank">geigermatic/claude-craft · verify-claim</a></strong> (MIT, one of 6 skills in the repo): aimed at what it calls <em>the single most expensive failure mode of AI-assisted coding: confident wrongness</em>. The method turns assertions into runnable evidence: state the claim as one specific, falsifiable sentence, match it to a mechanism (file read, grep, curl), run it, then report exactly one of three verdicts — <strong>Verified / Refuted / Inconclusive</strong> — with <code>file:line</code>, and <em>do not summarize prematurely</em> (three grep hits means report all three). <strong>When not to install it</strong>: it draws the line itself — things obvious from a file you just read, and trivial claims with low blast radius, do not deserve the ceremony.</p>
+<p><strong><a href="https://github.com/michaelwjohnson/claude-skills" target="_blank">michaelwjohnson/claude-skills · check-claims</a></strong>: a set of three — <code>occams-razor</code>, <code>check-claims</code>, <code>writing-review</code> — installed individually after <code>claude plugin marketplace add michaelwjohnson/claude-skills</code>. Its ordering argument is the interesting part: <strong>run the razor before the fact check</strong>, because "cutting changes which claims are still load-bearing, and because a cut leaves orphans that are themselves often false." <strong>Honest cost</strong>: per the GitHub repo page, 2026-09, it has <strong>0 stars, 0 forks and 11 commits on main</strong> — <strong>its value is that the ordering argument copies straight into your own process, not that it has been validated.</strong> Same for <a href="https://github.com/frmoretto/source-of-truth-creator" target="_blank">frmoretto/source-of-truth-creator</a> (CC BY 4.0), whose list of overconfidence traps (unmarked estimates, self-assessment bias, absence-as-proof, illustrative-as-data, staleness) is worth reading as a checklist — but per its repo page, 2026-09, it has 3 stars and 2 commits. <strong>Read it; don't depend on it.</strong></p>
+<h3>The criteria: choose by which class of fabrication you are blocking</h3>
+<ol>
+<li><strong>It invents links or quote locations</strong> → only API fields stop this. Citations for documents you hold; <code>web_search</code> (forced citations) or <code>web_fetch</code> (opt in) for the web. Skills are powerless in this cell.</li>
+<li><strong>It invents numbers and versions</strong> → <code>fact-checker</code>; its source hierarchy was written for this cell. Stack last issue's <a href="https://github.com/199-biotechnologies/claude-deep-research-skill/blob/main/scripts/verify_citations.py" target="_blank"><code>verify_citations.py</code></a> on top to sweep the link layer.</li>
+<li><strong>It invents "I ran it / I confirmed it"</strong> → <code>verify-claim</code> or <code>truth-first</code>. Both want tool output as evidence, not phrasing.</li>
+<li><strong>You are the one who will not double-check</strong> → <code>discernment-nudge</code>. Its only output is three things worth re-checking; it treats the human, not the model.</li>
+</ol>
+<div class="fail"><strong>This section's hard line: secondary aggregators are not sources.</strong> Name-checking for this issue hit it twice — an SEO site put <code>source-of-truth-creator</code>'s failure modes at 6 where the repo itself lists 8; another rendered the official <code>web-artifacts-builder</code> as <code>artifacts-builder</code>. <strong>Use aggregators to discover candidates; take every name, number and count back to the GitHub directory or the official page.</strong></div>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Costs and alternatives: grounding is not free, and one cell stays empty forever</h2>
+<div class="claim">Claim: grounding can prove "this sentence came from here". It can never prove "what is here is correct". Treating that cell as solved is where the real incidents come from.</div>
+<h3>Three bills</h3>
+<ul>
+<li><strong>Money</strong>: <code>web_search</code> is $10 per 1,000 searches plus input tokens for everything that lands in context; <code>web_fetch</code> has no tool fee, but one 500 kB PDF is roughly 125,000 input tokens. Citations itself only slightly raises input tokens (system prompt additions and chunking) and saves on the output side.</li>
+<li><strong>Integration</strong>: Citations and both server tools live at the <strong>API layer</strong> — you have to change code. Skills live at the <strong>instruction layer</strong> — drop them in a directory and they work. If all you have is Claude Code and no API calls of your own, <strong>the skill tier is the only tier available to you</strong>. That is the most commonly overlooked selection constraint here.</li>
+<li><strong>Noise</strong>: verification skills scatter "uncertain" everywhere. <code>fact-checker</code>'s ❓ and <code>verify-claim</code>'s Inconclusive are both honest, but a draft full of hedges is also an unusable draft. <strong>Turn this on only for claims someone will act on.</strong></li>
+</ul>
+<h3>What to do if you install nothing at all</h3>
+<ol>
+<li><strong>Copy the three official prompts.</strong> "Say I don't know", "extract quotes before analyzing", "delete any claim with no supporting quote and leave empty [] brackets" — zero cost, covers most of it.</li>
+<li><strong>Add one hard rule to CLAUDE.md</strong>: any number someone will act on must carry its source and <strong>the source page's own date</strong>; every name comes from a GitHub directory or an official page. (This repo's rule reads exactly that way, and it is what caught the two wrong names in the previous section.)</li>
+<li><strong>Make "actually retrieved" a precondition</strong>: no URL appears in a finished draft unless it was really fetched. <code>web_fetch</code>'s <code>url_not_in_prior_context</code> turns that into an error code — you can also just make it a rule of your own.</li>
+</ol>
+<div class="fail"><strong>The cell that stays empty</strong>: Citations guarantees the pointer resolves, <code>verify_citations.py</code> guarantees the DOI exists, <code>web_fetch</code> guarantees the link was really retrieved — <strong>none of them can judge whether the correctly cited passage actually supports the conclusion you wrote.</strong> That step is still a human one.</div>
+</div>
+<div class="combo">
+<h3>// ONE-PAGE BUYING CARD</h3>
+<p><strong>Do these three first</strong>: (1) read <a href="https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-hallucinations" target="_blank">Reduce hallucinations</a> and copy the "say I don't know" and "delete unsupported claims, leave empty []" prompts into your template. (2) <code>/plugin marketplace add anthropics/skills</code>, enable only <code>discernment-nudge</code> at first, and let it name three things per conversation that deserve a second look. (3) If you have documents to ask about, add <code>"citations": {"enabled": true}</code> to every document in your API calls — it is the only tier here that yields a pointer guaranteed to be valid.</p>
+<p><strong>Add as needed</strong>: <code>web_search</code> (you need current information and accept $10/1,000) · <code>web_fetch</code> + <code>citations.enabled</code> (you already have URLs and need passage-level citations, in a trusted environment) · <code>daymade/claude-code-skills</code>'s <code>fact-checker</code> (drafts heavy on numbers and versions) · <code>geigermatic/claude-craft</code>'s <code>verify-claim</code> (to block "I ran it") · <code>truth-first</code> (same job, Agensi marketplace, read its SKILL.md yourself before installing) · <code>199-biotechnologies/claude-deep-research-skill</code>'s <code>verify_citations.py</code> (sweep the link layer before filing).</p>
+<p><strong>Explicitly don't</strong>: treat "please cite your sources" in a prompt as grounding · treat <code>michaelwjohnson/claude-skills</code> (0 stars) or <code>source-of-truth-creator</code> (3 stars) as a validated dependency rather than reading material · copy names and numbers from secondary aggregators · <strong>assume that passing grounding and citation checks means the conclusions were checked</strong>.</p>
+</div>
+<div class="glossary">
+<h3>// GLOSSARY</h3>
+<dl>
+<dt>grounding</dt>
+<dd>Making every sentence in an output point back to a specific position in a specific piece of material. It governs locatability, not correctness.</dd>
+<dt>Citations (the official feature)</dt>
+<dd>With <code>citations.enabled</code> set on a document, the API parses citations into structured objects carrying locations. The doc's own claim: the pointers are guaranteed valid.</dd>
+<dt>char_location / page_location / content_block_location</dt>
+<dd>The three citation location types, for plain text (character offsets), PDFs (page numbers) and custom content (block indices) respectively.</dd>
+<dt>cited_text</dt>
+<dd>The quoted passage, extracted by the API rather than generated by the model, counting toward neither input nor output tokens.</dd>
+<dt>url_not_in_prior_context</dt>
+<dd><code>web_fetch</code>'s error code for a URL that never appeared earlier in the conversation. A link the model invented therefore cannot be retrieved.</dd>
+<dt>load-bearing claim</dt>
+<dd><code>verify-claim</code>'s term: a claim you intend to act on, where being wrong costs real work. Only these deserve the full verification procedure.</dd>
+<dt>Verified / Refuted / Inconclusive</dt>
+<dd>The three verdicts. The third matters most — it means "not found", not "false". Conflating them turns absent evidence into counter-evidence.</dd>
+</dl>
+</div>
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-hallucinations" target="_blank">Anthropic · Reduce hallucinations</a> — three basic strategies (allow "I don't know" / extract verbatim quotes / delete unsupported claims and mark with empty []) and four advanced ones (chain-of-thought, best-of-N, iterative refinement, external knowledge restriction), each with a copyable prompt (2026-09)</li>
+<li><a href="https://platform.claude.com/docs/en/build-with-claude/citations" target="_blank">Anthropic · Citations</a> — <code>citations.enabled</code>; three location types and their index bases; <code>cited_text</code> costs no tokens; images and scanned PDFs are not citable; all-or-none per request (2026-09)</li>
+<li><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool" target="_blank">Anthropic · Web search tool</a> — <em>Citations are always enabled for web search</em>; the four <code>web_search_result_location</code> fields; <code>allowed_domains</code> / <code>blocked_domains</code>; $10 per 1,000 searches (2026-09)</li>
+<li><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-fetch-tool" target="_blank">Anthropic · Web fetch tool</a> — URL validation and <code>url_not_in_prior_context</code>; citations off by default; <code>max_content_tokens</code>; the exfiltration Warning; no additional tool charge (2026-09)</li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/discernment-nudge/SKILL.md" target="_blank">anthropics/skills · discernment-nudge</a> — the 2–3 questions under <em>A few things worth a second look:</em>; at most once per conversation; skipped for creative writing, casual chat, simple lookups, and whenever the user already asked for verification</li>
+<li><a href="https://github.com/daymade/claude-code-skills/blob/main/fact-checker/SKILL.md" target="_blank">daymade/claude-code-skills · fact-checker</a> — the four-tier official-source hierarchy; ❓ Unverifiable for what it cannot check; corrections require human approval (MIT)</li>
+<li><a href="https://github.com/geigermatic/claude-craft/blob/main/skills/verify-claim/SKILL.md" target="_blank">geigermatic/claude-craft · verify-claim</a> — load-bearing claims; Verified/Refuted/Inconclusive; <code>file:line</code> and "do not summarize prematurely"; explicitly skipped for low-stakes cases (MIT, 6 skills in the repo)</li>
+<li><a href="https://github.com/michaelwjohnson/claude-skills" target="_blank">michaelwjohnson/claude-skills</a> — <code>occams-razor</code> / <code>check-claims</code> / <code>writing-review</code> and the "razor before claim check" ordering argument (per the repo page, 2026-09: 0 stars, 11 commits, MIT)</li>
+<li><a href="https://www.agensi.io/skills/truth-first" target="_blank">Agensi · truth-first</a> — no claiming completion without having actually read state or run the code (the site was blocked by this machine's egress policy for this issue; its page data could not be verified)</li>
+<li><a href="research-workflow-skill-skill20.en.html">This site · Skill 20 · Research as a Workflow Skill</a> — the full breakdown of <code>verify_citations.py</code> and the citation registry</li>
+<li><a href="mcp-security-skill12.en.html">This site · Skill 12 · Security Boundaries for MCP</a> — untrusted tool output as an injection surface, matching that <code>web_fetch</code> Warning</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Skill 21 · 2026-09-22</footer>
+</div>
+<script src="https://hub.cissychen.com/comments.js" defer></script>
+<script src="https://hub.cissychen.com/search.js" defer></script>
+<script src="https://hub.cissychen.com/index-button.js" defer></script>
+<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+</body></html>
