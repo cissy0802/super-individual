@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill 22 · The Data Analysis Skills Roundup — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head>
+
+<body>
+<div class="container">
+<header>
+<span class="week-tag">SKILL 22 / DATA · ROUNDUP</span>
+<h1>The Data Analysis Skills Roundup</h1>
+<h2>Connecting to the database is only the first layer · The real barrier in this class is metric definitions, and nobody can sell you those</h2>
+<div class="date">2026-09-23 · BigCat</div>
+<p class="pitch">This class installs fastest and fails most quietly: the SQL runs, the chart renders, the number is wrong, and nothing turns red. So this issue gives you ten installable entries first, then a review checklist built specifically for silent failure.</p>
+</header>
+<div class="xref">
+<a href="mcp-servers-roundup-skill9.en.html">Same series → Skill 9, the MCP server roundup (general connection-layer criteria live there)</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>When a writing skill goes wrong you can see it. When a data skill goes wrong you see a nicely formatted number. <strong>Failure in this class is silent</strong>: wrong column, wrong definition, one missing filter, and the query still returns a row. Worse, the thing that would save you <strong>is not in any marketplace</strong>: only you know what your company calls an active user. This issue names ten real, installable entries (some from the official plugin marketplace, some from GitHub, some from the official skills repo), gives the table and the commands first, and saves the selection criteria for the second half.</p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>The list first: ten entries, install commands below</h2>
+<div class="claim">Claim: read the second column across. Half of these are one-click installs from the official plugin marketplace; the other half are MCP servers you have to configure yourself. <strong>The first half saves time, the second half is the only one that pins down definitions.</strong></div>
+<div class="diagram">Entry                        Source                      What it takes off your plate     When not to install
+──────────────────────────────────────────────────────────────────────────────────────────────────────────
+(1) duckdb-skills            Official · DuckDB Foundation SQL over any local data file      Your data lives only in a cloud warehouse
+(2) bigquery-data-analytics  Official · Google LLC        Q&amp;A over BigQuery datasets        You do not use BigQuery
+(3) clickhouse + 28 rules    Official · ClickHouse        Read-only SQL on CH Cloud         Self-hosted CH: use mcp-clickhouse
+(4) MCP Toolbox for Databases googleapis/genai-toolbox    Definitions as tools, not open SQL You only need one ad-hoc query
+(5) Postgres MCP Pro         crystaldba/postgres-mcp      Index tuning · EXPLAIN · health    You do not run Postgres
+(6) DBHub                    bytebase/dbhub               One gateway, six engines, guards   One engine with an official plugin
+(7) mcp-server-motherduck    motherduckdb                 Local / S3 / cloud under one SQL   You do not intend to write SQL
+(8) mcp-server-chart         antvis                       26+ chart types from one sentence  Data may not leave your network
+(9) xlsx, inside document-skills anthropics/skills        Results as .xlsx that is not broken You want charts, not sheets
+(10) jupyter-mcp-server      datalayer                    Code that runs in a real notebook  You have no notebook workflow
+──────────────────────────────────────────────────────────────────────────────────────────────────────────
+(1)(2)(3) are one-click; (4)(5)(6)(7) are the connection layer, pick one per engine; (8)(9) are output; (10) is a runtime.</div>
+<h3>How to install (commands copied from each project's own page)</h3>
+<pre><code><span class="tag-com"># (1)(2)(3) the official marketplace is added on first interactive start; add it by hand if not</span>
+/plugin marketplace add anthropics/claude-plugins-official
+/plugin install duckdb-skills@claude-plugins-official
+/plugin install bigquery-data-analytics@claude-plugins-official
+/plugin install clickhouse@claude-plugins-official
+/plugin install clickhouse-best-practices@claude-plugins-official
+
+<span class="tag-com"># (4) binary / brew / npm; the real configuration lives in tools.yaml</span>
+brew install mcp-toolbox
+npx -y @toolbox-sdk/server --prebuilt=postgres --stdio   <span class="tag-com"># prebuilt tools, to try it out</span>
+./toolbox --config <span class="tag-key">"tools.yaml"</span>                          <span class="tag-com"># the real use: your own tools</span>
+
+<span class="tag-com"># (5) on a production database, always pass restricted</span>
+pipx install postgres-mcp
+postgres-mcp --access-mode=restricted
+
+<span class="tag-com"># (6) one gateway for Postgres/MySQL/SQL Server/MariaDB/Oracle/SQLite</span>
+npx @bytebase/dbhub@latest --transport http --port 8080 \
+  --dsn <span class="tag-key">"postgres://user:password@localhost:5432/dbname?sslmode=disable"</span>
+
+<span class="tag-com"># (7) no token means pure local DuckDB; drop --read-write to stay read-only</span>
+uvx mcp-server-motherduck --db-path :memory: --read-write --allow-switch-databases
+
+<span class="tag-com"># (8) uses its public rendering service by default; self-host and point VIS_REQUEST_SERVER at it</span>
+npx -y @antv/mcp-server-chart
+
+<span class="tag-com"># (9) the official document suite: xlsx / docx / pptx / pdf together</span>
+/plugin marketplace add anthropics/skills
+/plugin install document-skills@anthropic-agent-skills
+
+<span class="tag-com"># (10) start JupyterLab first, then attach the MCP server</span>
+uvx jupyter-mcp-server@latest
+
+<span class="tag-com"># do this right after installing</span>
+/skill-doctor    <span class="tag-com"># context cost and invocation count per skill</span>
+</code></pre>
+<h3>One by one, in plain words</h3>
+<ul>
+<li><strong>(1) <a href="https://github.com/duckdb/duckdb-skills" target="_blank">duckdb-skills</a></strong> (official marketplace, authored by DuckDB Foundation): the catalog describes it as <em>read any data file, attach and query DuckDB databases, search DuckDB/DuckLake docs, search past session logs, and install/update DuckDB extensions</em>. <strong>This is the lowest-barrier entry in the whole list</strong> — a folder of CSV or Parquet files is enough, no service to connect. <strong>When not to install</strong>: your data lives only in a cloud warehouse and there is not a single local file.</li>
+<li><strong>(2) <a href="https://github.com/gemini-cli-extensions/bigquery-data-analytics" target="_blank">bigquery-data-analytics</a></strong> and <strong><a href="https://github.com/gemini-cli-extensions/looker" target="_blank">looker</a></strong> (official marketplace, both authored by Google LLC): one talks to BigQuery datasets, the other talks to Looker <strong>in LookML</strong>. The second deserves separate attention: <strong>LookML is a written-down, executable definition layer</strong>. If you already run Looker, you have solved half of the hardest problem in this class.</li>
+<li><strong>(3) <a href="https://github.com/ClickHouse/clickhouse-claude-code-plugin" target="_blank">clickhouse</a></strong> (official marketplace, authored by ClickHouse): browse organizations, services, databases and schemas, run <strong>read-only SQL</strong>, and inspect backups and billing. The same vendor ships <strong><a href="https://github.com/ClickHouse/agent-skills" target="_blank">clickhouse-best-practices</a></strong> — <em>28 best practice rules for schema design, query optimization and ingestion, prioritized by impact</em>. It connects to nothing; it only changes how the model writes. Self-hosted ClickHouse goes through <a href="https://github.com/ClickHouse/mcp-clickhouse" target="_blank">ClickHouse/mcp-clickhouse</a> (<strong>877 stars per its GitHub repo page, 2026-09</strong>, Apache-2.0; <code>CLICKHOUSE_ALLOW_WRITE_ACCESS=false</code> by default).</li>
+<li><strong>(4) <a href="https://github.com/googleapis/genai-toolbox" target="_blank">MCP Toolbox for Databases</a></strong> (<strong>16.5k stars per its GitHub repo page, 2026-09</strong>, Apache-2.0): the most-starred entry here, and <strong>the only one that attacks the definition problem head-on</strong>. Its own README makes the argument: compared with generic SQL access, custom tools give you <em>restricted access, structured queries and semantic search</em>, with safety coming from predefined logic rather than direct queries. You define how monthly actives are computed as a parameterized tool in <code>tools.yaml</code>, and the model can only call it — it cannot invent a second version. Coverage includes AlloyDB, BigQuery, Cloud SQL, Spanner, Postgres, MySQL, SQL Server, Oracle, MongoDB, Redis, ClickHouse, Snowflake and Trino. <strong>When not to install</strong>: for a one-off question, writing the YAML costs more than the answer is worth.</li>
+<li><strong>(5) <a href="https://github.com/crystaldba/postgres-mcp" target="_blank">Postgres MCP Pro</a></strong> (<strong>3.3k stars per its GitHub repo page, 2026-09</strong>, MIT): more than a SQL pipe — <strong>it brings the DBA toolkit over</strong>: health checks for index health, buffer cache, vacuum status and replication lag; industrial-strength algorithms to find missing indexes; <code>EXPLAIN</code> with <strong>hypothetical index simulation</strong>, so you can price an index without creating it. The two access modes are stated plainly: <code>unrestricted</code> for a dev box, <code>restricted</code> for production, meaning read-only transactions with an execution time limit. <strong>On production there is no second option.</strong></li>
+<li><strong>(6) <a href="https://github.com/bytebase/dbhub" target="_blank">DBHub</a></strong> (<strong>3.6k stars per its GitHub repo page, 2026-09</strong>, MIT): one gateway across Postgres, MySQL, SQL Server, MariaDB, Oracle and SQLite. The tool surface is restrained — <code>execute_sql</code> and <code>search_objects</code>, with <code>explain_sql</code> and <code>health_check</code> opt-in — plus <strong>custom parameterized SQL tools</strong>, a lighter version of what (4) does. The README states the guardrails as read-only mode, row limiting and query timeout. <strong>Honest disclosure</strong>: its options site was blocked by the egress policy this issue, so <strong>the exact flag names are not copied here</strong> — read its Command-Line Options page before you install.</li>
+<li><strong>(7) <a href="https://github.com/motherduckdb/mcp-server-motherduck" target="_blank">mcp-server-motherduck</a></strong> (<strong>523 stars per its GitHub repo page, 2026-09</strong>, MIT): local files, in-memory databases, data on S3 and MotherDuck in the cloud, <strong>all under one SQL dialect</strong>; with no token it stays entirely local. The difference from (1) is that (1) is a set of skills (instruction layer) and this is an MCP server (tool layer). <strong>Install both and they fight over the same job, so pick one.</strong></li>
+<li><strong>(8) <a href="https://github.com/antvis/mcp-server-chart" target="_blank">mcp-server-chart</a></strong> (<strong>4.4k stars per its GitHub repo page, 2026-09</strong>, MIT): 26+ chart types, including sankey, funnel, violin, fishbone, mind map and network diagrams. <strong>Two boundaries you must know</strong>: by default it calls the free rendering service it provides, which means <strong>your data leaves your network</strong> — self-host and point <code>VIS_REQUEST_SERVER</code> at your own instance if that matters; and the map charts depend on AMap, so they <strong>only work inside China</strong>.</li>
+<li><strong>(9) <a href="https://github.com/anthropics/skills/blob/main/skills/xlsx/SKILL.md" target="_blank">the official xlsx skill</a></strong> (bundled in the <code>document-skills</code> plugin): the output-layer entry most worth installing, because <strong>it writes not-breaking-the-file into hard rules</strong> — use real formulas rather than hardcoding a value Python computed; after writing formulas, run <code>scripts/recalc.py</code>, which drives LibreOffice to actually evaluate them, and do not deliver unless <code>errors_found</code> is zero; <code>XLOOKUP</code>, <code>FILTER</code> and <code>UNIQUE</code> are banned because LibreOffice cannot evaluate them, so use <code>INDEX</code>/<code>MATCH</code>. <strong>The one rule most worth stealing for your own standards</strong>: every assumption and hardcoded number must carry a cell comment saying where it came from.</li>
+<li><strong>(10) <a href="https://github.com/datalayer/jupyter-mcp-server" target="_blank">jupyter-mcp-server</a></strong> (<strong>1.3k stars per its GitHub repo page, 2026-09</strong>, BSD-3-Clause): lets the model create cells, execute them and read outputs <strong>in a real notebook</strong> instead of imagining code in chat. The cost is setup: JupyterLab, the collaboration extension, and a fair number of version constraints. <strong>When not to install</strong>: no notebook workflow, in which case <code>duckdb</code> plus Bash is enough.</li>
+</ul>
+<div class="res"><strong>Two more, as warnings only</strong> · <a href="https://github.com/runekaagaard/mcp-alchemy" target="_blank">runekaagaard/mcp-alchemy</a> (420 stars per its repo page, 2026-09, MPL-2.0) reaches anything SQLAlchemy can reach, <strong>but its docs state no read-only switch</strong> — keep it off production. And the <a href="https://github.com/modelcontextprotocol/servers/tree/main/src" target="_blank">official reference servers</a> <strong>no longer include postgres or sqlite</strong> (what remains: everything, fetch, filesystem, git, memory, sequentialthinking, time). Any tutorial still telling you to install those two is stale. <strong>One box stays empty this issue</strong>: on anomaly detection, the skill repos that turned up were either at zero stars and zero forks or were just a few statistical methods rewritten as prompts, so <strong>none qualified to be named</strong> — better an empty box than filler.</div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Why these ten do not compare: four layers, and nobody sells the bottom one</h2>
+<div class="claim">Claim: the connection layer decides <strong>what it can reach</strong>, the execution layer decides <strong>whether it can actually compute</strong>, the output layer decides <strong>whether you can send it to anyone</strong> — and the definition layer, which decides whether the number is right, has no off-the-shelf product at all.</div>
+<div class="diagram">     Output      (8) mcp-server-chart · (9) xlsx          -> charts and sheets you can send
+       ^
+     Execution   (1) duckdb-skills · (7) motherduck · (10) jupyter  -> the number gets computed
+       ^
+     Connection  (2)(3)(4)(5)(6)                          -> the bytes come out of your database
+       ^
+     Definition  ---  nobody sells you this  ---          -> what "active user" actually means
+</div>
+<p><strong>The usual install covers only the middle two layers</strong>: connected, charting, and giving a different answer to the same metric question every time. That is not the model being dumb — it is <strong>a database with thousands of columns whose definitions nobody ever wrote down</strong>. The enterprise text-to-SQL benchmark <a href="https://github.com/xlang-ai/Spider2" target="_blank">Spider 2.0</a> (ICLR 2025 Oral) quantified it: <strong>per its repo README, on the paper's numbers (2024-11), the strongest LLMs of the time solved only 6.0% of Spider 2.0 tasks, versus 86.6% on Spider 1.0 and 57.4% on BIRD.</strong> The three numbers together are the point — <strong>it is not that models cannot write SQL; it is that in a real enterprise database, question-to-SQL has no single correct answer.</strong> (Leaderboard scores in 2026 are well above that figure; the benchmark's own site was blocked by the egress policy this issue, so only the paper's number and its date are quoted.)</p>
+<p><strong>So selection order in this class is the reverse of every other class</strong>: decide where the definitions live, then pick tools. Three workable paths, all named above: <code>tools.yaml</code> in (4), where a metric becomes a parameterized tool the model can call but not rewrite; the custom parameterized SQL tools in (6), the lighter version of the same idea; and the official <code>looker</code> plugin if you already have LookML, <strong>which is itself an executable definition layer</strong>. If none of the three is available, fall back to the crudest option: write your handful of metric definitions, canonical tables and forbidden tables straight into <code>CLAUDE.md</code>, and let the rule from (9) leave a trail — <strong>assumptions must be written as cell comments</strong>.</p>
+<p>(8) and (9) sit in their own layer because they only govern how it looks and whether the file survives — <strong>they say nothing about whether the number is right</strong>. A sankey diagram will render a wrong definition very professionally.</p>
+<div class="fail"><strong>How it breaks</strong>: someone installs (5) and (6), both pointed at the same Postgres. The same question then takes different execution paths with different row caps on different runs, and you conclude the data changed. <strong>One entry point per database. That is a hard rule.</strong></div>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Three-minute review: six questions the README already answers</h2>
+<div class="claim">Claim: in this class you read switches, not stars. If any one of these six has no answer, do not point it at production.</div>
+<ol>
+<li><strong>Is it read-only by default?</strong> The best answers here are (5), whose <code>--access-mode=restricted</code> gives read-only transactions with an execution time limit, and <code>mcp-clickhouse</code>, where <code>CLICKHOUSE_ALLOW_WRITE_ACCESS</code> is false by default. In (7) write access is something you add with <code>--read-write</code>. <code>mcp-alchemy</code> leaves this box empty.</li>
+<li><strong>Is there a row cap and a query timeout?</strong> Without them, one <code>SELECT *</code> fills your context window and your connection pool at the same time. (6) states both guardrails.</li>
+<li><strong>How does the schema enter context?</strong> Dumped in full at startup, or fetched on demand (<code>search_objects</code> in (6), schema browsing in (3))? On a database with thousands of columns, the first option burns money every turn.</li>
+<li><strong>Can you see the SQL?</strong> It must show you the statement it actually ran. A data tool that hides its SQL is a contract with the terms removed.</li>
+<li><strong>Does the data leave this machine?</strong> (8) goes through a public rendering service by default; (1), (5), (6), (7) and (10) all run locally. This question alone decides whether the tool may touch production data.</li>
+<li><strong>Can definitions be pinned down?</strong> Only (4), (6) and <code>looker</code> have anything real here. Everything else relies on the model improvising, and improvisation differs run to run.</li>
+</ol>
+<div class="fail"><strong>The line for this section</strong>: star counts are worth less in this class than in any other. (8) has 4.4k stars and runs no SQL at all; (4) has 16.5k and degrades into an ordinary SQL gateway if you never write <code>tools.yaml</code>. <strong>Pick by the layer you are missing, not by rank.</strong></div>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>The honest cost: this is the class you should least install wholesale</h2>
+<div class="claim">Claim: the marginal cost of data tooling is not tokens — it is <strong>your trust in a wrong number</strong>, and that bill comes due at the quarterly review.</div>
+<h3>Three bills</h3>
+<ul>
+<li><strong>Tool slots and context tax</strong>: every connection-layer server parks another batch of tool descriptions in every turn. Plenty of people install (4), (5), (6) and (7) when they need exactly one. Run <code>/skill-doctor</code> after installing and see who is collecting rent.</li>
+<li><strong>Permissions</strong>: grant write access for convenience, and one day a cleanup step runs a <code>DELETE</code>. There is no undo key for that. <strong>Read-only is the default, not an option.</strong></li>
+<li><strong>Silent errors</strong>: the most expensive failure in this class raises nothing. Wrong column, wrong definition, one filter short, and the query still succeeds. (1), (7) and (10) will not catch it, and (8) will draw it as a beautiful chart.</li>
+</ul>
+<h3>What you can do without installing anything</h3>
+<ol>
+<li><strong>Export a CSV and hand it to the official <code>xlsx</code> skill.</strong> No database connection means no permission risk, and its formula-verification loop still applies.</li>
+<li><strong>A <code>duckdb</code> CLI plus Bash is an execution layer.</strong> What (1) adds is convenience and doc search, not capability.</li>
+<li><strong>Write the definitions before you buy the tools.</strong> Put the five metrics you ask about most into <code>CLAUDE.md</code>, with canonical tables and forbidden tables spelled out. That step is worth more than any server on this list, and it costs nothing.</li>
+</ol>
+<div class="fail"><strong>The permanently empty box</strong>: (4) can guarantee the model only calls tools you defined, (5) can tell you which index a query used, (9) can guarantee the formulas evaluate — <strong>none of them can tell you whether the definition you wrote is the right one.</strong> That step is still human work, and only the human who knows the business can do it.</div>
+</div>
+<div class="combo">
+<h3>// THE ONE-PAGE BUYING CARD</h3>
+<p><strong>Install these three first</strong>: (1) <code>/plugin install duckdb-skills@claude-plugins-official</code> — local files become queryable immediately, with zero permission risk. (2) the one that reaches your database, chosen by engine: for Postgres, <code>pipx install postgres-mcp</code> and <strong>always pass <code>--access-mode=restricted</code></strong>; for a mixed estate, <code>npx @bytebase/dbhub@latest</code>; if you already live in BigQuery or ClickHouse, install the official <code>bigquery-data-analytics</code> or <code>clickhouse</code>. (3) <code>/plugin install document-skills@anthropic-agent-skills</code> — so results land as an <code>.xlsx</code> whose formulas evaluate and whose assumptions carry comments.</p>
+<p><strong>Add as needed</strong>: <code>googleapis/genai-toolbox</code> (you want metric definitions pinned into tools and will write <code>tools.yaml</code>) · <code>antvis/mcp-server-chart</code> (you need charts and accept the public renderer, or will self-host <code>VIS_REQUEST_SERVER</code>) · <code>clickhouse-best-practices</code> (you are designing ClickHouse tables) · <code>datalayer/jupyter-mcp-server</code> (you already live in notebooks) · <code>ClickHouse/mcp-clickhouse</code> (self-hosted ClickHouse) · the official <code>looker</code> (you already have LookML).</p>
+<p><strong>Explicitly do not</strong>: grant write access on production · point two servers at the same database · dump a whole schema into context at once · use something like <code>mcp-alchemy</code>, with no read-only switch, against production · follow an old tutorial into the official reference <strong>postgres or sqlite servers that no longer exist</strong> · <strong>assume that installing all ten solves the definition problem</strong>.</p>
+</div>
+<div class="glossary">
+<h3>// GLOSSARY</h3>
+<dl>
+<dt>metric definition</dt>
+<dd>How a business number is actually computed: which table, which time window, which exclusions. It decides whether the number is right, and it exists only inside your company.</dd>
+<dt>text-to-SQL</dt>
+<dd>Turning a natural-language question into SQL. Enterprise benchmarks like Spider 2.0 show the hard part is not syntax but picking the right columns and definitions out of thousands.</dd>
+<dt>restricted / unrestricted access mode</dt>
+<dd>The two permission levels in Postgres MCP Pro. The former means read-only transactions with an execution time limit, for production; the latter is for a dev box.</dd>
+<dt>tools.yaml</dt>
+<dd>The MCP Toolbox config file: define a metric as a parameterized tool there and the model can call it but cannot write its own version of the SQL.</dd>
+<dt>LookML</dt>
+<dd>Looker's modeling language. Its value is that the definitions are written down and executable — the layer most companies are missing.</dd>
+<dt>hypothetical index</dt>
+<dd>Letting the planner pretend an index exists to see whether the plan improves, without building it. Postgres MCP Pro's index advice rests on this.</dd>
+<dt>recalc check</dt>
+<dd>The closing step of the official xlsx skill: LibreOffice actually evaluates the formulas, and nothing ships unless <code>errors_found</code> is zero.</dd>
+</dl>
+</div>
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://github.com/anthropics/claude-plugins-official" target="_blank">anthropics/claude-plugins-official</a> — the official plugin catalog; the names and authors of <code>duckdb-skills</code> (DuckDB Foundation), <code>bigquery-data-analytics</code> / <code>looker</code> (Google LLC) and <code>clickhouse</code> / <code>clickhouse-best-practices</code> (ClickHouse) in this issue all come from its <code>marketplace.json</code> (2026-09)</li>
+<li><a href="https://code.claude.com/docs/en/discover-plugins" target="_blank">Claude Code · Discover plugins</a> — the official marketplace is added on first interactive start; <code>/plugin install &lt;name&gt;@claude-plugins-official</code>; the details pane shows Context cost and Last updated (2026-09)</li>
+<li><a href="https://github.com/googleapis/genai-toolbox" target="_blank">googleapis/genai-toolbox</a> — <code>tools.yaml</code>; <code>brew install mcp-toolbox</code> and <code>--prebuilt=postgres --stdio</code>; custom tools as restricted access plus structured queries (16.5k stars per its repo page, 2026-09, Apache-2.0)</li>
+<li><a href="https://github.com/crystaldba/postgres-mcp" target="_blank">crystaldba/postgres-mcp</a> — index tuning, EXPLAIN with hypothetical indexes, database health checks; <code>--access-mode=restricted|unrestricted</code> (3.3k stars per its repo page, 2026-09, MIT)</li>
+<li><a href="https://github.com/bytebase/dbhub" target="_blank">bytebase/dbhub</a> — six engines; <code>execute_sql</code> / <code>search_objects</code>, with <code>explain_sql</code> and <code>health_check</code> opt-in; custom parameterized SQL tools (3.6k stars per its repo page, 2026-09, MIT)</li>
+<li><a href="https://github.com/motherduckdb/mcp-server-motherduck" target="_blank">motherduckdb/mcp-server-motherduck</a> — local files / memory / S3 / MotherDuck; no token means fully local (523 stars per its repo page, 2026-09, MIT)</li>
+<li><a href="https://github.com/antvis/mcp-server-chart" target="_blank">antvis/mcp-server-chart</a> — 26+ chart types; public rendering service by default, self-host via <code>VIS_REQUEST_SERVER</code>; map charts depend on AMap and work only inside China (4.4k stars per its repo page, 2026-09, MIT)</li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/xlsx/SKILL.md" target="_blank">anthropics/skills · xlsx</a> — formulas not hardcoded values; <code>scripts/recalc.py</code> and <code>errors_found</code>; <code>XLOOKUP</code>/<code>FILTER</code>/<code>UNIQUE</code> banned; assumptions as cell comments</li>
+<li><a href="https://github.com/xlang-ai/Spider2" target="_blank">xlang-ai/Spider2</a> — the enterprise text-to-SQL benchmark (ICLR 2025 Oral); 547 examples each for Spider 2.0-Snow and -Lite, 68 for DBT; the 6.0% vs 86.6% vs 57.4% figures are the paper's (2024-11)</li>
+<li><a href="https://github.com/datalayer/jupyter-mcp-server" target="_blank">datalayer/jupyter-mcp-server</a> — create and execute cells in a real notebook (1.3k stars per its repo page, 2026-09, BSD-3-Clause)</li>
+<li><a href="office-skills-roundup-skill13.en.html">This site · Skill 13, the office output skills roundup</a> — the full breakdown of the two output-layer entries</li>
+<li><a href="mcp-security-skill12.en.html">This site · Skill 12, the security boundary of connecting MCP</a> — least privilege and human confirmation gates, matching questions 1 and 5 here</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Skill 22 · 2026-09-23</footer>
+</div>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
+</body></html>

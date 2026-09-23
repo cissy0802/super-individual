@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill 22 · 数据分析类 Skills 榜单 — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head>
+
+<body>
+<div class="container">
+<header>
+<span class="week-tag">SKILL 22 / DATA · ROUNDUP</span>
+<h1 data-tts="a630827c4d526cf8">数据分析类 Skills 榜单</h1>
+<h2 data-tts="27702b8540fd9777">接得上库只是第一层 · 这一类真正的门槛是口径，而口径没有人能卖给你</h2>
+<div class="date">2026-09-23 · BigCat</div>
+<p class="pitch">这一类工具装起来最快、翻车最安静：SQL 跑通了、图也出了、数字是错的，全程没有一条红色报错。所以本期先给十条能装的，再给一套专治「静默出错」的验货判据。</p>
+</header>
+<div class="xref">
+<a href="mcp-servers-roundup-skill9.html">同系列 → Skill 9 MCP server 榜单（接入层的通用判据在那期）</a>
+</div>
+<div class="intro">
+<h3 data-tts="02a8eaea0bfe520d">// WHY THIS MATTERS</h3>
+<p>写作类 skill 装错了，你一眼看得出来；数据类装错了，你看到的是一个格式漂亮的数字。<strong>这一类的失败模式是静默的</strong>——列名选错、口径取错、过滤条件漏了一条，SQL 照样返回一行结果。更麻烦的是，能救这件事的东西<strong>不在任何 marketplace 里</strong>：你公司管「活跃用户」叫什么，只有你知道。本期点名十条真实可装的条目（官方插件市场里的、GitHub 上的、官方 skill 里的各占一部分），先给表和命令，后半程再给在它们之间取舍的判据。</p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2 data-tts="a164525179a62d7d">先给清单：十条，装法都在下面</h2>
+<div class="claim">论断：这张表横着看第二列。一半是官方插件市场里点一下就装的，另一半是要你自己写配置的 MCP server——<strong>前者省事，后者才能把口径钉死</strong>。</div>
+<div class="diagram">条目                          出处                        替你干掉的那件事               什么时候别装
+──────────────────────────────────────────────────────────────────────────────────────────────────────
+① duckdb-skills              官方市场 · DuckDB Foundation 本地任意数据文件直接开 SQL      数据只在云数仓里
+② bigquery-data-analytics    官方市场 · Google LLC        BigQuery 数据集问答与洞察       你不用 BigQuery
+③ clickhouse ＋ 同厂 28 条规则 官方市场 · ClickHouse        只读查 CH Cloud，附建表规则     自托管 CH 走 mcp-clickhouse
+④ MCP Toolbox for Databases  googleapis/genai-toolbox     把口径写成工具，而非放开 SQL    只想临时查一次
+⑤ Postgres MCP Pro           crystaldba/postgres-mcp      索引调优 · EXPLAIN · 健康体检   你不用 Postgres
+⑥ DBHub                      bytebase/dbhub               一个网关连六种库，自带只读护栏  只有一种库且有官方插件
+⑦ mcp-server-motherduck      motherduckdb                 本地 / S3 / 云上一把 SQL        你不打算写 SQL
+⑧ mcp-server-chart           antvis                       26+ 种图，一句话出图            数据不许出网
+⑨ document-skills 里的 xlsx  anthropics/skills            结果落成公式不坏的 .xlsx        你只要图不要表
+⑩ jupyter-mcp-server         datalayer                    让它在真 notebook 里跑代码      你没有 notebook 工作流
+──────────────────────────────────────────────────────────────────────────────────────────────────────
+①②③ 点一下就装；④⑤⑥⑦ 是接入层，按你用什么库挑一个；⑧⑨ 是产出层；⑩ 是执行环境。</div>
+<h3 data-tts="e46ee19ce745b362">怎么装（命令抄自各自官方页面）</h3>
+<pre><code><span class="tag-com"># ①②③ 官方市场，Claude Code 首次交互启动时自动添加；没有就手动加</span>
+/plugin marketplace add anthropics/claude-plugins-official
+/plugin install duckdb-skills@claude-plugins-official
+/plugin install bigquery-data-analytics@claude-plugins-official
+/plugin install clickhouse@claude-plugins-official
+/plugin install clickhouse-best-practices@claude-plugins-official
+
+<span class="tag-com"># ④ 二进制 / brew / npm 三种装法，配置在 tools.yaml</span>
+brew install mcp-toolbox
+npx -y @toolbox-sdk/server --prebuilt=postgres --stdio   <span class="tag-com"># 先拿预置工具试水</span>
+./toolbox --config <span class="tag-key">"tools.yaml"</span>                          <span class="tag-com"># 正式用法：自己定义工具</span>
+
+<span class="tag-com"># ⑤ 生产库务必带 restricted：只读事务 + 执行时间上限</span>
+pipx install postgres-mcp
+postgres-mcp --access-mode=restricted
+
+<span class="tag-com"># ⑥ 一个网关连 Postgres/MySQL/SQL Server/MariaDB/Oracle/SQLite</span>
+npx @bytebase/dbhub@latest --transport http --port 8080 \
+  --dsn <span class="tag-key">"postgres://user:password@localhost:5432/dbname?sslmode=disable"</span>
+
+<span class="tag-com"># ⑦ 不给 token 就是纯本地 DuckDB；只读就别加 --read-write</span>
+uvx mcp-server-motherduck --db-path :memory: --read-write --allow-switch-databases
+
+<span class="tag-com"># ⑧ 默认走它的公共出图服务，介意就自部署后指 VIS_REQUEST_SERVER</span>
+npx -y @antv/mcp-server-chart
+
+<span class="tag-com"># ⑨ 官方文档四件套：xlsx / docx / pptx / pdf 一起装</span>
+/plugin marketplace add anthropics/skills
+/plugin install document-skills@anthropic-agent-skills
+
+<span class="tag-com"># ⑩ 先起 JupyterLab，再挂 MCP</span>
+uvx jupyter-mcp-server@latest
+
+<span class="tag-com"># 装完立刻做这件事</span>
+/skill-doctor    <span class="tag-com"># 看每个 skill 的 context 成本与调用频次</span>
+</code></pre>
+<h3 data-tts="f37ff7d5fa6150e1">逐条说人话</h3>
+<ul>
+<li><strong>① <a href="https://github.com/duckdb/duckdb-skills" target="_blank">duckdb-skills</a></strong>（官方市场，作者署名 DuckDB Foundation）：官方目录里对它的描述是<em>「读任意数据文件、挂载并查询 DuckDB 数据库、检索 DuckDB/DuckLake 文档、检索历史会话日志、安装与更新 DuckDB 扩展」</em>。<strong>这是全场门槛最低的一条</strong>——一堆 CSV/Parquet 扔在目录里就能开 SQL，不用连任何服务。<strong>什么时候别装</strong>：你的数据只在云数仓里，本地一个文件都没有。</li>
+<li><strong>② <a href="https://github.com/gemini-cli-extensions/bigquery-data-analytics" target="_blank">bigquery-data-analytics</a></strong>（官方市场，作者署名 Google LLC）与 <strong><a href="https://github.com/gemini-cli-extensions/looker" target="_blank">looker</a></strong>（同作者）：一个直连 BigQuery 数据集，一个连 Looker 并<strong>用 LookML 说话</strong>。后者值得单独注意：<strong>LookML 就是一份写下来的口径</strong>——你要是已经有 Looker，口径层这件事你比别人先解决了一半。</li>
+<li><strong>③ <a href="https://github.com/ClickHouse/clickhouse-claude-code-plugin" target="_blank">clickhouse</a></strong>（官方市场，作者署名 ClickHouse）：浏览组织/服务/库/表结构，<strong>跑只读 SQL</strong>，还能看备份与账单。同厂另有 <strong><a href="https://github.com/ClickHouse/agent-skills" target="_blank">clickhouse-best-practices</a></strong>——<em>28 条按影响排序的建表、查询与写入规则</em>，它不连库，只改模型的写法。自托管 ClickHouse 用 <a href="https://github.com/ClickHouse/mcp-clickhouse" target="_blank">ClickHouse/mcp-clickhouse</a>（<strong>据 GitHub 仓库页，2026-09 为 877 星</strong>，Apache-2.0；默认 <code>CLICKHOUSE_ALLOW_WRITE_ACCESS=false</code>）。</li>
+<li><strong>④ <a href="https://github.com/googleapis/genai-toolbox" target="_blank">MCP Toolbox for Databases</a></strong>（<strong>据 GitHub 仓库页，2026-09 为 16.5k 星</strong>，Apache-2.0）：本榜星最多，也是<strong>唯一一个正面解决口径问题的</strong>。它的主张写在 README 里——比起放开通用 SQL，自定义工具给的是<em>受限访问、结构化查询与语义检索</em>，靠预定义逻辑而不是让模型现编查询来保证安全。你在 <code>tools.yaml</code> 里把「月活怎么算」定义成一个带参数的工具，模型只能调它，编不出第二种算法。覆盖 AlloyDB、BigQuery、Cloud SQL、Spanner、Postgres、MySQL、SQL Server、Oracle、MongoDB、Redis、ClickHouse、Snowflake、Trino 等。<strong>什么时候别装</strong>：你只是临时查一次——写 YAML 的成本比那次查询高。</li>
+<li><strong>⑤ <a href="https://github.com/crystaldba/postgres-mcp" target="_blank">Postgres MCP Pro</a></strong>（<strong>据 GitHub 仓库页，2026-09 为 3.3k 星</strong>，MIT）：它不只是「能跑 SQL」，而是<strong>把 DBA 那套搬了过来</strong>——索引健康、缓冲区命中、vacuum 状态、复制延迟的体检；用工业级算法找缺失索引；<code>EXPLAIN</code> 加<strong>假设索引模拟</strong>（不真建索引就估收益）。两档权限写得很清楚：<code>unrestricted</code> 给开发机，<code>restricted</code> 是只读事务加执行时间上限、给生产。<strong>生产库上没有第二个选项。</strong></li>
+<li><strong>⑥ <a href="https://github.com/bytebase/dbhub" target="_blank">DBHub</a></strong>（<strong>据 GitHub 仓库页，2026-09 为 3.6k 星</strong>，MIT）：一个网关连 Postgres、MySQL、SQL Server、MariaDB、Oracle、SQLite 六种。工具面很克制——<code>execute_sql</code>、<code>search_objects</code>，<code>explain_sql</code> 与 <code>health_check</code> 要显式开；还能配<strong>自定义参数化 SQL 工具</strong>（和④同一个思路的轻量版）。README 明写护栏是「只读模式、行数上限、查询超时」三件套；<strong>诚实交代</strong>：它的参数文档站本期被出口策略挡住，<strong>确切 flag 名本期不抄</strong>，装前自己看它的 Command-Line Options 页。</li>
+<li><strong>⑦ <a href="https://github.com/motherduckdb/mcp-server-motherduck" target="_blank">mcp-server-motherduck</a></strong>（<strong>据 GitHub 仓库页，2026-09 为 523 星</strong>，MIT）：本地文件、内存库、S3 上的数据、MotherDuck 云端，<strong>同一把 SQL 全能查</strong>，不给 token 就是纯本地。和①的区别是①是一组 skill（指令层），它是 MCP server（工具层）——<strong>两个都装会在「查本地文件」这件事上打架，挑一个。</strong></li>
+<li><strong>⑧ <a href="https://github.com/antvis/mcp-server-chart" target="_blank">mcp-server-chart</a></strong>（<strong>据 GitHub 仓库页，2026-09 为 4.4k 星</strong>，MIT）：26 种以上图表——桑基、漏斗、小提琴、鱼骨、思维导图、网络图都在内。<strong>两条必须知道的边界</strong>：默认调用它提供的免费出图服务，<strong>即你的数据出网</strong>，介意就自部署再用 <code>VIS_REQUEST_SERVER</code> 指过去；地图类图表依赖高德，<strong>只在中国境内可用</strong>。</li>
+<li><strong>⑨ <a href="https://github.com/anthropics/skills/blob/main/skills/xlsx/SKILL.md" target="_blank">官方 xlsx skill</a></strong>（<code>document-skills</code> 插件里）：产出层里最该装的一个，因为它<strong>把「不坏文件」写成了硬规矩</strong>——必须写公式而不是把 Python 算出的结果硬编进去；写完公式必须跑 <code>scripts/recalc.py</code>（调 LibreOffice 真算一遍），报告 <code>errors_found</code> 不为零就不许交付；<code>XLOOKUP</code> / <code>FILTER</code> / <code>UNIQUE</code> 这类明令禁用（LibreOffice 算不了），改用 <code>INDEX</code>/<code>MATCH</code>。<strong>最值得抄进你自己规范的一条</strong>：所有假设与硬编码数字必须用单元格批注写明出处。</li>
+<li><strong>⑩ <a href="https://github.com/datalayer/jupyter-mcp-server" target="_blank">jupyter-mcp-server</a></strong>（<strong>据 GitHub 仓库页，2026-09 为 1.3k 星</strong>，BSD-3-Clause）：让模型在<strong>真实的 notebook 里</strong>建单元格、执行、读输出，而不是在对话里空想代码。代价是要先起 JupyterLab、装协作插件，版本约束也多。<strong>什么时候别装</strong>：你没有 notebook 工作流，那 <code>duckdb</code> 加一个 Bash 就够了。</li>
+</ul>
+<div class="res"><strong>另外两条只做提示</strong> · <a href="https://github.com/runekaagaard/mcp-alchemy" target="_blank">runekaagaard/mcp-alchemy</a>（据仓库页，2026-09 为 420 星，MPL-2.0）覆盖 SQLAlchemy 能连的一切，<strong>但文档里没有只读开关</strong>——生产库别用。<a href="https://github.com/modelcontextprotocol/servers/tree/main/src" target="_blank">官方 reference servers</a> 里<strong>已经没有 postgres / sqlite 了</strong>（现存 everything、fetch、filesystem、git、memory、sequentialthinking、time），教程里还在教你装那两个的，都是过期内容。<strong>还有一格本期空着</strong>：异常检测方向搜到的几个 skill 仓库，要么零星零 fork，要么只是把几条统计方法写成提示词，<strong>没有一个够格点名</strong>——这一格宁可留白，也不凑数。</div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2 data-tts="9f67dfabc0a293c3">为什么这十条不能混着比：它们是四层，而最底下那层没人卖</h2>
+<div class="claim">论断：接入层决定它<strong>够得着什么</strong>，执行层决定它<strong>能不能真算</strong>，产出层决定<strong>能不能交出去</strong>——而决定数字对不对的口径层，市面上一个现成的都没有。</div>
+<div class="diagram">     产出层  ⑧ mcp-server-chart · ⑨ xlsx           → 图和表，能发出去的东西
+       ↑
+     执行层  ① duckdb-skills · ⑦ motherduck · ⑩ jupyter → 真的把数算出来
+       ↑
+     接入层  ②③④⑤⑥                                → 字节从你的库里来
+       ↑
+     口径层  ——— 没有人卖给你 ———                  → 「活跃用户」到底怎么算
+</div>
+<p><strong>最常见的装法是只装中间两层</strong>：连上了库、出得了图，然后每次问同一个指标得到不一样的数。原因不在模型笨，在于<strong>它面对的是一个有几千列、没人写过定义的库</strong>。企业级 text-to-SQL 的基准 <a href="https://github.com/xlang-ai/Spider2" target="_blank">Spider 2.0</a>（ICLR 2025 Oral）把这件事量化了：<strong>据其仓库 README（论文口径，2024-11），当时最强的 LLM 在 Spider 2.0 上只解出 6.0%，而同样的模型在 Spider 1.0 上是 86.6%、BIRD 上是 57.4%。</strong>三个数放一起才是重点——<strong>不是模型不会写 SQL，是真实企业库里「问题→SQL」这一步本来就没有唯一解。</strong>（该基准 2026 年榜上的分数已经显著高于这个数；其官网本期被出口策略挡住，未能核现值，故只给论文口径的原数与日期。）</p>
+<p><strong>所以这一类的选型顺序和别的类别是反的</strong>：先决定口径写在哪，再挑工具。三条真实可走的路，都在上面点过名：④ 的 <code>tools.yaml</code>——把指标定义成带参数的工具，模型只能调、不能改算法；⑥ 的自定义参数化 SQL 工具——同一思路的轻量版；已经有 Looker 的直接用官方 <code>looker</code> 插件，<strong>LookML 本身就是一份可执行的口径</strong>。三条都走不了，就退到最土的一条：在 <code>CLAUDE.md</code> 里写死几条口径与禁用表，再让 ⑨ 的规矩替你留痕——<strong>假设必须写成批注</strong>。</p>
+<p>⑧⑨ 之所以单列一层，是因为它们只管「好不好看 / 坏不坏文件」，<strong>完全不管数字对不对</strong>。一张桑基图可以把错误的口径画得非常专业。</p>
+<div class="fail"><strong>翻车现场</strong>：装了⑤又装了⑥，两个都连同一个 Postgres。表现是同一个问题两次给出不同的执行路径与不同的行数上限，你还以为是数据变了。<strong>接入层一个库只留一个入口，这是硬规矩。</strong></div>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2 data-tts="6d2b86a0662c7318">三分钟验货：打开 README 就能答的六个问题</h2>
+<div class="claim">论断：这一类不看星数看开关。下面六问，任何一条答不上来，就别接你的生产库。</div>
+<ol>
+<li><strong>默认是不是只读？</strong> 答得最好的是 ⑤（<code>--access-mode=restricted</code> 给只读事务加执行时间上限）与 <code>mcp-clickhouse</code>（<code>CLICKHOUSE_ALLOW_WRITE_ACCESS</code> 默认 false）；⑦ 的写权限是你自己加 <code>--read-write</code> 加上去的；<code>mcp-alchemy</code> 这一格是空的。</li>
+<li><strong>有没有行数上限与查询超时？</strong> 没有的话，一句 <code>SELECT *</code> 就能把上下文窗口和数据库连接池一起打满。⑥ 明写有这两道护栏。</li>
+<li><strong>schema 怎么进 context？</strong> 是启动时把全库表结构灌进来，还是按需查（⑥ 的 <code>search_objects</code>、③ 的浏览表结构）？几千列的库用前一种，等于每轮都在烧钱。</li>
+<li><strong>SQL 看不看得见？</strong> 它必须把实际执行的 SQL 亮出来给你审。看不到 SQL 的数据工具，等于让你签一份看不到条款的合同。</li>
+<li><strong>数据出不出这台机器？</strong> ⑧ 默认走公共出图服务；① ⑤ ⑥ ⑦ ⑩ 都在本地跑。这一条决定了你能不能拿它碰生产数据。</li>
+<li><strong>口径能不能钉死？</strong> 只有 ④ ⑥ 和 <code>looker</code> 这一格是实的。其余的都指望模型每次现编，而它每次都可能编得不一样。</li>
+</ol>
+<div class="fail"><strong>这一节的死线</strong>：星数在这一类里参考价值最低。⑧ 有 4.4k 星，可它一行 SQL 都不跑；④ 有 16.5k 星，但你不写 <code>tools.yaml</code> 它就退化成一个普通的 SQL 网关。<strong>按你缺哪一层挑，不按榜位挑。</strong></div>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2 data-tts="89a4e91aa2f6ef59">诚实的代价：这一类最不该整套照搬</h2>
+<div class="claim">论断：数据类工具的边际成本不是 token，是<strong>「你对一个错数字的信任」</strong>——而这笔账要等到季度复盘才结。</div>
+<h3 data-tts="0b6572f08dfc3410">三笔账</h3>
+<ul>
+<li><strong>工具位与 context 税</strong>：接入层每接一个 server 就多一批工具描述常驻每一轮。④⑤⑥⑦ 全装的人不少，实际上你只需要其中一个。装完跑一次 <code>/skill-doctor</code>，看谁在白拿钱。</li>
+<li><strong>权限</strong>：图省事开了写权限，模型某次把 <code>DELETE</code> 当成清洗步骤跑了，这件事没有撤销键。<strong>只读是默认值，不是可选项。</strong></li>
+<li><strong>静默错误</strong>：这一类最贵的失败模式没有报错——列名选错、口径取错、过滤条件少一条，查询照样成功返回。①⑦⑩ 都不会替你发现这件事，⑧ 还会把它画成一张漂亮的图。</li>
+</ul>
+<h3 data-tts="525890d34a4a2fe4">不装任何东西，你还能怎么办</h3>
+<ol>
+<li><strong>导出 CSV，交给官方 <code>xlsx</code> skill。</strong> 不连任何库，也就没有任何权限风险，而它的公式校验闭环照样生效。</li>
+<li><strong>一个 <code>duckdb</code> CLI 加 Bash 就是执行层。</strong> ① 的价值主要在便利和文档检索，不在能力。</li>
+<li><strong>先写口径，再谈工具。</strong> 把你最常问的五个指标的定义写进 <code>CLAUDE.md</code>，连表名和禁用表一起写死——这一步比装任何一个 server 都值钱，而且零成本。</li>
+</ol>
+<div class="fail"><strong>那一格永远空着</strong>：④ 能保证模型只调你定义的工具，⑤ 能告诉你这条查询走了哪个索引，⑨ 能保证公式不报错——<strong>没有一样能判断你定义的那个口径本身对不对。</strong>这一步至今只能人做，而且只能由懂业务的那个人做。</div>
+</div>
+<div class="combo">
+<h3 data-tts="9a70aa01ef0a3776">// 一页选购卡</h3>
+<p><strong>先装这三个</strong>：① <code>/plugin install duckdb-skills@claude-plugins-official</code>——本地文件立刻能查，零权限风险。② 连你的库那一个，按库挑：Postgres 用 <code>pipx install postgres-mcp</code> 并<strong>务必带 <code>--access-mode=restricted</code></strong>；杂库用 <code>npx @bytebase/dbhub@latest</code>；已经在 BigQuery / ClickHouse 上的直接装官方 <code>bigquery-data-analytics</code> / <code>clickhouse</code>。③ <code>/plugin install document-skills@anthropic-agent-skills</code>——让结果落成公式不坏、假设有批注的 <code>.xlsx</code>。</p>
+<p><strong>按需再加</strong>：<code>googleapis/genai-toolbox</code>（要把指标口径钉成工具，愿意写 <code>tools.yaml</code>）· <code>antvis/mcp-server-chart</code>（要出图，且接受数据出网或自己部署 <code>VIS_REQUEST_SERVER</code>）· <code>clickhouse-best-practices</code>（你在写 ClickHouse 表）· <code>datalayer/jupyter-mcp-server</code>（你本来就住在 notebook 里）· <code>ClickHouse/mcp-clickhouse</code>（自托管 ClickHouse）· 官方 <code>looker</code>（你已经有 LookML）。</p>
+<p><strong>明确别做</strong>：给生产库开写权限 · 同一个库同时接两个 server · 把整库 schema 一次性灌进 context · 用 <code>mcp-alchemy</code> 这类没有只读开关的连生产库 · 照着老教程装官方 reference 里<strong>早已不存在</strong>的 postgres / sqlite server · <strong>以为装完这十条，口径问题就解决了</strong>。</p>
+</div>
+<div class="glossary">
+<h3 data-tts="d4eb51604cba077d">// 术语表</h3>
+<dl>
+<dt>口径（metric definition）</dt>
+<dd>一个业务指标到底怎么算：取哪张表、算哪个时间窗、排除哪些人。它决定数字对不对，而它只存在于你公司内部。</dd>
+<dt>text-to-SQL</dt>
+<dd>把自然语言问题翻成 SQL。Spider 2.0 这类企业级基准说明：难的不是语法，是在几千列里选对列与口径。</dd>
+<dt>restricted / unrestricted access mode</dt>
+<dd>Postgres MCP Pro 的两档权限。前者是只读事务加执行时间上限，给生产；后者给开发机。</dd>
+<dt>tools.yaml</dt>
+<dd>MCP Toolbox 的配置文件：在里面把口径定义成带参数的工具，模型只能调用，不能自己另写一套 SQL。</dd>
+<dt>LookML</dt>
+<dd>Looker 的建模语言。它的意义在于口径已经被写下来并且可执行——这是多数公司缺的那一层。</dd>
+<dt>假设索引模拟（hypothetical index）</dt>
+<dd>不真建索引，只让优化器假装它存在，看执行计划会不会变好。Postgres MCP Pro 的索引建议靠它。</dd>
+<dt>recalc 校验</dt>
+<dd>官方 xlsx skill 的收口动作：用 LibreOffice 真算一遍公式，<code>errors_found</code> 不为零就不许交付。</dd>
+</dl>
+</div>
+<div class="refs">
+<h3 data-tts="7fb60d864464d511">// 延伸阅读</h3>
+<ul>
+<li><a href="https://github.com/anthropics/claude-plugins-official" target="_blank">anthropics/claude-plugins-official</a> — 官方插件目录；本期 <code>duckdb-skills</code>（DuckDB Foundation）、<code>bigquery-data-analytics</code> / <code>looker</code>（Google LLC）、<code>clickhouse</code> / <code>clickhouse-best-practices</code>（ClickHouse）的名字与作者均以此处 <code>marketplace.json</code> 为准（2026-09）</li>
+<li><a href="https://code.claude.com/docs/en/discover-plugins" target="_blank">Claude Code · Discover plugins</a> — 官方市场首次交互启动时自动添加；<code>/plugin install &lt;name&gt;@claude-plugins-official</code>；详情页会显示 Context cost 与 Last updated（2026-09）</li>
+<li><a href="https://github.com/googleapis/genai-toolbox" target="_blank">googleapis/genai-toolbox</a> — <code>tools.yaml</code>；<code>brew install mcp-toolbox</code> 与 <code>--prebuilt=postgres --stdio</code>；自定义工具＝受限访问 + 结构化查询（据仓库页，2026-09 为 16.5k 星，Apache-2.0）</li>
+<li><a href="https://github.com/crystaldba/postgres-mcp" target="_blank">crystaldba/postgres-mcp</a> — 索引调优、EXPLAIN 与假设索引、数据库健康体检；<code>--access-mode=restricted|unrestricted</code>（据仓库页，2026-09 为 3.3k 星，MIT）</li>
+<li><a href="https://github.com/bytebase/dbhub" target="_blank">bytebase/dbhub</a> — 六种数据库；<code>execute_sql</code> / <code>search_objects</code>，<code>explain_sql</code> 与 <code>health_check</code> 需显式开；自定义参数化 SQL 工具（据仓库页，2026-09 为 3.6k 星，MIT）</li>
+<li><a href="https://github.com/motherduckdb/mcp-server-motherduck" target="_blank">motherduckdb/mcp-server-motherduck</a> — 本地文件 / 内存 / S3 / MotherDuck；不给 token 即纯本地（据仓库页，2026-09 为 523 星，MIT）</li>
+<li><a href="https://github.com/antvis/mcp-server-chart" target="_blank">antvis/mcp-server-chart</a> — 26+ 图表；默认走公共出图服务，可用 <code>VIS_REQUEST_SERVER</code> 自部署；地图依赖高德、仅中国境内（据仓库页，2026-09 为 4.4k 星，MIT）</li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/xlsx/SKILL.md" target="_blank">anthropics/skills · xlsx</a> — 必须写公式不许硬编码；<code>scripts/recalc.py</code> 与 <code>errors_found</code>；禁用 <code>XLOOKUP</code>/<code>FILTER</code>/<code>UNIQUE</code>；假设写成单元格批注</li>
+<li><a href="https://github.com/xlang-ai/Spider2" target="_blank">xlang-ai/Spider2</a> — 企业级 text-to-SQL 基准（ICLR 2025 Oral）；Spider 2.0-Snow / Lite 各 547 例、DBT 68 例；6.0% vs 86.6% vs 57.4% 为论文口径（2024-11）</li>
+<li><a href="https://github.com/datalayer/jupyter-mcp-server" target="_blank">datalayer/jupyter-mcp-server</a> — 在真实 notebook 里建单元格与执行（据仓库页，2026-09 为 1.3k 星，BSD-3-Clause）</li>
+<li><a href="office-skills-roundup-skill13.html">本站 Skill 13 · 办公产出类 skills 榜单</a> — 产出层那两条的完整拆解</li>
+<li><a href="mcp-security-skill12.html">本站 Skill 12 · 接 MCP 的安全边界</a> — 权限最小化与人工确认门，正对应本期第 1 与第 5 问</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Skill 22 · 2026-09-23</footer>
+</div>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
+</body></html>
