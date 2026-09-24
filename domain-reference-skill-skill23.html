@@ -64,8 +64,8 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <div class="container">
 <header>
 <span class="week-tag">SKILL 23 / DATA · DEEP-DIVE</span>
-<h1>按域拆 Reference 的 Skill 结构</h1>
-<h2>一个 SKILL.md 只放导航 · 用到哪份读哪份 · schema 与口径规则该落在哪一层</h2>
+<h1 data-tts="b280c6a1ff0b7386">按域拆 Reference 的 Skill 结构</h1>
+<h2 data-tts="b22fca91f8bbe703">一个 SKILL.md 只放导航 · 用到哪份读哪份 · schema 与口径规则该落在哪一层</h2>
 <div class="date">2026-09-24 · BigCat</div>
 <p class="pitch">上期的结论是：口径没人能卖给你，只能自己写。这期解决紧接着的那个问题——写完放哪。四个官方 skill 的真实目录摆在一起看，从「压根没拆」到「两轴矩阵」，中间那几道线画在哪。</p>
 </header>
@@ -73,17 +73,17 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <a href="data-skills-roundup-skill22.html">前置 → Skill 22 数据分析类 Skills 榜单（口径那一格谁也卖不给你）</a>
 </div>
 <div class="intro">
-<h3>// WHY THIS MATTERS</h3>
+<h3 data-tts="39efa738094d1272">// WHY THIS MATTERS</h3>
 <p>口径和 schema 写出来之后有个非常实际的问题：<strong>放哪</strong>。塞进 SKILL.md，一份仓库表结构就能把它撑到上千行，而且每次触发都整份进 context；塞进 CLAUDE.md 更糟——那是无条件常驻的，每个会话都付这笔钱。官方给的答案是<strong>按域拆成多份文件，SKILL.md 只留一张路由表</strong>。本期不从原理讲起，先把 <a href="https://github.com/anthropics/skills/tree/main/skills" target="_blank">anthropics/skills</a> 里四个真实目录摊开——<code>pdf</code> 平铺两份、<code>mcp-builder</code> 一个 <code>reference/</code>、<code>skill-creator</code> 一个 <code>references/</code>、<code>claude-api</code> 直接做成两轴矩阵——再回头说这几档之间怎么选。</p>
 </div>
 <!-- ============ 1 ============ -->
 <div class="section">
 <span class="num">// 01</span>
-<h2>它替你干掉什么：整份 schema 常驻 context 的税</h2>
+<h2 data-tts="cdd9b151c3bb0626">它替你干掉什么：整份 schema 常驻 context 的税</h2>
 <div class="claim">论断：拆 reference 省的不是磁盘，是 token。官方把这件事说得很直白——文件躺在那儿一个 token 都不花，被读了才花。</div>
-<h3>官方写死的三条加载规则</h3>
+<h3 data-tts="865c5e66b1ce2f5f">官方写死的三条加载规则</h3>
 <p><a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices" target="_blank">Skill authoring best practices</a> 的 Runtime environment 一节列了三条，是这套结构全部的经济学依据：<strong>① Metadata pre-loaded</strong>——启动时只有所有 skill 的 <code>name</code> 与 <code>description</code> 进系统提示；<strong>② Files read on-demand</strong>——相关了才读 SKILL.md，其余文件再按需读；<strong>③ No context penalty for large files</strong>，原话是 <em>Reference files, data, or documentation don't consume context tokens until actually read.</em></p>
-<h3>装法：四个加载位置，挑一个</h3>
+<h3 data-tts="42663d57c81f997c">装法：四个加载位置，挑一个</h3>
 <pre><code><span class="tag-com"># 个人级：本机所有项目可见</span>
 ~/.claude/skills/&lt;skill-name&gt;/SKILL.md
 <span class="tag-com"># 项目级：随仓库走，能进 git（团队共享口径就用这个）</span>
@@ -97,7 +97,7 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 /plugin marketplace add anthropics/skills
 /plugin install example-skills@anthropic-agent-skills
 </code></pre>
-<h3>第一条立刻能跑的用法：照抄官方 Pattern 2</h3>
+<h3 data-tts="109b092a2fa4db65">第一条立刻能跑的用法：照抄官方 Pattern 2</h3>
 <p>官方 best-practices 里的 <strong>Pattern 2: Domain-specific organization</strong> 给了一个 <code>bigquery-skill</code> 的骨架，原样可用：<code>SKILL.md</code> 加一个 <code>reference/</code>，里面 <code>finance.md</code> / <code>sales.md</code> / <code>product.md</code> / <code>marketing.md</code> 四份。SKILL.md 正文只放三种东西——一句话说这个 skill 管什么、一张按域路由的表、一条 grep 提示：</p>
 <pre><code>mkdir -p .claude/skills/warehouse/reference
 
@@ -114,9 +114,9 @@ grep -i "revenue" reference/finance.md
 <!-- ============ 2 ============ -->
 <div class="section">
 <span class="num">// 02</span>
-<h2>机制：SKILL.md 是目录页，文件系统是索引</h2>
+<h2 data-tts="9261736878948d28">机制：SKILL.md 是目录页，文件系统是索引</h2>
 <div class="claim">论断：拆得好不好，全看那张路由表有没有写清「什么情况下读哪份」。文件拆了而路由没写，等于没拆——模型永远不会去读它，还不报错。</div>
-<h3>四个官方 skill 的真实目录，摊开看</h3>
+<h3 data-tts="feb69b446b9cfb87">四个官方 skill 的真实目录，摊开看</h3>
 <div class="diagram">pdf/            SKILL.md(约 270 行) + forms.md + reference.md + scripts/
                                                         ← 平铺，一层深
 
@@ -139,13 +139,13 @@ docx/ xlsx/ pptx/ web-artifacts-builder/
 template/       只有一个 SKILL.md                       ← 起手式
 </div>
 <div class="res"><strong>出处</strong> · 据 <a href="https://github.com/anthropics/skills/tree/main/skills" target="_blank">anthropics/skills · skills/</a> 各目录页，2026-09（该目录下共 19 个 skill）</div>
-<h3>三种路由写法，都能在上面这几个里读到原文</h3>
+<h3 data-tts="8ec7808c97874b62">三种路由写法，都能在上面这几个里读到原文</h3>
 <ol>
 <li><strong>按任务路由</strong>——<a href="https://github.com/anthropics/skills/blob/main/skills/claude-api/SKILL.md" target="_blank"><code>claude-api</code></a> 的 Reading Guide：先读 <code>{lang}/claude-api/README.md</code>，然后按任务加料——Chat UI 加 <code>streaming.md</code>，tool use 加 <code>shared/tool-use-concepts.md</code> + <code>{lang}/claude-api/tool-use.md</code>，缓存读 <code>shared/prompt-caching.md</code>，省钱读 <code>shared/cost-optimization.md</code>。</li>
 <li><strong>按条件路由</strong>——<a href="https://github.com/anthropics/skills/blob/main/skills/mcp-builder/SKILL.md" target="_blank"><code>mcp-builder</code></a>：同一步里分叉，选 TypeScript 读 <code>./reference/node_mcp_server.md</code>，选 Python 读 <code>./reference/python_mcp_server.md</code>；而 <code>mcp_best_practices.md</code> 与 <code>evaluation.md</code> 是无条件读的。<strong>条件路由的价值在于「不该读的那份连名字都不会被展开」。</strong></li>
 <li><strong>按域路由</strong>——官方 Pattern 2 的 bigquery 例：finance / sales / product / marketing 四份，问哪个域读哪份。上一期说的口径问题，落点就在这一格。</li>
 </ol>
-<h3>两条硬约束，都是为了对付「预览式读取」</h3>
+<h3 data-tts="d73acd611906be85">两条硬约束，都是为了对付「预览式读取」</h3>
 <ul>
 <li><strong>引用只能一层深。</strong>SKILL.md → advanced.md → details.md 这种链条，官方明说模型可能只用 <code>head -100</code> 预览而不是整份读，结果是残缺信息。所有 reference 都要从 SKILL.md 直接链过去。</li>
 <li><strong>超过 100 行的 reference 顶部要放目录。</strong>理由同上：即使只被预览，也得让它看得见全貌。</li>
@@ -155,21 +155,21 @@ template/       只有一个 SKILL.md                       ← 起手式
 <!-- ============ 3 ============ -->
 <div class="section">
 <span class="num">// 03</span>
-<h2>真实用法与边界：schema 和口径到底写在哪一层</h2>
+<h2 data-tts="8a0e7a23cabab0bd">真实用法与边界：schema 和口径到底写在哪一层</h2>
 <div class="claim">论断：这三样东西该落在三个不同的层——SKILL.md 放导航与跨域硬规矩，<code>reference/&lt;域&gt;.md</code> 放 schema 与口径，<code>scripts/</code> 放能机器校验的部分。放错层，要么每次白交 token，要么该读的永远没读。</div>
-<h3>三层落位</h3>
+<h3 data-tts="c22bb90543ed7b07">三层落位</h3>
 <ul>
 <li><strong>SKILL.md（每次触发全读）</strong>：只放必须无条件生效的东西——一句话定位、路由表、最多两三条跨域硬规矩。官方那条 <em>always exclude test accounts</em> 就属于这里，因为它对 finance 和 sales 同时成立。</li>
 <li><strong><code>reference/&lt;域&gt;.md</code>（按需读）</strong>：表名字段、指标定义、口径边界、常用查询模板。<a href="https://github.com/anthropics/skills/tree/main/skills/skill-creator" target="_blank"><code>skill-creator</code></a> 把 schema 单独拎成 <code>references/schemas.md</code>，就是这一格的官方示范。</li>
 <li><strong><code>scripts/</code>（执行，不进 context）</strong>：能写成校验的别写成叮嘱。官方原话：<em>Only the script's output consumes tokens.</em> <a href="https://github.com/anthropics/skills/tree/main/skills/docx" target="_blank"><code>docx</code></a> 把 XSD 校验、run 合并、接受修订全做成了 <code>scripts/</code> 下的脚本，一份 .md 都没拆。</li>
 </ul>
-<h3>三条判据，用来在上面四档之间取舍</h3>
+<h3 data-tts="877da558728a5261">三条判据，用来在上面四档之间取舍</h3>
 <ol>
 <li><strong>域之间会不会被同时问到？</strong>会 → 别拆，拆了每次都要读两份还多一跳。不会 → 按域拆。这正是 <code>claude-api</code> 把 <code>shared/</code> 和语言目录分开的理由：问 Python 的人不需要 Ruby 那 8 份。</li>
 <li><strong>有没有第二根轴？</strong>只有「主题」一根 → <code>reference/</code> 平铺就够，<code>mcp-builder</code> 四份到顶。主题 × 语言、或主题 × 环境两根都在 → 才值得做成 <code>claude-api</code> 那样的矩阵。两轴的代价是路由表必须写成 <code>{lang}/xxx.md</code> 这种带占位符的模板，人读着累、改起来更累。</li>
 <li><strong>这份文件会过期吗？</strong>会 → 在文件里标日期。<code>claude-api</code> 的 SKILL.md 把模型与定价表标成 <em>as of 2026-06-24</em>，是本期最该抄走的一个小动作：<strong>volatile 的内容自己声明保质期</strong>，别让读者替你猜。</li>
 </ol>
-<h3>什么时候这套不成立</h3>
+<h3 data-tts="c42e71284d6e80a1">什么时候这套不成立</h3>
 <ul>
 <li><strong>只有一个域、SKILL.md 三百行以内</strong>：<code>docx</code> / <a href="https://github.com/anthropics/skills/tree/main/skills/xlsx" target="_blank"><code>xlsx</code></a> / <code>pptx</code> / <a href="https://github.com/anthropics/skills/tree/main/skills/web-artifacts-builder" target="_blank"><code>web-artifacts-builder</code></a> 四个官方 skill 至今都是 SKILL.md + <code>scripts/</code>，没有任何 .md 被拆出来。<strong>别因为「官方都拆」而拆——官方一多半没拆。</strong></li>
 <li><strong>靠 grep 捞域文件的话，先确认环境里有 bash。</strong>官方 Pattern 2 的 quick search 就是一行 <code>grep -i "revenue" reference/finance.md</code>，没有 shell 就退化成整份读。</li>
@@ -179,15 +179,15 @@ template/       只有一个 SKILL.md                       ← 起手式
 <!-- ============ 4 ============ -->
 <div class="section">
 <span class="num">// 04</span>
-<h2>代价与替代品：拆出来的每一份，都新增一条要维护的路由行</h2>
+<h2 data-tts="e263cfdbde801391">代价与替代品：拆出来的每一份，都新增一条要维护的路由行</h2>
 <div class="claim">论断：文件改名、域合并、新增一类——只要路由表不同步，模型读到的就是一份指向空气的目录页，而且全程没有报错。</div>
-<h3>三笔账</h3>
+<h3 data-tts="ca477acc7c2ba54a">三笔账</h3>
 <ul>
 <li><strong>维护面</strong>：n 份 reference = n 条路由行 + n 个可能写错的相对路径。上一节那个 <code>FORMS.md</code> / <code>forms.md</code> 就是这笔账的实例。</li>
 <li><strong>沉默失效</strong>：拆了但 SKILL.md 里没指，或者指得太含糊（「详见参考资料」），模型不会去读也不会报错——你只会觉得这个 skill「时好时坏」。官方给的检验办法是<strong>看行为</strong>：某份 bundled 文件如果从来没被访问过，它要么多余、要么在 SKILL.md 里没被好好信号化。</li>
 <li><strong>预览损耗</strong>：一层深和 100 行目录这两条不是洁癖。模型会用 <code>head -100</code> 预览，深链 + 无目录的长文件 = 读到一半的 schema，<strong>这比没读到更危险</strong>——半份口径不会触发任何怀疑。</li>
 </ul>
-<h3>不拆的话，你还能怎么办</h3>
+<h3 data-tts="6c8466695886e1de">不拆的话，你还能怎么办</h3>
 <ol>
 <li><strong>就不拆。</strong>单文件跑到 500 行再说。官方 <a href="https://github.com/anthropics/skills/blob/main/template/SKILL.md" target="_blank"><code>template/</code></a> 至今只有一个 SKILL.md，起手式本来就是这样。</li>
 <li><strong>把口径放进 CLAUDE.md。</strong>代价是无条件常驻，每个会话都付这笔 token；只适合真的每次都用得上的两三条。</li>
@@ -197,13 +197,13 @@ template/       只有一个 SKILL.md                       ← 起手式
 <div class="fail"><strong>最后一条诚实的代价</strong>：这套结构优化的是 token，不是正确性。<code>reference/finance.md</code> 里写错的口径，按需加载只会让它<strong>更晚</strong>被发现——因为你连它有没有被读过都不知道。<strong>拆 reference 之前，先保证那几份文件里的内容是对的。</strong></div>
 </div>
 <div class="combo">
-<h3>// 一页选购卡</h3>
+<h3 data-tts="2cf03230fe3fa4f5">// 一页选购卡</h3>
 <p><strong>先读这三份</strong>：① <a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices" target="_blank">官方 best-practices</a> 的 Progressive disclosure patterns 一节——Pattern 1/2/3、一层深、100 行目录，本期几乎所有规则的出处。② <a href="https://github.com/anthropics/skills/blob/main/skills/claude-api/SKILL.md" target="_blank"><code>skills/claude-api</code> 的 SKILL.md</a>——看那张 Reading Guide 怎么把 28 份 <code>shared/</code> 和 8 种语言目录压成一张表。③ <a href="https://github.com/anthropics/skills/tree/main/skills/mcp-builder" target="_blank"><code>skills/mcp-builder</code></a> 的 SKILL.md + <code>reference/</code>——四份文件，是「最小可用的按域拆」的标准答案。</p>
 <p><strong>按需再看</strong>：<a href="https://github.com/anthropics/skills/tree/main/skills/pdf" target="_blank"><code>skills/pdf</code></a>（平铺两份 md 长什么样）· <a href="https://github.com/anthropics/skills/tree/main/skills/skill-creator" target="_blank"><code>skills/skill-creator</code></a>（<code>references/schemas.md</code> 与 <code>agents/ assets/ scripts/</code> 的分工）· <a href="https://github.com/anthropics/skills/tree/main/skills/docx" target="_blank"><code>skills/docx</code></a> 与 <a href="https://github.com/anthropics/skills/tree/main/skills/xlsx" target="_blank"><code>skills/xlsx</code></a>（不拆也能很重的反例）· <a href="https://github.com/anthropics/skills/blob/main/template/SKILL.md" target="_blank"><code>template/SKILL.md</code></a>（起手式）· <a href="https://code.claude.com/docs/en/skills" target="_blank">code.claude.com/docs/en/skills</a>（四个加载路径）。</p>
 <p><strong>明确别做</strong>：因为「官方都这么做」就拆（官方 19 个 skill 里多数没拆）· 把整份 schema 写进 SKILL.md · 引用套引用超过一层 · 路由行里的路径手打不核大小写 · 拆完不在 volatile 的文件里标日期。</p>
 </div>
 <div class="glossary">
-<h3>// 术语表</h3>
+<h3 data-tts="3620d3a2e675a078">// 术语表</h3>
 <dl>
 <dt>progressive disclosure（渐进披露）</dt>
 <dd>只有 name/description 常驻，SKILL.md 触发时读，其余文件按需读的三级加载模型。它让「带一大堆资料」不再等于「烧一大堆 token」。</dd>
@@ -222,7 +222,7 @@ template/       只有一个 SKILL.md                       ← 起手式
 </dl>
 </div>
 <div class="refs">
-<h3>// 延伸阅读</h3>
+<h3 data-tts="46315c91490e8dc8">// 延伸阅读</h3>
 <ul>
 <li><a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices" target="_blank">Anthropic · Skill authoring best practices</a> — Pattern 1（高层指南 + 引用）/ Pattern 2（按域组织，bigquery 例）/ Pattern 3（条件细节）；一层深；100 行目录；500 行界线；Runtime environment 的三条加载规则（2026-09 访问）</li>
 <li><a href="https://code.claude.com/docs/en/skills" target="_blank">Claude Code · Skills</a> — 个人 / 项目 / 插件 / 企业 / 子目录五个加载位置的确切路径；supporting files 与渐进披露示例目录（2026-09 访问）</li>
