@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill 23 · Domain-Split Reference Structure — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head>
+<body>
+<div class="container">
+<header>
+<span class="week-tag">SKILL 23 / DATA · DEEP-DIVE</span>
+<h1>Domain-Split Reference Structure</h1>
+<h2>One SKILL.md that holds only navigation · Read the file the task needs · Which layer schemas and metric definitions belong in</h2>
+<div class="date">2026-09-24 · BigCat</div>
+<p class="pitch">Last issue ended on this: nobody can sell you your metric definitions, you have to write them yourself. This issue answers what comes next — where to put them. Four real official skill directories side by side, from "never split at all" to "a two-axis matrix," and where the lines between them fall.</p>
+</header>
+<div class="xref">
+<a href="data-skills-roundup-skill22.en.html">Prerequisite → Skill 22, the data analysis skills roundup (nobody can sell you your metric definitions)</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>Once the definitions and schemas are written down, a very practical problem follows: <strong>where do they live</strong>. Put them in SKILL.md and a single warehouse schema can push it past a thousand lines, all of which loads on every trigger. Put them in CLAUDE.md and it is worse, because that is unconditionally resident and every session pays for it. The official answer is to <strong>split by domain and leave SKILL.md holding nothing but a routing table</strong>. This issue starts from the artifacts rather than the theory: four real directories in <a href="https://github.com/anthropics/skills/tree/main/skills" target="_blank">anthropics/skills</a> — <code>pdf</code> with two flat files, <code>mcp-builder</code> with one <code>reference/</code>, <code>skill-creator</code> with a <code>references/</code>, and <code>claude-api</code> built as an outright two-axis matrix — and only then how to choose among them.</p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>What it kills for you: the tax of a whole schema resident in context</h2>
+<div class="claim">Claim: splitting references saves tokens, not disk. The docs say it plainly — a file sitting there costs nothing at all; it costs only once it is read.</div>
+<h3>Three loading rules the docs pin down</h3>
+<p>The Runtime environment section of <a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices" target="_blank">Skill authoring best practices</a> lists three, and they are the entire economic case for this structure: <strong>(1) Metadata pre-loaded</strong> — at startup only every skill's <code>name</code> and <code>description</code> enter the system prompt; <strong>(2) Files read on-demand</strong> — SKILL.md is read once the skill is relevant, everything else only as needed; <strong>(3) No context penalty for large files</strong>, verbatim: <em>Reference files, data, or documentation don't consume context tokens until actually read.</em></p>
+<h3>Install: four loading locations, pick one</h3>
+<pre><code><span class="tag-com"># Personal: visible to every project on this machine</span>
+~/.claude/skills/&lt;skill-name&gt;/SKILL.md
+<span class="tag-com"># Project: travels with the repo, can be committed (use this to share definitions)</span>
+.claude/skills/&lt;skill-name&gt;/SKILL.md
+<span class="tag-com"># Plugin: invoked namespaced, as /plugin-name:skill-name</span>
+&lt;plugin&gt;/skills/&lt;skill-name&gt;/SKILL.md
+<span class="tag-com"># Nested: loads only in sessions started in or below &lt;subdir&gt;</span>
+&lt;subdir&gt;/.claude/skills/&lt;skill-name&gt;/SKILL.md
+
+<span class="tag-com"># To read the shipped ones first (all 19 official skills are in here)</span>
+/plugin marketplace add anthropics/skills
+/plugin install example-skills@anthropic-agent-skills
+</code></pre>
+<h3>The first usage you can run today: copy official Pattern 2</h3>
+<p><strong>Pattern 2: Domain-specific organization</strong> in the best-practices page ships a <code>bigquery-skill</code> skeleton you can use as-is: a <code>SKILL.md</code> plus a <code>reference/</code> holding <code>finance.md</code>, <code>sales.md</code>, <code>product.md</code> and <code>marketing.md</code>. The SKILL.md body carries three things only — one line on what the skill covers, a routing table by domain, and a grep hint:</p>
+<pre><code>mkdir -p .claude/skills/warehouse/reference
+
+<span class="tag-com"># The routing table inside SKILL.md, exactly as the docs write it:</span>
+**Finance**: Revenue, ARR, billing → See [reference/finance.md](reference/finance.md)
+**Sales**: Opportunities, pipeline, accounts → See [reference/sales.md](reference/sales.md)
+
+<span class="tag-com"># Plus a quick-search hint so it can fish for itself:</span>
+grep -i "revenue" reference/finance.md
+</code></pre>
+<p><strong>Metric rules go into the matching domain file, not into SKILL.md</strong> — the docs' own example is a rule like "always exclude test accounts," which lands in whichever domain owns it. <strong>When not to split</strong>: SKILL.md is still short of 500 lines, there is only one domain, or the domains are tightly coupled (asking about A always requires B) — splitting then only adds a hop. The official line is hard: <em>Keep SKILL.md body under 500 lines... Split content into separate files when approaching this limit.</em></p>
+<div class="res"><strong>Sources</strong> · <a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices" target="_blank">Anthropic · Skill authoring best practices</a> (Progressive disclosure patterns and Runtime environment) · <a href="https://code.claude.com/docs/en/skills" target="_blank">Claude Code · Skills</a> (the four loading paths); both retrieved 2026-09</div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Mechanism: SKILL.md is the table of contents, the filesystem is the index</h2>
+<div class="claim">Claim: whether a split works comes down to whether the routing table says under what condition to read which file. Files split without routing are files that were never split — the model will never open them, and nothing errors.</div>
+<h3>Four official skill directories, laid side by side</h3>
+<div class="diagram">pdf/            SKILL.md (~270 lines) + forms.md + reference.md + scripts/
+                                                    &lt;- flat, one level deep
+
+mcp-builder/    SKILL.md + scripts/ + reference/
+                  mcp_best_practices.md  evaluation.md
+                  node_mcp_server.md     python_mcp_server.md
+                                                    &lt;- one reference dir, 4 files
+
+skill-creator/  SKILL.md + references/schemas.md
+                  + agents/ assets/ eval-viewer/ scripts/
+                                                    &lt;- dirs by purpose, not just md
+
+claude-api/     SKILL.md + shared/ (28 .md files)
+                  + python/ typescript/ java/ go/ ruby/
+                    csharp/ php/ curl/
+                                                    &lt;- two axes: topic x language
+
+docx/ xlsx/ pptx/ web-artifacts-builder/
+                SKILL.md + scripts/ and nothing else
+                                                    &lt;- never split at all
+template/       a single SKILL.md                   &lt;- the starting position
+</div>
+<div class="res"><strong>Source</strong> · per the directory pages of <a href="https://github.com/anthropics/skills/tree/main/skills" target="_blank">anthropics/skills · skills/</a>, 2026-09 (19 skill directories in total)</div>
+<h3>Three ways to route, each readable in the files above</h3>
+<ol>
+<li><strong>Route by task</strong> — the Reading Guide in <a href="https://github.com/anthropics/skills/blob/main/skills/claude-api/SKILL.md" target="_blank"><code>claude-api</code></a>: start at <code>{lang}/claude-api/README.md</code>, then add per task — a chat UI adds <code>streaming.md</code>, tool use adds <code>shared/tool-use-concepts.md</code> plus <code>{lang}/claude-api/tool-use.md</code>, caching reads <code>shared/prompt-caching.md</code>, cost work reads <code>shared/cost-optimization.md</code>.</li>
+<li><strong>Route by condition</strong> — <a href="https://github.com/anthropics/skills/blob/main/skills/mcp-builder/SKILL.md" target="_blank"><code>mcp-builder</code></a>: the same step forks, TypeScript reading <code>./reference/node_mcp_server.md</code> and Python reading <code>./reference/python_mcp_server.md</code>, while <code>mcp_best_practices.md</code> and <code>evaluation.md</code> are read unconditionally. <strong>The value of conditional routing is that the file you should not read never even gets named.</strong></li>
+<li><strong>Route by domain</strong> — the bigquery example under Pattern 2: finance, sales, product, marketing, and you read the one you were asked about. The definitions problem from the last issue lands exactly in this slot.</li>
+</ol>
+<h3>Two hard constraints, both aimed at preview-style reads</h3>
+<ul>
+<li><strong>References may be one level deep only.</strong> For a chain of SKILL.md to advanced.md to details.md, the docs say outright that the model may preview with <code>head -100</code> rather than reading the whole file, and the result is incomplete information. Every reference should link directly from SKILL.md.</li>
+<li><strong>A reference over 100 lines needs a table of contents at the top.</strong> Same reason: even a partial read should show the full scope of what is in there.</li>
+</ul>
+<div class="fail"><strong>A real trap</strong>: in the repo, <code>skills/pdf</code> holds lowercase <code>forms.md</code> and <code>reference.md</code>, while its SKILL.md body says "read FORMS.md" and "see REFERENCE.md." On the default macOS filesystem, case-insensitive, it works. In a Linux container those are two different names. <strong>When you split your own references, copy the paths in your routing lines out of <code>ls</code> output instead of typing them.</strong></div>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Real usage and limits: which layer schemas and definitions actually belong in</h2>
+<div class="claim">Claim: these are three different layers — SKILL.md holds navigation plus cross-domain hard rules, <code>reference/&lt;domain&gt;.md</code> holds schemas and definitions, <code>scripts/</code> holds whatever a machine can check. Put something in the wrong layer and you either pay tokens for nothing or never read what mattered.</div>
+<h3>The three layers</h3>
+<ul>
+<li><strong>SKILL.md (read in full on every trigger)</strong>: only what must apply unconditionally — one line of positioning, the routing table, and at most two or three cross-domain hard rules. The docs' own <em>always exclude test accounts</em> belongs here precisely because it holds for finance and sales alike.</li>
+<li><strong><code>reference/&lt;domain&gt;.md</code> (read on demand)</strong>: table and field names, metric definitions, the edges of each definition, common query templates. <a href="https://github.com/anthropics/skills/tree/main/skills/skill-creator" target="_blank"><code>skill-creator</code></a> pulls schemas out into <code>references/schemas.md</code>, which is the official demonstration of this slot.</li>
+<li><strong><code>scripts/</code> (executed, never loaded)</strong>: anything that can be a check should not be a reminder. Verbatim: <em>Only the script's output consumes tokens.</em> <a href="https://github.com/anthropics/skills/tree/main/skills/docx" target="_blank"><code>docx</code></a> turns XSD validation, run merging and accepting tracked changes into scripts under <code>scripts/</code> and splits out no .md at all.</li>
+</ul>
+<h3>Three criteria for choosing among the four shapes</h3>
+<ol>
+<li><strong>Do the domains get asked about together?</strong> If yes, do not split — you would read both files every time and add a hop. If no, split by domain. This is exactly why <code>claude-api</code> keeps <code>shared/</code> apart from the language directories: someone asking about Python has no use for the eight Ruby files.</li>
+<li><strong>Is there a second axis?</strong> One axis, topic only, and a flat <code>reference/</code> is enough — <code>mcp-builder</code> tops out at four files. Two axes present, topic by language or topic by environment, and only then is a <code>claude-api</code>-style matrix worth it. The cost of two axes is that the routing table has to be written with placeholders like <code>{lang}/xxx.md</code>, which is harder to read and harder still to change.</li>
+<li><strong>Will this file go stale?</strong> If yes, date it inside the file. The <code>claude-api</code> SKILL.md marks its model and pricing table <em>as of 2026-06-24</em>, and that is the single smallest habit worth stealing from this issue: <strong>let volatile content declare its own shelf life</strong> instead of making the reader guess.</li>
+</ol>
+<h3>Where this stops holding</h3>
+<ul>
+<li><strong>One domain and a SKILL.md under three hundred lines</strong>: <code>docx</code>, <a href="https://github.com/anthropics/skills/tree/main/skills/xlsx" target="_blank"><code>xlsx</code></a>, <code>pptx</code> and <a href="https://github.com/anthropics/skills/tree/main/skills/web-artifacts-builder" target="_blank"><code>web-artifacts-builder</code></a> are to this day SKILL.md plus <code>scripts/</code>, with no .md split out of any of them. <strong>Do not split because "the official ones split" — most of the official ones do not.</strong></li>
+<li><strong>If you lean on grep to reach domain files, check that the environment has bash.</strong> The quick search under Pattern 2 is the single line <code>grep -i "revenue" reference/finance.md</code>; with no shell it degrades to reading whole files.</li>
+<li><strong>Packaging for the API needs a second look</strong>: the docs state that the Claude API environment has no network access and no runtime package installation, so whatever <code>scripts/</code> depends on has to be there already. Only claude.ai can pull from npm, PyPI and GitHub.</li>
+</ul>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Costs and alternatives: every file you split out adds a routing line to maintain</h2>
+<div class="claim">Claim: rename a file, merge two domains, add a category — the moment the routing table falls out of sync, the model is reading a table of contents pointing at thin air, and nothing errors along the way.</div>
+<h3>Three ledgers</h3>
+<ul>
+<li><strong>Maintenance surface</strong>: n references means n routing lines and n relative paths that can be wrong. The <code>FORMS.md</code> versus <code>forms.md</code> case above is this ledger in the wild.</li>
+<li><strong>Silent failure</strong>: split the file but never point at it from SKILL.md, or point at it vaguely ("see the reference material"), and the model neither reads it nor complains — the skill just feels unreliable. The docs' own test is behavioral: a bundled file that is never accessed is either unnecessary or poorly signaled in the main instructions.</li>
+<li><strong>Preview loss</strong>: one level deep and a 100-line table of contents are not fastidiousness. The model previews with <code>head -100</code>, so a deep chain plus a long file with no contents equals half a schema — <strong>and half a schema is more dangerous than none</strong>, because half a definition triggers no suspicion.</li>
+</ul>
+<h3>What you can do instead of splitting</h3>
+<ol>
+<li><strong>Don't split.</strong> Run a single file until it approaches 500 lines. The official <a href="https://github.com/anthropics/skills/blob/main/template/SKILL.md" target="_blank"><code>template/</code></a> is still one SKILL.md and nothing else; that is what the starting position looks like.</li>
+<li><strong>Put the definitions in CLAUDE.md.</strong> The cost is that it is unconditionally resident and every session pays those tokens, so it fits only the two or three rules you genuinely need every time.</li>
+<li><strong>Serve schemas over MCP instead of from files.</strong> The server answers with the live table structure, so it never goes stale; the cost is a tool round trip per question and one more source of context tax (see <a href="mcp-servers-roundup-skill9.en.html">Skill 9</a> and <a href="data-skills-roundup-skill22.en.html">Skill 22</a>).</li>
+<li><strong>Give each domain a subagent.</strong> Stronger context isolation, higher coordination tax — that one is Skill 26's subject.</li>
+</ol>
+<div class="fail"><strong>The honest cost, last</strong>: this structure optimizes tokens, not correctness. A wrong definition inside <code>reference/finance.md</code> will only be caught <strong>later</strong> under on-demand loading, because you do not even know whether it was read. <strong>Before you split references, make sure what is in those files is right.</strong></div>
+</div>
+<div class="combo">
+<h3>// THE ONE-PAGE PICK LIST</h3>
+<p><strong>Read these three first</strong>: (1) the Progressive disclosure patterns section of the <a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices" target="_blank">official best-practices page</a> — Patterns 1/2/3, one level deep, the 100-line contents rule; nearly every rule in this issue comes from there. (2) <a href="https://github.com/anthropics/skills/blob/main/skills/claude-api/SKILL.md" target="_blank">the SKILL.md of <code>skills/claude-api</code></a> — see how one Reading Guide compresses 28 <code>shared/</code> files and eight language directories into a single table. (3) <a href="https://github.com/anthropics/skills/tree/main/skills/mcp-builder" target="_blank"><code>skills/mcp-builder</code></a>, its SKILL.md plus <code>reference/</code> — four files, the model answer for the smallest useful domain split.</p>
+<p><strong>Then as needed</strong>: <a href="https://github.com/anthropics/skills/tree/main/skills/pdf" target="_blank"><code>skills/pdf</code></a> (what two flat md files look like) · <a href="https://github.com/anthropics/skills/tree/main/skills/skill-creator" target="_blank"><code>skills/skill-creator</code></a> (how <code>references/schemas.md</code> divides work with <code>agents/</code>, <code>assets/</code>, <code>scripts/</code>) · <a href="https://github.com/anthropics/skills/tree/main/skills/docx" target="_blank"><code>skills/docx</code></a> and <a href="https://github.com/anthropics/skills/tree/main/skills/xlsx" target="_blank"><code>skills/xlsx</code></a> (counterexamples: heavy without splitting) · <a href="https://github.com/anthropics/skills/blob/main/template/SKILL.md" target="_blank"><code>template/SKILL.md</code></a> (the starting position) · <a href="https://code.claude.com/docs/en/skills" target="_blank">code.claude.com/docs/en/skills</a> (the four loading paths).</p>
+<p><strong>Explicitly don't</strong>: split because "the official ones do it" (most of the 19 official skills do not) · write a whole schema into SKILL.md · nest references more than one level · hand-type routing paths without checking their case · finish a split without dating the volatile files.</p>
+</div>
+<div class="glossary">
+<h3>// GLOSSARY</h3>
+<dl>
+<dt>progressive disclosure</dt>
+<dd>The three-stage loading model: only name and description stay resident, SKILL.md is read on trigger, everything else on demand. It is what makes "carrying a pile of material" stop meaning "burning a pile of tokens."</dd>
+<dt>SKILL.md</dt>
+<dd>A skill's entry file. Its YAML frontmatter requires <code>name</code> (max 64 characters, lowercase letters, digits and hyphens) and <code>description</code> (max 1,024 characters). The docs recommend keeping the body under 500 lines.</dd>
+<dt>routing table</dt>
+<dd>The lines in SKILL.md that say "under this condition, read that file." The central claim of this issue: <strong>with no clear routing table, the files you split out may as well not exist.</strong></dd>
+<dt>one level deep</dt>
+<dd>Every reference links directly from SKILL.md; A linking to B linking to C is not allowed. One of the official anti-patterns.</dd>
+<dt>shared/ and {lang}/</dt>
+<dd>The two-axis split in <code>claude-api</code>: language-independent concepts live in <code>shared/</code>, language-bound material in each language directory, and the routing table addresses both with a <code>{lang}</code> placeholder.</dd>
+<dt>metric definition</dt>
+<dd>Rules of the "how exactly do we count an active user" kind. This is domain knowledge, so it belongs in <code>reference/&lt;domain&gt;.md</code>, not in SKILL.md.</dd>
+<dt>bundled resources</dt>
+<dd>Everything in a skill directory other than SKILL.md: markdown, scripts, templates, assets. The official test for whether one is surplus has a single criterion — has it ever actually been accessed.</dd>
+</dl>
+</div>
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices" target="_blank">Anthropic · Skill authoring best practices</a> — Pattern 1 (high-level guide with references), Pattern 2 (domain-specific organization, the bigquery example), Pattern 3 (conditional details); one level deep; the 100-line contents rule; the 500-line limit; the three loading rules under Runtime environment (retrieved 2026-09)</li>
+<li><a href="https://code.claude.com/docs/en/skills" target="_blank">Claude Code · Skills</a> — exact paths for all five loading locations (personal, project, plugin, enterprise, nested); the supporting-files and progressive-disclosure example layout (retrieved 2026-09)</li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/claude-api/SKILL.md" target="_blank">anthropics/skills · claude-api/SKILL.md</a> — two-axis routing in the Reading Guide; 28 .md files under <code>shared/</code> plus eight language directories; a model table that carries its own <em>as of 2026-06-24</em> stamp</li>
+<li><a href="https://github.com/anthropics/skills/tree/main/skills/mcp-builder" target="_blank">anthropics/skills · mcp-builder</a> — four files under <code>reference/</code>: <code>mcp_best_practices.md</code> and <code>evaluation.md</code> read unconditionally, <code>node_mcp_server.md</code> / <code>python_mcp_server.md</code> read per language</li>
+<li><a href="https://github.com/anthropics/skills/tree/main/skills/skill-creator" target="_blank">anthropics/skills · skill-creator</a> — <code>references/schemas.md</code> isolates the schema; <code>agents/</code>, <code>assets/</code>, <code>eval-viewer/</code> and <code>scripts/</code> divide the rest by purpose</li>
+<li><a href="https://github.com/anthropics/skills/tree/main/skills/pdf" target="_blank">anthropics/skills · pdf</a> — the flat shape: SKILL.md (~270 lines) plus <code>forms.md</code>, <code>reference.md</code> and <code>scripts/</code>; note the case mismatch between the FORMS.md / REFERENCE.md written in the body and the lowercase files on disk</li>
+<li><a href="https://github.com/anthropics/skills/tree/main/skills/docx" target="_blank">anthropics/skills · docx</a> / <a href="https://github.com/anthropics/skills/tree/main/skills/xlsx" target="_blank">xlsx</a> — the counterexamples: SKILL.md plus <code>scripts/</code> only, with every deterministic operation scripted</li>
+<li><a href="https://github.com/anthropics/skills/blob/main/template/SKILL.md" target="_blank">anthropics/skills · template/SKILL.md</a> — the official starting position; the whole <code>template/</code> directory still holds only this one file</li>
+<li><a href="https://github.com/anthropics/skills/blob/main/spec/agent-skills-spec.md" target="_blank">anthropics/skills · spec/agent-skills-spec.md</a> — note: this file is now 87 bytes and its body is one line, "The spec is now located at agentskills.io/specification"; <strong>that domain was blocked by the egress policy for this issue, so its normative text could not be checked</strong> — every rule quoted here comes from the two official doc pages above, not from the spec</li>
+<li><a href="data-skills-roundup-skill22.en.html">This site · Skill 22, the data analysis skills roundup</a> — why nobody can sell you your metric definitions; the three layers here are how that conclusion gets implemented</li>
+<li><a href="skill-authoring-skill6.en.html">This site · Skill 6, reading the official skill authoring guide closely</a> — the hard constraints on name and description, and the degrees-of-freedom ladder</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Skill 23 · 2026-09-24</footer>
+</div>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
+</body></html>
