@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill 24 · Plan-Validate-Execute 模式 — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head>
+<body>
+<div class="container">
+<header>
+<span class="week-tag">SKILL 24 / DATA · DEEP-DIVE</span>
+<h1>Plan-Validate-Execute 模式</h1>
+<h2>先交一份能被机器骂回来的计划 · 官方 pdf / docx / xlsx 里的真实校验脚本 · 四个验证器四种退出码契约</h2>
+<div class="date">2026-09-25 · BigCat</div>
+<p class="pitch">上期讲 reference 该拆到哪一层。这期讲那个 <code>scripts/</code> 目录里到底该放什么——答案是验证器。官方 <code>pdf</code> / <code>docx</code> / <code>xlsx</code> / <code>pptx</code> 四个 skill 的校验脚本逐个打开看，包括它们互相矛盾的退出码。</p>
+</header>
+<div class="xref">
+<a href="domain-reference-skill-skill23.html">前置 → Skill 23 按域拆 Reference 的 Skill 结构（三层落位里 scripts/ 那一格）</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>批量改 50 个表单域、给一份合同加红线、往财务模型里铺一排公式——这类活的共同点是：模型一边想一边改，错了你还不知道错在哪一步。官方给这类活起了个名字，叫 <strong>plan-validate-execute</strong>：先让模型把打算做的事写成一份结构化文件，用脚本把这份文件骂一遍，过了才允许动原件。<a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices#create-verifiable-intermediate-outputs" target="_blank">Skill authoring best practices</a> 里有一整节叫 <em>Create verifiable intermediate outputs</em> 专门讲它。本期不停在文档上——把 <a href="https://github.com/anthropics/skills/tree/main/skills" target="_blank">anthropics/skills</a> 里真实存在的八九个校验脚本一个个打开，看它们怎么写报错、什么时候退 1、什么时候明明报错却退 0。</p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>它替你干掉什么：批量操作里「一边想一边改」</h2>
+<div class="claim">论断：这套模式买的不是正确性，是<strong>可回滚的思考过程</strong>——计划是一份 JSON，改它零成本；原件被改坏了，成本不一定是零。</div>
+<h3>官方原文给的适用范围</h3>
+<p>best-practices 那一节把场景写死了四项：<em>Batch operations, destructive changes, complex validation rules, high-stakes operations.</em> 举的例子也很具体——按一张表格去更新 PDF 里 50 个表单域，没有校验的话模型可能「引用不存在的域、造出互相冲突的值、漏掉必填项、或者把更新打错位置」。流程官方写成五步：<strong>analyze → create plan file → validate plan → execute → verify</strong>。</p>
+<h3>安装命令（两个 plugin，四个 skill 全在第一个里）</h3>
+<pre><code><span class="tag-com"># pdf / docx / xlsx / pptx 四件套 —— 本期主角全在这里</span>
+/plugin marketplace add anthropics/skills
+/plugin install document-skills@anthropic-agent-skills
+
+<span class="tag-com"># skill-creator / mcp-builder 等（03 节会用到）</span>
+/plugin install example-skills@anthropic-agent-skills
+</code></pre>
+<p>不装 plugin 也行——这四个 skill 目录可以直接拷进 <code>~/.claude/skills/</code> 或 <code>.claude/skills/</code>，<code>scripts/</code> 里的 Python 文件本来就是独立可跑的。<strong>什么时候别装</strong>：你根本不碰 Office / PDF 文件，那这四个装了纯交 metadata 税；但 <code>scripts/</code> 里的写法值得读，本期就是干这个。</p>
+<h3>第一条立刻能跑的用法：填一份可填写 PDF</h3>
+<p><a href="https://github.com/anthropics/skills/blob/main/skills/pdf/forms.md" target="_blank"><code>skills/pdf/forms.md</code></a> 开头第一句就是 <em>CRITICAL: You MUST complete these steps in order. Do not skip ahead to writing code.</em> 四条命令，在 <code>skills/pdf/</code> 目录下跑：</p>
+<pre><code><span class="tag-com"># ① 探：有没有可填写域（注意：文档里这行漏了 .py，见 04 节）</span>
+python scripts/check_fillable_fields.py form.pdf
+
+<span class="tag-com"># ② 析：把真实域抽成 JSON —— field_id / page / rect / type</span>
+python scripts/extract_form_field_info.py form.pdf field_info.json
+
+<span class="tag-com"># ③ 计划：你自己写 field_values.json，field_id 必须与上一步一致</span>
+<span class="tag-com">#    [{"field_id":"last_name","description":"...","page":1,"value":"Simpson"}]</span>
+
+<span class="tag-com"># ④ 执行：脚本先校验 ID 与值域，不过就 exit 1，不写输出</span>
+python scripts/fill_fillable_fields.py form.pdf field_values.json out.pdf
+</code></pre>
+<p>第 ④ 步是整套模式的缩影：<a href="https://github.com/anthropics/skills/blob/main/skills/pdf/scripts/fill_fillable_fields.py" target="_blank"><code>fill_fillable_fields.py</code></a> 在写任何字节之前先对着 <code>field_info.json</code> 把你的计划核一遍，报错长这样——<code>ERROR: Invalid value "X" for radio group field "citizenship". Valid values are: [...]</code>。<strong>它把合法取值全列出来</strong>，正是官方那条 implementation tip 的实现：报错要 verbose 到模型能照着改。</p>
+<div class="res"><strong>出处</strong> · <a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices#create-verifiable-intermediate-outputs" target="_blank">Anthropic · Skill authoring best practices</a> 的 Create verifiable intermediate outputs / Workflows and feedback loops 两节（2026-09 访问）· 脚本行为读自 <a href="https://github.com/anthropics/skills/tree/main/skills/pdf/scripts" target="_blank">skills/pdf/scripts</a> 的 main 分支源码，2026-09</div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>机制：让「打算做什么」变成一个能被集合比对的对象</h2>
+<div class="claim">论断：这套模式能成立只有一个前提——计划里的每个键，都能和一份真实存在的清单做集合比对。<code>field_id</code> 能，「把标题改得更专业些」不能。</div>
+<h3>官方目录里其实有两种变体，别混着用</h3>
+<div class="diagram">A. 校验计划（plan-first）—— pdf
+   extract_form_field_info.py  →  你写 field_values.json
+   → fill_fillable_fields.py 先核 ID/值域，不过则 exit 1，原件没动过
+
+   extract_form_structure.py   →  你写 fields.json（含 bounding box）
+   → check_bounding_boxes.py 独立校验
+   → fill_pdf_form_with_annotations.py
+   → convert_pdf_to_images.py 看图复核
+
+B. 校验产物（execute-then-validate）—— docx / pptx / xlsx
+   改 word/document.xml  →  zip  →  office/validate.py（XSD + 关系 + 内容类型）
+   openpyxl 写公式        →         recalc.py（LibreOffice 全量重算）
+   pptxgenjs writeFile    →         office/validate.py（图表 + 幻灯片 XML）
+</div>
+<p><strong>差别是「错误在哪一刻被发现」。</strong>A 类的代价是你得先有一份可枚举的真实清单（PDF 的域表、表格的行边界）；没有这份清单，计划里的键就没法比对，模式退化成一场仪式。B 类不需要事先枚举，代价是原件已经被改过了——<code>docx</code> 的做法是用 <code>--original</code> 兜底：<code>python scripts/office/validate.py out.docx --original doc.docx</code> 会把 XSD 检查基线对到原件上，<strong>原件自带的错就不算你的</strong>，还有 <code>--auto-repair</code> 修常见问题。</p>
+<h3>为什么中间产物必须是 JSON，不能是散文</h3>
+<ul>
+<li><strong>键要能比对。</strong><code>fill_fillable_fields.py</code> 做的三件事就是：ID 在不在真实域表里、<code>page</code> 对不对、<code>value</code> 落不落在 <code>checked_value</code> / <code>radio_options</code> 这些枚举里。三件事全是集合运算，一行散文都做不到。</li>
+<li><strong>计划要能原地改。</strong>官方原话 <em>Reversible planning: Claude can iterate on the plan without touching originals.</em> JSON 改十版，原件一次没打开。</li>
+<li><strong>报错要能点名。</strong><a href="https://github.com/anthropics/skills/blob/main/skills/pdf/scripts/check_bounding_boxes.py" target="_blank"><code>check_bounding_boxes.py</code></a> 只做两种检查——框相交、框高小于字号——但报错里带上了你自己写的 <code>description</code> 字段：<code>FAILURE: entry bounding box height (12) for <code>Last name entry field</code> is too short for the text content (font size: 14). Increase the box height or decrease the font size.</code> 既点名又给修法。它超过 20 条就停：<em>Aborting further checks; fix bounding boxes and try again</em>。</li>
+</ul>
+<div class="fail"><strong>一个容易写反的地方</strong>：<code>check_bounding_boxes.py</code> 的相交检查同时用到 <code>entry_bounding_box</code> 和 <code>label_bounding_box</code>。只写 entry 不写 label，它就查不出「文字压到标签上」这类错——而这恰好是最常犯的一类。<strong>计划的 schema 少一个字段，验证器就瞎一只眼，而且不会告诉你它瞎了。</strong></div>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>真实用法与边界：五条链路，逐个给命令</h2>
+<div class="claim">论断：验证器的位置不是随便放的。归一化要在写计划之前，清理要在结构定稿之后，看图复核永远在最后——顺序错了，每一步都在校验一个已经不成立的东西。</div>
+<h3>① 非填充式 PDF：计划里连坐标都要先被校验</h3>
+<pre><code>python scripts/extract_form_structure.py in.pdf form_structure.json  <span class="tag-com"># 标签/横线/复选框坐标</span>
+<span class="tag-com"># 你写 fields.json；pdf_width/pdf_height 表示 PDF 坐标，image_* 表示像素坐标</span>
+python scripts/check_bounding_boxes.py fields.json                    <span class="tag-com"># 先校验，再填</span>
+python scripts/fill_pdf_form_with_annotations.py in.pdf fields.json out.pdf
+python scripts/convert_pdf_to_images.py out.pdf verify/              <span class="tag-com"># 最后看图</span>
+</code></pre>
+<p>同目录还有一个 <a href="https://github.com/anthropics/skills/blob/main/skills/pdf/scripts/create_validation_image.py" target="_blank"><code>create_validation_image.py</code></a>，把 entry 框画红、label 框画蓝叠在页面图上——<strong>forms.md 里没提它</strong>，但它是「让模型用眼睛验计划」最直接的一个工具。<strong>什么时候别用这条链路</strong>：PDF 本来就有可填写域（先跑 <code>check_fillable_fields.py</code> 判一下），手算坐标纯属自找麻烦。</p>
+<h3>② docx 红线：归一化必须在写计划之前</h3>
+<pre><code>unzip -q doc.docx -d unpacked/ &amp;&amp; find unpacked -type l -delete
+python scripts/merge_runs.py unpacked/     <span class="tag-com"># 先合并碎片 run，否则文字在 XML 里不是连续串</span>
+<span class="tag-com"># 编辑 unpacked/word/document.xml —— 不要重排、不要 pretty-print</span>
+(cd unpacked &amp;&amp; zip -Xr ../out.docx .)
+python scripts/office/validate.py out.docx --original doc.docx --author "Reviewer"
+</code></pre>
+<p><a href="https://github.com/anthropics/skills/blob/main/skills/docx/scripts/merge_runs.py" target="_blank"><code>merge_runs.py</code></a> 替你干掉的那件事，是 Word 把一句话切成一堆 <code>&lt;w:r&gt;</code> 导致「你看得见的短语在 XML 里并不存在」。<strong>它是 plan 的前置条件</strong>：不先归一化，计划里写的定位字符串根本匹配不上。<code>--author</code> 则是一个很妙的 plan 校验——它报出「你改了文字却没包 <code>&lt;w:ins&gt;</code>/<code>&lt;w:del&gt;</code>」的地方，官方原话说这种错 <em>is easy to do by accident and invisible in the accepted view</em>。出清洁版用 <a href="https://github.com/anthropics/skills/blob/main/skills/docx/scripts/accept_changes.py" target="_blank"><code>accept_changes.py</code></a>，但它和 <code>pandoc --track-changes=accept</code> 都有同一个已知缺陷（删掉段落标记时留下空段落），官方自己写在 SKILL.md 里。</p>
+<h3>③ pptx：清理必须在结构定稿之后</h3>
+<p><a href="https://github.com/anthropics/skills/tree/main/skills/pptx/scripts" target="_blank"><code>skills/pptx/scripts</code></a> 里 <code>clean.py</code> 的说明只有一句硬约束：<em>Run <strong>after</strong> <code>&lt;p:sldIdLst&gt;</code> is final</em>——它删的是「已经没人引用」的幻灯片和媒体，结构还在变就跑，删的可能是你下一步要用的。<code>thumbnail.py</code> 是选版式阶段的「看图做计划」，但第二个参数必须传：默认前缀 <code>thumbnails</code> 会让同目录第二份 deck 静默覆盖第一份的网格图。</p>
+<h3>④ xlsx：验证器是强制的，而且它只证明「能算」</h3>
+<p><a href="https://github.com/anthropics/skills/blob/main/skills/xlsx/scripts/recalc.py" target="_blank"><code>recalc.py</code></a> 是本期唯一被写成 <em>mandatory</em> 的验证器（openpyxl 写公式不带缓存值，不重算的话 pandas 读回来全是 <code>None</code>）。但 SKILL.md 自己按了刹车：<em>A green recalc proves your formulas evaluate, not that they are right.</em> 差一行的区间会产出一个干净无错、数字全错的文件。它给的对策是行为上的：先写 2–3 个公式核对结果，再铺整张网格。</p>
+<h3>⑤ 把这套用在 skill 自己身上</h3>
+<p><a href="https://github.com/anthropics/skills/tree/main/skills/skill-creator" target="_blank"><code>skill-creator</code></a> 的 SKILL.md 给了两条命令：<code>python -m scripts.run_loop --eval-set &lt;trigger-eval.json&gt; --skill-path &lt;skill&gt;</code> 和 <code>python -m scripts.package_skill &lt;path/to/skill-folder&gt;</code>；<code>scripts/</code> 下还有 <code>quick_validate.py</code> / <code>run_eval.py</code> / <code>aggregate_benchmark.py</code>。它强调的顺序是 <em>GENERATE THE EVAL VIEWER BEFORE evaluating inputs yourself</em>——先把判据固化成可跑的东西，再动手判。<strong>什么时候别上</strong>：只有一个 SKILL.md、你自己一个人用，写 eval 的成本大于收益。</p>
+<h3>⑥ 模型会跳过验证器——这时候才该上 hooks</h3>
+<p>以上全部依赖模型肯按顺序跑。真要钉死，就把它挪出模型的判断范围：<a href="https://code.claude.com/docs/en/hooks" target="_blank">Claude Code hooks</a> 的 <code>PreToolUse</code> 在工具调用前触发、<strong>exit code 2 直接拦掉</strong>（官方原话：<em>On events that can block, exit 2 blocks whether or not you print JSON</em>），拦截理由可以用 <code>permissionDecision: "deny"</code> + <code>permissionDecisionReason</code> 精确回传给模型。<code>PostToolUse</code> 拦不住（工具已经跑了），exit 2 只是把 stderr 作为警告递给模型。<strong>什么时候别上 hooks</strong>：一次性任务、或者校验本身需要判断力——hooks 是确定性闸门，不是审稿人（详见 Skill 27）。</p>
+<h3>三条判据，用来在上面这几条链路之间取舍</h3>
+<ol>
+<li><strong>有没有一个不依赖模型判断的 oracle？</strong>XSD、域表、公式错误码都是。没有 oracle 就别搭这套——你只是让模型自己批自己的作业，还多烧一轮 token。</li>
+<li><strong>计划的键能不能和真实清单做集合比对？</strong>能（<code>field_id</code>、单元格地址、<code>slideN.xml</code>）→ 走 A 类，先校验计划。只能「看起来对」（文案、版式美感）→ 走 B 类或直接看图，别硬造 JSON。</li>
+<li><strong>失败可逆吗？</strong>不可逆或批量 → A 类，官方那四项适用范围就是这条。单文件、可重跑、五分钟能重来 → B 类够了，<code>docx</code> / <code>xlsx</code> 全系都是 B 类。</li>
+</ol>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>代价与替代品：四个官方验证器，四种退出码契约</h2>
+<div class="claim">论断：这是本期最该带走的一条——你不能假设「验证器退 0 就是过了」。同一个仓库里的四个脚本，对这件事的答案互不相同，而且都没写在显眼处。</div>
+<h3>逐个读源码得到的退出码表</h3>
+<div class="diagram">脚本                              发现问题时                      退出码
+──────────────────────────────────────────────────────────────────────
+fill_fillable_fields.py           print ERROR + 不写输出            1   ✅ fail-closed
+office/validate.py                报告失败项                        1   ✅ fail-closed
+recalc.py                         JSON status: "errors_found"       0   ⚠️ 静默
+check_bounding_boxes.py           print "FAILURE: ..."              0   ⚠️ 静默
+
+recalc.py 的最后一行是：sys.exit(1 if "error" in result else 0)
+→ 只有「压根没算成」（JSON 里有 error 键）才退 1；算成了但一堆 #REF! 退 0。
+check_bounding_boxes.py 全程没有 sys.exit(1)：框全相交也退 0。</div>
+<p><strong>后果很具体</strong>：你在 CI 或 hook 里写 <code>python scripts/recalc.py out.xlsx &amp;&amp; echo OK</code>，一份满是 <code>#NAME?</code> 的工作簿会一路绿灯过去。xlsx 的 SKILL.md 明确警告过这件事——<em>errors_found exits 0, so never treat a clean exit as a clean workbook</em>——但 <code>check_bounding_boxes.py</code> 的同类行为没有任何文档提醒，是读源码才看到的。<strong>把这两个接进自动化时，必须解析它们的 stdout，不能只看 <code>$?</code>。</strong></p>
+<h3>两处「照抄文档就会失败」的地方</h3>
+<div class="fail"><strong>① <code>forms.md</code> 第一条命令漏了扩展名。</strong>原文写 <code>python scripts/check_fillable_fields &lt;file.pdf&gt;</code>，仓库里的真实文件名是 <code>check_fillable_fields.py</code>（同目录其余七个脚本都带 <code>.py</code>）。照抄即 <em>No such file or directory</em>。<br/><strong>② best-practices 里的示例脚本名，一个都不存在。</strong>那节 PDF 工作流示范用的是 <code>analyze_form.py</code> / <code>validate_fields.py</code> / <code>fill_form.py</code> / <code>verify_output.py</code>，真实 <code>skills/pdf/scripts/</code> 里是 <code>extract_form_field_info.py</code> / <code>check_bounding_boxes.py</code> / <code>fill_fillable_fields.py</code> / <code>convert_pdf_to_images.py</code>。<strong>文档教的是模式，不是命令</strong>——命令永远从 <code>ls</code> 的输出里抄。</div>
+<h3>三笔账</h3>
+<ul>
+<li><strong>多一轮往返。</strong>analyze → plan → validate → execute → verify 是五步，小任务上就是五倍延迟。官方把适用范围限定在四种场景，反过来说就是：其余场景别上。</li>
+<li><strong>验证器只覆盖它写了的那几条。</strong><code>check_bounding_boxes.py</code> 只查相交和高度——不查你有没有漏填必填项、不查值对不对、不查字段语义。<strong>过了校验的计划仍然可以是一份完全错的计划。</strong></li>
+<li><strong>schema 会漂移。</strong>计划的字段名（<code>pdf_width</code> vs <code>image_width</code>、<code>entry_bounding_box</code>）是验证器和执行器之间的私有契约。上游脚本改一次输出格式，你手写的那份 <code>fields.json</code> 就悄悄失配，而验证器只会说「没问题」。</li>
+</ul>
+<h3>不上这套，你还能怎么办</h3>
+<ol>
+<li><strong>B 类：直接做完再校验。</strong><code>docx</code> / <code>xlsx</code> / <code>pptx</code> 三个官方 skill 全是这么干的——它们连 plan 文件都没有。可重跑的单文件操作，这就够了。</li>
+<li><strong>把闸门挪到 hooks。</strong><code>PreToolUse</code> exit 2，不给模型跳过的机会（Skill 27）。</li>
+<li><strong>用工具自带的 dry-run。</strong>能让上游工具替你做 <code>--check</code> 的，就别自己造中间格式——少一份要维护的 schema。</li>
+<li><strong>让另一个实例复核。</strong>上下文隔离的第二双眼睛，代价是协调税（Skill 26）。</li>
+<li><strong>就看图。</strong><code>convert_pdf_to_images.py</code> / <code>thumbnail.py</code> / <code>soffice.py --convert-to pdf</code> + <code>pdftoppm</code> 这条路线，官方四件套全都保留了——<strong>因为有些东西只有眼睛能验</strong>。</li>
+</ol>
+<div class="fail"><strong>最后一条诚实的代价</strong>：这套模式提高的是「发现错误的时间点」，不是「错误的数量」。一份通过全部校验的 <code>fields.json</code> 照样能把客户的名字填进出生日期栏——因为没有任何脚本知道那一栏该填什么。<strong>校验器守的是格式，不是意图；意图仍然只能你自己看一眼。</strong></div>
+</div>
+<div class="combo">
+<h3>// 一页选购卡</h3>
+<p><strong>先读这三份</strong>：① <a href="https://github.com/anthropics/skills/blob/main/skills/pdf/forms.md" target="_blank"><code>skills/pdf/forms.md</code></a>——全仓库唯一一份把 plan-validate-execute 从头到尾写完的文件，两条链路（可填写域 / 坐标标注）都在里面。② <a href="https://github.com/anthropics/skills/blob/main/skills/pdf/scripts/fill_fillable_fields.py" target="_blank"><code>fill_fillable_fields.py</code></a>——98 行，把「校验后再写」和「报错要列出合法取值」两件事写成了最短范例。③ <a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices#create-verifiable-intermediate-outputs" target="_blank">best-practices 的 Create verifiable intermediate outputs 一节</a>——模式的定名处与四条适用场景。</p>
+<p><strong>按需再看</strong>：<a href="https://github.com/anthropics/skills/blob/main/skills/pdf/scripts/check_bounding_boxes.py" target="_blank"><code>check_bounding_boxes.py</code></a>（独立 plan 校验器的写法，注意它退 0）· <a href="https://github.com/anthropics/skills/blob/main/skills/xlsx/scripts/recalc.py" target="_blank"><code>xlsx/scripts/recalc.py</code></a>（产物校验 + JSON 契约 + 退出码陷阱）· <a href="https://github.com/anthropics/skills/blob/main/skills/docx/scripts/office/validate.py" target="_blank"><code>docx/scripts/office/validate.py</code></a>（<code>--original</code> 基线、<code>--auto-repair</code>、<code>--author</code> 红线检查）· <a href="https://github.com/anthropics/skills/blob/main/skills/docx/scripts/merge_runs.py" target="_blank"><code>merge_runs.py</code></a>（写计划之前的归一化）· <a href="https://github.com/anthropics/skills/tree/main/skills/pptx/scripts" target="_blank"><code>pptx/scripts</code></a>（<code>clean.py</code> 的时序约束、<code>thumbnail.py</code> 的前缀坑）· <a href="https://github.com/anthropics/skills/tree/main/skills/skill-creator" target="_blank"><code>skill-creator</code></a>（<code>run_loop.py</code> / <code>package_skill.py</code>，把这套用在 skill 自己身上）· <a href="https://code.claude.com/docs/en/hooks" target="_blank">Claude Code hooks</a>（<code>PreToolUse</code> exit 2 硬门）。</p>
+<p><strong>明确别做</strong>：给没有 oracle 的任务硬造 plan 文件 · 把验证器的退出码当真而不读 stdout · 从文档里抄脚本名（两处已证实与仓库不符）· 在 <code>&lt;p:sldIdLst&gt;</code> 定稿前跑 <code>clean.py</code> · 在 <code>merge_runs.py</code> 之前写 docx 的定位计划 · 把「recalc 绿了」当成「数字对了」。</p>
+</div>
+<div class="glossary">
+<h3>// 术语表</h3>
+<dl>
+<dt>plan-validate-execute</dt>
+<dd>官方给这套模式的名字：模型先把打算做的改动写成结构化文件，脚本校验这份文件，过了才执行，最后再验产物。适用于批量、破坏性、高风险、规则复杂的操作。</dd>
+<dt>verifiable intermediate output（可校验中间产物）</dt>
+<dd>那份 JSON 计划本身。「可校验」的硬标准是：它的每个键都能和一份真实存在的清单做集合比对。</dd>
+<dt>oracle（判定依据）</dt>
+<dd>不依赖模型判断就能说「对/错」的东西——XSD、表单域表、公式错误码。没有 oracle，这套模式就只是仪式。</dd>
+<dt>fail-closed / fail-open</dt>
+<dd>发现问题时拒绝继续（退非 0、不写输出）叫 fail-closed；照样退 0 让调用方自己去读 stdout 叫 fail-open。官方四个验证器两种都有。</dd>
+<dt>execute-then-validate</dt>
+<dd>没有 plan 文件、改完再校验产物的变体。<code>docx</code> / <code>xlsx</code> / <code>pptx</code> 全系都是这一类，靠 <code>--original</code> 或重算兜底。</dd>
+<dt>归一化（normalization）</dt>
+<dd>写计划之前把原件整理成可定位的形态。<code>merge_runs.py</code> 合并碎片 run 就是典型：不做这一步，计划里的定位字符串在 XML 里根本不存在。</dd>
+<dt>PreToolUse hook</dt>
+<dd>Claude Code 在工具调用前触发的钩子，exit 2 直接拦掉该次调用。把「必须先跑验证器」从模型的自觉变成硬约束的唯一办法。</dd>
+</dl>
+</div>
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices#create-verifiable-intermediate-outputs" target="_blank">Anthropic · Skill authoring best practices</a> — Create verifiable intermediate outputs（模式定名、50 个表单域的例子、四条适用场景、verbose 报错的 implementation tip）· Workflows and feedback loops（五步 checklist、validator→fix→repeat 循环）· Provide utility scripts（预置脚本比现场生成更可靠、只有输出消耗 token）（2026-09 访问）</li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/pdf/forms.md" target="_blank">anthropics/skills · pdf/forms.md</a> — 294 行，两条完整链路；<code>field_info.json</code> / <code>field_values.json</code> / <code>fields.json</code> 三种格式的字段定义；<code>pdf_width</code> 与 <code>image_width</code> 的坐标系信号；第 4 行的 <code>check_fillable_fields</code> 缺 <code>.py</code></li>
+<li><a href="https://github.com/anthropics/skills/tree/main/skills/pdf/scripts" target="_blank">anthropics/skills · pdf/scripts</a> — 八个脚本：<code>check_fillable_fields.py</code>、<code>extract_form_field_info.py</code>、<code>extract_form_structure.py</code>、<code>check_bounding_boxes.py</code>、<code>fill_fillable_fields.py</code>、<code>fill_pdf_form_with_annotations.py</code>、<code>convert_pdf_to_images.py</code>、<code>create_validation_image.py</code>（最后一个 forms.md 未提及，作用是把 entry/label 框画在页面图上）</li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/xlsx/SKILL.md" target="_blank">anthropics/skills · xlsx/SKILL.md</a> — <code>recalc.py</code> 为何强制；<code>errors_found</code> 退 0 的明文警告；「绿灯只证明公式能算，不证明算对」；LibreOffice 不支持 <code>XLOOKUP</code> / <code>FILTER</code> 等而必须用 <code>INDEX</code>/<code>MATCH</code> 的清单</li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/docx/SKILL.md" target="_blank">anthropics/skills · docx/SKILL.md</a> — <code>merge_runs.py</code> → 编辑 → <code>validate.py --original</code> 的完整循环；<code>--author</code> 红线漏包检查；<code>accept_changes.py</code> 与 <code>pandoc --track-changes=accept</code> 的同一个已知缺陷</li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/pptx/SKILL.md" target="_blank">anthropics/skills · pptx/SKILL.md</a> — 脚本一览表；<code>clean.py</code> 必须在 <code>&lt;p:sldIdLst&gt;</code> 定稿后跑；<code>thumbnail.py</code> 默认前缀会静默覆盖；<code>validate.py --original</code> 对模板派生 deck 的基线作用</li>
+<li><a href="https://code.claude.com/docs/en/hooks" target="_blank">Claude Code · Hooks</a> — <code>PreToolUse</code> / <code>PostToolUse</code> 的可拦截性差异；exit 2 的语义；<code>permissionDecision</code> + <code>permissionDecisionReason</code> 的 JSON 回传格式（2026-09 访问）</li>
+<li><a href="https://github.com/anthropics/skills/tree/main/skills/skill-creator" target="_blank">anthropics/skills · skill-creator</a> — <code>python -m scripts.run_loop --eval-set ... --skill-path ...</code> 与 <code>python -m scripts.package_skill ...</code>；<code>scripts/</code> 下另有 <code>quick_validate.py</code> / <code>run_eval.py</code> / <code>aggregate_benchmark.py</code> / <code>improve_description.py</code></li>
+<li><a href="https://github.com/anthropics/skills/blob/main/.claude-plugin/marketplace.json" target="_blank">anthropics/skills · marketplace.json</a> — <code>document-skills</code> 含 xlsx / docx / pptx / pdf；<code>example-skills</code> 含 skill-creator / mcp-builder 等 12 个；<code>claude-api</code> 单独一个 plugin</li>
+<li><a href="domain-reference-skill-skill23.html">本站 Skill 23 · 按域拆 Reference 的 Skill 结构</a> — 三层落位里的 <code>scripts/</code> 那一格，本期是它的展开</li>
+<li><a href="skill-authoring-skill6.html">本站 Skill 6 · 官方 skill authoring 最佳实践精读</a> — 自由度阶梯：本期这套是「窄桥」那一端的标准做法</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Skill 24 · 2026-09-25</footer>
+</div>
+<script src="https://hub.cissychen.com/comments.js" defer></script>
+<script src="https://hub.cissychen.com/search.js" defer></script>
+<script src="https://hub.cissychen.com/index-button.js" defer></script>
+<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+</body></html>

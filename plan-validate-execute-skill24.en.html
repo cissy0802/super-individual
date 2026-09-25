@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill 24 · Plan-Validate-Execute — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head>
+<body>
+<div class="container">
+<header>
+<span class="week-tag">SKILL 24 / DATA · DEEP-DIVE</span>
+<h1>Plan-Validate-Execute</h1>
+<h2>Make the model hand in a plan a script can reject · The real validators inside the official pdf / docx / xlsx skills · Four validators, four different exit-code contracts</h2>
+<div class="date">2026-09-25 · BigCat</div>
+<p class="pitch">Last issue was about which layer a reference belongs in. This one is about what actually goes in that <code>scripts/</code> directory — the answer is validators. Every validation script in the official <code>pdf</code>, <code>docx</code>, <code>xlsx</code> and <code>pptx</code> skills, opened one by one, contradictory exit codes included.</p>
+</header>
+<div class="xref">
+<a href="domain-reference-skill-skill23.en.html">Prerequisite → Skill 23, domain-split reference structure (the <code>scripts/</code> slot of that three-layer split)</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>Updating 50 form fields, redlining a contract, laying a grid of formulas into a financial model — what these share is that the model thinks and edits at the same time, and when it goes wrong you cannot tell which step went wrong. The docs have a name for this class of work: <strong>plan-validate-execute</strong>. Have the model write down what it intends to do as a structured file, let a script tear that file apart, and only touch the original once the file passes. <a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices#create-verifiable-intermediate-outputs" target="_blank">Skill authoring best practices</a> devotes a whole section to it, titled <em>Create verifiable intermediate outputs</em>. This issue does not stop at the doc — it opens the eight or nine validation scripts that really exist in <a href="https://github.com/anthropics/skills/tree/main/skills" target="_blank">anthropics/skills</a> and looks at how each writes its errors, when it exits 1, and when it reports failures and exits 0 anyway.</p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>What it kills for you: editing while still thinking, in bulk</h2>
+<div class="claim">Claim: what this pattern buys is not correctness, it is a <strong>rollback-able train of thought</strong>. Rewriting a JSON plan costs nothing; a corrupted original may not.</div>
+<h3>The scope the docs pin down</h3>
+<p>That section names four situations verbatim: <em>Batch operations, destructive changes, complex validation rules, high-stakes operations.</em> The worked example is concrete — updating 50 PDF form fields from a spreadsheet, where without validation the model "might reference non-existent fields, create conflicting values, miss required fields, or apply updates incorrectly." The flow is written as five steps: <strong>analyze → create plan file → validate plan → execute → verify</strong>.</p>
+<h3>Install (two plugins; all four skills here are in the first)</h3>
+<pre><code><span class="tag-com"># pdf / docx / xlsx / pptx — every subject of this issue</span>
+/plugin marketplace add anthropics/skills
+/plugin install document-skills@anthropic-agent-skills
+
+<span class="tag-com"># skill-creator / mcp-builder and others (used in section 03)</span>
+/plugin install example-skills@anthropic-agent-skills
+</code></pre>
+<p>You do not need the plugin: these four directories drop straight into <code>~/.claude/skills/</code> or <code>.claude/skills/</code>, and the Python files under <code>scripts/</code> are standalone runnable anyway. <strong>When not to install</strong>: if you never touch Office or PDF files, all four are pure metadata tax. The code under <code>scripts/</code> is still worth reading, which is what this issue is for.</p>
+<h3>The first usage you can run today: fill a fillable PDF</h3>
+<p><a href="https://github.com/anthropics/skills/blob/main/skills/pdf/forms.md" target="_blank"><code>skills/pdf/forms.md</code></a> opens with <em>CRITICAL: You MUST complete these steps in order. Do not skip ahead to writing code.</em> Four commands, run from <code>skills/pdf/</code>:</p>
+<pre><code><span class="tag-com"># 1. Probe: does the form have fillable fields (the doc drops the .py here, see 04)</span>
+python scripts/check_fillable_fields.py form.pdf
+
+<span class="tag-com"># 2. Analyze: extract the real fields as JSON — field_id / page / rect / type</span>
+python scripts/extract_form_field_info.py form.pdf field_info.json
+
+<span class="tag-com"># 3. Plan: you write field_values.json; field_id must match step 2</span>
+<span class="tag-com">#    [{"field_id":"last_name","description":"...","page":1,"value":"Simpson"}]</span>
+
+<span class="tag-com"># 4. Execute: the script checks ids and value domains first, exit 1 and no output</span>
+python scripts/fill_fillable_fields.py form.pdf field_values.json out.pdf
+</code></pre>
+<p>Step 4 is the whole pattern in miniature: <a href="https://github.com/anthropics/skills/blob/main/skills/pdf/scripts/fill_fillable_fields.py" target="_blank"><code>fill_fillable_fields.py</code></a> checks your plan against <code>field_info.json</code> before writing a single byte, and its errors read like <code>ERROR: Invalid value "X" for radio group field "citizenship". Valid values are: [...]</code>. <strong>It enumerates the legal values</strong>, which is exactly the docs' implementation tip made real: make errors verbose enough for the model to fix itself.</p>
+<div class="res"><strong>Sources</strong> · <a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices#create-verifiable-intermediate-outputs" target="_blank">Anthropic · Skill authoring best practices</a>, the Create verifiable intermediate outputs and Workflows and feedback loops sections (retrieved 2026-09) · script behavior read from the <code>main</code>-branch source of <a href="https://github.com/anthropics/skills/tree/main/skills/pdf/scripts" target="_blank">skills/pdf/scripts</a>, 2026-09</div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Mechanism: turn "what I intend to do" into something set-comparable</h2>
+<div class="claim">Claim: this pattern holds on exactly one precondition — every key in the plan can be set-compared against a list that really exists. <code>field_id</code> can be. "Make the heading sound more professional" cannot.</div>
+<h3>The official directories hold two variants; don't mix them</h3>
+<div class="diagram">A. Validate the plan (plan-first) — pdf
+   extract_form_field_info.py  ->  you write field_values.json
+   -> fill_fillable_fields.py checks ids/domains, exit 1, original untouched
+
+   extract_form_structure.py   ->  you write fields.json (with bounding boxes)
+   -> check_bounding_boxes.py validates it standalone
+   -> fill_pdf_form_with_annotations.py
+   -> convert_pdf_to_images.py to look at the result
+
+B. Validate the artifact (execute-then-validate) — docx / pptx / xlsx
+   edit word/document.xml -> zip -> office/validate.py (XSD + rels + types)
+   openpyxl writes formulas      ->  recalc.py (LibreOffice recomputes all)
+   pptxgenjs writeFile           ->  office/validate.py (charts + slide XML)
+</div>
+<p><strong>The difference is the moment an error surfaces.</strong> Variant A costs you an enumerable list up front (the PDF's field table, a page's row boundaries); without that list the plan's keys have nothing to compare against and the pattern decays into ceremony. Variant B needs no list, and the cost is that the original has already been modified — <code>docx</code> covers for that with <code>--original</code>: <code>python scripts/office/validate.py out.docx --original doc.docx</code> baselines the XSD checks against the source, so <strong>errors the original already had do not read as yours</strong>, and <code>--auto-repair</code> fixes common issues.</p>
+<h3>Why the intermediate output must be JSON and not prose</h3>
+<ul>
+<li><strong>Keys have to be comparable.</strong> All <code>fill_fillable_fields.py</code> does is three set operations: is the id in the real field table, is <code>page</code> right, does <code>value</code> fall inside the enumerations (<code>checked_value</code>, <code>radio_options</code>, <code>choice_options</code>). No sentence of prose supports any of the three.</li>
+<li><strong>The plan has to be editable in place.</strong> Verbatim: <em>Reversible planning: Claude can iterate on the plan without touching originals.</em> Ten revisions of the JSON, zero opens of the original.</li>
+<li><strong>Errors have to name things.</strong> <a href="https://github.com/anthropics/skills/blob/main/skills/pdf/scripts/check_bounding_boxes.py" target="_blank"><code>check_bounding_boxes.py</code></a> runs only two checks — boxes that intersect, and boxes shorter than the font size — but it quotes back the <code>description</code> field you wrote: <code>FAILURE: entry bounding box height (12) for `Last name entry field` is too short for the text content (font size: 14). Increase the box height or decrease the font size.</code> It names the field and prescribes the fix. Past 20 messages it stops: <em>Aborting further checks; fix bounding boxes and try again</em>.</li>
+</ul>
+<div class="fail"><strong>Easy to get backwards</strong>: the intersection check in <code>check_bounding_boxes.py</code> uses both <code>entry_bounding_box</code> and <code>label_bounding_box</code>. Write the entry box and omit the label box and it can no longer catch text colliding with its own label — which happens to be the commonest fault of all. <strong>One missing field in the plan's schema blinds the validator in one eye, and it will not mention that it is blind.</strong></div>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Real usage and limits: five chains, each with its commands</h2>
+<div class="claim">Claim: where a validator sits is not arbitrary. Normalization comes before the plan, cleanup comes after the structure is final, and looking at the rendered output always comes last — get the order wrong and every step validates something that no longer holds.</div>
+<h3>1. Non-fillable PDFs: even the coordinates get validated first</h3>
+<pre><code>python scripts/extract_form_structure.py in.pdf form_structure.json  <span class="tag-com"># labels/lines/checkboxes</span>
+<span class="tag-com"># you write fields.json; pdf_width/pdf_height means PDF coords, image_* means pixels</span>
+python scripts/check_bounding_boxes.py fields.json                    <span class="tag-com"># validate, then fill</span>
+python scripts/fill_pdf_form_with_annotations.py in.pdf fields.json out.pdf
+python scripts/convert_pdf_to_images.py out.pdf verify/              <span class="tag-com"># look at it last</span>
+</code></pre>
+<p>The same directory holds <a href="https://github.com/anthropics/skills/blob/main/skills/pdf/scripts/create_validation_image.py" target="_blank"><code>create_validation_image.py</code></a>, which draws entry boxes in red and label boxes in blue over the page image. <strong>forms.md never mentions it</strong>, yet it is the most direct tool there is for letting the model validate a plan with its eyes. <strong>When not to use this chain</strong>: if the PDF has real fillable fields (run <code>check_fillable_fields.py</code> to find out), computing coordinates by hand is self-inflicted.</p>
+<h3>2. docx redlining: normalize before you write the plan</h3>
+<pre><code>unzip -q doc.docx -d unpacked/ &amp;&amp; find unpacked -type l -delete
+python scripts/merge_runs.py unpacked/     <span class="tag-com"># coalesce runs, or text isn't contiguous in the XML</span>
+<span class="tag-com"># edit unpacked/word/document.xml — do NOT reformat or pretty-print</span>
+(cd unpacked &amp;&amp; zip -Xr ../out.docx .)
+python scripts/office/validate.py out.docx --original doc.docx --author "Reviewer"
+</code></pre>
+<p>What <a href="https://github.com/anthropics/skills/blob/main/skills/docx/scripts/merge_runs.py" target="_blank"><code>merge_runs.py</code></a> kills is Word slicing one sentence across a pile of <code>&lt;w:r&gt;</code> elements, so a phrase you can see in the document does not exist as a contiguous string in the XML. <strong>It is a precondition of the plan</strong>: skip it and the anchor strings in your plan match nothing. <code>--author</code> is a neat plan check in its own right — it reports text you changed without wrapping it in <code>&lt;w:ins&gt;</code>/<code>&lt;w:del&gt;</code>, a mistake the docs describe as <em>easy to do by accident and invisible in the accepted view</em>. For a clean copy use <a href="https://github.com/anthropics/skills/blob/main/skills/docx/scripts/accept_changes.py" target="_blank"><code>accept_changes.py</code></a>, though it and <code>pandoc --track-changes=accept</code> share one known defect (a deleted paragraph mark leaves an emptied paragraph behind), which the SKILL.md documents itself.</p>
+<h3>3. pptx: clean up only after the structure is final</h3>
+<p>In <a href="https://github.com/anthropics/skills/tree/main/skills/pptx/scripts" target="_blank"><code>skills/pptx/scripts</code></a>, the note on <code>clean.py</code> is one hard constraint: <em>Run <strong>after</strong> <code>&lt;p:sldIdLst&gt;</code> is final</em> — it deletes slides and media nothing references any more, so running it while the structure is still moving may delete what you need next. <code>thumbnail.py</code> is the look-first step for choosing layouts, but its second argument is mandatory: the default prefix <code>thumbnails</code> lets a second deck in the same directory silently overwrite the first deck's grids.</p>
+<h3>4. xlsx: the validator is mandatory, and it only proves things evaluate</h3>
+<p><a href="https://github.com/anthropics/skills/blob/main/skills/xlsx/scripts/recalc.py" target="_blank"><code>recalc.py</code></a> is the only validator in this issue the docs call <em>mandatory</em> — openpyxl writes formulas with no cached values, so until you recalculate every formula cell reads back as <code>None</code> to pandas. But the SKILL.md immediately hits the brake: <em>A green recalc proves your formulas evaluate, not that they are right.</em> An off-by-one range yields a clean, error-free file full of wrong numbers. The remedy it offers is behavioral: write two or three formulas and check the values they pull before building out the grid.</p>
+<h3>5. Turning the pattern on skills themselves</h3>
+<p>The SKILL.md of <a href="https://github.com/anthropics/skills/tree/main/skills/skill-creator" target="_blank"><code>skill-creator</code></a> gives two commands: <code>python -m scripts.run_loop --eval-set &lt;trigger-eval.json&gt; --skill-path &lt;skill&gt;</code> and <code>python -m scripts.package_skill &lt;path/to/skill-folder&gt;</code>; <code>scripts/</code> also holds <code>quick_validate.py</code>, <code>run_eval.py</code> and <code>aggregate_benchmark.py</code>. The order it insists on is <em>GENERATE THE EVAL VIEWER BEFORE evaluating inputs yourself</em> — freeze the criteria into something runnable before you start judging. <strong>When not to bother</strong>: a single SKILL.md you alone use, where writing evals costs more than it returns.</p>
+<h3>6. The model will skip the validator — that is what hooks are for</h3>
+<p>Everything above depends on the model choosing to run things in order. To pin it down, move it outside the model's judgment: <a href="https://code.claude.com/docs/en/hooks" target="_blank">Claude Code hooks</a> fire <code>PreToolUse</code> before a tool call and <strong>exit code 2 blocks it outright</strong> (verbatim: <em>On events that can block, exit 2 blocks whether or not you print JSON</em>), and the reason can be returned precisely with <code>permissionDecision: "deny"</code> plus <code>permissionDecisionReason</code>. <code>PostToolUse</code> cannot block — the tool already ran — and exit 2 there only hands stderr to the model as a warning. <strong>When not to use hooks</strong>: one-off tasks, or checks that need judgment. A hook is a deterministic gate, not a reviewer (see Skill 27).</p>
+<h3>Three criteria for choosing among the chains above</h3>
+<ol>
+<li><strong>Is there an oracle that does not depend on the model's judgment?</strong> An XSD, a field table, a formula error code all are. With no oracle, do not build this: you are only having the model grade its own paper, one extra round of tokens later.</li>
+<li><strong>Can the plan's keys be set-compared against a real list?</strong> Yes (<code>field_id</code>, cell addresses, <code>slideN.xml</code>) → go variant A and validate the plan. Only "looks about right" (copy, visual balance) → go variant B or just look at the render; don't force a JSON into existence.</li>
+<li><strong>Is failure reversible?</strong> Irreversible or bulk → variant A; the docs' four situations are exactly this criterion. Single file, re-runnable, five minutes to redo → variant B suffices, which is why <code>docx</code> and <code>xlsx</code> are variant B end to end.</li>
+</ol>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Costs and alternatives: four official validators, four exit-code contracts</h2>
+<div class="claim">Claim: this is the one thing to take away — you cannot assume a validator exiting 0 means it passed. Four scripts in one repository answer that question differently, and none of them says so anywhere prominent.</div>
+<h3>The exit-code table, read off the source</h3>
+<div class="diagram">script                            on finding problems             exit
+──────────────────────────────────────────────────────────────────────
+fill_fillable_fields.py           prints ERROR, writes nothing      1   OK  fail-closed
+office/validate.py                reports the failures              1   OK  fail-closed
+recalc.py                         JSON status: "errors_found"       0   !!  silent
+check_bounding_boxes.py           prints "FAILURE: ..."             0   !!  silent
+
+recalc.py's last line is:  sys.exit(1 if "error" in result else 0)
+-> only "nothing was recalculated at all" (an error key) exits 1; a workbook
+   full of #REF! exits 0.
+check_bounding_boxes.py never calls sys.exit(1): fully overlapping boxes exit 0.</div>
+<p><strong>The consequence is concrete</strong>: write <code>python scripts/recalc.py out.xlsx &amp;&amp; echo OK</code> in CI or a hook and a workbook riddled with <code>#NAME?</code> sails through green. The xlsx SKILL.md does warn about this — <em>errors_found exits 0, so never treat a clean exit as a clean workbook</em> — but the identical behavior in <code>check_bounding_boxes.py</code> carries no documented warning at all; you only see it by reading the source. <strong>Wire either into automation and you must parse stdout, not just check <code>$?</code>.</strong></p>
+<h3>Two places where copying the doc fails</h3>
+<div class="fail"><strong>1. The first command in <code>forms.md</code> is missing its extension.</strong> It reads <code>python scripts/check_fillable_fields &lt;file.pdf&gt;</code>; the real filename is <code>check_fillable_fields.py</code> (all seven other scripts in that directory carry <code>.py</code>). Copied verbatim it is a <em>No such file or directory</em>.<br/><strong>2. Not one of the example script names in best-practices exists.</strong> That section's PDF workflow uses <code>analyze_form.py</code>, <code>validate_fields.py</code>, <code>fill_form.py</code> and <code>verify_output.py</code>; the real <code>skills/pdf/scripts/</code> holds <code>extract_form_field_info.py</code>, <code>check_bounding_boxes.py</code>, <code>fill_fillable_fields.py</code> and <code>convert_pdf_to_images.py</code>. <strong>The doc teaches the pattern, not the commands</strong> — copy commands out of <code>ls</code>, never out of prose.</div>
+<h3>Three bills to pay</h3>
+<ul>
+<li><strong>An extra round trip.</strong> analyze → plan → validate → execute → verify is five steps, which on a small task is five times the latency. The docs bound the pattern to four situations; read the other way, that means everywhere else, don't.</li>
+<li><strong>A validator covers only what it was written to cover.</strong> <code>check_bounding_boxes.py</code> checks intersections and heights — not missing required fields, not whether a value is correct, not what a field means. <strong>A plan that passes validation can still be entirely wrong.</strong></li>
+<li><strong>The schema drifts.</strong> The plan's field names (<code>pdf_width</code> vs <code>image_width</code>, <code>entry_bounding_box</code>) are a private contract between validator and executor. One upstream change to an output format and your hand-written <code>fields.json</code> quietly stops matching, while the validator keeps saying it is fine.</li>
+</ul>
+<h3>What you can do instead</h3>
+<ol>
+<li><strong>Variant B: just do it, then validate.</strong> The official <code>docx</code>, <code>xlsx</code> and <code>pptx</code> skills all work this way — they have no plan file at all. For re-runnable single-file work that is enough.</li>
+<li><strong>Move the gate into a hook.</strong> <code>PreToolUse</code> exit 2, no opportunity for the model to skip (Skill 27).</li>
+<li><strong>Use the tool's own dry run.</strong> If something upstream can do the <code>--check</code> for you, don't invent an intermediate format — that's one less schema to maintain.</li>
+<li><strong>Have a second instance review it.</strong> A second pair of eyes with isolated context, at the price of coordination overhead (Skill 26).</li>
+<li><strong>Just look at it.</strong> <code>convert_pdf_to_images.py</code>, <code>thumbnail.py</code>, <code>soffice.py --convert-to pdf</code> plus <code>pdftoppm</code> — all four official skills keep this route, <strong>because some things only an eye can check</strong>.</li>
+</ol>
+<div class="fail"><strong>One last honest cost</strong>: this pattern improves <em>when</em> you find an error, not <em>how many</em> there are. A <code>fields.json</code> that passes every check can still put the customer's name in the date-of-birth box, because no script knows what belongs in that box. <strong>Validators guard the format, not the intent; the intent still needs your own eyes.</strong></div>
+</div>
+<div class="combo">
+<h3>// ONE-PAGE PICK LIST</h3>
+<p><strong>Read these three first</strong>: (1) <a href="https://github.com/anthropics/skills/blob/main/skills/pdf/forms.md" target="_blank"><code>skills/pdf/forms.md</code></a> — the only file in the repo that writes plan-validate-execute out end to end, both chains (fillable fields and coordinate annotation). (2) <a href="https://github.com/anthropics/skills/blob/main/skills/pdf/scripts/fill_fillable_fields.py" target="_blank"><code>fill_fillable_fields.py</code></a> — 98 lines that make "check before writing" and "errors list the legal values" into the shortest possible example. (3) <a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices#create-verifiable-intermediate-outputs" target="_blank">the Create verifiable intermediate outputs section</a> — where the pattern is named and its four situations bounded.</p>
+<p><strong>Then as needed</strong>: <a href="https://github.com/anthropics/skills/blob/main/skills/pdf/scripts/check_bounding_boxes.py" target="_blank"><code>check_bounding_boxes.py</code></a> (how a standalone plan validator is written — note it exits 0) · <a href="https://github.com/anthropics/skills/blob/main/skills/xlsx/scripts/recalc.py" target="_blank"><code>xlsx/scripts/recalc.py</code></a> (artifact validation, a JSON contract, and the exit-code trap) · <a href="https://github.com/anthropics/skills/blob/main/skills/docx/scripts/office/validate.py" target="_blank"><code>docx/scripts/office/validate.py</code></a> (<code>--original</code> baselining, <code>--auto-repair</code>, the <code>--author</code> redline check) · <a href="https://github.com/anthropics/skills/blob/main/skills/docx/scripts/merge_runs.py" target="_blank"><code>merge_runs.py</code></a> (the normalization that precedes a plan) · <a href="https://github.com/anthropics/skills/tree/main/skills/pptx/scripts" target="_blank"><code>pptx/scripts</code></a> (the ordering constraint on <code>clean.py</code>, the prefix trap in <code>thumbnail.py</code>) · <a href="https://github.com/anthropics/skills/tree/main/skills/skill-creator" target="_blank"><code>skill-creator</code></a> (<code>run_loop.py</code> and <code>package_skill.py</code>, the pattern turned on skills themselves) · <a href="https://code.claude.com/docs/en/hooks" target="_blank">Claude Code hooks</a> (the <code>PreToolUse</code> exit-2 hard gate).</p>
+<p><strong>Explicitly don't</strong>: force a plan file onto a task with no oracle · trust a validator's exit code without reading its stdout · copy script names out of prose (two are confirmed not to match the repo) · run <code>clean.py</code> before <code>&lt;p:sldIdLst&gt;</code> is final · write docx anchor plans before <code>merge_runs.py</code> · read "recalc came back green" as "the numbers are right".</p>
+</div>
+<div class="glossary">
+<h3>// GLOSSARY</h3>
+<dl>
+<dt>plan-validate-execute</dt>
+<dd>The docs' name for the pattern: the model writes intended changes as a structured file, a script validates that file, execution follows only on a pass, and the artifact is verified afterwards. Meant for batch, destructive, high-stakes and complex-rule operations.</dd>
+<dt>verifiable intermediate output</dt>
+<dd>The JSON plan itself. The hard test for "verifiable" is that every key can be set-compared against a list that really exists.</dd>
+<dt>oracle</dt>
+<dd>Anything that can call something right or wrong without the model's judgment — an XSD, a form-field table, a formula error code. With no oracle the pattern is just ceremony.</dd>
+<dt>fail-closed / fail-open</dt>
+<dd>Refusing to continue on a problem (non-zero exit, no output written) is fail-closed; exiting 0 and leaving the caller to parse stdout is fail-open. The four official validators split evenly between the two.</dd>
+<dt>execute-then-validate</dt>
+<dd>The variant with no plan file, where the artifact is validated after the edit. <code>docx</code>, <code>xlsx</code> and <code>pptx</code> are all this, backstopped by <code>--original</code> or a full recalculation.</dd>
+<dt>normalization</dt>
+<dd>Putting the original into an addressable shape before the plan is written. <code>merge_runs.py</code> coalescing fragmented runs is the type case: skip it and the plan's anchor strings do not exist in the XML.</dd>
+<dt>PreToolUse hook</dt>
+<dd>The Claude Code hook that fires before a tool call, where exit 2 blocks the call outright. The only way to turn "run the validator first" from the model's good intention into a hard constraint.</dd>
+</dl>
+</div>
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices#create-verifiable-intermediate-outputs" target="_blank">Anthropic · Skill authoring best practices</a> — Create verifiable intermediate outputs (the pattern named, the 50-form-field example, four situations, the verbose-error implementation tip) · Workflows and feedback loops (the five-step checklist, the validator→fix→repeat loop) · Provide utility scripts (pre-made scripts beat generated code; only the output consumes tokens) (retrieved 2026-09)</li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/pdf/forms.md" target="_blank">anthropics/skills · pdf/forms.md</a> — 294 lines, two complete chains; the field definitions for <code>field_info.json</code>, <code>field_values.json</code> and <code>fields.json</code>; <code>pdf_width</code> vs <code>image_width</code> as the coordinate-system signal; the missing <code>.py</code> on line 4</li>
+<li><a href="https://github.com/anthropics/skills/tree/main/skills/pdf/scripts" target="_blank">anthropics/skills · pdf/scripts</a> — eight scripts: <code>check_fillable_fields.py</code>, <code>extract_form_field_info.py</code>, <code>extract_form_structure.py</code>, <code>check_bounding_boxes.py</code>, <code>fill_fillable_fields.py</code>, <code>fill_pdf_form_with_annotations.py</code>, <code>convert_pdf_to_images.py</code>, <code>create_validation_image.py</code> (the last is unmentioned in forms.md; it draws entry and label boxes onto the page image)</li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/xlsx/SKILL.md" target="_blank">anthropics/skills · xlsx/SKILL.md</a> — why <code>recalc.py</code> is mandatory; the explicit warning that <code>errors_found</code> exits 0; "green proves formulas evaluate, not that they are right"; the list of functions LibreOffice cannot evaluate (<code>XLOOKUP</code>, <code>FILTER</code> and friends) and the <code>INDEX</code>/<code>MATCH</code> substitute</li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/docx/SKILL.md" target="_blank">anthropics/skills · docx/SKILL.md</a> — the full <code>merge_runs.py</code> → edit → <code>validate.py --original</code> loop; the <code>--author</code> check for unwrapped tracked changes; the defect <code>accept_changes.py</code> shares with <code>pandoc --track-changes=accept</code></li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/pptx/SKILL.md" target="_blank">anthropics/skills · pptx/SKILL.md</a> — the script table; <code>clean.py</code> only after <code>&lt;p:sldIdLst&gt;</code> is final; the silent overwrite in <code>thumbnail.py</code>'s default prefix; what <code>validate.py --original</code> baselines for template-derived decks</li>
+<li><a href="https://code.claude.com/docs/en/hooks" target="_blank">Claude Code · Hooks</a> — what <code>PreToolUse</code> can block and <code>PostToolUse</code> cannot; the semantics of exit 2; the <code>permissionDecision</code> plus <code>permissionDecisionReason</code> JSON shape (retrieved 2026-09)</li>
+<li><a href="https://github.com/anthropics/skills/tree/main/skills/skill-creator" target="_blank">anthropics/skills · skill-creator</a> — <code>python -m scripts.run_loop --eval-set ... --skill-path ...</code> and <code>python -m scripts.package_skill ...</code>; <code>scripts/</code> also holds <code>quick_validate.py</code>, <code>run_eval.py</code>, <code>aggregate_benchmark.py</code> and <code>improve_description.py</code></li>
+<li><a href="https://github.com/anthropics/skills/blob/main/.claude-plugin/marketplace.json" target="_blank">anthropics/skills · marketplace.json</a> — <code>document-skills</code> holds xlsx / docx / pptx / pdf; <code>example-skills</code> holds skill-creator, mcp-builder and ten others; <code>claude-api</code> is its own plugin</li>
+<li><a href="domain-reference-skill-skill23.en.html">This site, Skill 23 · Domain-split reference structure</a> — the <code>scripts/</code> slot of that three-layer split, which this issue expands</li>
+<li><a href="skill-authoring-skill6.en.html">This site, Skill 6 · Skill authoring best practices, read closely</a> — the freedom ladder: this pattern is the standard move at the narrow-bridge end</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Skill 24 · 2026-09-25</footer>
+</div>
+<script src="https://hub.cissychen.com/comments.js" defer></script>
+<script src="https://hub.cissychen.com/search.js" defer></script>
+<script src="https://hub.cissychen.com/index-button.js" defer></script>
+<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+</body></html>
