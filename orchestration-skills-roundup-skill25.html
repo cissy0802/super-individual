@@ -64,8 +64,8 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <div class="container">
 <header>
 <span class="week-tag">SKILL 25 / ORCHESTRATION · ROUNDUP</span>
-<h1>编排类 Skills 与 Plugin 榜单</h1>
-<h2>四种原语只有两个轴：谁触发它 · 上下文在哪 — 答不上这两问，装再多也是乱的</h2>
+<h1 data-tts="f6c2ce0df0a59f82">编排类 Skills 与 Plugin 榜单</h1>
+<h2 data-tts="593f4eb16448d593">四种原语只有两个轴：谁触发它 · 上下文在哪 — 答不上这两问，装再多也是乱的</h2>
 <div class="date">2026-09-26 · BigCat</div>
 <p class="pitch">这一类最容易买错：很多人把「多 agent」当成更强的 skill 去装。其实 subagent / hook / slash command / plugin 解决的是四件不搭界的事，选错了不是效果差，是根本不触发。本期先给十条能装的，再给一张两轴坐标把它们各自钉死。</p>
 </header>
@@ -73,13 +73,13 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <a href="coding-skills-roundup-skill1.html">同系列 → Skill 1 编码类 skills 榜单（skill / subagent / MCP 的初步分工在那期）</a>
 </div>
 <div class="intro">
-<h3>// WHY THIS MATTERS</h3>
+<h3 data-tts="78ad3abef7e71215">// WHY THIS MATTERS</h3>
 <p>别的类别装错了至少还会跑，<strong>编排类装错了通常是静悄悄地不生效</strong>——「每次提交前跑 lint」写进 <code>CLAUDE.md</code>，模型十次忘三次；需要判断的活写成 hook，它每次都硬邦邦地拦错人。正确用法只有一句：<strong>需要判断的交给模型，不需要判断的交给代码，会淹没上下文的挪出去，要给别人用的打成包。</strong>本期点名十条真实可装/可读的条目，先给表和命令，判据放后半程。</p>
 </div>
 <!-- ============ 1 ============ -->
 <div class="section">
 <span class="num">// 01</span>
-<h2>先给清单：四种原语 ＋ 六个现成的</h2>
+<h2 data-tts="f3dbdabd84b03e22">先给清单：四种原语 ＋ 六个现成的</h2>
 <div class="claim">论断：前四条是<strong>官方机制</strong>，不用装、写个文件就有；后六条是<strong>别人已经写好的</strong>。先认清前四条，后六条才知道该挑哪个。</div>
 <div class="diagram">条目                            出处                          替你干掉的那件事                 什么时候别装 / 别用
 ────────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -95,7 +95,7 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 ⑩ disler/claude-code-hooks-mastery 社区仓库                  13 个 hook 事件的可跑范例        你只想抄一段，不想读全仓
 ────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ①②③④ 是原语，⑤ 是把①升级成独立会话；⑥⑦⑧ 是官方拿这些原语搭好的成品；⑨⑩ 是社区的量与范例。</div>
-<h3>怎么装（命令抄自各自官方页面）</h3>
+<h3 data-tts="e46ee19ce745b362">怎么装（命令抄自各自官方页面）</h3>
 <pre><code><span class="tag-com"># ⑥⑦⑧ 官方市场，首次启动交互式会话时自动添加；没有就手动加</span>
 /plugin marketplace add anthropics/claude-plugins-official
 /plugin install security-guidance@claude-plugins-official
@@ -116,7 +116,7 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 /plugin            <span class="tag-com"># Installed 页有 “Not used recently” 分组，直接告诉你谁在白拿钱</span>
 /skill-doctor      <span class="tag-com"># 看每个 skill 的 context 成本</span>
 </code></pre>
-<h3>逐条说人话</h3>
+<h3 data-tts="368335ed7449a1ba">逐条说人话</h3>
 <ul>
 <li><strong>① <a href="https://code.claude.com/docs/en/sub-agents" target="_blank">subagent</a></strong>：一个 <code>.claude/agents/*.md</code>，<strong>只有 <code>name</code> 和 <code>description</code> 必填</strong>，其余如 <code>tools</code> / <code>disallowedTools</code> / <code>model</code> / <code>maxTurns</code> / <code>permissionMode</code> / <code>isolation: worktree</code> 都是可选。全部价值在<strong>独立上下文窗口</strong>：翻日志、扫全仓这种会冲垮主对话的活扔进去，只把结论拿回来。官方硬数：<strong>默认最多 20 个并发</strong>（<code>CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS</code> 可调）、<strong>最多嵌套 3 层</strong>、<strong>所有 agent 的 description 加起来超过 15,000 token 会在启动时告警</strong>。<strong>什么时候别用</strong>：结果本来就只有一句话——多开一个上下文纯属交税。</li>
 <li><strong>② <a href="https://code.claude.com/docs/en/hooks-guide" target="_blank">hook</a></strong>：在 settings 里写一个 <code>hooks</code> 块，生命周期到点就跑你的 shell 命令。这是本类<strong>唯一确定性的机制</strong>——不靠模型「记得」。官方事件表已铺得很开：<code>PreToolUse</code> / <code>PostToolUse</code> / <code>PostToolUseFailure</code> / <code>PostToolBatch</code> / <code>UserPromptSubmit</code> / <code>PermissionRequest</code> / <code>PermissionDenied</code> / <code>SubagentStart</code> / <code>SubagentStop</code> / <code>Stop</code> / <code>TeammateIdle</code> / <code>TaskCreated</code> / <code>TaskCompleted</code> / <code>InstructionsLoaded</code> / <code>ConfigChange</code> / <code>FileChanged</code> / <code>PreCompact</code> / <code>SessionStart</code> / <code>SessionEnd</code> 等。两条硬规矩：<strong><code>PreToolUse</code> 的 <code>deny</code> 在 <code>bypassPermissions</code> 与 <code>--dangerously-skip-permissions</code> 下依然生效</strong>（能收紧、不能放宽）；<strong>同一事件的多个 hook 并行跑完才合并，一个 deny 不阻止另一个的副作用</strong>。<strong>什么时候别用</strong>：这件事需要判断——改用 <code>type: "prompt"</code>（单轮）或 <code>type: "agent"</code>（多轮、默认 60 秒超时、最多 50 轮，<strong>官方标注实验性</strong>）。</li>
@@ -134,7 +134,7 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <!-- ============ 2 ============ -->
 <div class="section">
 <span class="num">// 02</span>
-<h2>为什么这十条不能混着比：只有两个轴</h2>
+<h2 data-tts="30a901d6503c681e">为什么这十条不能混着比：只有两个轴</h2>
 <div class="claim">论断：横轴是<strong>谁按下它</strong>（你打字 / 模型自己决定 / 生命周期事件），纵轴是<strong>上下文在哪</strong>（进主对话 / 隔离 / 根本不进）。四种原语各占一格，<strong>没有一格能替另一格。</strong></div>
 <div class="diagram">                    │ 进主对话上下文        │ 隔离上下文              │ 完全不进上下文
 ────────────────────┼───────────────────────┼─────────────────────────┼──────────────────────
@@ -161,7 +161,7 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <!-- ============ 3 ============ -->
 <div class="section">
 <span class="num">// 03</span>
-<h2>三分钟验货：装之前先答这六问</h2>
+<h2 data-tts="846235bcd75e37d3">三分钟验货：装之前先答这六问</h2>
 <div class="claim">论断：这一类不看星数，看「它在哪一格」。下面六问答完，选哪个基本就定了。</div>
 <ol>
 <li><strong>这件事需不需要模型判断？</strong> 不需要 → ② hook（或 ⑦ 生成一条）。需要 → ③ skill 或 ① subagent。这一问答错，后面全错。</li>
@@ -176,15 +176,15 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <!-- ============ 4 ============ -->
 <div class="section">
 <span class="num">// 04</span>
-<h2>诚实的代价：编排是这一类里最贵的一档</h2>
+<h2 data-tts="191f66504141b024">诚实的代价：编排是这一类里最贵的一档</h2>
 <div class="claim">论断：subagent 的代价是 token，hook 的代价是<strong>你交出去的执行权</strong>，agent team 的代价是<strong>协调税</strong>——三笔账的结算方式完全不同。</div>
-<h3>三笔账</h3>
+<h3 data-tts="8c9eb78c591d46f0">三笔账</h3>
 <ul>
 <li><strong>常驻 context 税。</strong> 天天在付、看不见账单的一笔。从 ⑨ 里装五个插件很轻松，它们的名字和描述从此每轮都在。<strong>唯一对策是定期看 Not used recently 然后关掉。</strong></li>
 <li><strong>hook 以你的身份执行任意代码。</strong> 它跑什么都是以你的权限跑。两条实操坑：多个 hook <strong>并行</strong>、一个 deny 不阻止另一个的副作用；<code>PreToolUse</code> 的 Bash 匹配是<strong>尽力而为</strong>的，官方明说「硬性 allow/deny 请用 permission 系统，不要用 hook」。</li>
 <li><strong>agent team 的 token 线性叠加。</strong> 官方原话「显著多于单会话」，且 in-process teammate 的请求<strong>落在主对话缓存桶之外</strong>，默认 5 分钟 TTL（<code>subagentPromptCacheTtl</code> 可调 1h，但 1 小时缓存写入计费更高）。权限上还有一条：<strong>lead 用 <code>--dangerously-skip-permissions</code> 起，所有 teammate 都跟着</strong>。</li>
 </ul>
-<h3>不装任何东西，你还能怎么办</h3>
+<h3 data-tts="2ba1be7f46f17a0f">不装任何东西，你还能怎么办</h3>
 <ol>
 <li><strong>先写两条 hook，别写 agent。</strong> 多数人抱怨的「它老是忘了 X」，都是一条 <code>PostToolUse</code> 能解决的事。不会写就用 ⑦。</li>
 <li><strong>先装 ⑥，零配置且大部分层不花钱。</strong> 每次编辑的模式匹配<strong>不调模型</strong>；花钱的只有每轮结束与每次提交那两层，且都有上限。</li>
@@ -193,13 +193,13 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <div class="fail"><strong>那一格永远空着</strong>：① 隔离上下文、② 保证每次都跑、⑥ 自动复审、⑤ 让五个实例互相证伪——<strong>没有一样能判断「这件事该不该自动化」。</strong>⑤ 的限制清单里有一条最说明问题：任务状态会滞后，teammate 有时不把任务标成完成，<strong>「活是不是真干完了」至今得你自己看</strong>。</div>
 </div>
 <div class="combo">
-<h3>// 一页选购卡</h3>
+<h3 data-tts="a8d558d0a4158cc7">// 一页选购卡</h3>
 <p><strong>先装这三个</strong>：① <code>/plugin install security-guidance@claude-plugins-official</code>——零配置、模式匹配层不花钱，而且它本身就是最好的 hook 编排范本。② <code>/plugin install hookify@claude-plugins-official</code>——你的第一条 hook 用它写，改完不重启就生效。③ 一个你自己的 <code>.claude/agents/</code> 文件（<code>name</code> 与 <code>description</code> 两个字段就够），把最常淹没上下文的那件事挪出去。</p>
 <p><strong>按需再加</strong>：<code>feature-dev@claude-plugins-official</code>（做整块功能，接受七阶段的开销）· <code>code-review@claude-plugins-official</code>（要 PR 级多 agent 评分）· <code>claude-code-setup@claude-plugins-official</code>（不知道该配什么，让它扫一遍你的库）· <code>wshobson/agents</code>（缺某个特定角色，<strong>按插件取，不整仓装</strong>）· <code>disler/claude-code-hooks-mastery</code>（要抄 hook 范例，事件名回官方文档核）· <code>anthropics/claude-code-action</code>（要把这套搬进 CI）。</p>
 <p><strong>明确别做</strong>：把「每次都要做」的事写进 <code>CLAUDE.md</code> 而不是 hook · 把需要判断的事写成硬 <code>deny</code> hook · 同一件事装两个 reviewer · 只有自己一台机器还费劲打成 plugin · 没读限制清单就在生产分支上开 agent teams · <strong>以为 agent 数量越多编排越强</strong>——官方原话是「三个专注的常常打得过五个散的」。</p>
 </div>
 <div class="glossary">
-<h3>// 术语表</h3>
+<h3 data-tts="a375ad60b38e48be">// 术语表</h3>
 <dl>
 <dt>subagent</dt>
 <dd>一个 <code>.claude/agents/*.md</code> 定义的助手，跑在自己的上下文窗口里，只把结果交回调用者。默认最多 20 并发、最多嵌套 3 层。</dd>
@@ -218,7 +218,7 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 </dl>
 </div>
 <div class="refs">
-<h3>// 延伸阅读</h3>
+<h3 data-tts="8f3aeeff2a531e72">// 延伸阅读</h3>
 <ul>
 <li><a href="https://code.claude.com/docs/en/sub-agents" target="_blank">Claude Code · Subagents</a> — frontmatter 全字段；20 并发 / 3 层嵌套 / 15,000 token description 告警；fork 与普通 subagent 的区别（2026-09）</li>
 <li><a href="https://code.claude.com/docs/en/hooks-guide" target="_blank">Claude Code · Automate actions with hooks</a> — 完整事件表；exit code 2 的含义；多 hook 并行与合并规则；prompt / agent 两种判断型 hook（2026-09）</li>
@@ -238,8 +238,8 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 </div>
 <footer>BigCat · Super Individual · Skill 25 · 2026-09-26</footer>
 </div>
-<script src="https://hub.cissychen.com/comments.js" defer></script>
-<script src="https://hub.cissychen.com/search.js" defer></script>
-<script src="https://hub.cissychen.com/index-button.js" defer></script>
-<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
 </body></html>
