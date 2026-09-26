@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill 25 · The Orchestration Roundup — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head>
+<body>
+<div class="container">
+<header>
+<span class="week-tag">SKILL 25 / ORCHESTRATION · ROUNDUP</span>
+<h1>The Orchestration Roundup</h1>
+<h2>Four primitives, two axes: who fires it · where its context lives — answer those two and the choice makes itself</h2>
+<div class="date">2026-09-26 · BigCat</div>
+<p class="pitch">This is the easiest class to buy wrong: people install "multi-agent" as if it were a stronger skill. Subagents, hooks, slash commands and plugins solve four unrelated problems, and picking the wrong one doesn't give you a worse result — it gives you something that never fires. Ten installable entries first, then one two-axis grid that pins each of them down.</p>
+</header>
+<div class="xref">
+<a href="coding-skills-roundup-skill1.en.html">Same series → Skill 1, the coding skills roundup (the first pass at skill vs subagent vs MCP lives there)</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>Get another class wrong and it still runs. <strong>Get orchestration wrong and it quietly does nothing.</strong> "Run lint before every commit" in <code>CLAUDE.md</code> is forgotten three times out of ten. A judgment call written as a hard hook blocks the wrong thing every time. The rule is one sentence: <strong>judgment goes to the model, certainty goes to code, anything that would flood the context moves out, anything other people need gets packaged.</strong> Ten real, installable or readable entries below — table and commands first, criteria in the second half.</p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>The list first: four primitives and six ready-made things</h2>
+<div class="claim">Claim: the first four are <strong>built-in mechanisms</strong> — nothing to install, you just write a file. The last six are <strong>things other people already wrote</strong>. Get the first four straight and the rest picks itself.</div>
+<div class="diagram">Entry                            Source                        What it takes off your plate       When not to use it
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+(1) subagent                     Built-in · .claude/agents/*.md Moves context-flooding search out   The result is one line anyway
+(2) hook                         Built-in · settings.json      Pins "every time" into real code    The task needs judgment
+(3) skill / slash command        Built-in · .claude/skills/    Turns a procedure into a command    A one-off task
+(4) plugin                       Built-in · plugin.json        Packages 1-3 into a shippable unit  Only one machine uses it
+(5) agent teams (experimental)   Built-in · env var            Independent sessions that argue     Sequential work · same files
+(6) security-guidance            Official plugin · Anthropic   Three-layer auto security review    No Python 3.10+ on the box
+(7) hookify                      Official plugin · Anthropic   Writes a hook rule from one line    You already hand-write hooks
+(8) feature-dev                  Official plugin · Anthropic   7-phase pipeline with 3 agents      A one-line change
+(9) wshobson/agents              Community marketplace         94 plugins from one source          You need one specific role
+(10) disler/claude-code-hooks-mastery Community repo           Runnable samples for 13 hook events You only want one snippet
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+1-4 are the primitives, 5 upgrades 1 into full sessions; 6-8 are official builds on those primitives; 9-10 are community volume and samples.</div>
+<h3>How to install (commands copied from each official page)</h3>
+<pre><code><span class="tag-com"># 6-8 official marketplace, added on your first interactive session; add it manually if not</span>
+/plugin marketplace add anthropics/claude-plugins-official
+/plugin install security-guidance@claude-plugins-official
+/plugin install hookify@claude-plugins-official
+/plugin install feature-dev@claude-plugins-official
+
+<span class="tag-com"># 5 agent teams are off by default; turn them on in settings.json env</span>
+{ <span class="tag-key">"env"</span>: { <span class="tag-key">"CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS"</span>: <span class="tag-key">"1"</span> } }
+
+<span class="tag-com"># 9 the largest community marketplace, same two steps</span>
+/plugin marketplace add wshobson/agents
+/plugin install python-development          <span class="tag-com"># or any of its 94 plugins</span>
+
+<span class="tag-com"># 1 a subagent is just a markdown file with frontmatter; nothing to install</span>
+<span class="tag-com"># .claude/agents/reviewer.md -- name and description are the only required fields</span>
+
+<span class="tag-com"># Do these two right after installing anything</span>
+/plugin            <span class="tag-com"># the Installed tab has a "Not used recently" group: who is billing you for nothing</span>
+/skill-doctor      <span class="tag-com"># per-skill context cost</span>
+</code></pre>
+<h3>One by one, in plain words</h3>
+<ul>
+<li><strong>(1) <a href="https://code.claude.com/docs/en/sub-agents" target="_blank">subagent</a></strong>: a <code>.claude/agents/*.md</code> file where <strong><code>name</code> and <code>description</code> are the only required fields</strong>; <code>tools</code>, <code>disallowedTools</code>, <code>model</code>, <code>maxTurns</code>, <code>permissionMode</code> and <code>isolation: worktree</code> are all optional. The whole value is the <strong>separate context window</strong>: throw log-trawling and repo-wide searches in there and take back only the conclusion. The hard numbers the docs state: <strong>20 concurrent subagents by default</strong> (<code>CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS</code>), <strong>3 levels of nesting</strong>, and <strong>a startup warning once all agent descriptions together exceed 15,000 tokens</strong>. <strong>When not to use it</strong>: the answer was one sentence — a second context window is pure tax.</li>
+<li><strong>(2) <a href="https://code.claude.com/docs/en/hooks-guide" target="_blank">hook</a></strong>: a <code>hooks</code> block in settings that runs your shell command at a lifecycle point. <strong>The only deterministic mechanism in this class</strong> — it doesn't depend on the model remembering. The event table is wide now: <code>PreToolUse</code>, <code>PostToolUse</code>, <code>PostToolUseFailure</code>, <code>PostToolBatch</code>, <code>UserPromptSubmit</code>, <code>PermissionRequest</code>, <code>PermissionDenied</code>, <code>SubagentStart</code>, <code>SubagentStop</code>, <code>Stop</code>, <code>TeammateIdle</code>, <code>TaskCreated</code>, <code>TaskCompleted</code>, <code>InstructionsLoaded</code>, <code>ConfigChange</code>, <code>FileChanged</code>, <code>PreCompact</code>, <code>SessionStart</code>, <code>SessionEnd</code> and more. Two rules to memorize: <strong>a <code>PreToolUse</code> <code>deny</code> still holds under <code>bypassPermissions</code> and <code>--dangerously-skip-permissions</code></strong> (hooks tighten, never loosen); and <strong>hooks on one event all run to completion in parallel before results merge, so one hook's deny does not suppress another's side effects</strong>. <strong>When not to use it</strong>: the task needs judgment — reach for <code>type: "prompt"</code> (single-turn) or <code>type: "agent"</code> (multi-turn, 60-second default timeout, up to 50 tool turns, <strong>marked experimental</strong>).</li>
+<li><strong>(3) <a href="https://code.claude.com/docs/en/slash-commands" target="_blank">skill / slash command</a></strong>: two doors into the same thing now — <code>.claude/skills/&lt;name&gt;/SKILL.md</code> (multi-file, hot-reloaded), with the older <code>.claude/commands/&lt;name&gt;.md</code> still supported but single-file. <strong>Two frontmatter fields decide who can fire it</strong>: <code>disable-model-invocation: true</code> means only you can type it (right for a <code>/deploy</code>), <code>user-invocable: false</code> means only the model uses it. Three underrated powers: <code>!`command`</code> injects shell output <strong>before</strong> the model sees the content, <code>allowed-tools</code> pre-approves permissions for the turn, and <code>context: fork</code> runs the command in an isolated subagent. <strong>When not to write one</strong>: a task you'll do once.</li>
+<li><strong>(4) <a href="https://code.claude.com/docs/en/plugins" target="_blank">plugin</a></strong>: a directory with <code>.claude-plugin/plugin.json</code> that packages skills, agents, hooks and MCP servers as one installable unit. <strong>Not a fifth capability — a shipping crate.</strong> The docs are blunt about the price: <strong>an enabled plugin is part of every session, not only the ones where you use it</strong>. For everything the model can invoke on its own, the name and description are <strong>in context on every turn</strong>. Check <strong>Context cost</strong> in <code>/plugin</code> before installing and <strong>Not used recently</strong> after. <strong>When not to package</strong>: one machine, one user — just drop it in <code>~/.claude/</code>.</li>
+<li><strong>(5) <a href="https://code.claude.com/docs/en/agent-teams" target="_blank">agent teams</a></strong> (<strong>experimental, off by default</strong>): a teammate is not a subagent but <strong>a complete, independent Claude Code session</strong>, sharing a task list and messaging the others through mailbox files; you can talk to any of them directly. The documented sweet spot is specific: <strong>five teammates each holding one hypothesis and trying to disprove the others</strong>, which breaks the anchoring that ruins single-threaded investigation. The limits are equally specific: <strong>no resumption (<code>/resume</code> does not restore in-process teammates) · no nesting · one team per session · the lead can't be transferred · shutdown is slow · task status lags</strong>. The docs suggest <strong>starting with 3–5</strong> and say plainly that three focused teammates often beat five scattered ones.</li>
+<li><strong>(6) <a href="https://code.claude.com/docs/en/security-guidance" target="_blank">security-guidance</a></strong> (official plugin): <strong>install this one first, and read it as the best worked example of hook orchestration there is</strong> — <strong>the entire plugin is built out of hooks</strong>, in three deepening layers. <code>PostToolUse</code> on Edit/Write does a pure string-pattern match (<code>eval(</code>, <code>pickle</code>, <code>dangerouslySetInnerHTML</code>, edits under <code>.github/workflows/</code>) with <strong>no model call and no cost</strong>. <code>Stop</code> runs a background diff review at the end of each turn (<strong>up to 30 changed files per turn, at most three in a row</strong>). <code>PostToolUse</code> on Bash, filtered to <code>git commit</code> and <code>git push</code>, runs a deeper agentic review that reads surrounding code (<strong>capped at 20 per rolling hour</strong>). The key design choice: <strong>the instance that wrote the code never grades itself</strong> — a separate Claude starts fresh and is told only to find problems. <strong>Honest caveat</strong>: none of the three layers blocks a write or a commit. They hand findings back for Claude to fix.</li>
+<li><strong>(7) <a href="https://github.com/anthropics/claude-plugins-official/tree/main/plugins/hookify" target="_blank">hookify</a></strong> (official plugin): it automates <em>writing hooks</em>. <code>/hookify [description]</code> takes one sentence, or reads the conversation for the behavior that has been annoying you, and generates a markdown rule with YAML frontmatter (<code>event</code>, <code>pattern</code>, <code>action: warn|block</code>). <strong>No restart — the rule applies on the next tool use.</strong> <code>/hookify:list</code> and <code>/hookify:configure</code> manage the switches. <strong>When not to install</strong>: you already hand-write hook config, in which case it is one more layer of indirection.</li>
+<li><strong>(8) <a href="https://github.com/anthropics/claude-plugins-official/tree/main/plugins/feature-dev" target="_blank">feature-dev</a></strong> (official plugin): one <code>/feature-dev</code> command opens a <strong>seven-phase workflow</strong> carrying three clearly split agents — <code>code-explorer</code> (traces execution paths to map what exists), <code>code-architect</code> (produces the architecture and implementation blueprint) and <code>code-reviewer</code> (hunts bugs and convention violations). <strong>The split is the part worth studying</strong>: exploration, design and review each get their own context, and none of them vouches for another. The same marketplace also carries <code>code-review</code> (multi-agent PR scoring) and <code>claude-code-setup</code> (scans your repo and tells you which automation to configure). <strong>When not to use it</strong>: a one-line change.</li>
+<li><strong>(9) <a href="https://github.com/wshobson/agents" target="_blank">wshobson/agents</a></strong> (community marketplace, MIT): <strong>per its README, 2026-09, it describes itself as 94 plugins / 202 agents / 183 skills / 105 commands</strong>, and claims support for Claude Code, Codex, Cursor, OpenCode and GitHub Copilot among others. Installation is identical to the official marketplace. <strong>Use it to take one plugin you need, not to install the repo</strong> — go back and reread the context tax in item (4).</li>
+<li><strong>(10) <a href="https://github.com/disler/claude-code-hooks-mastery" target="_blank">disler/claude-code-hooks-mastery</a></strong> (community repo): 13 hook lifecycle events written out one by one as runnable example scripts (UV single-file scripts, each hook isolated), plus a Builder/Validator validation pair and a meta-agent that generates subagents. <strong>The one entry here to read rather than install</strong>: adapting it beats starting from scratch. <strong>Note</strong>: community repos trail the official event table, so <strong>take event names from the official hooks docs</strong>.</li>
+</ul>
+<div class="res"><strong>Three more, as pointers only</strong> · <a href="https://github.com/anthropics/claude-code-action" target="_blank">anthropics/claude-code-action</a> (MIT) moves this orchestration into GitHub Actions, picking its mode from <code>@claude</code> mentions, an explicit prompt, or a PR review; the minimal workflow needs <code>contents: write</code>, <code>pull-requests: write</code> and <code>issues: write</code> — <strong>think hard before granting CI write access</strong>. <a href="https://github.com/davila7/claude-code-templates" target="_blank">davila7/claude-code-templates</a> installs agent / command / hook / MCP components via <code>npx claude-code-templates@latest</code>. <a href="https://github.com/ruvnet/ruflo" target="_blank">ruvnet/ruflo</a> (formerly claude-flow, MIT) is the other extreme — 100+ self-described agents, swarm topologies, consensus mechanisms. <strong>That isn't installing a plugin, it's swapping your harness</strong>; not recommended here, because its configuration surface dwarfs the problem most people have.</div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Why these ten don't compare: there are only two axes</h2>
+<div class="claim">Claim: one axis is <strong>who presses it</strong> (you type, the model decides, a lifecycle event fires); the other is <strong>where the context goes</strong> (into the main conversation, into isolation, or nowhere). Each primitive owns one cell. <strong>No cell substitutes for another.</strong></div>
+<div class="diagram">                    │ Into main context     │ Isolated context        │ Never enters context
+────────────────────┼───────────────────────┼─────────────────────────┼──────────────────────
+ You type it        │ slash command         │ skill with context: fork│ --
+                    │ (disable-model-        │ /subtask                │
+                    │  invocation: true)     │                         │
+────────────────────┼───────────────────────┼─────────────────────────┼──────────────────────
+ The model decides  │ skill (SKILL.md)      │ (1) subagent            │ --
+                    │                       │ (5) teammate (session)  │
+────────────────────┼───────────────────────┼─────────────────────────┼──────────────────────
+ A lifecycle event  │ the small additional-  │ agent hook (experimental)│ (2) hook (shell)
+                    │ Context a hook feeds  │                         │ (6) lives entirely here
+────────────────────┴───────────────────────┴─────────────────────────┴──────────────────────
+ (4) plugin isn't on this grid -- it's the crate that ships any combination of these cells.</div>
+<p><strong>The three common mismatches are all visible on that grid:</strong></p>
+<ul>
+<li><strong>Writing a deterministic rule as an instruction.</strong> "Run lint before every commit" in <code>CLAUDE.md</code> takes work from the bottom-right cell and drops it in the middle one, where it becomes advice <strong>the model can forget</strong>. It should be a <code>PostToolUse</code> hook, or one sentence to (7).</li>
+<li><strong>Writing a judgment call as a hard hook.</strong> "Don't touch this directory" can be blocked outright. "Is this change a security problem" cannot. Two legitimate routes for the latter: a single-turn <code>type: "prompt"</code> hook, or copy (6) — a <code>Stop</code> hook that <strong>spins up a separate Claude</strong> in the background and feeds the verdict back.</li>
+<li><strong>Using a subagent as a teammate.</strong> The comparison table is explicit: a subagent <strong>returns its result to the caller</strong>, the main agent manages everything, and the token cost is <strong>lower</strong>; teammates <strong>message each other directly</strong>, claim their own tasks, and cost <strong>more</strong> (each is a full instance). <strong>Teams are for work that needs discussion and challenge. If you just want a conclusion, use a subagent.</strong></li>
+</ul>
+<p>One more thing that's easy to miss: <strong>turning (5) on changes ordinary delegation too.</strong> Per the docs, while agent teams are enabled, a subagent <strong>that Claude names on its own</strong> launches as a teammate — so <strong>a team can form when you never asked for one</strong>. Set <code>CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS</code> back to <code>0</code> if you don't want that.</p>
+<div class="fail"><strong>How it breaks</strong>: you install (8) and a couple of review plugins from (9), and both sides ship an agent called reviewer. Nothing errors — <strong>the model just picks a different one each time</strong>. You think your review standard is drifting; in fact you installed two rulers. <strong>One executor per job.</strong></div>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Three-minute check: answer these six before you install</h2>
+<div class="claim">Claim: this class isn't chosen on stars, it's chosen on which cell you're in. Answer the six and the pick is basically made.</div>
+<ol>
+<li><strong>Does this need model judgment?</strong> No → (2) a hook, or (7) to generate one. Yes → (3) a skill or (1) a subagent. Get this one wrong and everything after it is wrong.</li>
+<li><strong>Does the result need to come back in full?</strong> No (logs, repo-wide search, long diffs) → (1) a subagent. Yes → just do it in the main conversation.</li>
+<li><strong>Must it happen every single time?</strong> Then only (2) guarantees it. Anything in <code>CLAUDE.md</code> is advice, not a guarantee.</li>
+<li><strong>Should the model be able to fire it?</strong> Yes → the <code>description</code> must say when to use it. No → <code>disable-model-invocation: true</code>, so nothing runs your <code>/deploy</code> on a hunch.</li>
+<li><strong>How much context does it hold permanently?</strong> The official line: for everything the model can invoke, name and description are <strong>in context every turn</strong>. Check Context cost before, Not used recently and <code>/skill-doctor</code> after. (1) adds one of its own: <strong>a warning once all agent descriptions exceed 15,000 tokens</strong>.</li>
+<li><strong>How many people and machines?</strong> One person → <code>~/.claude/</code>. One repo → commit <code>.claude/</code>. Across repos or teams → now (4) and a marketplace are worth it.</li>
+</ol>
+<div class="fail"><strong>The hard line</strong>: (9) claims 94 plugins, (10) covers 13 events, (5) can run a roomful of sessions — <strong>none of those numbers is a selection criterion</strong>. Question 1 is. Answer "no judgment needed" and then install a pile of agents, and what you get is a pile of reminders that fire sometimes.</div>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>The honest cost: orchestration is the expensive tier</h2>
+<div class="claim">Claim: a subagent costs tokens, a hook costs <strong>execution rights you hand over</strong>, and an agent team costs <strong>coordination</strong>. Three different bills, settled three different ways.</div>
+<h3>Three bills</h3>
+<ul>
+<li><strong>The standing context tax.</strong> The one you pay daily and never see itemized. Installing five plugins from (9) is easy; their names and descriptions are in every turn from then on. <strong>The only defense is checking Not used recently and turning things off.</strong></li>
+<li><strong>A hook runs arbitrary code as you.</strong> Whatever it runs, it runs with your privileges. Two practical traps: hooks on one event run <strong>in parallel</strong> and one deny doesn't suppress another's side effects; and <code>PreToolUse</code> Bash matching is <strong>best-effort</strong> — the docs say plainly to use the permission system, not a hook, for a hard allow or deny.</li>
+<li><strong>Agent team tokens scale linearly.</strong> The docs say "significantly more" than a single session, and an in-process teammate's requests fall <strong>outside the main conversation's cache bucket</strong>, defaulting to a 5-minute TTL (<code>subagentPromptCacheTtl</code> raises it to 1h, but 1-hour cache writes bill higher). And on permissions: <strong>if the lead starts with <code>--dangerously-skip-permissions</code>, every teammate inherits it</strong>.</li>
+</ul>
+<h3>What you can do without installing anything</h3>
+<ol>
+<li><strong>Write two hooks before you write an agent.</strong> Most of what people mean by "it keeps forgetting X" is one <code>PostToolUse</code> hook. If you don't want to write it, (7) will.</li>
+<li><strong>Install (6) first — zero config, and most of it is free.</strong> The per-edit pattern match <strong>makes no model call</strong>; only the end-of-turn and commit layers spend, and both are capped.</li>
+<li><strong>Try subagents before a team.</strong> The agent teams page itself opens with it: before you set up a team, check whether a lighter option does the job.</li>
+</ol>
+<div class="fail"><strong>The cell that stays empty</strong>: (1) isolates context, (2) guarantees it runs, (6) reviews automatically, (5) has five instances falsify each other — <strong>none of them can tell you whether this should be automated at all.</strong> The most telling line in (5)'s limitations: task status lags, teammates sometimes fail to mark work complete. <strong>Checking whether the work is actually done is still yours.</strong></div>
+</div>
+<div class="combo">
+<h3>// THE ONE-PAGE BUYING CARD</h3>
+<p><strong>Install these three</strong>: (1) <code>/plugin install security-guidance@claude-plugins-official</code> — zero config, the pattern layer is free, and it doubles as the best hook-orchestration example around. (2) <code>/plugin install hookify@claude-plugins-official</code> — write your first hook with it; edits apply without a restart. (3) One <code>.claude/agents/</code> file of your own (<code>name</code> and <code>description</code> are enough) for whatever floods your context most often.</p>
+<p><strong>Add as needed</strong>: <code>feature-dev@claude-plugins-official</code> (whole features, if you accept the seven-phase overhead) · <code>code-review@claude-plugins-official</code> (multi-agent PR scoring) · <code>claude-code-setup@claude-plugins-official</code> (don't know what to configure — let it scan the repo) · <code>wshobson/agents</code> (you need a specific role; <strong>take a plugin, not the repo</strong>) · <code>disler/claude-code-hooks-mastery</code> (hook samples to adapt, event names verified against the official docs) · <code>anthropics/claude-code-action</code> (moving this into CI).</p>
+<p><strong>Explicitly don't</strong>: put "every time" rules in <code>CLAUDE.md</code> instead of a hook · write a judgment call as a hard <code>deny</code> hook · install two reviewers for one job · package a plugin when only your own machine uses it · enable agent teams on a production branch without reading the limitations list · <strong>assume more agents means better orchestration</strong> — the docs' own words are that three focused teammates often outperform five scattered ones.</p>
+</div>
+<div class="glossary">
+<h3>// GLOSSARY</h3>
+<dl>
+<dt>subagent</dt>
+<dd>An assistant defined by a <code>.claude/agents/*.md</code> file, running in its own context window and returning only a result. 20 concurrent and 3 nesting levels by default.</dd>
+<dt>hook</dt>
+<dd>A shell command fired by a lifecycle event — the only deterministic mechanism in this class. It can tighten permissions, never loosen them.</dd>
+<dt>teammate (agent team)</dt>
+<dd>A complete, independent Claude Code session that shares a task list with other teammates and messages them directly. Experimental, off by default.</dd>
+<dt>plugin</dt>
+<dd>A directory with <code>.claude-plugin/plugin.json</code> packaging skills, agents, hooks and MCP servers as one installable unit. A crate, not a fifth capability.</dd>
+<dt>Context cost</dt>
+<dd>The standing-context estimate shown on an official marketplace plugin's detail page in <code>/plugin</code>. The number to read before installing.</dd>
+<dt>disable-model-invocation</dt>
+<dd>A skill frontmatter field. Set true, only you can type the command and the model can't call it — right for something like <code>/deploy</code>.</dd>
+<dt>prompt hook / agent hook</dt>
+<dd>The two hook types for judgment rather than hard rules: single-turn LLM evaluation, and multi-turn with tool access (60-second default timeout, up to 50 turns, marked experimental).</dd>
+</dl>
+</div>
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://code.claude.com/docs/en/sub-agents" target="_blank">Claude Code · Subagents</a> — the full frontmatter field list; 20 concurrent / 3 nesting levels / the 15,000-token description warning; forks vs standard subagents (2026-09)</li>
+<li><a href="https://code.claude.com/docs/en/hooks-guide" target="_blank">Claude Code · Automate actions with hooks</a> — the full event table; what exit code 2 means; parallel execution and result merging; prompt and agent hooks (2026-09)</li>
+<li><a href="https://code.claude.com/docs/en/slash-commands" target="_blank">Claude Code · Slash commands</a> — SKILL.md versus legacy command files; <code>$ARGUMENTS</code>, <code>!`command`</code>, <code>allowed-tools</code>, <code>context: fork</code> (2026-09)</li>
+<li><a href="https://code.claude.com/docs/en/plugins" target="_blank">Claude Code · Plugins overview</a> — what a plugin contains; "an enabled plugin is part of every session"; Context cost and Not used recently (2026-09)</li>
+<li><a href="https://code.claude.com/docs/en/agent-teams" target="_blank">Claude Code · Agent teams</a> — the subagent comparison table; <code>CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS</code>; the 3–5 recommendation; the full limitations list (2026-09)</li>
+<li><a href="https://code.claude.com/docs/en/security-guidance" target="_blank">Claude Code · Security guidance plugin</a> — the three hook layers and their caps (30 files per turn, three in a row, 20 per rolling hour); review independence; none of the layers block (2026-09)</li>
+<li><a href="https://github.com/anthropics/claude-plugins-official" target="_blank">anthropics/claude-plugins-official</a> — the official plugin catalog; the names and authors of <code>security-guidance</code>, <code>hookify</code>, <code>feature-dev</code>, <code>code-review</code> and <code>claude-code-setup</code> here come from its <code>marketplace.json</code> (2026-09)</li>
+<li><a href="https://github.com/anthropics/claude-plugins-official/tree/main/plugins/feature-dev" target="_blank">feature-dev plugin source</a> — <code>code-explorer</code> / <code>code-architect</code> / <code>code-reviewer</code> under <code>agents/</code>; the seven-phase <code>/feature-dev</code> workflow</li>
+<li><a href="https://github.com/anthropics/claude-plugins-official/tree/main/plugins/hookify" target="_blank">hookify plugin source</a> — <code>/hookify</code>, <code>:list</code>, <code>:configure</code>; markdown rules with YAML frontmatter; <code>action: warn|block</code></li>
+<li><a href="https://github.com/wshobson/agents" target="_blank">wshobson/agents</a> — a multi-harness plugin marketplace; per its README, 2026-09, self-described as 94 plugins / 202 agents / 183 skills / 105 commands (MIT)</li>
+<li><a href="https://github.com/disler/claude-code-hooks-mastery" target="_blank">disler/claude-code-hooks-mastery</a> — UV single-file sample scripts for 13 hook events; a Builder/Validator pair; a meta-agent that generates subagents</li>
+<li><a href="https://github.com/anthropics/claude-code-action" target="_blank">anthropics/claude-code-action</a> — orchestration inside GitHub Actions; the minimal workflow needs write on <code>contents</code>, <code>pull-requests</code> and <code>issues</code> (MIT)</li>
+<li><a href="skill-authoring-skill6.en.html">This site · Skill 6, official skill authoring practices</a> — how to write the <code>description</code> that question 4 depends on</li>
+<li><a href="superpowers-skill2.en.html">This site · Skill 2, Superpowers</a> — an extreme sample that pushes all of the orchestration into the skill layer</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Skill 25 · 2026-09-26</footer>
+</div>
+<script src="https://hub.cissychen.com/comments.js" defer></script>
+<script src="https://hub.cissychen.com/search.js" defer></script>
+<script src="https://hub.cissychen.com/index-button.js" defer></script>
+<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+</body></html>
