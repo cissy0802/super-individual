@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill 26 · Subagent 与 Skill 怎么分工 — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head>
+</style></head>
+<body>
+<div class="container">
+<header>
+<span class="week-tag">SKILL 26 / ORCHESTRATION · DEEP-DIVE</span>
+<h1>Subagent 与 Skill 怎么分工</h1>
+<h2>一个问题定生死：这活儿在你的 context 里干，还是在另一个 context 里干 · 继承表逐行读 · 15 倍 token 的协调税</h2>
+<div class="date">2026-09-27 · BigCat</div>
+<p class="pitch">上期把 subagent / hook / skill / plugin 四个原语摊开比。这期只钻最容易买错的一格：这两个不是「弱版和强版」，一个往当前对话里<strong>注入指令</strong>，一个开<strong>新的 context</strong> 只把结果收回来一段话。官方继承表逐行读，再打开两个真实的 subagent 流水线 skill。</p>
+</header>
+<div class="xref">
+<a href="orchestration-skills-roundup-skill25.html">前置 → Skill 25 编排类 Skills 与 Plugin 榜单（四原语两轴的全景）</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>「要不要上 subagent」的答案不在任务难不难，在<strong>中间过程你还要不要看</strong>。Claude Agent SDK 的 subagents 文档把好处写成四条：<em>context isolation、parallelization、specialized instructions and knowledge、tool restrictions</em>。四条里只有第一条是别的手段替不了的——其余三条 skill 也能给。所以路线是：先把两边的<strong>继承契约</strong>读清楚（谁能看见什么），再点名可装可读的具体条目，最后才给判据。判据只有一句预告：<strong>你会把它的输出当成一段话读，还是当成一串步骤跟？</strong></p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>它替你干掉什么：把「读了四十个文件」从主对话里搬走</h2>
+<div class="claim">论断：subagent 买的不是能力，是<strong>遗忘</strong>。它读了四十个文件，你的主对话只收到一段摘要——这件事 skill 做不到，因为 skill 的内容就留在你这条对话里。</div>
+<h3>官方契约：一个 markdown 文件，两个必填字段</h3>
+<p>subagent 就是 <code>.claude/agents/</code>（项目）或 <code>~/.claude/agents/</code>（全局）下的一个 <code>.md</code> 文件，两个目录都<strong>递归扫描</strong>。必填只有 <code>name</code> 和 <code>description</code>，正文是它的 system prompt。<a href="https://code.claude.com/docs/en/sub-agents" target="_blank">官方文档</a>的可选字段里这几个值得记住：</p>
+<pre><code><span class="tag-com"># .claude/agents/api-developer.md</span>
+---
+<span class="tag-key">name</span>: api-developer
+<span class="tag-key">description</span>: Implement API endpoints following team conventions
+<span class="tag-key">tools</span>: Read, Grep, Edit, Write, Bash   <span class="tag-com"># 不写 = 继承全部；漏掉的工具压根不在它会话里</span>
+<span class="tag-key">model</span>: sonnet                          <span class="tag-com"># sonnet/opus/haiku/fable/inherit</span>
+<span class="tag-key">skills</span>: [api-conventions, error-handling-patterns]  <span class="tag-com"># ★ 启动时预载 skill</span>
+<span class="tag-key">memory</span>: project                        <span class="tag-com"># user/project/local 持久记忆</span>
+<span class="tag-key">isolation</span>: worktree                    <span class="tag-com"># ★ 给它一个独立 git worktree</span>
+<span class="tag-key">omitClaudeMd</span>: true                     <span class="tag-com"># 不加载 CLAUDE.md（省 token）</span>
+<span class="tag-key">maxTurns</span>: 10                           <span class="tag-com"># 到顶的输出被标记为 partial，可 resume</span>
+---
+You are an API development specialist...
+</code></pre>
+<p><code>skills:</code> 这一行就把「二选一」的伪命题打掉了：<strong>subagent 可以带着 skill 跑</strong>。反过来也成立——skill 的 frontmatter 里写 <code>context: fork</code> 就在隔离上下文里执行，<code>agent:</code> 还能指定用哪个 subagent 类型（见 <a href="https://code.claude.com/docs/en/skills" target="_blank">官方 skills 文档</a>）。</p>
+<h3>第一条立刻能跑的用法：不用装任何东西</h3>
+<p>Claude Code 自带三个内置 subagent，<strong>装机量为零、现在就能用</strong>：</p>
+<pre><code><span class="tag-com"># ① Explore —— 只读工具（Write/Edit 被拒），三档 thoroughness</span>
+Use the Explore subagent, very thorough, to map every place we validate JWTs
+
+<span class="tag-com"># ② Plan —— plan mode 下做调研的那个，同样只读</span>
+<span class="tag-com"># ③ general-purpose —— subagent 能拿到的全部工具，可改代码</span>
+
+<span class="tag-com"># 自己写完一个 agent 文件后，开会话前先验一遍 frontmatter</span>
+claude plugin validate .claude/agents
+
+<span class="tag-com"># 不写文件也能起：一次性 JSON 定义</span>
+claude --agents '{"code-reviewer":{"description":"Expert code reviewer.",
+  "prompt":"You are a senior code reviewer.","tools":["Read","Grep","Glob"],"model":"sonnet"}}'
+
+<span class="tag-com"># 让整个会话直接以某个 agent 的身份跑</span>
+claude --agent code-reviewer
+</code></pre>
+<p><code>Explore</code> 替你干掉的事很具体：<strong>四十次 grep 的输出不进你的对话</strong>。<strong>什么时候别用</strong>：答案本来就一行（「这函数在哪个文件」），派它去问要等冷启动加一轮往返，省下的 context 不值这个钱。</p>
+<div class="res"><strong>出处</strong> · <a href="https://code.claude.com/docs/en/sub-agents" target="_blank">Claude Code · Subagents</a> 与 <a href="https://code.claude.com/docs/en/skills" target="_blank">Claude Code · Skills</a>，2026-09 访问</div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>机制：一张继承表，解释了九成的「它怎么什么都不知道」</h2>
+<div class="claim">论断：subagent 与父对话之间<strong>只有一根管子</strong>——Agent 工具的那个 prompt 字符串。你没写进去的东西，它就是不知道。</div>
+<div class="diagram">                    普通 subagent          fork（/subtask）        skill
+──────────────────────────────────────────────────────────────────────────────────
+对话历史 / 工具结果      ✗ 完全没有            ✓ 全量继承             ✓ 就在这条对话里
+system prompt        自己的（正文）          ✓ 父对话的              父对话的
+CLAUDE.md            ✓（除非 omitClaudeMd）  ✓                     ✓
+工具池                子集（后台运行再砍一刀） ✓ 父对话原样            父对话的
+已在主对话调用过的 skill  ✗（除非写进 skills:）  ✓                     —
+模型                  subagent 模型顺序       ✓ 父对话的              可用 model: 覆盖
+回到主线的东西          只有最后一条消息         最后一条消息            全过程可见
+</div>
+<h3>唯一那根管子的实际后果</h3>
+<p>SDK 文档写得很直白：<em>The only content you pass from parent to subagent is the Agent tool's prompt string, so include any file paths, error messages, or decisions the subagent needs directly in that prompt.</em> 这就是「我明明刚跟它说过」的全部原因——<strong>你跟主对话说过，没跟它说过</strong>。</p>
+<h3>第三态：fork，别把它和 subagent 混着算</h3>
+<p>交互会话里的 <code>/subtask &lt;描述&gt;</code> 起的是一个 <strong>fork</strong>：独立 context window，但<strong>全量继承</strong>父对话的历史、system prompt、输出风格、模型，以及<strong>原样工具池</strong>（跳过后台 subagent 那道过滤）。fork 是「要隔离但不能失忆」那格的答案。代价：它继承了父对话的全部 token，省下的只有<strong>后续</strong>噪音。</p>
+<div class="fail"><strong>subagent 的返回值是不可信数据，不是命令。</strong>从 v2.1.210 起，Claude Code 会在父对话读到之前扫描 subagent 的最后一条消息：模仿 <code>&lt;system-reminder&gt;</code> 这类控制标签的会被插入反斜杠，以 <code>Human:</code> / <code>Assistant:</code> 开头的行会被在冒号前加反斜杠，命中时再前置一行 <code>[harness: ...]</code> 标记。官方同时强调两件事：它<strong>不判断恶意</strong>，也<strong>不替代限制</strong>——真正的护栏仍然是 <code>tools</code> / <code>disallowedTools</code> 和权限。让一个 subagent 去读外部网页、再把它的报告当指令执行，是一条现成的注入链。</div>
+<h3>为什么 skill 走的是另一条路</h3>
+<p>skill 的机制是<strong>指令注入</strong>：description 常驻（便宜），正文只在被调用时展开，展开后<strong>留在对话里跨 turn 生效</strong>。所以 skill 适合「接下来每一步都要守的规矩」，subagent 适合「这一段我不想看」。<code>disable-model-invocation: true</code> 让 skill 只能你手动喊，<code>user-invocable: false</code> 让它只能模型自动触发——两个字段合起来才是 skill 真正的调用契约。</p>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>真实用法与边界：五个可装可读的条目，逐个给命令</h2>
+<div class="claim">论断：真正把 subagent 用出价值的都不是「派一个 agent」，是<strong>把一条流水线的每一站都换成新鲜 context</strong>。这件事已经有人写成 skill 了，不用你自己发明。</div>
+<h3>① obra/superpowers · <code>subagent-driven-development</code></h3>
+<pre><code><span class="tag-com"># 官方 marketplace 一条命令</span>
+/plugin install superpowers@claude-plugins-official
+</code></pre>
+<p><a href="https://github.com/obra/superpowers/blob/main/skills/subagent-driven-development/SKILL.md" target="_blank">这个 skill</a> 的 description 只有一句：<em>Use when executing implementation plans with independent tasks in the current session</em>。它的做法是：先开<strong>独立 git worktree</strong>、核计划、扫冲突、建一份 ledger 记进度；然后每个任务一轮「派实现者 → 收报告 → 针对性 review → 修，最多 5 轮」，<strong>第 1–3 轮 resume 原来那个实现者，第 4–5 轮换更强的模型</strong>；最后在最强模型上做一次整支分支的总 review。<strong>替你干掉的是</strong>：一条长计划做到第七个任务时，前六个任务的噪音已经把上下文挤满了。<strong>什么时候别装</strong>：它自己写了三条——没有实现计划、任务之间紧耦合而非独立、你的平台压根没有 subagent（那就内联执行）。</p>
+<h3>② 同仓 · <code>dispatching-parallel-agents</code></h3>
+<p><a href="https://github.com/obra/superpowers/blob/main/skills/dispatching-parallel-agents/SKILL.md" target="_blank">它</a>的触发条件写成 <em>2+ independent tasks that can be worked on without shared state or sequential dependencies</em>，而正文的门槛更高：<strong>3 个以上不同根因</strong>才值得并行。最该记住的是那句机制原话——<em>Multiple dispatch calls in one response = parallel execution. One per response = sequential.</em> 并行不是一个开关，是<strong>你在一条回复里发了几个调用</strong>。<strong>什么时候别用</strong>：失败之间相关（修一个可能连带修好别的）、需要全局上下文才能理解、几个 agent 会互相改同一批文件、根因未知的探索式调试。它还有一句值得贴墙上的：<em>Do NOT just increase timeouts—find the real issue.</em></p>
+<h3>③ <code>isolation: worktree</code>：并行写文件的唯一正经办法</h3>
+<p>上面两个 skill 都从开 worktree 起手，不是巧合：多个 subagent 同时改同一棵工作树就是在互相覆盖。frontmatter 一行 <code>isolation: worktree</code> 就给它一棵独立的；superpowers 里还有个专门的 <code>using-git-worktrees</code> skill 管这条链路。<strong>什么时候别开</strong>：任务只读（<code>Explore</code> 那类），开 worktree 纯加 IO。</p>
+<h3>④ <code>wshobson/agents</code>：现成 agent 库</h3>
+<pre><code>/plugin marketplace add wshobson/agents
+/plugin install python-development
+</code></pre>
+<p>自称 <em>94 plugins, 202 agents, 183 skills, 105 commands</em>（据该仓 README，2026-09 读取；MIT），一份 markdown 源生成多个 harness 的产物。价值在于<strong>读别人的 description 怎么写</strong>——subagent 能不能被自动派到全看它。<strong>什么时候别装</strong>：整包装进来就是交 description 税（见 04 节那条 15,000 token 警告），按需只装你真用的那个 plugin。</p>
+<h3>⑤ Agent SDK：把这套写进代码</h3>
+<p>SDK 里 subagent 是 <code>query()</code> 的 <code>agents</code> 参数，<a href="https://code.claude.com/docs/en/agent-sdk/subagents" target="_blank">AgentDefinition</a> 的字段和文件版几乎一一对应（<code>description</code> / <code>prompt</code> 必填，其余 <code>tools</code> / <code>disallowedTools</code> / <code>model</code> / <code>skills</code> / <code>maxTurns</code> / <code>background</code> / <code>effort</code> 可选）。两个坑：Python SDK 里 <code>disallowedTools</code> / <code>mcpServers</code> <strong>保持 camelCase</strong>；检测有没有真派出去要同时匹配 <code>"Agent"</code> 和旧名 <code>"Task"</code>。规模再大就不该用 subagent 了——官方指向 <a href="https://code.claude.com/docs/en/workflows" target="_blank">dynamic workflows</a> 的 <code>Workflow</code> 工具，把编排搬到对话之外的脚本里。<strong>什么时候别上 Workflow</strong>：一轮里只派两三个 agent，subagent 直接够用。</p>
+<h3>三条判据，用来在上面这几条之间取舍</h3>
+<ol>
+<li><strong>中间过程你还要不要看？</strong>要跟着它一步步走 → skill（就在对话里）。只要结论 → subagent。这一条能定八成的局。</li>
+<li><strong>它需要你说过的话吗？</strong>需要全量历史 → <code>/subtask</code> 起 fork。只需要几个路径和一段报错 → 普通 subagent，把它们<strong>写进 prompt 字符串</strong>。</li>
+<li><strong>真的独立吗？</strong>3 个以上不同根因、不共享状态、不改同一批文件 → 并行派。否则串行，或者一个 agent 干完。</li>
+</ol>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>代价与替代品：15 倍 token，和一个「越强越爱派」的新问题</h2>
+<div class="claim">论断：subagent 的账不是「多花一点」，是<strong>乘法</strong>。而且从 Opus 5 起，默认倾向已经站在多派那一边，所以闸门得你自己设。</div>
+<h3>最硬的那个数</h3>
+<p>Anthropic 在 <a href="https://www.anthropic.com/engineering/multi-agent-research-system" target="_blank">《How we built our multi-agent research system》</a>（2025-06-13）里给了三个数：<strong>agent 大约是聊天的 4 倍 token，多 agent 系统大约是聊天的 15 倍</strong>；他们的内部研究评测上多 agent 比单体 Claude Opus 4 好 <strong>90.2%</strong>；而 token 用量本身就解释了浏览能力差异的 <strong>80%</strong>。同一篇文章明确列了不适用的场景：<strong>所有 agent 需要共享同一份上下文的任务、agent 之间依赖很多的领域，以及「大多数编码任务」</strong>——原话是编码可并行的部分比研究少。这三个数一起读才对：<strong>15 倍换 90.2%，值不值取决于你的任务长得像研究还是像改代码。</strong></p>
+<h3>Opus 5 之后多出来的一笔</h3>
+<p><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5" target="_blank">Prompting Claude Opus 5</a> 里写得很清楚：<em>Claude Opus 5 delegates to subagents more readily than prior models.</em> 官方给的对策是两层——一层是 prompt，一层是硬闸：</p>
+<pre><code><span class="tag-com"># ① prompt 层（官方示例，逐字可抄）</span>
+Delegate to a subagent only for large tasks that are genuinely independent and
+parallelizable, such as a wide multi-file investigation. Do not delegate work you
+can finish yourself in a handful of tool calls, and do not use subagents to verify
+or double-check your own work. If one subagent can complete the task, use one
+rather than several, and keep spawn counts low.
+
+<span class="tag-com"># ② 硬闸层（.claude/settings.json 的 env；默认 深度 3 / 并发 20）</span>
+"env": { "CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH": "1",
+         "CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS": "5" }
+<span class="tag-com"># SDK 里还有第三道：maxBudgetUsd / max_budget_usd，到顶返回 error_max_budget_usd</span>
+</code></pre>
+<p>同一份文档还有一条反直觉的：Opus 5 <strong>会自己验证自己的工作</strong>，所以 prompt 里「用一个 subagent 复核」这类老指令要<strong>删掉</strong>——留着只会过度验证、白烧 token。注意上面这两个环境变量要 Claude Code 2.1.217 以上。</p>
+<h3>三笔容易漏算的账</h3>
+<ul>
+<li><strong>description 也要交税。</strong>官方原文：自定义 subagent 的 description 加起来超过 <strong>15,000 token</strong>，Claude Code 启动时就会警告。细节要挪到正文里去——正文只在它真跑的时候才加载。</li>
+<li><strong>subagent 问不了你。</strong><code>AskUserQuestion</code> 在 subagent 里不可用（<code>EnterPlanMode</code> / <code>ScheduleWakeup</code> / <code>Workflow</code> 也一样）。它卡住了只能自己猜，猜错了你在报告里才看见。后台运行的 subagent 工具池还要再砍一刀。</li>
+<li><strong>协调本身要人干。</strong>superpowers 那条流水线里最贵的不是实现者，是 ledger、冲突扫描、修复轮次上限、最后一次全分支 review。<strong>派 agent 一行命令，收 agent 一套制度。</strong></li>
+</ul>
+<h3>不上 subagent，你还能怎么办</h3>
+<ol>
+<li><strong>写成 skill。</strong>要的是「每一步都守的规矩」而不是「这段我不想看」——skill 更便宜，而且你看得见它在干什么。</li>
+<li><strong>用 fork。</strong><code>/subtask</code> 要隔离不要失忆，代价是继承全部历史 token。</li>
+<li><strong>钉成 hook。</strong>确定性的事别派 agent 去做（Skill 27 专讲）。</li>
+<li><strong>上 Workflow。</strong>几十上百个 agent 的编排搬进脚本，别塞在对话里。</li>
+<li><strong>自己干完。</strong>官方那段 delegation 指令的第二句就是这个意思：几次工具调用能做完的事，别派。</li>
+</ol>
+<div class="fail"><strong>最后一条诚实的代价</strong>：隔离是双向的。subagent 看不见你的对话，你也看不见它的过程——它读错了文件、把测试跳过了、或者被一段网页内容带偏了，你拿到的都是一段读起来很顺的摘要。<strong>context isolation 的另一面叫审计盲区。</strong>所以 <code>tools</code> 收窄、worktree 隔离、报告只当数据读，这三件是配套的，不是可选项。</div>
+</div>
+<div class="combo">
+<h3>// 一页选购卡</h3>
+<p><strong>先读这三份</strong>：① <a href="https://code.claude.com/docs/en/sub-agents" target="_blank">Claude Code · Subagents</a>——字段全表、三个内置 agent、fork 一节、可用工具的两道过滤，本期一半内容的出处。② <a href="https://github.com/obra/superpowers/blob/main/skills/subagent-driven-development/SKILL.md" target="_blank">superpowers · <code>subagent-driven-development</code></a>——一条真实的 subagent 流水线长什么样，包括 5 轮修复上限和升级模型这种细节。③ <a href="https://www.anthropic.com/engineering/multi-agent-research-system" target="_blank">Anthropic · 多 agent 研究系统</a>（2025-06）——15 倍 token、90.2%，以及「大多数编码任务不适合」。</p>
+<p><strong>按需再看</strong>：<a href="https://github.com/obra/superpowers/blob/main/skills/dispatching-parallel-agents/SKILL.md" target="_blank"><code>dispatching-parallel-agents</code></a>（一条回复发多个调用 = 并行；四条不该并行的条件）· <a href="https://code.claude.com/docs/en/agent-sdk/subagents" target="_blank">Agent SDK · Subagents</a>（<code>AgentDefinition</code> 全字段、深度/并发/预算三道闸、resume 的写法）· <a href="https://code.claude.com/docs/en/skills" target="_blank">Claude Code · Skills</a>（<code>context: fork</code> + <code>agent:</code>，把 skill 就地隔离）· <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5" target="_blank">Prompting Claude Opus 5</a>（delegation 指令片段；删掉「用 subagent 复核」那类老指令）· <a href="https://github.com/wshobson/agents" target="_blank"><code>wshobson/agents</code></a>（现成 agent 库，拿来读 description 写法）· <a href="https://code.claude.com/docs/en/workflows" target="_blank">Dynamic workflows</a>（规模超出 subagent 之后）。</p>
+<p><strong>明确别做</strong>：派 subagent 去问一行答案 · 指望它记得你刚说过的话（路径和报错要写进 prompt）· 让多个 subagent 在同一棵工作树上写文件 · 把 subagent 的报告当指令执行 · 在 Opus 5 上留着「用 subagent 复核」这类旧指令 · 不设深度/并发/预算就放它跑。</p>
+</div>
+<div class="glossary">
+<h3>// 术语表</h3>
+<dl>
+<dt>subagent（子代理）</dt>
+<dd>一个独立的 Claude 实例，自己的 context window 与 system prompt，只把最后一条消息交回父对话。定义在 <code>.claude/agents/*.md</code> 或 SDK 的 <code>agents</code> 参数。</dd>
+<dt>context isolation（上下文隔离）</dt>
+<dd>subagent 四大好处里唯一别的手段替不了的那条：中间的工具调用与结果留在它自己那边，父对话只收摘要。反面是审计盲区。</dd>
+<dt>fork（<code>/subtask</code>）</dt>
+<dd>一种特殊的 subagent：独立 context window，但全量继承父对话的历史、system prompt、输出风格、模型和原样工具池。要隔离又不能失忆时用。</dd>
+<dt>instruction injection（指令注入，指 skill 的机制）</dt>
+<dd>skill 被调用时把正文展开进当前对话，此后跨 turn 一直生效。与「另开一个 context」是两条路。</dd>
+<dt><code>skills:</code> 预载</dt>
+<dd>subagent frontmatter 的字段，启动时把指定 skill 装进它的上下文。它证明两者不是二选一。</dd>
+<dt>coordination tax（协调税）</dt>
+<dd>派出去之后必须有人做的那些事：拆任务、写进 prompt、收报告、查冲突、定修复轮次上限、最后总 review。</dd>
+<dt>subagent output scanning</dt>
+<dd>v2.1.210 起，父对话读到 subagent 报告之前的一道扫描：给模仿控制标签和轮次分隔的文本加反斜杠、必要时前置 <code>[harness: ...]</code>。它不判断恶意，也不替代 <code>tools</code> 与权限限制。</dd>
+</dl>
+</div>
+<div class="thinking">
+<h3>// 三个想不通的地方</h3>
+<details><summary>既然 subagent 可以 <code>skills:</code> 预载 skill，skill 又可以 <code>context: fork</code> 变隔离，那这两个概念还有区别吗？</summary><div>有，区别在<strong>谁是默认</strong>。skill 的默认是「留在对话里」，subagent 的默认是「另开一个 context」；两边的可选字段只是让它们能互相借一步。真正不可交换的是<strong>回到主线的东西</strong>：skill 的全过程你都看得见，subagent 只给你最后一条消息。所以选择题从来不是「哪个更强」，是「我要不要看过程」。</div></details>
+<details><summary>15 倍 token 换 90.2% 提升，这笔账看起来挺划算，为什么官方还说「大多数编码任务不适合」？</summary><div>因为那 90.2% 是在<strong>研究评测</strong>上拿到的。研究天然广度优先：十个方向互不依赖，分头查，合起来就是答案。编码不是——改一个接口牵动三个调用方，可并行的部分远少于看起来的样子，几个 agent 同时改文件还会互相覆盖（这也是两个流水线 skill 都从开 worktree 起手的原因）。同一篇文章把「agent 之间依赖很多」列为不适用条件，编码正是这类。</div></details>
+<details><summary>模型越强越爱派 subagent，这是 bug 还是 feature？</summary><div>大概两者都是。Opus 5 官方文档一边说它 <em>coordinates teams of subagents well</em>、很少互相覆盖工作，一边说 <em>delegates more readily</em> 且要 <em>cap delegation</em>——能力和倾向同时上去了，而成本按 agent 数乘。有意思的是同一份文档要求删掉「用 subagent 复核」这类旧指令：<strong>上一代靠多派一个 agent 补的能力缺口，这一代补上了，指令却还留在无数 prompt 里</strong>。所以每次换模型，该检查的不只是 prompt 写得对不对，还有它当初是为了绕哪个缺陷而写的。</div></details>
+</div>
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://code.claude.com/docs/en/sub-agents" target="_blank">Claude Code · Subagents</a> — 文件位置与五级优先级、frontmatter 全表（<code>skills</code> / <code>isolation</code> / <code>omitClaudeMd</code> / <code>maxTurns</code> / <code>memory</code>…）、三个内置 agent（<code>Explore</code> 三档 thoroughness、<code>Plan</code>、<code>general-purpose</code>）、继承与不继承的对照表、fork 一节、subagent 不可用工具清单与后台再砍一刀、输出扫描、description 合计 15,000 token 的启动警告、<code>claude plugin validate .claude/agents</code>（2026-09 访问）</li>
+<li><a href="https://code.claude.com/docs/en/agent-sdk/subagents" target="_blank">Claude Agent SDK · Subagents in the SDK</a> — 四条好处的官方措辞；<code>AgentDefinition</code> 全字段表；「唯一传给 subagent 的内容是 Agent 工具的 prompt 字符串」；深度 / 并发 / <code>maxBudgetUsd</code> 三道闸与默认值；resume subagent 的完整示例；检测要同时匹配 <code>"Agent"</code> 与 <code>"Task"</code>（2026-09 访问）</li>
+<li><a href="https://code.claude.com/docs/en/skills" target="_blank">Claude Code · Skills</a> — SKILL.md frontmatter 全表，其中 <code>context: fork</code> / <code>agent:</code> / <code>background:</code> 三项是本期用到的；官方自己的 Skills vs. Subagents vs. CLAUDE.md 三方对照（2026-09 访问）</li>
+<li><a href="https://www.anthropic.com/engineering/multi-agent-research-system" target="_blank">Anthropic Engineering · How we built our multi-agent research system</a>（2025-06-13）— 4 倍 / 15 倍 token；内部研究评测上多 agent 比单体 Claude Opus 4 好 90.2%；token 用量解释 80% 的浏览能力差异；适用与不适用场景清单（含「大多数编码任务」）</li>
+<li><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5" target="_blank">Anthropic · Prompting Claude Opus 5</a> — Controlling subagent spawning 一节的 delegation 指令原文；<em>delegates more readily than prior models</em>；两个环境变量与 <code>max_budget_usd</code> 需要 Claude Code 2.1.217+；「删掉 use a subagent to verify 这类指令」（2026-09 访问）</li>
+<li><a href="https://github.com/obra/superpowers/blob/main/skills/subagent-driven-development/SKILL.md" target="_blank">obra/superpowers · subagent-driven-development</a> — worktree + ledger 起手；每任务「派实现者 → 报告 → review → 修（≤5 轮，4–5 轮升级模型）」；最强模型上的全分支总 review；三条不适用条件</li>
+<li><a href="https://github.com/obra/superpowers/blob/main/skills/dispatching-parallel-agents/SKILL.md" target="_blank">obra/superpowers · dispatching-parallel-agents</a> — 「一条回复多个 dispatch = 并行」；3+ 不同根因才值得；四条不该并行的条件；<em>Do NOT just increase timeouts</em></li>
+<li><a href="https://github.com/wshobson/agents" target="_blank">wshobson/agents</a> — 多 harness agentic plugin marketplace，README 自述 94 plugins / 202 agents / 183 skills / 105 commands（2026-09 读取，MIT）；<code>/plugin marketplace add wshobson/agents</code></li>
+<li><a href="https://code.claude.com/docs/en/workflows" target="_blank">Claude Code · Dynamic workflows</a> — 规模超出逐轮派 subagent 之后的那一档：把编排写进脚本，在对话上下文之外执行（2026-09 访问）</li>
+<li><a href="orchestration-skills-roundup-skill25.html">本站 Skill 25 · 编排类 Skills 与 Plugin 榜单</a> — 四原语两轴的全景，本期是其中 subagent 那一格的展开</li>
+<li><a href="hooks-automation-skill27.html">本站 Skill 27 · Hooks 与确定性自动化</a>（下期）— 本期反复出现的「这事别交给模型」，下期讲怎么钉死</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Skill 26 · 2026-09-27</footer>
+</div>
+<script src="https://hub.cissychen.com/comments.js" defer></script>
+<script src="https://hub.cissychen.com/search.js" defer></script>
+<script src="https://hub.cissychen.com/index-button.js" defer></script>
+<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+</body></html>

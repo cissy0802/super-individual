@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill 26 · Subagents vs Skills — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head>
+</style></head>
+<body>
+<div class="container">
+<header>
+<span class="week-tag">SKILL 26 / ORCHESTRATION · DEEP-DIVE</span>
+<h1>Subagents vs Skills</h1>
+<h2>One question settles it: does the work happen in your context, or in another one · the inheritance table, line by line · the 15x coordination tax</h2>
+<div class="date">2026-09-27 · BigCat</div>
+<p class="pitch">Last time we laid out four orchestration primitives side by side. This time we drill into the one people buy wrong most often. A subagent is not a stronger skill: one <strong>injects instructions</strong> into the conversation you are already in, the other opens a <strong>fresh context</strong> and hands back a single paragraph. We read the official inheritance table line by line, then open two real subagent pipelines that someone already wrote for you.</p>
+</header>
+<div class="xref">
+<a href="orchestration-skills-roundup-skill25.en.html">Prerequisite → Skill 25, the orchestration roundup (four primitives on two axes)</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>Whether to reach for a subagent has nothing to do with how hard the task is. It depends on <strong>whether you still want to watch the middle</strong>. The Agent SDK's subagents page lists four benefits: <em>context isolation, parallelization, specialized instructions and knowledge, tool restrictions</em>. Only the first is something a skill cannot give you — the other three, a skill does fine. So the route here is: read both <strong>inheritance contracts</strong> first (who can see what), then name the concrete things you can install or read, and only then hand over the criteria. One preview of those: <strong>will you read its output as a paragraph, or follow it as a series of steps?</strong></p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>What it takes off your plate: moving "read forty files" out of the main thread</h2>
+<div class="claim">Claim: what a subagent buys you is not capability, it is <strong>forgetting</strong>. It reads forty files and your main conversation receives one summary. A skill cannot do that, because a skill's body stays in the thread with you.</div>
+<h3>The contract: one markdown file, two required fields</h3>
+<p>A subagent is a <code>.md</code> file under <code>.claude/agents/</code> (project) or <code>~/.claude/agents/</code> (global) — both are scanned <strong>recursively</strong>. Only <code>name</code> and <code>description</code> are required; the body is its system prompt. From the <a href="https://code.claude.com/docs/en/sub-agents" target="_blank">official subagents docs</a>, these optional fields are the ones worth memorizing:</p>
+<pre><code><span class="tag-com"># .claude/agents/api-developer.md</span>
+---
+<span class="tag-key">name</span>: api-developer
+<span class="tag-key">description</span>: Implement API endpoints following team conventions
+<span class="tag-key">tools</span>: Read, Grep, Edit, Write, Bash   <span class="tag-com"># omit = inherit all; a tool left out isn't in its session at all</span>
+<span class="tag-key">model</span>: sonnet                          <span class="tag-com"># sonnet/opus/haiku/fable/inherit</span>
+<span class="tag-key">skills</span>: [api-conventions, error-handling-patterns]  <span class="tag-com"># * preloaded at startup</span>
+<span class="tag-key">memory</span>: project                        <span class="tag-com"># user/project/local persistent memory</span>
+<span class="tag-key">isolation</span>: worktree                    <span class="tag-com"># * give it its own git worktree</span>
+<span class="tag-key">omitClaudeMd</span>: true                     <span class="tag-com"># skip CLAUDE.md files (saves tokens)</span>
+<span class="tag-key">maxTurns</span>: 10                           <span class="tag-com"># output at the cap is marked partial; resumable</span>
+---
+You are an API development specialist...
+</code></pre>
+<p>That <code>skills:</code> line kills the false dichotomy on its own: <strong>a subagent can run with skills loaded</strong>. It works the other way too — a skill whose frontmatter sets <code>context: fork</code> runs in an isolated context, and <code>agent:</code> picks which subagent type it forks into (see the <a href="https://code.claude.com/docs/en/skills" target="_blank">official skills docs</a>).</p>
+<h3>The first thing you can run: nothing to install</h3>
+<p>Claude Code ships three built-in subagents. <strong>Zero installs, available right now:</strong></p>
+<pre><code><span class="tag-com"># (1) Explore -- read-only tools (Write/Edit denied), three thoroughness levels</span>
+Use the Explore subagent, very thorough, to map every place we validate JWTs
+
+<span class="tag-com"># (2) Plan -- the one that researches during plan mode, also read-only</span>
+<span class="tag-com"># (3) general-purpose -- every tool available to subagents; can modify code</span>
+
+<span class="tag-com"># After writing your own agent file, check its frontmatter before a session</span>
+claude plugin validate .claude/agents
+
+<span class="tag-com"># No file needed: a one-off JSON definition</span>
+claude --agents '{"code-reviewer":{"description":"Expert code reviewer.",
+  "prompt":"You are a senior code reviewer.","tools":["Read","Grep","Glob"],"model":"sonnet"}}'
+
+<span class="tag-com"># Or run the whole session as that agent</span>
+claude --agent code-reviewer
+</code></pre>
+<p>What <code>Explore</code> takes off your plate is very concrete: <strong>the output of forty greps never enters your conversation</strong>. <strong>When not to use it</strong>: the answer is one line anyway ("which file holds this function"). Dispatching an agent to ask costs you a cold start plus a round trip, and the context you save isn't worth that.</p>
+<div class="res"><strong>Sources</strong> · <a href="https://code.claude.com/docs/en/sub-agents" target="_blank">Claude Code · Subagents</a> and <a href="https://code.claude.com/docs/en/skills" target="_blank">Claude Code · Skills</a>, accessed 2026-09</div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Mechanism: one inheritance table explains nine tenths of "why does it know nothing"</h2>
+<div class="claim">Claim: there is exactly <strong>one pipe</strong> between a subagent and its parent — the prompt string of the Agent tool call. Whatever you didn't write into it, it does not know.</div>
+<div class="diagram">                        normal subagent        fork (/subtask)        skill
+────────────────────────────────────────────────────────────────────────────────────
+conversation history      x  none                yes, in full          yes, it's right here
+system prompt             its own (the body)     the parent's          the parent's
+CLAUDE.md                 yes (unless omitted)   yes                   yes
+tool pool                 a subset (smaller
+                          again in background)   parent's, unfiltered   the parent's
+skills already invoked    x (unless in skills:)  yes                   --
+model                     subagent model order   the parent's          model: can override
+what reaches the thread   final message only     final message only     the whole run
+</div>
+<h3>What that single pipe actually costs you</h3>
+<p>The SDK docs put it plainly: <em>The only content you pass from parent to subagent is the Agent tool's prompt string, so include any file paths, error messages, or decisions the subagent needs directly in that prompt.</em> That is the entire explanation for "but I just told it" — <strong>you told the main conversation, not the subagent</strong>.</p>
+<h3>The third state: forks, which don't belong in either column</h3>
+<p><code>/subtask &lt;description&gt;</code> in an interactive session starts a <strong>fork</strong>: its own context window, but <strong>full inheritance</strong> of the parent's history, system prompt, output style, model, and the parent's <strong>exact tool pool</strong> (skipping the filter that trims tools from background subagents). A fork is the answer for "I need isolation but I cannot afford amnesia." The cost: it inherits every token of the parent, so the only noise isolation saves is what comes <strong>after</strong>.</p>
+<div class="fail"><strong>A subagent's return value is untrusted data, not a command.</strong> Since v2.1.210, Claude Code scans a subagent's final message before the parent reads it: text imitating control tags such as <code>&lt;system-reminder&gt;</code> gets a backslash inserted, lines starting with <code>Human:</code> or <code>Assistant:</code> get one before the colon, and a matching report is prefixed with a <code>[harness: ...]</code> marker line. The docs are explicit about two limits: the scan <strong>doesn't judge maliciousness</strong>, and it <strong>isn't a substitute for restrictions</strong> — the real guardrails remain <code>tools</code>, <code>disallowedTools</code> and permissions. Letting a subagent read external pages and then treating its report as instructions is a ready-made injection chain.</div>
+<h3>Why a skill travels the other road</h3>
+<p>A skill's mechanism is <strong>instruction injection</strong>: the description sits in context permanently (cheap), the body expands only when invoked, and once expanded it <strong>stays in the thread across turns</strong>. So skills fit "a rule every following step must honor," subagents fit "this stretch I don't want to watch." <code>disable-model-invocation: true</code> makes a skill user-only; <code>user-invocable: false</code> makes it model-only. Those two fields together are a skill's real invocation contract.</p>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Real usage and limits: five installable or readable entries, with commands</h2>
+<div class="claim">Claim: nobody gets real value out of "dispatch an agent." They get it from <strong>replacing every station of a pipeline with a fresh context</strong> — and that has already been written down as a skill, so you don't have to invent it.</div>
+<h3>(1) obra/superpowers · <code>subagent-driven-development</code></h3>
+<pre><code><span class="tag-com"># one command from the official marketplace</span>
+/plugin install superpowers@claude-plugins-official
+</code></pre>
+<p><a href="https://github.com/obra/superpowers/blob/main/skills/subagent-driven-development/SKILL.md" target="_blank">This skill</a> has a one-line description: <em>Use when executing implementation plans with independent tasks in the current session</em>. It opens an <strong>isolated git worktree</strong>, verifies the plan, scans for conflicts and creates a ledger; then per task it runs dispatch implementer → handle report → task-specific review → fix loop, <strong>up to five rounds, with rounds 1–3 resuming the original implementer and rounds 4–5 escalating to a more capable model</strong>; finally a whole-branch review on the most capable model. <strong>What it takes off your plate</strong>: by task seven of a long plan, the noise from tasks one through six has already filled the window. <strong>When not to use it</strong> — it says so itself: no implementation plan exists, the tasks are tightly coupled rather than independent, or your platform has no subagents at all (then run inline).</p>
+<h3>(2) Same repo · <code>dispatching-parallel-agents</code></h3>
+<p><a href="https://github.com/obra/superpowers/blob/main/skills/dispatching-parallel-agents/SKILL.md" target="_blank">Its</a> trigger reads <em>2+ independent tasks that can be worked on without shared state or sequential dependencies</em>, while the body sets a higher bar: <strong>three or more distinct root causes</strong> before parallelism pays. The line worth memorizing is the mechanism: <em>Multiple dispatch calls in one response = parallel execution. One per response = sequential.</em> Parallelism is not a switch — it is <strong>how many calls you put in one reply</strong>. <strong>When not to</strong>: the failures are related (fixing one may fix the others), understanding requires full system context, agents would interfere with each other's edits, or the root cause is unknown and you're still exploring. It also has a line worth taping to a wall: <em>Do NOT just increase timeouts—find the real issue.</em></p>
+<h3>(3) <code>isolation: worktree</code>: the only sane way to write files in parallel</h3>
+<p>It is no accident that both skills above start by opening a worktree: several subagents editing one working tree are overwriting each other. One frontmatter line, <code>isolation: worktree</code>, gives an agent its own; superpowers also ships a dedicated <code>using-git-worktrees</code> skill for that path. <strong>When not to</strong>: read-only work (anything <code>Explore</code>-shaped) — a worktree is pure IO there.</p>
+<h3>(4) <code>wshobson/agents</code>: an off-the-shelf agent library</h3>
+<pre><code>/plugin marketplace add wshobson/agents
+/plugin install python-development
+</code></pre>
+<p>Self-described as <em>94 plugins, 202 agents, 183 skills, 105 commands</em> (per that repo's README, read 2026-09; MIT), generating harness-native artifacts from one markdown source. The real value is <strong>reading how other people write descriptions</strong> — whether a subagent ever gets dispatched automatically depends entirely on that field. <strong>When not to install</strong>: taking the whole marketplace means paying a description tax (see the 15,000-token warning in 04); install only the plugin you actually use.</p>
+<h3>(5) The Agent SDK: writing all this into code</h3>
+<p>In the SDK, subagents are the <code>agents</code> parameter of <code>query()</code>, and <a href="https://code.claude.com/docs/en/agent-sdk/subagents" target="_blank">AgentDefinition</a> maps almost field for field onto the file version (<code>description</code> and <code>prompt</code> required; <code>tools</code>, <code>disallowedTools</code>, <code>model</code>, <code>skills</code>, <code>maxTurns</code>, <code>background</code>, <code>effort</code> optional). Two traps: in the Python SDK, <code>disallowedTools</code> and <code>mcpServers</code> <strong>keep their camelCase spelling</strong>; and to detect a real dispatch you must match both <code>"Agent"</code> and the older name <code>"Task"</code>. Past a certain scale subagents are the wrong tool — the docs point at the <code>Workflow</code> tool and <a href="https://code.claude.com/docs/en/workflows" target="_blank">dynamic workflows</a>, which move orchestration into a script outside the conversation. <strong>When not to reach for Workflow</strong>: two or three agents in a turn, where plain subagents are enough.</p>
+<h3>Three criteria, to choose between the entries above</h3>
+<ol>
+<li><strong>Do you still need to watch the middle?</strong> Following it step by step → skill (it stays in the thread). Only the conclusion → subagent. This settles eighty percent of the cases.</li>
+<li><strong>Does it need what you said earlier?</strong> Needs the whole history → a fork via <code>/subtask</code>. Needs a few paths and one stack trace → a normal subagent, with those <strong>written into the prompt string</strong>.</li>
+<li><strong>Is it genuinely independent?</strong> Three or more distinct root causes, no shared state, no overlapping files → dispatch in parallel. Otherwise go sequential, or let one agent finish it.</li>
+</ol>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Cost and alternatives: 15x tokens, and a new problem called "the stronger it gets, the more it delegates"</h2>
+<div class="claim">Claim: the subagent bill is not "a bit more," it is <strong>multiplication</strong>. And as of Opus 5 the default leans toward delegating, so the brakes are yours to set.</div>
+<h3>The hardest number in this piece</h3>
+<p>In <a href="https://www.anthropic.com/engineering/multi-agent-research-system" target="_blank">How we built our multi-agent research system</a> (2025-06-13) Anthropic gives three figures: <strong>agents use about 4x the tokens of chat, and multi-agent systems about 15x</strong>; on their internal research eval the multi-agent system beat single-agent Claude Opus 4 by <strong>90.2%</strong>; and token usage alone explains <strong>80%</strong> of the variance in browsing ability. The same piece lists where it does not fit: <strong>tasks where all agents need the same context, domains with many inter-agent dependencies, and most coding tasks</strong> — their wording is that coding has fewer parallelizable components than research. Read the three together: <strong>15x for 90.2% is worth it or not depending on whether your task looks like research or like editing code.</strong></p>
+<h3>The extra line item Opus 5 adds</h3>
+<p><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5" target="_blank">Prompting Claude Opus 5</a> says it outright: <em>Claude Opus 5 delegates to subagents more readily than prior models.</em> The official remedy comes in two layers — a prompt layer and a hard cap:</p>
+<pre><code><span class="tag-com"># (1) the prompt layer (official example, copy it verbatim)</span>
+Delegate to a subagent only for large tasks that are genuinely independent and
+parallelizable, such as a wide multi-file investigation. Do not delegate work you
+can finish yourself in a handful of tool calls, and do not use subagents to verify
+or double-check your own work. If one subagent can complete the task, use one
+rather than several, and keep spawn counts low.
+
+<span class="tag-com"># (2) the hard caps (env in .claude/settings.json; defaults: depth 3 / 20 concurrent)</span>
+"env": { "CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH": "1",
+         "CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS": "5" }
+<span class="tag-com"># The SDK adds a third: maxBudgetUsd / max_budget_usd -> error_max_budget_usd at the cap</span>
+</code></pre>
+<p>The same document has a counterintuitive instruction: Opus 5 <strong>verifies its own work unprompted</strong>, so old lines like "use a subagent to double-check" should be <strong>removed</strong> — keeping them only causes over-verification and burns tokens. Note those two environment variables need Claude Code 2.1.217 or later.</p>
+<h3>Three costs that are easy to miss</h3>
+<ul>
+<li><strong>Descriptions are taxed too.</strong> Straight from the docs: when the combined descriptions of your custom subagents exceed <strong>15,000 tokens</strong>, Claude Code warns you at startup. Detail belongs in the body, which loads only when that agent actually runs.</li>
+<li><strong>A subagent cannot ask you anything.</strong> <code>AskUserQuestion</code> is unavailable inside subagents (so are <code>EnterPlanMode</code>, <code>ScheduleWakeup</code> and <code>Workflow</code>). Stuck, it guesses, and you see the guess in the report. Background subagents lose most built-in tools on top of that.</li>
+<li><strong>Coordination is human work.</strong> The expensive part of that superpowers pipeline is not the implementers — it is the ledger, the conflict scan, the five-round cap, the final whole-branch review. <strong>Dispatching agents is one command; collecting them is an institution.</strong></li>
+</ul>
+<h3>What to do instead of a subagent</h3>
+<ol>
+<li><strong>Write a skill.</strong> If you want "a rule every step honors" rather than "this stretch I don't want to see" — cheaper, and you can watch it work.</li>
+<li><strong>Use a fork.</strong> <code>/subtask</code> when you need isolation without amnesia; the cost is inheriting every parent token.</li>
+<li><strong>Pin it as a hook.</strong> Don't dispatch an agent to do something deterministic (Skill 27 covers this).</li>
+<li><strong>Move up to Workflow.</strong> Orchestrating dozens of agents belongs in a script, not in a conversation.</li>
+<li><strong>Just do it yourself.</strong> That is the second sentence of the official delegation instruction: don't delegate what a handful of tool calls would finish.</li>
+</ol>
+<div class="fail"><strong>The honest cost, last</strong>: isolation cuts both ways. The subagent cannot see your conversation, and you cannot see its process — if it read the wrong file, skipped the tests, or got steered by a page it fetched, what you receive is a summary that reads perfectly well. <strong>The other name for context isolation is audit blind spot.</strong> Which is why narrowing <code>tools</code>, isolating with a worktree, and reading the report as data are a set, not a menu.</div>
+</div>
+<div class="combo">
+<h3>// THE ONE-PAGE BUYING CARD</h3>
+<p><strong>Read these three first</strong>: (1) <a href="https://code.claude.com/docs/en/sub-agents" target="_blank">Claude Code · Subagents</a> — the full field table, the three built-ins, the fork section, and the two tool filters; half of this issue comes from it. (2) <a href="https://github.com/obra/superpowers/blob/main/skills/subagent-driven-development/SKILL.md" target="_blank">superpowers · <code>subagent-driven-development</code></a> — what a real subagent pipeline looks like, down to the five-round fix cap and the model escalation. (3) <a href="https://www.anthropic.com/engineering/multi-agent-research-system" target="_blank">Anthropic on their multi-agent research system</a> (2025-06) — 15x tokens, 90.2%, and "most coding tasks" on the unsuitable list.</p>
+<p><strong>Then as needed</strong>: <a href="https://github.com/obra/superpowers/blob/main/skills/dispatching-parallel-agents/SKILL.md" target="_blank"><code>dispatching-parallel-agents</code></a> (several dispatches in one reply = parallel; four conditions that forbid it) · <a href="https://code.claude.com/docs/en/agent-sdk/subagents" target="_blank">Agent SDK · Subagents</a> (every <code>AgentDefinition</code> field, the depth/concurrency/budget caps, how to resume) · <a href="https://code.claude.com/docs/en/skills" target="_blank">Claude Code · Skills</a> (<code>context: fork</code> plus <code>agent:</code>, isolating a skill in place) · <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5" target="_blank">Prompting Claude Opus 5</a> (the delegation snippet; delete legacy "verify with a subagent" lines) · <a href="https://github.com/wshobson/agents" target="_blank"><code>wshobson/agents</code></a> (an off-the-shelf library, worth reading for description style) · <a href="https://code.claude.com/docs/en/workflows" target="_blank">Dynamic workflows</a> (once the scale outgrows subagents).</p>
+<p><strong>Explicitly don't</strong>: dispatch a subagent to fetch a one-line answer · expect it to remember what you just said (paths and errors go in the prompt) · let several subagents write to one working tree · execute a subagent's report as instructions · leave legacy "double-check with a subagent" lines in an Opus 5 prompt · turn it loose with no depth, concurrency or budget cap.</p>
+</div>
+<div class="glossary">
+<h3>// GLOSSARY</h3>
+<dl>
+<dt>subagent</dt>
+<dd>A separate Claude instance with its own context window and system prompt that returns only its final message to the parent. Defined in <code>.claude/agents/*.md</code> or the SDK's <code>agents</code> parameter.</dd>
+<dt>context isolation</dt>
+<dd>The one benefit of the four that nothing else provides: intermediate tool calls and results stay on the subagent's side and the parent gets a summary. Its flip side is the audit blind spot.</dd>
+<dt>fork (<code>/subtask</code>)</dt>
+<dd>A special kind of subagent: its own context window, but full inheritance of the parent's history, system prompt, output style, model and unfiltered tool pool. For isolation without amnesia.</dd>
+<dt>instruction injection (the skill mechanism)</dt>
+<dd>Invoking a skill expands its body into the current conversation, where it stays in force across turns. A different road from opening a new context.</dd>
+<dt><code>skills:</code> preloading</dt>
+<dd>A subagent frontmatter field that loads named skills into its context at startup. Proof that the two are not an either/or.</dd>
+<dt>coordination tax</dt>
+<dd>Everything someone must still do after dispatching: splitting tasks, writing the prompt, collecting reports, checking conflicts, capping fix rounds, the final review.</dd>
+<dt>subagent output scanning</dt>
+<dd>Since v2.1.210, a pass over a subagent's report before the parent reads it: backslashes into text imitating control tags or turn markers, plus a <code>[harness: ...]</code> line when matched. It doesn't judge maliciousness and doesn't replace <code>tools</code> or permission limits.</dd>
+</dl>
+</div>
+<div class="thinking">
+<h3>// THREE THINGS THAT DON'T QUITE RESOLVE</h3>
+<details><summary>If a subagent can preload skills and a skill can set <code>context: fork</code>, is there any difference left between the two concepts?</summary><div>Yes — the difference is <strong>which one is the default</strong>. A skill defaults to staying in the thread; a subagent defaults to opening a fresh context. The optional fields only let each borrow one step from the other. What remains non-interchangeable is <strong>what comes back to the main thread</strong>: with a skill you see the whole run, with a subagent you get one final message. So the question was never which is stronger, it is whether you need to watch.</div></details>
+<details><summary>15x tokens for a 90.2% improvement sounds like a bargain. Why do the same authors say most coding tasks don't fit?</summary><div>Because that 90.2% was measured on a <strong>research eval</strong>. Research is breadth-first by nature: ten independent directions, ten searchers, and the union is the answer. Coding isn't — changing one interface touches three callers, the genuinely parallel fraction is far smaller than it looks, and several agents editing at once overwrite each other (which is exactly why both real pipeline skills start by opening a worktree). The same article lists "many inter-agent dependencies" as disqualifying, and coding is that case.</div></details>
+<details><summary>Stronger models delegate more eagerly. Bug or feature?</summary><div>Probably both. The Opus 5 guide says in one breath that it <em>coordinates teams of subagents well</em> with few cases of agents overwriting each other, and in the next that it <em>delegates more readily</em> and that you should cap delegation — capability and appetite rose together, while cost multiplies per agent. The telling detail is the instruction to delete old "use a subagent to verify" lines: <strong>a gap that an extra agent used to paper over is now closed in the model, but the workaround is still sitting in countless prompts.</strong> So every model swap deserves a check not just of whether a prompt is correct, but of which defect it was written to route around.</div></details>
+</div>
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://code.claude.com/docs/en/sub-agents" target="_blank">Claude Code · Subagents</a> — file locations and the five-level precedence; the full frontmatter table (<code>skills</code>, <code>isolation</code>, <code>omitClaudeMd</code>, <code>maxTurns</code>, <code>memory</code>…); the three built-ins (<code>Explore</code> with three thoroughness levels, <code>Plan</code>, <code>general-purpose</code>); the inherits/doesn't-inherit table; the fork section; the list of tools subagents cannot use and the extra trim for background runs; output scanning; the 15,000-token description warning at startup; <code>claude plugin validate .claude/agents</code> (accessed 2026-09)</li>
+<li><a href="https://code.claude.com/docs/en/agent-sdk/subagents" target="_blank">Claude Agent SDK · Subagents in the SDK</a> — the official wording of the four benefits; the full <code>AgentDefinition</code> table; "the only content you pass from parent to subagent is the Agent tool's prompt string"; the depth, concurrency and <code>maxBudgetUsd</code> caps with defaults; a complete resume example; matching both <code>"Agent"</code> and <code>"Task"</code> when detecting dispatch (accessed 2026-09)</li>
+<li><a href="https://code.claude.com/docs/en/skills" target="_blank">Claude Code · Skills</a> — the SKILL.md frontmatter table, of which <code>context: fork</code>, <code>agent:</code> and <code>background:</code> are the three used here; Anthropic's own Skills vs. Subagents vs. CLAUDE.md comparison (accessed 2026-09)</li>
+<li><a href="https://www.anthropic.com/engineering/multi-agent-research-system" target="_blank">Anthropic Engineering · How we built our multi-agent research system</a> (2025-06-13) — 4x and 15x token usage; the multi-agent system beating single-agent Claude Opus 4 by 90.2% on their internal research eval; token usage explaining 80% of browsing-ability variance; the suitable and unsuitable lists, including "most coding tasks"</li>
+<li><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5" target="_blank">Anthropic · Prompting Claude Opus 5</a> — the Controlling subagent spawning section and its delegation snippet; <em>delegates more readily than prior models</em>; the two environment variables and <code>max_budget_usd</code> requiring Claude Code 2.1.217+; the instruction to drop "use a subagent to verify" lines (accessed 2026-09)</li>
+<li><a href="https://github.com/obra/superpowers/blob/main/skills/subagent-driven-development/SKILL.md" target="_blank">obra/superpowers · subagent-driven-development</a> — worktree plus ledger to start; per task dispatch → report → review → fix (max five rounds, escalating model at 4–5); a whole-branch review on the most capable model; three stated non-applicable conditions</li>
+<li><a href="https://github.com/obra/superpowers/blob/main/skills/dispatching-parallel-agents/SKILL.md" target="_blank">obra/superpowers · dispatching-parallel-agents</a> — "multiple dispatch calls in one response = parallel"; three or more distinct root causes as the bar; four conditions that rule parallelism out; <em>Do NOT just increase timeouts</em></li>
+<li><a href="https://github.com/wshobson/agents" target="_blank">wshobson/agents</a> — a multi-harness agentic plugin marketplace; the README self-reports 94 plugins / 202 agents / 183 skills / 105 commands (read 2026-09, MIT); <code>/plugin marketplace add wshobson/agents</code></li>
+<li><a href="https://code.claude.com/docs/en/workflows" target="_blank">Claude Code · Dynamic workflows</a> — the tier above turn-by-turn dispatch: orchestration written as a script and executed outside the conversation context (accessed 2026-09)</li>
+<li><a href="orchestration-skills-roundup-skill25.en.html">This site, Skill 25 · The Orchestration Roundup</a> — four primitives on two axes; this issue expands the subagent cell of that grid</li>
+<li><a href="hooks-automation-skill27.en.html">This site, Skill 27 · Hooks and Deterministic Automation</a> (next) — "don't leave this to the model" keeps coming up here; next time, how to pin it down</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Skill 26 · 2026-09-27</footer>
+</div>
+<script src="https://hub.cissychen.com/comments.js" defer></script>
+<script src="https://hub.cissychen.com/search.js" defer></script>
+<script src="https://hub.cissychen.com/index-button.js" defer></script>
+<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+</body></html>
