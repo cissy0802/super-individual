@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill 27 · Hooks 与确定性自动化 — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head>
+
+<body>
+<div class="container">
+<header>
+<span class="week-tag">SKILL 27 / ORCHESTRATION · DEEP-DIVE</span>
+<h1>Hooks 与确定性自动化</h1>
+<h2>33 个事件 × 5 种 hook 类型 × 3 档退出码 · 抄一条官方插件的注册表 · 别把判断题钉成钩子</h2>
+<div class="date">2026-09-28 · BigCat</div>
+<p class="pitch">上期结尾那句「确定性的事别派 agent 去做」欠了一笔账。官方给 hooks 的定义只有一句要紧：<em>deterministic control: certain actions always happen rather than relying on the LLM to choose to run them</em>。模型会忘、会跳过、会「觉得这次不用」；钩子不会。这期从一条能跑的 Prettier 配置起手，拆到官方 <code>security-guidance</code> 插件的 hook 注册表，再点名六个社区工具。</p>
+</header>
+<div class="xref">
+<a href="subagents-vs-skills-skill26.html">前置 → Skill 26 Subagent 与 Skill 怎么分工（隔离 vs 注入两条路）</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>判断「该不该写成 hook」只有一个问题：<strong>这件事需要判断吗</strong>。需要判断 → 交给模型（prompt / skill / subagent）。不需要判断、每次都一样、漏一次就出事 → 钉成钩子。「我在 CLAUDE.md 里写了『改完代码一定要跑 format』」不是自动化，是<strong>祈祷</strong>——它进的是模型的 context，不是执行路径。本期顺序照旧：先给能抄的配置，再拆机制，再点名可装可读的条目，判据放后半程。</p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>它替你干掉什么：把「每次都要做」从模型的自由意志里拿走</h2>
+<div class="claim">论断：hook 买的不是能力，是<strong>必然性</strong>。同一件事写进 CLAUDE.md 是「大概率会做」，写进 hook 是「一定发生」——差别在漏掉的那百分之三上。</div>
+<h3>第一条立刻能跑：改完自动 format</h3>
+<p>官方指南里逐字给了这段，放进项目根的 <code>.claude/settings.json</code>，Claude 每次用 <code>Edit</code> / <code>Write</code> 改完文件就自动跑 <a href="https://prettier.io/" target="_blank">Prettier</a>：</p>
+<pre><code><span class="tag-com">// .claude/settings.json</span>
+{
+  <span class="tag-key">"hooks"</span>: {
+    <span class="tag-key">"PostToolUse"</span>: [
+      {
+        <span class="tag-key">"matcher"</span>: <span class="tag-claude">"Edit|Write"</span>,
+        <span class="tag-key">"hooks"</span>: [
+          { <span class="tag-key">"type"</span>: <span class="tag-claude">"command"</span>,
+            <span class="tag-key">"command"</span>: <span class="tag-claude">"jq -r '.tool_input.file_path' | xargs npx prettier --write"</span> }
+        ]
+      }
+    ]
+  }
+}
+</code></pre>
+<p>事件数据是<strong>一段 JSON 打到 stdin</strong>，所以官方所有 Bash 示例都用 <a href="https://jqlang.org/" target="_blank"><code>jq</code></a> 取字段（<code>brew install jq</code> / <code>apt-get install jq</code>）。<strong>什么时候别写这条</strong>：如果文件也可能被 <code>Bash</code> 命令改写，<code>Edit|Write</code> 这个 matcher 就漏了——官方让你改用 <code>FileChanged</code> 钩子盯具体文件名。</p>
+<h3>第二条：把不该动的文件挡住</h3>
+<p>写进 <code>.claude/hooks/protect-files.sh</code>（记得 <code>chmod +x</code>），在 <code>PreToolUse</code> 上注册成 <code>"$CLAUDE_PROJECT_DIR"/.claude/hooks/protect-files.sh</code>：</p>
+<pre><code>INPUT=$(cat)
+FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty')
+<span class="tag-com"># 命中就 exit 2：动作被拦下，stderr 作为反馈回给模型</span>
+case "$FILE_PATH" in
+  *.env|*/secrets/*) echo "该路径受保护，禁止写入" &gt;&amp;2; exit 2 ;;
+esac
+exit 0
+</code></pre>
+<h3>第三条：不想自己写，装官方那个</h3>
+<pre><code>/plugin install security-guidance@claude-plugins-official
+<span class="tag-com"># 提示 marketplace 找不到就先加：</span>
+/plugin marketplace add anthropics/claude-plugins-official
+</code></pre>
+<p><a href="https://code.claude.com/docs/en/security-guidance" target="_blank"><code>security-guidance</code></a> 是官方唯一一个把自己整个建在 hooks 上的插件，装完什么都不用喊。<strong>它替你干掉的是</strong>：注入、不安全反序列化、<code>dangerouslySetInnerHTML</code> 这类问题从「等 PR review 抓」提前到「写下去的那一刻」。<strong>什么时候别装</strong>：它每个改了文件的 turn 会多一次模型调用、每次 commit 再多一次 agentic 审查（默认 Claude Opus 4.7），这是真金白银；不在 git 仓库里时后两层直接跳过；cloud session 不加载 plugin。嫌贵可以只留免费那层——<code>ENABLE_CODE_SECURITY_REVIEW=0</code> 关掉全部模型审查，保留纯字符串匹配的逐次编辑检查。</p>
+<div class="res"><strong>出处</strong> · <a href="https://code.claude.com/docs/en/hooks-guide" target="_blank">Claude Code · Automate actions with hooks</a> 与 <a href="https://code.claude.com/docs/en/security-guidance" target="_blank">Security guidance plugin</a>，2026-09 访问</div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>机制：33 个事件 × 5 种类型 × 3 档退出码</h2>
+<div class="claim">论断：hook 的全部表达力就在这三张表里。记住它们，你不需要背任何教程。</div>
+<h3>事件：不只是 Pre/Post ToolUse</h3>
+<p><a href="https://code.claude.com/docs/en/hooks" target="_blank">官方 reference</a> 的事件表现在列了 <strong>33 个</strong>。社区文章里常见的「13 个生命周期事件」是旧的。几个容易被忽略但很好用的：</p>
+<div class="diagram">事件                作用（选摘）
+────────────────────────────────────────────────────────────
+PreToolUse         工具执行前，可拦（exit 2）
+PostToolUse        工具成功后，不可撤销（东西已经做完了）
+PostToolUseFailure 工具失败后 —— 自动重试/降级的挂点
+UserPromptSubmit   你的 prompt 进模型前，可改可拦
+SessionStart       matcher: startup|resume|clear|compact|fork
+PreCompact         压缩前备份 transcript
+FileChanged        matcher 是字面文件名（.envrc|.env），谁写的都算
+CwdChanged         切目录时重载环境变量（配 CLAUDE_ENV_FILE）
+ConfigChange       配置被改，可审计可拦
+Stop / SubagentStop 一轮/子代理结束，可以「不许停」
+SessionEnd         全部 SessionEnd 钩子共享 1.5 秒预算
+</div>
+<h3>类型：5 种，后两种是「反确定性」的</h3>
+<ul>
+<li><code>command</code> — 跑 shell 命令。默认超时 <strong>10 分钟</strong>。</li>
+<li><code>http</code> — POST 到一个 endpoint，body 里返回同样的 JSON。header 里的 <code>$VAR</code> 只解析 <code>allowedEnvVars</code> 列出的那些。</li>
+<li><code>mcp_tool</code> — 直接调某个 MCP server 的工具。</li>
+<li><code>prompt</code> — 把事件数据丢给一个模型（默认 Haiku）判 <code>{"ok": true/false, "reason": "..."}</code>。超时 30 秒。</li>
+<li><code>agent</code> — 起一个 subagent，能读文件、跑命令再判。超时 60 秒、最多 50 轮工具调用。<strong>官方标记为实验性，生产工作流建议用 <code>command</code></strong>。</li>
+</ul>
+<h3>退出码：只有三档</h3>
+<p><strong>0</strong> = 成功，stdout 按 JSON 解析（解析不了就当纯文本，部分事件会注入 Claude 上下文）。<strong>2</strong> = 拦截，stderr 是拦截理由；能被拦的事件是有限几个（<code>PreToolUse</code>、<code>UserPromptSubmit</code>、<code>Stop</code>、<code>SubagentStop</code>、<code>PreModelSwitch</code> 等），<code>SessionStart</code> 这类拦不住，exit 2 只是把 stderr 显示给你。<strong>其余</strong> = 非阻塞错误，动作照常进行，transcript 里出现一条 <code>hook error</code>。</p>
+<h3>配置放哪，决定了谁受管</h3>
+<div class="diagram">位置                                   作用域            能否共享
+──────────────────────────────────────────────────────────────────
+~/.claude/settings.json               你的全部项目       否
+.claude/settings.json                 单个项目           可提交进仓库
+.claude/settings.local.json           单个项目           否（gitignore）
+managed policy settings               整个组织           管理员控制
+plugin 的 hooks/hooks.json            插件启用时         随插件分发
+skill frontmatter                     skill 被调用之后   写在 skill 文件里
+subagent frontmatter                  该 subagent 运行时 写在 agent 文件里
+</div>
+<p><code>/hooks</code> 命令可以按事件浏览全部已配置钩子，但它<strong>只读</strong>——增删改要直接编辑 JSON。全局关闭是 <code>"disableAllHooks": true</code>；管理员那边还有个 <code>allowManagedHooksOnly</code>，能把你自己的钩子全部禁掉只留托管的。</p>
+<h3>抄一份真实的注册表</h3>
+<p><code>security-guidance</code> 把自己拆成五条注册，这张表值得当模板背下来（<a href="https://github.com/anthropics/claude-plugins-official/tree/main/plugins/security-guidance" target="_blank">源码在 GitHub 上</a>，目录里就是 <code>.claude-plugin/</code> + <code>hooks/</code> + <code>tests/</code>）：</p>
+<div class="diagram">SessionStart                          → 起 Python 虚拟环境（准备工作）
+UserPromptSubmit                      → 记下工作树基线（为了 diff）
+PostToolUse on Edit/Write/NotebookEdit → 纯字符串模式匹配，零模型调用
+Stop                                  → 后台跑一次整 turn 的 diff 审查
+PostToolUse on Bash（限 git commit/push）→ 更深的 agentic 审查
+</div>
+<p>三件事可以直接学：<strong>贵的放后面</strong>（免费的字符串匹配放逐次编辑，花钱的模型审查放 Stop 和 commit）；<strong>基线在前、判定在后</strong>（<code>UserPromptSubmit</code> 存快照，<code>Stop</code> 才 diff）；<strong>审查者不是写代码那个实例</strong>（另起一次调用、全新 context）。</p>
+<div class="fail"><strong>worktree 里 <code>$CLAUDE_PROJECT_DIR</code> 不跟着走。</strong>它永远指向会话启动时的项目根，所以 <code>"$CLAUDE_PROJECT_DIR"/.claude/hooks/x.sh</code> 跑的还是主 checkout 里那个脚本——这是<strong>对的</strong>。要知道 Claude 现在在哪个目录干活，读输入 JSON 里的 <code>cwd</code> 字段，它才跟着 worktree 和 <code>cd</code> 走。</div>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>真实用法与边界：六个可装可读的条目</h2>
+<div class="claim">论断：写 hook 最烦的从来不是逻辑，是每个脚本都要重写一遍 stdin 解析、退出码和事件分发。下面这几个各自消掉了一段样板。</div>
+<h3>① <code>GowayLee/cchooks</code> · Python SDK（132★）</h3>
+<pre><code>pip install cchooks   <span class="tag-com"># 或 uv add cchooks</span>
+</code></pre>
+<pre><code>from cchooks import create_context, PreToolUseContext
+c = create_context()
+assert isinstance(c, PreToolUseContext)
+if c.tool_name == "Write" and ".env" in c.tool_input.get("file_path", ""):
+    c.output.exit_deny("Nope! .env files are protected")
+else:
+    c.output.exit_success()
+</code></pre>
+<p><strong>替你干掉</strong>：手写 <code>json.load(sys.stdin)</code> 和记退出码语义，事件类型是带类型的 context 对象。覆盖 9 种事件。<strong>什么时候别装</strong>：你的钩子就一行 <code>jq | xargs</code>——为它引一个包不划算；它那 9 种事件也远少于官方现在的 33 种，冷门事件得自己裸写。（据 GitHub 仓库页，2026-09）</p>
+<h3>② <code>syou6162/cchook</code> · 把 JSON 换成 YAML（34★）</h3>
+<pre><code>go install github.com/syou6162/cchook@latest
+</code></pre>
+<pre><code>PostToolUse:
+  - matcher: "Write|Edit"
+    conditions:
+      - type: file_extension
+        value: ".go"
+    actions:
+      - type: command
+        command: "gofmt -w {.tool_input.file_path}"
+</code></pre>
+<p><strong>替你干掉</strong>：settings.json 里那坨转义地狱，条件（按扩展名、按模式）用声明式写，带 dry-run。<strong>什么时候别装</strong>：团队要共享配置时，多一层非官方格式就多一层「新人看不懂」；星数也说明它还是个小众工具。（据 GitHub 仓库页，2026-09）</p>
+<h3>③ <code>johnlindquist/claude-hooks</code> · TypeScript（393★）</h3>
+<pre><code>npx claude-hooks   <span class="tag-com"># 生成 .claude/hooks/index.ts，执行需要 Bun</span>
+</code></pre>
+<p><strong>替你干掉</strong>：payload 的类型提示与自动补全，全部事件写在一个 <code>index.ts</code> 里分发。<strong>什么时候别装</strong>：它把运行时依赖绑到了 Bun——CI 或队友机器上没有 Bun，钩子就静默失败（而 hook 失败默认<strong>不阻塞</strong>，你不开 debug 根本不知道）。（据 GitHub 仓库页，2026-09）</p>
+<h3>④ <code>disler/claude-code-hooks-mastery</code> · 教学仓（3.9k★）</h3>
+<p><a href="https://github.com/disler/claude-code-hooks-mastery" target="_blank">这个仓</a>用 Astral <code>uv</code> 的单文件 Python 脚本把当时的每个事件都实现了一遍，含 PreCompact 前备份 transcript、拦截 subagent 完成这类花活。<strong>替你干掉</strong>：「这个事件的 JSON 长什么样」——照着读比翻文档快。<strong>什么时候别装</strong>：它是<strong>范本不是产品</strong>，README 自述覆盖 13 个事件，而官方 reference 现在是 33 个；整个 <code>.claude</code> 目录拷进你的项目会连它的 output styles、status line 一起带进来。（据 GitHub 仓库页，2026-09）</p>
+<h3>⑤ <code>disler/claude-code-hooks-multi-agent-observability</code> · 看板（1.5k★）</h3>
+<p><a href="https://github.com/disler/claude-code-hooks-multi-agent-observability" target="_blank">它</a>把所有事件通过 HTTP POST 打到一个 Bun 服务器，再 WebSocket 推到 Vue 客户端，多个并发 agent 的流向实时可见。<strong>替你干掉</strong>：「五个 agent 同时在跑，谁卡住了」这种睁眼瞎。<strong>什么时候别装</strong>：要 uv + Bun + 一个常驻服务器，单人单会话纯属过度工程；官方 <code>http</code> 类型钩子现在原生支持 POST 到 endpoint，自己接个日志服务可能比搬这套轻。（据 GitHub 仓库页，2026-09）</p>
+<h3>⑥ <code>pre-commit/pre-commit</code> · 不在 Claude 里的那一半（15.6k★）</h3>
+<p><a href="https://github.com/pre-commit/pre-commit" target="_blank">pre-commit</a>（<code>pip install pre-commit</code> → <code>pre-commit install</code>，配置写在 <code>.pre-commit-config.yaml</code>）管的是 git 提交这一刻，和 Claude 的钩子<strong>不是替代关系是接力关系</strong>：Claude hook 只覆盖 Claude 干的事，你自己在终端敲的 commit 它一概看不见（官方明说 <code>!</code> shell escape 里的 commit 也不算）。<strong>什么时候别装</strong>：只有你一个人、且所有改动都过 Claude——那多一层会重复跑同样的 linter。</p>
+<h3>三条判据，用来在上面这些之间取舍</h3>
+<ol>
+<li><strong>这件事需要判断吗？</strong>不需要 → <code>command</code> 钩子。需要但只看事件数据就能判 → <code>prompt</code>。要读代码才能判 → <code>agent</code>（且知道它是实验性的）。</li>
+<li><strong>漏一次的代价是什么？</strong>代价只是难看（没格式化）→ <code>PostToolUse</code> 补。代价是出事（写了 secret）→ <code>PreToolUse</code> + <code>exit 2</code> 拦在前面，因为 <strong><code>PostToolUse</code> 撤不回来</strong>。</li>
+<li><strong>只管 Claude 还是管所有人？</strong>只管 Claude → Claude 钩子。要管住所有提交 → pre-commit 或 CI。两边都要 → 两边都写，且让 Claude 侧调用同一个脚本，别维护两份规则。</li>
+</ol>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>代价与替代品：钩子会把不确定性从前门赶出去，再从后门请回来</h2>
+<div class="claim">论断：hooks 最大的风险不是写错，是<strong>你以为它在跑</strong>。它没沙箱、默认不阻塞、失败只在 debug 日志里说一声。</div>
+<h3>五笔账</h3>
+<ul>
+<li><strong>没有沙箱。</strong>官方原话：<em>A hook can read files, make network requests, modify your environment, and run arbitrary commands.</em> 建议是「像对待 shell alias 和 dotfiles 一样对待它」——只启用你看懂的。危险的是钩子<strong>藏得住</strong>：plugin 的 <code>hooks/hooks.json</code>、skill frontmatter、subagent frontmatter 都能带钩子，装一个插件等于接受它注册的一切。</li>
+<li><strong>失败是静默的。</strong>非 0 非 2 的退出码只算非阻塞错误，动作照常做完。要看全貌得 <code>claude --debug</code> 或会话里 <code>/debug</code>。</li>
+<li><strong><code>if</code> 是尽力而为，不是安全边界。</strong><code>if: "Bash(rm *)"</code> 这种过滤在 Claude Code 判不出命令结构时会<strong>照跑不误</strong>；官方直说：硬性的 allow/deny 要用<a href="https://code.claude.com/docs/en/permissions" target="_blank">权限系统</a>，不是 hook。</li>
+<li><strong>matcher 的覆盖面是假的。</strong><code>Edit|Write</code> 抓不到 Bash 写的文件。要真全覆盖，官方给三条路：<code>Stop</code> 钩子每轮扫一次 <code>git status --porcelain</code>；或同时匹配 <code>Bash|PowerShell</code>；或用 <code>FileChanged</code> 盯文件本身。</li>
+<li><strong>时间预算。</strong><code>SessionEnd</code> 的全部钩子共享 <strong>1.5 秒</strong>（显式写更长的 <code>timeout</code> 才会抬到最多 60 秒）——想在那儿做清理、上传日志的，先看这条。</li>
+</ul>
+<div class="fail"><strong>最讽刺的一条代价</strong>：<code>prompt</code> 和 <code>agent</code> 两种 hook 类型，把你刚赶出去的不确定性又请了回来。它们有用（判断题本来就该模型判），但要认清楚——一个由 Haiku 判 <code>ok: true/false</code> 的 <code>Stop</code> 钩子<strong>不是确定性保障</strong>，它是在另一个地方多问了一次模型。真要「一定发生」，只有 <code>command</code> 那一档。</div>
+<h3>不写 hook，你还能怎么办</h3>
+<ol>
+<li><strong>权限系统。</strong>要的是「绝对不许碰」而不是「碰了记一笔」——用 allow/deny 规则，那才是硬边界。</li>
+<li><strong>pre-commit / CI。</strong>要管的是所有人的提交而不是 Claude 的编辑，钩子挂错层了。</li>
+<li><strong>CLAUDE.md 或 skill。</strong>规则本身需要理解和变通（「新代码尽量写测试」），钉死反而变成噪音——每次都触发的告警等于没有告警。</li>
+<li><strong>什么都不做。</strong>一件事一个月发生一次，写钩子的时间比手动做十年还长。</li>
+</ol>
+</div>
+<div class="combo">
+<h3>// 一页选购卡</h3>
+<p><strong>先装这三个</strong>：① <code>/plugin install security-guidance@claude-plugins-official</code>——官方唯一整个建在 hooks 上的插件，装完即用，嫌贵就 <code>ENABLE_CODE_SECURITY_REVIEW=0</code> 只留免费那层。② 上面那段 <strong>Prettier 的 <code>PostToolUse</code> 配置</strong>（连同 <code>jq</code>）——五行 JSON，今天就能进 <code>.claude/settings.json</code>。③ <strong><code>pre-commit</code></strong>（<code>.pre-commit-config.yaml</code>）——补上 Claude 钩子照不到的那一半：你自己敲的 commit。</p>
+<p><strong>按需再看</strong>：<a href="https://code.claude.com/docs/en/hooks" target="_blank">Hooks reference</a>（33 个事件全表、5 种类型字段、退出码语义）· <a href="https://github.com/anthropics/claude-plugins-official/tree/main/plugins/security-guidance" target="_blank">security-guidance 源码</a>（从 hook 里起一次独立模型调用再把结果喂回会话的完整写法）· <a href="https://github.com/GowayLee/cchooks" target="_blank"><code>cchooks</code></a>（Python，消掉 stdin 样板）· <a href="https://github.com/syou6162/cchook" target="_blank"><code>cchook</code></a>（YAML 配置 + dry-run）· <a href="https://github.com/johnlindquist/claude-hooks" target="_blank"><code>claude-hooks</code></a>（TypeScript 类型安全，要 Bun）· <a href="https://github.com/disler/claude-code-hooks-mastery" target="_blank"><code>claude-code-hooks-mastery</code></a>（各事件 JSON 长什么样，当字典查）· <a href="https://github.com/disler/claude-code-hooks-multi-agent-observability" target="_blank">多 agent 观测看板</a>（并发 agent 的实时流向）。</p>
+<p><strong>明确别做</strong>：用 <code>if</code> 条件当安全边界（那是权限系统的活）· 指望 <code>Edit|Write</code> 抓到 Bash 写的文件 · 用 <code>PostToolUse</code> 拦本该拦在 <code>PreToolUse</code> 的事 · 装插件不看它注册了哪些钩子 · 在 <code>SessionEnd</code> 里做超过 1.5 秒的事 · 把 <code>prompt</code>/<code>agent</code> 钩子当成确定性保障。</p>
+</div>
+<div class="glossary">
+<h3>// 术语表</h3>
+<dl>
+<dt>hook（钩子）</dt>
+<dd>在 Claude Code 生命周期的某个点上自动执行的用户自定义动作。官方定义的关键词是 deterministic control——不依赖模型「决定去做」。</dd>
+<dt>matcher（匹配器）</dt>
+<dd>决定某个事件的哪些实例触发钩子。工具事件里是工具名或正则（<code>Edit|Write</code>、<code>mcp__.*__write.*</code>），<code>SessionStart</code> 里是 <code>startup|resume|clear|compact|fork</code>，<code>FileChanged</code> 里是<strong>字面文件名</strong>而非正则。</dd>
+<dt>exit 2（阻塞退出）</dt>
+<dd>钩子以 2 退出 = 拦下这个动作，stderr 作为理由。只在可阻塞事件上成立（<code>PreToolUse</code>、<code>UserPromptSubmit</code>、<code>Stop</code> 等）。</dd>
+<dt><code>additionalContext</code></dt>
+<dd>钩子 JSON 输出里的字段，把一段文本塞进 Claude 的视野（以 system reminder 的形式）。钩子影响模型的主要通道之一。</dd>
+<dt><code>$CLAUDE_PROJECT_DIR</code> vs <code>cwd</code></dt>
+<dd>前者是会话启动的项目根，进 worktree 也不动，用来定位脚本；后者在输入 JSON 里，跟着 worktree 和 <code>cd</code> 走，用来知道现在在哪干活。</dd>
+<dt>prompt hook / agent hook</dt>
+<dd>用模型（默认 Haiku）或 subagent 来做判断的钩子类型，返回 <code>{"ok": bool, "reason": str}</code>。agent 类型官方标记为实验性。</dd>
+<dt><code>disableAllHooks</code></dt>
+<dd>settings 里的总开关。对应的管理员侧开关是 <code>allowManagedHooksOnly</code>：只跑托管钩子，禁掉用户自己的。</dd>
+</dl>
+</div>
+<div class="thinking">
+<h3>// 三个想不通的地方</h3>
+<details><summary>既然 hooks 是为了「不依赖模型判断」，为什么官方又加了 <code>prompt</code> 和 <code>agent</code> 两种要模型判断的类型？</summary><div>因为确定性真正稀缺的地方不是判断本身，是<strong>触发时机</strong>。「每次 Claude 说完话都要检查任务是否真的做完了」——检查这件事需要判断，但<strong>每次都检查</strong>不需要。hook 保证的是后者：时机必然、位置固定、不会被模型「觉得这次不用」跳过。至于那一刻是跑 <code>gofmt</code> 还是问 Haiku，是第二个问题。所以这两个类型没有背叛设计，它们把「必然发生」和「必然正确」拆开了——只是用的人容易把它们当成一回事。</div></details>
+<details><summary><code>security-guidance</code> 用 <code>Stop</code> 钩子在后台跑审查，那模型岂不是可以一直被打断到跑不完？</summary><div>官方给了闸：end-of-turn 审查每轮最多覆盖 30 个改动文件，<strong>连续最多重新提示三次</strong>就交还给你；commit/push 审查按滚动一小时封顶 20 次。这是 <code>Stop</code> 钩子这类「不许停」机制的通用难题——Claude Code 自己也在 <code>Stop</code> 钩子连续阻塞太多次时直接结束本轮并警告。<strong>凡是能让模型「继续」的钩子，都必须自带次数上限</strong>，否则你写的不是自动化，是一个自己给自己派活的永动机。</div></details>
+<details><summary>官方一边说「hook 没有沙箱，像对待 dotfiles 一样小心」，一边让 plugin、skill、subagent 都能带钩子，这不矛盾吗？</summary><div>矛盾是真的，而且它就是 Skill 30 要讲的那个问题的前哨。可以这么理解职责划分：分发机制负责<strong>让钩子可见</strong>（<code>/hooks</code> 能列出全部已配置钩子及其来源文件），审查责任留给你。官方那句「安全是共同责任」不是免责声明式的客套——在这个设计里，唯一能判断「这个钩子该不该跑」的是知道自己项目里有什么的人。所以装插件前跑一次 <code>/hooks</code>、装完再跑一次看多出了什么，是这套机制里唯一真正属于你的那道关。</div></details>
+</div>
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://code.claude.com/docs/en/hooks-guide" target="_blank">Claude Code · Automate actions with hooks</a> — 入门指南：Prettier 与 protect-files 两段可抄配置、桌面通知、<code>SessionStart</code> 配 <code>compact</code> matcher 重注入上下文、<code>CwdChanged</code> + <code>FileChanged</code> + <code>CLAUDE_ENV_FILE</code>、配置位置表、prompt/agent/http 三种类型、限制与排障（2026-09 访问）</li>
+<li><a href="https://code.claude.com/docs/en/hooks" target="_blank">Claude Code · Hooks reference</a> — 33 个事件全表与各自的 matcher 语义；<code>command</code>/<code>http</code>/<code>mcp_tool</code>/<code>prompt</code>/<code>agent</code> 五种类型的字段；退出码 0/2/其它的完整语义与可阻塞事件清单；<code>permissionDecision</code>/<code>additionalContext</code>/<code>updatedInput</code> 等输出字段；Security considerations 一节；<code>$CLAUDE_PROJECT_DIR</code> 在 worktree 下的行为（2026-09 访问）</li>
+<li><a href="https://code.claude.com/docs/en/security-guidance" target="_blank">Claude Code · Security guidance plugin</a> — 安装与卸载命令、三层审查的分工与各自上限（30 文件/轮、连续 3 次、commit 审查每小时 20 次）、<code>.claude/security-patterns.yaml</code> 自定义规则表、五个 <code>ENABLE_*</code> 开关、末尾「How the plugin integrates with Claude Code」那张 hook 注册表（2026-09 访问）</li>
+<li><a href="https://github.com/anthropics/claude-plugins-official/tree/main/plugins/security-guidance" target="_blank">anthropics/claude-plugins-official · plugins/security-guidance</a> — 官方指过来的范本源码，目录结构是 <code>.claude-plugin/</code> + <code>hooks/</code> + <code>tests/</code>；想学「从 hook 里起一次独立模型调用、再把结果喂回会话」就读这个</li>
+<li><a href="https://github.com/GowayLee/cchooks" target="_blank">GowayLee/cchooks</a> — Python SDK，<code>pip install cchooks</code>，带类型的 context 对象与 <code>exit_deny</code>/<code>exit_success</code>，覆盖 9 种事件（据 GitHub 仓库页 132★，2026-09）</li>
+<li><a href="https://github.com/syou6162/cchook" target="_blank">syou6162/cchook</a> — Go CLI，<code>go install github.com/syou6162/cchook@latest</code>，用 YAML + <code>{.tool_input.file_path}</code> 模板替掉 settings.json 的转义地狱，带 dry-run（据 GitHub 仓库页 34★，2026-09）</li>
+<li><a href="https://github.com/johnlindquist/claude-hooks" target="_blank">johnlindquist/claude-hooks</a> — TypeScript，<code>npx claude-hooks</code> 生成 <code>.claude/hooks/index.ts</code>，强类型 payload；执行依赖 Bun、CLI 需 Node 18+（据 GitHub 仓库页 393★，2026-09）</li>
+<li><a href="https://github.com/disler/claude-code-hooks-mastery" target="_blank">disler/claude-code-hooks-mastery</a> — 教学向大全，Astral <code>uv</code> 单文件 Python 脚本，README 自述覆盖 13 个事件（官方现为 33 个，读时注意版本差），含 PreCompact 备份 transcript 等花活（据 GitHub 仓库页 3.9k★，2026-09）</li>
+<li><a href="https://github.com/disler/claude-code-hooks-multi-agent-observability" target="_blank">disler/claude-code-hooks-multi-agent-observability</a> — 钩子 → HTTP POST → Bun 服务器 → WebSocket → Vue 3 客户端的实时事件看板，用于多 agent 并发时的会话追踪与过滤（据 GitHub 仓库页 1.5k★，2026-09）</li>
+<li><a href="https://github.com/pre-commit/pre-commit" target="_blank">pre-commit/pre-commit</a> — 多语言 git 钩子框架，配置文件 <code>.pre-commit-config.yaml</code>；管的是提交这一刻，补上 Claude 钩子看不见的那一半（据 GitHub 仓库页 15.6k★，2026-09）</li>
+<li><a href="subagents-vs-skills-skill26.html">本站 Skill 26 · Subagent 与 Skill 怎么分工</a> — 上期；那里说「确定性的事别派 agent 去做」，这期是它的展开</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Skill 27 · 2026-09-28</footer>
+</div>
+<script src="https://hub.cissychen.com/comments.js" defer></script>
+<script src="https://hub.cissychen.com/search.js" defer></script>
+<script src="https://hub.cissychen.com/index-button.js" defer></script>
+<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+</body></html>

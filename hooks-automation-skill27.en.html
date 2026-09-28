@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill 27 · Hooks and Deterministic Automation — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head>
+
+<body>
+<div class="container">
+<header>
+<span class="week-tag">SKILL 27 / ORCHESTRATION · DEEP-DIVE</span>
+<h1>Hooks and Deterministic Automation</h1>
+<h2>33 events × 5 hook types × 3 exit codes · Read one official plugin's hook registry · Don't pin down a judgment call</h2>
+<div class="date">2026-09-28 · BigCat</div>
+<p class="pitch">Last issue ended owing a debt: "don't send an agent to do a deterministic job." The official definition of hooks has exactly one load-bearing clause — <em>deterministic control: certain actions always happen rather than relying on the LLM to choose to run them</em>. Models forget, skip, and decide "not this time." Hooks don't. We start from a Prettier config you can paste today, take apart the hook registry of the official <code>security-guidance</code> plugin, then name six community tools.</p>
+</header>
+<div class="xref">
+<a href="subagents-vs-skills-skill26.en.html">Prerequisite → Skill 26 Subagents vs Skills (isolation vs injection)</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>There is one question behind "should this be a hook": <strong>does it require judgment?</strong> If yes, give it to the model (prompt, skill, subagent). If no — same every time, and one miss hurts — pin it to a hook. "I wrote in CLAUDE.md that formatting must run after every edit" is not automation, it is <strong>prayer</strong>: it lands in the model's context, not in the execution path. Same order as always: configs you can copy first, mechanism second, named installables third, criteria in the back half.</p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>What it takes off your plate: removing "every time" from the model's free will</h2>
+<div class="claim">Claim: a hook does not buy capability, it buys <strong>inevitability</strong>. The same rule in CLAUDE.md means "probably done"; in a hook it means "always happened." The difference lives in the 3% that got skipped.</div>
+<h3>First thing that runs: auto-format after every edit</h3>
+<p>The official guide gives this verbatim. Drop it into <code>.claude/settings.json</code> at the project root and <a href="https://prettier.io/" target="_blank">Prettier</a> runs every time Claude finishes an <code>Edit</code> or <code>Write</code>:</p>
+<pre><code><span class="tag-com">// .claude/settings.json</span>
+{
+  <span class="tag-key">"hooks"</span>: {
+    <span class="tag-key">"PostToolUse"</span>: [
+      {
+        <span class="tag-key">"matcher"</span>: <span class="tag-claude">"Edit|Write"</span>,
+        <span class="tag-key">"hooks"</span>: [
+          { <span class="tag-key">"type"</span>: <span class="tag-claude">"command"</span>,
+            <span class="tag-key">"command"</span>: <span class="tag-claude">"jq -r '.tool_input.file_path' | xargs npx prettier --write"</span> }
+        ]
+      }
+    ]
+  }
+}
+</code></pre>
+<p>Event data arrives as <strong>JSON on stdin</strong>, which is why every official Bash example reaches for <a href="https://jqlang.org/" target="_blank"><code>jq</code></a> (<code>brew install jq</code> / <code>apt-get install jq</code>). <strong>When not to write this one</strong>: if the file can also be rewritten by a <code>Bash</code> command, the <code>Edit|Write</code> matcher misses it — the docs point you at a <code>FileChanged</code> hook watching the filename instead.</p>
+<h3>Second: block what must not be touched</h3>
+<p>Save this as <code>.claude/hooks/protect-files.sh</code> (remember <code>chmod +x</code>) and register it on <code>PreToolUse</code> as <code>"$CLAUDE_PROJECT_DIR"/.claude/hooks/protect-files.sh</code>:</p>
+<pre><code>INPUT=$(cat)
+FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty')
+<span class="tag-com"># On a match, exit 2: the action is blocked, stderr goes back as feedback</span>
+case "$FILE_PATH" in
+  *.env|*/secrets/*) echo "Protected path, writes are denied" &gt;&amp;2; exit 2 ;;
+esac
+exit 0
+</code></pre>
+<h3>Third: skip the writing, install the official one</h3>
+<pre><code>/plugin install security-guidance@claude-plugins-official
+<span class="tag-com"># If the marketplace is not found, add it first:</span>
+/plugin marketplace add anthropics/claude-plugins-official
+</code></pre>
+<p><a href="https://code.claude.com/docs/en/security-guidance" target="_blank"><code>security-guidance</code></a> is the one official plugin built entirely on hooks; once installed there is nothing to invoke. <strong>What it takes off your plate</strong>: injection, unsafe deserialization, <code>dangerouslySetInnerHTML</code> and friends move from "caught at PR review" to "caught as the line is written." <strong>When not to install it</strong>: it adds a model call on every turn that changed files and a deeper agentic review on every commit (Claude Opus 4.7 by default) — that is real money; outside a git repository the last two layers silently skip; cloud sessions do not load plugins at all. If the cost bites, keep only the free layer: <code>ENABLE_CODE_SECURITY_REVIEW=0</code> turns off every model-backed review and leaves the pure string-match per-edit check.</p>
+<div class="res"><strong>Sources</strong> · <a href="https://code.claude.com/docs/en/hooks-guide" target="_blank">Claude Code · Automate actions with hooks</a> and <a href="https://code.claude.com/docs/en/security-guidance" target="_blank">Security guidance plugin</a>, accessed 2026-09</div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Mechanism: 33 events × 5 types × 3 exit codes</h2>
+<div class="claim">Claim: the entire expressive power of hooks lives in three tables. Learn them and you need no tutorial.</div>
+<h3>Events: there is more than Pre/Post ToolUse</h3>
+<p>The event table in the <a href="https://code.claude.com/docs/en/hooks" target="_blank">official reference</a> now lists <strong>33</strong> entries. The "13 lifecycle events" you see in community write-ups is stale. A few that get overlooked and shouldn't:</p>
+<div class="diagram">Event               What it is for (selected)
+────────────────────────────────────────────────────────────
+PreToolUse          Before a tool runs; can block (exit 2)
+PostToolUse         After success; cannot undo (it already happened)
+PostToolUseFailure  After failure — the hook point for retry/fallback
+UserPromptSubmit    Before your prompt reaches the model; edit or block
+SessionStart        matcher: startup|resume|clear|compact|fork
+PreCompact          Back up the transcript before compaction
+FileChanged         matcher is literal filenames (.envrc|.env), any writer
+CwdChanged          Reload env vars on directory change (CLAUDE_ENV_FILE)
+ConfigChange        Config was edited; audit it or block it
+Stop / SubagentStop End of a turn / subagent; can say "not yet"
+SessionEnd          All SessionEnd hooks share a 1.5-second budget
+</div>
+<h3>Types: five of them, and the last two are anti-deterministic</h3>
+<ul>
+<li><code>command</code> — run a shell command. Default timeout <strong>10 minutes</strong>.</li>
+<li><code>http</code> — POST to an endpoint; the same JSON comes back in the response body. <code>$VAR</code> in headers resolves only for names listed in <code>allowedEnvVars</code>.</li>
+<li><code>mcp_tool</code> — call a tool on a configured MCP server directly.</li>
+<li><code>prompt</code> — hand the event data to a model (Haiku by default) for a <code>{"ok": true/false, "reason": "..."}</code> verdict. 30-second timeout.</li>
+<li><code>agent</code> — spawn a subagent that can read files and run commands before deciding. 60-second timeout, up to 50 tool turns. <strong>Marked experimental; the docs say prefer <code>command</code> for production.</strong></li>
+</ul>
+<h3>Exit codes: only three cases</h3>
+<p><strong>0</strong> = success; stdout is parsed as JSON (and treated as plain text if it isn't, which some events inject into Claude's context). <strong>2</strong> = block, with stderr as the reason — but only on blockable events (<code>PreToolUse</code>, <code>UserPromptSubmit</code>, <code>Stop</code>, <code>SubagentStop</code>, <code>PreModelSwitch</code> and a few more); <code>SessionStart</code> and friends cannot be blocked, so exit 2 there merely shows stderr to you. <strong>Anything else</strong> = non-blocking error: the action proceeds and a <code>hook error</code> notice appears in the transcript.</p>
+<h3>Where the config lives decides who is governed</h3>
+<div class="diagram">Location                              Scope                 Shareable
+──────────────────────────────────────────────────────────────────────
+~/.claude/settings.json               All your projects     No
+.claude/settings.json                 One project           Yes, commit it
+.claude/settings.local.json           One project           No (gitignored)
+managed policy settings               Whole organization    Admin-controlled
+a plugin's hooks/hooks.json           While plugin enabled  Ships with plugin
+skill frontmatter                     Rest of session       In the skill file
+subagent frontmatter                  While that agent runs In the agent file
+</div>
+<p><code>/hooks</code> browses every configured hook grouped by event — but it is <strong>read-only</strong>; adding and removing means editing the JSON. The global off switch is <code>"disableAllHooks": true</code>, and administrators have <code>allowManagedHooksOnly</code>, which disables your own hooks and runs only the managed ones.</p>
+<h3>Copy a real registry</h3>
+<p><code>security-guidance</code> splits itself into five registrations. This table is worth memorizing as a template (<a href="https://github.com/anthropics/claude-plugins-official/tree/main/plugins/security-guidance" target="_blank">the source is on GitHub</a>: <code>.claude-plugin/</code> + <code>hooks/</code> + <code>tests/</code>):</p>
+<div class="diagram">SessionStart                          → bootstrap the Python environment
+UserPromptSubmit                      → capture the working-tree baseline
+PostToolUse on Edit/Write/NotebookEdit → pattern match, zero model calls
+Stop                                  → background review of the turn's diff
+PostToolUse on Bash (git commit/push)  → deeper agentic review
+</div>
+<p>Three things to steal outright: <strong>put the expensive layer last</strong> (free string matching per edit, paid model review on Stop and commit); <strong>baseline first, verdict later</strong> (<code>UserPromptSubmit</code> snapshots, <code>Stop</code> diffs); and <strong>the reviewer is not the instance that wrote the code</strong> (a separate call with a fresh context).</p>
+<div class="fail"><strong><code>$CLAUDE_PROJECT_DIR</code> does not follow you into a worktree.</strong> It always points at the project root where the session started, so <code>"$CLAUDE_PROJECT_DIR"/.claude/hooks/x.sh</code> keeps running the script in the main checkout — which is <strong>correct</strong>. To learn where Claude is actually working, read the <code>cwd</code> field in the hook's input JSON; that one does follow worktrees and <code>cd</code>.</div>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Real usage and limits: six things you can install or read</h2>
+<div class="claim">Claim: the annoying part of writing hooks was never the logic, it is re-writing stdin parsing, exit-code semantics and event dispatch in every script. Each of these kills one slab of that boilerplate.</div>
+<h3>① <code>GowayLee/cchooks</code> · Python SDK (132★)</h3>
+<pre><code>pip install cchooks   <span class="tag-com"># or: uv add cchooks</span>
+</code></pre>
+<pre><code>from cchooks import create_context, PreToolUseContext
+c = create_context()
+assert isinstance(c, PreToolUseContext)
+if c.tool_name == "Write" and ".env" in c.tool_input.get("file_path", ""):
+    c.output.exit_deny("Nope! .env files are protected")
+else:
+    c.output.exit_success()
+</code></pre>
+<p><strong>Kills</strong>: hand-rolled <code>json.load(sys.stdin)</code> and memorized exit-code semantics; each event becomes a typed context object. Covers 9 events. <strong>When not to install</strong>: if your hook is a one-liner <code>jq | xargs</code>, a dependency is not worth it — and 9 events is far short of the current 33, so anything exotic goes back to raw parsing. (Per the GitHub repo page, 2026-09.)</p>
+<h3>② <code>syou6162/cchook</code> · YAML instead of JSON (34★)</h3>
+<pre><code>go install github.com/syou6162/cchook@latest
+</code></pre>
+<pre><code>PostToolUse:
+  - matcher: "Write|Edit"
+    conditions:
+      - type: file_extension
+        value: ".go"
+    actions:
+      - type: command
+        command: "gofmt -w {.tool_input.file_path}"
+</code></pre>
+<p><strong>Kills</strong>: the escaping hell inside settings.json; conditions (by extension, by pattern) become declarative, and it ships a dry-run mode. <strong>When not to install</strong>: the moment a team shares config, a non-official format is one more thing newcomers cannot read — and the star count says it is still niche. (Per the GitHub repo page, 2026-09.)</p>
+<h3>③ <code>johnlindquist/claude-hooks</code> · TypeScript (393★)</h3>
+<pre><code>npx claude-hooks   <span class="tag-com"># generates .claude/hooks/index.ts; execution needs Bun</span>
+</code></pre>
+<p><strong>Kills</strong>: guessing at payload shapes — you get typed payloads with autocomplete, all events dispatched from one <code>index.ts</code>. <strong>When not to install</strong>: it binds your runtime to Bun, so on CI or a teammate's machine without Bun the hook fails silently — and a failing hook is <strong>non-blocking by default</strong>, so without debug logging you never find out. (Per the GitHub repo page, 2026-09.)</p>
+<h3>④ <code>disler/claude-code-hooks-mastery</code> · the teaching repo (3.9k★)</h3>
+<p><a href="https://github.com/disler/claude-code-hooks-mastery" target="_blank">This repo</a> implements every event of its day as an Astral <code>uv</code> single-file Python script, including transcript backups before PreCompact and intercepting subagent completion. <strong>Kills</strong>: the question "what does this event's JSON actually look like" — reading it beats grepping the docs. <strong>When not to install</strong>: it is a <strong>reference, not a product</strong>; the README claims 13 events while the official reference is now at 33, and copying the whole <code>.claude</code> directory drags in its output styles and status line too. (Per the GitHub repo page, 2026-09.)</p>
+<h3>⑤ <code>disler/claude-code-hooks-multi-agent-observability</code> · a dashboard (1.5k★)</h3>
+<p><a href="https://github.com/disler/claude-code-hooks-multi-agent-observability" target="_blank">It</a> POSTs every event over HTTP to a Bun server that broadcasts over WebSocket to a Vue 3 client, so several concurrent agents become visible in real time. <strong>Kills</strong>: the blindness of "five agents are running and one is stuck." <strong>When not to install</strong>: it needs uv, Bun and a long-running server — overkill for one person in one session, and the official <code>http</code> hook type now POSTs to an endpoint natively, so wiring your own log service may be lighter than adopting this stack. (Per the GitHub repo page, 2026-09.)</p>
+<h3>⑥ <code>pre-commit/pre-commit</code> · the half that isn't inside Claude (15.6k★)</h3>
+<p><a href="https://github.com/pre-commit/pre-commit" target="_blank">pre-commit</a> (<code>pip install pre-commit</code> → <code>pre-commit install</code>, configured in <code>.pre-commit-config.yaml</code>) governs the moment of committing. It is not a substitute for Claude's hooks, it is the next leg of the relay: Claude hooks only cover what Claude does, and commits you type in your own shell are invisible to them (the docs say even a <code>!</code> shell escape does not count). <strong>When not to install</strong>: solo work where every change goes through Claude — then you are running the same linters twice.</p>
+<h3>Three criteria for choosing among the above</h3>
+<ol>
+<li><strong>Does it need judgment?</strong> No → a <code>command</code> hook. Yes, but the event data is enough → <code>prompt</code>. Only by reading the code → <code>agent</code> (knowing it is experimental).</li>
+<li><strong>What does one miss cost?</strong> Merely ugly (unformatted) → fix it in <code>PostToolUse</code>. An incident (a committed secret) → block it in <code>PreToolUse</code> with <code>exit 2</code>, because <strong><code>PostToolUse</code> cannot undo anything</strong>.</li>
+<li><strong>Governing Claude or governing everyone?</strong> Claude only → Claude hooks. Every commit → pre-commit or CI. Both → write both, but have the Claude side call the same script; never maintain two copies of one rule.</li>
+</ol>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Costs and alternatives: hooks throw nondeterminism out the front door, then let it back in</h2>
+<div class="claim">Claim: the biggest risk with hooks is not writing one wrong, it is <strong>believing one is running</strong>. They are unsandboxed, non-blocking by default, and announce their failures only in the debug log.</div>
+<h3>Five line items</h3>
+<ul>
+<li><strong>No sandbox.</strong> Official wording: <em>A hook can read files, make network requests, modify your environment, and run arbitrary commands.</em> The advice is to treat them like shell aliases and dotfiles — enable only what you understand. The dangerous part is that hooks <strong>hide well</strong>: a plugin's <code>hooks/hooks.json</code>, skill frontmatter and subagent frontmatter all carry them, so installing a plugin means accepting everything it registers.</li>
+<li><strong>Failure is silent.</strong> Any exit code other than 0 or 2 is a non-blocking error and the action completes anyway. To see the whole picture you need <code>claude --debug</code> or <code>/debug</code> mid-session.</li>
+<li><strong><code>if</code> is best-effort, not a security boundary.</strong> A filter like <code>if: "Bash(rm *)"</code> runs the hook <strong>anyway</strong> when Claude Code cannot determine which commands the input runs. The docs say it plainly: hard allow/deny belongs to the <a href="https://code.claude.com/docs/en/permissions" target="_blank">permission system</a>, not to a hook.</li>
+<li><strong>Matcher coverage is an illusion.</strong> <code>Edit|Write</code> never sees a file written by Bash. For real coverage the docs give three routes: a <code>Stop</code> hook scanning <code>git status --porcelain</code> once per turn; also matching <code>Bash|PowerShell</code>; or a <code>FileChanged</code> hook on the file itself.</li>
+<li><strong>Time budgets.</strong> All <code>SessionEnd</code> hooks share <strong>1.5 seconds</strong> (raised to at most 60 only if you set a longer explicit <code>timeout</code>). Read that before planning cleanup or log uploads there.</li>
+</ul>
+<div class="fail"><strong>The most ironic cost</strong>: the <code>prompt</code> and <code>agent</code> hook types invite back exactly the nondeterminism you just evicted. They are useful — judgment calls should be judged by a model — but be clear-eyed: a <code>Stop</code> hook where Haiku returns <code>ok: true/false</code> is <strong>not a deterministic guarantee</strong>, it is one more model question asked somewhere else. If you need "this always happens," only <code>command</code> delivers it.</div>
+<h3>What to do instead of a hook</h3>
+<ol>
+<li><strong>The permission system.</strong> When the rule is "must never touch this" rather than "log it if touched," allow/deny rules are the hard boundary.</li>
+<li><strong>pre-commit or CI.</strong> When the thing to govern is everyone's commits rather than Claude's edits, the hook is at the wrong layer.</li>
+<li><strong>CLAUDE.md or a skill.</strong> When the rule needs understanding and give ("prefer tests for new code"), pinning it down turns it into noise — an alert that always fires is no alert.</li>
+<li><strong>Nothing.</strong> If it happens once a month, writing the hook costs more than a decade of doing it by hand.</li>
+</ol>
+</div>
+<div class="combo">
+<h3>// ONE-PAGE SHOPPING CARD</h3>
+<p><strong>Install these three first</strong>: ① <code>/plugin install security-guidance@claude-plugins-official</code> — the one official plugin built entirely on hooks, zero invocation needed; if the cost bites, <code>ENABLE_CODE_SECURITY_REVIEW=0</code> keeps the free layer. ② the <strong>Prettier <code>PostToolUse</code> config</strong> above (plus <code>jq</code>) — five lines of JSON that can go into <code>.claude/settings.json</code> today. ③ <strong><code>pre-commit</code></strong> (<code>.pre-commit-config.yaml</code>) — covers the half Claude's hooks cannot see: the commits you type yourself.</p>
+<p><strong>Read next, as needed</strong>: <a href="https://code.claude.com/docs/en/hooks" target="_blank">Hooks reference</a> (all 33 events, five type schemas, exit-code semantics) · <a href="https://github.com/anthropics/claude-plugins-official/tree/main/plugins/security-guidance" target="_blank">security-guidance source</a> (how to launch a separate model call from a hook and feed the result back) · <a href="https://github.com/GowayLee/cchooks" target="_blank"><code>cchooks</code></a> (Python, kills stdin boilerplate) · <a href="https://github.com/syou6162/cchook" target="_blank"><code>cchook</code></a> (YAML config plus dry-run) · <a href="https://github.com/johnlindquist/claude-hooks" target="_blank"><code>claude-hooks</code></a> (typed TypeScript, needs Bun) · <a href="https://github.com/disler/claude-code-hooks-mastery" target="_blank"><code>claude-code-hooks-mastery</code></a> (what each event's JSON looks like, used as a dictionary) · <a href="https://github.com/disler/claude-code-hooks-multi-agent-observability" target="_blank">multi-agent observability dashboard</a> (live flow across concurrent agents).</p>
+<p><strong>Explicitly don't</strong>: use an <code>if</code> condition as a security boundary (that is the permission system's job) · expect <code>Edit|Write</code> to catch files written by Bash · use <code>PostToolUse</code> to stop what belonged in <code>PreToolUse</code> · install a plugin without checking which hooks it registers · do more than 1.5 seconds of work in <code>SessionEnd</code> · treat <code>prompt</code>/<code>agent</code> hooks as a determinism guarantee.</p>
+</div>
+<div class="glossary">
+<h3>// GLOSSARY</h3>
+<dl>
+<dt>hook</dt>
+<dd>A user-defined action that runs automatically at a point in Claude Code's lifecycle. The keyword in the official definition is deterministic control — it does not depend on the model choosing to act.</dd>
+<dt>matcher</dt>
+<dd>Decides which instances of an event fire the hook. On tool events it is a tool name or regex (<code>Edit|Write</code>, <code>mcp__.*__write.*</code>); on <code>SessionStart</code> it is <code>startup|resume|clear|compact|fork</code>; on <code>FileChanged</code> it is <strong>literal filenames</strong>, not a regex.</dd>
+<dt>exit 2</dt>
+<dd>Exiting with code 2 blocks the action, with stderr as the reason. Only meaningful on blockable events (<code>PreToolUse</code>, <code>UserPromptSubmit</code>, <code>Stop</code> and others).</dd>
+<dt><code>additionalContext</code></dt>
+<dd>A field in a hook's JSON output that pushes text into Claude's view as a system reminder. One of the main channels by which a hook influences the model.</dd>
+<dt><code>$CLAUDE_PROJECT_DIR</code> vs <code>cwd</code></dt>
+<dd>The former is the project root where the session started and never moves, even inside a worktree — use it to locate scripts. The latter arrives in the input JSON, follows worktrees and <code>cd</code> — use it to know where work is happening.</dd>
+<dt>prompt hook / agent hook</dt>
+<dd>Hook types that ask a model (Haiku by default) or a subagent for a verdict, returning <code>{"ok": bool, "reason": str}</code>. The agent type is marked experimental.</dd>
+<dt><code>disableAllHooks</code></dt>
+<dd>The master off switch in settings. Its administrator-side counterpart is <code>allowManagedHooksOnly</code>: run only managed hooks and disable the user's own.</dd>
+</dl>
+</div>
+<div class="thinking">
+<h3>// THREE THINGS THAT DON'T ADD UP</h3>
+<details><summary>If hooks exist so we stop depending on model judgment, why did the docs add <code>prompt</code> and <code>agent</code> types that depend on it?</summary><div>Because the scarce determinism was never in the judgment, it was in the <strong>trigger</strong>. "Check whether the tasks are really finished every time Claude stops talking" — the check needs judgment, but <strong>checking every time</strong> does not. The hook guarantees the second part: fixed moment, fixed position, never skipped because the model felt it was unnecessary. Whether that moment runs <code>gofmt</code> or asks Haiku is a separate question. So these two types are not a betrayal of the design; they split "always happens" from "always correct" — it is the users who tend to read them as one thing.</div></details>
+<details><summary><code>security-guidance</code> runs its review from a <code>Stop</code> hook. Can't that keep interrupting the model forever?</summary><div>There are governors: the end-of-turn review covers at most 30 changed files and re-prompts <strong>at most three times in a row</strong> before yielding back to you; commit and push reviews are capped at 20 per rolling hour. This is the generic hazard of any "not yet" mechanism — Claude Code itself ends the turn with a warning when a <code>Stop</code> hook blocks too many times consecutively. <strong>Any hook that can tell the model to continue must carry its own iteration cap</strong>, or what you built is not automation but a perpetual motion machine assigning itself work.</div></details>
+<details><summary>The docs say hooks are unsandboxed and should be treated like dotfiles, yet plugins, skills and subagents can all ship them. Isn't that contradictory?</summary><div>The contradiction is real, and it is the prelude to what Skill 30 is about. Read the division of labor this way: the distribution mechanism is responsible for making hooks <strong>visible</strong> (<code>/hooks</code> lists every configured hook with its source file), and the reviewing is left to you. "Security is a shared responsibility" is not boilerplate disclaiming here — in this design the only party who can judge whether a given hook should run is the one who knows what is in their own project. Which makes running <code>/hooks</code> before installing a plugin, and again afterwards to see what appeared, the one gate in this system that genuinely belongs to you.</div></details>
+</div>
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://code.claude.com/docs/en/hooks-guide" target="_blank">Claude Code · Automate actions with hooks</a> — the getting-started guide: the Prettier and protect-files configs quoted above, desktop notifications, <code>SessionStart</code> with a <code>compact</code> matcher to re-inject context, <code>CwdChanged</code> + <code>FileChanged</code> + <code>CLAUDE_ENV_FILE</code>, the config-location table, the prompt/agent/http types, limitations and troubleshooting (accessed 2026-09)</li>
+<li><a href="https://code.claude.com/docs/en/hooks" target="_blank">Claude Code · Hooks reference</a> — all 33 events and their matcher semantics; field schemas for <code>command</code>/<code>http</code>/<code>mcp_tool</code>/<code>prompt</code>/<code>agent</code>; full exit-code semantics for 0/2/other plus the list of blockable events; output fields such as <code>permissionDecision</code>, <code>additionalContext</code> and <code>updatedInput</code>; the Security considerations section; <code>$CLAUDE_PROJECT_DIR</code> behavior under worktrees (accessed 2026-09)</li>
+<li><a href="https://code.claude.com/docs/en/security-guidance" target="_blank">Claude Code · Security guidance plugin</a> — install and uninstall commands, the three review layers with their caps (30 files per turn, 3 consecutive re-prompts, 20 commit reviews per rolling hour), the <code>.claude/security-patterns.yaml</code> rule schema, the five <code>ENABLE_*</code> switches, and the hook registry table under "How the plugin integrates with Claude Code" (accessed 2026-09)</li>
+<li><a href="https://github.com/anthropics/claude-plugins-official/tree/main/plugins/security-guidance" target="_blank">anthropics/claude-plugins-official · plugins/security-guidance</a> — the worked example the docs point at; the directory is <code>.claude-plugin/</code> + <code>hooks/</code> + <code>tests/</code>. Read it to see a hook launch an independent model call and feed the result back into the session</li>
+<li><a href="https://github.com/GowayLee/cchooks" target="_blank">GowayLee/cchooks</a> — Python SDK, <code>pip install cchooks</code>, typed context objects with <code>exit_deny</code>/<code>exit_success</code>, covering 9 events (132★ per the GitHub repo page, 2026-09)</li>
+<li><a href="https://github.com/syou6162/cchook" target="_blank">syou6162/cchook</a> — Go CLI, <code>go install github.com/syou6162/cchook@latest</code>, replaces settings.json escaping with YAML plus <code>{.tool_input.file_path}</code> templates, ships a dry-run mode (34★ per the GitHub repo page, 2026-09)</li>
+<li><a href="https://github.com/johnlindquist/claude-hooks" target="_blank">johnlindquist/claude-hooks</a> — TypeScript, <code>npx claude-hooks</code> generates <code>.claude/hooks/index.ts</code>, strongly typed payloads; execution needs Bun and the CLI needs Node 18+ (393★ per the GitHub repo page, 2026-09)</li>
+<li><a href="https://github.com/disler/claude-code-hooks-mastery" target="_blank">disler/claude-code-hooks-mastery</a> — a teaching collection of Astral <code>uv</code> single-file Python scripts; the README claims 13 events (the official reference is now 33, so mind the version gap) and includes tricks like backing up the transcript before PreCompact (3.9k★ per the GitHub repo page, 2026-09)</li>
+<li><a href="https://github.com/disler/claude-code-hooks-multi-agent-observability" target="_blank">disler/claude-code-hooks-multi-agent-observability</a> — hooks → HTTP POST → Bun server → WebSocket → Vue 3 client, a live event dashboard for session tracking and filtering across concurrent agents (1.5k★ per the GitHub repo page, 2026-09)</li>
+<li><a href="https://github.com/pre-commit/pre-commit" target="_blank">pre-commit/pre-commit</a> — a multi-language framework for git hooks, configured in <code>.pre-commit-config.yaml</code>; it governs the moment of committing and covers the half Claude's hooks cannot see (15.6k★ per the GitHub repo page, 2026-09)</li>
+<li><a href="subagents-vs-skills-skill26.en.html">This site · Skill 26 · Subagents vs Skills</a> — the previous issue, which ended on "don't send an agent to do a deterministic job"; this one is that sentence expanded</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Skill 27 · 2026-09-28</footer>
+</div>
+<script src="https://hub.cissychen.com/comments.js" defer></script>
+<script src="https://hub.cissychen.com/search.js" defer></script>
+<script src="https://hub.cissychen.com/index-button.js" defer></script>
+<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+</body></html>
