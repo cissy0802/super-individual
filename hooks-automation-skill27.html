@@ -60,13 +60,12 @@ pre code{color:#d8e8e8}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
 </style></head>
-
 <body>
 <div class="container">
 <header>
 <span class="week-tag">SKILL 27 / ORCHESTRATION · DEEP-DIVE</span>
-<h1>Hooks 与确定性自动化</h1>
-<h2>33 个事件 × 5 种 hook 类型 × 3 档退出码 · 抄一条官方插件的注册表 · 别把判断题钉成钩子</h2>
+<h1 data-tts="21016f904703899a">Hooks 与确定性自动化</h1>
+<h2 data-tts="360f895d70fbdd21">33 个事件 × 5 种 hook 类型 × 3 档退出码 · 抄一条官方插件的注册表 · 别把判断题钉成钩子</h2>
 <div class="date">2026-09-28 · BigCat</div>
 <p class="pitch">上期结尾那句「确定性的事别派 agent 去做」欠了一笔账。官方给 hooks 的定义只有一句要紧：<em>deterministic control: certain actions always happen rather than relying on the LLM to choose to run them</em>。模型会忘、会跳过、会「觉得这次不用」；钩子不会。这期从一条能跑的 Prettier 配置起手，拆到官方 <code>security-guidance</code> 插件的 hook 注册表，再点名六个社区工具。</p>
 </header>
@@ -74,15 +73,15 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <a href="subagents-vs-skills-skill26.html">前置 → Skill 26 Subagent 与 Skill 怎么分工（隔离 vs 注入两条路）</a>
 </div>
 <div class="intro">
-<h3>// WHY THIS MATTERS</h3>
+<h3 data-tts="c3a17fc51ad1f3ee">// WHY THIS MATTERS</h3>
 <p>判断「该不该写成 hook」只有一个问题：<strong>这件事需要判断吗</strong>。需要判断 → 交给模型（prompt / skill / subagent）。不需要判断、每次都一样、漏一次就出事 → 钉成钩子。「我在 CLAUDE.md 里写了『改完代码一定要跑 format』」不是自动化，是<strong>祈祷</strong>——它进的是模型的 context，不是执行路径。本期顺序照旧：先给能抄的配置，再拆机制，再点名可装可读的条目，判据放后半程。</p>
 </div>
 <!-- ============ 1 ============ -->
 <div class="section">
 <span class="num">// 01</span>
-<h2>它替你干掉什么：把「每次都要做」从模型的自由意志里拿走</h2>
+<h2 data-tts="dddf93406a2724f1">它替你干掉什么：把「每次都要做」从模型的自由意志里拿走</h2>
 <div class="claim">论断：hook 买的不是能力，是<strong>必然性</strong>。同一件事写进 CLAUDE.md 是「大概率会做」，写进 hook 是「一定发生」——差别在漏掉的那百分之三上。</div>
-<h3>第一条立刻能跑：改完自动 format</h3>
+<h3 data-tts="852fe07cc1b4c35e">第一条立刻能跑：改完自动 format</h3>
 <p>官方指南里逐字给了这段，放进项目根的 <code>.claude/settings.json</code>，Claude 每次用 <code>Edit</code> / <code>Write</code> 改完文件就自动跑 <a href="https://prettier.io/" target="_blank">Prettier</a>：</p>
 <pre><code><span class="tag-com">// .claude/settings.json</span>
 {
@@ -100,7 +99,7 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 }
 </code></pre>
 <p>事件数据是<strong>一段 JSON 打到 stdin</strong>，所以官方所有 Bash 示例都用 <a href="https://jqlang.org/" target="_blank"><code>jq</code></a> 取字段（<code>brew install jq</code> / <code>apt-get install jq</code>）。<strong>什么时候别写这条</strong>：如果文件也可能被 <code>Bash</code> 命令改写，<code>Edit|Write</code> 这个 matcher 就漏了——官方让你改用 <code>FileChanged</code> 钩子盯具体文件名。</p>
-<h3>第二条：把不该动的文件挡住</h3>
+<h3 data-tts="b4e8a19630df7c26">第二条：把不该动的文件挡住</h3>
 <p>写进 <code>.claude/hooks/protect-files.sh</code>（记得 <code>chmod +x</code>），在 <code>PreToolUse</code> 上注册成 <code>"$CLAUDE_PROJECT_DIR"/.claude/hooks/protect-files.sh</code>：</p>
 <pre><code>INPUT=$(cat)
 FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty')
@@ -110,7 +109,7 @@ case "$FILE_PATH" in
 esac
 exit 0
 </code></pre>
-<h3>第三条：不想自己写，装官方那个</h3>
+<h3 data-tts="0d509a4b5c9b568e">第三条：不想自己写，装官方那个</h3>
 <pre><code>/plugin install security-guidance@claude-plugins-official
 <span class="tag-com"># 提示 marketplace 找不到就先加：</span>
 /plugin marketplace add anthropics/claude-plugins-official
@@ -121,9 +120,9 @@ exit 0
 <!-- ============ 2 ============ -->
 <div class="section">
 <span class="num">// 02</span>
-<h2>机制：33 个事件 × 5 种类型 × 3 档退出码</h2>
+<h2 data-tts="7e09fa8d35a8f301">机制：33 个事件 × 5 种类型 × 3 档退出码</h2>
 <div class="claim">论断：hook 的全部表达力就在这三张表里。记住它们，你不需要背任何教程。</div>
-<h3>事件：不只是 Pre/Post ToolUse</h3>
+<h3 data-tts="356b49cf387058d9">事件：不只是 Pre/Post ToolUse</h3>
 <p><a href="https://code.claude.com/docs/en/hooks" target="_blank">官方 reference</a> 的事件表现在列了 <strong>33 个</strong>。社区文章里常见的「13 个生命周期事件」是旧的。几个容易被忽略但很好用的：</p>
 <div class="diagram">事件                作用（选摘）
 ────────────────────────────────────────────────────────────
@@ -139,7 +138,7 @@ ConfigChange       配置被改，可审计可拦
 Stop / SubagentStop 一轮/子代理结束，可以「不许停」
 SessionEnd         全部 SessionEnd 钩子共享 1.5 秒预算
 </div>
-<h3>类型：5 种，后两种是「反确定性」的</h3>
+<h3 data-tts="41bb3b8c33ec17ed">类型：5 种，后两种是「反确定性」的</h3>
 <ul>
 <li><code>command</code> — 跑 shell 命令。默认超时 <strong>10 分钟</strong>。</li>
 <li><code>http</code> — POST 到一个 endpoint，body 里返回同样的 JSON。header 里的 <code>$VAR</code> 只解析 <code>allowedEnvVars</code> 列出的那些。</li>
@@ -147,9 +146,9 @@ SessionEnd         全部 SessionEnd 钩子共享 1.5 秒预算
 <li><code>prompt</code> — 把事件数据丢给一个模型（默认 Haiku）判 <code>{"ok": true/false, "reason": "..."}</code>。超时 30 秒。</li>
 <li><code>agent</code> — 起一个 subagent，能读文件、跑命令再判。超时 60 秒、最多 50 轮工具调用。<strong>官方标记为实验性，生产工作流建议用 <code>command</code></strong>。</li>
 </ul>
-<h3>退出码：只有三档</h3>
+<h3 data-tts="6082496a08e32e56">退出码：只有三档</h3>
 <p><strong>0</strong> = 成功，stdout 按 JSON 解析（解析不了就当纯文本，部分事件会注入 Claude 上下文）。<strong>2</strong> = 拦截，stderr 是拦截理由；能被拦的事件是有限几个（<code>PreToolUse</code>、<code>UserPromptSubmit</code>、<code>Stop</code>、<code>SubagentStop</code>、<code>PreModelSwitch</code> 等），<code>SessionStart</code> 这类拦不住，exit 2 只是把 stderr 显示给你。<strong>其余</strong> = 非阻塞错误，动作照常进行，transcript 里出现一条 <code>hook error</code>。</p>
-<h3>配置放哪，决定了谁受管</h3>
+<h3 data-tts="21ed1a6ff7740c3c">配置放哪，决定了谁受管</h3>
 <div class="diagram">位置                                   作用域            能否共享
 ──────────────────────────────────────────────────────────────────
 ~/.claude/settings.json               你的全部项目       否
@@ -161,7 +160,7 @@ skill frontmatter                     skill 被调用之后   写在 skill 文�
 subagent frontmatter                  该 subagent 运行时 写在 agent 文件里
 </div>
 <p><code>/hooks</code> 命令可以按事件浏览全部已配置钩子，但它<strong>只读</strong>——增删改要直接编辑 JSON。全局关闭是 <code>"disableAllHooks": true</code>；管理员那边还有个 <code>allowManagedHooksOnly</code>，能把你自己的钩子全部禁掉只留托管的。</p>
-<h3>抄一份真实的注册表</h3>
+<h3 data-tts="0d1cd170e2861ae4">抄一份真实的注册表</h3>
 <p><code>security-guidance</code> 把自己拆成五条注册，这张表值得当模板背下来（<a href="https://github.com/anthropics/claude-plugins-official/tree/main/plugins/security-guidance" target="_blank">源码在 GitHub 上</a>，目录里就是 <code>.claude-plugin/</code> + <code>hooks/</code> + <code>tests/</code>）：</p>
 <div class="diagram">SessionStart                          → 起 Python 虚拟环境（准备工作）
 UserPromptSubmit                      → 记下工作树基线（为了 diff）
@@ -175,9 +174,9 @@ PostToolUse on Bash（限 git commit/push）→ 更深的 agentic 审查
 <!-- ============ 3 ============ -->
 <div class="section">
 <span class="num">// 03</span>
-<h2>真实用法与边界：六个可装可读的条目</h2>
+<h2 data-tts="d1d12231f2507aba">真实用法与边界：六个可装可读的条目</h2>
 <div class="claim">论断：写 hook 最烦的从来不是逻辑，是每个脚本都要重写一遍 stdin 解析、退出码和事件分发。下面这几个各自消掉了一段样板。</div>
-<h3>① <code>GowayLee/cchooks</code> · Python SDK（132★）</h3>
+<h3 data-tts="f7a994c9b33fdce9">① <code>GowayLee/cchooks</code> · Python SDK（132★）</h3>
 <pre><code>pip install cchooks   <span class="tag-com"># 或 uv add cchooks</span>
 </code></pre>
 <pre><code>from cchooks import create_context, PreToolUseContext
@@ -189,7 +188,7 @@ else:
     c.output.exit_success()
 </code></pre>
 <p><strong>替你干掉</strong>：手写 <code>json.load(sys.stdin)</code> 和记退出码语义，事件类型是带类型的 context 对象。覆盖 9 种事件。<strong>什么时候别装</strong>：你的钩子就一行 <code>jq | xargs</code>——为它引一个包不划算；它那 9 种事件也远少于官方现在的 33 种，冷门事件得自己裸写。（据 GitHub 仓库页，2026-09）</p>
-<h3>② <code>syou6162/cchook</code> · 把 JSON 换成 YAML（34★）</h3>
+<h3 data-tts="a78d1560b11214b2">② <code>syou6162/cchook</code> · 把 JSON 换成 YAML（34★）</h3>
 <pre><code>go install github.com/syou6162/cchook@latest
 </code></pre>
 <pre><code>PostToolUse:
@@ -202,17 +201,17 @@ else:
         command: "gofmt -w {.tool_input.file_path}"
 </code></pre>
 <p><strong>替你干掉</strong>：settings.json 里那坨转义地狱，条件（按扩展名、按模式）用声明式写，带 dry-run。<strong>什么时候别装</strong>：团队要共享配置时，多一层非官方格式就多一层「新人看不懂」；星数也说明它还是个小众工具。（据 GitHub 仓库页，2026-09）</p>
-<h3>③ <code>johnlindquist/claude-hooks</code> · TypeScript（393★）</h3>
+<h3 data-tts="bd8955c5121613c3">③ <code>johnlindquist/claude-hooks</code> · TypeScript（393★）</h3>
 <pre><code>npx claude-hooks   <span class="tag-com"># 生成 .claude/hooks/index.ts，执行需要 Bun</span>
 </code></pre>
 <p><strong>替你干掉</strong>：payload 的类型提示与自动补全，全部事件写在一个 <code>index.ts</code> 里分发。<strong>什么时候别装</strong>：它把运行时依赖绑到了 Bun——CI 或队友机器上没有 Bun，钩子就静默失败（而 hook 失败默认<strong>不阻塞</strong>，你不开 debug 根本不知道）。（据 GitHub 仓库页，2026-09）</p>
-<h3>④ <code>disler/claude-code-hooks-mastery</code> · 教学仓（3.9k★）</h3>
+<h3 data-tts="0d50228068d980c5">④ <code>disler/claude-code-hooks-mastery</code> · 教学仓（3.9k★）</h3>
 <p><a href="https://github.com/disler/claude-code-hooks-mastery" target="_blank">这个仓</a>用 Astral <code>uv</code> 的单文件 Python 脚本把当时的每个事件都实现了一遍，含 PreCompact 前备份 transcript、拦截 subagent 完成这类花活。<strong>替你干掉</strong>：「这个事件的 JSON 长什么样」——照着读比翻文档快。<strong>什么时候别装</strong>：它是<strong>范本不是产品</strong>，README 自述覆盖 13 个事件，而官方 reference 现在是 33 个；整个 <code>.claude</code> 目录拷进你的项目会连它的 output styles、status line 一起带进来。（据 GitHub 仓库页，2026-09）</p>
-<h3>⑤ <code>disler/claude-code-hooks-multi-agent-observability</code> · 看板（1.5k★）</h3>
+<h3 data-tts="013e5ff9c8111831">⑤ <code>disler/claude-code-hooks-multi-agent-observability</code> · 看板（1.5k★）</h3>
 <p><a href="https://github.com/disler/claude-code-hooks-multi-agent-observability" target="_blank">它</a>把所有事件通过 HTTP POST 打到一个 Bun 服务器，再 WebSocket 推到 Vue 客户端，多个并发 agent 的流向实时可见。<strong>替你干掉</strong>：「五个 agent 同时在跑，谁卡住了」这种睁眼瞎。<strong>什么时候别装</strong>：要 uv + Bun + 一个常驻服务器，单人单会话纯属过度工程；官方 <code>http</code> 类型钩子现在原生支持 POST 到 endpoint，自己接个日志服务可能比搬这套轻。（据 GitHub 仓库页，2026-09）</p>
-<h3>⑥ <code>pre-commit/pre-commit</code> · 不在 Claude 里的那一半（15.6k★）</h3>
+<h3 data-tts="b7c4728fdc645982">⑥ <code>pre-commit/pre-commit</code> · 不在 Claude 里的那一半（15.6k★）</h3>
 <p><a href="https://github.com/pre-commit/pre-commit" target="_blank">pre-commit</a>（<code>pip install pre-commit</code> → <code>pre-commit install</code>，配置写在 <code>.pre-commit-config.yaml</code>）管的是 git 提交这一刻，和 Claude 的钩子<strong>不是替代关系是接力关系</strong>：Claude hook 只覆盖 Claude 干的事，你自己在终端敲的 commit 它一概看不见（官方明说 <code>!</code> shell escape 里的 commit 也不算）。<strong>什么时候别装</strong>：只有你一个人、且所有改动都过 Claude——那多一层会重复跑同样的 linter。</p>
-<h3>三条判据，用来在上面这些之间取舍</h3>
+<h3 data-tts="073f8a49762c5448">三条判据，用来在上面这些之间取舍</h3>
 <ol>
 <li><strong>这件事需要判断吗？</strong>不需要 → <code>command</code> 钩子。需要但只看事件数据就能判 → <code>prompt</code>。要读代码才能判 → <code>agent</code>（且知道它是实验性的）。</li>
 <li><strong>漏一次的代价是什么？</strong>代价只是难看（没格式化）→ <code>PostToolUse</code> 补。代价是出事（写了 secret）→ <code>PreToolUse</code> + <code>exit 2</code> 拦在前面，因为 <strong><code>PostToolUse</code> 撤不回来</strong>。</li>
@@ -222,9 +221,9 @@ else:
 <!-- ============ 4 ============ -->
 <div class="section">
 <span class="num">// 04</span>
-<h2>代价与替代品：钩子会把不确定性从前门赶出去，再从后门请回来</h2>
+<h2 data-tts="1aed07ad62872d22">代价与替代品：钩子会把不确定性从前门赶出去，再从后门请回来</h2>
 <div class="claim">论断：hooks 最大的风险不是写错，是<strong>你以为它在跑</strong>。它没沙箱、默认不阻塞、失败只在 debug 日志里说一声。</div>
-<h3>五笔账</h3>
+<h3 data-tts="d0656ff64aafefe0">五笔账</h3>
 <ul>
 <li><strong>没有沙箱。</strong>官方原话：<em>A hook can read files, make network requests, modify your environment, and run arbitrary commands.</em> 建议是「像对待 shell alias 和 dotfiles 一样对待它」——只启用你看懂的。危险的是钩子<strong>藏得住</strong>：plugin 的 <code>hooks/hooks.json</code>、skill frontmatter、subagent frontmatter 都能带钩子，装一个插件等于接受它注册的一切。</li>
 <li><strong>失败是静默的。</strong>非 0 非 2 的退出码只算非阻塞错误，动作照常做完。要看全貌得 <code>claude --debug</code> 或会话里 <code>/debug</code>。</li>
@@ -233,7 +232,7 @@ else:
 <li><strong>时间预算。</strong><code>SessionEnd</code> 的全部钩子共享 <strong>1.5 秒</strong>（显式写更长的 <code>timeout</code> 才会抬到最多 60 秒）——想在那儿做清理、上传日志的，先看这条。</li>
 </ul>
 <div class="fail"><strong>最讽刺的一条代价</strong>：<code>prompt</code> 和 <code>agent</code> 两种 hook 类型，把你刚赶出去的不确定性又请了回来。它们有用（判断题本来就该模型判），但要认清楚——一个由 Haiku 判 <code>ok: true/false</code> 的 <code>Stop</code> 钩子<strong>不是确定性保障</strong>，它是在另一个地方多问了一次模型。真要「一定发生」，只有 <code>command</code> 那一档。</div>
-<h3>不写 hook，你还能怎么办</h3>
+<h3 data-tts="12be9f93e7c642fa">不写 hook，你还能怎么办</h3>
 <ol>
 <li><strong>权限系统。</strong>要的是「绝对不许碰」而不是「碰了记一笔」——用 allow/deny 规则，那才是硬边界。</li>
 <li><strong>pre-commit / CI。</strong>要管的是所有人的提交而不是 Claude 的编辑，钩子挂错层了。</li>
@@ -242,13 +241,13 @@ else:
 </ol>
 </div>
 <div class="combo">
-<h3>// 一页选购卡</h3>
+<h3 data-tts="64037a39f4fc8203">// 一页选购卡</h3>
 <p><strong>先装这三个</strong>：① <code>/plugin install security-guidance@claude-plugins-official</code>——官方唯一整个建在 hooks 上的插件，装完即用，嫌贵就 <code>ENABLE_CODE_SECURITY_REVIEW=0</code> 只留免费那层。② 上面那段 <strong>Prettier 的 <code>PostToolUse</code> 配置</strong>（连同 <code>jq</code>）——五行 JSON，今天就能进 <code>.claude/settings.json</code>。③ <strong><code>pre-commit</code></strong>（<code>.pre-commit-config.yaml</code>）——补上 Claude 钩子照不到的那一半：你自己敲的 commit。</p>
 <p><strong>按需再看</strong>：<a href="https://code.claude.com/docs/en/hooks" target="_blank">Hooks reference</a>（33 个事件全表、5 种类型字段、退出码语义）· <a href="https://github.com/anthropics/claude-plugins-official/tree/main/plugins/security-guidance" target="_blank">security-guidance 源码</a>（从 hook 里起一次独立模型调用再把结果喂回会话的完整写法）· <a href="https://github.com/GowayLee/cchooks" target="_blank"><code>cchooks</code></a>（Python，消掉 stdin 样板）· <a href="https://github.com/syou6162/cchook" target="_blank"><code>cchook</code></a>（YAML 配置 + dry-run）· <a href="https://github.com/johnlindquist/claude-hooks" target="_blank"><code>claude-hooks</code></a>（TypeScript 类型安全，要 Bun）· <a href="https://github.com/disler/claude-code-hooks-mastery" target="_blank"><code>claude-code-hooks-mastery</code></a>（各事件 JSON 长什么样，当字典查）· <a href="https://github.com/disler/claude-code-hooks-multi-agent-observability" target="_blank">多 agent 观测看板</a>（并发 agent 的实时流向）。</p>
 <p><strong>明确别做</strong>：用 <code>if</code> 条件当安全边界（那是权限系统的活）· 指望 <code>Edit|Write</code> 抓到 Bash 写的文件 · 用 <code>PostToolUse</code> 拦本该拦在 <code>PreToolUse</code> 的事 · 装插件不看它注册了哪些钩子 · 在 <code>SessionEnd</code> 里做超过 1.5 秒的事 · 把 <code>prompt</code>/<code>agent</code> 钩子当成确定性保障。</p>
 </div>
 <div class="glossary">
-<h3>// 术语表</h3>
+<h3 data-tts="af312117e9576103">// 术语表</h3>
 <dl>
 <dt>hook（钩子）</dt>
 <dd>在 Claude Code 生命周期的某个点上自动执行的用户自定义动作。官方定义的关键词是 deterministic control——不依赖模型「决定去做」。</dd>
@@ -267,13 +266,13 @@ else:
 </dl>
 </div>
 <div class="thinking">
-<h3>// 三个想不通的地方</h3>
+<h3 data-tts="6fb7751c29e66974">// 三个想不通的地方</h3>
 <details><summary>既然 hooks 是为了「不依赖模型判断」，为什么官方又加了 <code>prompt</code> 和 <code>agent</code> 两种要模型判断的类型？</summary><div>因为确定性真正稀缺的地方不是判断本身，是<strong>触发时机</strong>。「每次 Claude 说完话都要检查任务是否真的做完了」——检查这件事需要判断，但<strong>每次都检查</strong>不需要。hook 保证的是后者：时机必然、位置固定、不会被模型「觉得这次不用」跳过。至于那一刻是跑 <code>gofmt</code> 还是问 Haiku，是第二个问题。所以这两个类型没有背叛设计，它们把「必然发生」和「必然正确」拆开了——只是用的人容易把它们当成一回事。</div></details>
 <details><summary><code>security-guidance</code> 用 <code>Stop</code> 钩子在后台跑审查，那模型岂不是可以一直被打断到跑不完？</summary><div>官方给了闸：end-of-turn 审查每轮最多覆盖 30 个改动文件，<strong>连续最多重新提示三次</strong>就交还给你；commit/push 审查按滚动一小时封顶 20 次。这是 <code>Stop</code> 钩子这类「不许停」机制的通用难题——Claude Code 自己也在 <code>Stop</code> 钩子连续阻塞太多次时直接结束本轮并警告。<strong>凡是能让模型「继续」的钩子，都必须自带次数上限</strong>，否则你写的不是自动化，是一个自己给自己派活的永动机。</div></details>
 <details><summary>官方一边说「hook 没有沙箱，像对待 dotfiles 一样小心」，一边让 plugin、skill、subagent 都能带钩子，这不矛盾吗？</summary><div>矛盾是真的，而且它就是 Skill 30 要讲的那个问题的前哨。可以这么理解职责划分：分发机制负责<strong>让钩子可见</strong>（<code>/hooks</code> 能列出全部已配置钩子及其来源文件），审查责任留给你。官方那句「安全是共同责任」不是免责声明式的客套——在这个设计里，唯一能判断「这个钩子该不该跑」的是知道自己项目里有什么的人。所以装插件前跑一次 <code>/hooks</code>、装完再跑一次看多出了什么，是这套机制里唯一真正属于你的那道关。</div></details>
 </div>
 <div class="refs">
-<h3>// 延伸阅读</h3>
+<h3 data-tts="eb63deb8822ed5b5">// 延伸阅读</h3>
 <ul>
 <li><a href="https://code.claude.com/docs/en/hooks-guide" target="_blank">Claude Code · Automate actions with hooks</a> — 入门指南：Prettier 与 protect-files 两段可抄配置、桌面通知、<code>SessionStart</code> 配 <code>compact</code> matcher 重注入上下文、<code>CwdChanged</code> + <code>FileChanged</code> + <code>CLAUDE_ENV_FILE</code>、配置位置表、prompt/agent/http 三种类型、限制与排障（2026-09 访问）</li>
 <li><a href="https://code.claude.com/docs/en/hooks" target="_blank">Claude Code · Hooks reference</a> — 33 个事件全表与各自的 matcher 语义；<code>command</code>/<code>http</code>/<code>mcp_tool</code>/<code>prompt</code>/<code>agent</code> 五种类型的字段；退出码 0/2/其它的完整语义与可阻塞事件清单；<code>permissionDecision</code>/<code>additionalContext</code>/<code>updatedInput</code> 等输出字段；Security considerations 一节；<code>$CLAUDE_PROJECT_DIR</code> 在 worktree 下的行为（2026-09 访问）</li>
@@ -290,8 +289,8 @@ else:
 </div>
 <footer>BigCat · Super Individual · Skill 27 · 2026-09-28</footer>
 </div>
-<script src="https://hub.cissychen.com/comments.js" defer></script>
-<script src="https://hub.cissychen.com/search.js" defer></script>
-<script src="https://hub.cissychen.com/index-button.js" defer></script>
-<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
 </body></html>
