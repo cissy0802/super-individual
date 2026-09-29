@@ -64,8 +64,8 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <div class="container">
 <header>
 <span class="week-tag">SKILL 28 / ORCHESTRATION · DEEP-DIVE</span>
-<h1>《Building Effective Agents》精读</h1>
-<h2>一条可判定的分界线 · 五种模式的梯子 · 配套那五个 notebook · 「能不上 agent 就不上」的账怎么算</h2>
+<h1 data-tts="e4ef2c5bcb906079">《Building Effective Agents》精读</h1>
+<h2 data-tts="a9884ef9efdecbe4">一条可判定的分界线 · 五种模式的梯子 · 配套那五个 notebook · 「能不上 agent 就不上」的账怎么算</h2>
 <div class="date">2026-09-29 · BigCat</div>
 <p class="pitch">上期钉的是「每次都要做的事」。再往上游一步，是更贵的那个问题：这活到底该不该上 agent。Anthropic 2024-12-19 那篇《Building Effective AI Agents》给的答案只有两句定义的分量——workflow 是<em>预先写死的代码路径</em>，agent 是<em>模型自己决定路径</em>。这期把这篇文章连同它那个配套 notebook 仓库一起拆开，再拿后来三篇官方文章去对它的账。</p>
 </header>
@@ -73,13 +73,13 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <a href="hooks-automation-skill27.html">前置 → Skill 27 Hooks 与确定性自动化（确定性的事别派 agent）</a>
 </div>
 <div class="intro">
-<h3>// WHY THIS MATTERS</h3>
+<h3 data-tts="25c20441adb28eaa">// WHY THIS MATTERS</h3>
 <p>这篇文章被引用得太多，以至于多数人只记住了那五张图。它真正值钱的在两处：一是给了一条<strong>可判定</strong>的分界线，让「我们要不要做 agent」从品味之争变成事实之争；二是它自己一直在改——今天打开它，点名的框架名单已经和发表当天不是同一批。本期照旧：先给能跑的代码，再拆机制，再拿真材料对账，判据放后半程。</p>
 </div>
 <!-- ============ 1 ============ -->
 <div class="section">
 <span class="num">// 01</span>
-<h2>它替你干掉什么：把「要不要上 agent」从口水仗变成事实之争</h2>
+<h2 data-tts="22d89b421edb515f">它替你干掉什么：把「要不要上 agent」从口水仗变成事实之争</h2>
 <div class="claim">论断：这篇文章最值钱的不是那五张图，是开头那两句定义。它把 agent 从一个形容词变回了一个<strong>有真假的判断</strong>。</div>
 <p>原文（Erik Schluntz / Barry Zhang，2024-12-19）：</p>
 <pre><code><span class="tag-claude">Workflows</span> are systems where LLMs and tools are orchestrated
@@ -90,7 +90,7 @@ processes and tool usage</span>, maintaining control over how they
 accomplish tasks.
 </code></pre>
 <p>分界线落在一个当场就能回答的问题上：<strong>下一步调哪个工具，是你的代码决定的，还是模型决定的</strong>。代码决定 → workflow，无论它套了多少层；模型决定 → agent，哪怕它只有二十行。画得再花的流程图也可能是 workflow，一个 while 循环也可能是 agent。</p>
-<h3>配套代码：官方那五个 notebook</h3>
+<h3 data-tts="ec2f8e816d28cd90">配套代码：官方那五个 notebook</h3>
 <p>光读会以为自己懂了。参考实现在官方 cookbook 里——注意<strong>仓库已从 <code>anthropic-cookbook</code> 改名为 <code>claude-cookbooks</code></strong>（老链接会跳转，目录路径没变）：</p>
 <pre><code>git clone https://github.com/anthropics/claude-cookbooks
 cd claude-cookbooks/patterns/agents
@@ -103,7 +103,7 @@ cd claude-cookbooks/patterns/agents
 <span class="tag-com">util.py  prompts/                   # 共用工具与提示词</span>
 </code></pre>
 <p>每个 notebook 都是<strong>不依赖任何框架</strong>的裸实现，这正是文章的态度：<em>many patterns can be implemented in a few lines of code</em>。<strong>什么时候别看</strong>：你要的是生产级重试、观测、持久化——这些一样都没有，它们是教具不是底座。（据 GitHub 仓库页 53.1k★，2026-09）</p>
-<h3>第一条立刻能跑的：把最后那一档跑起来</h3>
+<h3 data-tts="8522bff5817468a6">第一条立刻能跑的：把最后那一档跑起来</h3>
 <p>五种模式里只有末档需要真正的 agent 循环，而这一档现在有官方现成的：</p>
 <pre><code>npm install @anthropic-ai/claude-agent-sdk   <span class="tag-com"># Node 18+</span>
 pip install claude-agent-sdk                 <span class="tag-com"># 或 Python 3.10+</span>
@@ -124,7 +124,7 @@ export ANTHROPIC_API_KEY=your-api-key
 <!-- ============ 2 ============ -->
 <div class="section">
 <span class="num">// 02</span>
-<h2>机制：五种模式不是并列的菜单，是一根梯子</h2>
+<h2 data-tts="7471f2521d6350b5">机制：五种模式不是并列的菜单，是一根梯子</h2>
 <div class="claim">论断：每上一级，你交出去的控制权多一点，换回来的适应性多一点，账单也多一点。选型就是<strong>选梯子的第几级</strong>，不是选哪道菜。</div>
 <p>梯子的地基叫 <strong>augmented LLM</strong>：<em>an LLM enhanced with augmentations such as retrieval, tools, and memory</em>。五种模式全建在它上面，区别只在谁来编排它。</p>
 <div class="diagram">控制权在代码 ──────────────────────────────► 控制权在模型
@@ -150,15 +150,15 @@ export ANTHROPIC_API_KEY=your-api-key
 <!-- ============ 3 ============ -->
 <div class="section">
 <span class="num">// 03</span>
-<h2>真实用法与边界：拿这篇 2024 年的文章去对三份后续材料的账</h2>
+<h2 data-tts="0cba7c63a375a798">真实用法与边界：拿这篇 2024 年的文章去对三份后续材料的账</h2>
 <div class="claim">论断：这篇是骨架，它自己没长肉。真正让你少赔钱的那几个数字和那几套做法，都在后来三篇里。</div>
-<h3>① 多 agent 到底贵多少</h3>
+<h3 data-tts="0d58439b3c65084c">① 多 agent 到底贵多少</h3>
 <p>官方 2025-06-13 的 <a href="https://www.anthropic.com/engineering/multi-agent-research-system" target="_blank">How we built our multi-agent research system</a> 把 ⑥ 这一档的账摊开算了：Opus 4 当 lead、Sonnet 4 当 subagent 的多 agent 系统，在其内部研究评测上比单个 Opus 4 高出 <strong>90.2%</strong>；代价是 agent 约烧掉聊天的 4 倍 token，<strong>多 agent 系统约 15 倍</strong>；并行工具调用把复杂查询耗时砍掉最多 90%。同一篇也划了边界：需要所有 agent 共享同一份上下文、或子任务之间强依赖的领域不适合，原文点名 <em>most coding tasks involve fewer truly parallelizable tasks than research</em>。<strong>什么时候别上</strong>：任务价值撑不起那 15 倍 token 的时候。</p>
-<h3>② 附录二的现代版</h3>
+<h3 data-tts="d531aac4a32dcfae">② 附录二的现代版</h3>
 <p>原文附录二叫「Prompt Engineering your Tools」，2025-09-11 的 <a href="https://www.anthropic.com/engineering/writing-tools-for-agents" target="_blank">Writing effective tools for AI agents</a> 是它长大后的样子，也是 ACI 那条原则唯一的操作手册：<strong>合并工具</strong>（别给 <code>list_users</code>/<code>list_events</code>/<code>create_event</code> 三个，给一个 <code>schedule_event</code>）、<strong>命名空间</strong>（<code>asana_search</code> / <code>jira_search</code> 划清边界）、<strong>省 token 的返回</strong>（Claude Code 默认把工具返回卡在 25,000 token，自己做分页/过滤/截断）、<strong>只返高信号字段</strong>（给 <code>name</code> 和 <code>file_type</code>，别给 <code>uuid</code> 和 <code>mime_type</code>）、<strong>先写 eval 再调描述</strong>。</p>
-<h3>③ 2024 年那篇基本没讲的那一半</h3>
+<h3 data-tts="d4ca550726b9e209">③ 2024 年那篇基本没讲的那一半</h3>
 <p>2025-09-29 的 <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" target="_blank">Effective context engineering for AI agents</a> 补上了盲区——上下文不是无限的。四个手法：<strong>compaction</strong>（接近上限时压缩历史）、<strong>结构化笔记</strong>（进度写进 <code>NOTES.md</code> 这类外部记忆）、<strong>子 agent 架构</strong>（在干净上下文里干活，只回摘要）、<strong>即时检索</strong>（存轻量标识符，用到再取）。一句总纲：找到 <em>the smallest possible set of high-signal tokens</em>。</p>
-<h3>④ 框架名单：这是一篇活文档</h3>
+<h3 data-tts="d81d5ee25f1293e4">④ 框架名单：这是一篇活文档</h3>
 <p>今天打开原文，「When and how to use frameworks」那节点名的是 <strong>Claude Agent SDK</strong>、<strong>Strands Agents SDK by AWS</strong>、<strong>Rivet</strong>、<strong>Vellum</strong>——而 Claude Agent SDK 这个名字是从 <code>claude-code-sdk</code> 改来的，2024-12 发表当天并不存在。别把旧笔记当现状。两个可装的：</p>
 <pre><code>pip install strands-harness      <span class="tag-com"># 或 npm i @strands-agents/harness</span>
 pip install -U langgraph
@@ -169,7 +169,7 @@ pip install -U langgraph
 <!-- ============ 4 ============ -->
 <div class="section">
 <span class="num">// 04</span>
-<h2>代价与替代品：这篇文章最大的代价，是被当成地图</h2>
+<h2 data-tts="32606629da673f76">代价与替代品：这篇文章最大的代价，是被当成地图</h2>
 <div class="claim">论断：它是一张 2024 年 12 月的<strong>地形图</strong>。地形没变，路牌全换了。照着它上路之前，先核一遍路牌。</div>
 <ol>
 <li><strong>术语漂移。</strong>cookbook 仓库改了名、SDK 改了名、框架名单换了人。凡是你从这篇文章里抄走的<strong>专有名词</strong>都得去一手源核一遍；抄走的<strong>判据</strong>可以直接用。</li>
@@ -177,7 +177,7 @@ pip install -U langgraph
 <li><strong>「90.2%」最容易被当成通用结论。</strong>那是研究类任务上的内部评测，同一篇紧接着就说编码任务可并行的部分远比研究少。</li>
 <li><strong>它的简单主义容易被念反。</strong>「保持简单」不等于「别上 agent」，而是「别在没量到收益前上」。</li>
 </ol>
-<h3>不上 agent，你还能怎么办：四个台阶</h3>
+<h3 data-tts="7c07ea1e1f7c107d">不上 agent，你还能怎么办：四个台阶</h3>
 <ol>
 <li><strong>一条好 prompt。</strong>文章的第一条建议就是先把单次调用优化到位，必要时配上检索和样例。</li>
 <li><strong>链式三次调用。</strong>二十行代码，可调试、可断点、成本可预测。</li>
@@ -186,13 +186,13 @@ pip install -U langgraph
 </ol>
 </div>
 <div class="combo">
-<h3>// 一页选购卡</h3>
+<h3 data-tts="ecb353cbca4f641d">// 一页选购卡</h3>
 <p><strong>先读/先装这三个</strong>：① <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">Building Effective AI Agents</a> 原文——读那两句定义和每档的「when to use」，图可以跳过。② <code>git clone https://github.com/anthropics/claude-cookbooks</code> 进 <code>patterns/agents/</code> 把 <code>basic_workflows.ipynb</code> 跑一遍——十分钟，比看十遍图管用。③ <code>pip install claude-agent-sdk</code>（或 <code>npm install @anthropic-ai/claude-agent-sdk</code>）——<strong>只在确认自己真在 ⑥ 那一档时才装</strong>。</p>
 <p><strong>按需再看</strong>：<a href="https://www.anthropic.com/engineering/multi-agent-research-system" target="_blank">How we built our multi-agent research system</a>（15× token 与 90.2% 的出处）· <a href="https://www.anthropic.com/engineering/writing-tools-for-agents" target="_blank">Writing effective tools for AI agents</a>（附录二的现代版）· <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" target="_blank">Effective context engineering</a>（compaction / 笔记 / 子 agent / 即时检索）· <a href="https://github.com/anthropics/claude-agent-sdk-demos" target="_blank"><code>claude-agent-sdk-demos</code></a>（其中 <code>research-agent</code> 就是编排者-工人的可跑版，据 GitHub 仓库页 2.8k★，2026-09）· <a href="https://github.com/strands-agents/harness-sdk" target="_blank"><code>strands-harness</code></a> · <a href="https://github.com/langchain-ai/langgraph" target="_blank"><code>langgraph</code></a>。</p>
 <p><strong>明确别做</strong>：把编排者-工人用在子任务清单你本来就能写死的地方 · 没有客观评判标准还上评估-优化循环 · 把 90.2% 当成「多 agent 普遍更好」· 先选框架再想清楚自己在梯子第几级 · 从这篇 2024 年的文章里直接抄包名和框架名 · 只读这篇就去做长程 agent。</p>
 </div>
 <div class="glossary">
-<h3>// 术语表</h3>
+<h3 data-tts="36021d95f10f9262">// 术语表</h3>
 <dl>
 <dt>workflow（工作流）</dt>
 <dd>LLM 与工具被<strong>预先写死的代码路径</strong>编排的系统。下一步是谁调的？代码。</dd>
@@ -213,13 +213,13 @@ pip install -U langgraph
 </dl>
 </div>
 <div class="thinking">
-<h3>// 三个想不通的地方</h3>
+<h3 data-tts="1e38b71c69bd2bac">// 三个想不通的地方</h3>
 <details><summary>既然多 agent 那一档能高出 90.2%，为什么文章通篇在劝你别用？</summary><div>因为那两个数字是<strong>同一篇文章</strong>里的：高出 90.2%，同时烧掉约 15 倍 token。文章劝的从来不是「agent 不好」，是<strong>别在没量到收益前付这笔钱</strong>。真正的判据是每档的边际收益：从一条 prompt 到链式调用，收益通常很大、成本几乎不变；从编排者-工人到全自主 agent，收益不确定、成本确定地涨。所以「保持简单」不是审美偏好，是<strong>在收益未知时选成本已知的那一档</strong>。</div></details>
 <details><summary>分界线既然这么清楚，为什么现实里几乎没有纯粹的一种？</summary><div>因为这条线是<strong>按决策点</strong>划的，不是按系统划的。Claude Code 本身就是混血：主循环里下一步调什么工具是模型决定的（agent），但 hook 在什么时机触发、权限怎么判、压缩什么时候发生，全是代码决定的（workflow）。真实系统是一张决策点的清单，<strong>每个点各自归属一边</strong>。所以有用的问法不是「我们在做 workflow 还是 agent」，而是「这个具体的决策，该由谁来做」——这也正好是上期 hooks 那条判据的另一种说法。</div></details>
 <details><summary>工具描述是给模型看的，「像打磨 API 文档一样打磨它」这个类比站得住吗？</summary><div>站得住，而且比给人看的文档要求更高：人会猜、会试、会去读源码，模型基本只有你给的那段描述。官方后来那篇把这件事量化了——光是改工具描述就能让后续 agent 的任务完成时间降 40%。但类比也有裂缝：API 文档追求完备，工具描述追求<strong>高信号</strong>，完备反而是负担（返回 <code>uuid</code> 和 <code>mime_type</code> 就是完备害了信号）。更准确的说法或许是：像打磨<strong>错误信息</strong>一样打磨它——在最短的篇幅里说清此刻该怎么办。</div></details>
 </div>
 <div class="refs">
-<h3>// 延伸阅读</h3>
+<h3 data-tts="b6c2efad34785e0e">// 延伸阅读</h3>
 <ul>
 <li><a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">Anthropic Engineering · Building Effective AI Agents</a> — 本期主角，Erik Schluntz / Barry Zhang，2024-12-19 发表且此后持续修订。workflow 与 agent 两句定义、augmented LLM 地基、五种模式各自的「when to use」、三条收口原则（simplicity / transparency / ACI）、附录一「Agents in Practice」（客服与编码 agent）、附录二「Prompt Engineering your Tools」、「When and how to use frameworks」那节的框架名单</li>
 <li><a href="https://github.com/anthropics/claude-cookbooks/tree/main/patterns/agents" target="_blank">anthropics/claude-cookbooks · patterns/agents</a> — 官方参考实现，<code>basic_workflows.ipynb</code>（链式/路由/并行）、<code>evaluator_optimizer.ipynb</code>、<code>orchestrator_workers.ipynb</code>、<code>async_multi_agent_orchestration.ipynb</code>、<code>latency_multi_agent.ipynb</code>，加 <code>util.py</code> 与 <code>prompts/</code>；全部不依赖框架（仓库原名 <code>anthropic-cookbook</code>；据 GitHub 仓库页 53.1k★，2026-09）</li>
