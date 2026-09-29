@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill 28 · 《Building Effective Agents》精读 — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head>
+<body>
+<div class="container">
+<header>
+<span class="week-tag">SKILL 28 / ORCHESTRATION · DEEP-DIVE</span>
+<h1>《Building Effective Agents》精读</h1>
+<h2>一条可判定的分界线 · 五种模式的梯子 · 配套那五个 notebook · 「能不上 agent 就不上」的账怎么算</h2>
+<div class="date">2026-09-29 · BigCat</div>
+<p class="pitch">上期钉的是「每次都要做的事」。再往上游一步，是更贵的那个问题：这活到底该不该上 agent。Anthropic 2024-12-19 那篇《Building Effective AI Agents》给的答案只有两句定义的分量——workflow 是<em>预先写死的代码路径</em>，agent 是<em>模型自己决定路径</em>。这期把这篇文章连同它那个配套 notebook 仓库一起拆开，再拿后来三篇官方文章去对它的账。</p>
+</header>
+<div class="xref">
+<a href="hooks-automation-skill27.html">前置 → Skill 27 Hooks 与确定性自动化（确定性的事别派 agent）</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>这篇文章被引用得太多，以至于多数人只记住了那五张图。它真正值钱的在两处：一是给了一条<strong>可判定</strong>的分界线，让「我们要不要做 agent」从品味之争变成事实之争；二是它自己一直在改——今天打开它，点名的框架名单已经和发表当天不是同一批。本期照旧：先给能跑的代码，再拆机制，再拿真材料对账，判据放后半程。</p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>它替你干掉什么：把「要不要上 agent」从口水仗变成事实之争</h2>
+<div class="claim">论断：这篇文章最值钱的不是那五张图，是开头那两句定义。它把 agent 从一个形容词变回了一个<strong>有真假的判断</strong>。</div>
+<p>原文（Erik Schluntz / Barry Zhang，2024-12-19）：</p>
+<pre><code><span class="tag-claude">Workflows</span> are systems where LLMs and tools are orchestrated
+through <span class="tag-key">predefined code paths</span>.
+
+<span class="tag-gpt">Agents</span> are systems where LLMs <span class="tag-key">dynamically direct their own
+processes and tool usage</span>, maintaining control over how they
+accomplish tasks.
+</code></pre>
+<p>分界线落在一个当场就能回答的问题上：<strong>下一步调哪个工具，是你的代码决定的，还是模型决定的</strong>。代码决定 → workflow，无论它套了多少层；模型决定 → agent，哪怕它只有二十行。画得再花的流程图也可能是 workflow，一个 while 循环也可能是 agent。</p>
+<h3>配套代码：官方那五个 notebook</h3>
+<p>光读会以为自己懂了。参考实现在官方 cookbook 里——注意<strong>仓库已从 <code>anthropic-cookbook</code> 改名为 <code>claude-cookbooks</code></strong>（老链接会跳转，目录路径没变）：</p>
+<pre><code>git clone https://github.com/anthropics/claude-cookbooks
+cd claude-cookbooks/patterns/agents
+
+<span class="tag-com">basic_workflows.ipynb               # 链式 / 路由 / 并行三件套</span>
+<span class="tag-com">evaluator_optimizer.ipynb           # 评估-优化循环</span>
+<span class="tag-com">orchestrator_workers.ipynb          # 编排者-工人</span>
+<span class="tag-com">async_multi_agent_orchestration.ipynb</span>
+<span class="tag-com">latency_multi_agent.ipynb           # 有延迟与预算约束的多 agent</span>
+<span class="tag-com">util.py  prompts/                   # 共用工具与提示词</span>
+</code></pre>
+<p>每个 notebook 都是<strong>不依赖任何框架</strong>的裸实现，这正是文章的态度：<em>many patterns can be implemented in a few lines of code</em>。<strong>什么时候别看</strong>：你要的是生产级重试、观测、持久化——这些一样都没有，它们是教具不是底座。（据 GitHub 仓库页 53.1k★，2026-09）</p>
+<h3>第一条立刻能跑的：把最后那一档跑起来</h3>
+<p>五种模式里只有末档需要真正的 agent 循环，而这一档现在有官方现成的：</p>
+<pre><code>npm install @anthropic-ai/claude-agent-sdk   <span class="tag-com"># Node 18+</span>
+pip install claude-agent-sdk                 <span class="tag-com"># 或 Python 3.10+</span>
+export ANTHROPIC_API_KEY=your-api-key
+</code></pre>
+<pre><code><span class="tag-com">from</span> claude_agent_sdk <span class="tag-com">import</span> query, ClaudeAgentOptions
+
+<span class="tag-com">async for</span> m <span class="tag-com">in</span> query(
+    prompt=<span class="tag-claude">"Review utils.py for bugs that would crash. Fix them."</span>,
+    options=ClaudeAgentOptions(
+        allowed_tools=[<span class="tag-claude">"Read"</span>, <span class="tag-claude">"Edit"</span>, <span class="tag-claude">"Glob"</span>],
+        permission_mode=<span class="tag-claude">"acceptEdits"</span>)):
+    print(m)
+</code></pre>
+<p>这段抄自官方 quickstart。<strong>它替你干掉的是自己写 agent 循环</strong>：工具调用、上下文管理、重试、权限门都在库里。<strong>什么时候别装</strong>：任务是固定三步、每步都能预测——按文章的判据你要的是链式调用，直接调 API 写三次就行，别拖进一整个 harness。另注意 v0.1.0 起<strong>默认不再带 Claude Code 的系统提示词</strong>，要老行为得显式写 <code>{"type":"preset","preset":"claude_code"}</code>。</p>
+<div class="res"><strong>出处</strong> · <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">Building Effective AI Agents</a>（2024-12-19）· <a href="https://code.claude.com/docs/en/agent-sdk/quickstart" target="_blank">Agent SDK Quickstart</a> 与 <a href="https://code.claude.com/docs/en/agent-sdk/migration-guide" target="_blank">Migration guide</a>，2026-09 访问</div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>机制：五种模式不是并列的菜单，是一根梯子</h2>
+<div class="claim">论断：每上一级，你交出去的控制权多一点，换回来的适应性多一点，账单也多一点。选型就是<strong>选梯子的第几级</strong>，不是选哪道菜。</div>
+<p>梯子的地基叫 <strong>augmented LLM</strong>：<em>an LLM enhanced with augmentations such as retrieval, tools, and memory</em>。五种模式全建在它上面，区别只在谁来编排它。</p>
+<div class="diagram">控制权在代码 ──────────────────────────────► 控制权在模型
+
+  ① prompt chaining      固定步骤，A 的输出喂给 B
+  ② routing              先分类，再进不同的专用路径
+  ③ parallelization      sectioning 拆开并行 / voting 同题多跑
+  ④ orchestrator-workers 子任务由模型现场拆，不预先定
+  ⑤ evaluator-optimizer  一个写，一个批，循环到过关
+  ⑥ agents               步数不可预测，模型自己决定何时收工</div>
+<p>上面那几档在 <code>claude-cookbooks/patterns/agents/</code> 里一一对得上：①②③ 全在 <code>basic_workflows.ipynb</code>，④ 在 <code>orchestrator_workers.ipynb</code>，⑤ 在 <code>evaluator_optimizer.ipynb</code>，⑥ 没有单独的 notebook——因为它就是 <code>claude-agent-sdk</code> 那个 <code>query()</code> 循环本身。文章给每一档的适用条件都是一句能直接拿去开会的话：</p>
+<ul>
+<li><strong>① 链式</strong> — <em>the task can be easily and cleanly decomposed into fixed subtasks</em>。关键词是 <em>fixed</em>：能画出流程图就用它。</li>
+<li><strong>② 路由</strong> — <em>distinct categories that are better handled separately</em>。客服分流、难易分模型都在这。</li>
+<li><strong>③ 并行</strong> — 两个变体别混：<em>sectioning</em> 拆成互不依赖的子任务同时跑，买的是速度；<em>voting</em> 同一任务跑多次取共识，买的是置信度。</li>
+<li><strong>④ 编排者-工人</strong> — <em>complex tasks where you can't predict the subtasks needed</em>。和 ③ 的分界就在这句：子任务清单是<strong>预先写死</strong>还是<strong>当场生成</strong>。</li>
+<li><strong>⑤ 评估-优化</strong> — <em>when we have clear evaluation criteria, and when iterative refinement provides measurable value</em>。没有清晰评判标准别上，否则只是两个模型互相恭维。</li>
+<li><strong>⑥ agents</strong> — <em>open-ended problems where it's difficult or impossible to predict the required number of steps</em>。代价文章也直说：<em>higher costs, and the potential for compounding errors</em>。</li>
+</ul>
+<div class="fail"><strong>最常见的误用：</strong>把 ④ 当成「更高级的 ③」。这俩的差别不是复杂度，是<strong>子任务清单谁生成</strong>。清单你本来就能写死却上了 ④，等于花模型的钱买一份你手里已有的答案。</div>
+<p>文章自己的收口是三条原则，值得当 checklist 贴墙上：<strong>simplicity</strong>（设计保持简单）、<strong>transparency</strong>（显式展示 agent 的规划步骤）、<strong>ACI</strong>（像打磨 API 文档一样打磨工具文档与测试）。第三条是它最被低估的一条，下一节就是它的操作手册。</p>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>真实用法与边界：拿这篇 2024 年的文章去对三份后续材料的账</h2>
+<div class="claim">论断：这篇是骨架，它自己没长肉。真正让你少赔钱的那几个数字和那几套做法，都在后来三篇里。</div>
+<h3>① 多 agent 到底贵多少</h3>
+<p>官方 2025-06-13 的 <a href="https://www.anthropic.com/engineering/multi-agent-research-system" target="_blank">How we built our multi-agent research system</a> 把 ⑥ 这一档的账摊开算了：Opus 4 当 lead、Sonnet 4 当 subagent 的多 agent 系统，在其内部研究评测上比单个 Opus 4 高出 <strong>90.2%</strong>；代价是 agent 约烧掉聊天的 4 倍 token，<strong>多 agent 系统约 15 倍</strong>；并行工具调用把复杂查询耗时砍掉最多 90%。同一篇也划了边界：需要所有 agent 共享同一份上下文、或子任务之间强依赖的领域不适合，原文点名 <em>most coding tasks involve fewer truly parallelizable tasks than research</em>。<strong>什么时候别上</strong>：任务价值撑不起那 15 倍 token 的时候。</p>
+<h3>② 附录二的现代版</h3>
+<p>原文附录二叫「Prompt Engineering your Tools」，2025-09-11 的 <a href="https://www.anthropic.com/engineering/writing-tools-for-agents" target="_blank">Writing effective tools for AI agents</a> 是它长大后的样子，也是 ACI 那条原则唯一的操作手册：<strong>合并工具</strong>（别给 <code>list_users</code>/<code>list_events</code>/<code>create_event</code> 三个，给一个 <code>schedule_event</code>）、<strong>命名空间</strong>（<code>asana_search</code> / <code>jira_search</code> 划清边界）、<strong>省 token 的返回</strong>（Claude Code 默认把工具返回卡在 25,000 token，自己做分页/过滤/截断）、<strong>只返高信号字段</strong>（给 <code>name</code> 和 <code>file_type</code>，别给 <code>uuid</code> 和 <code>mime_type</code>）、<strong>先写 eval 再调描述</strong>。</p>
+<h3>③ 2024 年那篇基本没讲的那一半</h3>
+<p>2025-09-29 的 <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" target="_blank">Effective context engineering for AI agents</a> 补上了盲区——上下文不是无限的。四个手法：<strong>compaction</strong>（接近上限时压缩历史）、<strong>结构化笔记</strong>（进度写进 <code>NOTES.md</code> 这类外部记忆）、<strong>子 agent 架构</strong>（在干净上下文里干活，只回摘要）、<strong>即时检索</strong>（存轻量标识符，用到再取）。一句总纲：找到 <em>the smallest possible set of high-signal tokens</em>。</p>
+<h3>④ 框架名单：这是一篇活文档</h3>
+<p>今天打开原文，「When and how to use frameworks」那节点名的是 <strong>Claude Agent SDK</strong>、<strong>Strands Agents SDK by AWS</strong>、<strong>Rivet</strong>、<strong>Vellum</strong>——而 Claude Agent SDK 这个名字是从 <code>claude-code-sdk</code> 改来的，2024-12 发表当天并不存在。别把旧笔记当现状。两个可装的：</p>
+<pre><code>pip install strands-harness      <span class="tag-com"># 或 npm i @strands-agents/harness</span>
+pip install -U langgraph
+</code></pre>
+<p><a href="https://github.com/strands-agents/harness-sdk" target="_blank"><code>strands-agents/harness-sdk</code></a> 主打「any model, any cloud」的 harness 自控（据 GitHub 仓库页 8.5k★，2026-09）；<a href="https://github.com/langchain-ai/langgraph" target="_blank"><code>langchain-ai/langgraph</code></a> 是有状态 agent 的低层编排框架（据 GitHub 仓库页 42.5k★，2026-09）。<strong>什么时候两个都别装</strong>：文章原话是先直接用 LLM API，因为框架会 <em>create extra layers of abstraction that can obscure the underlying prompts and responses, making them harder to debug</em>——你连自己发出去的 prompt 长什么样都看不见时，任何调优都是玄学。</p>
+<div class="res"><strong>出处</strong> · 上述三篇 Anthropic Engineering 文章（日期为各自发布日）与两个仓库的 GitHub 页，2026-09 访问</div>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>代价与替代品：这篇文章最大的代价，是被当成地图</h2>
+<div class="claim">论断：它是一张 2024 年 12 月的<strong>地形图</strong>。地形没变，路牌全换了。照着它上路之前，先核一遍路牌。</div>
+<ol>
+<li><strong>术语漂移。</strong>cookbook 仓库改了名、SDK 改了名、框架名单换了人。凡是你从这篇文章里抄走的<strong>专有名词</strong>都得去一手源核一遍；抄走的<strong>判据</strong>可以直接用。</li>
+<li><strong>它不谈上下文。</strong>2024 年那会儿 context window 还不是设计约束的主角。只读这篇就去做 ⑥，你会在第三十轮工具调用上撞墙。</li>
+<li><strong>「90.2%」最容易被当成通用结论。</strong>那是研究类任务上的内部评测，同一篇紧接着就说编码任务可并行的部分远比研究少。</li>
+<li><strong>它的简单主义容易被念反。</strong>「保持简单」不等于「别上 agent」，而是「别在没量到收益前上」。</li>
+</ol>
+<h3>不上 agent，你还能怎么办：四个台阶</h3>
+<ol>
+<li><strong>一条好 prompt。</strong>文章的第一条建议就是先把单次调用优化到位，必要时配上检索和样例。</li>
+<li><strong>链式三次调用。</strong>二十行代码，可调试、可断点、成本可预测。</li>
+<li><strong>一个 skill 或一份 CLAUDE.md。</strong>要的只是「每次都按这套方法做」——那是 Skill 6 的活，不需要 agent 循环。</li>
+<li><strong>一条 hook。</strong>要的是「每次都一定发生」——那是上期的活，连模型判断都不需要。</li>
+</ol>
+</div>
+<div class="combo">
+<h3>// 一页选购卡</h3>
+<p><strong>先读/先装这三个</strong>：① <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">Building Effective AI Agents</a> 原文——读那两句定义和每档的「when to use」，图可以跳过。② <code>git clone https://github.com/anthropics/claude-cookbooks</code> 进 <code>patterns/agents/</code> 把 <code>basic_workflows.ipynb</code> 跑一遍——十分钟，比看十遍图管用。③ <code>pip install claude-agent-sdk</code>（或 <code>npm install @anthropic-ai/claude-agent-sdk</code>）——<strong>只在确认自己真在 ⑥ 那一档时才装</strong>。</p>
+<p><strong>按需再看</strong>：<a href="https://www.anthropic.com/engineering/multi-agent-research-system" target="_blank">How we built our multi-agent research system</a>（15× token 与 90.2% 的出处）· <a href="https://www.anthropic.com/engineering/writing-tools-for-agents" target="_blank">Writing effective tools for AI agents</a>（附录二的现代版）· <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" target="_blank">Effective context engineering</a>（compaction / 笔记 / 子 agent / 即时检索）· <a href="https://github.com/anthropics/claude-agent-sdk-demos" target="_blank"><code>claude-agent-sdk-demos</code></a>（其中 <code>research-agent</code> 就是编排者-工人的可跑版，据 GitHub 仓库页 2.8k★，2026-09）· <a href="https://github.com/strands-agents/harness-sdk" target="_blank"><code>strands-harness</code></a> · <a href="https://github.com/langchain-ai/langgraph" target="_blank"><code>langgraph</code></a>。</p>
+<p><strong>明确别做</strong>：把编排者-工人用在子任务清单你本来就能写死的地方 · 没有客观评判标准还上评估-优化循环 · 把 90.2% 当成「多 agent 普遍更好」· 先选框架再想清楚自己在梯子第几级 · 从这篇 2024 年的文章里直接抄包名和框架名 · 只读这篇就去做长程 agent。</p>
+</div>
+<div class="glossary">
+<h3>// 术语表</h3>
+<dl>
+<dt>workflow（工作流）</dt>
+<dd>LLM 与工具被<strong>预先写死的代码路径</strong>编排的系统。下一步是谁调的？代码。</dd>
+<dt>agent（智能体）</dt>
+<dd>LLM 自己决定流程与工具使用、并保持对「怎么完成」的控制权的系统。下一步是谁调的？模型。</dd>
+<dt>augmented LLM（增强 LLM）</dt>
+<dd>挂上检索、工具、记忆的 LLM。文章称它为一切 agentic 系统的基本构件，五种模式都建在它上面。</dd>
+<dt>ACI</dt>
+<dd>agent-computer interface，智能体-计算机接口。相对于给人用的 UI/HCI，指给模型用的那层工具接口。文章三条原则之一就是像打磨 API 文档一样打磨它。</dd>
+<dt>sectioning vs voting</dt>
+<dd>并行的两个变体。前者把任务拆成互不依赖的子任务同时跑（买速度），后者把同一任务跑多次取共识（买置信度）。</dd>
+<dt>orchestrator-workers</dt>
+<dd>编排者-工人。中央 LLM <strong>现场</strong>拆出子任务派给工人再汇总。与并行的唯一分界：子任务清单不是预先写死的。</dd>
+<dt>evaluator-optimizer</dt>
+<dd>评估者-优化者。一个 LLM 产出、另一个给评价与反馈，循环到过关。前提是评判标准客观。</dd>
+<dt>compaction（压缩）</dt>
+<dd>上下文接近上限时把历史摘要化，保留架构决策与未决问题、丢掉冗余输出。长程 agent 的基础设施。</dd>
+</dl>
+</div>
+<div class="thinking">
+<h3>// 三个想不通的地方</h3>
+<details><summary>既然多 agent 那一档能高出 90.2%，为什么文章通篇在劝你别用？</summary><div>因为那两个数字是<strong>同一篇文章</strong>里的：高出 90.2%，同时烧掉约 15 倍 token。文章劝的从来不是「agent 不好」，是<strong>别在没量到收益前付这笔钱</strong>。真正的判据是每档的边际收益：从一条 prompt 到链式调用，收益通常很大、成本几乎不变；从编排者-工人到全自主 agent，收益不确定、成本确定地涨。所以「保持简单」不是审美偏好，是<strong>在收益未知时选成本已知的那一档</strong>。</div></details>
+<details><summary>分界线既然这么清楚，为什么现实里几乎没有纯粹的一种？</summary><div>因为这条线是<strong>按决策点</strong>划的，不是按系统划的。Claude Code 本身就是混血：主循环里下一步调什么工具是模型决定的（agent），但 hook 在什么时机触发、权限怎么判、压缩什么时候发生，全是代码决定的（workflow）。真实系统是一张决策点的清单，<strong>每个点各自归属一边</strong>。所以有用的问法不是「我们在做 workflow 还是 agent」，而是「这个具体的决策，该由谁来做」——这也正好是上期 hooks 那条判据的另一种说法。</div></details>
+<details><summary>工具描述是给模型看的，「像打磨 API 文档一样打磨它」这个类比站得住吗？</summary><div>站得住，而且比给人看的文档要求更高：人会猜、会试、会去读源码，模型基本只有你给的那段描述。官方后来那篇把这件事量化了——光是改工具描述就能让后续 agent 的任务完成时间降 40%。但类比也有裂缝：API 文档追求完备，工具描述追求<strong>高信号</strong>，完备反而是负担（返回 <code>uuid</code> 和 <code>mime_type</code> 就是完备害了信号）。更准确的说法或许是：像打磨<strong>错误信息</strong>一样打磨它——在最短的篇幅里说清此刻该怎么办。</div></details>
+</div>
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">Anthropic Engineering · Building Effective AI Agents</a> — 本期主角，Erik Schluntz / Barry Zhang，2024-12-19 发表且此后持续修订。workflow 与 agent 两句定义、augmented LLM 地基、五种模式各自的「when to use」、三条收口原则（simplicity / transparency / ACI）、附录一「Agents in Practice」（客服与编码 agent）、附录二「Prompt Engineering your Tools」、「When and how to use frameworks」那节的框架名单</li>
+<li><a href="https://github.com/anthropics/claude-cookbooks/tree/main/patterns/agents" target="_blank">anthropics/claude-cookbooks · patterns/agents</a> — 官方参考实现，<code>basic_workflows.ipynb</code>（链式/路由/并行）、<code>evaluator_optimizer.ipynb</code>、<code>orchestrator_workers.ipynb</code>、<code>async_multi_agent_orchestration.ipynb</code>、<code>latency_multi_agent.ipynb</code>，加 <code>util.py</code> 与 <code>prompts/</code>；全部不依赖框架（仓库原名 <code>anthropic-cookbook</code>；据 GitHub 仓库页 53.1k★，2026-09）</li>
+<li><a href="https://www.anthropic.com/engineering/multi-agent-research-system" target="_blank">Anthropic Engineering · How we built our multi-agent research system</a> — 2025-06-13。90.2% 与「聊天 4 倍 / 多 agent 约 15 倍 token」的出处；并行工具调用最多省 90% 耗时；改工具描述让任务完成时间降 40%；以及多 agent 不适用的边界</li>
+<li><a href="https://www.anthropic.com/engineering/writing-tools-for-agents" target="_blank">Anthropic Engineering · Writing effective tools for AI agents</a> — 2025-09-11。ACI 那条原则的操作手册：工具合并、命名空间、25,000 token 返回上限与分页/过滤/截断、只返高信号字段、用 eval 驱动工具描述迭代</li>
+<li><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" target="_blank">Anthropic Engineering · Effective context engineering for AI agents</a> — 2025-09-29。compaction、结构化笔记、子 agent 架构、即时检索四个手法；「最小的高信号 token 集合」这条总纲；补的正是 2024 年那篇的盲区</li>
+<li><a href="https://code.claude.com/docs/en/agent-sdk/overview" target="_blank">Claude Docs · Agent SDK overview</a> — Agent SDK / CLI / Client SDK / Managed Agents 四者的分工对照表；内置工具、hooks、subagents、MCP、权限、会话、skills 各自的入口</li>
+<li><a href="https://code.claude.com/docs/en/agent-sdk/quickstart" target="_blank">Claude Docs · Agent SDK Quickstart</a> — 本期那段代码的原处；Node 18+ / Python 3.10+、<code>ANTHROPIC_API_KEY</code>、<code>allowed_tools</code> 与 <code>permission_mode</code> 的取值、按工具组合划分的权限档位表</li>
+<li><a href="https://code.claude.com/docs/en/agent-sdk/migration-guide" target="_blank">Claude Docs · Migrate to Claude Agent SDK</a> — 包名变更对照（<code>@anthropic-ai/claude-code</code> → <code>@anthropic-ai/claude-agent-sdk</code>、<code>claude-code-sdk</code> → <code>claude-agent-sdk</code>）；v0.1.0 起系统提示词不再默认、<code>ClaudeCodeOptions</code> 改名、<code>settingSources</code> 的现行行为</li>
+<li><a href="https://github.com/anthropics/claude-agent-sdk-demos" target="_blank">anthropics/claude-agent-sdk-demos</a> — 官方示例集：<code>research-agent</code>（多 agent 研究，编排者-工人的可跑版）、<code>email-agent</code>、<code>simple-chatapp</code>、<code>hello-world</code> 等；官方注明仅供本地开发（据 GitHub 仓库页 2.8k★，2026-09）</li>
+<li><a href="https://github.com/strands-agents/harness-sdk" target="_blank">strands-agents/harness-sdk</a> — 原文框架名单里的 Strands Agents SDK；<code>pip install strands-harness</code> / <code>npm install @strands-agents/harness</code>，自述「any model, any cloud」的端到端 harness 控制（据 GitHub 仓库页 8.5k★，2026-09）</li>
+<li><a href="https://github.com/langchain-ai/langgraph" target="_blank">langchain-ai/langgraph</a> — 有状态 agent 的低层编排框架，<code>pip install -U langgraph</code>；拿来对照文章那句「框架会遮住底层 prompt 与响应」最合适（据 GitHub 仓库页 42.5k★，2026-09）</li>
+<li><a href="hooks-automation-skill27.html">本站 Skill 27 · Hooks 与确定性自动化</a> — 上期；这期是它的上游：先判断该不该上 agent，再谈哪些事钉成钩子</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Skill 28 · 2026-09-29</footer>
+</div>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
+</body></html>

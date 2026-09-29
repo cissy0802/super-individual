@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill 28 · Building Effective Agents, Read Closely — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head>
+<body>
+<div class="container">
+<header>
+<span class="week-tag">SKILL 28 / ORCHESTRATION · DEEP-DIVE</span>
+<h1>Building Effective Agents, Read Closely</h1>
+<h2>One decidable dividing line · A ladder of five patterns · The five companion notebooks · How to price "don't reach for an agent"</h2>
+<div class="date">2026-09-29 · BigCat</div>
+<p class="pitch">Last issue pinned down the things that must happen every time. One step further upstream sits the more expensive question: should this job be an agent at all? Anthropic's <em>Building Effective AI Agents</em> (2024-12-19) answers it in two definitions — a workflow runs through <em>predefined code paths</em>, an agent <em>directs its own</em>. This issue opens the essay together with its companion notebook repo, then audits it against three later official posts.</p>
+</header>
+<div class="xref">
+<a href="hooks-automation-skill27.en.html">Prerequisite → Skill 27 Hooks &amp; Deterministic Automation</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>The essay is cited so often that most people remember only the five diagrams. Its real value sits in two places: it draws a <strong>decidable</strong> line, turning "should we build an agent" from a matter of taste into a matter of fact; and it keeps revising itself — open it today and the list of frameworks it names is not the one it shipped with. Same order as always here: runnable code first, mechanism second, real material to audit against third, criteria in the back half.</p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>What it takes off your plate: turning "agent or not" into a question with an answer</h2>
+<div class="claim">The claim: the most valuable thing in this essay is not the five diagrams, it is the two definitions at the top. They turn <strong>agent</strong> from an adjective back into a statement that can be true or false.</div>
+<p>Verbatim (Erik Schluntz / Barry Zhang, 2024-12-19):</p>
+<pre><code><span class="tag-claude">Workflows</span> are systems where LLMs and tools are orchestrated
+through <span class="tag-key">predefined code paths</span>.
+
+<span class="tag-gpt">Agents</span> are systems where LLMs <span class="tag-key">dynamically direct their own
+processes and tool usage</span>, maintaining control over how they
+accomplish tasks.
+</code></pre>
+<p>The line lands on a question you can answer on the spot: <strong>who decides which tool gets called next — your code, or the model?</strong> Code decides it, and it is a workflow no matter how many layers it wears. The model decides it, and it is an agent even at twenty lines. An elaborate diagram can still be a workflow; a single while-loop can be an agent.</p>
+<h3>The companion code: those five official notebooks</h3>
+<p>Reading alone leaves you feeling like you understood it. The reference implementation lives in the official cookbook — note that the repo was <strong>renamed from <code>anthropic-cookbook</code> to <code>claude-cookbooks</code></strong> (old links redirect; the directory path is unchanged):</p>
+<pre><code>git clone https://github.com/anthropics/claude-cookbooks
+cd claude-cookbooks/patterns/agents
+
+<span class="tag-com">basic_workflows.ipynb               # chaining / routing / parallel</span>
+<span class="tag-com">evaluator_optimizer.ipynb           # the evaluate-refine loop</span>
+<span class="tag-com">orchestrator_workers.ipynb          # orchestrator and workers</span>
+<span class="tag-com">async_multi_agent_orchestration.ipynb</span>
+<span class="tag-com">latency_multi_agent.ipynb           # multi-agent under latency/budget</span>
+<span class="tag-com">util.py  prompts/                   # shared helpers and prompts</span>
+</code></pre>
+<p>Every notebook is a bare implementation with <strong>no framework underneath</strong>, which is exactly the essay's stance: <em>many patterns can be implemented in a few lines of code</em>. <strong>When not to bother</strong>: if what you need is production-grade retries, observability and persistence, none of that is here — these are teaching aids, not a foundation. (Per the GitHub repo page, 53.1k stars, 2026-09.)</p>
+<h3>The first thing you can actually run: the top rung</h3>
+<p>Only the last of the five patterns needs a real agent loop, and that rung now ships officially:</p>
+<pre><code>npm install @anthropic-ai/claude-agent-sdk   <span class="tag-com"># Node 18+</span>
+pip install claude-agent-sdk                 <span class="tag-com"># or Python 3.10+</span>
+export ANTHROPIC_API_KEY=your-api-key
+</code></pre>
+<pre><code><span class="tag-com">from</span> claude_agent_sdk <span class="tag-com">import</span> query, ClaudeAgentOptions
+
+<span class="tag-com">async for</span> m <span class="tag-com">in</span> query(
+    prompt=<span class="tag-claude">"Review utils.py for bugs that would crash. Fix them."</span>,
+    options=ClaudeAgentOptions(
+        allowed_tools=[<span class="tag-claude">"Read"</span>, <span class="tag-claude">"Edit"</span>, <span class="tag-claude">"Glob"</span>],
+        permission_mode=<span class="tag-claude">"acceptEdits"</span>)):
+    print(m)
+</code></pre>
+<p>Lifted from the official quickstart. <strong>What it takes off your plate is writing the agent loop yourself</strong>: tool calls, context management, retries and the permission gate all live in the library. <strong>When not to install it</strong>: your task is three fixed steps, each one predictable — by the essay's own criteria that is prompt chaining, so call the API three times and skip dragging in a whole harness. Also note that since v0.1.0 the SDK <strong>no longer loads Claude Code's system prompt by default</strong>; for the old behavior you pass <code>{"type":"preset","preset":"claude_code"}</code> explicitly.</p>
+<div class="res"><strong>Sources</strong> · <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">Building Effective AI Agents</a> (2024-12-19) · <a href="https://code.claude.com/docs/en/agent-sdk/quickstart" target="_blank">Agent SDK Quickstart</a> and <a href="https://code.claude.com/docs/en/agent-sdk/migration-guide" target="_blank">Migration guide</a>, accessed 2026-09</div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Mechanism: the five patterns are a ladder, not a menu</h2>
+<div class="claim">The claim: each rung up hands a little more control to the model, buys a little more adaptability, and costs a little more. Choosing a design means <strong>choosing a rung</strong>, not picking a dish.</div>
+<p>The ladder stands on what the essay calls the <strong>augmented LLM</strong>: <em>an LLM enhanced with augmentations such as retrieval, tools, and memory</em>. All five patterns are built on it; they differ only in who orchestrates it.</p>
+<div class="diagram">control lives in code ────────────────────► control lives in the model
+
+  (1) prompt chaining       fixed steps, A's output feeds B
+  (2) routing               classify first, then a specialized path
+  (3) parallelization       sectioning (split) / voting (repeat)
+  (4) orchestrator-workers  subtasks invented on the spot
+  (5) evaluator-optimizer   one writes, one critiques, loop until it passes
+  (6) agents                step count unpredictable, model decides when done</div>
+<p>The rungs map one-to-one onto <code>claude-cookbooks/patterns/agents/</code>: (1)(2)(3) all live in <code>basic_workflows.ipynb</code>, (4) in <code>orchestrator_workers.ipynb</code>, (5) in <code>evaluator_optimizer.ipynb</code>, and (6) has no notebook of its own — because it <em>is</em> the <code>query()</code> loop inside <code>claude-agent-sdk</code>. The essay gives each rung a fitness test short enough to quote in a design review:</p>
+<ul>
+<li><strong>(1) Chaining</strong> — <em>the task can be easily and cleanly decomposed into fixed subtasks</em>. The operative word is <em>fixed</em>: if you can draw the flowchart, use this.</li>
+<li><strong>(2) Routing</strong> — <em>distinct categories that are better handled separately</em>. Support triage and easy-vs-hard model selection both live here.</li>
+<li><strong>(3) Parallelization</strong> — don't conflate the two variants: <em>sectioning</em> splits into independent subtasks run at once and buys speed; <em>voting</em> runs the same task repeatedly for consensus and buys confidence.</li>
+<li><strong>(4) Orchestrator-workers</strong> — <em>complex tasks where you can't predict the subtasks needed</em>. That sentence is the whole border with (3): is the subtask list <strong>hardcoded</strong> or <strong>generated at runtime</strong>?</li>
+<li><strong>(5) Evaluator-optimizer</strong> — <em>when we have clear evaluation criteria, and when iterative refinement provides measurable value</em>. Without an objective yardstick you get two models complimenting each other.</li>
+<li><strong>(6) Agents</strong> — <em>open-ended problems where it's difficult or impossible to predict the required number of steps</em>. The essay states the bill too: <em>higher costs, and the potential for compounding errors</em>.</li>
+</ul>
+<div class="fail"><strong>The most common misuse:</strong> treating (4) as "a fancier (3)". The difference is not sophistication, it is <strong>who generates the subtask list</strong>. Reaching for (4) when you could have hardcoded the list means paying model tokens for an answer you already held.</div>
+<p>The essay closes on three principles worth pinning above the desk: <strong>simplicity</strong> in the design, <strong>transparency</strong> about the agent's planning steps, and a carefully crafted <strong>ACI</strong> — tool documentation and testing polished the way you would polish an API reference. The third is the most underrated, and the next section is its manual.</p>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Practice and limits: auditing a 2024 essay against three later posts</h2>
+<div class="claim">The claim: this essay is a skeleton and it never grew muscle. The numbers and the techniques that actually save you money arrived in the three posts that followed.</div>
+<h3>1. What multi-agent really costs</h3>
+<p>Anthropic's <a href="https://www.anthropic.com/engineering/multi-agent-research-system" target="_blank">How we built our multi-agent research system</a> (2025-06-13) opens the books on rung (6): a multi-agent system with Opus 4 as lead and Sonnet 4 subagents beat single-agent Opus 4 by <strong>90.2%</strong> on their internal research eval. The bill: agents burn roughly 4x the tokens of chat, and <strong>multi-agent systems about 15x</strong>; parallel tool calling cut research time by up to 90% on complex queries. The same post draws the border: domains that need every agent to share one context, or where subtasks depend heavily on each other, are a bad fit — it names <em>most coding tasks involve fewer truly parallelizable tasks than research</em>. <strong>When not to reach for it</strong>: when the task isn't worth 15x the tokens.</p>
+<h3>2. Appendix 2, grown up</h3>
+<p>The essay's second appendix is called "Prompt Engineering your Tools"; <a href="https://www.anthropic.com/engineering/writing-tools-for-agents" target="_blank">Writing effective tools for AI agents</a> (2025-09-11) is what it became, and the only operating manual for the ACI principle: <strong>consolidate tools</strong> (one <code>schedule_event</code> instead of <code>list_users</code>/<code>list_events</code>/<code>create_event</code>), <strong>namespace them</strong> (<code>asana_search</code> vs <code>jira_search</code> to mark boundaries), <strong>return token-efficient responses</strong> (Claude Code caps tool responses at 25,000 tokens by default — do your own pagination, filtering, truncation), <strong>return high-signal fields only</strong> (<code>name</code> and <code>file_type</code>, not <code>uuid</code> and <code>mime_type</code>), and <strong>write the eval before tuning descriptions</strong>.</p>
+<h3>3. The half the 2024 essay barely covers</h3>
+<p><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" target="_blank">Effective context engineering for AI agents</a> (2025-09-29) fills the blind spot: context is not free. Four techniques — <strong>compaction</strong> (summarize history near the limit), <strong>structured note-taking</strong> (persist progress to external memory such as a <code>NOTES.md</code>), <strong>sub-agent architectures</strong> (work in a clean window, return only a condensed summary), and <strong>just-in-time retrieval</strong> (keep lightweight identifiers, load on demand). One governing line: find <em>the smallest possible set of high-signal tokens</em>.</p>
+<h3>4. The framework list: this is a living document</h3>
+<p>Open the essay today and "When and how to use frameworks" names <strong>the Claude Agent SDK</strong>, <strong>Strands Agents SDK by AWS</strong>, <strong>Rivet</strong> and <strong>Vellum</strong> — and the Claude Agent SDK is a rename of <code>claude-code-sdk</code>, a name that did not exist on publication day in 2024-12. Don't mistake old notes for the present state. Two you can install:</p>
+<pre><code>pip install strands-harness      <span class="tag-com"># or npm i @strands-agents/harness</span>
+pip install -U langgraph
+</code></pre>
+<p><a href="https://github.com/strands-agents/harness-sdk" target="_blank"><code>strands-agents/harness-sdk</code></a> sells end-to-end harness control, "any model, any cloud" (per the GitHub repo page, 8.5k stars, 2026-09); <a href="https://github.com/langchain-ai/langgraph" target="_blank"><code>langchain-ai/langgraph</code></a> is a low-level orchestration framework for stateful agents (per the GitHub repo page, 42.5k stars, 2026-09). <strong>When to install neither</strong>: the essay says start with the LLM API directly, because frameworks <em>create extra layers of abstraction that can obscure the underlying prompts and responses, making them harder to debug</em> — and when you cannot see the prompt you actually sent, every tuning decision is superstition.</p>
+<div class="res"><strong>Sources</strong> · the three Anthropic Engineering posts above (dates are their own publication dates) and the two GitHub repo pages, accessed 2026-09</div>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Cost and alternatives: the price of this essay is being used as a map</h2>
+<div class="claim">The claim: it is a <strong>terrain map from December 2024</strong>. The terrain holds; every signpost has been replaced. Check the signposts before you set out.</div>
+<ol>
+<li><strong>Terminology drift.</strong> The cookbook repo was renamed, the SDK was renamed, the framework list changed hands. Every <strong>proper noun</strong> you copy out of this essay needs re-checking at a primary source; every <strong>criterion</strong> you copy still holds.</li>
+<li><strong>It doesn't discuss context.</strong> In 2024 the context window wasn't yet the main design constraint. Read only this and go build rung (6), and you hit the wall around tool call thirty.</li>
+<li><strong>"90.2%" is the easiest number to over-generalize.</strong> It came from an internal research-task eval, and the very same post goes on to say coding has far less that is genuinely parallelizable.</li>
+<li><strong>Its minimalism gets read backwards.</strong> "Keep it simple" does not mean "never build an agent"; it means "don't move up a rung before you've measured the gain".</li>
+</ol>
+<h3>Four rungs below the agent</h3>
+<ol>
+<li><strong>One good prompt.</strong> The essay's first recommendation is to optimize the single call, adding retrieval and in-context examples where they help.</li>
+<li><strong>Three chained calls.</strong> Twenty lines: debuggable, breakpointable, cost-predictable.</li>
+<li><strong>A skill or a CLAUDE.md.</strong> If all you want is "do it this way every time", that's Skill 6's territory — no agent loop required.</li>
+<li><strong>One hook.</strong> If all you want is "this must happen every time", that's last issue's territory — no model judgment required.</li>
+</ol>
+</div>
+<div class="combo">
+<h3>// ONE-PAGE BUYING CARD</h3>
+<p><strong>Read/install these three first</strong>: (1) the <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">Building Effective AI Agents</a> essay — read the two definitions and each rung's "when to use"; the diagrams are skippable. (2) <code>git clone https://github.com/anthropics/claude-cookbooks</code>, then run <code>basic_workflows.ipynb</code> in <code>patterns/agents/</code> — ten minutes, worth more than ten readings of the diagrams. (3) <code>pip install claude-agent-sdk</code> (or <code>npm install @anthropic-ai/claude-agent-sdk</code>) — <strong>only once you've confirmed you're genuinely on rung (6)</strong>.</p>
+<p><strong>Read next, as needed</strong>: <a href="https://www.anthropic.com/engineering/multi-agent-research-system" target="_blank">How we built our multi-agent research system</a> (where the 15x and the 90.2% come from) · <a href="https://www.anthropic.com/engineering/writing-tools-for-agents" target="_blank">Writing effective tools for AI agents</a> (appendix 2, grown up) · <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" target="_blank">Effective context engineering</a> (compaction / notes / sub-agents / just-in-time retrieval) · <a href="https://github.com/anthropics/claude-agent-sdk-demos" target="_blank"><code>claude-agent-sdk-demos</code></a> (its <code>research-agent</code> is orchestrator-workers you can run; per the GitHub repo page, 2.8k stars, 2026-09) · <a href="https://github.com/strands-agents/harness-sdk" target="_blank"><code>strands-harness</code></a> · <a href="https://github.com/langchain-ai/langgraph" target="_blank"><code>langgraph</code></a>.</p>
+<p><strong>Explicitly don't</strong>: use orchestrator-workers where the subtask list was always hardcodeable · run an evaluator-optimizer loop with no objective yardstick · read 90.2% as "multi-agent is generally better" · pick a framework before knowing which rung you're on · copy package and framework names straight out of a 2024 essay · build a long-horizon agent on this essay alone.</p>
+</div>
+<div class="glossary">
+<h3>// GLOSSARY</h3>
+<dl>
+<dt>workflow</dt>
+<dd>A system where LLMs and tools are orchestrated through <strong>predefined code paths</strong>. Who picks the next call? Your code.</dd>
+<dt>agent</dt>
+<dd>A system where the LLM directs its own process and tool usage, keeping control over how the task gets done. Who picks the next call? The model.</dd>
+<dt>augmented LLM</dt>
+<dd>An LLM with retrieval, tools and memory attached. The essay calls it the basic building block; all five patterns stand on it.</dd>
+<dt>ACI</dt>
+<dd>Agent-computer interface. The counterpart to a human UI: the tool surface a model works against. One of the essay's three closing principles is to craft it as carefully as an API reference.</dd>
+<dt>sectioning vs voting</dt>
+<dd>The two variants of parallelization. Sectioning splits a task into independent subtasks run at once (buys speed); voting runs the same task several times for consensus (buys confidence).</dd>
+<dt>orchestrator-workers</dt>
+<dd>A central LLM decomposes a task into subtasks <strong>at runtime</strong>, delegates them to workers, and synthesizes the results. The sole border with parallelization: the subtask list isn't fixed in advance.</dd>
+<dt>evaluator-optimizer</dt>
+<dd>One LLM produces, another critiques and feeds back, looping until it passes. Presupposes an objective evaluation criterion.</dd>
+<dt>compaction</dt>
+<dd>Summarizing history as context nears its limit, keeping architectural decisions and open questions while dropping redundant output. Infrastructure for long-horizon agents.</dd>
+</dl>
+</div>
+<div class="thinking">
+<h3>// THREE THINGS THAT DON'T ADD UP</h3>
+<details><summary>If the agent rung wins by 90.2%, why does the essay spend its length talking you out of it?</summary><div>Because both numbers come from <strong>the same post</strong>: 90.2% better, and roughly 15x the tokens. The argument was never that agents are bad; it is <strong>don't pay that bill before you've measured the return</strong>. The real test is marginal: going from one prompt to chained calls usually buys a lot at nearly no extra cost, while going from orchestrator-workers to a fully autonomous agent buys an uncertain amount at a certain cost. So "keep it simple" isn't an aesthetic preference — it's <strong>choosing the rung with known cost while the return is unknown</strong>.</div></details>
+<details><summary>If the line is this clean, why is almost nothing in the wild purely one or the other?</summary><div>Because the line is drawn <strong>per decision point</strong>, not per system. Claude Code itself is a hybrid: which tool gets called next in the main loop is the model's call (agent), while when hooks fire, how permissions resolve and when compaction happens are all code's call (workflow). A real system is a list of decision points, and <strong>each one belongs to one side</strong>. So the useful question is never "are we building a workflow or an agent" but "who should make this particular decision" — which is last issue's hook criterion said a second way.</div></details>
+<details><summary>Tool descriptions are written for a model, not a person. Does "polish it like an API reference" survive that?</summary><div>It survives, and the bar is higher than for human docs: people guess, experiment and read the source, while a model mostly has the description you wrote. The later official post quantified it — improving a tool description alone cut task completion time by 40% for agents using it. But the analogy has a seam: API references aim for completeness, tool descriptions aim for <strong>signal</strong>, and completeness is a liability (returning <code>uuid</code> and <code>mime_type</code> is completeness hurting signal). A sharper version might be: polish it like an <strong>error message</strong> — say what to do next, in as few words as possible.</div></details>
+</div>
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">Anthropic Engineering · Building Effective AI Agents</a> — this issue's subject, by Erik Schluntz and Barry Zhang, published 2024-12-19 and revised since. The workflow/agent definitions, the augmented-LLM foundation, each pattern's "when to use", the three closing principles (simplicity / transparency / ACI), Appendix 1 "Agents in Practice" (customer support and coding agents), Appendix 2 "Prompt Engineering your Tools", and the framework list in "When and how to use frameworks"</li>
+<li><a href="https://github.com/anthropics/claude-cookbooks/tree/main/patterns/agents" target="_blank">anthropics/claude-cookbooks · patterns/agents</a> — the official reference implementation: <code>basic_workflows.ipynb</code> (chaining/routing/parallel), <code>evaluator_optimizer.ipynb</code>, <code>orchestrator_workers.ipynb</code>, <code>async_multi_agent_orchestration.ipynb</code>, <code>latency_multi_agent.ipynb</code>, plus <code>util.py</code> and <code>prompts/</code>; all framework-free (repo formerly <code>anthropic-cookbook</code>; per the GitHub repo page, 53.1k stars, 2026-09)</li>
+<li><a href="https://www.anthropic.com/engineering/multi-agent-research-system" target="_blank">Anthropic Engineering · How we built our multi-agent research system</a> — 2025-06-13. Source of the 90.2% and of "agents use about 4x the tokens of chat, multi-agent about 15x"; parallel tool calling cutting research time by up to 90%; a tool-description rewrite cutting task completion time 40%; and where multi-agent does not fit</li>
+<li><a href="https://www.anthropic.com/engineering/writing-tools-for-agents" target="_blank">Anthropic Engineering · Writing effective tools for AI agents</a> — 2025-09-11. The operating manual for the ACI principle: tool consolidation, namespacing, the 25,000-token response cap with pagination/filtering/truncation, high-signal return fields, and eval-driven iteration on tool descriptions</li>
+<li><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" target="_blank">Anthropic Engineering · Effective context engineering for AI agents</a> — 2025-09-29. Compaction, structured note-taking, sub-agent architectures and just-in-time retrieval; the "smallest possible set of high-signal tokens" principle; exactly the blind spot the 2024 essay leaves</li>
+<li><a href="https://code.claude.com/docs/en/agent-sdk/overview" target="_blank">Claude Docs · Agent SDK overview</a> — the comparison table separating Agent SDK, CLI, Client SDK and Managed Agents, plus entry points for built-in tools, hooks, subagents, MCP, permissions, sessions and skills</li>
+<li><a href="https://code.claude.com/docs/en/agent-sdk/quickstart" target="_blank">Claude Docs · Agent SDK Quickstart</a> — where this issue's snippet comes from: Node 18+ / Python 3.10+, <code>ANTHROPIC_API_KEY</code>, the values for <code>allowed_tools</code> and <code>permission_mode</code>, and the capability tiers by tool combination</li>
+<li><a href="https://code.claude.com/docs/en/agent-sdk/migration-guide" target="_blank">Claude Docs · Migrate to Claude Agent SDK</a> — the package rename table (<code>@anthropic-ai/claude-code</code> → <code>@anthropic-ai/claude-agent-sdk</code>, <code>claude-code-sdk</code> → <code>claude-agent-sdk</code>), the v0.1.0 breaking changes (no default system prompt, <code>ClaudeCodeOptions</code> renamed) and the current <code>settingSources</code> behavior</li>
+<li><a href="https://github.com/anthropics/claude-agent-sdk-demos" target="_blank">anthropics/claude-agent-sdk-demos</a> — official demo apps: <code>research-agent</code> (a runnable orchestrator-workers research system), <code>email-agent</code>, <code>simple-chatapp</code>, <code>hello-world</code> and more; the repo states they are for local development only (per the GitHub repo page, 2.8k stars, 2026-09)</li>
+<li><a href="https://github.com/strands-agents/harness-sdk" target="_blank">strands-agents/harness-sdk</a> — the Strands Agents SDK named in the essay's framework list; <code>pip install strands-harness</code> / <code>npm install @strands-agents/harness</code>, describing itself as end-to-end harness control for "any model, any cloud" (per the GitHub repo page, 8.5k stars, 2026-09)</li>
+<li><a href="https://github.com/langchain-ai/langgraph" target="_blank">langchain-ai/langgraph</a> — a low-level orchestration framework for stateful agents, <code>pip install -U langgraph</code>; the best thing to hold against the essay's line about frameworks obscuring the underlying prompts (per the GitHub repo page, 42.5k stars, 2026-09)</li>
+<li><a href="hooks-automation-skill27.en.html">This site · Skill 27 · Hooks &amp; Deterministic Automation</a> — the previous issue; this one sits upstream of it: decide whether an agent belongs here at all, then decide what gets pinned to a hook</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Skill 28 · 2026-09-29</footer>
+</div>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
+</body></html>
