@@ -64,8 +64,8 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <div class="container">
 <header>
 <span class="week-tag">SKILL 29 / SAFETY · ROUNDUP</span>
-<h1>安全与治理类 Skills 榜单</h1>
-<h2>这一类只有一个验货问题：发现问题时它阻断，还是只是告诉你一声</h2>
+<h1 data-tts="5eb6123f0d454378">安全与治理类 Skills 榜单</h1>
+<h2 data-tts="5221181edd22d2b4">这一类只有一个验货问题：发现问题时它阻断，还是只是告诉你一声</h2>
 <div class="date">2026-09-30 · BigCat</div>
 <p class="pitch">别的类别装错了只是白花钱，安全类装错了会给你<strong>一种「已经防住了」的错觉</strong>。本榜十二条都真实可装/可读，但分成两拨：能<strong>硬挡住</strong>你的（退出码非零、系统调用被拦），和只会<strong>写份报告</strong>的。两拨都有用，混着当一回事用就会出事。</p>
 </header>
@@ -73,13 +73,13 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <a href="mcp-security-skill12.html">同系列 → Skill 12 接 MCP 的安全边界（工具返回值即注入面那一层在那期）</a>
 </div>
 <div class="intro">
-<h3>// WHY THIS MATTERS</h3>
+<h3 data-tts="2b07f85b56c3eeeb">// WHY THIS MATTERS</h3>
 <p>AI 写代码之后多出两个新战场——<strong>模型边写边扫</strong>，以及<strong>你装进来的 skill / MCP server 本身就是攻击面</strong>。本期把这两个和老三样（密钥扫描 / 依赖审计 / 越权检查）放进一张表，用一条判据排序：<strong>fail-closed 优先</strong>——不确定时默认拒绝，而不是默认放过。先给表和命令，判据放后半程。</p>
 </div>
 <!-- ============ 1 ============ -->
 <div class="section">
 <span class="num">// 01</span>
-<h2>先给清单：十二条，按「能不能阻断」排</h2>
+<h2 data-tts="c05d36099c766616">先给清单：十二条，按「能不能阻断」排</h2>
 <div class="claim">论断：上半张表（①–⑤）<strong>会拦住你</strong>，下半张表（⑥–⑫）<strong>只会告诉你</strong>。装之前先知道自己买的是哪一种。</div>
 <div class="diagram">条目                            出处                          替你干掉的那件事                 什么时候别装 / 别用
 ━━━ 能阻断（确定性，退出码/系统调用说话）━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -99,7 +99,7 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 另有两条「别装」：guardrails-ai（还活着，但那是给你的 LLM 应用用的，不是给 Claude Code 用的）
                   protectai/llm-guard（据其 GitHub 页，2026-07-09 已 archived，别再往新项目里引）</div>
-<h3>怎么装（命令抄自各自官方页面 / 仓库 README）</h3>
+<h3 data-tts="d5004570d2edb62e">怎么装（命令抄自各自官方页面 / 仓库 README）</h3>
 <pre><code><span class="tag-com"># ①② 不用装，改配置就有。沙箱先看面板缺什么</span>
 /sandbox
 <span class="tag-com"># 要把沙箱当安全门禁而不是省事工具，这两个键必须显式写</span>
@@ -128,7 +128,7 @@ claude mcp add semgrep -- semgrep mcp
 <span class="tag-com"># ⑫ 扫你自己装的那些 MCP server 与 skill；默认逐个问你才连</span>
 uvx snyk-agent-scan@latest scan
 </code></pre>
-<h3>逐条说人话</h3>
+<h3 data-tts="4f96edd8192cf863">逐条说人话</h3>
 <ul>
 <li><strong>① <a href="https://code.claude.com/docs/en/sandboxing" target="_blank">Bash 沙箱</a></strong>（官方机制）：<strong>本榜唯一由操作系统兜底的一条</strong>——macOS 走 Seatbelt，Linux/WSL2 靠两个包，原生 Windows 不支持。两层独立：<code>filesystem</code> 管路径、<code>network</code> 管域名。最值得抄的设计：<strong><code>denyRead</code> 在更宽的 <code>allowRead</code> 里依然成立</strong>（官方原话是「一条宽的 allow 不能悄悄把一个 secret 重新暴露出来」）。<strong>什么时候别用</strong>：你其实想要的是每条命令都问你——那用 permission 模式，别用沙箱。</li>
 <li><strong>② <a href="https://code.claude.com/docs/en/permissions" target="_blank">permissions.deny</a></strong>（官方机制）：<strong>能收紧、不能放宽</strong>——deny 规则在 auto 模式下依然生效。但它有一条必须知道的天花板：<strong>Bash 的 deny 是按命令原文匹配的</strong>，官方自己写明「要不依赖命令文本的网络管控，请用沙箱的网络隔离」。<strong>什么时候别用</strong>：你想要的是「问我一下」而不是「禁掉」——那写成 <code>ask</code>。</li>
@@ -148,7 +148,7 @@ uvx snyk-agent-scan@latest scan
 <!-- ============ 2 ============ -->
 <div class="section">
 <span class="num">// 02</span>
-<h2>为什么这十二条不能混着比：两个轴，四个格</h2>
+<h2 data-tts="f8e39d9b786a808f">为什么这十二条不能混着比：两个轴，四个格</h2>
 <div class="claim">论断：横轴是<strong>谁做判断</strong>（写死的规则 / 模型读上下文），纵轴是<strong>发现之后会怎样</strong>（硬阻断 / 只报告）。<strong>右上角那格是空的，而且短期内会一直空着。</strong></div>
 <div class="diagram">                    │ 规则写死（确定性）              │ 模型读上下文（有语义）
 ────────────────────┼─────────────────────────────────┼────────────────────────────────
@@ -174,7 +174,7 @@ uvx snyk-agent-scan@latest scan
 <!-- ============ 3 ============ -->
 <div class="section">
 <span class="num">// 03</span>
-<h2>三分钟验货：装之前答这六问</h2>
+<h2 data-tts="5f4386fe755024d5">三分钟验货：装之前答这六问</h2>
 <div class="claim">论断：这一类不看星数，看<strong>它在不确定或出故障的时候默认做什么</strong>。默认放过的东西，别当门禁用。</div>
 <ol>
 <li><strong>它有发现的时候，退出码是几？</strong> 答不出来的就不是门禁。③ 是 1、④ 加 <code>--fail</code> 是 183，能直接进 CI。⑥⑦⑧⑨ 答案都是「不阻断」——记下来，别自我安慰。</li>
@@ -189,15 +189,15 @@ uvx snyk-agent-scan@latest scan
 <!-- ============ 4 ============ -->
 <div class="section">
 <span class="num">// 04</span>
-<h2>诚实的代价：安全类是最容易「装了等于没装」的一类</h2>
+<h2 data-tts="333e7729e36b47c8">诚实的代价：安全类是最容易「装了等于没装」的一类</h2>
 <div class="claim">论断：这一类的代价不是钱，是<strong>三种可预测的失效</strong>——告警疲劳、虚假安心、工具本身成为入口。</div>
-<h3>三笔账</h3>
+<h3 data-tts="eb02af39357ab54d">三笔账</h3>
 <ul>
 <li><strong>告警疲劳会自己杀死检查。</strong> 老仓库上直接开 ③，头一次可能几百条历史命中；没人看，两周后就被从 CI 里注释掉。<strong>正确顺序是先出 baseline 再开门禁</strong>，④ 的 <code>--results=verified</code> 同理。</li>
 <li><strong>虚假安心是最贵的一笔。</strong> ⑥⑦⑧⑨ 都产出很像结论的东西，而都不阻断；⑦ 官方还写明<strong>扫描不确定，同一份代码两次扫可能不一样</strong>。把这类报告当「通过」记进流程，不如什么都不装——那时你至少知道自己没防。</li>
 <li><strong>安全工具本身在扩大攻击面。</strong> ④ 验证凭据要往外发请求；⑫ 扫配置可能执行命令；⑨ 明说不抗注入。加上沙箱那条默认值：<strong>沙箱的默认读权限覆盖整台机器（除若干默认拒绝目录），连 <code>~/.aws/credentials</code> 和 <code>~/.ssh/</code> 都还能读</strong>——要挡住得显式配 <code>sandbox.credentials</code> 或把路径加进 <code>denyRead</code>。</li>
 </ul>
-<h3>不装任何东西，你还能怎么办</h3>
+<h3 data-tts="96e372f6466d50ea">不装任何东西，你还能怎么办</h3>
 <ol>
 <li><strong>先敲 <code>/security-review</code>。</strong> 零安装零配置，先知道这个分支大概什么水位。</li>
 <li><strong>再开托管方自带的推送保护。</strong> 比装任何扫描器都省事，而且它真阻断。</li>
@@ -206,13 +206,13 @@ uvx snyk-agent-scan@latest scan
 <div class="fail"><strong>那一格永远空着</strong>：① 能拦系统调用、③ 能拦提交、⑦ 能写 SARIF 和补丁——<strong>没有一样能判断「这个风险你的业务能不能接受」。</strong>⑦ 把这件事写进了产品设计：补丁永不自动应用。<strong>按不按那个 <code>git apply</code>，至今是人的活。</strong></div>
 </div>
 <div class="combo">
-<h3>// 一页选购卡</h3>
+<h3 data-tts="9d270790f343dda0">// 一页选购卡</h3>
 <p><strong>先装这三个</strong>：① <code>gitleaks</code> 进 pre-commit（<code>brew install gitleaks</code>，一行 <code>- id: gitleaks</code>，有发现退出码 1）——唯一「今天装、今天就有牙」的。② <code>/security-review</code>——零安装，先摸清分支水位。③ <code>/plugin install security-guidance@claude-plugins-official</code>——边写边复审，但记住它<strong>不阻断</strong>。</p>
 <p><strong>按需再加</strong>：<code>claude-security@claude-plugins-official</code>（要 SARIF 报告与可 <code>git apply</code> 的补丁，接受 token 开销）· <code>trufflehog --results=verified --fail</code>（③ 误报多到没人看，且法务能接 AGPL）· <code>osv-scanner scan source -r .</code>（依赖多、语言杂）· <code>zizmor .github/workflows/</code>（仓里有 workflow，<strong>这格最常空着</strong>）· <code>anthropics/claude-code-security-review</code>（要 PR 级评论，且<strong>只审可信 PR</strong>）· <code>uvx snyk-agent-scan@latest scan</code>（装了第三方 skill / MCP server）· <code>claude mcp add semgrep -- semgrep mcp</code>（要 agent 自己能调 SAST）。</p>
 <p><strong>明确别做</strong>：把「有报告」当成「有门禁」 · 在老仓库上不出 baseline 就开密钥扫描门禁 · 让模型的安全判断直接否决提交 · 只审代码不审 <code>.github/workflows/</code> 和装进来的 skill · 开了沙箱却不写 <code>failIfUnavailable</code> 与 <code>allowUnsandboxedCommands</code> · 把 <code>strictAllowlist</code> 写进仓库的 <code>.claude/settings.json</code>（不生效）· 往新项目里引 <code>llm-guard</code>（已归档）· <strong>以为星数高就更安全</strong>。</p>
 </div>
 <div class="glossary">
-<h3>// 术语表</h3>
+<h3 data-tts="11ba01ac71568399">// 术语表</h3>
 <dl>
 <dt>fail-closed / fail-open</dt>
 <dd>出故障或判断不了时，默认拒绝（closed）还是默认放过（open）。安全组件必须 fail-closed，而很多默认值是 open。</dd>
@@ -231,7 +231,7 @@ uvx snyk-agent-scan@latest scan
 </dl>
 </div>
 <div class="refs">
-<h3>// 延伸阅读</h3>
+<h3 data-tts="e528252351953f0a">// 延伸阅读</h3>
 <ul>
 <li><a href="https://code.claude.com/docs/en/security" target="_blank">Claude Code · Security</a> — 权限架构；fail-closed matching；deny 按命令原文匹配的限制；<code>/security-review</code> 的位置（2026-09）</li>
 <li><a href="https://code.claude.com/docs/en/sandboxing" target="_blank">Claude Code · Configure the sandboxed Bash tool</a> — <code>failIfUnavailable</code> / <code>allowUnsandboxedCommands</code> / <code>strictAllowlist</code> / <code>credentials</code>；denyRead 在宽 allow 里仍成立；默认读权限覆盖整机（2026-09）</li>
