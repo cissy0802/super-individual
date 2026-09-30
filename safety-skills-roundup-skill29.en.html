@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill 29 · Safety &amp; Governance Skills Roundup — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head>
+<body>
+<div class="container">
+<header>
+<span class="week-tag">SKILL 29 / SAFETY · ROUNDUP</span>
+<h1>Safety &amp; Governance Skills Roundup</h1>
+<h2>This class has exactly one acceptance question: when it finds something, does it block you, or just tell you?</h2>
+<div class="date">2026-09-30 · BigCat</div>
+<p class="pitch">Get another class wrong and you waste money. Get this one wrong and you buy a <strong>feeling of being protected</strong>. All twelve entries below are real and installable (or readable), but they split into two piles: the ones that <strong>actually stop you</strong> — nonzero exit code, blocked syscall — and the ones that <strong>write a report</strong>. Both are useful. Treating them as the same thing is how you get burned.</p>
+</header>
+<div class="xref">
+<a href="mcp-security-skill12.en.html">Same series → Skill 12, the MCP trust boundary (that injection surface is covered there)</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>Once a model writes your code, two new fronts open up: <strong>scanning while the model is still typing</strong>, and the fact that <strong>the skills and MCP servers you installed are themselves an attack surface</strong>. This issue puts both next to the classic three — secret scanning, dependency audit, privilege checks — in one table, ordered by a single criterion: <strong>fail-closed first</strong>. Deny by default when uncertain, don't pass by default. Table and commands first; the criteria come later.</p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>The list: twelve entries, sorted by whether they can block</h2>
+<div class="claim">Claim: the top half (1-5) <strong>stops you</strong>. The bottom half (6-12) <strong>only tells you</strong>. Know which one you are buying before you install it.</div>
+<div class="diagram">Entry                          Source                      What it takes off your plate       When not to install
+=== CAN BLOCK (deterministic: exit codes and syscalls) =============================================================
+1  sandbox (Bash sandbox)      built-in · /sandbox         OS enforces file + network limits  Native Windows (needs WSL2)
+2  permissions.deny            built-in · settings.json    Hard-bans tools/paths; tightens    You actually want "ask me"
+3  gitleaks                    GitHub · MIT                Exit code 1 before a secret lands  Push protection already covers it
+4  trufflehog                  GitHub · AGPL-3.0           Only reports secrets verified live Legal cannot accept AGPL
+5  osv-scanner                 GitHub · Apache-2.0         Dependency CVEs against OSV.dev    One language with its own audit
+=== ONLY TELLS YOU (model review and reports; no blocking) =========================================================
+6  security-guidance           plugin · Anthropic          A second model reviews as you write No Python 3.10+ on this box
+7  claude-security             plugin · Anthropic          Multi-agent deep scan + SARIF      The token cost is too steep
+8  /security-review            built-in command            One security pass over the branch  You want it to run every time
+9  claude-code-security-review GitHub · MIT                Auto-comments findings on a PR     You review untrusted PRs
+10 semgrep mcp                 GitHub · LGPL-2.1           Rule-based SAST wired into agents  You don't need the model to call it
+11 zizmor                      GitHub · MIT                Audits GitHub Actions privileges   No workflows in the repo
+12 snyk/agent-scan             GitHub · Apache-2.0         Scans the MCP servers/skills you installed  You install no third-party skills
+====================================================================================================================
+Two more that belong under "do not install": guardrails-ai (alive, but it guards YOUR LLM app, not your coding agent)
+                                             protectai/llm-guard (per its GitHub page, archived 2026-07-09)</div>
+<h3>How to install (commands copied from each official page or repo README)</h3>
+<pre><code><span class="tag-com"># 1 and 2 need no install, just configuration. Start with the sandbox panel.</span>
+/sandbox
+<span class="tag-com"># To use the sandbox as a security gate rather than a convenience, set these explicitly</span>
+{ <span class="tag-key">"sandbox"</span>: { <span class="tag-key">"enabled"</span>: true, <span class="tag-key">"failIfUnavailable"</span>: true,
+                <span class="tag-key">"allowUnsandboxedCommands"</span>: false,
+                <span class="tag-key">"network"</span>: { <span class="tag-key">"strictAllowlist"</span>: true, <span class="tag-key">"allowedDomains"</span>: [<span class="tag-key">"*.github.com"</span>] } } }
+
+<span class="tag-com"># 3, 4, 5, 11 are deterministic scanners; each installs in one line</span>
+brew install gitleaks trufflehog zizmor
+go install github.com/google/osv-scanner/v2/cmd/osv-scanner@latest
+gitleaks git --report-path gitleaks-report.json   <span class="tag-com"># findings -&gt; exit code 1</span>
+trufflehog git file://. --results=verified --fail <span class="tag-com"># findings -&gt; exit code 183</span>
+osv-scanner scan source -r .
+zizmor .github/workflows/                          <span class="tag-com"># SARIF output for CI</span>
+
+<span class="tag-com"># 6 and 7 are official plugins; 8 is built in and needs nothing</span>
+/plugin marketplace add anthropics/claude-plugins-official
+/plugin install security-guidance@claude-plugins-official
+/plugin install claude-security@claude-plugins-official   <span class="tag-com"># needs python3 &gt;= 3.9</span>
+/claude-security         <span class="tag-com"># menu: scan codebase / scan changes / suggest patches</span>
+/security-review         <span class="tag-com"># one pass over the current branch, zero install</span>
+
+<span class="tag-com"># 10 Semgrep's MCP is now a subcommand of the main repo (the old semgrep/mcp is archived)</span>
+claude mcp add semgrep -- semgrep mcp
+
+<span class="tag-com"># 12 scans the MCP servers and skills you installed; asks before contacting each one</span>
+uvx snyk-agent-scan@latest scan
+</code></pre>
+<h3>Entry by entry</h3>
+<ul>
+<li><strong>1. <a href="https://code.claude.com/docs/en/sandboxing" target="_blank">Bash sandbox</a></strong> (built in): <strong>the only entry here backed by the operating system</strong> — Seatbelt on macOS, two packages on Linux/WSL2, native Windows unsupported. Two independent layers: <code>filesystem</code> for paths, <code>network</code> for domains. The design worth copying: <strong><code>denyRead</code> still holds inside a wider <code>allowRead</code></strong> — the docs put it as "a broad allow can't silently re-expose a secret." <strong>Skip it if</strong> what you actually want is a prompt on every command; that's permission modes, not the sandbox.</li>
+<li><strong>2. <a href="https://code.claude.com/docs/en/permissions" target="_blank">permissions.deny</a></strong> (built in): it <strong>tightens but never loosens</strong> — deny rules still apply in auto mode. One ceiling you must know: <strong>Bash deny rules match the command as written</strong>, and the docs say outright that for network enforcement that doesn't depend on command text you should use sandbox network isolation. <strong>Skip it if</strong> you want "ask me" rather than "forbid"; write an <code>ask</code> rule.</li>
+<li><strong>3. <a href="https://github.com/gitleaks/gitleaks" target="_blank">gitleaks</a></strong> (MIT; ~29.6k stars per its GitHub page, 2026-09): regex rules over git history and files. <strong>The cheapest fail-closed sample on this list</strong>: findings mean <strong>exit code 1</strong> (tunable with <code>--exit-code</code>), and one <code>- id: gitleaks</code> line in pre-commit stops the commit. For an old repo drowning in historical hits, use a baseline: write a report first, then <code>--baseline-path</code> to see only what's new, with individual false positives in <code>.gitleaksignore</code>. <strong>Skip it if</strong> your host's push protection already covers you.</li>
+<li><strong>4. <a href="https://github.com/trufflesecurity/trufflehog" target="_blank">trufflehog</a></strong> (AGPL-3.0; ~28.2k stars and 800+ detectors per its GitHub page, 2026-09): the difference from 3 is <strong>verification</strong> — it calls the provider's API with the credential it found (AWS gets a <code>GetCallerIdentity</code>) to confirm it is still live. <code>--results=verified</code> cuts the noise down to what actually works; <code>--fail</code> turns findings into <strong>exit code 183</strong>. <strong>The cost is real</strong>: verification sends outbound requests, and <strong>AGPL-3.0 is not something every company can take</strong>.</li>
+<li><strong>5. <a href="https://github.com/google/osv-scanner" target="_blank">osv-scanner</a></strong> (Apache-2.0; ~11.1k stars per its GitHub page, 2026-09): reads manifests like <code>package.json</code>, <code>go.mod</code> and <code>pom.xml</code> and reconciles them against the OSV.dev database; <code>scan source -r .</code> walks a tree. The experimental <code>osv-scanner fix</code> proposes upgrades filtered by dependency depth and severity, <strong>but the docs draw a line</strong>: it is risky on untrusted projects because it may execute package-manager scripts.</li>
+<li><strong>6. <a href="https://code.claude.com/docs/en/security-guidance" target="_blank">security-guidance</a></strong> (official plugin): <strong>three review layers written purely as hooks</strong>, aimed at the code the model just produced. The key design is that <strong>the instance that wrote the code does not grade itself</strong>; a separate Claude is spun up and told only to find problems. <strong>The one honest disclosure that matters most on this list</strong>: <strong>none of the three layers blocks</strong> a write or a commit. They hand findings back for the model to fix. Installing it is not installing a gate.</li>
+<li><strong>7. <a href="https://code.claude.com/docs/en/claude-security" target="_blank">claude-security</a></strong> (official plugin; needs <code>python3</code> 3.9+): a team of agents maps the architecture, builds a threat model and hunts, and <strong>every finding is checked by an independent verifier agent before it reaches the report</strong>. Three files come out of one source: <code>CLAUDE-SECURITY-RESULTS.md</code>, <code>.jsonl</code>, and <code>.sarif</code> (SARIF 2.1.0, classified by CWE, ready for GitHub code scanning), plus a <strong>revision stamp</strong> recording which commit was scanned. <strong>Three limits to internalize</strong>: scans are <strong>nondeterministic</strong> (two runs over the same code can surface different findings), <strong>patches are never applied automatically</strong> (they land in <code>patches/F1.patch</code> for you to <code>git apply</code>), and <strong>one scan can burn a lot of tokens</strong> and needs the session left open.</li>
+<li><strong>8. <a href="https://code.claude.com/docs/en/security" target="_blank">/security-review</a></strong> (built-in command): <strong>the cheapest thing here — nothing to install</strong>. Run it in your project directory and it does one security pass over the branch's changes. The docs split the layers cleanly: 6 works while the model writes, 8 is a <strong>single</strong> pass over the branch, 7 is the on-demand deep scan. <strong>Where it falls short</strong>: you want it on every commit — that's 6 or CI.</li>
+<li><strong>9. <a href="https://github.com/anthropics/claude-code-security-review" target="_blank">claude-code-security-review</a></strong> (MIT; ~6.3k stars and 700 forks per its GitHub page, 2026-09): a GitHub Action that runs on pull requests and comments its findings, covering injection, broken authorization and IDOR, exposed secrets, weak crypto, deserialization RCE and more, with a built-in <strong>false-positive filter</strong> that deliberately drops DoS, rate limiting and open redirects. <strong>Read its own warning</strong>: it is <strong>not hardened against prompt injection and should only review trusted PRs</strong>, and the repo suggests requiring approval for external contributors. The minimal workflow needs just <code>contents: read</code> and <code>pull-requests: write</code>.</li>
+<li><strong>10. <a href="https://github.com/semgrep/semgrep" target="_blank">semgrep mcp</a></strong> (LGPL-2.1; ~16.8k stars per its GitHub page, 2026-09): 5,000+ SAST rules exposed as MCP tools (<code>security_check</code>, <code>semgrep_scan</code>, <code>semgrep_scan_with_custom_rule</code> and others) so the agent can scan on its own. <strong>There is a naming trap</strong>: the standalone <code>semgrep/mcp</code> repo was <strong>archived on 2025-10-28 per its own page</strong>; it is now the <code>semgrep mcp</code> subcommand of the main repo. <strong>Skip wiring it</strong> if you don't need the model to call it — run <code>semgrep ci</code> in CI and save the resident context.</li>
+<li><strong>11. <a href="https://github.com/zizmorcore/zizmor" target="_blank">zizmor</a></strong> (MIT; ~6.6k stars per its GitHub page, 2026-09): audits CI configuration specifically — <strong>template injection</strong> (a <code>${{ }}</code> interpolation becoming attacker-controlled code execution), <strong>credential persistence</strong>, <strong>over-broad runner permissions</strong>, and impostor commits. <strong>This is the most commonly missing square in "privilege checks"</strong>: everyone audits code permissions; nobody audits the workflow token that can write to the repo. SARIF output for CI.</li>
+<li><strong>12. <a href="https://github.com/snyk/agent-scan" target="_blank">snyk/agent-scan</a></strong> (Apache-2.0; ~3.1k stars per its GitHub page, 2026-09): <strong>the only entry that audits the AI components you installed</strong> — it walks <code>mcp.json</code>, <code>.claude/skills</code>, <code>.agents/skills</code> and looks for prompt injection, tool poisoning, suspicious downloads and hardcoded secrets. Its own warning says everything about this class: <strong>scanning MCP configuration can itself execute commands or make outbound requests</strong>, which is why an interactive scan <strong>asks before contacting each server</strong> and a non-interactive one needs an explicit <code>--dangerously-run-mcp-servers</code>. Needs <code>SNYK_TOKEN</code>.</li>
+</ul>
+<div class="res"><strong>Why those two landed under "do not install"</strong> · <a href="https://github.com/guardrails-ai/guardrails" target="_blank">guardrails-ai/guardrails</a> (Apache-2.0; ~7.5k stars per its GitHub page, 2026-09) is alive and <code>OnFailAction.EXCEPTION</code> is exactly the fail-closed shape — but it guards <strong>your own LLM application's</strong> inputs and outputs, not your coding agent, and listing it here would mislead. <a href="https://github.com/protectai/llm-guard" target="_blank">protectai/llm-guard</a> (MIT) has a beautiful input/output scanner taxonomy, <strong>but per its GitHub page it was archived on 2026-07-09 and is explicitly unmaintained</strong> — read it for ideas, don't pull it into a new project.</div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Why these twelve don't compare: two axes, four squares</h2>
+<div class="claim">Claim: the horizontal axis is <strong>who judges</strong> (a hardcoded rule vs. a model reading context); the vertical axis is <strong>what happens on a finding</strong> (hard block vs. a report). <strong>The top-right square is empty, and it will stay empty for a while.</strong></div>
+<div class="diagram">                      | Hardcoded rules (deterministic)   | Model reads context (semantic)
+----------------------+-----------------------------------+---------------------------------------
+ Blocks on a finding  | 1  sandbox (syscall layer)        | (empty)
+                      | 2  permissions.deny               |   -- nothing here dares let a model's
+                      | 3  gitleaks, exit code 1          |      judgment veto your commit outright
+                      | 4  trufflehog --fail -> 183       |
+----------------------+-----------------------------------+---------------------------------------
+ Reports; you decide  | 5  osv-scanner                    | 6  security-guidance (no layer blocks)
+                      | 10 semgrep mcp                    | 7  claude-security (patches await you)
+                      | 11 zizmor (teeth only via SARIF)  | 8  /security-review
+                      | 12 snyk/agent-scan                | 9  PR Action (comments, never blocks)
+----------------------+-----------------------------------+---------------------------------------</div>
+<p><strong>That empty square is a design choice, not an unfinished product</strong>: model review has false positives, and one false positive that hard-blocks a commit gets the whole check switched off the next morning — and then you don't even have the report. So read this class correctly: <strong>the left column enforces "must never happen," the right column says "you should look at this." Neither substitutes for the other.</strong></p>
+<p><strong>Three common mismatches</strong>:</p>
+<ul>
+<li><strong>Treating the right column as a gate.</strong> You installed 6 and assume vulnerabilities can't get through — none of its layers block. A gate means 3 or 4 in CI, speaking in exit codes.</li>
+<li><strong>Treating the left column as an audit.</strong> 3 only knows regexes; 5 only knows the dependency versions in a manifest. Business-logic authorization flaws (who may read whose orders) are invisible to both. That's 7 and 9.</li>
+<li><strong>Auditing code but not configuration or what you installed.</strong> Squares 11 and 12 are the ones usually left empty: a workflow token that can write to the repo, and the third-party skill you installed yesterday, are both shortcuts around every check above.</li>
+</ul>
+<div class="fail"><strong>How it goes wrong</strong>: a team wires up 9, gets a tidy security comment on every PR, and feels covered. Six months later a key leaks — that comment <strong>never blocked a merge</strong>, and nobody ever added 3. <strong>A report nobody reads equals nothing installed. An exit code nobody can route around.</strong></div>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>A three-minute check: answer these six before installing</h2>
+<div class="claim">Claim: this class isn't chosen by star count. It's chosen by <strong>what the thing does by default when it is uncertain or broken</strong>. Anything that passes by default is not a gate.</div>
+<ol>
+<li><strong>What's the exit code on a finding?</strong> If you can't answer, it isn't a gate. For 3 it's 1; for 4 with <code>--fail</code> it's 183 — both go straight into CI. For 6, 7, 8 and 9 the answer is "does not block." Write that down instead of comforting yourself.</li>
+<li><strong>What happens when the tool itself can't run?</strong> This question separates the serious from the rest. The sandbox's default is to <strong>warn and keep running unsandboxed</strong> when dependencies are missing or the platform is unsupported — fail-open. Making it a hard failure takes an explicit <code>sandbox.failIfUnavailable: true</code>, which the docs describe as being for deployments that require sandboxing as a security gate.</li>
+<li><strong>Is there a sanctioned way around it?</strong> Yes, and it's documented: on a sandbox violation Claude may retry with <code>dangerouslyDisableSandbox</code>, and <code>allowUnsandboxedCommands: false</code> is what closes that path. Entry 12's equivalent is <code>--dangerously-run-mcp-servers</code>. <strong>Whenever a flag has "dangerously" in its name, find out whether it defaults on or off.</strong></li>
+<li><strong>Which settings layer actually counts?</strong> An easy trap: <code>sandbox.network.strictAllowlist</code> (which turns "ask" into "deny") <strong>is honored only from user settings, managed settings, or <code>--settings</code> — putting it in a repository's <code>.claude/settings.json</code> does nothing at all</strong>. Security config in the wrong layer is security config you don't have.</li>
+<li><strong>Who manages its false positives?</strong> Only a tool with a real mechanism deserves a gate: 3 has baselines plus <code>.gitleaksignore</code>, 4 has <code>--results=verified</code>, 9 has that exclusion list. A noisy tool with no triage mechanism is a tool waiting to be switched off.</li>
+<li><strong>Is the tool itself an attack surface?</strong> This one is aimed at this class specifically: 9 states it isn't hardened against prompt injection and should only see trusted PRs; 12 states that scanning configuration may execute commands; 5's <code>fix</code> may execute package-manager scripts. <strong>Security tools read untrusted input by definition — those three warnings are honesty, not weakness.</strong></li>
+</ol>
+<div class="fail"><strong>The line in this section</strong>: 12 has ~3.1k stars and 3 has ~29.6k — <strong>neither number is a selection criterion</strong>. Questions 1 and 2 are: does it block on a finding, and does it pass by default when broken? Two "passes" means you own a reminder tool. Don't put it in a compliance document.</div>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>The honest cost: this is the class most likely to be installed and useless</h2>
+<div class="claim">Claim: the cost here isn't money. It's <strong>three predictable failures</strong> — alert fatigue, false comfort, and the tool becoming the entry point.</div>
+<h3>Three ledgers</h3>
+<ul>
+<li><strong>Alert fatigue kills the check by itself.</strong> Turn 3 on over an old repo and the first run may produce hundreds of historical hits. Nobody reads them, and two weeks later it's commented out of CI. <strong>The right order is baseline first, gate second</strong>; the same goes for 4's <code>--results=verified</code>.</li>
+<li><strong>False comfort is the expensive one.</strong> Entries 6 through 9 all produce something that looks like a conclusion, and none of them block; 7's own docs add that <strong>scans are nondeterministic — two runs over the same code can differ</strong>. Recording that kind of report as a "pass" in your process is worse than installing nothing, because with nothing installed you at least know you aren't covered.</li>
+<li><strong>Security tools widen the attack surface.</strong> 4 sends outbound requests to verify; 12 may execute commands while scanning; 9 says it doesn't resist injection. Add the sandbox default: <strong>read access covers the whole machine apart from certain denied directories, and that still includes <code>~/.aws/credentials</code> and <code>~/.ssh/</code></strong> — closing it takes an explicit <code>sandbox.credentials</code> block or those paths in <code>denyRead</code>.</li>
+</ul>
+<h3>What you can do without installing anything</h3>
+<ol>
+<li><strong>Run <code>/security-review</code> first.</strong> Zero install, zero config, and you learn roughly where this branch stands.</li>
+<li><strong>Then turn on your host's push protection.</strong> Less work than any scanner, and it genuinely blocks.</li>
+<li><strong>Only then put 3 in pre-commit.</strong> One <code>- id: gitleaks</code> line is the best value fail-closed control you can buy.</li>
+</ol>
+<div class="fail"><strong>The square that stays empty</strong>: 1 stops syscalls, 3 stops commits, 7 writes SARIF and patches — <strong>not one of them can decide whether your business can accept a given risk.</strong> Entry 7 built that into the product: patches are never applied automatically. <strong>Pressing that <code>git apply</code> is still a human's job.</strong></div>
+</div>
+<div class="combo">
+<h3>// ONE-PAGE BUYING CARD</h3>
+<p><strong>Install these three first</strong>: (1) <code>gitleaks</code> in pre-commit (<code>brew install gitleaks</code>, one <code>- id: gitleaks</code> line, exit code 1 on findings) — the only entry that has teeth the day you install it. (2) <code>/security-review</code> — zero install, tells you where the branch stands. (3) <code>/plugin install security-guidance@claude-plugins-official</code> — review while the model writes, but remember it <strong>does not block</strong>.</p>
+<p><strong>Add as needed</strong>: <code>claude-security@claude-plugins-official</code> (you want SARIF reports and <code>git apply</code>-able patches, and accept the token cost) · <code>trufflehog --results=verified --fail</code> (3 is too noisy to read, and legal accepts AGPL) · <code>osv-scanner scan source -r .</code> (many dependencies, mixed languages) · <code>zizmor .github/workflows/</code> (you have workflows — <strong>the most commonly empty square</strong>) · <code>anthropics/claude-code-security-review</code> (you want PR-level comments, and <strong>only review trusted PRs</strong>) · <code>uvx snyk-agent-scan@latest scan</code> (you installed third-party skills or MCP servers) · <code>claude mcp add semgrep -- semgrep mcp</code> (you want the agent to call SAST itself).</p>
+<p><strong>Explicitly don't</strong>: treat "there is a report" as "there is a gate" · turn on a secret-scanning gate over an old repo without a baseline · let a model's security judgment veto a commit directly · audit code but never <code>.github/workflows/</code> or the skills you installed · enable the sandbox without setting <code>failIfUnavailable</code> and <code>allowUnsandboxedCommands</code> · put <code>strictAllowlist</code> in a repo's <code>.claude/settings.json</code> (no effect) · pull <code>llm-guard</code> into a new project (archived) · <strong>assume more stars means more secure</strong>.</p>
+</div>
+<div class="glossary">
+<h3>// GLOSSARY</h3>
+<dl>
+<dt>fail-closed / fail-open</dt>
+<dd>When broken or unable to decide, does it deny (closed) or pass (open)? Security components must be fail-closed, and plenty of defaults are open.</dd>
+<dt>SARIF</dt>
+<dd>The interchange format for static analysis results (2.1.0). A tool that emits SARIF can be read directly by GitHub code scanning — it is usually how a report gets teeth.</dd>
+<dt>verified secret</dt>
+<dd>A trufflehog concept: the credential found is actually used against the provider's API to confirm it is live. Cost is an outbound request; benefit is far fewer false positives.</dd>
+<dt>baseline</dt>
+<dd>Record every existing hit in a report, then only look at what's new. A prerequisite for gating secret scanning on an old repo, or alert fatigue is guaranteed.</dd>
+<dt>tool poisoning</dt>
+<dd>An MCP server or skill hiding malicious content in its own description so that being read into context steers the agent. Exactly what snyk/agent-scan looks for.</dd>
+<dt>sandbox.failIfUnavailable</dt>
+<dd>A Claude Code setting. By default a sandbox that can't start only warns and runs anyway; set it to true for a hard failure. Required if you treat the sandbox as a gate.</dd>
+<dt>strictAllowlist</dt>
+<dd>A sandbox network setting. Non-allowlisted domains go from "ask you" to "denied." Honored only from user settings, managed settings, or <code>--settings</code>.</dd>
+</dl>
+</div>
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://code.claude.com/docs/en/security" target="_blank">Claude Code · Security</a> — permission architecture; fail-closed matching; the limit that deny rules match the command as written; where <code>/security-review</code> sits (2026-09)</li>
+<li><a href="https://code.claude.com/docs/en/sandboxing" target="_blank">Claude Code · Configure the sandboxed Bash tool</a> — <code>failIfUnavailable</code>, <code>allowUnsandboxedCommands</code>, <code>strictAllowlist</code>, <code>credentials</code>; denyRead holding inside a wider allow; default read access covering the machine (2026-09)</li>
+<li><a href="https://code.claude.com/docs/en/claude-security" target="_blank">Claude Code · Scan your codebase for vulnerabilities</a> — the three jobs of <code>claude-security</code>; the three report files and the revision stamp; scan nondeterminism; patches never applied automatically (2026-09)</li>
+<li><a href="https://code.claude.com/docs/en/security-guidance" target="_blank">Claude Code · Catch security issues as Claude writes code</a> — the three hook layers and their caps; review independence; <strong>none of the layers blocks</strong> (2026-09)</li>
+<li><a href="https://github.com/anthropics/claude-code-security-review" target="_blank">anthropics/claude-code-security-review</a> — minimal workflow and required permissions; covered vulnerability classes; the false-positive exclusion list; the "not hardened against prompt injection" warning (MIT, 2026-09)</li>
+<li><a href="https://github.com/gitleaks/gitleaks" target="_blank">gitleaks/gitleaks</a> — exit codes 0/1/126; pre-commit config; baselines and <code>.gitleaksignore</code> (MIT, 2026-09)</li>
+<li><a href="https://github.com/trufflesecurity/trufflehog" target="_blank">trufflesecurity/trufflehog</a> — the three result classes and what verified means; 800+ detectors; <code>--fail</code> and exit code 183 (AGPL-3.0, 2026-09)</li>
+<li><a href="https://github.com/google/osv-scanner" target="_blank">google/osv-scanner</a> — <code>scan source -r</code>; the experimental <code>fix</code> flags and its "risky on untrusted projects" note (Apache-2.0, 2026-09)</li>
+<li><a href="https://github.com/semgrep/semgrep" target="_blank">semgrep/semgrep</a> — the <code>semgrep mcp</code> subcommand and the tools it exposes; the old standalone <code>semgrep/mcp</code> archived 2025-10-28 per its page (LGPL-2.1, 2026-09)</li>
+<li><a href="https://github.com/zizmorcore/zizmor" target="_blank">zizmorcore/zizmor</a> — the four audit families: template injection, credential persistence, over-broad permissions, impostor commits; SARIF output (MIT, 2026-09)</li>
+<li><a href="https://github.com/snyk/agent-scan" target="_blank">snyk/agent-scan</a> — the list of MCP server and skill locations it scans; per-server consent by default; <code>--dangerously-run-mcp-servers</code> (Apache-2.0, 2026-09)</li>
+<li><a href="https://github.com/guardrails-ai/guardrails" target="_blank">guardrails-ai/guardrails</a> — the Guard / validator / Hub structure; <code>OnFailAction.EXCEPTION</code> as a fail-closed shape (Apache-2.0, 2026-09)</li>
+<li><a href="https://github.com/protectai/llm-guard" target="_blank">protectai/llm-guard</a> — the full input/output scanner taxonomy, worth reading for ideas; archived 2026-07-09 per its GitHub page (MIT)</li>
+<li><a href="mcp-security-skill12.en.html">This site, Skill 12 · The MCP trust boundary</a> — the injection surface entry 12 scans for, explained there</li>
+<li><a href="hooks-automation-skill27.en.html">This site, Skill 27 · Hooks and deterministic automation</a> — why a gate has to be code rather than instructions</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Skill 29 · 2026-09-30</footer>
+</div>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
+</body></html>

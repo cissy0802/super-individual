@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill 29 · 安全与治理类 Skills 榜单 — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head>
+<body>
+<div class="container">
+<header>
+<span class="week-tag">SKILL 29 / SAFETY · ROUNDUP</span>
+<h1>安全与治理类 Skills 榜单</h1>
+<h2>这一类只有一个验货问题：发现问题时它阻断，还是只是告诉你一声</h2>
+<div class="date">2026-09-30 · BigCat</div>
+<p class="pitch">别的类别装错了只是白花钱，安全类装错了会给你<strong>一种「已经防住了」的错觉</strong>。本榜十二条都真实可装/可读，但分成两拨：能<strong>硬挡住</strong>你的（退出码非零、系统调用被拦），和只会<strong>写份报告</strong>的。两拨都有用，混着当一回事用就会出事。</p>
+</header>
+<div class="xref">
+<a href="mcp-security-skill12.html">同系列 → Skill 12 接 MCP 的安全边界（工具返回值即注入面那一层在那期）</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>AI 写代码之后多出两个新战场——<strong>模型边写边扫</strong>，以及<strong>你装进来的 skill / MCP server 本身就是攻击面</strong>。本期把这两个和老三样（密钥扫描 / 依赖审计 / 越权检查）放进一张表，用一条判据排序：<strong>fail-closed 优先</strong>——不确定时默认拒绝，而不是默认放过。先给表和命令，判据放后半程。</p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>先给清单：十二条，按「能不能阻断」排</h2>
+<div class="claim">论断：上半张表（①–⑤）<strong>会拦住你</strong>，下半张表（⑥–⑫）<strong>只会告诉你</strong>。装之前先知道自己买的是哪一种。</div>
+<div class="diagram">条目                            出处                          替你干掉的那件事                 什么时候别装 / 别用
+━━━ 能阻断（确定性，退出码/系统调用说话）━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+① sandbox（Bash 沙箱）         官方机制 · /sandbox           文件与网络越权由操作系统拦        原生 Windows（要 WSL2）
+② permissions.deny             官方机制 · settings.json      硬禁某些工具/路径，收紧不放宽      你要的是「问我一下」
+③ gitleaks                     GitHub · MIT                  密钥进 commit 前就退出码 1        已有 push protection 且够用
+④ trufflehog                   GitHub · AGPL-3.0             只报「验证过还活着」的密钥        AGPL 许可你的法务不接受
+⑤ osv-scanner                  GitHub · Apache-2.0           依赖漏洞按 OSV 库对账             你只用一种语言且生态自带
+━━━ 只会告诉你（模型审查/报告，不阻断）━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⑥ security-guidance            官方插件 · Anthropic          模型边写边被另一个模型复审        这台机器没有 Python 3.10+
+⑦ claude-security              官方插件 · Anthropic          多 agent 深扫 ＋ SARIF ＋ 补丁    嫌一次扫描的 token 太贵
+⑧ /security-review             官方内置命令                  当前分支跑一遍安全 pass           你要的是每次都自动跑
+⑨ claude-code-security-review  GitHub · MIT                  PR 上自动评论安全发现            会审外部贡献者的 PR
+⑩ semgrep mcp                  GitHub · LGPL-2.1             规则型 SAST 挂进 agent            你不需要模型来调它
+⑪ zizmor                       GitHub · MIT                  审 GitHub Actions 的越权与注入    仓里没有 workflow
+⑫ snyk/agent-scan              GitHub · Apache-2.0           扫你装的 MCP server 与 skill      你一个第三方 skill 都不装
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+另有两条「别装」：guardrails-ai（还活着，但那是给你的 LLM 应用用的，不是给 Claude Code 用的）
+                  protectai/llm-guard（据其 GitHub 页，2026-07-09 已 archived，别再往新项目里引）</div>
+<h3>怎么装（命令抄自各自官方页面 / 仓库 README）</h3>
+<pre><code><span class="tag-com"># ①② 不用装，改配置就有。沙箱先看面板缺什么</span>
+/sandbox
+<span class="tag-com"># 要把沙箱当安全门禁而不是省事工具，这两个键必须显式写</span>
+{ <span class="tag-key">"sandbox"</span>: { <span class="tag-key">"enabled"</span>: true, <span class="tag-key">"failIfUnavailable"</span>: true,
+                <span class="tag-key">"allowUnsandboxedCommands"</span>: false,
+                <span class="tag-key">"network"</span>: { <span class="tag-key">"strictAllowlist"</span>: true, <span class="tag-key">"allowedDomains"</span>: [<span class="tag-key">"*.github.com"</span>] } } }
+
+<span class="tag-com"># ③④⑤⑪ 确定性扫描器，装法都是一行</span>
+brew install gitleaks trufflehog zizmor
+go install github.com/google/osv-scanner/v2/cmd/osv-scanner@latest
+gitleaks git --report-path gitleaks-report.json   <span class="tag-com"># 有发现 → 退出码 1</span>
+trufflehog git file://. --results=verified --fail <span class="tag-com"># 有发现 → 退出码 183</span>
+osv-scanner scan source -r .
+zizmor .github/workflows/                          <span class="tag-com"># 支持 SARIF 输出接 CI</span>
+
+<span class="tag-com"># ⑥⑦ 官方插件；⑧ 内置命令，什么都不用装</span>
+/plugin marketplace add anthropics/claude-plugins-official
+/plugin install security-guidance@claude-plugins-official
+/plugin install claude-security@claude-plugins-official   <span class="tag-com"># 需要 python3 ≥ 3.9</span>
+/claude-security         <span class="tag-com"># 菜单三件事：扫全库 / 扫改动 / 出补丁</span>
+/security-review         <span class="tag-com"># 当前分支跑一遍，不用装任何东西</span>
+
+<span class="tag-com"># ⑩ semgrep 的 MCP 现在是主仓的子命令（旧仓 semgrep/mcp 已归档）</span>
+claude mcp add semgrep -- semgrep mcp
+
+<span class="tag-com"># ⑫ 扫你自己装的那些 MCP server 与 skill；默认逐个问你才连</span>
+uvx snyk-agent-scan@latest scan
+</code></pre>
+<h3>逐条说人话</h3>
+<ul>
+<li><strong>① <a href="https://code.claude.com/docs/en/sandboxing" target="_blank">Bash 沙箱</a></strong>（官方机制）：<strong>本榜唯一由操作系统兜底的一条</strong>——macOS 走 Seatbelt，Linux/WSL2 靠两个包，原生 Windows 不支持。两层独立：<code>filesystem</code> 管路径、<code>network</code> 管域名。最值得抄的设计：<strong><code>denyRead</code> 在更宽的 <code>allowRead</code> 里依然成立</strong>（官方原话是「一条宽的 allow 不能悄悄把一个 secret 重新暴露出来」）。<strong>什么时候别用</strong>：你其实想要的是每条命令都问你——那用 permission 模式，别用沙箱。</li>
+<li><strong>② <a href="https://code.claude.com/docs/en/permissions" target="_blank">permissions.deny</a></strong>（官方机制）：<strong>能收紧、不能放宽</strong>——deny 规则在 auto 模式下依然生效。但它有一条必须知道的天花板：<strong>Bash 的 deny 是按命令原文匹配的</strong>，官方自己写明「要不依赖命令文本的网络管控，请用沙箱的网络隔离」。<strong>什么时候别用</strong>：你想要的是「问我一下」而不是「禁掉」——那写成 <code>ask</code>。</li>
+<li><strong>③ <a href="https://github.com/gitleaks/gitleaks" target="_blank">gitleaks</a></strong>（MIT，据其 GitHub 页 2026-09 约 29.6k star）：正则规则库扫 git 历史与文件。<strong>本榜最省事的 fail-closed 样本</strong>：有发现就<strong>退出码 1</strong>（<code>--exit-code</code> 可改），pre-commit 一行 <code>- id: gitleaks</code> 就拦在提交前。老仓库满屏告警的解法是 baseline：先出报告，再 <code>--baseline-path</code> 只看新增，个别误报进 <code>.gitleaksignore</code>。<strong>别装</strong>：托管方的推送保护已经够用。</li>
+<li><strong>④ <a href="https://github.com/trufflesecurity/trufflehog" target="_blank">trufflehog</a></strong>（AGPL-3.0，据其 GitHub 页 2026-09 约 28.2k star、800+ 检测器）：和 ③ 的关键差别是<strong>验证</strong>——拿捡到的凭据真去调一次服务方 API（AWS 走 <code>GetCallerIdentity</code>）确认还活着。<code>--results=verified</code> 把噪音砍到「真能用的那些」，<code>--fail</code> 让有发现时退出码变 <strong>183</strong>。<strong>代价</strong>：验证要往外发请求，且 <strong>AGPL-3.0 不是所有公司能接</strong>。</li>
+<li><strong>⑤ <a href="https://github.com/google/osv-scanner" target="_blank">osv-scanner</a></strong>（Apache-2.0，据其 GitHub 页 2026-09 约 11.1k star）：读 <code>package.json</code> / <code>go.mod</code> / <code>pom.xml</code> 这些清单跟 OSV.dev 的漏洞库对账，<code>scan source -r .</code> 递归扫。实验性的 <code>osv-scanner fix</code> 能按漏洞深度与严重度自动提升级方案，<strong>但官方标了红线</strong>：它在不可信项目上有风险，可能执行包管理器脚本。</li>
+<li><strong>⑥ <a href="https://code.claude.com/docs/en/security-guidance" target="_blank">security-guidance</a></strong>（官方插件）：<strong>纯 hooks 写的三层自动复审</strong>，管「模型刚写出来的那段代码」。关键设计是<strong>不让写代码的实例自己打分</strong>，另起一个只被告知「找问题」的 Claude。<strong>本榜最重要的一句诚实交代</strong>：<strong>它三层都不阻断</strong>写入或提交，只把发现塞回去让模型改。装了它不等于装了门禁。</li>
+<li><strong>⑦ <a href="https://code.claude.com/docs/en/claude-security" target="_blank">claude-security</a></strong>（官方插件，需 <code>python3</code> ≥ 3.9）：一队 agent 先摸架构、建威胁模型、分头找漏洞，<strong>每条发现都由独立 verifier agent 复核过才进报告</strong>。产出三份同源文件：<code>CLAUDE-SECURITY-RESULTS.md</code> / <code>.jsonl</code> / <code>.sarif</code>（SARIF 2.1.0，按 CWE 归类，能直接喂 GitHub code scanning），外加一份<strong>版本戳</strong>记下扫的是哪个 commit。<strong>三条必须知道的限制</strong>：扫描结果<strong>不确定</strong>（同一份代码两次扫可能给出不同发现）、<strong>补丁永不自动应用</strong>（写到 <code>patches/F1.patch</code> 等你 <code>git apply</code>）、<strong>一次扫描消耗的 token 可能很多</strong>且要开着会话跑完。</li>
+<li><strong>⑧ <a href="https://code.claude.com/docs/en/security" target="_blank">/security-review</a></strong>（官方内置命令）：<strong>本榜成本最低——什么都不用装</strong>，在项目目录里敲一下，对当前分支跑一遍安全 pass。官方把分工写得很清楚：⑥ 在模型写代码时管，⑧ 是<strong>单次</strong>过一遍分支，⑦ 是按需深扫。<strong>不够用时</strong>：你要每次提交都自动跑——那是 ⑥ 或 CI 的活。</li>
+<li><strong>⑨ <a href="https://github.com/anthropics/claude-code-security-review" target="_blank">claude-code-security-review</a></strong>（MIT，据其 GitHub 页 2026-09 约 6.3k star / 700 fork）：一个 GitHub Action，在 PR 上自动跑并评论，覆盖注入 / 越权与 IDOR / 密钥泄漏 / 弱加密 / 反序列化 RCE 等，内置一层<strong>误报过滤</strong>（主动排除 DoS、限流、开放重定向这些高误报项）。<strong>它自己的警告必须读</strong>：<strong>没有针对 prompt injection 做加固，只应审可信的 PR</strong>，并建议对外部贡献者开启「需要审批」。最小工作流只要 <code>contents: read</code> ＋ <code>pull-requests: write</code>。</li>
+<li><strong>⑩ <a href="https://github.com/semgrep/semgrep" target="_blank">semgrep mcp</a></strong>（LGPL-2.1，据其 GitHub 页 2026-09 约 16.8k star）：把 5,000+ 条规则的 SAST 做成 MCP 工具（<code>security_check</code> / <code>semgrep_scan</code> / <code>semgrep_scan_with_custom_rule</code> 等），让 agent 自己去扫。<strong>名字上有坑</strong>：独立仓 <code>semgrep/mcp</code> <strong>据其页面已于 2025-10-28 归档</strong>，现在是主仓的 <code>semgrep mcp</code> 子命令。<strong>别接</strong>：不需要模型调它，就在 CI 跑 <code>semgrep ci</code>，省下常驻 context。</li>
+<li><strong>⑪ <a href="https://github.com/zizmorcore/zizmor" target="_blank">zizmor</a></strong>（MIT，据其 GitHub 页 2026-09 约 6.6k star）：专审 CI 配置——<strong>模板注入</strong>（<code>${{ }}</code> 插值变成攻击者可控的代码执行）、<strong>凭据残留</strong>、<strong>runner 权限过宽</strong>、冒名 commit。<strong>「越权检查」里最容易漏掉的一格</strong>：多数人审代码权限，没人审那个能写仓库的 workflow token。支持 SARIF 接 CI。</li>
+<li><strong>⑫ <a href="https://github.com/snyk/agent-scan" target="_blank">snyk/agent-scan</a></strong>（Apache-2.0，据其 GitHub 页 2026-09 约 3.1k star）：<strong>本榜唯一把「你装的 AI 组件本身」当审计对象的一条</strong>——扫 <code>mcp.json</code>、<code>.claude/skills</code>、<code>.agents/skills</code>，找 prompt injection、tool poisoning、可疑下载、硬编码密钥。它自己那条警告最说明这一类的处境：<strong>扫 MCP 配置本身就可能执行命令或发出网络请求</strong>，所以默认交互式扫描<strong>每连一个 server 都问你一次</strong>，非交互环境要显式给 <code>--dangerously-run-mcp-servers</code>。需要 <code>SNYK_TOKEN</code>。</li>
+</ul>
+<div class="res"><strong>那两条为什么进了「别装」</strong> · <a href="https://github.com/guardrails-ai/guardrails" target="_blank">guardrails-ai/guardrails</a>（Apache-2.0，据其 GitHub 页 2026-09 约 7.5k star）活得很好，<code>OnFailAction.EXCEPTION</code> 正是 fail-closed 的写法——但它管的是<strong>你自己那个 LLM 应用</strong>的输入输出，不是你的编码 agent，放进本榜会误导人。<a href="https://github.com/protectai/llm-guard" target="_blank">protectai/llm-guard</a>（MIT）的 input/output scanner 分类做得漂亮，<strong>但据其 GitHub 页已于 2026-07-09 归档、明示不再维护</strong>——当思路读可以，往新项目里引不行。</div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>为什么这十二条不能混着比：两个轴，四个格</h2>
+<div class="claim">论断：横轴是<strong>谁做判断</strong>（写死的规则 / 模型读上下文），纵轴是<strong>发现之后会怎样</strong>（硬阻断 / 只报告）。<strong>右上角那格是空的，而且短期内会一直空着。</strong></div>
+<div class="diagram">                    │ 规则写死（确定性）              │ 模型读上下文（有语义）
+────────────────────┼─────────────────────────────────┼────────────────────────────────
+ 发现就阻断          │ ① sandbox（系统调用层）          │ （空）
+                    │ ② permissions.deny              │  —— 没有一条敢让模型的判断
+                    │ ③ gitleaks 退出码 1              │     直接否决你的提交
+                    │ ④ trufflehog --fail → 183       │
+────────────────────┼─────────────────────────────────┼────────────────────────────────
+ 只报告，你自己决定  │ ⑤ osv-scanner                    │ ⑥ security-guidance（三层都不阻断）
+                    │ ⑩ semgrep mcp                    │ ⑦ claude-security（补丁等你 apply）
+                    │ ⑪ zizmor（SARIF 进门禁才有牙）    │ ⑧ /security-review
+                    │ ⑫ snyk/agent-scan                │ ⑨ PR Action（评论，不挡合并）
+────────────────────┴─────────────────────────────────┴────────────────────────────────</div>
+<p><strong>右上角空着不是产品没做完，是设计取舍</strong>：模型审查有误报，一条误报硬挡提交，团队第二天就会把整个检查关掉——连报告都没了。所以正确读法是：<strong>左列负责「绝不许发生」，右列负责「你最好看一眼」，谁也别替谁。</strong></p>
+<p><strong>三种常见的错配</strong>：</p>
+<ul>
+<li><strong>把右列当门禁。</strong> 装了 ⑥ 就以为漏洞进不去了——它三层都不阻断。要门禁得在 CI 加 ③ 或 ④，靠退出码说话。</li>
+<li><strong>把左列当审计。</strong> ③ 只认正则、⑤ 只认清单里的依赖版本。业务逻辑上的越权（谁能读谁的订单）它们看不见，那是 ⑦ ⑨ 的活。</li>
+<li><strong>只审代码，不审配置和装进来的东西。</strong> ⑪⑫ 这两格最常空着：能写仓库的 workflow token、昨天顺手装的第三方 skill，都是绕过前面所有检查的近路。</li>
+</ul>
+<div class="fail"><strong>翻车现场</strong>：CI 里装了 ⑨，PR 上每次都有漂亮的安全评论，团队很满意。半年后密钥泄漏——那条评论<strong>从来不挡合并</strong>，而这半年没人加过 ③。<strong>没人读的报告等于没装；退出码没人能绕过。</strong></div>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>三分钟验货：装之前答这六问</h2>
+<div class="claim">论断：这一类不看星数，看<strong>它在不确定或出故障的时候默认做什么</strong>。默认放过的东西，别当门禁用。</div>
+<ol>
+<li><strong>它有发现的时候，退出码是几？</strong> 答不出来的就不是门禁。③ 是 1、④ 加 <code>--fail</code> 是 183，能直接进 CI。⑥⑦⑧⑨ 答案都是「不阻断」——记下来，别自我安慰。</li>
+<li><strong>它自己跑不起来的时候会怎样？</strong> 这一问最见功底。沙箱默认行为是<strong>依赖缺失或平台不支持就打个警告、不沙箱地跑下去</strong>——即 fail-open。要它硬失败必须显式写 <code>sandbox.failIfUnavailable: true</code>（官方注明这是给「把沙箱当安全门禁」的部署用的）。</li>
+<li><strong>有没有绕过它的合法通道？</strong> 有，官方写明了：沙箱违规时 Claude 可能带 <code>dangerouslyDisableSandbox</code> 重试，<code>allowUnsandboxedCommands: false</code> 关掉这条通道。⑫ 对应的键叫 <code>--dangerously-run-mcp-servers</code>。<strong>凡是名字里带 dangerously 的，先弄清它默认是开还是关。</strong></li>
+<li><strong>这条配置放在哪一层才算数？</strong> 容易踩的一坑：<code>sandbox.network.strictAllowlist</code>（把「问一下」变成「直接拒」）<strong>只有写在用户设置、托管设置或 <code>--settings</code> 里才生效，写进仓库的 <code>.claude/settings.json</code> 完全没用</strong>。安全配置放错层等于没放。</li>
+<li><strong>它的误报谁来治？</strong> 有机制的才敢开门禁：③ 的 baseline ＋ <code>.gitleaksignore</code>、④ 的 <code>--results=verified</code>、⑨ 那份排除清单。没有治理机制的高误报工具，装上就是等着被关掉。</li>
+<li><strong>它自己是不是攻击面？</strong> 这一问专门对付本类工具：⑨ 自己写了「未针对 prompt injection 加固，只审可信 PR」；⑫ 自己写了「扫配置可能执行命令」；⑤ 的 <code>fix</code> 可能执行包管理器脚本。<strong>安全工具读的就是不可信输入，这三条警告是它们诚实，不是它们差。</strong></li>
+</ol>
+<div class="fail"><strong>这一节的死线</strong>：⑫ 3.1k star、③ 29.6k star——<strong>这两个数不构成选型依据</strong>。依据是第 1、2 问：有发现时拦不拦，出故障时默认放不放。都答「放过」，那它是提醒工具，别写进合规文档。</div>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>诚实的代价：安全类是最容易「装了等于没装」的一类</h2>
+<div class="claim">论断：这一类的代价不是钱，是<strong>三种可预测的失效</strong>——告警疲劳、虚假安心、工具本身成为入口。</div>
+<h3>三笔账</h3>
+<ul>
+<li><strong>告警疲劳会自己杀死检查。</strong> 老仓库上直接开 ③，头一次可能几百条历史命中；没人看，两周后就被从 CI 里注释掉。<strong>正确顺序是先出 baseline 再开门禁</strong>，④ 的 <code>--results=verified</code> 同理。</li>
+<li><strong>虚假安心是最贵的一笔。</strong> ⑥⑦⑧⑨ 都产出很像结论的东西，而都不阻断；⑦ 官方还写明<strong>扫描不确定，同一份代码两次扫可能不一样</strong>。把这类报告当「通过」记进流程，不如什么都不装——那时你至少知道自己没防。</li>
+<li><strong>安全工具本身在扩大攻击面。</strong> ④ 验证凭据要往外发请求；⑫ 扫配置可能执行命令；⑨ 明说不抗注入。加上沙箱那条默认值：<strong>沙箱的默认读权限覆盖整台机器（除若干默认拒绝目录），连 <code>~/.aws/credentials</code> 和 <code>~/.ssh/</code> 都还能读</strong>——要挡住得显式配 <code>sandbox.credentials</code> 或把路径加进 <code>denyRead</code>。</li>
+</ul>
+<h3>不装任何东西，你还能怎么办</h3>
+<ol>
+<li><strong>先敲 <code>/security-review</code>。</strong> 零安装零配置，先知道这个分支大概什么水位。</li>
+<li><strong>再开托管方自带的推送保护。</strong> 比装任何扫描器都省事，而且它真阻断。</li>
+<li><strong>然后才是 ③ 进 pre-commit。</strong> 一行 <code>- id: gitleaks</code>，性价比最高的一条 fail-closed。</li>
+</ol>
+<div class="fail"><strong>那一格永远空着</strong>：① 能拦系统调用、③ 能拦提交、⑦ 能写 SARIF 和补丁——<strong>没有一样能判断「这个风险你的业务能不能接受」。</strong>⑦ 把这件事写进了产品设计：补丁永不自动应用。<strong>按不按那个 <code>git apply</code>，至今是人的活。</strong></div>
+</div>
+<div class="combo">
+<h3>// 一页选购卡</h3>
+<p><strong>先装这三个</strong>：① <code>gitleaks</code> 进 pre-commit（<code>brew install gitleaks</code>，一行 <code>- id: gitleaks</code>，有发现退出码 1）——唯一「今天装、今天就有牙」的。② <code>/security-review</code>——零安装，先摸清分支水位。③ <code>/plugin install security-guidance@claude-plugins-official</code>——边写边复审，但记住它<strong>不阻断</strong>。</p>
+<p><strong>按需再加</strong>：<code>claude-security@claude-plugins-official</code>（要 SARIF 报告与可 <code>git apply</code> 的补丁，接受 token 开销）· <code>trufflehog --results=verified --fail</code>（③ 误报多到没人看，且法务能接 AGPL）· <code>osv-scanner scan source -r .</code>（依赖多、语言杂）· <code>zizmor .github/workflows/</code>（仓里有 workflow，<strong>这格最常空着</strong>）· <code>anthropics/claude-code-security-review</code>（要 PR 级评论，且<strong>只审可信 PR</strong>）· <code>uvx snyk-agent-scan@latest scan</code>（装了第三方 skill / MCP server）· <code>claude mcp add semgrep -- semgrep mcp</code>（要 agent 自己能调 SAST）。</p>
+<p><strong>明确别做</strong>：把「有报告」当成「有门禁」 · 在老仓库上不出 baseline 就开密钥扫描门禁 · 让模型的安全判断直接否决提交 · 只审代码不审 <code>.github/workflows/</code> 和装进来的 skill · 开了沙箱却不写 <code>failIfUnavailable</code> 与 <code>allowUnsandboxedCommands</code> · 把 <code>strictAllowlist</code> 写进仓库的 <code>.claude/settings.json</code>（不生效）· 往新项目里引 <code>llm-guard</code>（已归档）· <strong>以为星数高就更安全</strong>。</p>
+</div>
+<div class="glossary">
+<h3>// 术语表</h3>
+<dl>
+<dt>fail-closed / fail-open</dt>
+<dd>出故障或判断不了时，默认拒绝（closed）还是默认放过（open）。安全组件必须 fail-closed，而很多默认值是 open。</dd>
+<dt>SARIF</dt>
+<dd>静态分析结果的交换格式（2.1.0）。工具输出 SARIF，GitHub code scanning 就能直接读——报告要有牙通常靠它接门禁。</dd>
+<dt>verified secret</dt>
+<dd>trufflehog 的概念：捡到的凭据真去调一次服务方 API 确认还活着。代价是往外发请求，收益是误报大降。</dd>
+<dt>baseline</dt>
+<dd>先把现存命中存成一份报告，之后只看新增。老仓库开密钥扫描门禁的前提，否则必然告警疲劳。</dd>
+<dt>tool poisoning</dt>
+<dd>MCP server 或 skill 在自己的描述里藏恶意内容，靠被读进上下文操纵 agent。snyk/agent-scan 扫的正是这类。</dd>
+<dt>sandbox.failIfUnavailable</dt>
+<dd>Claude Code 设置项。沙箱起不来时默认只警告并照常运行；设为 true 才是硬失败。当门禁用就必须显式写。</dd>
+<dt>strictAllowlist</dt>
+<dd>沙箱网络设置项。非白名单域名从「问你一下」变成「直接拒」。只在用户、托管设置或 <code>--settings</code> 里生效。</dd>
+</dl>
+</div>
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://code.claude.com/docs/en/security" target="_blank">Claude Code · Security</a> — 权限架构；fail-closed matching；deny 按命令原文匹配的限制；<code>/security-review</code> 的位置（2026-09）</li>
+<li><a href="https://code.claude.com/docs/en/sandboxing" target="_blank">Claude Code · Configure the sandboxed Bash tool</a> — <code>failIfUnavailable</code> / <code>allowUnsandboxedCommands</code> / <code>strictAllowlist</code> / <code>credentials</code>；denyRead 在宽 allow 里仍成立；默认读权限覆盖整机（2026-09）</li>
+<li><a href="https://code.claude.com/docs/en/claude-security" target="_blank">Claude Code · Scan your codebase for vulnerabilities</a> — <code>claude-security</code> 三件事；三份报告文件与版本戳；扫描不确定性；补丁永不自动应用（2026-09）</li>
+<li><a href="https://code.claude.com/docs/en/security-guidance" target="_blank">Claude Code · Catch security issues as Claude writes code</a> — 三层 hook 的事件与上限；复审独立性；<strong>三层都不阻断</strong>（2026-09）</li>
+<li><a href="https://github.com/anthropics/claude-code-security-review" target="_blank">anthropics/claude-code-security-review</a> — 最小 workflow 与所需权限；覆盖的漏洞类别；误报过滤清单；「未针对 prompt injection 加固」警告（MIT，2026-09）</li>
+<li><a href="https://github.com/gitleaks/gitleaks" target="_blank">gitleaks/gitleaks</a> — 退出码 0/1/126；pre-commit 配置；baseline 与 <code>.gitleaksignore</code>（MIT，2026-09）</li>
+<li><a href="https://github.com/trufflesecurity/trufflehog" target="_blank">trufflesecurity/trufflehog</a> — 三档结果分类与 verified 的含义；800+ 检测器；<code>--fail</code> 退出码 183（AGPL-3.0，2026-09）</li>
+<li><a href="https://github.com/google/osv-scanner" target="_blank">google/osv-scanner</a> — <code>scan source -r</code>；实验性 <code>fix</code> 的参数与「不可信项目上有风险」提示（Apache-2.0，2026-09）</li>
+<li><a href="https://github.com/semgrep/semgrep" target="_blank">semgrep/semgrep</a> — <code>semgrep mcp</code> 子命令与暴露的工具；旧独立仓 <code>semgrep/mcp</code> 据其页面 2025-10-28 归档（LGPL-2.1，2026-09）</li>
+<li><a href="https://github.com/zizmorcore/zizmor" target="_blank">zizmorcore/zizmor</a> — 模板注入 / 凭据残留 / 权限过宽 / 冒名 commit 四类审计；SARIF 输出（MIT，2026-09）</li>
+<li><a href="https://github.com/snyk/agent-scan" target="_blank">snyk/agent-scan</a> — 扫 MCP server 与 skill 的位置清单；默认逐个征求同意；<code>--dangerously-run-mcp-servers</code>（Apache-2.0，2026-09）</li>
+<li><a href="https://github.com/guardrails-ai/guardrails" target="_blank">guardrails-ai/guardrails</a> — Guard / validator / Hub 结构；<code>OnFailAction.EXCEPTION</code> 这种 fail-closed 写法（Apache-2.0，2026-09）</li>
+<li><a href="https://github.com/protectai/llm-guard" target="_blank">protectai/llm-guard</a> — input/output scanner 的完整分类，当思路读；据其 GitHub 页 2026-07-09 已归档（MIT）</li>
+<li><a href="mcp-security-skill12.html">本站 Skill 12 · 接 MCP 的安全边界</a> — ⑫ 要扫的那个注入面，机制在那期</li>
+<li><a href="hooks-automation-skill27.html">本站 Skill 27 · Hooks 与确定性自动化</a> — 为什么门禁必须是代码而不是指令</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Skill 29 · 2026-09-30</footer>
+</div>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
+</body></html>
