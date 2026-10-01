@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill 30 · How Risky Is Installing Another Person's Skill — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head>
+<body>
+<div class="container">
+<header>
+<span class="week-tag">SKILL 30 / SAFETY · DEEP DIVE</span>
+<h1>How Risky Is Installing Another Person's Skill</h1>
+<h2>Two paths: it executes code as you, or it rewrites your instructions as a document — and neither one goes through the sandbox</h2>
+<div class="date">2026-10-01 · BigCat</div>
+<p class="pitch">The official page gives away the answer in its first sentence: &quot;A Claude Code plugin you install can execute arbitrary code on your machine <strong>with your user privileges</strong>.&quot; This issue gives you three commands you can run today, the official four-step review, what each trust tier actually guarantees, and the least intuitive part — <strong>you don't have to install anything at all. A <code>git clone</code> and one <code>claude -p</code> is enough.</strong></p>
+</header>
+<div class="xref">
+<a href="mcp-security-skill12.en.html">Same series → Skill 12, the security boundary when you wire up MCP</a> · <a href="safety-skills-roundup-skill29.en.html">Skill 29, safety &amp; governance roundup</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>Skills and plugins are already a link in your software supply chain; nobody manages them like a dependency. NVIDIA's own scanner puts an uncomfortable number in its README: in the analyzed subset of their research dataset, <strong>26.1% of skills contain vulnerabilities and 5.2% show likely malicious intent</strong> (per the NVIDIA/SkillSpector GitHub repository page, 2026-10). This issue doesn't stop at the scare: <strong>the runnable intake pipeline comes first, the criteria come later</strong>, and the criteria exist to choose among the tools named here.</p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>What it kills for you: turning &quot;invisible before install&quot; into &quot;itemized before install&quot;</h2>
+<div class="claim">The claim: reviewing a third-party skill doesn't require you to read vulnerabilities. It requires <strong>listing what the thing wants to put on your machine</strong>. Four commands already do that.</div>
+<pre><code><span class="tag-com"># 1. Inventory what is ALREADY on this machine (covers a dozen-plus clients)</span>
+uvx snyk-agent-scan@latest
+
+<span class="tag-com"># 2. For the next candidate: static scan (--no-llm = no model calls, static only)</span>
+uv tool install git+https://github.com/NVIDIA/skillspector.git
+skillspector scan ./candidate-skill/ --no-llm
+
+<span class="tag-com"># 3. Official: no session, just list what it would add</span>
+claude --plugin-dir ./that-plugin plugin details &lt;plugin-name&gt;
+
+<span class="tag-com"># 4. Structural check — note it validates structure, not safety</span>
+claude plugin validate ./that-plugin</code></pre>
+<h3>What each one kills, and when not to use it</h3>
+<ul>
+<li><strong><a href="https://github.com/snyk/agent-scan" target="_blank">snyk/agent-scan</a></strong> (Apache-2.0; about 3.1k stars per its GitHub repository page, 2026-10) — kills &quot;I don't know what's already installed here.&quot; It discovers installed harnesses, MCP servers and skills, then scans them across fourteen risk classes: prompt injection, untrusted content, private data exposure, destructive capabilities, malicious code, suspicious downloads, insecure credential handling and more. <code>--no-skills</code> scans MCP only; <code>--ci</code> exits nonzero on findings. <strong>When not to</strong>: you've installed nothing third-party — and never put <code>--dangerously-run-mcp-servers</code> in a script, because that drops the per-item consent prompt.</li>
+<li><strong><a href="https://github.com/NVIDIA/SkillSpector" target="_blank">NVIDIA/SkillSpector</a></strong> (Apache-2.0; about 18.9k stars per its GitHub repository page, 2026-10) — kills &quot;I opened SKILL.md and don't know what to look for.&quot; 71 patterns across 17 categories (prompt injection, data exfiltration, privilege escalation, supply chain, excessive agency, memory poisoning, MCP tool poisoning and others), a 0–100 risk score, and SARIF / JSON / Markdown reports. It takes a git repository, a URL, a zip, a directory or a single file. <strong>When not to</strong>: you want a green checkmark and won't read the report — then all it buys you is false comfort.</li>
+<li><strong><a href="https://code.claude.com/docs/en/plugins/security" target="_blank"><code>claude --plugin-dir … plugin details</code></a></strong> (official, nothing to install) — kills &quot;the pane won't tell me how many hooks it has.&quot; It reads the directory without starting a session and prints a Component inventory: skills and commands, agents, <strong>every hook with the event it fires on</strong>, and MCP and LSP servers. After install, the same <code>claude plugin details &lt;name&gt;</code> reports on the installed copy under <code>~/.claude/plugins/cache/</code>.</li>
+<li><strong><a href="https://code.claude.com/docs/en/plugins/create-marketplace" target="_blank"><code>claude plugin validate</code></a></strong> — checks JSON syntax, required fields, naming rules, and <code>..</code> in relative paths. <strong>Said honestly</strong>: it never looks at what a hook runs. <code>✔ Validation passed</code> has nothing to do with safety.</li>
+</ul>
+<div class="fail"><strong>The pane says &quot;there is a hook.&quot; It does not say what the hook runs.</strong> That's why the official review steps name three files to read by hand: <code>hooks/hooks.json</code> (the command each hook actually executes), <code>.mcp.json</code> (each server's command or URL), and <code>bin/</code> (<strong>every</strong> file in the directory). Until you've read those three, the commands above are just a warm-up.</div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Mechanism: why permission rules and the sandbox don't catch this</h2>
+<div class="claim">The claim: the danger isn't that a plugin can call tools. It's that <strong>half of what a plugin carries never travels as a tool call at all</strong> — and the sandbox and permission rules can't see that half.</div>
+<h3>The code-execution path (four entry points)</h3>
+<ul>
+<li><strong>Hooks</strong>: shell commands that run at lifecycle points, such as before or after a tool call.</li>
+<li><strong>MCP and LSP servers</strong>: a stdio MCP server is a process Claude Code starts on your machine.</li>
+<li><strong>The <code>bin/</code> directory</strong>: added to the <code>PATH</code> of the Bash tool's shell.</li>
+<li><strong>Auto-update</strong>: while it's on, the files you reviewed can change on disk behind you.</li>
+</ul>
+<p>The official boundary is blunt: <strong>permission rules and the sandbox cover the tool calls Claude makes, not the code a plugin runs by itself</strong> — Claude Code runs hooks and MCP servers <strong>outside the sandbox</strong>, with your full user permissions. Only when Claude uses Bash to run an executable from <code>bin/</code> is that a tool call, and only then do your permission rules apply.</p>
+<h3>The instruction-injection path (harder to defend)</h3>
+<p>Skills, slash commands and agents don't execute code. They <strong>enter Claude's context as instructions</strong> and change what the model does with the tools it already has. And a skill's <code>allowed-tools</code> can grant itself access: the docs say plainly that <strong>workspace trust doesn't gate that field</strong> — &quot;A skill can grant itself broad tool access, so review the <code>allowed-tools</code> of skills checked into a repository before you run Claude Code there.&quot; The <code>!</code> command lines in a skill body are the same story: they run on your machine <strong>before</strong> the content reaches the model.</p>
+<div class="fail"><strong>The least intuitive part: you don't have to install anything.</strong> In the official table of what runs before you trust a folder — a project skill's hooks and <code>allowed-tools</code>: <strong>Used</strong> (used even in a <code>claude -p</code> run in a folder you've never trusted); servers in <code>.mcp.json</code>: under <code>-p</code>, <strong>connected without asking</strong>, approved or not; and <code>permissions.allow</code>: <strong>Not used</strong> until you accept the dialog. <strong>The dangerous half applies by default; the half that protects you does not.</strong></div>
+<h3>So run an unfamiliar repository like this</h3>
+<pre><code><span class="tag-com"># Cheapest one-shot: read no project-side customization at all</span>
+claude --bare -p <span class="tag-key">"review the structure of this repo"</span>
+<span class="tag-com"># Or turn things off piecemeal: user settings only / all hooks off / reject one server</span>
+claude --setting-sources user -p <span class="tag-key">"…"</span>
+claude --settings <span class="tag-key">'{"disableAllHooks": true}'</span> -p <span class="tag-key">"…"</span>
+<span class="tag-com"># Two standing settings: kill shell execution in skill bodies; deny a skill by name</span>
+{ <span class="tag-key">"disableSkillShellExecution"</span>: true,
+  <span class="tag-key">"permissions"</span>: { <span class="tag-key">"deny"</span>: [<span class="tag-key">"Skill(skill:deploy)"</span>] } }</code></pre>
+<p>Putting <code>disableAllHooks</code> in your user settings <strong>isn't enough</strong> — project settings take precedence and can set it back to <code>false</code>, so pass it via <code>--settings</code>. In deny rules, a bare <code>Skill</code> removes the whole tool from the model's context; the <code>Skill(skill:&lt;name&gt;)</code> form matches that one skill under any of its names.</p>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Use and limits: what each trust tier guarantees, and how to pin a version</h2>
+<div class="claim">The claim: a trust tier only decides <strong>how much reviewing you still owe</strong>. It never replaces per-plugin review — the docs say it themselves: a marketplace's name tells you <strong>who publishes the catalog</strong>, not what each plugin in it does.</div>
+<div class="diagram">Tier          Marketplace name                  Reviewed by      Auto-update    What you still do
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Official      claude-plugins-official + 13       Anthropic, or    On (2 excl.)   Read the Will install
+              other reserved names (agent-       its partners                    pane; note it self-updates
+              skills / life-sciences / …)
+Community     claude-community                   Submitted via    Off            Automated scan is not
+              (repo anthropics/claude-           claude.ai, auto-                per-item human review;
+              plugins-community)                 scanned, approved               entries pin a commit SHA
+Third-party   everything else (a coworker's,     nobody           Off            The full four steps: pane →
+              your own)                                                          source → hooks.json /
+                                                                                 .mcp.json / bin/
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Impersonation can't get in: Claude Code accepts the official and community names only for marketplaces
+sourced from github.com/anthropics/. Right name, wrong source → the whole marketplace stops loading,
+and so do the plugins you already installed from it.</div>
+<p>The <a href="https://github.com/anthropics/claude-plugins-community" target="_blank">community catalog</a> states its guarantee concretely in the README: every plugin listed there was submitted via claude.ai, &quot;passed automated security scanning, and been approved for distribution.&quot; The repository itself is a <strong>read-only mirror</strong>, direct pull requests are closed automatically, and it syncs nightly from the internal pipeline. The hard constraint lives client-side: that catalog pins a commit SHA for nearly every entry, and <strong>Claude Code refuses to install a different commit</strong>. The third-party tier has none of this — in Anthropic's words, Anthropic doesn't review third-party marketplaces.</p>
+<h3>Reviewed-then-changed: pin the version</h3>
+<ul>
+<li><strong>Remember the defaults</strong>: auto-update is on for the reserved official names (except <code>knowledge-work-plugins</code> and <code>first-party-plugins</code>) and off for community, third-party and local development marketplaces. <strong>Leave the third-party one off</strong>; don't switch it on by hand.</li>
+<li><strong>Pin a ref</strong>: <code>/plugin marketplace add your-org/plugins#v1.2.0</code> pins the marketplace to a tag.</li>
+<li><strong>Pin a digest</strong>: an <code>archive</code> source can pin <code>sha256</code> in its entry, and a mismatched download is refused.</li>
+</ul>
+<h3>Uninstalling is not cleaning up</h3>
+<p>After <code>claude plugin uninstall &lt;plugin&gt; --scope &lt;the scope you installed at&gt;</code>, its files stay under <code>~/.claude/plugins/cache/</code> for <strong>fourteen days</strong> before a background sweep removes them; delete that directory yourself if you want them gone now. If it's the owner you distrust, <strong>remove the marketplace too</strong> — that uninstalls every plugin you got from it.</p>
+<h3>Team side: six named managed-settings keys</h3>
+<p><code>strictKnownMarketplaces</code> (source allowlist, alias <code>allowedMarketplaces</code>; an empty <code>[]</code> blocks the official one too) · <code>blockedMarketplaces</code> (blocklist, checked before the allowlist) · <code>disableSideloadFlags</code> (rejects <code>--plugin-dir</code>, <code>--plugin-url</code>, <code>--agents</code> and <code>CLAUDE_CODE_PLUGIN_DIRS</code>) · <code>strictPluginOnlyCustomization</code> (allows skills / agents / hooks / mcp only from a plugin, managed settings or the built-ins) · <code>allowManagedHooksOnly</code> · <code>pluginTrustMessage</code> (appends your own text to the pre-install trust warning).</p>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Cost and alternatives: a scanner gives you leads, not a verdict</h2>
+<div class="claim">The claim: the real cost of this class isn't false positives. It's that <strong>a risk score looks far too much like a green checkmark</strong>. And the cheapest alternative was always there: copy the body, don't install the thing.</div>
+<h3>Two costs to book</h3>
+<ul>
+<li><strong>SkillSpector writes its own limits down</strong>: it may miss patterns in non-English content, can't analyze text inside images, can't analyze compiled or encrypted content, is static-only with no dynamic execution, and falls back to a small built-in list for one supply-chain check when it has no network access to OSV.dev. So a clean report means &quot;these 71 patterns didn't fire,&quot; not &quot;this is safe.&quot;</li>
+<li><strong>Deciding whether something is a threat depends on what it claims to do.</strong> A hook making an outbound request is normal in a deployment plugin and exfiltration in a writing skill. A scanner structurally cannot make that call — it doesn't know why you wanted the thing. And the scanner is itself something you installed: agent-scan has to read a dozen clients' configs, so <strong>asking for consent per item is the right default</strong>.</li>
+</ul>
+<h3>Not installing it: what else you can do (cheapest first)</h3>
+<ol>
+<li><strong>Copy, don't install.</strong> Read its <code>SKILL.md</code> and copy the twenty lines that actually help into your own <code>.claude/skills/</code> — without its hooks, without <code>bin/</code>, without the MCP server it drags along. For methodology-style skills the value is <strong>almost entirely in the body</strong>, and the body is the one part you can read end to end.</li>
+<li><strong>Try it once.</strong> <code>claude --plugin-dir ./that-plugin</code> loads it for one session only and never writes to <code>enabledPlugins</code> (note: this is rejected where a team sets <code>disableSideloadFlags</code>).</li>
+<li><strong>Read the official ones first, to calibrate &quot;normal.&quot;</strong> <a href="https://github.com/anthropics/skills" target="_blank">anthropics/skills</a> (about 179k stars per its GitHub repository page, 2026-10; mostly Apache-2.0, with the <code>docx</code>/<code>pdf</code>/<code>pptx</code>/<code>xlsx</code> set source-available) and <a href="https://github.com/anthropics/claude-plugins-official" target="_blank">anthropics/claude-plugins-official</a>. Only after reading a few normal ones can you see why the third-party one has an extra hook.</li>
+</ol>
+<div class="fail"><strong>Locking down has a cost too.</strong> <code>strictKnownMarketplaces: []</code> blocks the official marketplace along with everything else, and setting any allowlist without a <code>{&quot;source&quot;: &quot;skills-dir&quot;}</code> entry <strong>stops your own plugins under <code>~/.claude/skills/</code> that carry a <code>.claude-plugin/plugin.json</code> from loading</strong> (a plain <code>SKILL.md</code> is unaffected). And once a machine has started under a policy that blocked the official marketplace, Claude Code records the blocked attempt and won't retry registration after you change the policy back.</div>
+<div class="fail"><strong>Even Anthropic doesn't present its own skills as finished goods</strong>: the <code>anthropics/skills</code> README says these skills are &quot;provided for demonstration and educational purposes only&quot; and asks you to &quot;always test skills thoroughly in your own environment before relying on them for critical tasks.&quot; <strong>A star count is not a security property.</strong></div>
+</div>
+<div class="combo">
+<h3>// ONE-PAGE ACTION CARD</h3>
+<p><strong>Do these three today</strong>: 1. <code>uvx snyk-agent-scan@latest</code> — inventory what's already on the machine; most people discover something here they forgot installing. 2. Run the next third-party candidate through the sequence: <code>skillspector scan ./x --no-llm</code> → <code>claude --plugin-dir ./x plugin details &lt;name&gt;</code> → read <code>hooks/hooks.json</code>, <code>.mcp.json</code> and <code>bin/</code> by hand. 3. Write two standing settings: <code>&quot;disableSkillShellExecution&quot;: true</code>, and <strong>leave</strong> auto-update off for third-party marketplaces (off is the default).</p>
+<p><strong>Add as needed</strong>: <code>claude plugin validate</code> (you publish a marketplace) · <code>strictKnownMarketplaces</code> + <code>disableSideloadFlags</code> (you set team policy) · a <code>Skill(skill:&lt;name&gt;)</code> deny rule (keep a skill but stop the model from firing it) · <code>claude --bare -p</code> (you run non-interactively in an unfamiliar repo) · <a href="https://github.com/trailofbits/mcp-context-protector" target="_blank"><code>trailofbits/mcp-context-protector</code></a> (it ships an MCP server and you want pin-on-first-trust).</p>
+<p><strong>Explicitly don't</strong>: run a bare <code>claude -p</code> in an unfamiliar repo · treat &quot;passed the scan&quot; as &quot;safe&quot; · assume more stars means safer · turn auto-update on for a third-party marketplace · put <code>--dangerously-run-mcp-servers</code> in a script · uninstall the plugin but keep the marketplace · read the Will install pane and think you've read the hook · leave <code>disableAllHooks</code> only in your user settings.</p>
+</div>
+<div class="glossary">
+<h3>// GLOSSARY</h3>
+<dl>
+<dt>workspace trust</dt>
+<dd>The trust dialog you get the first time you start an interactive session in a folder. It gates things that grant the repository more power, such as <code>permissions.allow</code>. It does <strong>not</strong> gate hooks or a skill's <code>allowed-tools</code>.</dd>
+<dt>Component inventory</dt>
+<dd>The listing <code>claude plugin details</code> prints: skills and commands, agents, hooks with each hook's event, and MCP and LSP servers. Available before install via <code>--plugin-dir</code>.</dd>
+<dt>reserved marketplace names</dt>
+<dd>The fourteen names that belong to Anthropic's marketplaces. A marketplace using one of them whose source isn't under <code>github.com/anthropics/</code> is refused, so third parties can't impersonate one.</dd>
+<dt>reviewed-then-changed (TOCTOU)</dt>
+<dd>The content changes between the moment you review it and the moment it runs. In plugins this comes from auto-update; the answer is to turn it off and pin a <code>#ref</code> or a <code>sha256</code>.</dd>
+<dt>allowed-tools</dt>
+<dd>A skill frontmatter field that pre-approves a set of tools for the turn that invokes the skill, with no prompt. It only widens, never narrows — and <strong>workspace trust doesn't gate it</strong>.</dd>
+<dt>skills-dir plugin</dt>
+<dd>One kept under <code>~/.claude/skills/</code> or a project's <code>.claude/skills/</code> with a <code>.claude-plugin/plugin.json</code>. Set a marketplace allowlist and you must add <code>{&quot;source&quot;: &quot;skills-dir&quot;}</code> or these stop loading.</dd>
+</dl>
+</div>
+<div class="thinking">
+<h3>// THREE THINGS THAT DON'T ADD UP</h3>
+<details><summary>If the community catalog already passed automated security scanning, why review it again?</summary><div>Because &quot;passed an automated scan&quot; and &quot;someone understood what it intends to do&quot; are different claims, and the first one's limits are exactly the list SkillSpector publishes about itself: static, English, no runtime. More importantly, a scanner can't judge <strong>intent match</strong> — a plugin that claims to format code shipping a hook that makes outbound requests is entirely legal pattern-wise. So read the tiers as <strong>&quot;how much review is still owed&quot;</strong>: the official tier owes you a glance at Will install, the community tier owes you &quot;why does it need this hook,&quot; the third-party tier owes the full four steps. The community catalog's real hard guarantee is a different one — entries pin a commit SHA, so <strong>the version you reviewed is the version you install</strong>. That's worth more than the scan verdict.</div></details>
+<details><summary>A skill is just text. Why is it harder to defend against than an MCP server?</summary><div>Because an MCP server is a process, and processes have boundaries you can argue about: put it in a container, restrict egress, run it read-only, use fully qualified names — the whole panel of knobs from Skill 12 still applies. A skill has no process. It <strong>becomes the model's instructions directly</strong>, and &quot;should the model obey this paragraph&quot; has no syscall-level enforcement point. Worse, it looks harmless: one Markdown file, a short diff, easy to skim past in review. That's the real asymmetry — <strong>MCP risk you can configure away; skill risk you can only read away</strong>. Which is why the only gate that works for this class is &quot;I read the body,&quot; and why &quot;copy, don't install&quot; isn't settling — it's the sane default at this layer.</div></details>
+<details><summary>SkillSpector scored it 70. Should I install it?</summary><div>That's the wrong question, and wrong in a very typical way: a risk score is <strong>lead density</strong>, not a conclusion. Use it to decide how long to look — low score, spot-check three files; high score, read line by line or walk away. The questions worth answering are concrete: which file do the hits land in (a hit in a hook or in <code>bin/</code> is a different order of magnitude from wording in the body), does the feature it claims require that capability, and what do you lose by not installing it. The third one usually decides it. Most of the time the answer is &quot;twenty lines of prompt,&quot; and then how to read a 70 never comes up.</div></details>
+</div>
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://code.claude.com/docs/en/plugins/security" target="_blank">Claude Code · Plugin security and trust</a> — the main source: the four entry points a plugin runs code through; hooks and MCP servers run outside the sandbox; the three tiers and fourteen reserved names; the four review steps and <code>--plugin-dir … plugin details</code>; the trust warning verbatim; cache kept 14 days after uninstall (2026-10)</li>
+<li><a href="https://code.claude.com/docs/en/permissions" target="_blank">Claude Code · Configure permissions</a> — the &quot;what runs before you trust a folder&quot; table (a skill's hooks and <code>allowed-tools</code> still apply under <code>-p</code>, <code>.mcp.json</code> connects without asking, <code>permissions.allow</code> does not apply); <code>--bare</code> / <code>--setting-sources user</code> / <code>disableAllHooks</code> / <code>disabledMcpjsonServers</code>; the <code>Skill(skill:&lt;name&gt;)</code> deny rule (2026-10)</li>
+<li><a href="https://code.claude.com/docs/en/skills" target="_blank">Claude Code · Agent Skills</a> — &quot;Workspace trust doesn't gate this field&quot; and &quot;A skill can grant itself broad tool access&quot; verbatim; when <code>!</code> commands in a skill body run, and <code>disableSkillShellExecution</code> (2026-10)</li>
+<li><a href="https://code.claude.com/docs/en/plugins/org" target="_blank">Claude Code · Manage plugins for your organization</a> — the control matrix: what <code>strictKnownMarketplaces</code> / <code>blockedMarketplaces</code> / <code>disableSideloadFlags</code> / <code>strictPluginOnlyCustomization</code> / <code>allowManagedHooksOnly</code> / <code>pluginTrustMessage</code> each enforce and can't do; the <code>[]</code> lockout and the <code>skills-dir</code> trap (2026-10)</li>
+<li><a href="https://code.claude.com/docs/en/plugins/install" target="_blank">Claude Code · Install and manage plugins</a> — what the Will install pane shows; auto-update defaults (on for official names, off for community and third-party); pinning with <code>#ref</code>; a <code>command</code> source asks you to accept it before it runs (2026-10)</li>
+<li><a href="https://code.claude.com/docs/en/plugins/anthropic-marketplaces" target="_blank">Claude Code · Anthropic's marketplaces</a> — the repositories and marketplace names of the official, community and demo catalogs; &quot;Anthropic doesn't review third-party marketplaces&quot; verbatim (2026-10)</li>
+<li><a href="https://github.com/NVIDIA/SkillSpector" target="_blank">NVIDIA/SkillSpector</a> — install and <code>scan</code> usage; 71 patterns across 17 categories and the 0–100 risk score; SARIF output and <code>--no-llm</code>; the 26.1% / 5.2% dataset figures; <strong>its own five stated limitations</strong> (Apache-2.0, per its repository page 2026-10)</li>
+<li><a href="https://github.com/snyk/agent-scan" target="_blank">snyk/agent-scan</a> — <code>uvx snyk-agent-scan@latest</code>; the discovery coverage for harnesses, MCP servers and skills across a dozen-plus clients; fourteen risk classes; <code>--no-skills</code> / <code>--ci</code> / <code>--dangerously-run-mcp-servers</code> (Apache-2.0, per its repository page 2026-10)</li>
+<li><a href="https://github.com/anthropics/claude-plugins-community" target="_blank">anthropics/claude-plugins-community</a> — &quot;submitted via claude.ai, passed automated security scanning, and been approved for distribution&quot; verbatim; read-only mirror, pull requests auto-closed, nightly sync (Apache-2.0, 2026-10)</li>
+<li><a href="https://github.com/anthropics/skills" target="_blank">anthropics/skills</a> — the official skill reference set, used here to calibrate what normal looks like; the README disclaimer verbatim (mostly Apache-2.0, document set source-available, 2026-10)</li>
+<li><a href="https://github.com/anthropics/claude-plugins-official" target="_blank">anthropics/claude-plugins-official</a> — the official catalog itself; its <code>.claude-plugin/marketplace.json</code> is the catalog (2026-10)</li>
+<li><a href="https://github.com/trailofbits/mcp-context-protector" target="_blank">trailofbits/mcp-context-protector</a> — the counterpart control for plugins that ship an MCP server: pin on first trust, block semantic changes (Apache-2.0, 2026-10)</li>
+<li><a href="mcp-security-skill12.en.html">This site · Skill 12, the security boundary when you wire up MCP</a> — the full panel of knobs on the process side, against this issue's &quot;skill risk you can only read away&quot;</li>
+<li><a href="safety-skills-roundup-skill29.en.html">This site · Skill 29, safety &amp; governance roundup</a> — where this issue's scanners sit on the &quot;blocks you vs. just tells you&quot; table</li>
+<li><a href="hooks-automation-skill27.en.html">This site · Skill 27, hooks and deterministic automation</a> — why the hook is the first file to read in any plugin</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Skill 30 · 2026-10-01</footer>
+</div>
+<script src="https://hub.cissychen.com/comments.js" defer></script>
+<script src="https://hub.cissychen.com/search.js" defer></script>
+<script src="https://hub.cissychen.com/index-button.js" defer></script>
+<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+</body></html>
