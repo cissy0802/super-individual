@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill 31 &middot; Truth-First Skills &mdash; Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head>
+<body>
+<div class="container">
+<header>
+<span class="week-tag">SKILL 31 / SAFETY &middot; DEEP DIVE</span>
+<h1>Truth-First Skills</h1>
+<h2>Making it say &quot;I don't know,&quot; making it run the command before saying &quot;done&quot; &mdash; and why this whole class fails open</h2>
+<div class="date">2026-10-02 &middot; BigCat</div>
+<p class="pitch">An unglamorous opening: <code>truth-first</code> does exist as an Agensi listing, but a search engine attributed it to Addy Osmani's <code>agent-skills</code> &mdash; and that repo's 25 skill directories contain no such folder. Which is exactly the disease this class of skill treats. Below: 9 real, installable or readable entries with install commands and a first usable prompt, plus the one criterion worth memorizing &mdash; <strong>no &quot;unknown&quot; tier means it is binary, and binary fails.</strong></p>
+</header>
+<div class="xref">
+<a href="source-grounding-skill21.en.html">Same series &rarr; Skill 21 Source Grounding</a> &middot; <a href="skill-eval-skill7.en.html">Skill 7 Writing Evals for a Skill</a> &middot; <a href="hooks-automation-skill27.en.html">Skill 27 Hooks &amp; Deterministic Automation</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>A model lies in two ways: it <strong>invents facts</strong> (citations, version numbers, URLs) and it <strong>invents completion</strong> (&quot;tests should pass now&quot;). Skill 21 handed the first to tool grounding; this issue takes the second, plus something harder &mdash; <strong>making &quot;I don't know&quot; a legal value in the output contract</strong>. That is the entire craft here: these skills do not change what the model knows, only <strong>the precondition for it to speak</strong>.</p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>What it kills for you: turning &quot;I think it's fine&quot; into &quot;the gate is shut, so I may not say fine&quot;</h2>
+<div class="claim">Claim: the four that actually earn their keep all install within one screen. Commands first; the criteria come in the second half.</div>
+<pre><code><span class="tag-com"># 1. The headliner: truth-first (an Agensi marketplace listing)</span>
+npx agensi install truth-first
+
+<span class="tag-com"># 2. The hardest completion gate on the official marketplace (one skill inside Superpowers)</span>
+/plugin install superpowers@claude-plugins-official
+
+<span class="tag-com"># 3. &quot;Read the official docs first&quot; and &quot;get disproved first&quot;</span>
+npx skills add addyosmani/agent-skills --list   <span class="tag-com"># see the 25 folder names first</span>
+npx skills add addyosmani/agent-skills
+
+<span class="tag-com"># 4. The CLAUDE.md school: paste in permission to say I don't know</span>
+/plugin marketplace add instantX-research/anthropic-anti-hallucinate-skills
+/plugin install anti-hallucinate@anthropic-anti-hallucinate-skills</code></pre>
+<h3>The first usable move</h3>
+<p>Don't wait for auto-trigger. Next time it says &quot;should,&quot; paste this back:</p>
+<pre><code>You just said the tests "should" pass. Run verification-before-completion:
+which command proves that sentence? Run it in full <span class="tag-key">in this message</span>,
+paste the exit code and the failure count, then state a conclusion.</code></pre>
+<h3>What each of the four kills, and when not to install it</h3>
+<ul>
+<li><strong><a href="https://www.agensi.io/skills/truth-first" target="_blank">Agensi &middot; <code>truth-first</code></a></strong> (per that marketplace's skill page, free with 32 installs as of 2026-10; tags include verification / reliability / devops) &mdash; kills <em>answering ops questions from remembered system state</em>: it requires reading actual system state, configs and file contents first, grading every claim into <strong>Verified / Inferred / Unknown</strong>, and delivering a report where each claim carries its evidence (paths, log snippets, command output). <strong>Skip it when</strong> your work is pure logic rather than machine state &mdash; there it is friction only. <strong>Stated honestly</strong>: agensi.io is blocked by this site's egress policy, so the above comes from a search engine's summary of that page; read its SKILL.md yourself before installing.</li>
+<li><strong><a href="https://github.com/obra/superpowers/blob/main/skills/verification-before-completion/SKILL.md" target="_blank">obra/superpowers &middot; <code>verification-before-completion</code></a></strong> (MIT; ~294.1k stars per its GitHub repo page, 2026-10) &mdash; kills <em>invented completion</em>, and it is the only one here written as an iron law: <em>&quot;If you haven't run the verification command in this message, you cannot claim it passes.&quot;</em> It ships a claim / required evidence / not sufficient table: tests passing needs fresh output with 0 failures; a bug fixed needs the original symptom going green, not &quot;the code changed&quot;; <strong>an agent reporting success needs the VCS diff</strong>. <strong>Skip it when</strong> the work is exploratory throwaway scripting &mdash; it will demand a full run per sentence.</li>
+<li><strong><a href="https://github.com/addyosmani/agent-skills/blob/main/skills/source-driven-development/SKILL.md" target="_blank">addyosmani/agent-skills &middot; <code>source-driven-development</code></a></strong> (MIT; ~100.4k stars per its GitHub repo page, 2026-10; 25 skills in the repo) &mdash; kills <em>writing framework code from memory</em>: read the dependency file to pin versions (<code>package.json</code>, <code>go.mod</code>&hellip;) &rarr; fetch the one relevant docs page (not the homepage) &rarr; implement what the docs show &rarr; cite full URLs in comments and in conversation. It explicitly requires an <strong><code>UNVERIFIED</code></strong> marker when no docs can be found, and names &quot;I'll just say it might be outdated&quot; the worst option of all. <strong>Skip it when</strong> the change is version-independent: renames, moving files.</li>
+<li><strong><a href="https://github.com/addyosmani/agent-skills/blob/main/skills/doubt-driven-development/SKILL.md" target="_blank">addyosmani/agent-skills &middot; <code>doubt-driven-development</code></a></strong> (same repo) &mdash; kills <em>it convinced itself and started typing</em>: before a non-trivial decision it spawns a reviewer with <strong>fresh context, instructed to disprove rather than approve</strong>, over five steps CLAIM &rarr; EXTRACT &rarr; DOUBT &rarr; RECONCILE &rarr; STOP. The key design: hand the reviewer the artifact and the contract, <strong>never your own conclusion</strong>, so it cannot nod along. Three cycles max, then escalate to a human. <strong>Skip it when</strong> the change is mechanical, a one-liner, or speed was explicitly requested.</li>
+</ul>
+<div class="fail"><strong>An SEO site filed <code>truth-first</code> under Addy Osmani &mdash; that is the counter-example itself.</strong> Go look at <code>addyosmani/agent-skills</code>: 25 skill folders, no <code>truth-first</code>. So this series' rule matters doubly here: <strong>aggregator sites are for discovering candidates only; names come from the GitHub repo directory or the official marketplace page.</strong></div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Mechanism: three designs, and not one of them is &quot;be careful&quot;</h2>
+<div class="claim">Claim: none of the effective truth-first skills says &quot;please be careful.&quot; They write <strong>a gate, a third tier, and a table that pre-rejects excuses</strong>.</div>
+<h3>1. The gate function: a claim must pass through</h3>
+<div class="diagram">BEFORE saying "done," you must complete:
+  1 IDENTIFY  which command proves this sentence?
+  2 RUN       run it in full (fresh, not last time's)
+  3 READ      full output, check exit code, count failures
+  4 VERIFY    does the output actually support the claim?
+                - no  -> state the real status, with evidence
+                - yes -> state the claim, with evidence
+  5 ONLY THEN are you allowed to speak
+  Skipping any step = lying, not verifying</div>
+<p>This beats &quot;please verify first&quot; on one point: <strong>speaking itself becomes a governed action</strong>, so &quot;Great!&quot; and &quot;Perfect!&quot; fall inside the gate too &mdash; that SKILL.md lists expressing satisfaction among its red flags.</p>
+<h3>2. Three tiers: binary squeezes &quot;unknown&quot; into &quot;known&quot;</h3>
+<p>This is the most reusable idea in the issue. With only right/wrong available, anything uncertain must be filed under one of them, and the model's default bias is &quot;right.&quot; So every serious attempt adds a third tier: <code>truth-first</code>'s Verified / Inferred / <strong>Unknown</strong>, <code>verify-claim</code>'s Verified / Refuted / <strong>Inconclusive</strong>, <code>source-driven-development</code>'s <strong><code>UNVERIFIED</code></strong>. The official side is blunter: the first basic strategy on <a href="https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-hallucinations" target="_blank">Reduce hallucinations</a> is literally <em>Allow Claude to say &quot;I don't know&quot;</em>, with a sentence you can copy verbatim &mdash; <em>&quot;If you're unsure about any aspect or if the report lacks necessary information, say 'I don't have enough information to confidently assess this.'&quot;</em> (per that page, 2026-10).</p>
+<h3>3. The rationalization table: write down every excuse in advance</h3>
+<p>Both of the skills above carry a two-column table: excuse on the left, rebuttal on the right. &quot;Should work now&quot; &rarr; run it. &quot;I'm confident&quot; &rarr; confidence is not evidence. &quot;Just this once&quot; &rarr; no exceptions. &quot;Different words, so the rule doesn't apply&quot; &rarr; spirit over letter. And the sharpest: &quot;fetching docs wastes tokens&quot; &rarr; hallucinating an API wastes more.</p>
+<div class="fail"><strong>Why write it that way?</strong> Because the common failure of a rule like this is not incomprehension, it is <strong>circumvention</strong>: rephrase it, verify half of it, &quot;this case is special.&quot; Writing the dodges into the skill closes the exits in advance &mdash; the fastest signal of whether one of these was made seriously.</div>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Use and limits: five more entries, and how to accept-test them</h2>
+<div class="claim">Claim: don't install three of the same kind &mdash; they differ in trigger moment and in surface, and overlapping ones just fight. Sort out who owns which segment.</div>
+<p>Only <code>anti-hallucinate</code> below ships install commands; the other four are single-folder skills &mdash; copy that folder from the repo into <code>~/.claude/skills/</code> or the project's <code>.claude/skills/</code>.</p>
+<ul>
+<li><strong><a href="https://github.com/anthropics/skills/blob/main/skills/discernment-nudge/SKILL.md" target="_blank">anthropics/skills &middot; <code>discernment-nudge</code></a></strong> (official) &mdash; kills <em>the answer ends and the reader has no handle to check it</em>: after an answer the user may act on, it appends 2&ndash;3 follow-up questions tied to that content (one at a number or claim, one probing an assumption, one at missing context), in the fixed format <em>&quot;A few things worth a second look:&quot;</em>, <strong>at most once per conversation</strong>. <strong>Skip it when</strong> &mdash; it lists this itself &mdash; the ask is a simple lookup, a purely educational explanation, creative writing or chat, a reformat of the user's own material, or the user already asked you to verify.</li>
+<li><strong><a href="https://github.com/instantX-research/anthropic-anti-hallucinate-skills" target="_blank">instantX-research/anthropic-anti-hallucinate-skills &middot; <code>anti-hallucinate</code></a></strong> (MIT; 11 stars per its GitHub repo page, 2026-10) &mdash; kills <em>re-pasting your honesty rules into every project</em>: five principles (honesty over helpfulness, never fabricate citations, hedge when uncertain, extra care with facts / dates / names, ask yourself &quot;do I actually know this&quot;) packaged so you can <code>curl</code> them straight onto <code>~/.claude/CLAUDE.md</code>, or install them as a plugin. <strong>Skip it when</strong> you already have your own honesty section &mdash; two copies just cost context. <strong>Stated honestly</strong>: 11 stars, and &quot;anthropic&quot; in the repo name is borrowed, not official.</li>
+<li><strong><a href="https://github.com/0xcjl/anti-sycophancy" target="_blank">0xcjl/anti-sycophancy</a></strong> (MIT; 8 stars and 2 commits on main per its GitHub repo page, 2026-10) &mdash; kills <em>you ask &quot;right?&quot; and it says right</em>: three layers at once, a <code>UserPromptSubmit</code> hook rewriting confirmatory prompts into critical ones (Claude Code only) plus a SKILL.md critical mode plus persistent CLAUDE.md rules. <strong>The layering is the lesson</strong>; that hook layer is the only design here that actually intercepts the input. <strong>Skip it when</strong> &mdash; 8 stars, 2 commits, and I could not verify the ArXiv number its README cites: read it as a reference design, don't install it as a product.</li>
+<li><strong><a href="https://github.com/geigermatic/claude-craft/blob/main/skills/verify-claim/SKILL.md" target="_blank">geigermatic/claude-craft &middot; <code>verify-claim</code></a></strong> (MIT) &mdash; kills <em>load-bearing claims nobody checked</em>: rewrite the claim as one <strong>falsifiable</strong> sentence naming specific files, functions, values, behaviors &rarr; match claim type to tool (read, grep, curl, run tests, fetch) &rarr; report <strong>exact observations</strong> rather than summarizing early &rarr; return Verified / Refuted / Inconclusive plus a next step. It also states which claims it <strong>refuses</strong>: vague ones, multi-part ones, predictions about the future. <strong>Skip it for</strong> facts you could just read, and low-stakes trivia.</li>
+<li><strong><a href="https://github.com/daymade/claude-code-skills/tree/main/fact-checker" target="_blank">daymade/claude-code-skills &middot; <code>fact-checker</code></a></strong> (MIT; ~1.4k stars per its repo page, 2026-10) &mdash; kills <em>numbers and quotes in a draft that nobody re-checked</em>: works a four-tier official-source priority, marks what it cannot confirm <strong>&#10067; Unverifiable</strong> instead of deleting it, and requires human confirmation for any edit. <strong>Skip it for</strong> code work &mdash; its object is prose facts, not program behavior.</li>
+</ul>
+<h3>Four criteria, for choosing among the nine above</h3>
+<ol>
+<li><strong>Only a reverse eval counts as acceptance</strong>: anything passes the positive cases. What you must construct are three cases where <strong>the evidence does not exist</strong> &mdash; a function in a file that isn't there, a version number that can't be looked up, confirming tests pass in an environment that won't run. One pass condition: it says it doesn't know. Run the no-skill baseline first, per Skill 7, or you cannot measure what this one added.</li>
+<li><strong>Is there a third tier</strong>: the output spec must carry Unknown / Inconclusive / UNVERIFIED. &quot;Verified&quot; with no &quot;couldn't verify&quot; is binary &mdash; drop it.</li>
+<li><strong>Is there a rationalization table and a red-flag list</strong>: the hard sign of serious work (see above). Principles without closed exits get dodged by tomorrow with &quot;this case is special.&quot;</li>
+<li><strong>Which side its trigger sits on</strong>: read the <code>description</code> in its frontmatter. &quot;Before claiming complete / committing / opening a PR&quot; governs invented completion; &quot;when the user asks for facts&quot; governs invented facts. Don't expect one skill to cover both &mdash; what you stack is <strong>different segments</strong>, not duplicates.</li>
+</ol>
+<div class="fail"><strong>A real way to get this wrong</strong>: install <code>truth-first</code> and <code>verification-before-completion</code> together, then complain that every sentence needs a command. Both want evidence, but one wants <strong>system state</strong> (configs, logs) and the other wants <strong>an exit code</strong>. If you aren't debugging infrastructure, turn the former off.</div>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Cost and alternatives: this class fails open, so the real gate isn't here</h2>
+<div class="claim">Claim: Skill 29's rule that safety skills must fail closed is violated right here &mdash; these are all prompt text, the model may ignore them, and <strong>nothing errors when it does</strong>.</div>
+<h3>Two bills to accept up front</h3>
+<ul>
+<li><strong>Tokens and time</strong>: a full test or build run before every claim, and <code>doubt-driven-development</code> additionally spawns a reviewer (it books that cost itself as buying early interception) &mdash; so turn it on only for irreversible, cross-module or security-relevant decisions.</li>
+<li><strong>Friction turning into noise</strong>: the failure mode of this class is not inertness but <strong>over-firing</strong> &mdash; everything marked Unknown. The well-designed ones ship their own off-switch conditions (<code>verify-claim</code>'s &quot;skip low stakes,&quot; <code>discernment-nudge</code>'s &quot;at most once per conversation&quot;); read that section before installing.</li>
+</ul>
+<h3>The ladder of alternatives: harder as you go down, and pricier</h3>
+<div class="diagram">one prompt   the official "say I don't know" line; free, this turn only
+  ↓
+CLAUDE.md    persistent across the project; costs context permanently
+  ↓
+skill        triggerable, room for a long spec; fails open (all nine live here)
+  ↓
+hook         Stop event, exit 2 / {"decision":"block"}; the model cannot dodge it
+  ↓
+CI           the only layer that stops what was already pushed</div>
+<p><strong>How to go one layer down</strong>: Claude Code's <a href="https://code.claude.com/docs/en/hooks" target="_blank"><code>Stop</code> hook</a> fires when it wants to finish, and <strong>exit code 2 prevents it from stopping and continues the conversation</strong>; the JSON form is <code>{&quot;decision&quot;:&quot;block&quot;,&quot;reason&quot;:&quot;...&quot;}</code>, and <code>hookSpecificOutput.additionalContext</code> can feed &quot;3 test failures remain, continue&quot; straight back in (per the official hooks reference, 2026-10). In other words: <strong>&quot;did it run the tests&quot; belongs to a hook, not to a skill.</strong></p>
+<h3>Putting uncertainty into the output contract</h3>
+<p>If this lives in your own program rather than a CLI chat, don't lean on prompting &mdash; lean on schema. <a href="https://platform.claude.com/docs/en/build-with-claude/structured-outputs" target="_blank">Structured Outputs</a> pins the response to your schema via <code>output_config.format</code> (<code>type: &quot;json_schema&quot;</code>), so <code>status: &quot;verified&quot; | &quot;inferred&quot; | &quot;unknown&quot;</code> and <code>evidence</code> can be <strong>required fields</strong> &mdash; no confident prose can route around the unknown tier any more. Limits worth knowing: no recursive schemas, no <code>minimum</code>/<code>maxLength</code>-style constraints, <code>additionalProperties</code> must be <code>false</code>, and output may not match the schema on a refusal or when <code>max_tokens</code> is hit (per that page, 2026-10).</p>
+</div>
+<div class="combo">
+<h3>// ONE-PAGE ACTION CARD</h3>
+<p><strong>Do these three today</strong>: 1. <code>/plugin install superpowers@claude-plugins-official</code>, then invoke <code>verification-before-completion</code> by hand right before it would say &quot;done&quot; &mdash; the most direct payoff of the nine. 2. Copy the official line into your <code>CLAUDE.md</code>: <em>&quot;If you're unsure &hellip; say 'I don't have enough information to confidently assess this.'&quot;</em> &mdash; free, project-wide. 3. Write three reverse-eval cases where <strong>the evidence does not exist</strong>, and run the no-skill baseline first.</p>
+<p><strong>Add as needed</strong>: <code>source-driven-development</code> (framework code) &middot; <code>doubt-driven-development</code> (irreversible or cross-module decisions) &middot; <code>truth-first</code> (debugging and system-state questions; read its SKILL.md first) &middot; <code>discernment-nudge</code> (answers going to non-technical readers) &middot; <code>fact-checker</code> (numbers and quotes in a draft) &middot; one <code>Stop</code> hook (pin &quot;no finishing without a test run&quot; there).</p>
+<p><strong>Explicitly don't</strong>: install two of the same evidence-demanding kind &middot; treat this class as a CI gate (it fails open) &middot; copy skill names or authors off aggregator sites &middot; accept-test with positive cases only &middot; run a completion gate over exploratory scripts &middot; think &quot;I noted it might be outdated&quot; equals having checked.</p>
+</div>
+<div class="glossary">
+<h3>// GLOSSARY</h3>
+<dl>
+<dt>false completion</dt>
+<dd>Claiming tests passed, the bug is fixed, or the build succeeded without running the verification. The sibling of invented facts; this issue treats it.</dd>
+<dt>three-tier grading</dt>
+<dd>Output tiers like Verified / Inferred / Unknown. The third one is the point &mdash; binary forces the uncertain into &quot;certain.&quot;</dd>
+<dt>fail-open / fail-closed</dt>
+<dd>Letting through on failure versus blocking on failure. A skill is the former (ignoring it raises nothing); hooks and CI are the latter.</dd>
+<dt>rationalization table</dt>
+<dd>The two-column &quot;excuse to rebuttal&quot; table inside a SKILL.md, pre-closing rephrasing, half-verification and &quot;just this once.&quot;</dd>
+<dt>Structured Outputs</dt>
+<dd>The Claude API's <code>output_config.format</code> (<code>json_schema</code>), pinning output to a schema; it can make &quot;unknown&quot; a required field.</dd>
+</dl>
+</div>
+<div class="thinking">
+<h3>// THREE THINGS THAT DON'T ADD UP</h3>
+<details><summary>If the model can ignore it, is this class of skill worth anything?</summary><div>Yes, but the value is not a guarantee &mdash; it is <strong>a changed default</strong>. With no external constraint the model's default is to produce an answer that sounds complete; these skills move the default to &quot;find the evidence first.&quot; The right mental slot for one is <strong>a checklist on call</strong>, not a door. Which yields a counter-intuitive conclusion: <strong>invoking it by hand beats waiting for auto-trigger</strong> &mdash; calling it the moment you read the word &quot;should&quot; hits far more often than hoping it fires itself at exactly that moment. If you want a door, go down a layer to a <code>Stop</code> hook.</div></details>
+<details><summary>Won't truth-first grading just give me something that marks everything Unknown?</summary><div>It can, and this is the most common real failure of the class, not a theoretical risk: you rewarded &quot;I don't know,&quot; so it treats not knowing as the safe exit. Two counters, both inside things named above &mdash; turn it on only for high-stakes work (<code>verify-claim</code> says to skip low stakes outright), and don't test only whether it will say it doesn't know. <strong>The reverse eval has to run both ways</strong>: build three more cases where the evidence is entirely sufficient and see whether it still dares to conclude. One-directional acceptance reliably produces an assistant that hands every question back to you &mdash; that is not honesty, it is deflection.</div></details>
+<details><summary>Why is &quot;make it say I don't know&quot; so much harder to accept-test than &quot;make it check&quot;?</summary><div>Because checking leaves traces and not knowing doesn't. A check means tool calls, fetched URLs, command output &mdash; countable in the transcript. Whereas &quot;it should have said it didn't know and didn't&quot; is only detectable if you already know the right answer, which is precisely what you lack in the situations where you'd use it. So acceptance here requires <strong>manufacturing the evidence gap yourself</strong>: you remove the evidence by hand, which makes you the only party who knows the answer key. That also explains why opinion on this class is the most divided of any &mdash; most people cannot test it and go on feel.</div></details>
+</div>
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://github.com/obra/superpowers/blob/main/skills/verification-before-completion/SKILL.md" target="_blank">obra/superpowers &middot; verification-before-completion</a> &mdash; a primary source here: the iron law verbatim, the five-step gate function, the claim / required / not-sufficient table, red flags and the rationalization table (MIT; ~294.1k stars per its repo page, 2026-10)</li>
+<li><a href="https://www.agensi.io/skills/truth-first" target="_blank">Agensi &middot; truth-first</a> &mdash; the headliner's marketplace listing: <code>npx agensi install truth-first</code>, the three tiers and the evidence report (per that page, free with 32 installs, 2026-10; <strong>this site could not reach agensi.io, so the data comes from a search engine's summary of the page &mdash; verify it yourself before installing</strong>)</li>
+<li><a href="https://github.com/addyosmani/agent-skills" target="_blank">addyosmani/agent-skills</a> &mdash; <code>source-driven-development</code>'s four steps and <code>UNVERIFIED</code> marker, <code>doubt-driven-development</code>'s five steps and &quot;don't hand over your own conclusion&quot;; also this issue's counter-example: <strong>no truth-first among those 25 folders</strong> (MIT; ~100.4k stars per its repo page, 2026-10)</li>
+<li><a href="https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-hallucinations" target="_blank">Anthropic &middot; Reduce hallucinations</a> &mdash; the copyable &quot;allow I don't know&quot; prompt line; word-for-word quotes first; delete unsupported claims and leave <code>[]</code>; four advanced strategies (2026-10)</li>
+<li><a href="https://platform.claude.com/docs/en/build-with-claude/structured-outputs" target="_blank">Anthropic &middot; Structured outputs</a> &mdash; <code>output_config.format</code> / <code>type: json_schema</code>; SDK helpers (Python <code>messages.parse</code>, TS <code>zodOutputFormat</code>); unsupported recursion and numeric constraints, <code>additionalProperties</code> must be false, two exceptions (2026-10)</li>
+<li><a href="https://code.claude.com/docs/en/hooks" target="_blank">Claude Code &middot; Hooks reference</a> &mdash; <code>Stop</code> event exit 2 preventing a stop, <code>{&quot;decision&quot;:&quot;block&quot;,&quot;reason&quot;:&quot;&hellip;&quot;}</code>, <code>additionalContext</code>; and <code>PostToolUse</code>, which cannot block but can rewrite via <code>updatedToolOutput</code> (2026-10)</li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/discernment-nudge/SKILL.md" target="_blank">anthropics/skills &middot; discernment-nudge</a> &mdash; the fixed format and length cap for 2&ndash;3 follow-ups, once per conversation, and the six non-trigger cases (official)</li>
+<li><a href="https://github.com/geigermatic/claude-craft/blob/main/skills/verify-claim/SKILL.md" target="_blank">geigermatic/claude-craft &middot; verify-claim</a> &mdash; one falsifiable sentence, tool by claim type, no premature summarizing, three outcome tiers, and the four kinds of claim it refuses (MIT)</li>
+<li><a href="https://github.com/instantX-research/anthropic-anti-hallucinate-skills" target="_blank">instantX-research/anthropic-anti-hallucinate-skills</a> &mdash; five principles plus the <code>curl &hellip; &gt;&gt; ~/.claude/CLAUDE.md</code> persistent install and the plugin install (MIT; 11 stars per its repo page, 2026-10; <strong>&quot;anthropic&quot; in the name does not mean official</strong>)</li>
+<li><a href="https://github.com/0xcjl/anti-sycophancy" target="_blank">0xcjl/anti-sycophancy</a> &mdash; the three-layer structure: <code>UserPromptSubmit</code> hook rewriting confirmatory prompts, plus SKILL.md, plus persistent CLAUDE.md (MIT; 8 stars and 2 commits per its repo page, 2026-10; the ArXiv number in its README could not be verified)</li>
+<li><a href="https://github.com/daymade/claude-code-skills/tree/main/fact-checker" target="_blank">daymade/claude-code-skills &middot; fact-checker</a> &mdash; four-tier official-source priority, &#10067; Unverifiable instead of deletion, human confirmation for edits (MIT; ~1.4k stars per its repo page, 2026-10)</li>
+<li><a href="source-grounding-skill21.en.html">This site, Skill 21 &middot; Source Grounding</a> &mdash; the invented-facts half: what models nearly always fabricate, and how tool grounding changes the verdict</li>
+<li><a href="skill-eval-skill7.en.html">This site, Skill 7 &middot; Writing Evals for a Skill</a> &mdash; the full method behind the reverse eval: baseline first, three scenarios, two-instance iteration</li>
+<li><a href="hooks-automation-skill27.en.html">This site, Skill 27 &middot; Hooks &amp; Deterministic Automation</a> &mdash; why &quot;did it run the tests&quot; belongs to a hook rather than a skill</li>
+</ul>
+</div>
+<footer>BigCat &middot; Super Individual &middot; Skill 31 &middot; 2026-10-02</footer>
+</div>
+<script src="https://hub.cissychen.com/comments.js" defer></script>
+<script src="https://hub.cissychen.com/search.js" defer></script>
+<script src="https://hub.cissychen.com/index-button.js" defer></script>
+<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+</body></html>

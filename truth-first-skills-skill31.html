@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill 31 · 「诚实优先」类 Skill — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head>
+<body>
+<div class="container">
+<header>
+<span class="week-tag">SKILL 31 / SAFETY · DEEP DIVE</span>
+<h1>「诚实优先」类 Skill</h1>
+<h2>逼它说「不知道」，逼它跑完再说「好了」——而这类 skill 自己是 fail-open 的</h2>
+<div class="date">2026-10-02 · BigCat</div>
+<p class="pitch">先说件扫兴的事：主角 <code>truth-first</code> 在 Agensi 上确有条目，但搜索引擎把它归到 Addy Osmani 的 <code>agent-skills</code> 名下，而那仓库 25 个 skill 目录里<strong>没有</strong>它。这正是本期要治的病。下面点名 9 个真实可装 / 可读的条目，给安装命令与第一条能跑的用法，以及最该记住的判据：<strong>没有「不知道」这一档的，都是二值，不合格。</strong></p>
+</header>
+<div class="xref">
+<a href="source-grounding-skill21.html">同系列 → Skill 21 来源接地与引用可信度</a> · <a href="skill-eval-skill7.html">Skill 7 给 Skill 写 Eval</a> · <a href="hooks-automation-skill27.html">Skill 27 Hooks 与确定性自动化</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>模型有两种谎：<strong>编事实</strong>（引文、版本号、URL）与<strong>编完成</strong>（「测试应该过了」）。Skill 21 已把前者交给工具接地，本期专攻后者，外加一件更难的事——<strong>把「不知道」变成输出契约里的合法取值</strong>。这类 skill 的手艺全在此：不改模型的知识，只改它<strong>发言的前置条件</strong>。</p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>它替你干掉什么：把「我觉得好了」变成「闸门没开不许说好了」</h2>
+<div class="claim">论断：这类里真正有用的四个，装法都在一屏之内。先给命令，判据放后半程。</div>
+<pre><code><span class="tag-com"># ① 主角：truth-first（Agensi marketplace 的条目）</span>
+npx agensi install truth-first
+
+<span class="tag-com"># ② 官方 marketplace 里最硬的完成门禁（Superpowers 的其中一个 skill）</span>
+/plugin install superpowers@claude-plugins-official
+
+<span class="tag-com"># ③ 「先查官方文档再写」与「先找人反驳再做」</span>
+npx skills add addyosmani/agent-skills --list   <span class="tag-com"># 先看 25 个目录名</span>
+npx skills add addyosmani/agent-skills
+
+<span class="tag-com"># ④ 往 CLAUDE.md 里塞「允许说不知道」那一派</span>
+/plugin marketplace add instantX-research/anthropic-anti-hallucinate-skills
+/plugin install anti-hallucinate@anthropic-anti-hallucinate-skills</code></pre>
+<h3>第一条立刻能跑的用法</h3>
+<p>不用等它自动触发。下次它说出「应该」，把这句贴回去：</p>
+<pre><code>你刚说「测试应该过了」。按 verification-before-completion 走：
+这句要哪条命令证明？在<span class="tag-key">这一条消息里</span>完整跑一遍，
+贴出 exit code 与失败计数，再说结论。</code></pre>
+<h3>四个分别替你干掉什么、什么时候别装</h3>
+<ul>
+<li><strong><a href="https://www.agensi.io/skills/truth-first" target="_blank">Agensi · <code>truth-first</code></a></strong>（据该 marketplace 的 skill 页，2026-10 为免费、32 次安装；标签含 verification / reliability / devops）— 替你干掉「拿记忆里的系统状态回答运维问题」：要求先实地读取系统状态、配置与文件内容，再按 <strong>Verified / Inferred / Unknown</strong> 三档逐条分级，最后交一份每条论断都连着证据（路径、日志、命令输出）的报告。<strong>别装的时候</strong>：活儿是写纯逻辑而非查机器状态时，它只在加摩擦。<strong>诚实说清</strong>：agensi.io 被本站出口策略挡住，以上取自搜索引擎对该页的摘要，装前自行核对 SKILL.md。</li>
+<li><strong><a href="https://github.com/obra/superpowers/blob/main/skills/verification-before-completion/SKILL.md" target="_blank">obra/superpowers · <code>verification-before-completion</code></a></strong>（MIT；据 GitHub 仓库页 2026-10 约 29.4 万 star）— 替你干掉「编完成」这一种谎，而且是本期唯一写成铁律的：<em>「如果你没在这一条消息里跑过那条验证命令，你就不能声称它通过。」</em>它给一张「声称 → 需要什么 → 什么不算」的对照表：测试通过要的是 0 failures 的新鲜输出；bug 修好要的是原症状转绿，不是「代码改了」；<strong>subagent 报告成功要的是 VCS diff</strong>。<strong>别装的时候</strong>：探索性、一次性的脚本——它会要求你为每句话跑全量命令。</li>
+<li><strong><a href="https://github.com/addyosmani/agent-skills/blob/main/skills/source-driven-development/SKILL.md" target="_blank">addyosmani/agent-skills · <code>source-driven-development</code></a></strong>（MIT；据 GitHub 仓库页 2026-10 约 10.04 万 star，仓库共 25 个 skill）— 替你干掉「凭记忆写框架代码」：先读依赖文件定版本（<code>package.json</code> / <code>go.mod</code>…）→ 抓那一页官方文档（不是首页）→ 按文档写 → 注释与对话里给全 URL。它明确要求<strong>抓不到文档就打 <code>UNVERIFIED</code></strong>，并把「先声明一句可能过时」列为最差选项。<strong>别装的时候</strong>：改名、挪文件这类与版本无关的活。</li>
+<li><strong><a href="https://github.com/addyosmani/agent-skills/blob/main/skills/doubt-driven-development/SKILL.md" target="_blank">addyosmani/agent-skills · <code>doubt-driven-development</code></a></strong>（同仓库）— 替你干掉「它说服了自己就开始动手」：在非平凡决定上先起一个<strong>全新上下文、被要求去反驳而不是赞同</strong>的审查者，五步走 CLAIM → EXTRACT → DOUBT → RECONCILE → STOP；关键设计是只交产物与契约、<strong>不交你自己的结论</strong>，避免它顺着你点头。最多三轮，之后升级给人。<strong>别装的时候</strong>：机械改动、一行小修、明说要快。</li>
+</ul>
+<div class="fail"><strong>SEO 站把 <code>truth-first</code> 挂在 Addy Osmani 名下——这就是反例本身。</strong> 真去查 <code>addyosmani/agent-skills</code> 的目录，25 个 skill 里没有 <code>truth-first</code>。所以本系列那条规矩在这一期格外要紧：<strong>聚合站只能用来发现候选，名字一律以 GitHub 仓库目录或官方 marketplace 页面为准。</strong></div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>机制：三个设计，没一个是「讲道理」</h2>
+<div class="claim">论断：有效的「诚实优先」skill 都不写「请谨慎」，它们写的是<strong>闸门、三态、和一张预先驳回借口的表</strong>。</div>
+<h3>① 闸门函数：声称必须过闸</h3>
+<div class="diagram">要说「好了」之前，必须走完：
+  1 IDENTIFY  哪条命令能证明这句话？
+  2 RUN       完整跑一遍（新鲜的，不是上次的）
+  3 READ      读全量输出 · 看 exit code · 数失败条数
+  4 VERIFY    输出真的支持这句话吗？
+                └ 否 → 带证据说出真实状态
+                └ 是 → 带证据再说结论
+  5 ONLY THEN 才允许发言
+  跳过任一步 = 撒谎，不是验证</div>
+<p>这比「请先验证」强在：<strong>「发言」本身成了受管动作</strong>，于是「太好了！」这类表态也落进门禁——那份 SKILL.md 把表达满意列进了红旗清单。</p>
+<h3>② 三态分级：二值会把「不知道」挤进「知道」</h3>
+<p>这是本期最可复用的一条。输出只有「对 / 错」两格时，不确定的东西必须被塞进一格，而模型的默认偏置是「对」。所以认真做的都设了第三格：<code>truth-first</code> 的 Verified / Inferred / <strong>Unknown</strong>、<code>verify-claim</code> 的 Verified / Refuted / <strong>Inconclusive</strong>、<code>source-driven-development</code> 的 <strong><code>UNVERIFIED</code></strong>。官方那侧更直白：<a href="https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-hallucinations" target="_blank">Reduce hallucinations</a> 第一条基本策略就叫 <em>Allow Claude to say「I don't know」</em>，并给了可直接抄的句子——<em>「If you're unsure about any aspect or if the report lacks necessary information, say『I don't have enough information to confidently assess this.』」</em>（据该页，2026-10）。</p>
+<h3>③ 借口预防表：预先写下它会说的每句借口</h3>
+<p>上面两个 skill 都带一张两列表：左列借口，右列驳回。「应该能跑了」→ 去跑。「我很有信心」→ 信心不是证据。「就这一次」→ 没有例外。「换个说法规则就不适用」→ 精神高于字面。「抓文档浪费 token」→ 编错 API 浪费得更多。</p>
+<div class="fail"><strong>为什么非要这么写？</strong>因为这类规则最常见的失效不是模型不懂，而是<strong>绕过</strong>：换措辞、只验一半、「这次特殊」。把绕法写进 skill 等于提前堵住出口——这也是判断它认真与否的最快信号。</div>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>用法与边界：另外五个条目，以及怎么验收</h2>
+<div class="claim">论断：这类不能装三个同款——触发时机与作用面都不同，装重了互相打架。先分清谁管哪段。</div>
+<p>五个里只有 <code>anti-hallucinate</code> 给了命令；其余四个是单目录 skill——把仓库里那个目录拷进 <code>~/.claude/skills/</code> 或项目 <code>.claude/skills/</code>。</p>
+<ul>
+<li><strong><a href="https://github.com/anthropics/skills/blob/main/skills/discernment-nudge/SKILL.md" target="_blank">anthropics/skills · <code>discernment-nudge</code></a></strong>（官方）— 替你干掉「答完就完，读者无从核起」：在给出可被拿去行动的答案后，追加 2–3 条紧扣该内容的追问（一条针对某个数字或论断、一条戳假设、一条问缺失上下文），固定格式 <em>「A few things worth a second look:」</em>，<strong>一次对话最多一次</strong>。<strong>别装的时候</strong>：它自己列了——简单查询、纯教学解释、创意写作与闲聊、只帮排版、以及用户已要求核验过。</li>
+<li><strong><a href="https://github.com/instantX-research/anthropic-anti-hallucinate-skills" target="_blank">instantX-research/anthropic-anti-hallucinate-skills · <code>anti-hallucinate</code></a></strong>（MIT；据 GitHub 仓库页 2026-10 为 11 star）— 替你干掉「每个项目都要重贴一遍诚实要求」：五条原则（诚实优于顺从、不编引文、不确定就标出来、对事实 / 日期 / 人名格外当心、答前自问「我真知道吗」）做成可 <code>curl</code> 追加进 <code>~/.claude/CLAUDE.md</code> 的常驻版，也能当 plugin 装。<strong>别装的时候</strong>：你已有自己的诚实段落，叠着只是占 context。<strong>诚实说清</strong>：11 star，名字里的 anthropic 是蹭的，非官方出品。</li>
+<li><strong><a href="https://github.com/0xcjl/anti-sycophancy" target="_blank">0xcjl/anti-sycophancy</a></strong>（MIT；据 GitHub 仓库页 2026-10 为 8 star、主干 2 次提交）— 替你干掉「你一问『这样对吧？』它就说对」：三层同打：<code>UserPromptSubmit</code> hook 把确认式提问改写成批判式（仅 Claude Code）＋ SKILL.md 触发批判模式＋ CLAUDE.md 常驻规则。<strong>值得看的是分层思路</strong>，hook 那层是本期唯一能真正拦住输入的。<strong>别装的时候</strong>：8 star、2 次提交、README 引的 ArXiv 编号未核到——当参考读，别当成品装。</li>
+<li><strong><a href="https://github.com/geigermatic/claude-craft/blob/main/skills/verify-claim/SKILL.md" target="_blank">geigermatic/claude-craft · <code>verify-claim</code></a></strong>（MIT）— 替你干掉「承重论断没人验」：把论断改写成<strong>可被否证</strong>的单句（点名具体文件、函数、值、行为）→ 按类型选工具（读文件 / grep / curl / 跑测试 / 抓 URL）→ 报<strong>精确观察</strong>而非提前概括 → 给 Verified / Refuted / Inconclusive 之一并附下一步。它还写明<strong>会拒绝</strong>含糊的、一句塞多件事的、预测未来的论断。<strong>别装的时候</strong>：读一下就知道的事实、低风险小事。</li>
+<li><strong><a href="https://github.com/daymade/claude-code-skills/tree/main/fact-checker" target="_blank">daymade/claude-code-skills · <code>fact-checker</code></a></strong>（MIT；据仓库页 2026-10 约 1.4 千 star）— 替你干掉「稿子里的数字和引文没人回查」：按四级官方源优先级核，核不动的标 <strong>❓ Unverifiable</strong> 而非删掉，改动需人工确认。<strong>别装的时候</strong>：代码类工作——它的对象是文稿事实，非程序行为。</li>
+</ul>
+<h3>四条判据（用来在上面九个之间取舍）</h3>
+<ol>
+<li><strong>反向 eval 才算验收</strong>：正向场景谁都能过。要造的是三个<strong>证据根本不存在</strong>的场景——不存在的文件里的函数、查不到的版本号、在跑不起来的环境里确认测试通过。合格线只有一条：它说「不知道」。按 Skill 7 先跑不装 skill 的 baseline，否则量不出它带来了什么。</li>
+<li><strong>有没有第三格</strong>：输出规格里必须有 Unknown / Inconclusive / UNVERIFIED 这一档。只有「已核实」没有「核不了」的是二值，直接淘汰。</li>
+<li><strong>有没有借口预防表与红旗清单</strong>：认真做的硬标志（见上节）。只写原则不堵绕法的，第二天就被绕过去。</li>
+<li><strong>触发时机写在哪一侧</strong>：读它 frontmatter 的 <code>description</code>：写「在声称完成 / 提交 / 建 PR <em>之前</em>」的管编完成，写「用户问事实时」的管编事实。别指望一个 skill 全包——该叠的是<strong>不同段</strong>，不是同款。</li>
+</ol>
+<div class="fail"><strong>一个真实的踩法</strong>：<code>truth-first</code> 与 <code>verification-before-completion</code> 一起装，然后抱怨「每句话都要跑命令」。两者都要证据，但一个要的是<strong>系统状态</strong>（读配置、看日志），一个要的是<strong>命令退出码</strong>。不在排障就该关掉前者。</div>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>代价与替代品：这类 skill 是 fail-open 的，真门禁不在它这儿</h2>
+<div class="claim">论断：Skill 29 那条「安全类必须 fail-closed」在这里是被违反的——这类 skill 全是提示词，模型可以不听，而<strong>不听时没有任何东西会报错</strong>。</div>
+<h3>两笔要先认的账</h3>
+<ul>
+<li><strong>token 与时间</strong>：每条声称前跑一遍全量测试 / 构建，<code>doubt-driven-development</code> 还要额外起一个审查者（它自己把这笔账写成「用成本换早期拦截」）——只在不可逆、跨模块、安全相关的决定上开。</li>
+<li><strong>摩擦变噪音</strong>：这类的失败模式不是失效而是<strong>过度生效</strong>——什么都标 Unknown。设计得好的都自带关闸条件（<code>verify-claim</code> 的「低风险不用」、<code>discernment-nudge</code> 的「一次对话最多一次」），装前先读那段。</li>
+</ul>
+<h3>替代品阶梯：越往下越硬，也越贵</h3>
+<div class="diagram">一句 prompt      官方那句「不确定就说不知道」，零成本，只管这一轮
+  ↓
+CLAUDE.md        常驻全项目，代价是永久占 context
+  ↓
+skill            可触发、能写长规格；fail-open（本期九个都在这层）
+  ↓
+hook             Stop 事件 exit 2 / {"decision":"block"}，绕不过
+  ↓
+CI               唯一能挡住已经 push 出去的那层</div>
+<p><strong>往下一层怎么做</strong>：Claude Code 的 <a href="https://code.claude.com/docs/en/hooks" target="_blank"><code>Stop</code> hook</a> 是「它想收工时」触发的，<strong>退出码 2 会阻止它停下并让对话继续</strong>，JSON 形式是 <code>{"decision":"block","reason":"..."}</code>，也可用 <code>hookSpecificOutput.additionalContext</code> 把「还有 3 个测试在失败，继续」喂回去（据官方 hooks 文档，2026-10）。换句话说：<strong>「跑没跑过测试」该交给 hook，不该交给 skill</strong>。</p>
+<h3>把不确定性写进输出契约</h3>
+<p>如果是在你自己的程序里而不是 CLI 里聊，别靠提示词，靠 schema：<a href="https://platform.claude.com/docs/en/build-with-claude/structured-outputs" target="_blank">Structured Outputs</a> 用 <code>output_config.format</code>（<code>type: "json_schema"</code>）把输出钉在 schema 上，于是 <code>status: "verified" | "inferred" | "unknown"</code> 与 <code>evidence</code> 可以设成<strong>必填字段</strong>——模型没法再用一段自信的散文绕开「不知道」这一格。限制：不支持递归 schema 与 <code>minimum</code>/<code>maxLength</code> 这类约束、<code>additionalProperties</code> 必须 <code>false</code>、拒答或撞到 <code>max_tokens</code> 时输出可能不符合 schema（据该页，2026-10）。</p>
+</div>
+<div class="combo">
+<h3>// 一页行动卡</h3>
+<p><strong>今天就做这三件</strong>：① <code>/plugin install superpowers@claude-plugins-official</code>，然后只在它要说「好了」之前手工点 <code>verification-before-completion</code>——九个里收益最直接。② 把官方那句原文抄进 <code>CLAUDE.md</code>：<em>「If you're unsure … say『I don't have enough information to confidently assess this.』」</em>，零成本、全项目生效。③ 写三个<strong>证据不存在</strong>的反向 eval 场景，先跑不装任何 skill 的 baseline。</p>
+<p><strong>按需再加</strong>：<code>source-driven-development</code>（写框架代码）· <code>doubt-driven-development</code>（不可逆或跨模块的决定）· <code>truth-first</code>（排障与系统状态问答，装前自读 SKILL.md）· <code>discernment-nudge</code>（答案给非技术读者）· <code>fact-checker</code>（核稿子里的数字与引文）· 一条 <code>Stop</code> hook（「测试没跑过不许收工」钉死在这儿）。</p>
+<p><strong>明确别做</strong>：同时装两个「要证据」的同款 · 把这类 skill 当 CI 门禁（它 fail-open） · 抄聚合站写的 skill 名与作者 · 只用正向场景验收 · 在探索性脚本上开完成门禁 · 以为「我声明了可能过时」等于核过。</p>
+</div>
+<div class="glossary">
+<h3>// 术语表</h3>
+<dl>
+<dt>编完成（false completion）</dt>
+<dd>没跑验证就声称「测试过了 / 修好了」。与编事实并列的另一种谎。</dd>
+<dt>三态分级</dt>
+<dd>Verified / Inferred / Unknown 这样的输出分档。关键在第三格——二值会把不确定归进「确定」。</dd>
+<dt>fail-open / fail-closed</dt>
+<dd>失效时放行 / 失效时拦住。skill 属前者（被忽略无人报错），hook 与 CI 属后者。</dd>
+<dt>借口预防表</dt>
+<dd>SKILL.md 里那张「借口 → 驳回」两列表，预先堵住换词、半验、「就这一次」。</dd>
+<dt>Structured Outputs</dt>
+<dd>Claude API 的 <code>output_config.format</code>（<code>json_schema</code>），把输出钉在 schema 上，可把「不知道」做成必填字段。</dd>
+</dl>
+</div>
+<div class="thinking">
+<h3>// 三个想不通的地方</h3>
+<details><summary>既然模型可以不听，这类 skill 到底还有没有意义？</summary><div>有，但意义不在「保证」，在<strong>改默认值</strong>：模型无外部约束时默认给出一个听起来完整的答案，这类 skill 把默认值挪到「先找证据」。它的正确定位是<strong>随叫随到的检查表</strong>，不是一道门。于是有个反直觉的结论：<strong>手工点它比等它自动触发更有效</strong>——你读到「应该」两字时主动调用，命中率远高于指望它自己在那一刻触发。真要门，往下走 <code>Stop</code> hook。</div></details>
+<details><summary>装了「诚实优先」，会不会得到一个什么都标 Unknown 的废物？</summary><div>会，这是这类最常见的真实失败，不是理论风险：你奖励了「说不知道」，它就把它当安全出口。对策两条——只在高风险场景开（<code>verify-claim</code> 明写低风险不用）；别只验「它会不会说不知道」，<strong>反向 eval 要双向</strong>：另造三个证据完全充分的场景，看它是否仍敢给结论。单向验收必然养出一个把问题全退回给你的助手，那不是诚实，是推责。</div></details>
+<details><summary>为什么「逼它说不知道」比「逼它去查」难验收得多？</summary><div>因为「去查」有痕迹，「不知道」没有。查过就有工具调用、抓过的 URL、命令输出，能在 transcript 里数出来；而「它本该说不知道却没说」，只有你已知正确答案才发现得了——那恰恰是你用它的场合里不具备的条件。所以验收必须<strong>人工构造证据缺口</strong>：你亲手挖掉那份证据，于是你成了唯一知道标准答案的人。这也解释了为什么这类口碑分歧最大——大多数人没法验，只能凭感觉。</div></details>
+</div>
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://github.com/obra/superpowers/blob/main/skills/verification-before-completion/SKILL.md" target="_blank">obra/superpowers · verification-before-completion</a> — 本期主源之一：铁律原文、五步闸门函数、「声称 / 需要什么 / 什么不算」对照表、红旗清单与借口预防表（MIT；据仓库页 2026-10 约 29.4 万 star）</li>
+<li><a href="https://www.agensi.io/skills/truth-first" target="_blank">Agensi · truth-first</a> — 主角的 marketplace 条目：<code>npx agensi install truth-first</code>、三档分级与证据报告（据该页，2026-10 免费、32 次安装；<strong>本站未能直连 agensi.io，数据取自搜索引擎对该页的摘要，装前请自行核对</strong>）</li>
+<li><a href="https://github.com/addyosmani/agent-skills" target="_blank">addyosmani/agent-skills</a> — <code>source-driven-development</code> 四步与 <code>UNVERIFIED</code> 标记、<code>doubt-driven-development</code> 五步与「不交自己的结论」；也是本期反例：<strong>25 个目录里没有 truth-first</strong>（MIT；据仓库页 2026-10 约 10.04 万 star）</li>
+<li><a href="https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-hallucinations" target="_blank">Anthropic · Reduce hallucinations</a> — 「允许说 I don't know」可直接抄的 prompt 原句；逐字引文先行；找不到支撑引文就删并留 <code>[]</code>；四条进阶策略（2026-10）</li>
+<li><a href="https://platform.claude.com/docs/en/build-with-claude/structured-outputs" target="_blank">Anthropic · Structured outputs</a> — <code>output_config.format</code> / <code>type: json_schema</code>；SDK 助手（Python <code>messages.parse</code>、TS <code>zodOutputFormat</code>）；不支持递归与数值约束、<code>additionalProperties</code> 必须 false、两种例外（2026-10）</li>
+<li><a href="https://code.claude.com/docs/en/hooks" target="_blank">Claude Code · Hooks reference</a> — <code>Stop</code> 事件 exit 2 阻止收工、<code>{"decision":"block","reason":"…"}</code>、<code>additionalContext</code>；<code>PostToolUse</code> 不能阻断但能用 <code>updatedToolOutput</code> 改写（2026-10）</li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/discernment-nudge/SKILL.md" target="_blank">anthropics/skills · discernment-nudge</a> — 2–3 条追问的固定格式与长度上限、一次对话最多一次、六类不触发场景（官方）</li>
+<li><a href="https://github.com/geigermatic/claude-craft/blob/main/skills/verify-claim/SKILL.md" target="_blank">geigermatic/claude-craft · verify-claim</a> — 可否证单句、按类型选工具、不许提前概括、三档结论、以及它会拒绝哪四类论断（MIT）</li>
+<li><a href="https://github.com/instantX-research/anthropic-anti-hallucinate-skills" target="_blank">instantX-research/anthropic-anti-hallucinate-skills</a> — 五条原则与 <code>curl … &gt;&gt; ~/.claude/CLAUDE.md</code> 常驻装法、plugin 装法（MIT；据仓库页 2026-10 为 11 star；<strong>名字里的 anthropic 不代表官方</strong>）</li>
+<li><a href="https://github.com/0xcjl/anti-sycophancy" target="_blank">0xcjl/anti-sycophancy</a> — 三层结构：<code>UserPromptSubmit</code> hook 改写确认式提问 ＋ SKILL.md ＋ CLAUDE.md 常驻（MIT；据仓库页 2026-10 为 8 star、2 次提交；README 引的 ArXiv 编号未能核实）</li>
+<li><a href="https://github.com/daymade/claude-code-skills/tree/main/fact-checker" target="_blank">daymade/claude-code-skills · fact-checker</a> — 四级官方源优先级、核不动标 ❓ Unverifiable、改动需人工确认（MIT；据仓库页 2026-10 约 1.4 千 star）</li>
+<li><a href="source-grounding-skill21.html">本站 Skill 21 · 来源接地与引用可信度</a> — 编事实那一半：哪些内容模型几乎必编、工具接地怎么改判</li>
+<li><a href="skill-eval-skill7.html">本站 Skill 7 · 给 Skill 写 Eval</a> — 「反向 eval」的完整做法：先建 baseline、三场景起步、双实例迭代</li>
+<li><a href="hooks-automation-skill27.html">本站 Skill 27 · Hooks 与确定性自动化</a> — 为什么「跑没跑过测试」该交给 hook 而非 skill</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Skill 31 · 2026-10-02</footer>
+</div>
+<script src="https://hub.cissychen.com/comments.js" defer></script>
+<script src="https://hub.cissychen.com/search.js" defer></script>
+<script src="https://hub.cissychen.com/index-button.js" defer></script>
+<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+</body></html>
