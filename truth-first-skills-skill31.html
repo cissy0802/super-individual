@@ -64,8 +64,8 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <div class="container">
 <header>
 <span class="week-tag">SKILL 31 / SAFETY · DEEP DIVE</span>
-<h1>「诚实优先」类 Skill</h1>
-<h2>逼它说「不知道」，逼它跑完再说「好了」——而这类 skill 自己是 fail-open 的</h2>
+<h1 data-tts="76361e61f6833cdb">「诚实优先」类 Skill</h1>
+<h2 data-tts="5b92fbcb954d030d">逼它说「不知道」，逼它跑完再说「好了」——而这类 skill 自己是 fail-open 的</h2>
 <div class="date">2026-10-02 · BigCat</div>
 <p class="pitch">先说件扫兴的事：主角 <code>truth-first</code> 在 Agensi 上确有条目，但搜索引擎把它归到 Addy Osmani 的 <code>agent-skills</code> 名下，而那仓库 25 个 skill 目录里<strong>没有</strong>它。这正是本期要治的病。下面点名 9 个真实可装 / 可读的条目，给安装命令与第一条能跑的用法，以及最该记住的判据：<strong>没有「不知道」这一档的，都是二值，不合格。</strong></p>
 </header>
@@ -73,13 +73,13 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <a href="source-grounding-skill21.html">同系列 → Skill 21 来源接地与引用可信度</a> · <a href="skill-eval-skill7.html">Skill 7 给 Skill 写 Eval</a> · <a href="hooks-automation-skill27.html">Skill 27 Hooks 与确定性自动化</a>
 </div>
 <div class="intro">
-<h3>// WHY THIS MATTERS</h3>
+<h3 data-tts="bafe491a3cff1338">// WHY THIS MATTERS</h3>
 <p>模型有两种谎：<strong>编事实</strong>（引文、版本号、URL）与<strong>编完成</strong>（「测试应该过了」）。Skill 21 已把前者交给工具接地，本期专攻后者，外加一件更难的事——<strong>把「不知道」变成输出契约里的合法取值</strong>。这类 skill 的手艺全在此：不改模型的知识，只改它<strong>发言的前置条件</strong>。</p>
 </div>
 <!-- ============ 1 ============ -->
 <div class="section">
 <span class="num">// 01</span>
-<h2>它替你干掉什么：把「我觉得好了」变成「闸门没开不许说好了」</h2>
+<h2 data-tts="5d48e48d8d8f882d">它替你干掉什么：把「我觉得好了」变成「闸门没开不许说好了」</h2>
 <div class="claim">论断：这类里真正有用的四个，装法都在一屏之内。先给命令，判据放后半程。</div>
 <pre><code><span class="tag-com"># ① 主角：truth-first（Agensi marketplace 的条目）</span>
 npx agensi install truth-first
@@ -94,12 +94,12 @@ npx skills add addyosmani/agent-skills
 <span class="tag-com"># ④ 往 CLAUDE.md 里塞「允许说不知道」那一派</span>
 /plugin marketplace add instantX-research/anthropic-anti-hallucinate-skills
 /plugin install anti-hallucinate@anthropic-anti-hallucinate-skills</code></pre>
-<h3>第一条立刻能跑的用法</h3>
+<h3 data-tts="ca8af55e9ef3d0c7">第一条立刻能跑的用法</h3>
 <p>不用等它自动触发。下次它说出「应该」，把这句贴回去：</p>
 <pre><code>你刚说「测试应该过了」。按 verification-before-completion 走：
 这句要哪条命令证明？在<span class="tag-key">这一条消息里</span>完整跑一遍，
 贴出 exit code 与失败计数，再说结论。</code></pre>
-<h3>四个分别替你干掉什么、什么时候别装</h3>
+<h3 data-tts="ce024b89406b69e5">四个分别替你干掉什么、什么时候别装</h3>
 <ul>
 <li><strong><a href="https://www.agensi.io/skills/truth-first" target="_blank">Agensi · <code>truth-first</code></a></strong>（据该 marketplace 的 skill 页，2026-10 为免费、32 次安装；标签含 verification / reliability / devops）— 替你干掉「拿记忆里的系统状态回答运维问题」：要求先实地读取系统状态、配置与文件内容，再按 <strong>Verified / Inferred / Unknown</strong> 三档逐条分级，最后交一份每条论断都连着证据（路径、日志、命令输出）的报告。<strong>别装的时候</strong>：活儿是写纯逻辑而非查机器状态时，它只在加摩擦。<strong>诚实说清</strong>：agensi.io 被本站出口策略挡住，以上取自搜索引擎对该页的摘要，装前自行核对 SKILL.md。</li>
 <li><strong><a href="https://github.com/obra/superpowers/blob/main/skills/verification-before-completion/SKILL.md" target="_blank">obra/superpowers · <code>verification-before-completion</code></a></strong>（MIT；据 GitHub 仓库页 2026-10 约 29.4 万 star）— 替你干掉「编完成」这一种谎，而且是本期唯一写成铁律的：<em>「如果你没在这一条消息里跑过那条验证命令，你就不能声称它通过。」</em>它给一张「声称 → 需要什么 → 什么不算」的对照表：测试通过要的是 0 failures 的新鲜输出；bug 修好要的是原症状转绿，不是「代码改了」；<strong>subagent 报告成功要的是 VCS diff</strong>。<strong>别装的时候</strong>：探索性、一次性的脚本——它会要求你为每句话跑全量命令。</li>
@@ -111,9 +111,9 @@ npx skills add addyosmani/agent-skills
 <!-- ============ 2 ============ -->
 <div class="section">
 <span class="num">// 02</span>
-<h2>机制：三个设计，没一个是「讲道理」</h2>
+<h2 data-tts="91cce26d15062e3d">机制：三个设计，没一个是「讲道理」</h2>
 <div class="claim">论断：有效的「诚实优先」skill 都不写「请谨慎」，它们写的是<strong>闸门、三态、和一张预先驳回借口的表</strong>。</div>
-<h3>① 闸门函数：声称必须过闸</h3>
+<h3 data-tts="4f4c0c43cc010293">① 闸门函数：声称必须过闸</h3>
 <div class="diagram">要说「好了」之前，必须走完：
   1 IDENTIFY  哪条命令能证明这句话？
   2 RUN       完整跑一遍（新鲜的，不是上次的）
@@ -124,16 +124,16 @@ npx skills add addyosmani/agent-skills
   5 ONLY THEN 才允许发言
   跳过任一步 = 撒谎，不是验证</div>
 <p>这比「请先验证」强在：<strong>「发言」本身成了受管动作</strong>，于是「太好了！」这类表态也落进门禁——那份 SKILL.md 把表达满意列进了红旗清单。</p>
-<h3>② 三态分级：二值会把「不知道」挤进「知道」</h3>
+<h3 data-tts="f0a6dccdc3660707">② 三态分级：二值会把「不知道」挤进「知道」</h3>
 <p>这是本期最可复用的一条。输出只有「对 / 错」两格时，不确定的东西必须被塞进一格，而模型的默认偏置是「对」。所以认真做的都设了第三格：<code>truth-first</code> 的 Verified / Inferred / <strong>Unknown</strong>、<code>verify-claim</code> 的 Verified / Refuted / <strong>Inconclusive</strong>、<code>source-driven-development</code> 的 <strong><code>UNVERIFIED</code></strong>。官方那侧更直白：<a href="https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-hallucinations" target="_blank">Reduce hallucinations</a> 第一条基本策略就叫 <em>Allow Claude to say「I don't know」</em>，并给了可直接抄的句子——<em>「If you're unsure about any aspect or if the report lacks necessary information, say『I don't have enough information to confidently assess this.』」</em>（据该页，2026-10）。</p>
-<h3>③ 借口预防表：预先写下它会说的每句借口</h3>
+<h3 data-tts="580a48c194dfe531">③ 借口预防表：预先写下它会说的每句借口</h3>
 <p>上面两个 skill 都带一张两列表：左列借口，右列驳回。「应该能跑了」→ 去跑。「我很有信心」→ 信心不是证据。「就这一次」→ 没有例外。「换个说法规则就不适用」→ 精神高于字面。「抓文档浪费 token」→ 编错 API 浪费得更多。</p>
 <div class="fail"><strong>为什么非要这么写？</strong>因为这类规则最常见的失效不是模型不懂，而是<strong>绕过</strong>：换措辞、只验一半、「这次特殊」。把绕法写进 skill 等于提前堵住出口——这也是判断它认真与否的最快信号。</div>
 </div>
 <!-- ============ 3 ============ -->
 <div class="section">
 <span class="num">// 03</span>
-<h2>用法与边界：另外五个条目，以及怎么验收</h2>
+<h2 data-tts="48fdda19e5dc8924">用法与边界：另外五个条目，以及怎么验收</h2>
 <div class="claim">论断：这类不能装三个同款——触发时机与作用面都不同，装重了互相打架。先分清谁管哪段。</div>
 <p>五个里只有 <code>anti-hallucinate</code> 给了命令；其余四个是单目录 skill——把仓库里那个目录拷进 <code>~/.claude/skills/</code> 或项目 <code>.claude/skills/</code>。</p>
 <ul>
@@ -143,7 +143,7 @@ npx skills add addyosmani/agent-skills
 <li><strong><a href="https://github.com/geigermatic/claude-craft/blob/main/skills/verify-claim/SKILL.md" target="_blank">geigermatic/claude-craft · <code>verify-claim</code></a></strong>（MIT）— 替你干掉「承重论断没人验」：把论断改写成<strong>可被否证</strong>的单句（点名具体文件、函数、值、行为）→ 按类型选工具（读文件 / grep / curl / 跑测试 / 抓 URL）→ 报<strong>精确观察</strong>而非提前概括 → 给 Verified / Refuted / Inconclusive 之一并附下一步。它还写明<strong>会拒绝</strong>含糊的、一句塞多件事的、预测未来的论断。<strong>别装的时候</strong>：读一下就知道的事实、低风险小事。</li>
 <li><strong><a href="https://github.com/daymade/claude-code-skills/tree/main/fact-checker" target="_blank">daymade/claude-code-skills · <code>fact-checker</code></a></strong>（MIT；据仓库页 2026-10 约 1.4 千 star）— 替你干掉「稿子里的数字和引文没人回查」：按四级官方源优先级核，核不动的标 <strong>❓ Unverifiable</strong> 而非删掉，改动需人工确认。<strong>别装的时候</strong>：代码类工作——它的对象是文稿事实，非程序行为。</li>
 </ul>
-<h3>四条判据（用来在上面九个之间取舍）</h3>
+<h3 data-tts="b8f0c863a911ad34">四条判据（用来在上面九个之间取舍）</h3>
 <ol>
 <li><strong>反向 eval 才算验收</strong>：正向场景谁都能过。要造的是三个<strong>证据根本不存在</strong>的场景——不存在的文件里的函数、查不到的版本号、在跑不起来的环境里确认测试通过。合格线只有一条：它说「不知道」。按 Skill 7 先跑不装 skill 的 baseline，否则量不出它带来了什么。</li>
 <li><strong>有没有第三格</strong>：输出规格里必须有 Unknown / Inconclusive / UNVERIFIED 这一档。只有「已核实」没有「核不了」的是二值，直接淘汰。</li>
@@ -155,14 +155,14 @@ npx skills add addyosmani/agent-skills
 <!-- ============ 4 ============ -->
 <div class="section">
 <span class="num">// 04</span>
-<h2>代价与替代品：这类 skill 是 fail-open 的，真门禁不在它这儿</h2>
+<h2 data-tts="70c089112119371d">代价与替代品：这类 skill 是 fail-open 的，真门禁不在它这儿</h2>
 <div class="claim">论断：Skill 29 那条「安全类必须 fail-closed」在这里是被违反的——这类 skill 全是提示词，模型可以不听，而<strong>不听时没有任何东西会报错</strong>。</div>
-<h3>两笔要先认的账</h3>
+<h3 data-tts="3a0d44b0e68dd689">两笔要先认的账</h3>
 <ul>
 <li><strong>token 与时间</strong>：每条声称前跑一遍全量测试 / 构建，<code>doubt-driven-development</code> 还要额外起一个审查者（它自己把这笔账写成「用成本换早期拦截」）——只在不可逆、跨模块、安全相关的决定上开。</li>
 <li><strong>摩擦变噪音</strong>：这类的失败模式不是失效而是<strong>过度生效</strong>——什么都标 Unknown。设计得好的都自带关闸条件（<code>verify-claim</code> 的「低风险不用」、<code>discernment-nudge</code> 的「一次对话最多一次」），装前先读那段。</li>
 </ul>
-<h3>替代品阶梯：越往下越硬，也越贵</h3>
+<h3 data-tts="5f23bc2f0d1fd9d1">替代品阶梯：越往下越硬，也越贵</h3>
 <div class="diagram">一句 prompt      官方那句「不确定就说不知道」，零成本，只管这一轮
   ↓
 CLAUDE.md        常驻全项目，代价是永久占 context
@@ -173,17 +173,17 @@ hook             Stop 事件 exit 2 / {"decision":"block"}，绕不过
   ↓
 CI               唯一能挡住已经 push 出去的那层</div>
 <p><strong>往下一层怎么做</strong>：Claude Code 的 <a href="https://code.claude.com/docs/en/hooks" target="_blank"><code>Stop</code> hook</a> 是「它想收工时」触发的，<strong>退出码 2 会阻止它停下并让对话继续</strong>，JSON 形式是 <code>{"decision":"block","reason":"..."}</code>，也可用 <code>hookSpecificOutput.additionalContext</code> 把「还有 3 个测试在失败，继续」喂回去（据官方 hooks 文档，2026-10）。换句话说：<strong>「跑没跑过测试」该交给 hook，不该交给 skill</strong>。</p>
-<h3>把不确定性写进输出契约</h3>
+<h3 data-tts="7e32840a328c07ca">把不确定性写进输出契约</h3>
 <p>如果是在你自己的程序里而不是 CLI 里聊，别靠提示词，靠 schema：<a href="https://platform.claude.com/docs/en/build-with-claude/structured-outputs" target="_blank">Structured Outputs</a> 用 <code>output_config.format</code>（<code>type: "json_schema"</code>）把输出钉在 schema 上，于是 <code>status: "verified" | "inferred" | "unknown"</code> 与 <code>evidence</code> 可以设成<strong>必填字段</strong>——模型没法再用一段自信的散文绕开「不知道」这一格。限制：不支持递归 schema 与 <code>minimum</code>/<code>maxLength</code> 这类约束、<code>additionalProperties</code> 必须 <code>false</code>、拒答或撞到 <code>max_tokens</code> 时输出可能不符合 schema（据该页，2026-10）。</p>
 </div>
 <div class="combo">
-<h3>// 一页行动卡</h3>
+<h3 data-tts="f325df53cfd78ec9">// 一页行动卡</h3>
 <p><strong>今天就做这三件</strong>：① <code>/plugin install superpowers@claude-plugins-official</code>，然后只在它要说「好了」之前手工点 <code>verification-before-completion</code>——九个里收益最直接。② 把官方那句原文抄进 <code>CLAUDE.md</code>：<em>「If you're unsure … say『I don't have enough information to confidently assess this.』」</em>，零成本、全项目生效。③ 写三个<strong>证据不存在</strong>的反向 eval 场景，先跑不装任何 skill 的 baseline。</p>
 <p><strong>按需再加</strong>：<code>source-driven-development</code>（写框架代码）· <code>doubt-driven-development</code>（不可逆或跨模块的决定）· <code>truth-first</code>（排障与系统状态问答，装前自读 SKILL.md）· <code>discernment-nudge</code>（答案给非技术读者）· <code>fact-checker</code>（核稿子里的数字与引文）· 一条 <code>Stop</code> hook（「测试没跑过不许收工」钉死在这儿）。</p>
 <p><strong>明确别做</strong>：同时装两个「要证据」的同款 · 把这类 skill 当 CI 门禁（它 fail-open） · 抄聚合站写的 skill 名与作者 · 只用正向场景验收 · 在探索性脚本上开完成门禁 · 以为「我声明了可能过时」等于核过。</p>
 </div>
 <div class="glossary">
-<h3>// 术语表</h3>
+<h3 data-tts="8336073fe60d50bd">// 术语表</h3>
 <dl>
 <dt>编完成（false completion）</dt>
 <dd>没跑验证就声称「测试过了 / 修好了」。与编事实并列的另一种谎。</dd>
@@ -198,13 +198,13 @@ CI               唯一能挡住已经 push 出去的那层</div>
 </dl>
 </div>
 <div class="thinking">
-<h3>// 三个想不通的地方</h3>
+<h3 data-tts="d1be5bfa9ce5ba5d">// 三个想不通的地方</h3>
 <details><summary>既然模型可以不听，这类 skill 到底还有没有意义？</summary><div>有，但意义不在「保证」，在<strong>改默认值</strong>：模型无外部约束时默认给出一个听起来完整的答案，这类 skill 把默认值挪到「先找证据」。它的正确定位是<strong>随叫随到的检查表</strong>，不是一道门。于是有个反直觉的结论：<strong>手工点它比等它自动触发更有效</strong>——你读到「应该」两字时主动调用，命中率远高于指望它自己在那一刻触发。真要门，往下走 <code>Stop</code> hook。</div></details>
 <details><summary>装了「诚实优先」，会不会得到一个什么都标 Unknown 的废物？</summary><div>会，这是这类最常见的真实失败，不是理论风险：你奖励了「说不知道」，它就把它当安全出口。对策两条——只在高风险场景开（<code>verify-claim</code> 明写低风险不用）；别只验「它会不会说不知道」，<strong>反向 eval 要双向</strong>：另造三个证据完全充分的场景，看它是否仍敢给结论。单向验收必然养出一个把问题全退回给你的助手，那不是诚实，是推责。</div></details>
 <details><summary>为什么「逼它说不知道」比「逼它去查」难验收得多？</summary><div>因为「去查」有痕迹，「不知道」没有。查过就有工具调用、抓过的 URL、命令输出，能在 transcript 里数出来；而「它本该说不知道却没说」，只有你已知正确答案才发现得了——那恰恰是你用它的场合里不具备的条件。所以验收必须<strong>人工构造证据缺口</strong>：你亲手挖掉那份证据，于是你成了唯一知道标准答案的人。这也解释了为什么这类口碑分歧最大——大多数人没法验，只能凭感觉。</div></details>
 </div>
 <div class="refs">
-<h3>// 延伸阅读</h3>
+<h3 data-tts="888f96007362b13a">// 延伸阅读</h3>
 <ul>
 <li><a href="https://github.com/obra/superpowers/blob/main/skills/verification-before-completion/SKILL.md" target="_blank">obra/superpowers · verification-before-completion</a> — 本期主源之一：铁律原文、五步闸门函数、「声称 / 需要什么 / 什么不算」对照表、红旗清单与借口预防表（MIT；据仓库页 2026-10 约 29.4 万 star）</li>
 <li><a href="https://www.agensi.io/skills/truth-first" target="_blank">Agensi · truth-first</a> — 主角的 marketplace 条目：<code>npx agensi install truth-first</code>、三档分级与证据报告（据该页，2026-10 免费、32 次安装；<strong>本站未能直连 agensi.io，数据取自搜索引擎对该页的摘要，装前请自行核对</strong>）</li>
@@ -224,8 +224,8 @@ CI               唯一能挡住已经 push 出去的那层</div>
 </div>
 <footer>BigCat · Super Individual · Skill 31 · 2026-10-02</footer>
 </div>
-<script src="https://hub.cissychen.com/comments.js" defer></script>
-<script src="https://hub.cissychen.com/search.js" defer></script>
-<script src="https://hub.cissychen.com/index-button.js" defer></script>
-<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
 </body></html>
