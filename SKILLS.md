@@ -89,3 +89,7 @@
 - Skill 32 [榜单]: pkm-skills-roundup — 个人生产力类 skills 榜单 — 会议纪要 / 收件箱 / 笔记整理 / 日程；这一类为什么最该自建而不是装现成的
 - Skill 33 [深挖]: personal-skill-from-repetition — 从重复劳动里长出自己的 skill — 观察「每次都要重新解释的东西」；一次真实任务→一个 skill 的最短路径
 - Skill 34 [深挖]: skill-library-hygiene — 个人 skill 库的卫生 — 命名一致性、去重、废弃、按使用度淘汰；什么时候该把 skill 合并回 prompt
+
+## 增补 · 月度前沿刷新（不走「榜单开路」节奏，单条深挖）
+
+- Skill 35 [深挖]: agent-plugins — Agent Plugins 1.0.0：skill 与 MCP server 终于有了统一打包格式 — 2026-08 由 Amazon / Anysphere(Cursor) / Microsoft / OpenAI / Vercel 五方联合发布的厂商中立打包规范；plugin 就是一个文件夹：必需的 `plugin.json` 清单 + 可选 `skills/`（每个 skill 一份 SKILL.md，沿用 Agent Skills 规范）+ 可选 `mcp.json`（声明 MCP servers）；规范刻意只定义包格式，把安装/权限/安全/分发的信任边界留给各客户端；首发客户端逐个给装法（VS Code、Copilot CLI、Copilot app、Codex、Cursor、Kiro）并与 Claude Code 自家 plugin / marketplace 格式对照；「自己的工具集写一次、跨客户端复用」的最短路径；什么时候不该打包（只有一个 skill、只用一个客户端时一份 SKILL.md 就够）；与 Skill 6 skill-authoring / Skill 8 agents-md / Skill 12 mcp-security / Skill 30 untrusted-skills 的分工（月度前沿刷新纳入 2026-09；来源：https://github.com/agentplugins/agent-plugins-spec 与 https://github.blog/changelog/2026-08-12-agent-plugins-1-0-in-vs-code-copilot-cli-and-the-copilot-app/）
