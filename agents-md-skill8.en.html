@@ -65,17 +65,18 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <header>
 <span class="week-tag">SKILL 08 / META · DEEP DIVE</span>
 <h1>AGENTS.md and Cross-Harness Portability</h1>
-<h2>One repo brief for twenty agents — and why Claude Code is the one that does not read it</h2>
-<div class="date">2026-09-09 · BigCat</div>
+<h2>One repo brief for twenty agents — and when Claude Code reads it, and when it does not</h2>
+<div class="date">2026-09-09 · BigCat · updated 2026-10-01</div>
 <p class="pitch">Your repository currently holds CLAUDE.md, AGENTS.md, .cursor/rules/, and .github/copilot-instructions.md. Four files saying the same thing, and they have already started contradicting each other.</p>
 </header>
 <div class="xref">
 <a href="skill-authoring-skill6.en.html">Related → Skill 06 Reading the Official Authoring Guide (skills load on demand; this issue covers the layer that enters context every single session)</a>
 </div>
+<div class="fail"><strong>Updated 2026-10-01</strong>: when this issue first ran, Claude Code read <code>CLAUDE.md</code> only and not <code>AGENTS.md</code>, and the text was built around that claim. Since <strong>v2.1.277</strong> it reads <code>AGENTS.md</code> natively (v2.1.281 extended that to Bedrock, Vertex AI, Foundry and similar sessions). The affected passages below have been rewritten against the current official docs.</div>
 <div class="intro">
 <h3>// WHY THIS MATTERS</h3>
 <p>AGENTS.md is a README for agents: one plain Markdown file at the repo root, no schema, no validation, no required fields, read into context by coding agents before they start work. It is now stewarded by the <strong>Agentic AI Foundation</strong> under the Linux Foundation, and the spec repo <code>agentsmd/agents.md</code> shows roughly <strong>24.2k stars</strong> and an MIT license per its GitHub page, 2026-09.</p>
-<p>The single most useful thing to know is stated plainly in the official docs: <strong>Claude Code reads <code>CLAUDE.md</code>, not <code>AGENTS.md</code>.</strong> So "just rename the file and it works everywhere" is wrong. This issue names what each tool actually reads, gives the exact commands that wire them together, and then answers the real question: in a repo-level brief, what belongs and what does not.</p>
+<p>The single most useful thing to know has a version boundary: <strong>before v2.1.277 Claude Code read <code>CLAUDE.md</code> only, not <code>AGENTS.md</code>; from v2.1.277 on, it reads AGENTS.md directly when the repository has no CLAUDE.md.</strong> Mind the condition — a single <code>CLAUDE.md</code> in your working directory or above it (a <code>CLAUDE.local.md</code> counts too) and by default only CLAUDE.md is read. So "just rename the file and it works everywhere" is still only half right. This issue names what each tool actually reads, gives the exact commands that wire them together, and then answers the real question: in a repo-level brief, what belongs and what does not.</p>
 </div>
 <!-- ============ 1 ============ -->
 <div class="section">
@@ -85,7 +86,8 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <div class="diagram">WHO READS WHAT (per each vendor's own docs)
 ──────────────────────────────────────────────────────────────
 Claude Code    CLAUDE.md / .claude/CLAUDE.md / CLAUDE.local.md
-               .claude/rules/*.md      &lt;- does NOT read AGENTS.md
+               .claude/rules/*.md
+               AGENTS.md  &lt;- v2.1.277+, only when there is no CLAUDE.md
 OpenAI Codex   AGENTS.md (git root -&gt; cwd) + ~/.codex/AGENTS.md
 GitHub Copilot AGENTS.md (nearest wins) · CLAUDE.md · GEMINI.md
                .github/copilot-instructions.md
@@ -95,7 +97,11 @@ Cursor         .cursor/rules/*.mdc · .cursorrules
 ──────────────────────────────────────────────────────────────
 AGENTS.md is the greatest common denominator, not the whole set.</div>
 <h3>The first thing you can run right now</h3>
-<pre><code><span class="tag-com"># Make AGENTS.md the canonical file. The Claude Code docs give two ways in --</span>
+<pre><code><span class="tag-com"># Make AGENTS.md the canonical file. Claude Code v2.1.277+ with no CLAUDE.md in the repo: do nothing</span>
+<span class="tag-com"># Verify: a new session prints  no CLAUDE.md found; AGENTS.md loaded: &lt;path&gt;</span>
+<span class="tag-com"># To load both files: /config -&gt; Project instructions -&gt; claude-md-and-agents-md</span>
+
+<span class="tag-com"># On older versions, or to append Claude-only text, the two earlier recipes still work (content is read once) --</span>
 <span class="tag-com"># (1) symlink: simplest when you need no Claude-specific text; prints nothing on success</span>
 ln -s AGENTS.md CLAUDE.md
 <span class="tag-com"># On Windows a symlink needs Administrator or Developer Mode; use (2) instead</span>
@@ -157,7 +163,7 @@ HARD NUMBERS (Claude Code docs)
 <p><strong>Nesting may not load the way you assume.</strong> Codex walks "git root to current directory", not "every subdirectory". Issue <a href="https://github.com/openai/codex/issues/13288" target="_blank">#13288</a> in openai/codex (opened 2026-03-02, now closed) reports exactly this: launched at the repo root and editing code under <code>go/</code>, the <code>go/AGENTS.md</code> is never merged in. Claude Code's subdirectory CLAUDE.md files, by contrast, are <strong>loaded on demand</strong> — they enter context when Claude reads a file in that directory. The same nested layout behaves differently under the two harnesses.</p>
 <p><strong>Monorepos get polluted by other teams' briefs.</strong> Claude Code offers <code>claudeMdExcludes</code>, matched as globs against absolute paths. Put it in <code>.claude/settings.local.json</code> and it stays on your machine:</p>
 <pre><code><span class="tag-key">{ "claudeMdExcludes": ["**/monorepo/CLAUDE.md"] }</span></code></pre>
-<p><strong>Personal preferences do not belong in the canonical file.</strong> <code>CLAUDE.local.md</code> (gitignore it) is for your sandbox URLs and test data. Across git worktrees it only exists in the one where you created it, so the docs suggest importing from your home directory instead: <code>@~/.claude/my-project-instructions.md</code>.</p>
+<p><strong>Personal preferences do not belong in the canonical file.</strong> <code>CLAUDE.local.md</code> (gitignore it) is for your sandbox URLs and test data. Across git worktrees it only exists in the one where you created it, so the docs suggest importing from your home directory instead: <code>@~/.claude/my-project-instructions.md</code>. <strong>A new trap</strong>: adding a <code>CLAUDE.local.md</code> to a repo that relies on AGENTS.md stops Claude Code from reading AGENTS.md by default (it counts as "having a CLAUDE.md"); to read both, set Project instructions to <code>claude-md-and-agents-md</code>.</p>
 <div class="fail"><strong>Failure mode</strong>: when two rules contradict each other, the official line is that Claude "may pick one arbitrarily". Across harnesses this gets worse — AGENTS.md says pnpm, an unmaintained <code>.cursorrules</code> says npm, and you never learn which one won today. When you absorb old rule files, <strong>deleting the source</strong> matters more than the import itself.</div>
 <div class="res"><strong>Going deeper</strong> · <a href="https://code.claude.com/docs/en/memory#write-effective-instructions" target="_blank">Claude Code · writing effective instructions (size, structure, specificity, consistency)</a> · <a href="https://code.claude.com/docs/en/large-codebases" target="_blank">Claude Code · Monorepos and large repos</a></div>
 </div>
@@ -168,20 +174,20 @@ HARD NUMBERS (Claude Code docs)
 <div class="claim">Claim: AGENTS.md can carry exactly one thing — a block of plain text that enters context every session. MCP servers, hooks, subagents, skills, path-scoped rules: none of what actually makes an agent strong travels with it. Portability is bought by giving capability up.</div>
 <h3>Three routes, an order of magnitude apart in cost</h3>
 <ul>
-<li><strong>A · one symlink</strong> (<code>ln -s AGENTS.md CLAUDE.md</code>). No dependencies, no maintenance, one canonical file. <em>When it stops being enough</em>: when tools need different wording (you want only Claude in plan mode, say) a symlink gives you no insertion point — switch to the <code>@AGENTS.md</code> import and append below it.</li>
+<li><strong>A · native loading, or one symlink</strong>. Claude Code v2.1.277+ reads AGENTS.md directly in a repo with no CLAUDE.md, with nothing to set up; on older versions add <code>ln -s AGENTS.md CLAUDE.md</code> (the docs confirm the content is read once either way). No dependencies, no maintenance, one canonical file. <em>When it stops being enough</em>: when tools need different wording (you want only Claude in plan mode, say) — switch to the <code>@AGENTS.md</code> import and append below it. Once a CLAUDE.md exists it is the only file read by default, so that import line is not optional.</li>
 <li><strong>B · <a href="https://github.com/intellectronica/ruler" target="_blank">ruler</a></strong> (roughly 2.9k stars, MIT, per its GitHub repo page, 2026-09). <em>What it kills</em>: hand-syncing config files across dozens of agents. <em>How to use it</em>: <code>npx @intellectronica/ruler apply</code>, canonical text in <code>.ruler/AGENTS.md</code>, distributed to <code>CLAUDE.md</code>, <code>AGENTS.md</code>, <code>.aider.conf.yml</code> and more; the README lists 30 targets (Copilot, Claude Code, Cursor, Windsurf, Cline, Aider, Codex CLI, Gemini CLI, Goose, Zed, Jules and others) and it manages MCP config too. <em>When not to install it</em>: if your team uses one or two agents, the generated artifacts and the CI drift check cost more than they save.</li>
 <li><strong>C · <a href="https://github.com/dyoshikawa/rulesync" target="_blank">rulesync</a></strong> (roughly 1.4k stars, MIT, per its GitHub repo page, 2026-09). <em>What it kills</em>: the same problem, but its strength is the <strong>reverse</strong> direction. <em>How to use it</em>: <code>npm install -g rulesync</code>; <code>rulesync import</code> pulls existing configs into <code>.rulesync/</code>, and <code>rulesync convert --from cursor --to copilot,claudecode</code> does a one-shot format conversion without adopting its workflow at all; <code>rulesync generate</code> is the steady-state command. Beyond rules it covers ignore files, MCP, commands, subagents, skills and hooks. <em>When not to install it</em>: if you only need one migration, run <code>convert</code> and uninstall — do not leave a generator living in the repo.</li>
 </ul>
 <h3>What you can do without installing anything</h3>
-<p>Make <code>AGENTS.md</code> canonical, <code>ln -s</code> on the Claude Code side, change <code>context.fileName</code> on the Gemini CLI side, and Copilot and Codex read it natively. Those four steps cover almost everyone's needs at zero cost. <strong>A generator only starts paying for itself once "each tool also needs its own paragraph" becomes the norm</strong> — at that point you are no longer maintaining one file but a template plus N diffs.</p>
+<p>Make <code>AGENTS.md</code> canonical: Claude Code (v2.1.277+), Copilot and Codex read it natively, and Gemini CLI needs one <code>context.fileName</code> change; on an older Claude Code add one <code>ln -s</code>. Those few steps cover almost everyone's needs at zero cost. <strong>A generator only starts paying for itself once "each tool also needs its own paragraph" becomes the norm</strong> — at that point you are no longer maintaining one file but a template plus N diffs.</p>
 <div class="fail"><strong>The honest cost</strong>: AGENTS.md enters context on every session. It is a <strong>standing tax</strong>, not on-demand loading. A skill is read in only when it is judged relevant; a rules file is not. So every paragraph you add has to answer one question: is this worth appearing in every single conversation you have for the rest of the year? Most "best practices" are not.</div>
 <div class="res"><strong>Going deeper</strong> · <a href="https://code.claude.com/docs/en/skills" target="_blank">Claude Code · Skills (the on-demand layer)</a> · <a href="https://code.claude.com/docs/en/hooks-guide" target="_blank">Claude Code · Hooks (the layer code should guarantee)</a></div>
 </div>
 <div class="combo">
 <h3>// ONE-PAGE BUYING CARD</h3>
-<p><strong>Do these three first</strong>: (1) make <code>AGENTS.md</code> canonical, run <code>ln -s AGENTS.md CLAUDE.md</code>, then open a new session and confirm it under Memory files with <code>/context</code>; (2) run <code>/doctor</code> and apply its criteria — delete the directory tree, the dependency list and the architecture overview, keep pitfalls, rationale and anti-default conventions, and get under 200 lines; (3) move anything that is only true inside one subdirectory into <code>.claude/rules/</code> with a <code>paths:</code> frontmatter, so it stops taxing every session.</p>
+<p><strong>Do these three first</strong>: (1) make <code>AGENTS.md</code> canonical. On Claude Code v2.1.277+ with no CLAUDE.md in the repo there is nothing to do — a new session showing the <code>AGENTS.md loaded</code> line is your confirmation; on older versions, or in a repo that already has a CLAUDE.md, use <code>ln -s AGENTS.md CLAUDE.md</code> or an <code>@AGENTS.md</code> import and check that it is listed under <code>/memory</code>; (2) run <code>/doctor</code> and apply its criteria — delete the directory tree, the dependency list and the architecture overview, keep pitfalls, rationale and anti-default conventions, and get under 200 lines; (3) move anything that is only true inside one subdirectory into <code>.claude/rules/</code> with a <code>paths:</code> frontmatter, so it stops taxing every session.</p>
 <p><strong>Pick by situation</strong>: one or two agents → a symlink is enough, skip the generator; distributing to a dozen tools with per-tool differences → <code>npx @intellectronica/ruler apply</code> with <code>.ruler/AGENTS.md</code> as the source; a pile of Cursor <code>.mdc</code> files you just want converted once → <code>rulesync convert --from cursor --to copilot,claudecode</code>, then uninstall; moving a whole setup of MCP servers, commands, subagents and skills into Claude Code → <code>/import</code> (v2.1.213+); polluted by other teams in a monorepo → <code>claudeMdExcludes</code>.</p>
-<p><strong>Numbers to keep handy</strong>: target under 200 lines for CLAUDE.md · over 4 MiB is skipped · <code>@path</code> imports nest at most four hops · Gemini CLI takes an array in <code>context.fileName</code> · Copilot is nearest-wins while Codex and Claude Code concatenate · <code>CLAUDE_CODE_NEW_INIT=1</code> makes <code>/init</code> read AGENTS.md as well.</p>
+<p><strong>Numbers to keep handy</strong>: target under 200 lines for CLAUDE.md · over 4 MiB is skipped · <code>@path</code> imports nest at most four hops · Gemini CLI takes an array in <code>context.fileName</code> · Copilot is nearest-wins while Codex and Claude Code concatenate · <code>CLAUDE_CODE_NEW_INIT=1</code> makes <code>/init</code> read AGENTS.md as well · Claude Code v2.1.277+ reads AGENTS.md when there is no CLAUDE.md (a <code>CLAUDE.local.md</code> counts as one).</p>
 <p><strong>The criterion in one line</strong>: if one grep would tell the model, delete it; if a new teammate would need to be told, keep it; if it is true in only one subdirectory, move it into a path-scoped rule.</p>
 </div>
 <div class="glossary">
@@ -204,8 +210,9 @@ HARD NUMBERS (Claude Code docs)
 <div class="refs">
 <h3>// FURTHER READING</h3>
 <ul>
-<li><a href="https://code.claude.com/docs/en/memory" target="_blank">Claude Code · How Claude remembers your project</a> — the primary source for most of this issue: the sentence "Claude Code reads CLAUDE.md, not AGENTS.md", the <code>@AGENTS.md</code> import and <code>ln -s</code> recipes, which legacy rule files <code>/init</code> and <code>/import</code> each read, load order, <code>claudeMdExcludes</code>, the <code>paths:</code> field in <code>.claude/rules/</code>, the 200-line and 4 MiB numbers, and the <code>/doctor</code> trim criteria</li>
+<li><a href="https://code.claude.com/docs/en/memory" target="_blank">Claude Code · How Claude remembers your project</a> — the primary source for most of this issue: the "AGENTS.md" section (when it is read directly, the four Project instructions values, which sessions cannot read it, what to do with earlier workarounds), the <code>@AGENTS.md</code> import and <code>ln -s</code> recipes, which legacy rule files <code>/init</code> and <code>/import</code> each read, load order, <code>claudeMdExcludes</code>, the <code>paths:</code> field in <code>.claude/rules/</code>, the 200-line and 4 MiB numbers, and the <code>/doctor</code> trim criteria</li>
 <li><a href="https://github.com/agentsmd/agents.md" target="_blank">agentsmd/agents.md</a> — the spec itself plus a sample file (dev environment, testing, PR conventions); roughly 24.2k stars, MIT, per its GitHub repo page, 2026-09. The site <a href="https://agents.md/" target="_blank">agents.md</a> lists the supporting tools</li>
+<li><a href="https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md" target="_blank">anthropics/claude-code · CHANGELOG.md</a> — the two entries behind the 2026-10-01 update: v2.1.277 "in a project with no CLAUDE.md, Claude Code reads AGENTS.md instead", and v2.1.281 extending it to Bedrock, Vertex AI, Foundry and LLM gateways</li>
 <li><a href="https://aaif.io/projects/agents-md" target="_blank">Agentic AI Foundation · AGENTS.md project page</a> — governance: a project of the Linux Foundation's AAIF alongside MCP and goose</li>
 <li><a href="https://github.com/openai/codex/blob/main/docs/agents_md.md" target="_blank">openai/codex · docs/agents_md.md</a> — the Codex entry point, pointing at the official guide <a href="https://developers.openai.com/codex/guides/agents-md" target="_blank">Custom instructions with AGENTS.md</a> (concatenated from git root down to the current directory, stacked on <code>~/.codex/AGENTS.md</code>, with a byte cap on the total)</li>
 <li><a href="https://github.com/openai/codex/issues/13288" target="_blank">openai/codex · issue #13288</a> — "Codex doesn't load AGENTS.md in all the parent directories", opened 2026-03-02 and now closed; a real case of a subdirectory AGENTS.md never taking effect</li>
@@ -217,7 +224,7 @@ HARD NUMBERS (Claude Code docs)
 <li><a href="skill-authoring-skill6.en.html">This site · Skill 06 Reading the Official Authoring Guide</a> — how to write the on-demand layer (skills); the complement to this issue's always-resident layer</li>
 </ul>
 </div>
-<footer>BigCat · Super Individual · Skill 08 · 2026-09-09</footer>
+<footer>BigCat · Super Individual · Skill 08 · 2026-09-09 · updated 2026-10-01</footer>
 </div>
 <script src="https://hub.cissychen.com/comments.js" defer></script>
 <script src="https://hub.cissychen.com/search.js" defer></script>
