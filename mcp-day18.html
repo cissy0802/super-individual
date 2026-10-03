@@ -133,7 +133,7 @@ mcp = FastMCP(<span class="tag-gpt">"weather"</span>)
 <span class="num">// 03</span>
 <h2 data-tts="60ab361770f1f7a5">stdio vs Streamable HTTP：transport 决定进程模型</h2>
 <div class="claim">论断：transport 不是部署细节——它决定 server 是本地子进程还是远程服务、能否多租户、认证边界在哪。</div>
-<h3 data-tts="70bbb392107c789f">背景与原理</h3>
+<h3 data-tts="eb5318f2782e64a8">背景与原理</h3>
 <p>MCP 用 <strong>JSON-RPC 2.0</strong>，跑在两种标准 transport 上：</p>
 <ul>
 <li><strong>stdio</strong>：client 把 server 当<strong>子进程</strong>拉起，靠 stdin/stdout 收发、换行分隔。零网络、零认证、延迟最低，但天然 <strong>1:1</strong>——一个 client 一个进程，无法多租户。本地工具（文件、Git、本地 DB）首选。</li>
