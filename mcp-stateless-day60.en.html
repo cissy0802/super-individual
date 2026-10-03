@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Day 60 · MCP Goes Stateless, and How to Migrate — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;overflow-x:auto}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking{margin:40px 0}
+.thinking h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}}
+</style></head><body>
+<div class="container">
+<header>
+<span class="week-tag">DAY 60 · PROTOCOL</span>
+<h1>MCP Goes Stateless, and How to Migrate</h1>
+<h2>The 2026-07-28 spec deleted the handshake and the session — which lines of your server have to change</h2>
+<div class="date">2026-10-03 · BigCat</div>
+<p class="pitch">Removing state from the protocol does not make your state disappear. It just moves it out of the protocol's hands and into yours.</p>
+</header>
+<div class="xref">
+<a href="mcp-day18.en.html">Prerequisite → Day 18 MCP (three primitives / transports / the context tax — written against the old stateful protocol)</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>The 2026-07-28 revision is the largest breaking rewrite since MCP launched: <strong>the <code>initialize</code> handshake is gone, <code>Mcp-Session-Id</code> is gone, and the protocol no longer has a concept of a "session" at all</strong>. This is not syntactic sugar — the mental model from Day 18, "connect, then negotiate capabilities in a handshake," is simply no longer valid. What is worth your time is not the sentence "it went stateless" but three concrete engineering consequences: <strong>a remote server can now run bare behind a round-robin load balancer</strong> (no sticky routing, no shared session store), <strong>routing and rate-limiting information has been lifted into HTTP headers</strong> (your gateway can meter per tool without parsing the JSON-RPC body), and <strong>flows that need mid-call user input now use a retry instead of a long-lived connection</strong>. The costs are equally concrete: statelessness pushes a batch of state-management problems from the protocol onto you, and one mislabelled cache scope is a cross-user leak. This issue walks the mechanisms, gives a migration checklist, and names the failure mode each new mechanism brings with it.</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// POINT 01</span>
+<h2>The handshake is gone: identity and capabilities drop from connection scope to request scope</h2>
+<p class="claim">It used to be "ask once on connect." Now it is "carry it every time" — and therefore any request can land on any instance.</p>
+<h3>// BACKGROUND</h3>
+<p>The old lifecycle was: connect → <code>initialize</code> to exchange protocol version and capabilities → <code>initialized</code> → subsequent requests identify back into the same session via <code>Mcp-Session-Id</code>. That design let a server assume "I have seen what came before for this session," at the price that <strong>horizontal scaling required stickiness</strong>: either the load balancer pinned sessions to instances, or session state went into a shared store like Redis.</p>
+<p>The new spec (SEP-2575 / SEP-2567) deletes that layer wholesale. Client identity now <strong>travels in <code>_meta</code> on every request</strong>, under the fixed reverse-DNS key <code>io.modelcontextprotocol/clientInfo</code>. Capability discovery becomes an <strong>optional</strong> <code>server/discover</code> method — clients call it when they want to know up front, not as a prerequisite for anything. Alongside it, W3C Trace Context (SEP-414) also rides in <code>_meta</code> under the fixed keys <code>traceparent</code> / <code>tracestate</code> / <code>baggage</code>, which for the first time lets MCP calls join your existing OTel traces directly.</p>
+<h3>// IN PRACTICE</h3>
+<pre><code><span class="tag-com">// New protocol: a self-contained tools/call, no prior handshake</span>
+{
+  <span class="tag-gpt">"jsonrpc"</span>: <span class="tag-gpt">"2.0"</span>, <span class="tag-gpt">"id"</span>: 1,
+  <span class="tag-gpt">"method"</span>: <span class="tag-gpt">"tools/call"</span>,
+  <span class="tag-gpt">"params"</span>: {
+    <span class="tag-gpt">"name"</span>: <span class="tag-gpt">"search"</span>,
+    <span class="tag-gpt">"arguments"</span>: { <span class="tag-gpt">"q"</span>: <span class="tag-gpt">"mcp stateless"</span> },
+    <span class="tag-key">"_meta"</span>: {
+      <span class="tag-gpt">"io.modelcontextprotocol/clientInfo"</span>: { <span class="tag-gpt">"name"</span>: <span class="tag-gpt">"my-app"</span>, <span class="tag-gpt">"version"</span>: <span class="tag-gpt">"1.0"</span> }
+    }
+  }
+}</code></pre>
+<pre><code><span class="tag-com">// TypeScript SDK v2: a factory builds one server instance per request</span>
+<span class="tag-claude">import</span> { createMcpHandler, McpServer } <span class="tag-claude">from</span> <span class="tag-gpt">'@modelcontextprotocol/server'</span>;
+
+<span class="tag-claude">const</span> handler = createMcpHandler(() =&gt; {
+  <span class="tag-claude">const</span> server = <span class="tag-claude">new</span> McpServer(
+    { name: <span class="tag-gpt">'my-server'</span>, version: <span class="tag-gpt">'1.0.0'</span> },
+    { capabilities: { tools: {} } }
+  );
+  <span class="tag-com">// register tools / resources / prompts here</span>
+  <span class="tag-claude">return</span> server;
+});
+<span class="tag-claude">export default</span> handler;  <span class="tag-com">// web-standard runtimes export it directly</span></code></pre>
+<div class="diagram">  OLD (2025, stateful)                  NEW (2026-07-28, stateless)
+
+  client ──initialize──┐              client ──tools/call──┐
+         └─Session-Id──┤                (identity in _meta) │
+                       ▼                                    ▼
+              ┌─ sticky LB ─┐                      ┌─ round-robin ─┐
+              ▼             ▼                      ▼               ▼
+          [inst A]      [inst B]                [inst A]       [inst B]
+              └── shared session store              (no shared state)
+                  (Redis / sticky routing)</div>
+<div class="fail"><strong>Failure mode:</strong> the most common misreading is taking "the protocol is stateless" to mean "I don't have to manage state." <strong>The protocol merely stopped identifying sessions for you — business state that belonged in external storage still belongs there</strong>: a server accumulating per-client caches or authorization scope in process memory works fine on one instance and drifts randomly once you scale to two. The second trap is on the client side: <code>server/discover</code> is optional, so if you skip it and hard-code capabilities, a server that lacks a primitive will not fail at handshake time — it will <strong>blow up on the first real call instead</strong>.</div>
+<div class="res">Further reading: <a href="https://blog.modelcontextprotocol.io/posts/2026-07-28/" target="_blank">MCP Blog · The 2026-07-28 Specification</a> (2026-07) · <a href="https://ts.sdk.modelcontextprotocol.io/v2/migration/support-2026-07-28" target="_blank">TypeScript SDK v2 · Supporting protocol revision 2026-07-28</a></div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// POINT 02</span>
+<h2>Mcp-Method / Mcp-Name: lifting routing information into HTTP headers</h2>
+<p class="claim">A gateway should not have to parse JSON-RPC to rate-limit. Now it doesn't.</p>
+<h3>// BACKGROUND</h3>
+<p>Under the old protocol all MCP traffic looked identical at the HTTP layer: the same <code>POST /mcp</code>, with the method name and tool name buried in the body. Rate-limiting per tool, authorizing per method, or blocking a dangerous operation at the WAF all required <strong>making the gateway parse a JSON body</strong> — an ugly and error-prone job at the infrastructure layer.</p>
+<p>SEP-2243 standardizes this: Streamable HTTP requests <strong>must</strong> carry three headers — <code>MCP-Protocol-Version</code>, <code>Mcp-Method</code>, and <code>Mcp-Name</code>. <code>Mcp-Method</code> is the JSON-RPC method name; <code>Mcp-Name</code> mirrors <code>params.name</code> or <code>params.uri</code>, so calls that name a target (<code>tools/call</code> / <code>resources/read</code> / <code>prompts/get</code>) expose "which thing is being touched" in the headers. Crucially this is not a friendly hint: <strong>the server must validate that headers and body agree, and reject them when they don't</strong> — the TS SDK implements this as HTTP 400 with JSON-RPC error code <code>-32020</code> (<code>HeaderMismatch</code>). A tool can additionally mark a parameter with <code>x-mcp-header</code> in its <code>inputSchema</code>, and the SDK serializes it into an <code>Mcp-Param-{Name}</code> header (Base64-encoded when necessary).</p>
+<h3>// IN PRACTICE</h3>
+<pre><code><span class="tag-com"># Hand-rolled request: missing one of the three headers is a protocol error</span>
+curl -X POST https://example.com/mcp \
+  -H <span class="tag-gpt">'MCP-Protocol-Version: 2026-07-28'</span> \
+  -H <span class="tag-gpt">'Mcp-Method: tools/call'</span> \
+  -H <span class="tag-gpt">'Mcp-Name: search'</span> \
+  -H <span class="tag-gpt">'Content-Type: application/json'</span> \
+  -d <span class="tag-gpt">'{"jsonrpc":"2.0","id":1,"method":"tools/call",
+       "params":{"name":"search","arguments":{"q":"x"}}}'</span>
+
+<span class="tag-com"># Only now can you write this at the gateway (Envoy-style, per-tool buckets)</span>
+<span class="tag-com"># descriptor: request_headers -&gt; Mcp-Name -&gt; rate_limit</span>
+<span class="tag-com"># Expensive tools (running SQL / calling external APIs) get a tighter bucket;</span>
+<span class="tag-com"># cheap tools/list rides a wide one — without touching a single line of body.</span></code></pre>
+<div class="fail"><strong>Failure mode:</strong> first, <strong>intermediaries stripping headers</strong>. Plenty of reverse proxies, CDNs, and corporate egress proxies drop or rewrite custom headers they don't recognize, and the moment <code>Mcp-Method</code> gets eaten every request uniformly 400s — because it fails wholesale rather than intermittently, it is easy to misdiagnose as the server being down. <code>curl</code> through the real path before you ship to confirm the headers survive. Second, <code>x-mcp-header</code> <strong>lifts parameter values into your infrastructure logs</strong>: gateways, WAFs, and CDNs log request headers by default, so do not mark parameters that carry user identifiers, query content, or secrets.</div>
+<div class="res">Further reading: <a href="https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/" target="_blank">MCP Blog · The 2026-07-28 Release Candidate</a> (SEP-by-SEP walkthrough of the six statelessness SEPs, 2026-05)</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// POINT 03</span>
+<h2>MRTR: a retry instead of a long-lived connection</h2>
+<p class="claim">Asking the user something mid-execution no longer needs a live server-side connection — sign the state and hand it to the client to bring back.</p>
+<h3>// BACKGROUND</h3>
+<p>"The tool is halfway done and needs a confirmation or an extra argument" used to be implemented by the server issuing a request on an SSE stream. That was the last hard dependency on sticky sessions: the server had to stay alive on that connection, a dropped connection killed the flow, and it therefore could not cross instances.</p>
+<p>SEP-2322 introduces <strong>MRTR (Multi-Round-Trip Requests)</strong> and inverts it: the server does not push, it <strong>returns a result that says "I still need input"</strong> — <code>resultType: 'input_required'</code>, carrying <code>inputRequests</code> (what it needs answered) and <code>requestState</code> (an opaque string holding the context needed to continue). Once the client has the answers it <strong>retries the original call</strong>, putting them in <code>inputResponses</code> and echoing <code>requestState</code> back verbatim. Flow state therefore parks with the client between the two hops, the server needs to remember nothing, and the next hop can resume on a different instance. The companion SEP-2260 tightens what is left of server-initiated requests: <strong>they may only be issued while the server is actively processing a client request</strong>.</p>
+<h3>// IN PRACTICE</h3>
+<pre><code><span class="tag-com">// TS SDK v2: requestState must be signed (HMAC-SHA256)</span>
+<span class="tag-claude">import</span> { inputRequired, acceptedContent,
+         createRequestStateCodec } <span class="tag-claude">from</span> <span class="tag-gpt">'@modelcontextprotocol/server'</span>;
+
+<span class="tag-claude">const</span> stateCodec = createRequestStateCodec&lt;FlowState&gt;({ key: SECRET });
+
+<span class="tag-claude">async</span> (args, ctx) =&gt; {
+  <span class="tag-claude">const</span> state = ctx.mcpReq.requestState&lt;FlowState&gt;();
+  <span class="tag-claude">if</span> (!state) {                      <span class="tag-com">// first hop: ask</span>
+    <span class="tag-claude">return</span> inputRequired({
+      inputRequests: { count: inputRequired.elicit({ <span class="tag-com">/* schema */</span> }) },
+      requestState: <span class="tag-claude">await</span> stateCodec.mint({ phase: <span class="tag-gpt">'awaiting-count'</span> })
+    });
+  }
+  <span class="tag-com">// second hop: take the answers and continue (possibly on another instance)</span>
+  <span class="tag-claude">const</span> response = acceptedContent(ctx.mcpReq.inputResponses, <span class="tag-gpt">'count'</span>, SCHEMA);
+}</code></pre>
+<div class="diagram">  client                                server (any instance)
+    │── tools/call ──────────────────────▶ A
+    │◀─ input_required + inputRequests ───┤
+    │   + requestState (signed)           │
+    │                                     │
+    │  (collect input from the user;       │
+    │   no connection held meanwhile)      │
+    │                                     │
+    │── retry tools/call ────────────────▶ B   ← resumes on a new instance
+    │   + inputResponses + requestState   │
+    │◀─ final result ─────────────────────┤</div>
+<div class="fail"><strong>Failure mode:</strong> <code>requestState</code> is <strong>data that has made a round trip through the client's hands</strong>. Hand-rolling the protocol layer, signing is the easiest thing to omit, and the field then degenerates into one the client can tamper with freely — stuffing <code>{"userId":...,"approved":true}</code> into it is a privilege-escalation bug. The SDK's HMAC signing exists precisely for this; do not route around it. The second trap is idempotency: externalized state means the same <code>requestState</code> can be <strong>replayed or submitted concurrently</strong>, so side-effecting tools (placing orders, sending mail, writing to a database) must carry their own idempotency key — the same problem as the exactly-once requirement in Day 58's piece on durable execution. Third, don't stuff large payloads into <code>requestState</code>: it crosses the network on every hop.</div>
+<div class="res">Further reading: <a href="https://github.com/modelcontextprotocol/modelcontextprotocol/pull/2322" target="_blank">SEP-2322 · Multi-Round-Trip Requests</a> · <a href="durable-agents-day58.en.html">Day 58 Durable Agent Execution</a> (idempotency keys and exactly-once side effects)</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// POINT 04</span>
+<h2>Cache scope, CIMD, and the twelve-month window: a migration checklist</h2>
+<p class="claim">This revision hands you two new footguns: a mislabelled cache scope, and an authorization server that will make HTTP requests on your behalf.</p>
+<h3>// BACKGROUND</h3>
+<p>Once sessions are gone, the cost of clients re-fetching <code>tools/list</code> surfaces, so SEP-2549 adds <strong><code>ttlMs</code> and <code>cacheScope</code> to list and resource results, modeled on HTTP <code>Cache-Control</code></strong>. The TS SDK defaults to the most conservative <code>ttlMs: 0</code> / <code>cacheScope: 'private'</code> — that default is correct, and <strong>before changing it to <code>'shared'</code> you should be able to prove the result is independent of who is calling</strong>.</p>
+<p>Two authorization changes need deliberate work. First, <strong>Dynamic Client Registration (DCR) is formally deprecated in favour of CIMD (Client ID Metadata Documents)</strong>: a client's <code>client_id</code> becomes a URL, and the authorization server fetches that URL on first use to retrieve a metadata document. The motivation is that DCR's open registration was used to register phishing clients, with publicly documented one-click account-takeover incidents in 2025; CIMD binds client identity to a domain the client must actually control. Second, SEP-2468 requires validating the <code>iss</code> parameter in authorization responses per <strong>RFC 9207</strong>.</p>
+<p>The deprecation cadence is set by SEP-2577: an Active / Deprecated / Removed lifecycle with <strong>at least twelve months between deprecation and the earliest possible removal</strong>. Marked deprecated in this revision are <strong>Roots, Sampling, and Logging</strong> plus the legacy HTTP+SSE transport — their methods, types, and capability flags keep working in this release and in every specification version published within a year. On the SDK side, all four Tier 1 SDKs (TypeScript, Python, Go, C#) speak 2026-07-28, and Rust supports it in beta.</p>
+<h3>// IN PRACTICE</h3>
+<pre><code><span class="tag-com">// Cache hints: before switching to 'shared', ask "is this list user-filtered?"</span>
+<span class="tag-claude">new</span> McpServer({ name: <span class="tag-gpt">'my-server'</span>, version: <span class="tag-gpt">'1.0.0'</span> }, {
+  capabilities: { tools: {} },
+  cacheHints: { tools: { ttlMs: 3600000, cacheScope: <span class="tag-gpt">'shared'</span> } }
+  <span class="tag-com">// ↑ only valid when the tool list is identical for every caller</span>
+});</code></pre>
+<pre><code><span class="tag-com"># Migration checklist for a self-hosted server</span>
+1. Upgrade to an SDK that speaks 2026-07-28 (TS/Python/Go/C# GA, Rust beta)
+2. Swap the entry point for a stateless handler (TS: createMcpHandler);
+   delete the initialize branch
+3. Audit in-process state: per-session caches / accumulated scope
+   -&gt; externalize or remove
+4. Verify Mcp-Method / Mcp-Name survive your reverse proxy and CDN
+5. Rewrite server-initiated requests as MRTR; requestState must be signed
+6. Set ttlMs / cacheScope explicitly on every list; leave the default private
+7. Authorization: add RFC 9207 iss validation; plan the DCR -&gt; CIMD move
+8. Inventory dependencies on Roots / Sampling / Logging (~one-year window)
+9. Old clients: the SDK's legacy 'stateless' mode serves 2025 traffic
+   on the same endpoint</code></pre>
+<div class="fail"><strong>Failure mode:</strong> the most dangerous is <strong><code>cacheScope: 'shared'</code> on a user-filtered list</strong> — multi-tenant servers slip into this easily ("isn't the tool list static?"), and user A ends up caching the tool set visible to user B. If anything in a list result has ever varied by caller, it can only be <code>private</code>. Next, CIMD works by <strong>having the authorization server fetch a client-supplied URL</strong>, which is inherently an SSRF surface: a self-hosted AS must constrain that fetch (block private ranges and metadata endpoints, cap timeouts and response size, don't follow redirects). Last is misjudging the cadence — reading "twelve months left" as "not my problem this time." The replacement paths for Roots and Sampling are not settled yet, so binding your design tightly to them now makes next year's migration a reactive one.</div>
+<div class="res">Further reading: <a href="https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization/client-registration" target="_blank">MCP Spec 2026-07-28 · Client Registration</a> (the normative text on CIMD and the DCR deprecation) · <a href="https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/" target="_blank">MCP Blog · Release Candidate</a> (the six authorization SEPs)</div>
+</div>
+
+<!-- ============ What's next ============ -->
+<div class="combo">
+<h3>// WHERE THIS IS HEADED</h3>
+<p>The official roadmap of 2026-08-22 is blunt about direction: <strong>transports keep converging on HTTP</strong> — even local servers are to be unified onto "Streamable HTTP over stdio" rather than maintaining two approaches; <strong>authorization moves toward workload identity</strong>, finalizing DPoP and replacing long-lived API keys with the ID-JAG grant behind Enterprise-Managed Authorization plus standard token exchange; <strong>server-initiated events come back</strong> as webhooks and channels so clients aren't left polling for results — which does not contradict this revision's tightening of server-initiated requests, it moves them out of an in-protocol connection and onto an out-of-band channel; and <strong>progressive tool discovery</strong>, where a server offers a small entry point and reveals more of its catalog as the conversation narrows — the protocol-level answer to the tool-definition context tax from Day 18. If you run your own server, the first two mean: stop binding your design to stdio-only paths and static API keys now.</p>
+</div>
+
+<div class="thinking">
+<h3>// GOING DEEPER</h3>
+<details><summary>Does "stateless protocol" eliminate complexity, or just relocate it?</summary><div>It relocates it. The "session" abstraction used to carry three things for both sides: identity memory, a capability contract, and mid-flow state. With it gone, identity becomes overhead retransmitted on every request, the capability contract becomes either an extra <code>server/discover</code> round trip or the risk of a late failure, and flow state becomes a signed <code>requestState</code> the client ferries back and forth. The gain is real — horizontal scaling no longer needs sticky routing, which is worth a lot operationally — but the protocol's surface area grew (three required headers, a caching semantics, a state string that must be signed) and the new correctness burden lands on implementers. So the gain is unevenly distributed: a clear win for anyone running remote servers at scale, close to pure migration cost for someone running one local stdio server.</div></details>
+<details><summary>Is there a new security cost to exposing method and tool names in HTTP headers?</summary><div>Yes, and it is a trade-off rather than a pure win. Three costs: <strong>observability is leakage</strong> — headers land in gateway, CDN, and WAF logs, so "who called which tool when" is recorded all along the path, and <code>x-mcp-header</code> drags parameter values in too; <strong>a metadata side channel</strong> — even with a redacted body, the call pattern itself can reveal business intent; and <strong>a new inconsistency surface</strong> — header/body agreement validation is itself logic that must be implemented correctly, and a lax implementation offers a "pass on the header, execute on the body" bypass. The conclusion is not to avoid it but to design headers as public data.</div></details>
+<details><summary>MRTR parks flow state with the client. Which classic distributed-systems problem is that isomorphic to?</summary><div>To pushing session state down into a cookie or JWT. Three old lessons apply directly: state held by the client <strong>must be signed</strong>, or it is an escalation path; <strong>anything that round-trips can be replayed</strong>, so side-effecting resumption must be idempotent and <code>requestState</code> should bind an idempotency key rather than merely encoding "what's next"; and <strong>without server-side bookkeeping there is no expiry</strong>, so you must put an issue time in the payload and validate it. The deeper difference: a durable-execution framework's journal lives on the server, while MRTR's state lives on the client — which makes MRTR right for short, few-hop, replayable interactions and wrong as a way to implement long-running workflows.</div></details>
+<details><summary>How do you engineer against a "safe by default but easy to break" setting like cache scope?</summary><div>The incident never happens at the default; it happens the moment someone flips it to <code>shared</code> to save latency — and that class of bug <strong>will not show up in tests</strong>, because in a single-user environment the two behave identically. So lean on structural constraints rather than defaults: make "does this result vary by caller" a fact at the type level, or add a CI assertion that requests the same <code>tools/list</code> under two different identities and treats any difference as proof that <code>shared</code> is misconfigured. This generalizes: any setting that "still runs when wrong, and is only wrong under multi-tenancy" deserves a two-identity comparison test rather than a warning in the docs.</div></details>
+<details><summary>What general lesson does a breaking rewrite like Day 18 → Day 60 teach about adopting new protocols early?</summary><div>One usable dividing line: <strong>isolate the protocol as a dependency instead of internalizing it as architecture</strong>. What this revision broke were exactly the implementations that had absorbed protocol semantics into their design — whoever's business logic genuinely relied on "I have seen what came before for this session" has the most painful migration, while whoever treated MCP as a thin request/response adapter changes a few lines. So the point is not early versus late, but leaving a layer when you adopt: tool implementations that are unaware of transport and session semantics, with protocol detail concentrated in one adapter. A corollary: the spec now writes a minimum twelve-month deprecation window into the rules, which makes future breaking changes more predictable — and makes "wait for it to stabilize" a worse bargain than it used to be.</div></details>
+</div>
+
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://blog.modelcontextprotocol.io/posts/2026-07-28/" target="_blank">MCP Blog · The 2026-07-28 Specification (2026-07)</a> — the official release note: <code>_meta</code> identity, <code>server/discover</code>, required headers, MRTR, caching, and deprecations</li>
+<li><a href="https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/" target="_blank">MCP Blog · The 2026-07-28 Release Candidate (2026-05)</a> — SEP-by-SEP detail (SEP-2575/2567/2243/2322/2549/2577 and others)</li>
+<li><a href="https://blog.modelcontextprotocol.io/posts/mcp-roadmap/" target="_blank">MCP Blog · MCP Roadmap (2026-08-22)</a> — Streamable HTTP over stdio, DPoP, workload identity, server-initiated events, progressive discovery</li>
+<li><a href="https://ts.sdk.modelcontextprotocol.io/v2/migration/support-2026-07-28" target="_blank">TypeScript SDK v2 · Supporting protocol revision 2026-07-28</a> — the actual APIs: <code>createMcpHandler</code>, <code>versionNegotiation</code>, <code>cacheHints</code>, signed <code>requestState</code></li>
+<li><a href="mcp-day18.en.html">Day 18 · MCP</a> — the three primitives and the tool-definition context tax; its handshake and session sections are superseded by this revision</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Day 60 · 2026-10-03</footer>
+</div>
+<script src="https://hub.cissychen.com/comments.js" defer></script>
+<script src="https://hub.cissychen.com/search.js" defer></script>
+<script src="https://hub.cissychen.com/index-button.js" defer></script>
+<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+</body></html>

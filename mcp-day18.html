@@ -139,7 +139,9 @@ mcp = FastMCP(<span class="tag-gpt">"weather"</span>)
 <li><strong>stdio</strong>：client 把 server 当<strong>子进程</strong>拉起，靠 stdin/stdout 收发、换行分隔。零网络、零认证、延迟最低，但天然 <strong>1:1</strong>——一个 client 一个进程，无法多租户。本地工具（文件、Git、本地 DB）首选。</li>
 <li><strong>Streamable HTTP</strong>：远程 server 暴露单个 <code>/mcp</code> 端点，同时接 POST 和 GET，可选用 SSE 流式推送多条消息。可扩展、可多租户，但要自己处理 auth。<strong>注意：旧的 HTTP+SSE 双端点 transport 已在 2025-03 弃用</strong>，新项目直接用 Streamable HTTP。</li>
 </ul>
+<p><strong>⚠️ 路线图注（2026-08）：</strong>官方已明确要让 transport 继续向 HTTP 收敛——<strong>本地 server 也统一成「在 stdio 上跑 Streamable HTTP」</strong>，而不是长期维护两套。别把设计绑死在 stdio 专属路径上，详见 <a href="mcp-stateless-day60.html">Day 60</a>。</p>
 <p>两种 transport 之上跑的是同一套协议生命周期：连接后先 <code>initialize</code> 握手——client 和 server 交换协议版本，并<strong>协商各自支持的能力</strong>（server 声明有没有 tools / resources / prompts、支不支持 list 动态变更通知）。这意味着接同一个 server，不同 client 看到的能力面可能不同；也意味着你的 server 要老实声明 capability，否则 client 不会去拉对应的 list。能力协商是 MCP「N+M 复用」得以成立的根：client 不需要预知 server 长什么样，握手时问一次即可。</p>
+<p><strong>⚠️ 已被改写（2026-07-28 规范）：</strong>上面这套 <code>initialize</code> 握手与会话语义<strong>已在 2026-07-28 规范中删除</strong>——身份与能力改为每请求走 <code>_meta</code>，能力发现变成可选的 <code>server/discover</code>。现行无状态协议与迁移清单见 <a href="mcp-stateless-day60.html">Day 60 · MCP 无状态化与迁移</a>。</p>
 <div class="diagram">          stdio                    Streamable HTTP
         ┌────────┐                 ┌────────┐
 client ─┤subprocess├ stdin/stdout  client ─┤ POST/GET├─▶ https://host/mcp

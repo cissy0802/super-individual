@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Day 60 · MCP 无状态化与迁移 — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;overflow-x:auto}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking{margin:40px 0}
+.thinking h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}}
+</style></head><body>
+<div class="container">
+<header>
+<span class="week-tag">DAY 60 · PROTOCOL</span>
+<h1>MCP 无状态化与迁移</h1>
+<h2>2026-07-28 规范把握手和会话删掉了 — 你的 server 该改哪几行</h2>
+<div class="date">2026-10-03 · BigCat</div>
+<p class="pitch">协议层删掉状态，不等于你的状态消失了——它只是从协议手里，搬到了你手里。</p>
+</header>
+<div class="xref">
+<a href="mcp-day18.html">前置 → 本站 Day 18 MCP（三层原语 / transport / context 税，描述的是旧的有状态协议）</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>2026-07-28 规范是 MCP 发布以来最大的一次破坏性改写：<strong><code>initialize</code> 握手没了，<code>Mcp-Session-Id</code> 没了，协议层不再有"会话"这个概念</strong>。这不是一次语法糖更新——Day 18 里"连接后先握手协商能力"那套心智模型直接失效了。真正值钱的不是"它变无状态了"这句话，而是三件工程后果：<strong>远程 server 可以裸跑在轮询 LB 后面</strong>（不再需要粘性路由或共享 session store）、<strong>路由与限流信息被抬到 HTTP 头上</strong>（网关不拆 JSON-RPC body 就能按工具计量）、<strong>需要用户中途输入的流程改用"重试"而不是长连接</strong>。代价同样具体：无状态化把一批状态管理问题从协议推给了你，缓存作用域一旦标错就是跨用户泄漏。这一期按这三条讲清机制、给迁移清单，并点出每条新机制自带的失败模式。</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// POINT 01</span>
+<h2>握手消失：身份与能力从连接级降到请求级</h2>
+<p class="claim">以前"连上问一次"，现在"每次都带着"——于是任何请求可以落到任何实例。</p>
+<h3>// 背景与原理</h3>
+<p>旧协议的生命周期是：连接 → <code>initialize</code> 交换协议版本与 capability → <code>initialized</code> → 后续请求靠 <code>Mcp-Session-Id</code> 认回同一会话。这套设计让 server 有权假设"同一 session 的请求我见过前因"，代价是<strong>横向扩容必须有粘性</strong>：要么 LB 按 session 粘住实例，要么把会话态放进 Redis 之类的共享存储。</p>
+<p>新规范（SEP-2575 / SEP-2567）把这一层整个删掉。客户端身份改为<strong>每个请求都在 <code>_meta</code> 里自带</strong>，键名是固定的反向域名 <code>io.modelcontextprotocol/clientInfo</code>；能力发现变成一个<strong>可选</strong>的 <code>server/discover</code> 方法——客户端"需要提前知道"时才调，而不是作为任何调用的前置。配套的还有 W3C Trace Context（SEP-414）也走 <code>_meta</code>，键名固定为 <code>traceparent</code> / <code>tracestate</code> / <code>baggage</code>，这是第一次让 MCP 调用链能直接并进你现有的 OTel 链路。</p>
+<h3>// 实战示例</h3>
+<pre><code><span class="tag-com">// 新协议：一个自足的 tools/call，没有前置握手</span>
+{
+  <span class="tag-gpt">"jsonrpc"</span>: <span class="tag-gpt">"2.0"</span>, <span class="tag-gpt">"id"</span>: 1,
+  <span class="tag-gpt">"method"</span>: <span class="tag-gpt">"tools/call"</span>,
+  <span class="tag-gpt">"params"</span>: {
+    <span class="tag-gpt">"name"</span>: <span class="tag-gpt">"search"</span>,
+    <span class="tag-gpt">"arguments"</span>: { <span class="tag-gpt">"q"</span>: <span class="tag-gpt">"mcp stateless"</span> },
+    <span class="tag-key">"_meta"</span>: {
+      <span class="tag-gpt">"io.modelcontextprotocol/clientInfo"</span>: { <span class="tag-gpt">"name"</span>: <span class="tag-gpt">"my-app"</span>, <span class="tag-gpt">"version"</span>: <span class="tag-gpt">"1.0"</span> }
+    }
+  }
+}</code></pre>
+<pre><code><span class="tag-com">// TypeScript SDK v2：工厂函数每请求建一个 server 实例</span>
+<span class="tag-claude">import</span> { createMcpHandler, McpServer } <span class="tag-claude">from</span> <span class="tag-gpt">'@modelcontextprotocol/server'</span>;
+
+<span class="tag-claude">const</span> handler = createMcpHandler(() =&gt; {
+  <span class="tag-claude">const</span> server = <span class="tag-claude">new</span> McpServer(
+    { name: <span class="tag-gpt">'my-server'</span>, version: <span class="tag-gpt">'1.0.0'</span> },
+    { capabilities: { tools: {} } }
+  );
+  <span class="tag-com">// 在这里注册 tools / resources / prompts</span>
+  <span class="tag-claude">return</span> server;
+});
+<span class="tag-claude">export default</span> handler;  <span class="tag-com">// Web 标准运行时直接导出</span></code></pre>
+<div class="diagram">  旧（2025 有状态）                     新（2026-07-28 无状态）
+
+  client ──initialize──┐              client ──tools/call──┐
+         └─Session-Id──┤                   （_meta 自带身份）│
+                       ▼                                    ▼
+              ┌─ sticky LB ─┐                      ┌─ round-robin ─┐
+              ▼             ▼                      ▼               ▼
+          [inst A]      [inst B]                [inst A]       [inst B]
+              └── shared session store              （无共享状态）
+                  (Redis / 粘性路由)</div>
+<div class="fail"><strong>失败模式：</strong>最常见的误解是把"协议无状态"当成"我不用管状态了"。<strong>协议只是不再替你认会话——业务状态该外置还得外置</strong>：server 在进程内存里攒 per-client 缓存或累积的授权 scope，单实例一切正常，扩到两个实例后行为随机漂移。第二个坑在 client 侧：<code>server/discover</code> 是可选的，省掉它再硬编码能力，遇到不支持某原语的 server 不会在握手时失败，而是<strong>延迟到首次真实调用才炸</strong>。</div>
+<div class="res">进阶资源：<a href="https://blog.modelcontextprotocol.io/posts/2026-07-28/" target="_blank">MCP Blog · The 2026-07-28 Specification</a>（2026-07）· <a href="https://ts.sdk.modelcontextprotocol.io/v2/migration/support-2026-07-28" target="_blank">TypeScript SDK v2 · Supporting protocol revision 2026-07-28</a></div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// POINT 02</span>
+<h2>Mcp-Method / Mcp-Name：把路由信息抬到 HTTP 头</h2>
+<p class="claim">网关不该为了做限流去解 JSON-RPC body——现在它不用了。</p>
+<h3>// 背景与原理</h3>
+<p>旧协议下所有 MCP 流量在 HTTP 层长得一模一样：同一个 <code>POST /mcp</code>，方法名和工具名埋在 body 里。想按工具做限流、按方法做鉴权、在 WAF 上拦某个危险操作，都得<strong>让网关去解 JSON body</strong>——这在基础设施层是个难看且易错的活。</p>
+<p>SEP-2243 把这件事规范化：Streamable HTTP 请求<strong>必须</strong>带 <code>MCP-Protocol-Version</code>、<code>Mcp-Method</code>、<code>Mcp-Name</code> 三个头。<code>Mcp-Method</code> 是 JSON-RPC 方法名；<code>Mcp-Name</code> 镜像 <code>params.name</code> 或 <code>params.uri</code>，于是点名目标的调用（<code>tools/call</code> / <code>resources/read</code> / <code>prompts/get</code>）在头里就暴露了"要动哪个东西"。关键是这不是善意提示：<strong>server 必须校验头与 body 一致，不一致就拒</strong>——TS SDK 的实现是 HTTP 400 配错误码 <code>-32020</code>（<code>HeaderMismatch</code>）。工具还可在 <code>inputSchema</code> 里用 <code>x-mcp-header</code> 标记参数，SDK 会把它序列化成 <code>Mcp-Param-{Name}</code> 头（必要时 Base64）。</p>
+<h3>// 实战示例</h3>
+<pre><code><span class="tag-com"># 手写请求：三个头缺一个就是协议错误</span>
+curl -X POST https://example.com/mcp \
+  -H <span class="tag-gpt">'MCP-Protocol-Version: 2026-07-28'</span> \
+  -H <span class="tag-gpt">'Mcp-Method: tools/call'</span> \
+  -H <span class="tag-gpt">'Mcp-Name: search'</span> \
+  -H <span class="tag-gpt">'Content-Type: application/json'</span> \
+  -d <span class="tag-gpt">'{"jsonrpc":"2.0","id":1,"method":"tools/call",
+       "params":{"name":"search","arguments":{"q":"x"}}}'</span>
+
+<span class="tag-com"># 现在才能在网关层这样写（Envoy 风格，按工具分桶限流）</span>
+<span class="tag-com"># descriptor: request_headers -&gt; Mcp-Name -&gt; rate_limit</span>
+<span class="tag-com"># 贵的工具（跑 SQL / 调外部 API）单独一个更紧的桶，</span>
+<span class="tag-com"># 便宜的 tools/list 走宽桶 —— 不碰 body 一行。</span></code></pre>
+<div class="fail"><strong>失败模式：</strong>一是<strong>中间层剥头</strong>：不少反代、CDN、企业出口代理默认丢弃或重写不认识的自定义头，<code>Mcp-Method</code> 一被吃掉就是全部请求统一 400——因为是"全挂"而非"偶发"，容易误判成 server 挂了。上线前务必在真实链路上 <code>curl</code> 验一遍头能否穿透。二是 <code>x-mcp-header</code> <strong>把参数值抬进了基础设施日志</strong>：网关、WAF、CDN 默认记录请求头，别给含用户标识、查询内容、密钥的参数打这个标记。</div>
+<div class="res">进阶资源：<a href="https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/" target="_blank">MCP Blog · The 2026-07-28 Release Candidate</a>（SEP-2243 等六个无状态化 SEP 的逐条说明，2026-05）</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// POINT 03</span>
+<h2>MRTR：用重试代替长连接</h2>
+<p class="claim">工具执行中途要问用户，不再需要一条活着的服务端连接——把状态签个名交给客户端拿回来。</p>
+<h3>// 背景与原理</h3>
+<p>"工具跑一半需要用户确认/补参数"这个需求，旧协议靠 server 在 SSE 流上主动发请求实现。这是粘性会话的最后一个硬依赖：server 必须在那条连接上活着，连接断了流程就死了，也因此无法跨实例。</p>
+<p>SEP-2322 引入 <strong>MRTR（Multi-Round-Trip Requests）</strong>把这件事翻过来：server 不主动推，而是<strong>直接返回一个"我还需要输入"的结果</strong>——<code>resultType: 'input_required'</code>，带 <code>inputRequests</code>（要问什么）与 <code>requestState</code>（不透明字符串，装着继续执行所需的上下文）；客户端收齐答案后<strong>重试原调用</strong>，答案放进 <code>inputResponses</code>、<code>requestState</code> 原样带回。流程状态于是在两跳之间寄存在客户端手里，server 不需要记住任何东西，下一跳落到别的实例也能续上。配套的 SEP-2260 收紧了残留的服务端发起请求：<strong>只允许在 server 正在处理某个客户端请求期间发出</strong>。</p>
+<h3>// 实战示例</h3>
+<pre><code><span class="tag-com">// TS SDK v2：requestState 必须签名（HMAC-SHA256）</span>
+<span class="tag-claude">import</span> { inputRequired, acceptedContent,
+         createRequestStateCodec } <span class="tag-claude">from</span> <span class="tag-gpt">'@modelcontextprotocol/server'</span>;
+
+<span class="tag-claude">const</span> stateCodec = createRequestStateCodec&lt;FlowState&gt;({ key: SECRET });
+
+<span class="tag-claude">async</span> (args, ctx) =&gt; {
+  <span class="tag-claude">const</span> state = ctx.mcpReq.requestState&lt;FlowState&gt;();
+  <span class="tag-claude">if</span> (!state) {                      <span class="tag-com">// 第一跳：问</span>
+    <span class="tag-claude">return</span> inputRequired({
+      inputRequests: { count: inputRequired.elicit({ <span class="tag-com">/* schema */</span> }) },
+      requestState: <span class="tag-claude">await</span> stateCodec.mint({ phase: <span class="tag-gpt">'awaiting-count'</span> })
+    });
+  }
+  <span class="tag-com">// 第二跳：取答案继续（可能落在另一个实例上）</span>
+  <span class="tag-claude">const</span> response = acceptedContent(ctx.mcpReq.inputResponses, <span class="tag-gpt">'count'</span>, SCHEMA);
+}</code></pre>
+<div class="diagram">  client                                server (任意实例)
+    │── tools/call ──────────────────────▶ A
+    │◀─ input_required + inputRequests ───┤
+    │   + requestState (已签名)            │
+    │                                     │
+    │  （向用户取得输入；此间无需保持连接） │
+    │                                     │
+    │── 重试 tools/call ─────────────────▶ B   ← 换实例也能续
+    │   + inputResponses + requestState   │
+    │◀─ 最终结果 ─────────────────────────┤</div>
+<div class="fail"><strong>失败模式：</strong><code>requestState</code> 是<strong>在客户端手里过了一圈的数据</strong>，自己手写协议层时最容易漏掉签名，于是它退化成一个客户端可任意篡改的字段——把 <code>{"userId":...,"approved":true}</code> 塞进去就是一个提权漏洞。SDK 默认 HMAC 签名正是为此，别绕过。第二个坑是幂等：状态外置意味着同一个 <code>requestState</code> 可以被<strong>重放或并发提交多次</strong>，副作用型工具（下单、发信、写库）必须自己带幂等键，这一点与 Day 58 讲持久化执行时的 exactly-once 要求是同一个问题。第三，别把大 payload 塞进 <code>requestState</code>——它每跳都在网络上走一遍。</div>
+<div class="res">进阶资源：<a href="https://github.com/modelcontextprotocol/modelcontextprotocol/pull/2322" target="_blank">SEP-2322 · Multi-Round-Trip Requests</a> · 本站 <a href="durable-agents-day58.html">Day 58 Durable Agent Execution</a>（幂等键与副作用 exactly-once）</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// POINT 04</span>
+<h2>缓存作用域、CIMD 与 12 个月窗口：迁移清单</h2>
+<p class="claim">这一版给了你两个新的脚枪：标错的缓存作用域，和一个会替你发 HTTP 请求的授权服务器。</p>
+<h3>// 背景与原理</h3>
+<p>无状态化之后，客户端重复拉 <code>tools/list</code> 的成本浮上来了，于是 SEP-2549 给 list 与 resource 结果加了<strong>仿 HTTP <code>Cache-Control</code> 的 <code>ttlMs</code> 与 <code>cacheScope</code></strong>。TS SDK 的默认值是最保守的 <code>ttlMs: 0</code> / <code>cacheScope: 'private'</code>——这个默认是对的，<strong>把它改成 <code>'shared'</code> 之前要能证明该结果与调用者身份无关</strong>。</p>
+<p>授权侧两条变化更需要主动动手。其一，<strong>Dynamic Client Registration（DCR）被正式弃用，转向 CIMD（Client ID Metadata Documents）</strong>：客户端的 <code>client_id</code> 变成一个 URL，授权服务器首次见到时去 fetch 该 URL 拿元数据文档。动机是 DCR 的开放注册被用来注册钓鱼客户端（2025 年有公开的一键账号接管案例），CIMD 把客户端身份绑到一个它必须真正控制的域名上。其二，SEP-2468 要求按 <strong>RFC 9207 校验授权响应里的 <code>iss</code> 参数</strong>。</p>
+<p>弃用节奏由 SEP-2577 定规矩：Active / Deprecated / Removed 三段，<strong>弃用到最早可能移除之间至少十二个月</strong>。本版被标弃用的是 <strong>Roots、Sampling、Logging</strong> 与旧的 HTTP+SSE transport——方法、类型与 capability 标志在本版及此后一年内发布的每个版本中都继续可用。SDK 侧：TypeScript、Python、Go、C# 四个 Tier 1 SDK 均已支持 2026-07-28，Rust 为 beta。</p>
+<h3>// 实战示例</h3>
+<pre><code><span class="tag-com">// 缓存提示：改 'shared' 前先问"这个 list 会按用户过滤吗"</span>
+<span class="tag-claude">new</span> McpServer({ name: <span class="tag-gpt">'my-server'</span>, version: <span class="tag-gpt">'1.0.0'</span> }, {
+  capabilities: { tools: {} },
+  cacheHints: { tools: { ttlMs: 3600000, cacheScope: <span class="tag-gpt">'shared'</span> } }
+  <span class="tag-com">// ↑ 仅当工具清单对所有调用者完全相同时才成立</span>
+});</code></pre>
+<pre><code><span class="tag-com"># 自建 server 迁移清单</span>
+1. 升到支持 2026-07-28 的 SDK（TS/Python/Go/C# 已 GA，Rust beta）
+2. 入口换成无状态 handler（TS: createMcpHandler）；删掉 initialize 分支
+3. 审一遍进程内状态：per-session 缓存 / 累积 scope → 外置或去掉
+4. 验证 Mcp-Method / Mcp-Name 能穿透你的反代与 CDN
+5. 服务端发起请求 → 改写成 MRTR；requestState 必须签名
+6. 给每个 list 显式标 ttlMs / cacheScope，默认留 private
+7. 授权：加 RFC 9207 iss 校验；规划 DCR → CIMD
+8. 盘点对 Roots / Sampling / Logging 的依赖（约一年窗口）
+9. 旧客户端：SDK 的 legacy 'stateless' 模式可同端点兼容 2025 流量</code></pre>
+<div class="fail"><strong>失败模式：</strong>最危险的是<strong><code>cacheScope: 'shared'</code> 用在按用户过滤的清单上</strong>——多租户 server 很容易这么干（"工具清单不就是静态的吗"），结果 A 用户缓存到的是 B 用户可见的工具集。凡 list 结果里出现过"因人而异"的内容，就只能 <code>private</code>。其次，CIMD 的机制是<strong>让授权服务器去 fetch 一个客户端提供的 URL</strong>，这天然是 SSRF 面：自建 AS 必须对该 fetch 做出网限制（禁内网与元数据端点、限超时与大小、不跟跳转）。最后是节奏误判：把"还有十二个月"读成"这次不用管"——Roots / Sampling 的替代路径尚未定型，现在深绑，一年后的迁移是被动的。</div>
+<div class="res">进阶资源：<a href="https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization/client-registration" target="_blank">MCP Spec 2026-07-28 · Client Registration</a>（CIMD 与 DCR 弃用的规范原文）· <a href="https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/" target="_blank">MCP Blog · Release Candidate</a>（授权侧六个 SEP）</div>
+</div>
+
+<!-- ============ 下一步 ============ -->
+<div class="combo">
+<h3>// 接下来会怎么走</h3>
+<p>官方 2026-08-22 的路线图把方向说得很直：<strong>transport 继续向 HTTP 收敛</strong>——连本地 server 也要统一成"在 stdio 上跑 Streamable HTTP"，而不是维护两套；<strong>授权向 workload identity 走</strong>，落地 DPoP、以 Enterprise-Managed Authorization 背后的 ID-JAG grant 与标准 token exchange 取代长期 API key；<strong>补回服务端主动事件</strong>（webhook 与 channel，让客户端不必轮询结果——这与本版收紧服务端发起请求不矛盾，是把它从协议内连接挪到协议外通道）；以及<strong>渐进式工具发现</strong>：server 先给一个小入口，随对话收窄再展开目录，这正是 Day 18 讲的 tool-definition context 税的协议级解法。对自建 server 的人，前两条意味着现在别把设计绑死在 stdio 专属路径和静态 API key 上。</p>
+</div>
+
+<div class="glossary">
+<h3>// 术语表</h3>
+<dl>
+<dt>stateless protocol core（无状态协议核心）</dt><dd>2026-07-28 的主题变更：删除 <code>initialize</code> 握手与 <code>Mcp-Session-Id</code>，任何请求可落任何实例（SEP-2575 / SEP-2567）。</dd>
+<dt>server/discover</dt><dd>取代握手的<strong>可选</strong>能力发现方法；客户端需要提前知道 server 能力时调用，而非任何请求的前置。</dd>
+<dt>Mcp-Method / Mcp-Name</dt><dd>Streamable HTTP 必填头（SEP-2243）：前者是 JSON-RPC 方法名，后者镜像 <code>params.name</code> / <code>params.uri</code>，供网关不拆 body 路由与计量。</dd>
+<dt>HeaderMismatch（-32020）</dt><dd>头与 body 不一致时的拒绝：HTTP 400 + 该 JSON-RPC 错误码。头不是提示，是必须一致的声明。</dd>
+<dt>MRTR（Multi-Round-Trip Requests）</dt><dd>SEP-2322：server 返回 <code>input_required</code> + <code>requestState</code>，客户端带 <code>inputResponses</code> 重试原调用，取代长连接上的服务端发起请求。</dd>
+<dt>requestState</dt><dd>MRTR 中寄存在客户端手里的不透明状态串；必须签名（SDK 用 HMAC-SHA256），否则等于可篡改输入。</dd>
+<dt>ttlMs / cacheScope</dt><dd>SEP-2549 给 list 与 resource 结果的缓存提示，仿 HTTP <code>Cache-Control</code>；默认 <code>0</code> / <code>private</code>，<code>shared</code> 需结果与调用者无关。</dd>
+<dt>CIMD（Client ID Metadata Documents）</dt><dd>取代被弃用的 DCR：以一个客户端控制的 URL 作 <code>client_id</code>，授权服务器 fetch 该文档取元数据。</dd>
+<dt>RFC 9207</dt><dd>OAuth 授权响应的 issuer 标识；SEP-2468 要求校验 <code>iss</code> 参数，防混淆攻击。</dd>
+<dt>deprecation window（弃用窗口）</dt><dd>SEP-2577 的 Active / Deprecated / Removed 三段生命周期，弃用到最早移除至少十二个月。</dd>
+</dl>
+</div>
+
+<div class="thinking">
+<h3>// 深入思考</h3>
+<details><summary>"协议无状态"是把复杂度消灭了，还是搬了个地方？</summary><div>搬了地方。原来"会话"替双方承担三件事：身份记忆、能力契约、流程中途状态。删掉之后，身份变成每请求重复传输的开销，能力契约变成客户端要么多调一次 <code>server/discover</code>、要么承担延迟失败的风险，流程状态变成签名后交给客户端往返的 <code>requestState</code>。净收益是真的——横向扩容不再需要粘性路由，运维上值一大笔；代价是协议表面积变大，新增的正确性责任落在实现者身上。所以收益分布不均：对运行大规模远程 server 的人是净赚，对只跑一个本地 stdio server 的人几乎只有迁移成本。</div></details>
+<details><summary>把方法名和工具名暴露在 HTTP 头上，有没有安全上的新代价？</summary><div>有，是权衡而非纯收益。代价有三条：<strong>可观测性即泄漏</strong>——头会进网关、CDN、WAF 的日志，"谁在何时调了哪个工具"沿链路留痕，<code>x-mcp-header</code> 更会把参数值也带进去；<strong>元数据侧信道</strong>——就算 body 脱敏，调用模式本身可能暴露业务意图；<strong>新的不一致面</strong>——头体一致校验本身是一处要正确实现的逻辑，宽松实现会给出"按头放行、按体执行"的绕过。结论不是别用，而是把头当公开数据设计。</div></details>
+<details><summary>MRTR 把流程状态交给客户端往返，这和分布式系统里哪个老问题同形？</summary><div>同形于"会话态下沉到 cookie / JWT"。三个老教训直接适用：客户端持有的状态<strong>必须签名</strong>，否则是提权入口；<strong>可往返即可重放</strong>，带副作用的续跑必须幂等，<code>requestState</code> 应绑定幂等键而非只装"下一步做什么"；<strong>没有服务端记账就没有过期</strong>，签发时间要自己放进载荷并校验。更深一层的差异：持久化执行框架的 journal 在服务端，MRTR 的状态在客户端——所以它适合短、少跳、可重放的交互流程，不适合拿来实现长跑工作流。</div></details>
+<details><summary>缓存作用域这类"默认安全但容易被改坏"的设计，工程上该怎么防？</summary><div>事故不发生在默认值上，而发生在有人为省延迟手改成 <code>shared</code> 的那一刻——而且这类错误<strong>不会在测试里暴露</strong>，单用户环境下两者行为完全一致。所以要靠结构性约束而非默认值：把"结果是否按调用者变化"做成类型层面的事实，或在 CI 里加一条断言——同一个 <code>tools/list</code> 用两个不同身份请求，结果有差异则 <code>shared</code> 即错误配置。这是通用模式：凡"错了也能跑、只在多租户下才错"的配置项，都该有一个双身份对比测试。</div></details>
+<details><summary>Day 18 到 Day 60 这种破坏性改写，对"该不该早接新协议"给了什么启示？</summary><div>给了一条分界：<strong>把协议当依赖隔离，而不是当架构内化</strong>。这次被打掉的恰恰是那些把协议语义吃进架构的实现——业务逻辑里真的依赖了"同一 session 我见过前因"的人迁移最痛；当初只把 MCP 当一层薄适配的人改几行就过了。所以要点不是早接晚接，而是接的时候留一层：工具实现不感知 transport 与会话语义，协议细节集中在适配层。附带一条：规范这次写进了至少十二个月的弃用窗口，未来的破坏性变更更可预测，"等它稳定"的性价比反而变低了。</div></details>
+</div>
+
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://blog.modelcontextprotocol.io/posts/2026-07-28/" target="_blank">MCP Blog · The 2026-07-28 Specification（2026-07）</a> — 官方发布说明：<code>_meta</code> 身份、<code>server/discover</code>、必填头、MRTR、缓存与弃用一览</li>
+<li><a href="https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/" target="_blank">MCP Blog · The 2026-07-28 Release Candidate（2026-05）</a> — 逐个 SEP 的详细说明（SEP-2575/2567/2243/2322/2549/2577 等）</li>
+<li><a href="https://blog.modelcontextprotocol.io/posts/mcp-roadmap/" target="_blank">MCP Blog · MCP Roadmap（2026-08-22）</a> — stdio 上跑 Streamable HTTP、DPoP、workload identity、服务端事件、渐进式工具发现</li>
+<li><a href="https://ts.sdk.modelcontextprotocol.io/v2/migration/support-2026-07-28" target="_blank">TypeScript SDK v2 · Supporting protocol revision 2026-07-28</a> — <code>createMcpHandler</code>、<code>versionNegotiation</code>、<code>cacheHints</code>、<code>requestState</code> 签名的实际 API</li>
+<li><a href="mcp-day18.html">本站 Day 18 · MCP</a> — 三层原语与 tool-definition context 税；其中握手与会话部分已被本版改写</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Day 60 · 2026-10-03</footer>
+</div>
+<script src="https://hub.cissychen.com/comments.js" defer></script>
+<script src="https://hub.cissychen.com/search.js" defer></script>
+<script src="https://hub.cissychen.com/index-button.js" defer></script>
+<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+</body></html>
