@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill 32 · Personal Productivity Skills Roundup — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head>
+<body>
+<div class="container">
+<header>
+<span class="week-tag">SKILL 32 / PKM · ROUNDUP</span>
+<h1>Personal Productivity Skills Roundup</h1>
+<h2>Meeting notes · inbox · notes · calendar — you can install the plumbing, not the judgment</h2>
+<div class="date">2026-10-03 · BigCat</div>
+<p class="pitch">Conclusion first for this category: <strong>install the plumbing layer, let the official memory layer do its thing, and write the output layer yourself.</strong> Below are 11 real, installable or readable entries, each with a link, an install command, and a when-not-to-install. One of them (<code>apple-mcp</code>, 3.1k stars) <strong>was archived read-only on 2026-01-01</strong> — that is the hardest honest cost in this issue.</p>
+</header>
+<div class="xref">
+<a href="mcp-servers-roundup-skill9.en.html">Same series → Skill 9 MCP Server Roundup</a> · <a href="agents-md-skill8.en.html">Skill 8 AGENTS.md and Portability</a> · <a href="skill-authoring-skill6.en.html">Skill 6 Official Skill Authoring</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>Meeting notes, inbox, note cleanup, calendar: the four things that look most delegable to AI, and the category where <strong>off-the-shelf products help least</strong>. The reason is simple. Coding skills have an objective oracle (do the tests pass). Office skills have a deterministic format (is the docx still valid). But what belongs in <em>this</em> meeting's notes is <strong>known only to you</strong>. So read the table in three layers — pick the wrong layer and you will shop for output skills by star count, then demand that a pipe sound like you.</p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>The shortlist: 9 candidates + 1 counter-example + 1 tool for building your own</h2>
+<div class="claim">Claim: three different kinds of thing share one table. Locate the layer first, then argue about installing.</div>
+<div class="diagram">LAYER    ENTRY                                     KILLS FOR YOU             SKIP IT WHEN
+───────────────────────────────────────────────────────────────────────────────────────
+OUTPUT  1 notion-workspace-plugin (Notion, 1st party)  pre-reads / notes / reports   not on Notion
+        2 anthropics/skills · internal-comms           update / memo / FAQ format    your formats differ
+MEMORY  3 auto memory + CLAUDE.md (built in)           re-explaining who you are     — (already there)
+        4 basicmachines-co/basic-memory                conclusions evaporating       you have note rules
+        5 @modelcontextprotocol/server-memory          forgetting across sessions    you want production
+PIPE    6 MarkusPfundstein/mcp-obsidian                hand-pasting from the vault   vault is local
+        7 Doist/todoist-mcp                            typing todos by hand          todos live elsewhere
+        8 nspady/google-calendar-mcp                   hunting for a free slot       you just want today
+        9 Readwise official MCP                        highlights never reused       not on Readwise
+ANTI    10 supermemoryai/apple-mcp                     (once Notes / Mail / more)    archived — skip
+BUILD   11 anthropics/skills · skill-creator           writing skills by vibes       one-off work only</div>
+<h3>Install: every command you can copy</h3>
+<pre><code><span class="tag-com"># 1 Notion first-party plugin (4 skills + 10 slash commands)</span>
+/plugin marketplace add makenotion/claude-code-notion-plugin
+/plugin install notion-workspace-plugin@notion-plugin-marketplace
+
+<span class="tag-com"># 3 Built in: the toggle and the viewer are the same command</span>
+/memory
+
+<span class="tag-com"># 4 A local markdown knowledge graph</span>
+uv tool install basic-memory --prerelease=allow
+
+<span class="tag-com"># 6 Obsidian (install the Local REST API plugin first, grab the API key)</span>
+uvx mcp-obsidian   <span class="tag-com"># set OBSIDIAN_API_KEY / OBSIDIAN_HOST / OBSIDIAN_PORT</span>
+
+<span class="tag-com"># 7, 8, 9 — todos / calendar / highlights</span>
+npx @doist/todoist-mcp
+npx @cocal/google-calendar-mcp
+claude mcp add --transport http readwise https://mcp2.readwise.io/mcp</code></pre>
+<h3>Entry by entry: what it kills, when to skip it</h3>
+<ul>
+<li><strong><a href="https://github.com/makenotion/claude-code-notion-plugin" target="_blank">makenotion/claude-code-notion-plugin</a></strong> (491 stars per the repo page, 2026-10) — the <strong>only first-party output-layer entry here</strong>: it bundles four skills (Knowledge Capture, Meeting Intelligence, Research Documentation, Spec to Implementation) plus ten commands such as <code>/Notion:search</code>, <code>/Notion:create-page</code> and <code>/Notion:tasks:plan</code>. Kills "manually digging through five pages for meeting background." <strong>Skip it</strong> if your notes do not live in Notion. <strong>Get the name right</strong>: a separate <code>team-attention/notion-skills-for-claude</code> has 24 stars and was archived on 2025-12-22 — do not copy that one.</li>
+<li><strong><a href="https://github.com/anthropics/skills/blob/main/skills/internal-comms/SKILL.md" target="_blank">anthropics/skills · internal-comms</a></strong> (first-party, Apache-2.0) — kills "reinventing the format of every status update, announcement and FAQ." Under <code>examples/</code> sit four templates: <code>3p-updates.md</code> (Progress / Plans / Problems), <code>company-newsletter.md</code>, <code>faq-answers.md</code> and <code>general-comms.md</code>; pick the one matching the comms type. <strong>This is the structure most worth copying in the whole table</strong>: the house style is left as a slot, so swapping the samples makes it yours. <strong>Skip it</strong> if your company uses none of those formats — then fork the directory shape instead.</li>
+<li><strong><a href="https://code.claude.com/docs/en/memory" target="_blank">Claude Code auto memory + CLAUDE.md</a></strong> (first-party, nothing to install) — kills "re-explaining who you are every session." Auto memory writes four kinds of note and records the kind in a <code>type</code> field: <code>user</code> (role and preferences), <code>feedback</code> (your corrections), <code>project</code> (work in flight and decisions), <code>reference</code> (where outside information lives). It is stored under <code>~/.claude/projects/&lt;project&gt;/memory/</code>, and only the first 200 lines or 25KB load. <strong>The docs state plainly that it skips anything derivable from the codebase and anything your CLAUDE.md already says.</strong> <strong>Turn it off</strong> on shared or demo machines — these are machine-local plaintext notes. Use <code>autoMemoryEnabled: false</code> or <code>CLAUDE_CODE_DISABLE_AUTO_MEMORY=1</code>.</li>
+<li><strong><a href="https://github.com/basicmachines-co/basic-memory" target="_blank">basicmachines-co/basic-memory</a></strong> (AGPL-3.0; ~4.1k stars per the repo page, 2026-10) — kills "the conclusion you reached in chat evaporating with the window." It settles conversations into markdown with frontmatter, weaving observations and wiki links into a knowledge graph, by default under <code>~/basic-memory</code>, with a local SQLite index for search. <strong>Note the AGPL.</strong> <strong>Skip it</strong> if you already run Obsidian with clear note conventions — two indexes will fight (section 04).</li>
+<li><strong><a href="https://github.com/modelcontextprotocol/servers/tree/main/src/memory" target="_blank">@modelcontextprotocol/server-memory</a></strong> (official reference server) — nine tools (<code>create_entities</code>, <code>create_relations</code>, <code>add_observations</code>, <code>search_nodes</code>, <code>read_graph</code> and more), stored in one JSONL file whose path comes from <code>MEMORY_FILE_PATH</code>. <strong>Skip it</strong>: it calls itself <em>a basic implementation</em> — a single file with no project isolation. <strong>Read it as a model, do not run it as your answer.</strong></li>
+<li><strong><a href="https://github.com/MarkusPfundstein/mcp-obsidian" target="_blank">MarkusPfundstein/mcp-obsidian</a></strong> (MIT; ~4.5k stars per the repo page, 2026-10) — kills "browsing the vault by hand and pasting into chat." Seven tools: <code>list_files_in_vault</code>, <code>get_file_contents</code>, <code>search</code>, <code>patch_content</code>, <code>append_content</code>, <code>delete_file</code> and one more. <strong>Prerequisite</strong>: the community plugin <a href="https://github.com/coddingtonbear/obsidian-local-rest-api" target="_blank">obsidian-local-rest-api</a> inside the vault. <strong>Skip it</strong> if you use Claude Code and the vault is on the same machine — <code>--add-dir</code> reads the files with one less layer, and hands nothing a <code>delete_file</code>.</li>
+<li><strong><a href="https://github.com/Doist/todoist-mcp" target="_blank">Doist/todoist-mcp</a></strong> (MIT; 554 stars per the repo page, 2026-10) — kills "reading a paragraph then typing three todos." <strong>The valuable part is not the star count, it is the maintainer</strong>: Doist maintains this itself, not a hobbyist. <strong>Skip it</strong> if your tasks are elsewhere, or if a markdown checklist is genuinely all you need.</li>
+<li><strong><a href="https://github.com/nspady/google-calendar-mcp" target="_blank">nspady/google-calendar-mcp</a></strong> (MIT; ~1.2k stars per the repo page, 2026-10) — thirteen tools, including <code>get-freebusy</code>, <code>create-events</code> (batch) and <code>manage-accounts</code> (multi-account). Kills "three people comparing free slots." <strong>The cost is in its own README</strong>: create a Google Cloud project, enable the Calendar API, configure OAuth desktop credentials — and in test mode the token <strong>expires after seven days</strong>, so you re-authorize weekly. <strong>Skip it</strong> if you only wanted to see today's meetings.</li>
+<li><strong><a href="https://docs.readwise.io/tools/mcp" target="_blank">Readwise official MCP</a></strong> — kills "highlights sitting in Readwise and never getting reused." Hosted at <code>https://mcp2.readwise.io/mcp</code> with OAuth; tools include <code>readwise_search_highlights</code>, <code>readwise_list_highlights</code> and <code>readwise_create_highlights</code>. <strong>Skip it</strong> if you do not use Readwise, or if your reading notes already sync into the vault. <strong>Stated plainly</strong>: this site's egress policy blocks readwise.io and its docs host, so the command and endpoint above come from two consistent search-engine extracts of Readwise's own docs page. Open that page and check before installing.</li>
+<li><strong><a href="https://github.com/supermemoryai/apple-mcp" target="_blank">supermemoryai/apple-mcp</a></strong> (MIT; 3.1k stars) — once covered Messages, Notes, Contacts, Mail, Reminders, Calendar and Maps, and was the most-recommended entry in this category. <strong>The repo page now reads: This repository was archived by the owner on Jan 1, 2026. It is now read-only.</strong> It is listed not to install but so that <strong>"3.1k stars gets abandoned too"</strong> enters your shopping criteria — especially since the permissions it wanted were half your digital life.</li>
+<li><strong><a href="https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md" target="_blank">anthropics/skills · skill-creator</a></strong> (first-party) — the real answer for this category: it kills "writing skills by vibes." It pins the process to eleven steps — capture intent, interview for edge cases, draft the SKILL.md, <strong>build 2–3 realistic prompts</strong>, run with and without the skill in parallel, draft quantitative assertions, grade and aggregate, review with you, iterate, optimize the description for trigger accuracy, package. Its own line is where this issue lands: <em>create skills that can be used a million times</em>, not ones that only fit the examples at hand. <strong>Skip it</strong> if the thing you want runs exactly once.</li>
+</ul>
+<div class="fail"><strong>Both traps here are about names.</strong> (1) "Obsidian MCP" returns at least six same-named repositories, forks included; the one named here is the 4.5k-star <code>MarkusPfundstein/mcp-obsidian</code>. (2) "Official Notion skills" maps to several same-named <code>notion-mcp-server</code> repos plus one archived mirror. <strong>Aggregators and search results are for discovering candidates only — verify every name against the GitHub repo tree or the vendor's own page.</strong></div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Why these three layers cannot be compared together</h2>
+<div class="claim">Claim: the three layers have <strong>completely different acceptance tests</strong>, so one set of criteria will pick wrong.</div>
+<div class="diagram">PIPE    judge on: coverage · are writes reversible · who maintains it · tool count
+        failure mode: connected, but the model picks the wrong tool — or one
+                      delete_file erases your note
+        buy off the shelf? — yes, and you should. No "house style" lives here
+
+MEMORY  judge on: where it lives · who can read it · does it fight your notes
+        failure mode: two indexes each half full, and you cannot say which to trust
+        buy off the shelf? — start with the built-in one; add more only if short
+
+OUTPUT  judge on: does it sound like you — there is no second criterion
+        failure mode: grammatically perfect output that you would never have written
+        buy off the shelf? — take its structure only; fill the style slot yourself</div>
+<p>Two classic ways to get this wrong: <strong>shopping for output skills by star count</strong> (you install another company's status-update template, rewrite half of it every time, and would have been better off without it), and <strong>demanding that a pipe sound like you</strong> (which produces the conclusion "MCP is useless" — it was only ever moving data in).</p>
+<p>That is also what <code>SKILLS.md</code> means when it says this category is <strong>the one you should build yourself</strong>. Not because off-the-shelf quality is bad, but because the output layer's acceptance test lives inside you. Which is why the structure most worth copying is <code>internal-comms</code>: <strong>one SKILL.md hanging four sample files</strong> — swap the samples, swap the house style.</p>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>A three-minute inspection of the SKILL.md or README</h2>
+<div class="claim">Claim: six criteria are specific to this category, and two of them barely matter elsewhere.</div>
+<ul>
+<li><strong>1. Does it read your private context?</strong> A "productivity skill" with no data entry point is just a prompt in a different directory — you may as well paste it into the chat. Look for a tool list or API configuration in the README first.</li>
+<li><strong>2. Are the writes reversible?</strong> This risk is specific to this category: <strong>notes and calendars are a destructive write surface</strong>. Look for append-only variants and whether deletion requires confirmation. In <code>mcp-obsidian</code>, <code>delete_file</code> and <code>patch_content</code> are the two to watch; for calendars, watch <code>delete-event</code>. If read-only will do, go read-only.</li>
+<li><strong>3. Who maintains it?</strong> The vendor itself (<code>Doist/todoist-mcp</code>, <code>makenotion/claude-code-notion-plugin</code>) beats a high-star personal repo. While you are there, check the last commit — and <strong>whether there is an archive banner at the top of the page</strong>. <code>apple-mcp</code> is this criterion's price tag.</li>
+<li><strong>4. Is the house style a slot or hard-coded?</strong> For output-layer entries this is the only question that matters: is there an <code>examples/</code> directory under the SKILL.md for you to fill in? <code>internal-comms</code> has four files. Anything with someone else's style baked in has to be rewritten after installing anyway.</li>
+<li><strong>5. How much context tax?</strong> Count the tools. Thirteen for <code>google-calendar-mcp</code>, seven for <code>mcp-obsidian</code>, nine for the official memory server — turn all three on and thirty tool definitions ride along every turn. Worse is <strong>overlap</strong>: when two servers can both "search notes," the model has to choose, and one wrong choice costs a full round trip.</li>
+<li><strong>6. Privacy radius.</strong> What is the largest scope it can reach? The Obsidian pipe gives it one vault; the Apple class gives it mail plus messages plus contacts. <strong>Price it at the worst case, not at how you intend to use it.</strong></li>
+</ul>
+<p><strong>How to spend the three minutes</strong>: one minute on the tool list (that answers 1, 2, 5 and 6 at once), one on the top of the repo page and the commit history (3), one on whether the directory tree has a sample slot (4).</p>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>The honest cost</h2>
+<div class="claim">Claim: the more completely you install this category, the likelier some morning finds half your pipes broken.</div>
+<h3>1. Abandonment, and of high-star projects</h3>
+<p><code>supermemoryai/apple-mcp</code>: 3.1k stars, <strong>archived read-only on 2026-01-01</strong>. The Notion skills mirror <code>team-attention/notion-skills-for-claude</code>: <strong>archived 2025-12-22</strong>. A personally maintained integration layer depends on an upstream API not changing, and upstreams never promise that. So star counts are worth less here than in any other category — <strong>look at the maintainer</strong>.</p>
+<h3>2. The OAuth tax is paid in real time</h3>
+<p><code>google-calendar-mcp</code> wants you to create a Google Cloud project, enable the API and configure OAuth desktop credentials, and its README says outright that test-mode tokens expire after seven days. To save yourself "open the calendar and look," you bought a weekly re-authorization. <strong>Do that arithmetic before installing.</strong></p>
+<h3>3. Two indexes fighting</h3>
+<p><code>basic-memory</code> has its own SQLite index and <code>~/basic-memory</code> directory; your Obsidian vault has its own. Run both and "that decision from last week" exists as half a record on each side. <strong>There must be exactly one source of truth</strong>: either point basic-memory at the vault directory, or keep only one.</p>
+<div class="fail"><strong>4. The largest cost is not in the tools: the output layer cannot be outsourced.</strong> Notice where the official docs draw auto memory's boundary — it records <strong>only what you taught it</strong> (corrections, preferences, decisions) and explicitly skips what is derivable from the codebase and what your CLAUDE.md already says. The vendor does not decide what is worth remembering for you. So if you expect that installing a skill will make meeting notes come out the way you write them, that expectation is doomed in this category: the ceiling on off-the-shelf value is <strong>skipping the steps where you open the app</strong>, not having your judgment done for you.</div>
+<div class="res">Sources: <a href="https://github.com/supermemoryai/apple-mcp" target="_blank">the archive banner on the apple-mcp repo page</a> · <a href="https://github.com/nspady/google-calendar-mcp" target="_blank">the OAuth and 7-day token notes in the google-calendar-mcp README</a> · <a href="https://code.claude.com/docs/en/memory" target="_blank">Claude Code memory docs, on auto memory's four note kinds and skip rules</a> (all per those pages, 2026-10)</div>
+</div>
+<div class="combo">
+<h3>// ONE-PAGE SHOPPING CARD</h3>
+<p><strong>Install these three first</strong>: (1) leave <code>/memory</code> on and write a twenty-line <code>CLAUDE.md</code> — free, first-party, applies to every project, and because auto memory skips what your CLAUDE.md already says, the two complement each other. (2) <strong>Install exactly one pipe, the one matching your note system</strong>: Obsidian → <code>uvx mcp-obsidian</code> (install obsidian-local-rest-api first); Notion → <code>/plugin install notion-workspace-plugin@notion-plugin-marketplace</code>. (3) <code>anthropics/skills · skill-creator</code> — turn the thing you re-explained three times this week into one skill. That is this category's real answer.</p>
+<p><strong>Add as needed</strong>: <code>Doist/todoist-mcp</code> (if your tasks really are in Todoist) · the Readwise official MCP (if you have highlights in flight) · <code>basicmachines-co/basic-memory</code> (if you have <strong>no</strong> note system yet, it can be that system) · <code>anthropics/skills · internal-comms</code> (when you need update or announcement formats — copy the structure, swap the samples).</p>
+<p><strong>Explicitly do not install</strong>: <code>supermemoryai/apple-mcp</code> (archived) · <code>@modelcontextprotocol/server-memory</code> (it calls itself a basic implementation; read it as a model) · <code>basic-memory</code> alongside Obsidian as two indexes · three servers that can all "search notes" at once · any output-layer template with someone else's house style baked in.</p>
+</div>
+<div class="glossary">
+<h3>// GLOSSARY</h3>
+<dl>
+<dt>PKM (personal knowledge management)</dt>
+<dd>The pile of private context: notes, highlights, meeting records, calendar.</dd>
+<dt>Pipe layer / memory layer / output layer</dt>
+<dd>This issue's three layers. Pipes move data, memory persists across sessions, output produces the finished thing. Different acceptance tests, so never compare across them.</dd>
+<dt>auto memory</dt>
+<dd>The notes Claude Code writes for itself, in four kinds: <code>user</code>, <code>feedback</code>, <code>project</code>, <code>reference</code>. Machine-local, isolated per repository, and only the first 200 lines or 25KB load.</dd>
+<dt>Sample slot (examples/)</dt>
+<dd>The directory under an output-layer SKILL.md left for you to fill with your own house style. Whether that slot exists decides whether the skill can ever be yours.</dd>
+<dt>Context tax</dt>
+<dd>Every server you connect parks a batch of tool definitions in context, consuming it and raising the odds of picking the wrong tool.</dd>
+<dt>Abandonment</dt>
+<dd>A repository archived read-only. The most common death for a personally maintained integration layer, and unrelated to star count.</dd>
+</dl>
+</div>
+<div class="thinking">
+<h3>// THREE THINGS I CANNOT SETTLE</h3>
+<details><summary>Why does "build it yourself" hold for this category but not for coding?</summary><div>The difference is <strong>whether an objective oracle exists</strong>. Coding criteria live outside the repo — tests pass or they do not, types check or they do not — so a stranger's <code>code-reviewer</code> can be useful to you directly. This category's criteria live in your head: nothing arbitrates "what belongs in this meeting's notes" or "why this highlight matters." The inference is deflating but useful: <strong>the ceiling on off-the-shelf value here is skipping the steps where you open the app</strong>. If you want judgment done for you, you have to write it — which is why <code>skill-creator</code> sits in the top three of the shopping card.</div></details>
+<details><summary>Auto memory already ships. Do I still need something like basic-memory?</summary><div>Two questions decide it: <strong>where it lives, and whether a human can read it</strong>. Auto memory lives under <code>~/.claude/projects/&lt;project&gt;/memory/</code>, isolated per repository and machine-local (the docs state it is not shared across machines or cloud environments), and it writes only when it judges something worth keeping — it is <strong>for the model</strong>. <code>basic-memory</code> settles into markdown you can open in Obsidian — it is <strong>for humans too</strong>. So the question is not which is stronger but whether a person needs to read it. If you already have a vault, the answer is usually: do not add a second store, connect the vault.</div></details>
+<details><summary>Why does everything feel slower after installing a pile of pipes?</summary><div>Two mechanisms stack. First, <strong>tool count</strong>: thirteen for calendar, seven for notes, nine for memory — thirty definitions riding along, read every turn. Second, and this is the one that actually costs time, <strong>overlap</strong>: when <code>mcp-obsidian</code>'s <code>search</code> and the memory server's <code>search_nodes</code> are both present, the model must first decide where to look, and one wrong choice burns a whole round trip without telling you it chose wrong. The fix is crude and effective: <strong>one path per job</strong>; turn the overlapping one off.</div></details>
+</div>
+<div class="refs">
+<h3>// FURTHER READING</h3>
+<ul>
+<li><a href="https://code.claude.com/docs/en/memory" target="_blank">Claude Code · How Claude remembers your project</a> — the main source here: the CLAUDE.md vs auto memory split, the <code>type</code> field's four note kinds, <code>~/.claude/projects/&lt;project&gt;/memory/</code>, the 200-line or 25KB load ceiling, <code>autoMemoryEnabled</code> and <code>CLAUDE_CODE_DISABLE_AUTO_MEMORY=1</code> (first-party, 2026-10)</li>
+<li><a href="https://github.com/makenotion/claude-code-notion-plugin" target="_blank">makenotion/claude-code-notion-plugin</a> — four skills, ten slash commands, a two-line install (491 stars per the repo page, 2026-10)</li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/internal-comms/SKILL.md" target="_blank">anthropics/skills · internal-comms</a> — the four templates under <code>examples/</code>: <code>3p-updates.md</code>, <code>company-newsletter.md</code>, <code>faq-answers.md</code>, <code>general-comms.md</code>; the structure this issue recommends copying (first-party)</li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md" target="_blank">anthropics/skills · skill-creator</a> — the eleven steps, building 2–3 realistic prompts and running them against a no-skill baseline, and "create skills that can be used a million times" (first-party)</li>
+<li><a href="https://github.com/MarkusPfundstein/mcp-obsidian" target="_blank">MarkusPfundstein/mcp-obsidian</a> — seven tools and the <code>uvx mcp-obsidian</code> config snippet; prerequisite plugin <a href="https://github.com/coddingtonbear/obsidian-local-rest-api" target="_blank">obsidian-local-rest-api</a> (MIT; ~4.5k stars per the repo page, 2026-10)</li>
+<li><a href="https://github.com/basicmachines-co/basic-memory" target="_blank">basicmachines-co/basic-memory</a> — a knowledge graph from markdown, frontmatter, observations and wiki links; default <code>~/basic-memory</code>; SQLite index (AGPL-3.0; ~4.1k stars per the repo page, 2026-10)</li>
+<li><a href="https://github.com/modelcontextprotocol/servers/tree/main/src/memory" target="_blank">@modelcontextprotocol/server-memory</a> — the official reference server: nine tools, JSONL storage, <code>MEMORY_FILE_PATH</code>; calls itself <em>a basic implementation</em></li>
+<li><a href="https://github.com/nspady/google-calendar-mcp" target="_blank">nspady/google-calendar-mcp</a> — thirteen tools (including <code>get-freebusy</code> and <code>manage-accounts</code>), the Google Cloud and OAuth setup steps, and the seven-day test-mode token (MIT; ~1.2k stars per the repo page, 2026-10)</li>
+<li><a href="https://github.com/Doist/todoist-mcp" target="_blank">Doist/todoist-mcp</a> — vendor-maintained, <code>npx @doist/todoist-mcp</code> (MIT; 554 stars per the repo page, 2026-10)</li>
+<li><a href="https://docs.readwise.io/tools/mcp" target="_blank">Readwise · MCP Server</a> — endpoint <code>https://mcp2.readwise.io/mcp</code>, the <code>claude mcp add --transport http</code> install, OAuth, and tools such as <code>readwise_search_highlights</code> (<strong>this site could not reach the domain directly; the data comes from two consistent search-engine extracts of that page, so verify before installing</strong>)</li>
+<li><a href="https://github.com/supermemoryai/apple-mcp" target="_blank">supermemoryai/apple-mcp</a> — this issue's counter-example: seven Apple apps covered, and a repo banner reading <em>archived by the owner on Jan 1, 2026</em> (MIT; 3.1k stars)</li>
+<li><a href="mcp-servers-roundup-skill9.en.html">This site, Skill 9 · MCP Server Roundup</a> — the general criteria for the pipe layer and how to price context tax</li>
+<li><a href="skill-authoring-skill6.en.html">This site, Skill 6 · Official Skill Authoring</a> — the other half, writing the output layer: the hard constraints on name and description, and progressive disclosure</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Skill 32 · 2026-10-03</footer>
+</div>
+<script src="https://hub.cissychen.com/comments.js" defer></script>
+<script src="https://hub.cissychen.com/search.js" defer></script>
+<script src="https://hub.cissychen.com/index-button.js" defer></script>
+<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+</body></html>
