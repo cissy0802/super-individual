@@ -64,8 +64,8 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <div class="container">
 <header>
 <span class="week-tag">SKILL 32 / PKM · ROUNDUP</span>
-<h1>个人生产力类 Skills 榜单</h1>
-<h2>会议纪要 · 收件箱 · 笔记 · 日程——管道可以装，判断装不来</h2>
+<h1 data-tts="0b22cba0494ec975">个人生产力类 Skills 榜单</h1>
+<h2 data-tts="1428367ca1114493">会议纪要 · 收件箱 · 笔记 · 日程——管道可以装，判断装不来</h2>
 <div class="date">2026-10-03 · BigCat</div>
 <p class="pitch">这一类我先把结论放前面：<strong>管道层该装，记忆层官方已自带，产出层你得自己写。</strong>下面点名 11 个真实可装 / 可读的条目，每个给链接、装法与「什么时候别装」。其中一个（<code>apple-mcp</code>，3.1k star）<strong>已于 2026-01-01 归档只读</strong>——它就是本期最硬的那条代价。</p>
 </header>
@@ -73,13 +73,13 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <a href="mcp-servers-roundup-skill9.html">同系列 → Skill 9 MCP Server 榜单</a> · <a href="agents-md-skill8.html">Skill 8 AGENTS.md 与跨 Harness</a> · <a href="skill-authoring-skill6.html">Skill 6 官方 Skill Authoring 精读</a>
 </div>
 <div class="intro">
-<h3>// WHY THIS MATTERS</h3>
+<h3 data-tts="069d087334be3f60">// WHY THIS MATTERS</h3>
 <p>会议纪要、收件箱、笔记整理、日程，看起来最该让 AI 代劳，却是整个生态里<strong>现成货最不管用</strong>的一类。原因不复杂：编码类有客观 oracle（测试绿不绿），办公类有确定性格式（docx 坏没坏），而「这次会议该记什么」<strong>只有你知道</strong>。所以这张表要分三层读——装错层，就会用 star 数去挑产出型、又拿「像不像我」去要求管道型。</p>
 </div>
 <!-- ============ 1 ============ -->
 <div class="section">
 <span class="num">// 01</span>
-<h2>选品表：9 个候选 ＋ 1 个反例 ＋ 1 件自建工具</h2>
+<h2 data-tts="1de271d664b03956">选品表：9 个候选 ＋ 1 个反例 ＋ 1 件自建工具</h2>
 <div class="claim">论断：同一张表里混着三层东西。先按层定位，再谈装不装。</div>
 <div class="diagram">层    条目                                      替你干掉什么            别装的时候
 ───────────────────────────────────────────────────────────────────────────────
@@ -94,7 +94,7 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
       ⑨ Readwise 官方 MCP                       划线躺着从不复用          不用 Readwise
 反例  ⑩ supermemoryai/apple-mcp                 （曾覆盖 Notes / 邮件）   已归档，别装
 自建  ⑪ anthropics/skills · skill-creator        凭感觉写 skill            只写一次性的</div>
-<h3>装法：能抄的命令都在这儿</h3>
+<h3 data-tts="180fe6a99e7ab705">装法：能抄的命令都在这儿</h3>
 <pre><code><span class="tag-com"># ① Notion 官方 plugin（4 个 skill ＋ 10 条 slash command）</span>
 /plugin marketplace add makenotion/claude-code-notion-plugin
 /plugin install notion-workspace-plugin@notion-plugin-marketplace
@@ -112,7 +112,7 @@ uvx mcp-obsidian   <span class="tag-com"># 配 OBSIDIAN_API_KEY / OBSIDIAN_HOST 
 npx @doist/todoist-mcp
 npx @cocal/google-calendar-mcp
 claude mcp add --transport http readwise https://mcp2.readwise.io/mcp</code></pre>
-<h3>逐条：替你干掉什么 · 什么时候别装</h3>
+<h3 data-tts="ef277d004d6d271c">逐条：替你干掉什么 · 什么时候别装</h3>
 <ul>
 <li><strong><a href="https://github.com/makenotion/claude-code-notion-plugin" target="_blank">makenotion/claude-code-notion-plugin</a></strong>（据仓库页 2026-10 为 491 star）— 本类里<strong>唯一的厂商官方产出型</strong>：捆了 Knowledge Capture / Meeting Intelligence / Research Documentation / Spec to Implementation 四个 skill，外加 <code>/Notion:search</code>、<code>/Notion:create-page</code>、<code>/Notion:tasks:plan</code> 等十条命令。替你干掉「开会前自己翻五个页面凑背景」。<strong>别装</strong>：笔记不在 Notion 里。<strong>认名字</strong>：另有一份 <code>team-attention/notion-skills-for-claude</code> 只有 24 star 且 2025-12-22 已归档，别抄那个。</li>
 <li><strong><a href="https://github.com/anthropics/skills/blob/main/skills/internal-comms/SKILL.md" target="_blank">anthropics/skills · internal-comms</a></strong>（官方，Apache-2.0）— 替你干掉「周报 / 公告 / FAQ 每次重新想版式」：<code>examples/</code> 下四份模板——<code>3p-updates.md</code>（Progress / Plans / Problems）、<code>company-newsletter.md</code>、<code>faq-answers.md</code>、<code>general-comms.md</code>，按类型选一份照着写。<strong>这是全表最值得抄的结构</strong>：口径留成空槽，你换掉样例就是你的了。<strong>别装</strong>：你的公司根本不用这几种格式——那就直接 fork 它的目录结构。</li>
@@ -131,7 +131,7 @@ claude mcp add --transport http readwise https://mcp2.readwise.io/mcp</code></pr
 <!-- ============ 2 ============ -->
 <div class="section">
 <span class="num">// 02</span>
-<h2>为什么这三层不能混着比</h2>
+<h2 data-tts="bba47fbafa76b469">为什么这三层不能混着比</h2>
 <div class="claim">论断：三层的<strong>验收标准完全不同</strong>，用一套判据挑必然挑错。</div>
 <div class="diagram">管道层   比什么：覆盖面 · 写操作是否可逆 · 维护主体 · tool 数量
          失败模式：接上了但模型选错工具，或者一次 delete_file 删掉你的笔记
@@ -150,7 +150,7 @@ claude mcp add --transport http readwise https://mcp2.readwise.io/mcp</code></pr
 <!-- ============ 3 ============ -->
 <div class="section">
 <span class="num">// 03</span>
-<h2>打开 SKILL.md / README 三分钟验货</h2>
+<h2 data-tts="903a99636e7a940e">打开 SKILL.md / README 三分钟验货</h2>
 <div class="claim">论断：这一类有六个专属判据，其中第 2 和第 4 条在别的分类里不重要。</div>
 <ul>
 <li><strong>① 它读不读你的私有上下文？</strong>没有数据入口的「生产力 skill」就是一段 prompt 换了个目录——不如直接贴进对话。先找 README 里有没有 tool 列表或 API 配置。</li>
@@ -165,25 +165,25 @@ claude mcp add --transport http readwise https://mcp2.readwise.io/mcp</code></pr
 <!-- ============ 4 ============ -->
 <div class="section">
 <span class="num">// 04</span>
-<h2>诚实的代价</h2>
+<h2 data-tts="484ab57c42f6962a">诚实的代价</h2>
 <div class="claim">论断：本类装得越全，越可能在某天早上发现一半管道断了。</div>
-<h3>① 弃养，而且是高星弃养</h3>
+<h3 data-tts="a779cd1a0d74746b">① 弃养，而且是高星弃养</h3>
 <p><code>supermemoryai/apple-mcp</code>，3.1k star，<strong>2026-01-01 归档只读</strong>。那份 Notion skills 的镜像仓库 <code>team-attention/notion-skills-for-claude</code>，<strong>2025-12-22 归档</strong>。个人维护的集成层依赖的是上游 API 不变，而上游从不保证这件事。所以本类的 star 数比别的分类更不值钱——<strong>要看维护主体</strong>。</p>
-<h3>② OAuth 税是真金白银的时间</h3>
+<h3 data-tts="b30512ff95c9e674">② OAuth 税是真金白银的时间</h3>
 <p><code>google-calendar-mcp</code> 要你建 Google Cloud 项目、开 API、配 OAuth 桌面凭据，而且它 README 自己写明 test mode 的 token 七天过期。为了省掉「打开日历看一眼」，你换来每周一次重新授权——<strong>算一下再装</strong>。</p>
-<h3>③ 两套索引打架</h3>
+<h3 data-tts="b116894952f8f551">③ 两套索引打架</h3>
 <p><code>basic-memory</code> 有自己的 SQLite 索引与 <code>~/basic-memory</code> 目录，你的 Obsidian vault 有自己的一套。同时跑起来之后，「上周那个决定」会在两边各有半份——<strong>真相源必须唯一</strong>，要么让 basic-memory 直接指向 vault 目录，要么只留一个。</p>
 <div class="fail"><strong>④ 最大的代价不在工具上：产出层外包不掉。</strong>注意官方自己把 auto memory 的边界划在哪——它<strong>只记你教过它的</strong>（纠正、偏好、决定），明确跳过能从代码推出来的、以及 CLAUDE.md 已经写了的。官方不替你决定「该记什么」。所以如果你期待装一个 skill 之后会议纪要就变成你会写的样子，这个期待在本类注定落空：现成货的收益上限是<strong>省掉打开 app 那几步</strong>，不是替你判断。</div>
 <div class="res">来源：<a href="https://github.com/supermemoryai/apple-mcp" target="_blank">apple-mcp 仓库页归档横幅</a> · <a href="https://github.com/nspady/google-calendar-mcp" target="_blank">google-calendar-mcp README 的 OAuth 与 7 天 token</a> · <a href="https://code.claude.com/docs/en/memory" target="_blank">Claude Code · memory 文档的 auto memory 四类与跳过规则</a>（均据各页 2026-10）</div>
 </div>
 <div class="combo">
-<h3>// 一页选购卡</h3>
+<h3 data-tts="11ed40e5987eb3e4">// 一页选购卡</h3>
 <p><strong>先装这三个</strong>：① <code>/memory</code> 开着，再写一份二十行的 <code>CLAUDE.md</code>——零成本、官方、全项目生效，而且它跳过你已经写进 CLAUDE.md 的东西，两者互补。② <strong>只装你笔记系统对应的那一个管道</strong>：Obsidian → <code>uvx mcp-obsidian</code>（先装 obsidian-local-rest-api）；Notion → <code>/plugin install notion-workspace-plugin@notion-plugin-marketplace</code>。③ <code>anthropics/skills · skill-creator</code>——把你这周重复解释过三次的那件事写成一个 skill，这才是本类的正解。</p>
 <p><strong>按需再加</strong>：<code>Doist/todoist-mcp</code>（待办确实在 Todoist）· Readwise 官方 MCP（有在读的划线）· <code>basicmachines-co/basic-memory</code>（还<strong>没有</strong>笔记系统时，它可以当那个系统）· <code>anthropics/skills · internal-comms</code>（要周报 / 公告版式时，抄结构换样例）。</p>
 <p><strong>明确别装</strong>：<code>supermemoryai/apple-mcp</code>（已归档） · <code>@modelcontextprotocol/server-memory</code>（官方自称 basic implementation，当范本读） · <code>basic-memory</code> 与 Obsidian 两套索引并存 · 三个都能「搜笔记」的 server 同时开 · 任何写死了别人口径的产出型模板。</p>
 </div>
 <div class="glossary">
-<h3>// 术语表</h3>
+<h3 data-tts="ab941f7d693f348d">// 术语表</h3>
 <dl>
 <dt>PKM（personal knowledge management）</dt>
 <dd>个人知识管理：笔记、划线、会议记录、日程这一摊私有上下文。</dd>
@@ -200,13 +200,13 @@ claude mcp add --transport http readwise https://mcp2.readwise.io/mcp</code></pr
 </dl>
 </div>
 <div class="thinking">
-<h3>// 三个想不通的地方</h3>
+<h3 data-tts="3bec186d12f8e0aa">// 三个想不通的地方</h3>
 <details><summary>为什么「最该自建」这句话对本类成立，对编码类就不成立？</summary><div>差别在<strong>有没有客观 oracle</strong>。编码类的判据长在仓库外面——测试绿不绿、类型过不过，所以一个陌生人写的 <code>code-reviewer</code> 能直接对你有用。本类的判据长在你脑子里：「这次会议该记什么」「这条划线为什么重要」没有外部仲裁。推论有点扫兴但很实用：<strong>本类装现成的，收益上限是省掉打开 app 那几步</strong>，想要「替我判断」，只能自己写——这也是为什么 <code>skill-creator</code> 被我放进了选购卡的前三。</div></details>
 <details><summary>官方已经自带 auto memory 了，还需要 basic-memory 这类吗？</summary><div>看两件事：<strong>存在哪、人能不能读</strong>。auto memory 存在 <code>~/.claude/projects/&lt;project&gt;/memory/</code>，按仓库隔离、机器本地（官方明写不跨机器与云端环境），而且只在它觉得值得时才写——它是<strong>给模型用的</strong>。<code>basic-memory</code> 落成你能用 Obsidian 打开的 markdown，是<strong>给人也用的</strong>。所以问题不是「哪个更强」，而是你要不要人也读。如果你已经有 vault，答案通常是：别加第二套，把 vault 接上去。</div></details>
 <details><summary>装了一堆管道之后，为什么反而觉得变慢了？</summary><div>两个机制叠在一起。一是<strong>工具数量</strong>：日程十三个＋笔记七个＋记忆九个，三十个工具定义常驻，每轮都要读。二是<strong>功能重叠</strong>——真正费时间的是这个：当 <code>mcp-obsidian</code> 的 <code>search</code> 和 memory 的 <code>search_nodes</code> 同时在场，模型得先决定去哪儿找，选错一次就是一整轮空转，而它不会告诉你刚才选错了。对策很土但有效：<strong>同一件事只留一条路</strong>，重叠的那个关掉。</div></details>
 </div>
 <div class="refs">
-<h3>// 延伸阅读</h3>
+<h3 data-tts="1876b752007b4143">// 延伸阅读</h3>
 <ul>
 <li><a href="https://code.claude.com/docs/en/memory" target="_blank">Claude Code · How Claude remembers your project</a> — 本期主源：CLAUDE.md 与 auto memory 的分工表、四类笔记的 <code>type</code> 字段、<code>~/.claude/projects/&lt;project&gt;/memory/</code>、前 200 行或 25KB 的加载上限、<code>autoMemoryEnabled</code> 与 <code>CLAUDE_CODE_DISABLE_AUTO_MEMORY=1</code>（官方，2026-10）</li>
 <li><a href="https://github.com/makenotion/claude-code-notion-plugin" target="_blank">makenotion/claude-code-notion-plugin</a> — 四个 skill 与十条 slash command、两行安装命令（据仓库页 2026-10 为 491 star）</li>
@@ -225,8 +225,8 @@ claude mcp add --transport http readwise https://mcp2.readwise.io/mcp</code></pr
 </div>
 <footer>BigCat · Super Individual · Skill 32 · 2026-10-03</footer>
 </div>
-<script src="https://hub.cissychen.com/comments.js" defer></script>
-<script src="https://hub.cissychen.com/search.js" defer></script>
-<script src="https://hub.cissychen.com/index-button.js" defer></script>
-<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
 </body></html>
