@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill 33 · Growing a Skill From Repetition — Super Individual</title>
+<style>
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head>
+<body>
+<div class="container">
+<header>
+<span class="week-tag">SKILL 33 / PKM · DEEP DIVE</span>
+<h1>Growing a Skill From Repetition</h1>
+<h2>Notice what you re-explain every time — the shortest path from one real task to one skill</h2>
+<div class="date">2026-10-04 · BigCat</div>
+<p class="pitch">Last issue concluded that the output layer is something you write yourself. This one is about how: <strong>don't sit down and write a skill from a blank page. Do the task once, then have the model extract the places where you corrected it.</strong> Below are 9 real items you can install or read: official docs, an official plugin, built-in commands, and one community methodology.</p>
+</header>
+<div class="xref">
+<a href="pkm-skills-roundup-skill32.en.html">Same series → Skill 32 Personal Productivity Roundup</a> · <a href="skill-eval-skill7.en.html">Skill 7 Writing Evals for Skills</a> · <a href="hooks-automation-skill27.en.html">Skill 27 Hooks and Deterministic Automation</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>The Claude Code docs give one test for when to build a skill: <em>Create a skill when you keep pasting the same instructions, checklist, or multi-step procedure into chat</em>. The claude.com guide phrases it differently: when you find yourself <strong>correcting Claude with the same instructions</strong>. Both point at the same signal: <strong>repeated explanation is the raw material of a skill</strong>. That leaves one question: how to pull it out of the conversation, instead of writing yet another generic "best practices" file.</p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>What it removes · install · the first prompt that works</h2>
+<div class="claim">Claim: the shortest path is three steps. Finish the task as usual, say "turn this into a skill", then check it against the next real task.</div>
+<p>It removes <strong>re-explaining everything in every new session</strong>: table names and metric definitions, your report format, rules like "exclude test accounts for this kind of request". The main tool is the official <code>skill-creator</code>:</p>
+<pre><code><span class="tag-com"># Claude Code: the skill-creator plugin from the official marketplace</span>
+/plugin install skill-creator@claude-plugins-official
+<span class="tag-com"># If it reports "Marketplace not found", add the official marketplace and retry</span>
+/plugin marketplace add anthropics/claude-plugins-official
+
+<span class="tag-com"># First prompt: in the same session where you just finished the work</span>
+Turn the workflow we just used into a skill with skill-creator.
+Keep the places where I corrected you along the way.</code></pre>
+<p>Why the <strong>same session</strong>? Because the first step of <code>skill-creator</code>, Capture Intent, says that if the current conversation already holds a workflow the user wants to capture (say, the user types <em>turn this into a skill</em>), it should <strong>extract answers from the conversation history first</strong>: the tools used, the order of steps, the corrections the user made, the input/output formats it saw. Then it asks you to fill the gaps and confirm. Open a new window and all of that raw material is gone.</p>
+<p>Where the file goes: <code>~/.claude/skills/&lt;name&gt;/SKILL.md</code> is personal (every project on this machine); <code>.claude/skills/&lt;name&gt;/SKILL.md</code> is per project (commit it to share with your team). After that, Claude calls it when a request matches the description, or you type <code>/&lt;name&gt;</code>.</p>
+<div class="fail"><strong>When not to bother</strong>: you will only do this once. In the words of the official claude.com guide: for a one-off task, just describe what you want in the conversation.</div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Mechanism: why "do it once, then extract" beats "just write it"</h2>
+<div class="claim">Claim: a skill generated from nothing holds only what the model already knows. One extracted from a real task holds what it doesn't.</div>
+<p><strong>agentskills.io</strong>, the official site for the open Agent Skills specification, names this trap at the top of "Best practices for skill creators": ask an LLM to write a skill from its training knowledge alone, and you get filler like "handle errors appropriately" or "follow best practices for authentication". The first fix it offers is called <strong>Extract from a hands-on task</strong>, and it tells you to watch four things:</p>
+<ul>
+<li><strong>Steps that worked</strong>: the sequence of actions that ended in success;</li>
+<li><strong>Corrections you made</strong>: "use library X, not Y", "check for edge case Z". These carry the most value;</li>
+<li><strong>Input/output formats</strong>: what the data looked like going in and coming out;</li>
+<li><strong>Context you provided</strong>: project facts and conventions the model didn't already know.</li>
+</ul>
+<p>Anthropic's "Skill authoring best practices" writes the same idea as seven steps with <strong>Claude A and Claude B</strong>. First, finish the task with Claude A and no skill, and <em>notice what information you repeatedly provide</em>. Then find the reusable pattern, have A write the skill, cut needless explanations, and tidy the structure. Next, open a fresh instance B with the skill loaded, give it similar tasks, watch what it misses, and take that back to A. The docs also point out that you don't need a special "writing skills" skill; ask Claude to write one and it follows the format.</p>
+<p>On the community side, the strongest take is <strong>writing-skills</strong> inside <code>obra/superpowers</code>, which treats this as TDD: run a baseline without the skill and record the agent's exact excuses (RED), write the smallest skill that targets those violations (GREEN), then close the loopholes (REFACTOR). Its key line: <em>If you didn't watch an agent fail without the skill, you don't know if the skill teaches the right thing.</em></p>
+<div class="diagram">Do it once (Claude A)     Extract                   Check (Claude B · new session)
+──────────────────────    ──────────────────────    ──────────────────────────────
+real task + corrections → steps / corrections /  →  the next similar real task
+                          formats / context            what it missed → back to A
+                          → SKILL.md</div>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Real usage and limits: which repetition should become a skill</h2>
+<div class="claim">Claim: repetition is necessary, not sufficient. Three kinds of repetition have better homes.</div>
+<h3>How to spot repetition</h3>
+<ul>
+<li><strong><code>/insights</code></strong> (built into Claude Code) analyzes your recent sessions on this machine (up to 200 per run) and writes an HTML report of friction points such as misunderstood requests, plus suggestions, to <code>~/.claude/usage-data/report.html</code>. <strong>When it won't help</strong>: it is unavailable in cloud sessions, and the analysis spends your usage.</li>
+<li><strong><code>/run-skill-generator</code></strong> (built into Claude Code) is Anthropic's own example of a skill grown from repetition. It gets your app running from a clean environment, records the install commands, env vars and launch script that worked as a project skill at <code>.claude/skills/run-&lt;name&gt;/</code>, and from then on <code>/run</code> and <code>/verify</code> follow the recipe <strong>instead of rediscovering it</strong>. <strong>Skip it</strong> for standard projects: the docs say <code>/run</code> infers the launch without setup.</li>
+</ul>
+<h3>Three kinds of repetition that shouldn't become a skill</h3>
+<ul>
+<li><strong>Facts that apply to every conversation</strong> → put them in <code>CLAUDE.md</code>. The official split: CLAUDE.md stays in context every turn; a skill loads only when used, and <strong>once loaded it isn't re-read on later turns</strong>. The reverse also holds: when a CLAUDE.md section has grown into a procedure rather than a fact, move it into a skill.</li>
+<li><strong>Rules that must hold every time</strong> → make them a <a href="https://code.claude.com/docs/en/hooks-guide" target="_blank">hook</a>. The docs' troubleshooting section: if Claude skipped a rule that must hold every time, move the rule into a hook. <code>writing-skills</code> is blunter: if you can enforce it with a regex or a validator, automate it instead of documenting it.</li>
+<li><strong>One-off solutions</strong> → don't save them. <code>writing-skills</code>: a skill is not a narrative about how you solved a problem once.</li>
+</ul>
+<h3>Two switches to set correctly</h3>
+<p>For workflows with side effects (deploys, commits), add <code>disable-model-invocation: true</code> to the frontmatter so only you can trigger them with <code>/name</code>. For anything that needs live data, use an inline command such as <code>!`git diff HEAD`</code>. It runs before Claude sees the skill and injects the live output.</p>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Costs and alternatives</h2>
+<div class="claim">Claim: more skills is not better. Once one grows, you still owe it a test.</div>
+<h3>① Overfitting to that one task</h3>
+<p><code>skill-creator</code> warns about this itself. You iterate on a few examples because it is fast, but a skill that works only on those examples is useless. The goal is a skill that can be used a million times, not one stuffed with "fiddly overfitty changes, or oppressively constrictive MUSTs". After extraction, <strong>test it on a real task it has never seen</strong>.</p>
+<h3>② The listing budget squeezes out rarely used skills</h3>
+<p>From the official docs: skill names and descriptions sit in a standing listing whose budget is <strong>1%</strong> of the model's context window. When it overflows, descriptions are dropped starting with the skills <strong>you invoke least</strong>, and a skill without its description is hard to trigger automatically. A single <code>description</code> plus <code>when_to_use</code> is also cut off at 1,536 characters. A loaded body stays in context, so <strong>every line is a recurring token cost</strong>.</p>
+<h3>③ Recipes go stale</h3>
+<p>A recorded workflow is only true for the environment on the day you recorded it. The docs tell you to <strong>run <code>/run-skill-generator</code> again</strong> when the build or launch changes. A personal skill has no such reminder; when it goes stale it just quietly does the wrong thing.</p>
+<div class="fail"><strong>Alternatives, cheapest first</strong>: paste it (one-off) → one line in <code>CLAUDE.md</code> (a fact it should always know) → a hook (a rule that must always hold) → a skill (a procedure you keep pasting) → a plugin (several skills to install and share together). <strong>First ask whether it can move one step left.</strong></div>
+<div class="res">Sources: <a href="https://code.claude.com/docs/en/skills" target="_blank">Claude Code · Extend Claude with skills</a> (1% listing budget, 1,536-character cutoff, body stays in context, hook troubleshooting) · <a href="https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md" target="_blank">skill-creator SKILL.md</a> ("a million times") (all as of each page, 2026-10)</div>
+</div>
+<div class="combo">
+<h3>// One-page buying card</h3>
+<p><strong>Start with these three</strong>: ① <code>/plugin install skill-creator@claude-plugins-official</code>. When the work is done, say "turn this into a skill" in the same session; it extracts the steps and your corrections from the history, then runs with-skill vs. without-skill comparisons. ② Read the <strong>Claude A / Claude B seven steps</strong> in the official "Skill authoring best practices" and follow its rhythm for testing. ③ Read <strong>writing-skills</strong> in <code>obra/superpowers</code>. You don't need the whole Superpowers suite; just copy its RED step of watching the agent fail first.</p>
+<p><strong>Add as needed</strong>: <code>/run-skill-generator</code> (when your project's launch steps are complex) · <code>/insights</code> (many local sessions, and you want to find where you keep getting stuck) · <code>template/</code> in <code>anthropics/skills</code> (a minimal skeleton when writing by hand) · <code>skills-ref validate</code> (check frontmatter before sharing).</p>
+<p><strong>Don't</strong>: ask the model to "write a skill for X" without real context · try to extract in a new session (the raw material is gone) · turn always-true facts into a skill · keep must-hold rules only in a skill.</p>
+</div>
+<div class="glossary">
+<h3>// Glossary</h3>
+<dl>
+<dt>Capture Intent</dt>
+<dd>The first step of <code>skill-creator</code>: pull tools, steps, corrections and input/output formats out of the current conversation, then ask you about the gaps.</dd>
+<dt>Claude A / Claude B</dt>
+<dd>The official iteration method: A helps you write the skill; B is a fresh instance with the skill loaded that exposes gaps on real tasks.</dd>
+<dt>Baseline</dt>
+<dd>What the model does without the skill. Without one, you can't tell what the skill actually changed.</dd>
+<dt>disable-model-invocation</dt>
+<dd>A frontmatter switch. Set to <code>true</code>, Claude won't call the skill on its own; only you can, with <code>/name</code>.</dd>
+<dt>Listing budget</dt>
+<dd>The standing list of all skill names and descriptions, capped at 1% of the context window; on overflow, descriptions of the least used skills go first.</dd>
+</dl>
+</div>
+<div class="thinking">
+<h3>// Three things that don't add up</h3>
+<details><summary>The docs say a description should cover "what it does and when to use it"; writing-skills says "only when to use it". Which is right?</summary><div>They guard against different failures. The docs care about <strong>getting picked</strong>: Claude chooses among a hundred-plus skills, so the description needs the key terms. <code>writing-skills</code> guards against <strong>getting picked and then not reading the body</strong>. It records a test where a description that summarized the workflow ("code review between tasks") led the agent to do one review and skip the two-stage review in the body's flowchart; once the description only stated the trigger, the agent followed the body. My compromise: <strong>state when to use it and the key terms, but don't put a summary of the steps in there</strong>. Leave the procedure to the body.</div></details>
+<details><summary>Is there a standard number of repeats before something deserves a skill?</summary><div>The official docs give no count, only shapes: instructions, checklists or multi-step procedures you keep pasting, or correcting Claude with the same words. My own line is <strong>the third time I re-explain the same thing</strong>. That is a personal habit, not an official rule. A better test is cost: if one line in <code>CLAUDE.md</code> solves it, skip the skill; if getting it wrong causes incidents, use a hook.</div></details>
+<details><summary>If Claude will write a skill when asked, why do the task first?</summary><div>Because what it writes is <strong>what it already knows</strong>. The agentskills.io test is to ask of each line, "Would the agent get this wrong without this instruction?" and to cut it if not. Most lines of a skill written from nothing fail that test; what survives extraction from a real task is exactly the set of places where you corrected it. That is also why extraction belongs in <strong>the same session</strong>: in a new window, the model can only fall back on general knowledge.</div></details>
+</div>
+<div class="refs">
+<h3>// Further reading</h3>
+<ul>
+<li><a href="https://code.claude.com/docs/en/skills" target="_blank">Claude Code · Extend Claude with skills</a>: the "keep pasting the same instructions" test, personal and project paths, <code>disable-model-invocation</code>, <code>!</code> inline commands, CLAUDE.md vs. skills, the 1% listing budget, <code>/run-skill-generator</code> (official, read 2026-10)</li>
+<li><a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices" target="_blank">Skill authoring best practices · Develop Skills iteratively with Claude</a>: the Claude A / Claude B seven steps, "Notice what information you repeatedly provide", build evaluations first (official)</li>
+<li><a href="https://claude.com/docs/skills/how-to" target="_blank">claude.com · Create custom skills</a>: the "correcting Claude with the same instructions" test, why one-off tasks don't need a skill, <code>skills-ref validate</code> and ZIP packaging (official)</li>
+<li><a href="https://github.com/anthropics/claude-plugins-official/tree/main/plugins/skill-creator" target="_blank">anthropics/claude-plugins-official · skill-creator plugin</a>: <code>/plugin install skill-creator@claude-plugins-official</code>; the source <a href="https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md" target="_blank">skills/skill-creator/SKILL.md</a> holds Capture Intent and "a million times" (official)</li>
+<li><a href="https://github.com/agentskills/agentskills/blob/main/docs/skill-creation/best-practices.mdx" target="_blank">agentskills · Best practices for skill creators</a>: the four things in Extract from a hands-on task, and synthesizing skills from runbooks, code review comments and fix commits (source file of the official agentskills.io site)</li>
+<li><a href="https://github.com/obra/superpowers/blob/main/skills/writing-skills/SKILL.md" target="_blank">obra/superpowers · writing-skills</a>: skill writing as TDD, when not to create one, the test behind trigger-only descriptions; full suite via <code>/plugin install superpowers@claude-plugins-official</code></li>
+<li><a href="https://code.claude.com/docs/en/costs" target="_blank">Claude Code · Analyze your usage patterns</a>: <code>/insights</code>, up to 200 sessions, friction points, report path, unavailable in cloud sessions (official)</li>
+<li><a href="https://github.com/anthropics/skills/tree/main/template" target="_blank">anthropics/skills · template</a>: a minimal SKILL.md skeleton with only name and description (official)</li>
+<li><a href="pkm-skills-roundup-skill32.en.html">This site, Skill 32 · Personal Productivity Roundup</a>: why the output layer in this category is yours to write</li>
+<li><a href="skill-eval-skill7.en.html">This site, Skill 7 · Writing Evals for Skills</a>: how to tell whether the extracted skill is a real improvement</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Skill 33 · 2026-10-04</footer>
+</div>
+<script src="https://hub.cissychen.com/comments.js" defer></script>
+<script src="https://hub.cissychen.com/search.js" defer></script>
+<script src="https://hub.cissychen.com/index-button.js" defer></script>
+<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+</body></html>
