@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Day 61 · Portable Agent Runtime Governance (ACS) — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;overflow-x:auto}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking{margin:40px 0}
+.thinking h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}}
+</head><body>
+<div class="container">
+<header>
+<span class="week-tag">DAY 61 · GOVERNANCE</span>
+<h1>Portable Agent Runtime Governance (ACS)</h1>
+<h2>Guardrails written as a policy file that moves with the agent, so switching frameworks no longer means rewriting them</h2>
+<div class="date">2026-10-04 · BigCat</div>
+<p class="pitch">Are your guardrails code written inside a framework, or data that a framework enforces? The answer decides whether a framework switch makes you write them all again.</p>
+</header>
+<div class="xref">
+<a href="guardrails-sandbox-day50.en.html">Prerequisite → Day 50 LLM Guardrails &amp; Sandboxing (writing guardrails yourself)</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>The guardrails in Day 50 rest on an unstated assumption: <strong>they live inside one framework's callbacks</strong>. Claude Code uses hooks, LangGraph uses nodes, the OpenAI Agents SDK uses guardrail decorators, and none of the three can read the others. A super individual often runs two or three agent stacks at once, so the same "no <code>rm -rf</code>" rule ends up written three times. When the rule changes, whichever copy you forget to update becomes the hole. Microsoft's <strong>Agent Control Specification (ACS)</strong>, released at Build 2026, aims to fill that gap: <strong>policy is data (a YAML manifest plus Rego or Cedar), and the framework's only job is to call it at fixed checkpoints and enforce the verdict</strong>. It is still a <code>0.4.0-alpha.1</code> draft, so there is no rush to put it in production. It is worth reading because it states openly the engineering decisions a portable guardrail needs: how the responsibilities are split, where to intercept, how many kinds of verdict there are, and what happens on error. This issue takes each one apart and also shows where its promises fall short.</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// POINT 01</span>
+<h2>PEP / PDP Split: the Framework Enforces, the Policy Decides</h2>
+<p class="claim">Portability comes from a very old split: interception and enforcement stay in the framework, and the decision moves out into a stateless function.</p>
+<h3>// Background &amp; Mechanism</h3>
+<p>ACS borrows the classic access-control split. <strong>The host (your agent framework) is the PEP, the policy enforcement point</strong>, and <strong>the ACS runtime is the PDP, the policy decision point</strong>. At each checkpoint the host packs the current context into a complete JSON snapshot and hands it to the runtime. The runtime evaluates the policy bound in the manifest, computes a normalized verdict, and returns it for the host to enforce. The spec gives the runtime three hard constraints. It is <strong>stateless</strong>: it may keep no mutable state between evaluations that could affect a verdict. It is <strong>deterministic</strong>: the same manifest, snapshot, mode and dispatcher results must produce the same verdict. It is <strong>fail-closed</strong>: any error during evaluation must produce <code>deny</code>.</p>
+<p>Portability rests on these three rules. A verdict depends only on manifest plus snapshot, so the same policy file should reach the same conclusion under any framework. Policies can be written in Rego (OPA) or Cedar. The runtime core is Rust, with Python, Node, .NET and Go bindings.</p>
+<h3>// Hands-on Example</h3>
+<pre><code><span class="tag-com"># The spec's full worked example (verbatim): block destructive SQL at the input checkpoint</span>
+<span class="tag-key">agent_control_specification_version</span>: 0.4.0-alpha.1
+<span class="tag-key">policies</span>:
+  input_guard:
+    type: custom
+    adapter: example_blocklist
+<span class="tag-key">intervention_points</span>:
+  input:
+    policy_target_kind: user_input
+    policy:
+      id: input_guard
+    policy_target: $.input
+
+<span class="tag-com"># snapshot sent by the host                  {"input": {"text": "please drop table users"}}</span>
+<span class="tag-com"># dispatcher response → normalized verdict    {"decision": "deny", "reason": "blocked_destructive_sql"}</span></code></pre>
+<pre><code><span class="tag-com"># The same idea in Rego: policy input carries intervention_point / policy_target / tool / annotations</span>
+package agent.tool_guard
+default verdict := {"decision": "allow"}
+verdict := {"decision": "deny", "reason": "destructive_shell"} if {
+  input.tool.clearance == "shell"
+  regex.match(`rm\s+-rf\s+/|mkfs|dd\s+if=`, input.policy_target.command)
+}</code></pre>
+<div class="fail"><strong>Failure mode:</strong> the PDP sees only what the PEP gives it. The spec <strong>does not prescribe a top-level snapshot structure; the host defines it</strong>, and policies read values through paths like <code>$.input</code>. So "portable" carries a condition: <strong>every framework's adapter has to build the snapshot in the same shape</strong>. If the LangChain adapter puts the command at <code>args.command</code> and your own adapter uses <code>args.cmd</code>, the same Rego finds nothing in the second case. Under the spec it then fails closed with <code>runtime_error:path_missing</code>. A denial is better than a silent allow, but it means every framework move requires re-checking the snapshot contract.</div>
+<div class="res">Further: <a href="https://github.com/microsoft/agent-governance-toolkit/blob/main/policy-engine/spec/SPECIFICATION.md" target="_blank">ACS SPECIFICATION.md (0.4.0-alpha.1)</a> · <a href="https://commandline.microsoft.com/agent-control-specification-runtime-governance/" target="_blank">Microsoft · Agent Control Specification: Portable runtime governance for AI Agents</a></div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// POINT 02</span>
+<h2>Eight Checkpoints: the Announcement Says Five, the Spec Defines Eight</h2>
+<p class="claim">Where you intercept decides which attacks you can stop, and how much latency every loop iteration pays for it.</p>
+<h3>// Background &amp; Mechanism</h3>
+<p>The announcement speaks of "five validation checkpoints: input, LLM, state, tool execution, output." In the spec these become <strong>8 named intervention points</strong>. LLM and tool execution each split into a before-call and an after-call point, and "state" maps to session startup and shutdown. When citing it, go by the spec.</p>
+<div class="diagram">
+<pre style="border:none;background:none;margin:0;padding:0"><code><span class="tag-key">agent_startup</span>  ─▶ config / environment check
+     │
+<span class="tag-key">input</span>          ─▶ before user input reaches the model
+     │
+ ┌──▶ <span class="tag-key">pre_model_call</span>   ─▶ before the full context goes to the model
+ │       │
+ │   <span class="tag-key">post_model_call</span>  ─▶ before the model's reply is acted on
+ │       │
+ │   <span class="tag-key">pre_tool_call</span>    ─▶ before tool name + args execute   <span class="tag-claude">← stop destructive actions</span>
+ │       │
+ └── <span class="tag-key">post_tool_call</span>   ─▶ before tool output re-enters context <span class="tag-claude">← stop indirect injection</span>
+     │
+<span class="tag-key">output</span>         ─▶ before the final reply leaves        <span class="tag-claude">← stop exfiltration</span>
+     │
+<span class="tag-key">agent_shutdown</span> ─▶ session end: audit and logging</code></pre>
+</div>
+<p>The engineering point here is <strong>annotations</strong>. Each checkpoint can attach <code>classifier</code>, <code>llm</code> or <code>endpoint</code> annotators. They finish before the policy is called and write scores such as "how injection-like is this text" into the policy input, and <strong>the policy itself only makes deterministic decisions on those scores</strong>. So "deterministic" describes the runtime layer. An LLM annotator's network call belongs to the host and is not deterministic. The division of labor: the model makes the semantic judgment, and "what score crosses the line" lives in an auditable rule.</p>
+<h3>// Hands-on Example</h3>
+<pre><code><span class="tag-com"># Rego: annotator scores block indirect injection at post_tool_call; pre_tool_call keeps plain arg rules</span>
+package agent.ingest_guard
+default verdict := {"decision": "allow"}
+verdict := {"decision": "deny", "reason": "indirect_injection"} if {
+  input.intervention_point == "post_tool_call"
+  input.annotations.injection_score &gt;= 0.8        <span class="tag-com"># written by a classifier annotator</span>
+}
+verdict := {"decision": "warn", "reason": "injection_suspect"} if {
+  input.intervention_point == "post_tool_call"
+  input.annotations.injection_score &gt;= 0.5
+  input.annotations.injection_score &lt; 0.8
+}</code></pre>
+<div class="fail"><strong>Failure mode:</strong> the most common mistake is <strong>guarding only <code>pre_tool_call</code></strong>. Destructive commands get blocked, but injection hidden in web pages, emails and retrieval results enters the context at <code>post_tool_call</code> (the path covered in Day 24), so guarding only before execution lets it in. Going the other way, attaching LLM annotators to all eight points adds two model round trips to every tool call and roughly doubles latency and cost on long tasks. A practical setup: <strong>cheap classifiers around tool calls, and an LLM judge only on <code>output</code></strong>.</div>
+<div class="res">Further: <a href="https://devblogs.microsoft.com/foundry/build-2026-open-trust-stack-ai-agents/" target="_blank">Microsoft Foundry Blog · Build agents you can trust across any framework (Build 2026, ACS + ASSERT)</a> · <a href="prompt-injection-day24.en.html">Day 24 Prompt Injection</a></div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// POINT 03</span>
+<h2>Five Intents, Three Verdicts: Escalate Is a Deny That Can Be Lifted</h2>
+<p class="claim">A human approval must cover exactly the arguments that were reviewed. Otherwise you have a TOCTOU hole.</p>
+<h3>// Background &amp; Mechanism</h3>
+<p>A policy can express five intents, and all of them normalize into three verdicts: <strong><code>allow</code>, <code>deny</code>, <code>transform</code></strong>. <code>warn</code> becomes <code>allow</code> plus an entry in <code>warnings[]</code>. <code>escalate</code> becomes <strong>a <code>deny</code> carrying an <code>approval</code> block</strong>, which the spec calls a liftable deny. It goes to the host's approval resolver, which can allow, deny or suspend. <code>transform</code> (redaction or rewriting) <strong>may change only the policy target itself</strong>, never the snapshot, the annotations or host state.</p>
+<p>The approval design is worth copying. The approval object carries an <code>enforced_identity</code>: the <strong>SHA-256</strong> of the canonical policy input after the transform. Right before execution, the SDK recomputes it from the current input, and on a mismatch it fails closed with <code>host_error:approval_identity_mismatch</code>. This closes the time-of-check/time-of-use (TOCTOU) window, where A is reviewed but B is what runs. Separately, in <code>evaluate_only</code> mode verdicts are computed as usual but transforms are not applied. That works as a <strong>shadow mode</strong>: you see what a policy would block before you decide to turn it on.</p>
+<h3>// Hands-on Example</h3>
+<pre><code><span class="tag-com"># Skeleton of the host-side enforcement loop (pseudocode showing PEP duties; not the literal SDK API)</span>
+v = acs.evaluate(point=<span class="tag-gpt">"pre_tool_call"</span>, snapshot=snap, mode=<span class="tag-gpt">"enforce"</span>)
+<span class="tag-key">if</span> v.decision == <span class="tag-gpt">"allow"</span>:      run(tool, args); log(v.warnings)
+<span class="tag-key">elif</span> v.decision == <span class="tag-gpt">"transform"</span>: run(tool, v.transformed_target)      <span class="tag-com"># use only the rewritten args</span>
+<span class="tag-key">elif</span> v.approval:                   <span class="tag-com"># liftable deny</span>
+    ok = ask_human(v.approval, show=canonical(args))
+    <span class="tag-key">if</span> ok <span class="tag-key">and</span> sha256(canonical(current_input)) == ok.enforced_identity:
+        run(tool, args)
+    <span class="tag-key">else</span>: refuse()                   <span class="tag-com"># args changed → must be re-reviewed</span>
+<span class="tag-key">else</span>: refuse(v.reason)               <span class="tag-com"># runtime_error:* lands here too</span></code></pre>
+<div class="fail"><strong>Failure mode:</strong> fail-closed costs availability. An annotator timeout becomes <code>runtime_error:annotation_timeout</code> and a deny, so one hiccup in the classifier service halts every agent at once. That is a trade-off you have to accept explicitly: give annotators a timeout budget and a degraded path instead of assuming they are always up. The second trap is <strong>approval fatigue</strong>. With a loose escalate threshold, people quickly get used to clicking "approve" every time, and the approval step stops meaning anything. Before going live, run a week in <code>evaluate_only</code> and measure how often escalate fires.</div>
+<div class="res">Further: <a href="https://github.com/microsoft/agent-governance-toolkit/blob/main/policy-engine/spec/SPECIFICATION.md" target="_blank">ACS spec · verdict normalization / transform validation / approval and enforced_identity sections</a></div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// POINT 04</span>
+<h2>For a Super Individual: Decouple Policy from Framework First, Decide on ACS Later</h2>
+<p class="claim">The benefit you can have today comes not from the ACS runtime but from the habit of treating policy as data.</p>
+<h3>// Background &amp; Mechanism</h3>
+<p>Start by comparing it with what you already use. Claude Code's <code>PreToolUse</code> hook can return a <code>permissionDecision</code> (allow / deny / ask) and can rewrite arguments with <code>updatedInput</code>. Semantically that matches ACS's allow / deny / escalate / transform, except it is locked inside Claude Code. So the test is simple: <strong>with one framework, hooks are enough</strong>. An external PDP like ACS pays off once you run two or more frameworks, or need versioned and audited policy.</p>
+<p>The ACS manifest's <code>extends</code> suits layered governance. Its merge is <strong>additive only</strong>: a name defined in more than one manifest must be identical everywhere or non-conflicting, and at a given checkpoint only annotations are unioned. In other words, <strong>a child manifest can add annotators on top of your base rules but cannot loosen them</strong>; a conflict fails closed. Remote <code>extends</code> is HTTPS-only, can be pinned with <code>sha256</code>, and may not point at private-network or cloud-metadata addresses.</p>
+<h3>// Hands-on Example</h3>
+<pre><code><span class="tag-com"># A bridge you can use today: one Rego file, called from a Claude Code hook now, reusable under ACS later</span>
+<span class="tag-com"># .claude/hooks/policy.sh (PreToolUse; needs opa and jq installed locally)</span>
+#!/usr/bin/env bash
+in=$(cat)
+snap=$(jq '{intervention_point:"pre_tool_call",
+            tool:{clearance:(if .tool_name=="Bash" then "shell" else "other" end)},
+            policy_target:.tool_input}' &lt;&lt;&lt;"$in")
+v=$(opa eval -d ~/policies/tool_guard.rego -I --format raw \
+      'data.agent.tool_guard.verdict' &lt;&lt;&lt;"$snap")
+<span class="tag-key">if</span> [ "$(jq -r .decision &lt;&lt;&lt;"$v")" = "deny" ]; <span class="tag-key">then</span>
+  jq -n --arg r "$(jq -r .reason &lt;&lt;&lt;"$v")" '{hookSpecificOutput:{
+    hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:$r}}'
+<span class="tag-key">fi</span></code></pre>
+<p>Build the snapshot shape (<code>tool.clearance</code> / <code>policy_target</code>) to match the ACS policy input from day one. Then <strong>the adapter stays a thin layer and the policy exists in one copy</strong>, and a framework switch means rewriting only that dozen-line adapter.</p>
+<div class="fail"><strong>Failure mode:</strong> first, <strong>the spec is still moving</strong>. The <code>bundle_url</code> remote policy bundle from the earlier engine has already been removed in this version, and the whole toolkit is still in Public Preview. Binding deeply to the SDK's API means signing up for migration debt; <strong>the Rego policies themselves</strong> are the most stable asset. Second, Rego is one more language to learn, and a wrong policy can also let things through silently, so write unit tests for policies (OPA ships <code>opa test</code>). Third, deterministic rules have a ceiling: an argument regex can stop <code>rm -rf /</code> but not "base64-encode the key and tuck it into a harmless-looking URL." Semantic attacks still need annotators and the Day 50 sandbox as backstops. <strong>The policy layer is just one layer of defense in depth</strong>.</div>
+<div class="res">Further: <a href="https://code.claude.com/docs/en/hooks" target="_blank">Claude Code Docs · Hooks (PreToolUse permissionDecision / updatedInput)</a> · <a href="https://github.com/microsoft/agent-governance-toolkit" target="_blank">microsoft/agent-governance-toolkit</a></div>
+</div>
+
+<div class="thinking">
+<h3>// Reflections</h3>
+<details><summary>ACS claims to be vendor-neutral. Which layer does its portability actually get stuck on?</summary><div>The snapshot contract, not the policy language. Rego and Cedar are neutral already. The hard part is whether every framework's adapter packs the same facts into the same JSON: what the tool arguments are called, where annotation scores go, how "who is calling" is expressed in multi-agent setups. The spec leaves snapshot structure to the host. That is pragmatic (frameworks differ too much), but it means portability depends on adapters agreeing with each other. Compare OpenTelemetry: the protocol existed early, and what made it usable was the semantic conventions agreed later. That is exactly what ACS is missing.</div></details>
+<details><summary>"Deterministic runtime + LLM annotators": what does determinism actually guarantee here?</summary><div>It guarantees that the same evidence produces the same verdict. It does not guarantee that the evidence is stable. If an LLM annotator scores 0.79 today and 0.81 tomorrow, the verdict flips between warn and deny. Its value lies in <strong>isolating the nondeterminism in one auditable place</strong>: after an incident you can tell whether the score moved or the rule was wrong. It is the same idea as Day 58 pushing nondeterminism into activities: the deterministic part becomes replayable rules, and the nondeterministic part is isolated and recorded.</div></details>
+<details><summary>Who does the additive-only extends merge protect against?</summary><div>It protects against a child manifest quietly loosening its parent. An organization's base policy cannot be overridden by one agent's manifest: a conflict fails outright instead of letting the later definition win. That is the opposite of CSS cascading or Kubernetes overlays and closer to the policy-as-code convention that a security baseline can only tighten. The cost is that exceptions are hard to grant. If an agent genuinely needs wider permissions, you have to edit the base policy or start a separate manifest, which forces you to write the exception down explicitly.</div></details>
+<details><summary>For a solo developer, when is an external PDP over-engineering?</summary><div>With one framework, fewer than ten rules and no audit requirement, hooks plus a few lines of shell are enough, and adding OPA and a set of Rego files just brings in two more components that can break. There are three real tipping points: <strong>the same rule has to apply in two or more places</strong>, rules need versioning and rollback, or you must prove to someone else that "this agent cannot do X." Even before you reach one, you can adopt the policy-as-data habit without rushing to the runtime.</div></details>
+</div>
+
+<div class="refs">
+<h3>// Further Reading</h3>
+<ul>
+<li><a href="https://github.com/microsoft/agent-governance-toolkit/blob/main/policy-engine/spec/SPECIFICATION.md" target="_blank">ACS SPECIFICATION.md (0.4.0-alpha.1 draft)</a>: 8 intervention points, verdict normalization, reserved fail-closed reasons, extends merging, approval and enforced_identity</li>
+<li><a href="https://commandline.microsoft.com/agent-control-specification-runtime-governance/" target="_blank">Microsoft · Agent Control Specification: Portable runtime governance for AI Agents</a>: design motivation and the PEP/PDP framing</li>
+<li><a href="https://devblogs.microsoft.com/foundry/build-2026-open-trust-stack-ai-agents/" target="_blank">Microsoft Foundry Blog · Build agents you can trust across any framework (Build 2026)</a>: ACS released together with the ASSERT eval framework</li>
+<li><a href="https://github.com/microsoft/agent-governance-toolkit" target="_blank">microsoft/agent-governance-toolkit</a>: MIT license, Public Preview, Rust core with multi-language SDKs and framework adapters</li>
+<li><a href="https://code.claude.com/docs/en/hooks" target="_blank">Claude Code Docs · Hooks</a>: the in-framework control group, PreToolUse decision control</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Day 61 · 2026-10-04</footer>
+</div>
+<script src="https://hub.cissychen.com/comments.js" defer></script>
+<script src="https://hub.cissychen.com/search.js" defer></script>
+<script src="https://hub.cissychen.com/index-button.js" defer></script>
+<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+</body></html>

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Day 61 · 可移植的 Agent 运行时治理（ACS） — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;overflow-x:auto}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking{margin:40px 0}
+.thinking h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}}
+</head><body>
+<div class="container">
+<header>
+<span class="week-tag">DAY 61 · GOVERNANCE</span>
+<h1>可移植的 Agent 运行时治理（ACS）</h1>
+<h2>把护栏写成跟着 agent 走的策略文件——换框架时不用再重写一遍</h2>
+<div class="date">2026-10-04 · BigCat</div>
+<p class="pitch">护栏是写在框架里的代码，还是交给框架去执行的数据？这决定了你换框架时要不要从头再写一遍。</p>
+</header>
+<div class="xref">
+<a href="guardrails-sandbox-day50.html">前置 → 本站 Day 50 LLM 安全护栏与沙箱（自己动手写护栏）</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>Day 50 讲的护栏有个隐性前提：<strong>它长在某个框架的回调里</strong>。Claude Code 用 hooks，LangGraph 用节点，OpenAI Agents SDK 用 guardrail 装饰器，三套写法互不相通。超级个体手里常常同时跑着两三个 agent 栈，于是同一条"禁止 <code>rm -rf</code>"在三个地方各写一遍，改规则时漏掉一处的那个就是漏洞。Microsoft 在 Build 2026 发布的 <strong>Agent Control Specification（ACS）</strong>想把这一格补上：<strong>策略写成数据（YAML 清单 + Rego/Cedar），框架只管在固定检查点上调用它、执行它给的判决</strong>。它现在还是 <code>0.4.0-alpha.1</code> 草案，不必急着上生产。值得读，是因为它把"可移植护栏"需要的几个工程决定都摆到了明面上：怎么切分职责、在哪些点拦截、判决分几种、出错时怎么办。这一期逐条拆开讲，也讲它的承诺在哪里会落空。</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// POINT 01</span>
+<h2>PEP / PDP 分离：框架只负责执行，判断交给策略</h2>
+<p class="claim">可移植性来自一个很老的切分：拦截和执行留在框架里，判断搬出去成为一个无状态函数。</p>
+<h3>// 背景与原理</h3>
+<p>ACS 借用的是访问控制里的经典切分。<strong>宿主（host，即你的 agent 框架）是 PEP（策略执行点）</strong>，<strong>ACS 运行时是 PDP（策略决策点）</strong>。到了检查点，宿主把当时的上下文拼成一份完整的 JSON 快照交给运行时；运行时按清单里绑定的策略算出一个归一化的判决，再交回宿主执行。规范给运行时立了三条硬约束：<strong>无状态</strong>（两次评估之间不能保留任何会影响判决的可变状态）、<strong>确定性</strong>（清单、快照、模式、分发器结果都相同时，判决必须相同）、<strong>fail-closed</strong>（评估中任何错误都必须给出 <code>deny</code>）。</p>
+<p>可移植靠的就是这三条。判决只取决于"清单 + 快照"，同一份策略文件在哪个框架下都应当得出同样的结论。策略本身可以用 Rego（OPA）或 Cedar 写，运行时核心是 Rust，另有 Python / Node / .NET / Go 绑定。</p>
+<h3>// 实战示例</h3>
+<pre><code><span class="tag-com"># 规范附录里的完整例子（原文照录）：拦截 input 检查点上的破坏性 SQL</span>
+<span class="tag-key">agent_control_specification_version</span>: 0.4.0-alpha.1
+<span class="tag-key">policies</span>:
+  input_guard:
+    type: custom
+    adapter: example_blocklist
+<span class="tag-key">intervention_points</span>:
+  input:
+    policy_target_kind: user_input
+    policy:
+      id: input_guard
+    policy_target: $.input
+
+<span class="tag-com"># 宿主交上来的快照       {"input": {"text": "please drop table users"}}</span>
+<span class="tag-com"># 分发器返回 → 归一化判决  {"decision": "deny", "reason": "blocked_destructive_sql"}</span></code></pre>
+<pre><code><span class="tag-com"># 换成 Rego 写策略：policy input 里有 intervention_point / policy_target / tool / annotations</span>
+package agent.tool_guard
+default verdict := {"decision": "allow"}
+verdict := {"decision": "deny", "reason": "destructive_shell"} if {
+  input.tool.clearance == "shell"
+  regex.match(`rm\s+-rf\s+/|mkfs|dd\s+if=`, input.policy_target.command)
+}</code></pre>
+<div class="fail"><strong>失败模式：</strong>PDP 只能看到 PEP 交给它的东西。规范<strong>没有规定快照的顶层结构，结构由宿主决定</strong>，策略再通过 <code>$.input</code> 这类路径去取值。于是"可移植"其实有个前提：<strong>不同框架的适配器拼出的快照形状必须一致</strong>。LangChain 适配器把命令放在 <code>args.command</code>，你自己的适配器放在 <code>args.cmd</code>，那么同一条 Rego 在后者那里取不到值，按规范会以 <code>runtime_error:path_missing</code> fail-closed 拒绝——好在是拒绝而不是放行，但意味着搬一次框架就要过一遍快照契约。</div>
+<div class="res">进阶资源：<a href="https://github.com/microsoft/agent-governance-toolkit/blob/main/policy-engine/spec/SPECIFICATION.md" target="_blank">ACS SPECIFICATION.md（0.4.0-alpha.1）</a> · <a href="https://commandline.microsoft.com/agent-control-specification-runtime-governance/" target="_blank">Microsoft · Agent Control Specification: Portable runtime governance for AI Agents</a></div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// POINT 02</span>
+<h2>八个检查点：发布稿写的是五个，规范里定义了八个</h2>
+<p class="claim">拦截点放在哪里，决定了你能挡住哪一类攻击，也决定了每轮循环要多付多少延迟。</p>
+<h3>// 背景与原理</h3>
+<p>发布稿里的说法是"五个校验检查点：输入、LLM、状态、工具执行、输出"。规范落到实处时是 <strong>8 个具名拦截点</strong>：五类里的 LLM 和工具执行各拆成调用前、调用后两个点，"状态"对应会话的启动和结束。引用时以规范为准。</p>
+<div class="diagram">
+<pre style="border:none;background:none;margin:0;padding:0"><code><span class="tag-key">agent_startup</span>  ─▶ 配置/环境自检
+     │
+<span class="tag-key">input</span>          ─▶ 用户输入进入模型前
+     │
+ ┌──▶ <span class="tag-key">pre_model_call</span>   ─▶ 完整 context 发给模型前
+ │       │
+ │   <span class="tag-key">post_model_call</span>  ─▶ 模型回复被执行前
+ │       │
+ │   <span class="tag-key">pre_tool_call</span>    ─▶ 工具名 + 参数执行前     <span class="tag-claude">← 拦破坏性动作</span>
+ │       │
+ └── <span class="tag-key">post_tool_call</span>   ─▶ 工具输出回灌 context 前  <span class="tag-claude">← 拦间接注入</span>
+     │
+<span class="tag-key">output</span>         ─▶ 最终回复离开 agent 前    <span class="tag-claude">← 拦外泄</span>
+     │
+<span class="tag-key">agent_shutdown</span> ─▶ 会话结束：审计与日志</code></pre>
+</div>
+<p>这里的工程要点是<strong>注解（annotations）</strong>。每个检查点可以挂 <code>classifier</code> / <code>llm</code> / <code>endpoint</code> 三类注解器，它们在调用策略之前就跑完，把"这段文本像不像注入"之类的分数写进 policy input，<strong>策略本身只对这些分数做确定性判断</strong>。所以确定性指的是运行时这一层；LLM 注解器的网络调用归宿主负责，本身并不确定。分工的意思是：语义判断交给模型，"分数多少算越线"写进可审计的规则。</p>
+<h3>// 实战示例</h3>
+<pre><code><span class="tag-com"># Rego：post_tool_call 上用注解器的分数挡间接注入，pre_tool_call 上只做参数规则</span>
+package agent.ingest_guard
+default verdict := {"decision": "allow"}
+verdict := {"decision": "deny", "reason": "indirect_injection"} if {
+  input.intervention_point == "post_tool_call"
+  input.annotations.injection_score &gt;= 0.8        <span class="tag-com"># 分数由 classifier 注解器写入</span>
+}
+verdict := {"decision": "warn", "reason": "injection_suspect"} if {
+  input.intervention_point == "post_tool_call"
+  input.annotations.injection_score &gt;= 0.5
+  input.annotations.injection_score &lt; 0.8
+}</code></pre>
+<div class="fail"><strong>失败模式：</strong>最常见的是<strong>只守 <code>pre_tool_call</code></strong>。破坏性命令挡住了，但网页、邮件、检索结果里的注入是从 <code>post_tool_call</code> 进入 context 的（Day 24 讲的就是这条路径），只守执行前等于把它放了进来。反过来，八个点都挂 LLM 注解器，每个工具调用要多做两次模型往返，长任务的延迟和成本都会翻倍。实用的配法是：<strong>工具前后挂便宜的分类器，只在 <code>output</code> 上挂 LLM judge</strong>。</div>
+<div class="res">进阶资源：<a href="https://devblogs.microsoft.com/foundry/build-2026-open-trust-stack-ai-agents/" target="_blank">Microsoft Foundry Blog · Build agents you can trust across any framework（Build 2026，ACS + ASSERT）</a> · 本站 <a href="prompt-injection-day24.html">Day 24 提示注入</a></div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// POINT 03</span>
+<h2>五种意图，三种判决：escalate 本质上是一次可以被解除的 deny</h2>
+<p class="claim">人工审批批准的必须是被审的那份参数——否则就有 TOCTOU 漏洞。</p>
+<h3>// 背景与原理</h3>
+<p>策略可以表达五种意图，最后都归一化成三种判决：<strong><code>allow</code> / <code>deny</code> / <code>transform</code></strong>。<code>warn</code> 归为 <code>allow</code>，同时在 <code>warnings[]</code> 里记一笔；<code>escalate</code> 归为<strong>一个带 <code>approval</code> 块的 <code>deny</code></strong>，规范称之为可解除的拒绝（liftable deny），交给宿主的审批解析器，结果可以是放行、拒绝或挂起。<code>transform</code>（脱敏、改写）<strong>只能改策略目标本身</strong>，碰不到快照、注解或宿主状态。</p>
+<p>审批这一段的设计值得照抄。审批对象带一个 <code>enforced_identity</code>，是 transform 之后的规范化 policy input 的 <strong>SHA-256</strong>。真正执行前，SDK 会用当前 input 重新算一遍，对不上就以 <code>host_error:approval_identity_mismatch</code> fail-closed。这样就堵住了"审的是 A，执行时被换成 B"的检查时与使用时（TOCTOU）窗口。另外，<code>evaluate_only</code> 模式下判决照常计算，但 transform 不执行，相当于<strong>影子模式</strong>，可以先看策略会拦什么再决定开不开。</p>
+<h3>// 实战示例</h3>
+<pre><code><span class="tag-com"># 宿主侧执行循环的骨架（伪代码，示意 PEP 的职责；非 SDK 原样 API）</span>
+v = acs.evaluate(point=<span class="tag-gpt">"pre_tool_call"</span>, snapshot=snap, mode=<span class="tag-gpt">"enforce"</span>)
+<span class="tag-key">if</span> v.decision == <span class="tag-gpt">"allow"</span>:      run(tool, args); log(v.warnings)
+<span class="tag-key">elif</span> v.decision == <span class="tag-gpt">"transform"</span>: run(tool, v.transformed_target)      <span class="tag-com"># 只用改写后的参数</span>
+<span class="tag-key">elif</span> v.approval:                   <span class="tag-com"># liftable deny</span>
+    ok = ask_human(v.approval, show=canonical(args))
+    <span class="tag-key">if</span> ok <span class="tag-key">and</span> sha256(canonical(current_input)) == ok.enforced_identity:
+        run(tool, args)
+    <span class="tag-key">else</span>: refuse()                   <span class="tag-com"># 参数变了 → 必须重新审</span>
+<span class="tag-key">else</span>: refuse(v.reason)               <span class="tag-com"># runtime_error:* 也走这里</span></code></pre>
+<div class="fail"><strong>失败模式：</strong>fail-closed 有可用性代价。注解器超时会被判成 <code>runtime_error:annotation_timeout</code> 并拒绝，分类器服务一抖动，所有 agent 一起停摆。这是你需要明确接受的取舍，所以要给注解器配超时预算和降级路径，不能默认它永远在线。第二个坑是<strong>审批疲劳</strong>：escalate 阈值定得太松，人很快就会养成一路点"同意"的习惯，审批也就形同虚设。上线前先在 <code>evaluate_only</code> 下跑一周，统计 escalate 的频率。</div>
+<div class="res">进阶资源：<a href="https://github.com/microsoft/agent-governance-toolkit/blob/main/policy-engine/spec/SPECIFICATION.md" target="_blank">ACS 规范 · 判决归一化 / transform 校验 / 审批与 enforced_identity 各节</a></div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// POINT 04</span>
+<h2>超级个体怎么落地：先把策略和框架解耦，再决定要不要上 ACS</h2>
+<p class="claim">今天就能拿到的收益不在 ACS 运行时本身，而在"策略即数据"这个习惯。</p>
+<h3>// 背景与原理</h3>
+<p>先对照你已经在用的东西。Claude Code 的 <code>PreToolUse</code> hook 能返回 <code>permissionDecision</code>（allow / deny / ask），还能用 <code>updatedInput</code> 改写参数，语义上正对应 ACS 的 allow / deny / escalate / transform，只是锁在 Claude Code 里。所以判据很简单：<strong>只用一个框架时，hooks 就够了</strong>；同时跑两个以上的框架，或者需要给策略做版本管理和审计，ACS 这种外置 PDP 才划算。</p>
+<p>ACS 清单的 <code>extends</code> 适合分层治理。它的合并是<strong>只增不改</strong>的：同一个名字在多份清单里出现时，必须完全一致或者互不冲突；同一个检查点上，只有注解可以取并集。也就是说，<strong>子清单可以在你的基础规则之上加注解器，却放宽不了基础规则</strong>，有冲突就直接 fail-closed。远程 <code>extends</code> 只走 HTTPS，可以用 <code>sha256</code> 钉住内容，并禁止指向内网和云元数据地址。</p>
+<h3>// 实战示例</h3>
+<pre><code><span class="tag-com"># 今天就能用的过渡方案：同一份 Rego，先由 Claude Code hook 调用，日后挪进 ACS 照样复用</span>
+<span class="tag-com"># .claude/hooks/policy.sh（PreToolUse；需要本机装 opa 和 jq）</span>
+#!/usr/bin/env bash
+in=$(cat)
+snap=$(jq '{intervention_point:"pre_tool_call",
+            tool:{clearance:(if .tool_name=="Bash" then "shell" else "other" end)},
+            policy_target:.tool_input}' &lt;&lt;&lt;"$in")
+v=$(opa eval -d ~/policies/tool_guard.rego -I --format raw \
+      'data.agent.tool_guard.verdict' &lt;&lt;&lt;"$snap")
+<span class="tag-key">if</span> [ "$(jq -r .decision &lt;&lt;&lt;"$v")" = "deny" ]; <span class="tag-key">then</span>
+  jq -n --arg r "$(jq -r .reason &lt;&lt;&lt;"$v")" '{hookSpecificOutput:{
+    hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:$r}}'
+<span class="tag-key">fi</span></code></pre>
+<p>快照的形状（<code>tool.clearance</code> / <code>policy_target</code>）一开始就按 ACS 的 policy input 来拼。这样<strong>适配器只写薄薄一层，策略只写一份</strong>，换框架时只需要重写那个十几行的适配器。</p>
+<div class="fail"><strong>失败模式：</strong>一是<strong>规范还在变</strong>：早期引擎里的 <code>bundle_url</code> 远程策略包在这一版已经被删掉，整个工具包也还是 Public Preview。深度绑定 SDK 的 API 等于签了一份迁移债，<strong>Rego 策略本身</strong>才是最稳的资产。二是 Rego 等于多学一门语言，策略写错同样会无声放行，所以要给策略写单测（OPA 自带 <code>opa test</code>）。三是确定性规则的天花板：参数正则拦得住 <code>rm -rf /</code>，拦不住"把密钥 base64 之后塞进一个看起来无害的 URL"。语义层面的攻击还得靠注解器和 Day 50 的沙箱兜底，<strong>策略层只是纵深防御里的一层</strong>。</div>
+<div class="res">进阶资源：<a href="https://code.claude.com/docs/en/hooks" target="_blank">Claude Code Docs · Hooks（PreToolUse 的 permissionDecision / updatedInput）</a> · <a href="https://github.com/microsoft/agent-governance-toolkit" target="_blank">microsoft/agent-governance-toolkit</a></div>
+</div>
+
+<div class="glossary">
+<h3>// 术语表</h3>
+<dl>
+<dt>ACS（Agent Control Specification）</dt><dd>Microsoft 在 Build 2026 发布的开放规范：把 agent 运行时护栏写成可移植的策略清单，属于 Agent Governance Toolkit 的策略层。</dd>
+<dt>PEP / PDP</dt><dd>策略执行点 / 策略决策点。宿主框架负责拦截和执行，ACS 运行时负责无状态地算出判决。</dd>
+<dt>intervention point（拦截点）</dt><dd>规范定义的 8 个检查点，从 <code>agent_startup</code> 到 <code>agent_shutdown</code>，每个点绑定一条策略。</dd>
+<dt>snapshot（快照）</dt><dd>宿主在检查点拼出的完整 JSON 上下文。顶层结构由宿主定义，策略通过路径取值。</dd>
+<dt>annotator（注解器）</dt><dd><code>classifier</code> / <code>llm</code> / <code>endpoint</code> 三类，在策略执行前给 input 加上分数；出错或超时都按 fail-closed 处理。</dd>
+<dt>liftable deny（可解除的拒绝）</dt><dd><code>escalate</code> 归一化后的形态：带 <code>approval</code> 块的 deny，由审批解析器决定放行、拒绝或挂起。</dd>
+<dt>enforced_identity</dt><dd>transform 之后规范化 policy input 的 SHA-256，把审批绑定到确切的参数上，防 TOCTOU。</dd>
+<dt>evaluate_only</dt><dd>影子模式：照常计算判决，但不执行 transform，用于上线前观察策略的效果。</dd>
+<dt>fail-closed</dt><dd>任何评估错误都以 <code>deny</code> 结束，原因只能是保留的 <code>runtime_error:*</code> 标识。</dd>
+</dl>
+</div>
+
+<div class="thinking">
+<h3>// 深入思考</h3>
+<details><summary>ACS 号称"厂商中立"，那它的可移植性真正卡在哪一层？</summary><div>卡在快照契约这一层，不在策略语言。Rego、Cedar 本来就是中立的，难的是每个框架的适配器能不能把同一件事拼成同样的 JSON：工具参数叫什么、注解分数放哪儿、多 agent 场景下"谁在调用"怎么表达。规范把快照结构留给宿主，这是务实的选择（框架差异太大），代价是可移植性取决于适配器之间有没有约定好。类比 OpenTelemetry：协议很早就有了，真正让它可用的是后来定下的 semantic conventions。ACS 缺的正是这一份。</div></details>
+<details><summary>"确定性运行时 + LLM 注解器"——这里的确定性到底保证了什么？</summary><div>保证的是"同样的证据得出同样的判决"，不保证证据本身稳定。LLM 注解器今天打 0.79、明天打 0.81，判决就会在 warn 和 deny 之间来回跳。它的价值在于<strong>把不确定性隔离在一处、并且可以审计</strong>：出了事能复盘出"是分数变了还是规则错了"。这和 Day 58 持久化执行把不确定性赶进 activity 是同一个思路：确定的部分写成可重放的规则，不确定的部分隔离开并记录下来。</div></details>
+<details><summary>只增不改的 extends 合并，是在防谁？</summary><div>防的是"子清单悄悄放宽父清单"。组织的基础策略不能被某个 agent 的清单覆盖掉，冲突就直接失败，而不是后写的覆盖先写的。这和 CSS 层叠或 Kubernetes 的 overlay 正好相反，它更接近"安全基线只能收紧"的 policy-as-code 惯例。代价是例外很难开：某个 agent 确实需要更宽的权限时，只能去改基础策略或者另起一份清单，而这正好逼着你把例外显式地写出来。</div></details>
+<details><summary>对单人开发者，什么时候外置 PDP 是过度工程？</summary><div>只有一个框架、规则不到十条、也没有审计需求的时候，hooks 加几行 shell 已经够用，多一个 OPA 和一套 Rego 反而多出两个会坏的组件。真正的拐点有三个：<strong>同一条规则需要在两个以上的地方生效</strong>；规则需要版本管理和回滚；要向别人证明"这个 agent 做不了某件事"。就算还没到拐点，也可以先采纳"策略即数据"这个习惯，不必急着上运行时。</div></details>
+</div>
+
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://github.com/microsoft/agent-governance-toolkit/blob/main/policy-engine/spec/SPECIFICATION.md" target="_blank">ACS SPECIFICATION.md（0.4.0-alpha.1 草案）</a>：8 个拦截点、判决归一化、fail-closed 保留原因、extends 合并、审批与 enforced_identity</li>
+<li><a href="https://commandline.microsoft.com/agent-control-specification-runtime-governance/" target="_blank">Microsoft · Agent Control Specification: Portable runtime governance for AI Agents</a>：设计动机与 PEP/PDP 框架</li>
+<li><a href="https://devblogs.microsoft.com/foundry/build-2026-open-trust-stack-ai-agents/" target="_blank">Microsoft Foundry Blog · Build agents you can trust across any framework（Build 2026）</a>：ACS 和 ASSERT 评测框架一起发布</li>
+<li><a href="https://github.com/microsoft/agent-governance-toolkit" target="_blank">microsoft/agent-governance-toolkit</a>：MIT 许可，Public Preview，Rust 核心与多语言 SDK，各框架适配器</li>
+<li><a href="https://code.claude.com/docs/en/hooks" target="_blank">Claude Code Docs · Hooks</a>：框架内护栏的对照组，PreToolUse 决策控制</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Day 61 · 2026-10-04</footer>
+</div>
+<script src="https://hub.cissychen.com/comments.js" defer></script>
+<script src="https://hub.cissychen.com/search.js" defer></script>
+<script src="https://hub.cissychen.com/index-button.js" defer></script>
+<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+</body></html>
