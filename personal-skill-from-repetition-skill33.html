@@ -63,8 +63,8 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <div class="container">
 <header>
 <span class="week-tag">SKILL 33 / PKM · DEEP DIVE</span>
-<h1>从重复劳动里长出自己的 Skill</h1>
-<h2>观察「每次都要重新解释的东西」——一次真实任务 → 一个 skill 的最短路径</h2>
+<h1 data-tts="bdfba5c65757bd8b">从重复劳动里长出自己的 Skill</h1>
+<h2 data-tts="9a42b09292025556">观察「每次都要重新解释的东西」——一次真实任务 → 一个 skill 的最短路径</h2>
 <div class="date">2026-10-04 · BigCat</div>
 <p class="pitch">上一期的结论是「产出层得自己写」。这一期回答怎么写：<strong>别坐下来凭空写 skill，先把活干完一遍，再让模型把你纠正过它的地方抽出来。</strong>下面点名 9 个真实可装 / 可读的条目，官方文档、官方插件、内置命令和一份社区方法论都有。</p>
 </header>
@@ -72,13 +72,13 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <a href="pkm-skills-roundup-skill32.html">同系列 → Skill 32 个人生产力类榜单</a> · <a href="skill-eval-skill7.html">Skill 7 给 Skill 写 Eval</a> · <a href="hooks-automation-skill27.html">Skill 27 Hooks 与确定性自动化</a>
 </div>
 <div class="intro">
-<h3>// WHY THIS MATTERS</h3>
+<h3 data-tts="274aeba722ce6cb6">// WHY THIS MATTERS</h3>
 <p>Claude Code 官方文档给「什么时候该建 skill」写了一句判据：<em>Create a skill when you keep pasting the same instructions, checklist, or multi-step procedure into chat</em>——当你反复往对话里粘同一段指令、清单或多步流程时。claude.com 的教程换了个说法：当你发现自己<strong>用同样的话纠正 Claude</strong>。两句话指向同一个信号：<strong>重复解释就是 skill 的原材料</strong>。问题只剩一个——怎么把它从对话里捞出来，而不是坐下来另写一份泛泛的「最佳实践」。</p>
 </div>
 <!-- ============ 1 ============ -->
 <div class="section">
 <span class="num">// 01</span>
-<h2>它替你干掉什么 · 装法 · 第一条能跑的用法</h2>
+<h2 data-tts="c28c78eed26a9e41">它替你干掉什么 · 装法 · 第一条能跑的用法</h2>
 <div class="claim">论断：最短路径只有三步——照常把活干完 → 一句「turn this into a skill」→ 拿下一个真实任务去验。</div>
 <p>它替你干掉的是<strong>「每个新会话从头解释一遍」</strong>：表名和口径、你们的报告格式、「这类请求先排除测试账号」这种规矩。主力工具是官方的 <code>skill-creator</code>：</p>
 <pre><code><span class="tag-com"># Claude Code：官方 marketplace 里的 skill-creator 插件</span>
@@ -96,7 +96,7 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <!-- ============ 2 ============ -->
 <div class="section">
 <span class="num">// 02</span>
-<h2>机制：为什么「先干一遍再抽」比「直接让它写」好</h2>
+<h2 data-tts="321742f312f15e3a">机制：为什么「先干一遍再抽」比「直接让它写」好</h2>
 <div class="claim">论断：凭空生成的 skill 只有模型的通识；从真实任务里抽出来的，才装着它不知道的东西。</div>
 <p>Agent Skills 开放规范的官方站 <strong>agentskills.io</strong> 在《Best practices for skill creators》开篇就点名了这个坑：只让 LLM 凭训练知识写 skill，得到的是「妥善处理错误」「遵循认证最佳实践」这类空话。它给的第一种解法就叫 <strong>Extract from a hands-on task</strong>，让你盯四样东西：</p>
 <ul>
@@ -115,44 +115,44 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <!-- ============ 3 ============ -->
 <div class="section">
 <span class="num">// 03</span>
-<h2>真实用法与边界：哪些重复该长成 skill，哪些不该</h2>
+<h2 data-tts="90f160d64aeaba47">真实用法与边界：哪些重复该长成 skill，哪些不该</h2>
 <div class="claim">论断：重复是必要条件，不是充分条件。三类重复各有更好的归宿。</div>
-<h3>怎么发现重复</h3>
+<h3 data-tts="24f1305b4ec31a09">怎么发现重复</h3>
 <ul>
 <li><strong><code>/insights</code></strong>（Claude Code 内置）——分析本机最近的会话（一次最多 200 个），产出 HTML 报告，列出被误解的请求等摩擦点和改进建议，存在 <code>~/.claude/usage-data/report.html</code>。<strong>别指望它的时候</strong>：云端会话里不可用，且分析消耗你的额度。</li>
 <li><strong><code>/run-skill-generator</code></strong>（Claude Code 内置）——官方自己做的「从重复里长 skill」样板：从干净环境把你的应用跑起来，把成功的安装命令、环境变量、启动脚本记成项目 skill <code>.claude/skills/run-&lt;name&gt;/</code>，之后 <code>/run</code>、<code>/verify</code> 照着走，<strong>不再每次重新摸索</strong>。<strong>别跑</strong>：标准项目——官方说 <code>/run</code> 不配置也能推断启动方式。</li>
 </ul>
-<h3>三类不该长成 skill 的重复</h3>
+<h3 data-tts="b62204682cc05972">三类不该长成 skill 的重复</h3>
 <ul>
 <li><strong>每次对话都该生效的事实</strong> → 写进 <code>CLAUDE.md</code>。官方的分界：CLAUDE.md 每轮都在上下文里；skill 只在用到时加载，<strong>加载后也不会逐轮重读</strong>。反过来，CLAUDE.md 里一节长成了「流程」而不是「事实」，就该搬进 skill。</li>
 <li><strong>必须每次都成立的规则</strong> → 写成 <a href="https://code.claude.com/docs/en/hooks-guide" target="_blank">hook</a>。官方排障节原话：Claude 跳过了必须每次成立的规则，就把它挪进 hook。<code>writing-skills</code> 说得更直白：能用正则或校验自动化的，就别写成文档。</li>
 <li><strong>一次性的解法</strong> → 别存。<code>writing-skills</code>：skill 不是「我某次怎么解决问题」的叙事。</li>
 </ul>
-<h3>两个必须设对的开关</h3>
+<h3 data-tts="c90adb1319d47c9d">两个必须设对的开关</h3>
 <p>有副作用的流程（部署、提交）在 frontmatter 加 <code>disable-model-invocation: true</code>，只允许你手动 <code>/name</code> 触发。需要当下数据的，用 <code>!`git diff HEAD`</code> 这种行内命令——它在 Claude 看到 skill 之前就执行，把实时输出注入进去。</p>
 </div>
 <!-- ============ 4 ============ -->
 <div class="section">
 <span class="num">// 04</span>
-<h2>代价与替代品</h2>
+<h2 data-tts="341d1dfa7774987c">代价与替代品</h2>
 <div class="claim">论断：skill 不是越多越好；长出来之后，你还欠它一次验收。</div>
-<h3>① 过拟合到那一次任务</h3>
+<h3 data-tts="5a278be198ed4c3b">① 过拟合到那一次任务</h3>
 <p><code>skill-creator</code> 自己警告：你们在几个例子上反复迭代，是因为快；但如果 skill 只对这几个例子有效，它就没用——要造的是能被用一百万次的 skill，而不是塞「抠细节的补丁和压迫性的 MUST」。抽出来之后<strong>必须换一个没见过的真实任务</strong>去验。</p>
-<h3>② 清单预算会挤掉冷门 skill 的描述</h3>
+<h3 data-tts="67d038112cc35c42">② 清单预算会挤掉冷门 skill 的描述</h3>
 <p>官方文档：skill 名字和描述常驻一份清单，预算是模型上下文窗口的 <strong>1%</strong>；超了就从<strong>你最少调用的</strong> skill 开始丢描述，丢了描述它就很难被自动触发。单条 <code>description</code> 加 <code>when_to_use</code> 也会在 1,536 字符处截断。加载后的 body 会一直留在上下文里，<strong>每一行都是持续的 token 成本</strong>。</p>
-<h3>③ 菜谱会过期</h3>
+<h3 data-tts="387149f303f340d2">③ 菜谱会过期</h3>
 <p>记下来的流程只对记录那天的环境成立。官方对 <code>/run-skill-generator</code> 的要求就是：构建或启动方式变了，<strong>再跑一次</strong>。个人 skill 没有这种提醒，过期了只会悄悄跑错。</p>
 <div class="fail"><strong>替代品，按成本从低到高</strong>：直接粘贴（一次性）→ <code>CLAUDE.md</code> 一行（每次都该知道的事实）→ hook（必须每次成立的规则）→ 一个 skill（反复粘贴的流程）→ 打包成 plugin（多个 skill 要一起装、一起分享）。<strong>先问能不能往左挪一格。</strong></div>
 <div class="res">来源：<a href="https://code.claude.com/docs/en/skills" target="_blank">Claude Code · Extend Claude with skills</a>（清单 1% 预算、1,536 字符截断、body 常驻、hook 排障） · <a href="https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md" target="_blank">skill-creator SKILL.md</a>（「一百万次」）（均据各页 2026-10）</div>
 </div>
 <div class="combo">
-<h3>// 一页选购卡</h3>
+<h3 data-tts="53a75f72c4d63a94">// 一页选购卡</h3>
 <p><strong>先装这三个</strong>：① <code>/plugin install skill-creator@claude-plugins-official</code>——干完活在同一个会话里说「把这套做成 skill」，它从对话历史里抽步骤和你的纠正，再跑有 / 无 skill 的对比。② 读一遍官方《Skill authoring best practices》里的 <strong>Claude A / Claude B 七步</strong>，照它的节奏验。③ 读 <code>obra/superpowers</code> 的 <strong>writing-skills</strong>——不必装整套 Superpowers，只抄它「先看 agent 失败再写」的 RED 步骤。</p>
 <p><strong>按需再加</strong>：<code>/run-skill-generator</code>（项目启动步骤复杂时）· <code>/insights</code>（本地会话多、想找自己在哪反复卡住）· <code>anthropics/skills</code> 的 <code>template/</code>（手写时的最小骨架） · <code>skills-ref validate</code>（要分享前校验 frontmatter）。</p>
 <p><strong>明确别做</strong>：凭空让模型「写一个某某 skill」而不给真实上下文 · 在新会话里补抽取（原材料已丢）· 把每次都该知道的事实写成 skill · 把必须成立的规则只写在 skill 里。</p>
 </div>
 <div class="glossary">
-<h3>// 术语表</h3>
+<h3 data-tts="11dc719f988a8701">// 术语表</h3>
 <dl>
 <dt>Capture Intent</dt>
 <dd><code>skill-creator</code> 的第一步：先从当前对话里抽出工具、步骤、纠正、输入/输出格式，缺口再问你。</dd>
@@ -167,13 +167,13 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 </dl>
 </div>
 <div class="thinking">
-<h3>// 三个想不通的地方</h3>
+<h3 data-tts="4d21711a990a95b3">// 三个想不通的地方</h3>
 <details><summary>官方说 description 要写「做什么 + 什么时候用」，writing-skills 却说只写「什么时候用」，听谁的？</summary><div>两者的出发点不同。官方要的是<strong>被选中</strong>：Claude 要从上百个 skill 里挑，description 得有关键词。<code>writing-skills</code> 防的是<strong>被选中之后不读正文</strong>：它记录过一次实测，description 里概括了流程（「任务间做 code review」），agent 就只做了一次 review，跳过了正文流程图里的两段式审查；改成只写触发条件后才按正文走。我的折中：<strong>写清「什么时候用」和关键词，别把步骤摘要塞进去</strong>——流程本身留给正文。</div></details>
 <details><summary>「重复几次才值得做成 skill」有没有标准答案？</summary><div>官方文档没有给次数，只给了形态：反复粘贴的指令、清单、多步流程，或者你用同样的话纠正 Claude。我自己的经验线是<strong>第三次重新解释同一件事时</strong>动手——这是个人习惯，不是官方规则。更好的判据是成本：如果它能用 <code>CLAUDE.md</code> 一行解决，就别建 skill；如果它会出事故，就上 hook。</div></details>
 <details><summary>既然直接让 Claude「写个 skill」它也会写，为什么还要先干一遍？</summary><div>因为它写的是<strong>它已经知道的东西</strong>。agentskills.io 的判据是：逐条问「没有这条指令，agent 会做错吗？」——不会就删。凭空写出来的 skill，大部分条目都过不了这一问；从真实任务里抽出来的，留下的正好是你纠正过它的那几处。这也是为什么 skill 要在<strong>同一个会话</strong>里抽，新窗口里它只能回到通识。</div></details>
 </div>
 <div class="refs">
-<h3>// 延伸阅读</h3>
+<h3 data-tts="f617c9be0aeaf6a0">// 延伸阅读</h3>
 <ul>
 <li><a href="https://code.claude.com/docs/en/skills" target="_blank">Claude Code · Extend Claude with skills</a> — 「keep pasting the same instructions」判据、个人 / 项目路径、<code>disable-model-invocation</code>、<code>!</code> 行内命令、CLAUDE.md 与 skill 的分界、清单 1% 预算、<code>/run-skill-generator</code>（官方，据 2026-10 读取）</li>
 <li><a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices" target="_blank">Skill authoring best practices · Develop Skills iteratively with Claude</a> — Claude A / Claude B 七步、「Notice what information you repeatedly provide」、先建 eval（官方）</li>
@@ -189,8 +189,8 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 </div>
 <footer>BigCat · Super Individual · Skill 33 · 2026-10-04</footer>
 </div>
-<script src="https://hub.cissychen.com/comments.js" defer></script>
-<script src="https://hub.cissychen.com/search.js" defer></script>
-<script src="https://hub.cissychen.com/index-button.js" defer></script>
-<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
 </body></html>
