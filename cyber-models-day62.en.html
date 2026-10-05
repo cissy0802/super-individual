@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Day 62 · Specialized Cyber Models and the Collapsing Cost of Vulnerability Discovery — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;overflow-x:auto}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking{margin:40px 0}
+.thinking h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}}
+</style>
+</head><body>
+<div class="container">
+<header>
+<span class="week-tag">DAY 62 · SECURITY</span>
+<h1>Specialized Cyber Models and the Collapsing Cost of Vulnerability Discovery</h1>
+<h2>The ground is moving on the capability side: the open-source libraries you depend on are being scanned by models at this scale</h2>
+<div class="date">2026-10-05 · BigCat</div>
+<p class="pitch">Once finding bugs gets cheap, the default assumptions behind your patch window, your dependency upgrade cadence, and report quality all need recomputing.</p>
+</header>
+<div class="xref">
+<a href="prompt-injection-day24.en.html">Prerequisite → Day 24 Prompt Injection</a> · <a href="guardrails-sandbox-day50.en.html">Day 50 LLM Guardrails and Sandboxing</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>Until now, the security track on this site has been about <strong>not getting hit yourself</strong>: Day 24 defends against injection, Day 50 builds guardrails. This issue covers the other side: <strong>offensive and defensive capability itself is shifting</strong>. In February 2026 Anthropic disclosed that Claude Opus 4.6 had found and validated 500+ previously unknown high-severity vulnerabilities in open-source libraries; in March, working with Mozilla, it found 22 vulnerabilities in Firefox in two weeks. On August 10 OpenAI released <strong>GPT-5.6-Cyber</strong>, trained specifically for security workflows and available only through Daybreak Red access; on September 2 Google followed with <strong>Gemini 3.8 Flash Cyber</strong>, likewise only for applicants accepted into its Fairwind program. All three vendors have converged on the same shape: <strong>tiered capability, with access as the control plane</strong>. For a super individual the question is not whether to apply for Red. It is that your dependency tree, your upgrade cadence and your patch window all rest on a premise that no longer holds: that finding vulnerabilities is expensive.</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// POINT 01</span>
+<h2>Refusal rate is not capability: specialization has a cost</h2>
+<p class="claim">GPT-5.6-Cyber raised "willing to do it" from 1.5% to 95%, yet lost to the general model on OpenAI's own "find the bug + write the report" eval.</p>
+<h3>// Background and mechanism</h3>
+<p>OpenAI uses an internal metric, the <strong>Advanced Cybersecurity Completion Rate</strong>, to measure how often a model completes requests such as exploit-chain development, authentication bypass and privilege escalation: GPT-5.6 Sol under standard safeguards scores 1.5%, 2.0% with Daybreak Blue's loosened safeguards, its predecessor GPT-5.5-Cyber 57.3%, and GPT-5.6-Cyber 95.0%. Note that this metric <strong>measures willingness, not accuracy</strong>. In the same release, GPT-5.6-Cyber actually scored below Sol on the internal <strong>Vulnerability Discovery and Report Writing</strong> eval (find a severe, actionable bug, build a working PoC, submit a high-quality report); OpenAI's stated reason is that it "sometimes produc[es] shorter, less detailed vulnerability reports."</p>
+<p>The engineering takeaway: <strong>willingness and capability are two independent axes</strong>. Specialized fine-tuning moved far along the willingness axis and slid back on the "write it completely" axis. That is an old fine-tuning rule: outside the distribution you tuned for, something always gets squeezed out. Before picking a model, decide whether your task is <strong>blocked by refusals or by capability</strong>. Auditing your own repo, checking dependencies, reading a diff for injection points: a general model with an authorization context rarely refuses. Only exploit-chain writing and bypass validation hit that 1.5% wall.</p>
+<h3>// Hands-on example</h3>
+<pre><code><span class="tag-com"># Defensive audit with a general model: pin down scope, output contract, confidence</span>
+You are auditing a repository I own, ./src (scope: this directory only, no network).
+Task: find memory-safety / injection / authentication flaws reachable from external input.
+For each finding, output JSON:
+{"file":..., "line":..., "class":"CWE-xxx",
+ "reachability":"how external input reaches this point, hop by hop through the call chain",
+ "repro":"minimal reproducing input or test case (required; if you cannot give one, confidence ≤ 0.3)",
+ "confidence":0.0-1.0, "fix":"minimal patch"}
+Fewer but solid: guesses without a reproducible path go into a separate "hypotheses" array, not findings.</code></pre>
+<div class="fail"><strong>Failure mode:</strong> reading completion rate as a capability leaderboard leads you to the wrong model; if someone downstream consumes the reports (tickets, disclosure emails), the specialized model's "shorter reports" turn straight into triage cost. The other trap is <strong>assuming you're behind because you can't get Red</strong>. Most defensive work runs fine on a general model with a good audit prompt; the real gap is in the validation pipeline, not the model tier.</div>
+<div class="res">Further resources: <a href="https://openai.com/index/expanding-daybreak-as-the-cyber-defense-window-narrows/" target="_blank">OpenAI · Expanding Daybreak as the Cyber Defense Window Narrows (2026-08)</a> · <a href="https://help.openai.com/en/articles/20001258-openai-daybreak-trusted-access-for-cyber-overview" target="_blank">OpenAI Help · Daybreak Trusted Access for Cyber Overview</a></div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// POINT 02</span>
+<h2>The "cheap to find, expensive to exploit" gap is closing</h2>
+<p class="claim">In March Anthropic said finding is an order of magnitude cheaper than exploiting, but that the gap won't last long; by August a model had chained two V8 bugs into a sandbox escape.</p>
+<h3>// Background and mechanism</h3>
+<p>The Firefox numbers are worth a close look: in two weeks Opus 4.6 scanned about 6,000 C++ files and submitted 112 reports; Mozilla confirmed 22 vulnerabilities, 14 of them high severity, fixed in Firefox 148. But the team spent about $4,000 in API credits trying to write PoC exploits, and across several hundred attempts <strong>succeeded only twice</strong>. Anthropic's conclusion was that finding vulnerabilities is an order of magnitude cheaper than exploiting them, with a caveat: at the current rate of progress, that gap is unlikely to last.</p>
+<p>Five months later, OpenAI pointed GPT-5.6-Cyber at V8 and found <strong>two previously unknown, chainable vulnerabilities</strong>. The optimizing compiler skipped a safety check when converting values to integers, so <code>undefined</code> could become an unexpectedly large number; used as an array index, the compiler assumed it was in bounds and dropped the bounds check, enabling out-of-bounds reads and writes. The second bug was used to <strong>escape the V8 heap sandbox</strong>. The first was assigned <strong>CVE-2026-15903</strong> (CVSS 8.8, fixed in Chrome 150.0.7871.128). For defenders, this means the time from "fix published" to "someone has an exploit" is shrinking, and <strong>your patch lag becomes the main risk</strong>. Auto-updating browsers are fine, but Electron apps that bundle Chromium, container images pinned to old versions, and lockfiles untouched for six months are all exposed inside that window.</p>
+<h3>// Hands-on example</h3>
+<pre><code><span class="tag-com"># Measure your own patch lag: which known vulns have a fixed version, and how many days the advisory has been out</span>
+osv-scanner scan source -r . --format json 2>/dev/null \
+| jq -r '.results[].packages[] | .package as $p | .vulnerabilities[]
+    | [ $p.name, $p.version, .id,
+        ([.affected[]?.ranges[]?.events[]?.fixed // empty] | first // "no-fix"),
+        (((now - (.published | sub("\\.[0-9]+"; "") | fromdateiso8601)) / 86400) | floor) ]
+    | @tsv' \
+| sort -t$'\t' -k5,5nr | column -t
+<span class="tag-com"># A version in column 4 plus a large day count in column 5 = handle first; list "no-fix" separately and decide whether to replace the dependency</span></code></pre>
+<div class="fail"><strong>Failure mode:</strong> osv-scanner only sees <strong>advisories already in the database</strong>. Once AI drives discovery cost down, the biggest increase will land on unmaintained libraries: bugs get found, maybe even published, but never get a fixed version and may never enter a database. "Scan is all green" only means the known issues are handled. Also, <code>published</code> is the advisory date, not the fix date; a strict lag metric needs to be matched against the release time of the fixed version.</div>
+<div class="res">Further resources: <a href="https://www.anthropic.com/news/mozilla-firefox-security" target="_blank">Anthropic · Partnering with Mozilla to improve Firefox's security (2026-03)</a> · <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-15903" target="_blank">NVD · CVE-2026-15903</a></div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// POINT 03</span>
+<h2>Split dependency upgrades into two lanes: version updates cool down, security fixes jump the queue</h2>
+<p class="claim">"Upgrade fast" defends against known vulnerabilities; "upgrade slowly" defends against poisoned packages. The two don't conflict, as long as you don't govern them with one rule.</p>
+<h3>// Background and mechanism</h3>
+<p>Cheaper vulnerability discovery creates two opposing pressures. On one side, more CVEs and faster exploits demand <strong>faster</strong> upgrades; on the other, supply-chain poisoning means malicious versions are often caught by researchers and automated scanners shortly after release, which argues for <strong>letting new versions sit</strong> first. Many teams just do "upgrade everything every Monday" and serve neither goal.</p>
+<p>The right move is to <strong>split the lanes</strong>, and mainstream tools already build the distinction in. Renovate's <code>minimumReleaseAge</code> holds each new version until the specified duration has passed, and the docs state plainly that <strong>security updates bypass any minimumReleaseAge checks</strong>; PRs raised from <code>vulnerabilityAlerts</code> also ignore <code>schedule</code> and hourly rate limits and go straight to the front of the queue. Dependabot's <code>cooldown</code> option works the same way: <strong>it applies only to version updates, not security updates</strong>.</p>
+<h3>// Hands-on example</h3>
+<pre><code><span class="tag-com">// renovate.json: routine updates cool for 7 days, majors for 14; security fixes get their own fast lane</span>
+{
+  "extends": ["config:recommended"],
+  "minimumReleaseAge": "7 days",
+  "internalChecksFilter": "strict",
+  "packageRules": [
+    { "matchUpdateTypes": ["major"], "minimumReleaseAge": "14 days" }
+  ],
+  "vulnerabilityAlerts": { "labels": ["security"], "prConcurrentLimit": 5 },
+  "osvVulnerabilityAlerts": true
+}</code></pre>
+<pre><code><span class="tag-com"># .github/dependabot.yml: the equivalent (cooldown does not affect security updates)</span>
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule: { interval: "daily" }
+    cooldown:
+      default-days: 7
+      semver-major-days: 14</code></pre>
+<div class="fail"><strong>Failure mode:</strong> the fast lane only fires <strong>when an advisory exists</strong>, which is the blind spot from the previous point. Renovate's OSV alerts <strong>cover direct dependencies only</strong>; transitive dependencies need GitHub's Dependabot alerts or osv-scanner to fill the gap. Be careful enabling automerge on security fixes: the docs warn that a wrong alert can cause a fix PR to flap. And one counterintuitive point: the longer your cooldown, the more you rely on <strong>someone else</strong> being the canary. If everyone sets 14 days, day 14 becomes the real release day.</div>
+<div class="res">Further resources: <a href="https://docs.renovatebot.com/key-concepts/minimum-release-age/" target="_blank">Renovate Docs · Minimum Release Age</a> · <a href="https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference" target="_blank">GitHub Docs · Dependabot options reference (cooldown)</a></div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// POINT 04</span>
+<h2>The bottleneck has moved from discovery to validation</h2>
+<p class="claim">Discovery got cheap; validation did not. An AI report with no reproduction path just shifts the cost onto the maintainer.</p>
+<h3>// Background and mechanism</h3>
+<p>The same year produced two sharply contrasting data points. curl shut down its HackerOne bug bounty on January 31, 2026; Daniel Stenberg's reason was the flood of low-quality, apparently AI-generated reports, with only about 5% of 2025 submissions turning out to be real vulnerabilities. On the other side, every one of Anthropic's 500+ findings <strong>was validated by a team member or an outside researcher</strong>; even so, the Firefox effort's 112 reports mapped to 22 confirmed vulnerabilities. If a frontier lab's pipeline still needs that much human triage, an individual who runs a model once and submits will produce far more noise.</p>
+<p>For a super individual this cuts both ways. <strong>As a reporter</strong>: when you use AI on someone else's code, "reproducible" is the price of entry; a finding without a reproduction is only a lead. <strong>As a maintainer</strong>: move AI review into your own CI and find the bugs before others do; and state in SECURITY.md that reports must include a runnable reproduction.</p>
+<h3>// Hands-on example</h3>
+<pre><code><span class="tag-com"># .github/workflows/security.yml: Anthropic's official action, scans the PR diff only</span>
+name: Security Review
+permissions:
+  pull-requests: write
+  contents: read
+on:
+  pull_request:
+jobs:
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 2
+      - uses: anthropics/claude-code-security-review@main
+        with:
+          comment-pr: true
+          claude-api-key: ${{ secrets.CLAUDE_API_KEY }}</code></pre>
+<div class="fail"><strong>Failure mode:</strong> the README itself says this action is <strong>not hardened against prompt injection</strong>, should only review trusted PRs, and recommends turning on "Require approval for all external contributors"; otherwise the reviewer becomes exactly the injection entry point from Day 24. It only looks at the diff, so old bugs in existing code go unseen; run it over the whole repo periodically. Its false-positive filtering can also drop real issues, so keep one more round of human confirmation.</div>
+<div class="res">Further resources: <a href="https://github.com/anthropics/claude-code-security-review" target="_blank">anthropics/claude-code-security-review</a> · <a href="https://lwn.net/Articles/1055996/" target="_blank">LWN · Stenberg: The end of the curl bug-bounty program</a></div>
+</div>
+
+<div class="thinking">
+<h3>// Deeper questions</h3>
+<details><summary>Does tiered capability plus identity-gated access end up tilting the balance toward attackers?</summary><div>Access gates stop <strong>the people who follow the rules</strong>. Organized attackers can route around them with open-weight models, stolen accounts or their own fine-tunes, while defenders wait in an approval queue. The vendors' bet is that loosening access for verified defenders lets fixes outpace open models catching up. That bet only works if defenders actually use the access and fixes actually ship downstream. The practical conclusion for an individual developer: don't count on getting Red; assume attackers already have equivalent capability.</div></details>
+<details><summary>Are the specialized model's shorter reports a capability regression or a misaligned objective?</summary><div>More likely a side effect of the training distribution: refusal-reduction data is mostly high-risk requests answered directly, so the model learns <strong>less setup, faster delivery</strong>, while a good vulnerability report needs exactly that setup (blast radius, repro steps, remediation). The lesson: quality dimensions not written into the fine-tuning objective get squeezed out by default. If your pipeline depends on report quality, put "report completeness" into your own eval instead of trusting the word Cyber in the model name.</div></details>
+<details><summary>A cooldown is a form of free-riding. What happens if everyone sets 14 days?</summary><div>Cooldowns work because someone always installs first and some scanner always looks first. If everyone waits, the job of catching poisoned packages falls entirely on registry-side scanning and a few early adopters, and day 14 becomes the de facto release day. It is a classic public-goods problem, comparable to backoff in distributed systems: everyone using the same fixed backoff collides in lockstep, so you need jitter. In practice, giving critical dependencies different cooldown lengths, or running a new version's tests early in your own sandbox, means taking on a bit of the canary role yourself.</div></details>
+<details><summary>When bugs are found in unmaintained libraries, what can an individual do?</summary><div>Three things. <strong>Inventory</strong>: list the packages in your dependency tree whose last commit is over a year old and that have a single maintainer. <strong>Reduce exposure</strong>: replace them where you can; where you can't, narrow the input they touch, for example by feeding them only trusted data or running them in an isolated process. <strong>Give back</strong>: when AI finds a problem, submit the reproduction and a patch together rather than just a report. After discovery costs collapse, "comes with a fix" is the contribution that actually helps maintainers.</div></details>
+</div>
+
+<div class="refs">
+<h3>// Further reading</h3>
+<ul>
+<li><a href="https://openai.com/index/expanding-daybreak-as-the-cyber-defense-window-narrows/" target="_blank">OpenAI · Expanding Daybreak as the Cyber Defense Window Narrows</a>: GPT-5.6-Cyber, the Blue/Red tiers, the V8 bug chain</li>
+<li><a href="https://www.anthropic.com/news/mozilla-firefox-security" target="_blank">Anthropic · Partnering with Mozilla to improve Firefox's security</a>: the cost gap between finding and exploiting</li>
+<li><a href="https://red.anthropic.com/2026/zero-days/" target="_blank">Anthropic Frontier Red Team · 0-Days</a>: Opus 4.6 finds and validates 500+ high-severity bugs in open-source libraries</li>
+<li><a href="https://securityboulevard.com/2026/09/google-launches-fairwind-program/" target="_blank">Security Boulevard · Google Launches Fairwind Program for Gemini 3.8 Flash Cyber Access</a>: Google's version of the same gated-access shape</li>
+<li><a href="https://docs.renovatebot.com/key-concepts/minimum-release-age/" target="_blank">Renovate Docs · Minimum Release Age</a>: dependency cooldowns and the security-update bypass</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Day 62 · 2026-10-05</footer>
+</div>
+<script src="https://hub.cissychen.com/comments.js" defer></script>
+<script src="https://hub.cissychen.com/search.js" defer></script>
+<script src="https://hub.cissychen.com/index-button.js" defer></script>
+<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+</body></html>
