@@ -63,8 +63,8 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <div class="container">
 <header>
 <span class="week-tag">SKILL 34 / PKM · DEEP DIVE</span>
-<h1>个人 Skill 库的卫生</h1>
-<h2>命名一致 · 去重 · 废弃 · 按使用度淘汰——以及什么时候该把 skill 合并回 prompt</h2>
+<h1 data-tts="cfe2c0fe05a35ea1">个人 Skill 库的卫生</h1>
+<h2 data-tts="065ecfa6e71778bc">命名一致 · 去重 · 废弃 · 按使用度淘汰——以及什么时候该把 skill 合并回 prompt</h2>
 <div class="date">2026-10-05 · BigCat</div>
 <p class="pitch">上一期教你从重复劳动里长 skill。这一期是它的另一半：<strong>长出来的 skill 不会自己死，没人用的那些每一轮都在扣你的上下文。</strong>下面点名 9 个真实可装 / 可用的条目——6 个官方命令与设置、3 个社区工具——先讲怎么体检，再讲怎么剪。</p>
 </header>
@@ -72,13 +72,13 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <a href="personal-skill-from-repetition-skill33.html">同系列 → Skill 33 从重复劳动里长出 Skill</a> · <a href="skill-authoring-skill6.html">Skill 6 官方 authoring 精读</a> · <a href="untrusted-skills-skill30.html">Skill 30 装别人的 Skill 有多危险</a>
 </div>
 <div class="intro">
-<h3>// WHY THIS MATTERS</h3>
+<h3 data-tts="dbc7328bf8e043c3">// WHY THIS MATTERS</h3>
 <p>Claude Code 官方文档在「Find unused skills」一节写得很直白：<em>Every skill in the skill listing adds to your context on every turn, whether or not Claude ever uses it.</em>——清单里的每个 skill，不管用没用过，<strong>每一轮</strong>都占上下文。代码库有 lint 和死代码检测，skill 库直到最近才有对应的工具。好消息是现在有了；坏消息是它只告诉你「谁没被用」，<strong>剪不剪、怎么剪，还得你自己定</strong>。</p>
 </div>
 <!-- ============ 1 ============ -->
 <div class="section">
 <span class="num">// 01</span>
-<h2>它替你干掉什么 · 装法 · 第一条能跑的用法</h2>
+<h2 data-tts="4a883a44de4f248d">它替你干掉什么 · 装法 · 第一条能跑的用法</h2>
 <div class="claim">论断：体检只要两条内置命令——先 <code>/skill-doctor</code> 看谁白占地方，再 <code>/skills</code> 按空格把它调暗。</div>
 <p>它替你干掉的是<strong>「凭印象清理」</strong>：你记得哪些 skill 常用，但记不住每个占多少 token、上次什么时候被调用。</p>
 <pre><code><span class="tag-com"># ① 官方体检（Claude Code v2.1.252+，终端里跑）</span>
@@ -98,32 +98,32 @@ claude plugin details &lt;name&gt;   <span class="tag-com"># Always-on 行 = 每
 <!-- ============ 2 ============ -->
 <div class="section">
 <span class="num">// 02</span>
-<h2>机制：skill 多了，到底坏在哪</h2>
+<h2 data-tts="9ab303d15da3739a">机制：skill 多了，到底坏在哪</h2>
 <div class="claim">论断：坏的不是「多」，是三件事——清单预算挤掉描述、同名静默遮蔽、加载后的正文赖着不走。</div>
-<h3>① 清单预算：最少用的先「哑」</h3>
+<h3 data-tts="f2a772aa06f77d57">① 清单预算：最少用的先「哑」</h3>
 <p>官方文档：清单的字符预算按模型上下文窗口的 <strong>1%</strong> 计；溢出时<strong>从你调用最少的 skill 开始丢描述</strong>。名字还在，但关键词没了，Claude 就很难自动匹配到它。<code>/context</code> 的 Skills 行显示的是预算裁剪后的大小，<code>/doctor</code> 会估算清单成本和最大贡献者。想放宽可设 <code>skillListingBudgetFraction</code>（如 <code>0.02</code>）——但这是把问题往后推，不是解决。</p>
-<h3>② 同名遮蔽：没有报错</h3>
+<h3 data-tts="e6662c8f3e63364f">② 同名遮蔽：没有报错</h3>
 <p>同名 skill 的优先级是<strong>企业 &gt; 个人 &gt; 项目</strong>：<code>~/.claude/skills/deploy</code> 和仓库里的 <code>.claude/skills/deploy</code> 同时存在时，<code>/deploy</code> 跑的是你个人那份——队友改了项目版，你却一直用旧的，而且不会有任何提示。插件 skill 带命名空间 <code>/插件名:skill名</code>，所以不撞，但会出现两个功能相近的条目抢同一类请求。</p>
-<h3>③ 正文常驻：调过一次就一直在</h3>
+<h3 data-tts="386c2a5671a1b374">③ 正文常驻：调过一次就一直在</h3>
 <p>skill 被调用后，正文作为一条消息<strong>留在对话里</strong>，后续轮次不重读文件。自动压缩时，每个 skill 只保留前 5,000 token，所有 skill 合计 25,000 token，<strong>按最近调用顺序填</strong>——一次会话里调了太多 skill，早的那些压缩后会整份丢掉。</p>
 </div>
 <!-- ============ 3 ============ -->
 <div class="section">
 <span class="num">// 03</span>
-<h2>真实用法与边界：命名、去重、废弃、合并回 prompt</h2>
+<h2 data-tts="42f22b73d8c7bd15">真实用法与边界：命名、去重、废弃、合并回 prompt</h2>
 <div class="claim">论断：四个动作各有一个现成工具；判据放最后，用来决定一个 skill 走哪条路。</div>
-<h3>命名一致：先让机器挑错</h3>
+<h3 data-tts="769592f372ebb545">命名一致：先让机器挑错</h3>
 <p>Agent Skills 规范规定 <code>name</code> 只许小写字母、数字和连字符，最长 64 字符，<strong>必须与父目录同名</strong>；用 <a href="https://github.com/agentskills/agentskills/tree/main/skills-ref" target="_blank">skills-ref</a> 的 <code>skills-ref validate ./my-skill</code> 校验。官方《Skill authoring best practices》建议用<strong>动名词</strong>（<code>processing-pdfs</code>）并点名要避免的：<code>helper</code>、<code>utils</code>、<code>tools</code> 这类含糊名，以及<strong>同一个库里风格不一致</strong>。</p>
-<h3>去重：两层检测</h3>
+<h3 data-tts="fac2f7ff40946282">去重：两层检测</h3>
 <ul>
 <li><strong>MindiveLabs/skill-doctor</strong>（社区，MIT）——注意它和官方 <code>/skill-doctor</code> <strong>同名但无关</strong>。它扫个人、项目目录里的 SKILL.md，报七类冲突：同名遮蔽、触发短语碰撞、语义重叠、主动建议互抢、状态文件冲突、子集包含等；默认只读，<code>--fix</code> 才会把冲突项挪进 <code>~/.skill-doctor/trash/</code>。装法：<code>/plugin marketplace add MindiveLabs/skill-doctor</code> → <code>/plugin install skill-doctor@skill-doctor</code>。<strong>别装的时候</strong>：据 GitHub 仓库页（2026-10 读取）只有 4 星，会注册两个后台 hook——按 <a href="untrusted-skills-skill30.html">Skill 30</a> 的清单先读一遍再装；<strong>别用 git clone 方式装</strong>，否则它会顶替官方的 <code>/skill-doctor</code>（见文末）。</li>
 <li><strong>skill-creator 的 Description Optimization</strong>——两个 skill 抢同一类请求时，给留下的那个写 20 条触发评测，其中一半是「该不触发」的<strong>近邻请求</strong>；<code>scripts.run_loop</code> 按 60/40 切训练与留出集、每条跑 3 次、最多迭代 5 轮，按留出分选最佳描述。</li>
 </ul>
-<h3>废弃：用状态阶梯，不要直接删</h3>
+<h3 data-tts="3d1dd53dd318b53d">废弃：用状态阶梯，不要直接删</h3>
 <p><code>skillOverrides</code> 的四个状态天然就是废弃流程：<code>on</code> → <code>name-only</code>（只留名字，腾出描述预算）→ <code>user-invocable-only</code>（Claude 看不见，你还能 <code>/name</code>）→ <code>off</code>（全隐藏）→ 观察一阵没人想起它，再删目录。插件走 <code>/plugin disable</code> / <code>/plugin uninstall</code>。skill 内部过时的段落，官方建议挪进一个折叠的 <strong>「Old patterns」</strong>节，而不是混在正文里。</p>
-<h3>跨工具的库：一份源</h3>
+<h3 data-tts="fb906bfe3d1f0415">跨工具的库：一份源</h3>
 <p>同时用几个 agent 的人，最容易出现「三份副本、改了一份」。Vercel 的 <a href="https://github.com/vercel-labs/skills" target="_blank">skills CLI</a>（据 GitHub 仓库页，2026-10 读取约 3.3 万星）默认用<strong>符号链接</strong>把各 agent 目录指向同一份拷贝：<code>npx skills list</code> 看装了什么、<code>npx skills update</code> 升级、<code>npx skills remove &lt;name&gt;</code> 卸载。<strong>别用的时候</strong>：只用 Claude Code 一个工具——内置的 <code>/skills</code> 和 <code>/plugin</code> 已经够了。</p>
-<h3>判据：一个 skill 该留、该降级、还是合并回 prompt</h3>
+<h3 data-tts="159f5c7a89a12ece">判据：一个 skill 该留、该降级、还是合并回 prompt</h3>
 <ul>
 <li><strong>几乎每个会话都会调用、正文又很短</strong> → 它其实是常驻事实，搬进 <code>CLAUDE.md</code>（这是我的经验线；官方的分界是 CLAUDE.md 放每轮都该在的上下文，skill 放具体任务）。</li>
 <li><strong>只有你会手动敲 <code>/name</code></strong> → <code>user-invocable-only</code>，别让它的描述占清单。</li>
@@ -135,25 +135,25 @@ claude plugin details &lt;name&gt;   <span class="tag-com"># Always-on 行 = 每
 <!-- ============ 4 ============ -->
 <div class="section">
 <span class="num">// 04</span>
-<h2>代价与替代品</h2>
+<h2 data-tts="b9ff1fd2c3854d2e">代价与替代品</h2>
 <div class="claim">论断：清理本身也有成本；最便宜的卫生是少装。</div>
-<h3>① 「从未调用」不等于「没用」</h3>
+<h3 data-tts="6ba911ff1e95ca1b">① 「从未调用」不等于「没用」</h3>
 <p>有些 skill 一季度只用一次，但那一次很关键（比如发版检查清单）。<code>/skill-doctor</code> 只看调用次数，不看价值。这类 skill 降到 <code>user-invocable-only</code> 比直接删稳妥。</p>
-<h3>② 降级会改变行为</h3>
+<h3 data-tts="b52bf23ca827a8f9">② 降级会改变行为</h3>
 <p>降到 <code>name-only</code> 后描述没了，原本靠关键词自动触发的场景会失效。<strong>改完要验</strong>：官方给的办法是挑几个真实提示，在新会话里分别开、关这个 skill 各跑一遍对比；插件 skill 用 <code>claude plugin eval</code>，它会自动带一个「不装插件」的基线。</p>
-<h3>③ 工具链本身也要卫生</h3>
+<h3 data-tts="fe322b13cf409d1c">③ 工具链本身也要卫生</h3>
 <p>社区去重工具、跨 agent 管理器都是新依赖：会注册 hook、会建自己的目录、会更新。为了清理 10 个 skill 再装 2 个工具，先算一下账。</p>
 <div class="fail"><strong>替代品，按成本从低到高</strong>：什么都不装，每月跑一次 <code>/skill-doctor</code> → 用 <code>/skills</code> 手动调状态 → 名字统一后 <code>skills-ref validate</code> 一遍 → 有重叠时上 skill-creator 的触发评测 → 多 agent 共用才上 <code>npx skills</code> → 库大到人眼看不过来才装社区冲突扫描器。</div>
 <div class="res">来源：<a href="https://code.claude.com/docs/en/skills" target="_blank">Claude Code · Extend Claude with skills</a>（1% 预算、同名优先级、skillOverrides 四态、/skill-doctor、压缩时 5,000 / 25,000 token） · <a href="https://code.claude.com/docs/en/discover-plugins" target="_blank">Discover plugins</a>（Not used recently、claude plugin details）（均据各页 2026-10 读取）</div>
 </div>
 <div class="combo">
-<h3>// 一页选购卡</h3>
+<h3 data-tts="4efdfb75edee0138">// 一页选购卡</h3>
 <p><strong>先用这三个</strong>：① <code>/skill-doctor</code>——每月一次，按成本从高到低看「从未调用」名单。② <code>/skills</code>——按 Space 把可疑项先降到 <code>name-only</code> 或 <code>user-only</code>，观察两周再 <code>off</code>。③ <code>claude plugin details &lt;name&gt;</code> + <code>/plugin</code> 的 Not used recently——插件里的 skill 不受 skillOverrides 管，得在这里剪。</p>
 <p><strong>按需再加</strong>：<code>skills-ref validate</code>（统一命名后批量校验） · skill-creator 的 Description Optimization（合并两个重叠 skill 后重调描述） · <code>npx skills</code>（多个 agent 共用一个库） · MindiveLabs/skill-doctor（库大到需要语义冲突扫描，且你读过它的 hook）。</p>
 <p><strong>明确别做</strong>：靠调大 <code>skillListingBudgetFraction</code> 掩盖臃肿 · 在个人和项目目录各放一份同名 skill · 降级后不验就走 · 把一两句规则硬撑成一个 skill。</p>
 </div>
 <div class="glossary">
-<h3>// 术语表</h3>
+<h3 data-tts="5e268414937ad715">// 术语表</h3>
 <dl>
 <dt>skill listing（清单）</dt>
 <dd>所有 skill 的名字与描述，每轮常驻上下文，预算约为上下文窗口的 1%。</dd>
@@ -168,13 +168,13 @@ claude plugin details &lt;name&gt;   <span class="tag-com"># Always-on 行 = 每
 </dl>
 </div>
 <div class="thinking">
-<h3>// 三个想不通的地方</h3>
+<h3 data-tts="044e909ef54480e1">// 三个想不通的地方</h3>
 <details><summary>官方的 /skill-doctor 和社区的 skill-doctor 同名，装了社区那个会怎样？</summary><div>看你怎么装。走插件装，它的 skill 带插件命名空间，和官方命令<strong>并存</strong>。走 README 里的 git clone 方式，它落在 <code>~/.claude/skills/skill-doctor</code>，就是一个名叫 <code>skill-doctor</code> 的个人 skill——按官方规则，个人 skill 会在终端会话里<strong>顶替同名的内置命令</strong>，你再敲 <code>/skill-doctor</code> 就看不到官方的用量报告了，而且不会有提示。这个小插曲本身就是本期的题眼：<strong>命名冲突连做冲突检测的工具都会踩</strong>。</div></details>
 <details><summary>多少个 skill 算「太多」？</summary><div>官方没给个数，只给了预算：清单占上下文窗口的 1%，超了就丢描述。所以真正的上限取决于你们的描述有多长、模型窗口有多大。与其数个数，不如看 <code>/context</code> 的 Skills 行和 <code>--debug</code> 日志里有没有超预算警告——<strong>有警告就是太多了</strong>。</div></details>
 <details><summary>该不该把常用 skill 都合并成一个「大 skill」省清单？</summary><div>不该。合并省的是清单里几行描述，代价是每次调用都把整份正文搬进上下文，而且触发变模糊。官方 authoring 指南建议正文控制在 500 行内、用分文件的渐进式披露。<strong>合并的判据是触发重叠，不是数量。</strong></div></details>
 </div>
 <div class="refs">
-<h3>// 延伸阅读</h3>
+<h3 data-tts="ee18da7a7088c7e8">// 延伸阅读</h3>
 <ul>
 <li><a href="https://code.claude.com/docs/en/skills" target="_blank">Claude Code · Extend Claude with skills</a> — Find unused skills（<code>/skill-doctor</code>）、Override skill visibility（<code>skillOverrides</code>）、Resolve skills that share a name、Skill content lifecycle、Skill descriptions are cut short（官方，据 2026-10 读取）</li>
 <li><a href="https://code.claude.com/docs/en/discover-plugins" target="_blank">Claude Code · Discover and install plugins</a> — Installed 页、Not used recently、<code>/plugin disable</code> / <code>uninstall</code>、<code>claude plugin details</code>（官方）</li>
@@ -190,8 +190,8 @@ claude plugin details &lt;name&gt;   <span class="tag-com"># Always-on 行 = 每
 </div>
 <footer>BigCat · Super Individual · Skill 34 · 2026-10-05</footer>
 </div>
-<script src="https://hub.cissychen.com/comments.js" defer></script>
-<script src="https://hub.cissychen.com/search.js" defer></script>
-<script src="https://hub.cissychen.com/index-button.js" defer></script>
-<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
 </body></html>
