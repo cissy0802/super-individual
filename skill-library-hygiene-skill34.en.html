@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill 34 · Skill Library Hygiene — Super Individual</title>
+<style>
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head>
+<body>
+<div class="container">
+<header>
+<span class="week-tag">SKILL 34 / PKM · DEEP DIVE</span>
+<h1>Skill Library Hygiene</h1>
+<h2>Consistent naming · dedup · deprecation · retiring by usage, and when to fold a skill back into the prompt</h2>
+<div class="date">2026-10-05 · BigCat</div>
+<p class="pitch">Last issue showed how to grow skills out of repeated work. This is the other half: <strong>skills don't die on their own, and the ones nobody uses keep charging you context on every turn.</strong> Below are 9 real tools you can install or run today (six official commands and settings, three community tools): first how to run a checkup, then how to prune.</p>
+</header>
+<div class="xref">
+<a href="personal-skill-from-repetition-skill33.en.html">Series → Skill 33 Growing a Skill From Repetition</a> · <a href="skill-authoring-skill6.en.html">Skill 6 Official Authoring Guide</a> · <a href="untrusted-skills-skill30.en.html">Skill 30 How Risky Are Other People's Skills</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>The Claude Code docs put it bluntly in "Find unused skills": <em>Every skill in the skill listing adds to your context on every turn, whether or not Claude ever uses it.</em> Codebases have linters and dead-code detection; skill libraries only recently got the equivalent. The good news is that it exists now. The catch is that it only tells you <strong>who isn't being used</strong>. Whether to prune, and how, is still your call.</p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>What it does for you · install · a first command that runs</h2>
+<div class="claim">Claim: a checkup takes two built-in commands: <code>/skill-doctor</code> to see what's dead weight, then <code>/skills</code> to dim it with the space bar.</div>
+<p>What it replaces is <strong>pruning from memory</strong>. You remember which skills feel useful, but not what each one costs in tokens or when it last ran.</p>
+<pre><code><span class="tag-com"># 1. Official checkup (Claude Code v2.1.252+, run in the terminal)</span>
+/skill-doctor
+<span class="tag-com"># Interactive: opens in the /plugin manager's Stats tab; with -p it prints text</span>
+
+<span class="tag-com"># 2. Official switch: highlight a skill, press Space to cycle states, Esc to save</span>
+/skills
+<span class="tag-com"># Written to .claude/settings.local.json, equivalent to:</span>
+{ "skillOverrides": { "legacy-context": "name-only", "deploy": "off" } }
+
+<span class="tag-com"># 3. Plugin skills ignore skillOverrides, so check them separately</span>
+claude plugin details &lt;name&gt;   <span class="tag-com"># Always-on line = tokens added to every session</span></code></pre>
+<p>The <code>/skill-doctor</code> report lists each skill's context cost and invocation count, <strong>flags the ones that have never run</strong>, and tells you where to turn them off. The docs say to start with the most expensive ones. It also lists plugins you haven't used recently, and the Installed tab in <code>/plugin</code> has a <strong>Not used recently</strong> group plus a Last used line on each plugin.</p>
+<div class="fail"><strong>When it won't help</strong>: bundled skills and enterprise skills are left out of the report. Run it over Remote Control from your phone or browser and you get "Skill usage reports are not available on this connection". Run it in the terminal on the machine where the session lives.</div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Mechanism: what actually breaks when skills pile up</h2>
+<div class="claim">Claim: the count itself isn't the problem. Three things are: the listing budget squeezes out descriptions, same-name skills shadow each other silently, and loaded bodies never leave.</div>
+<h3>1. The listing budget: least-used skills go quiet first</h3>
+<p>Per the docs, the listing's character budget is <strong>1%</strong> of the model's context window. When it overflows, Claude Code <strong>drops descriptions starting with the skills you invoke least</strong>. The name stays, but the keywords vanish, so Claude rarely matches the skill on its own. The Skills row in <code>/context</code> shows the size after trimming, and <code>/doctor</code> estimates the listing cost and its biggest contributors. You can raise <code>skillListingBudgetFraction</code> (for example <code>0.02</code>), but that delays the problem. It doesn't fix it.</p>
+<h3>2. Name shadowing: no error</h3>
+<p>For same-name skills the order is <strong>enterprise &gt; personal &gt; project</strong>. With both <code>~/.claude/skills/deploy</code> and the repo's <code>.claude/skills/deploy</code>, <code>/deploy</code> runs your personal copy. A teammate updates the project version, you keep running the old one, and nothing warns you. Plugin skills are namespaced as <code>/plugin-name:skill-name</code>, so they don't collide on names, but two similar entries can end up competing for the same requests.</p>
+<h3>3. Bodies stay resident: invoke once, it stays</h3>
+<p>Once a skill runs, its body stays in the conversation as a message, and later turns don't re-read the file. During auto-compaction each skill keeps only its first 5,000 tokens, all skills share 25,000 tokens, and the budget <strong>fills from the most recently invoked</strong> skill. Invoke too many in one session and the earlier ones can drop out entirely after compaction.</p>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Real usage and limits: naming, dedup, deprecation, folding back</h2>
+<div class="claim">Claim: each of the four jobs already has a tool. The criteria come last and decide which path a given skill takes.</div>
+<h3>Consistent naming: let a machine find the mistakes</h3>
+<p>The Agent Skills spec allows only lowercase letters, digits and hyphens in <code>name</code>, caps it at 64 characters, and requires it to <strong>match the parent directory</strong>. Check with <a href="https://github.com/agentskills/agentskills/tree/main/skills-ref" target="_blank">skills-ref</a>: <code>skills-ref validate ./my-skill</code>. The official "Skill authoring best practices" suggests <strong>gerund</strong> names (<code>processing-pdfs</code>) and names what to avoid: vague names like <code>helper</code>, <code>utils</code> and <code>tools</code>, and <strong>inconsistent patterns within your collection</strong>.</p>
+<h3>Dedup: two layers of detection</h3>
+<ul>
+<li><strong>MindiveLabs/skill-doctor</strong> (community, MIT). Note that it <strong>shares a name with the official <code>/skill-doctor</code> but is unrelated</strong>. It scans SKILL.md files in personal and project directories and reports seven conflict types, including name shadow, trigger collision, semantic overlap, proactive race, state-file collision and subsumption. It is read-only by default. Only <code>--fix</code> moves a conflicting skill into <code>~/.skill-doctor/trash/</code>. Install: <code>/plugin marketplace add MindiveLabs/skill-doctor</code> → <code>/plugin install skill-doctor@skill-doctor</code>. <strong>When to skip it</strong>: the GitHub repo page showed just 4 stars (read 2026-10), and it registers two background hooks, so read it first using the <a href="untrusted-skills-skill30.en.html">Skill 30</a> checklist. <strong>Don't install it with git clone</strong>, or it will shadow the official <code>/skill-doctor</code> (see the end of this issue).</li>
+<li><strong>skill-creator's Description Optimization</strong>. When two skills compete for the same requests, write 20 trigger evals for the one you keep, about half of them <strong>near-misses</strong> that should not trigger it. <code>scripts.run_loop</code> splits them 60/40 into train and held-out sets, runs each query 3 times, iterates up to 5 rounds, and picks the best description by held-out score.</li>
+</ul>
+<h3>Deprecation: walk the state ladder instead of deleting outright</h3>
+<p>The four <code>skillOverrides</code> states already form a deprecation path: <code>on</code> → <code>name-only</code> (name only, frees description budget) → <code>user-invocable-only</code> (Claude can't see it, you can still type <code>/name</code>) → <code>off</code> (hidden everywhere). Once a while has passed and nobody missed it, delete the folder. For plugins, use <code>/plugin disable</code> or <code>/plugin uninstall</code>. For outdated sections inside a skill, the official guide suggests a collapsed <strong>"Old patterns"</strong> section instead of leaving them mixed into the body.</p>
+<h3>Libraries shared across tools: keep one source</h3>
+<p>If you use several agents, the classic failure is three copies with only one of them updated. Vercel's <a href="https://github.com/vercel-labs/skills" target="_blank">skills CLI</a> (about 33.1k stars on its GitHub repo page, read 2026-10) <strong>symlinks</strong> every agent directory to one canonical copy by default. <code>npx skills list</code> shows what's installed, <code>npx skills update</code> upgrades, and <code>npx skills remove &lt;name&gt;</code> uninstalls. <strong>When to skip it</strong>: if you only use Claude Code, the built-in <code>/skills</code> and <code>/plugin</code> are enough.</p>
+<h3>Criteria: keep it, demote it, or fold it back into the prompt</h3>
+<ul>
+<li><strong>Invoked in almost every session, with a short body</strong> → it's really a standing fact, so move it into <code>CLAUDE.md</code>. That's my own rule of thumb. The official line is that CLAUDE.md holds context needed on every turn and skills hold discrete tasks.</li>
+<li><strong>Only you ever type <code>/name</code></strong> → set it to <code>user-invocable-only</code> so its description stops taking listing space.</li>
+<li><strong>Triggers overlap with another skill</strong> → merge them into one, then run trigger evals on the survivor.</li>
+<li><strong><code>/skill-doctor</code> shows it has never run, and it's expensive</strong> → set it to <code>off</code>. If nobody misses it within a month, delete it.</li>
+<li><strong>Down to one or two rules</strong> → put them back in your prompt or CLAUDE.md. If a rule must hold every time, make it a hook.</li>
+</ul>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Costs and alternatives</h2>
+<div class="claim">Claim: cleanup costs something too. The cheapest hygiene is installing less.</div>
+<h3>1. "Never invoked" doesn't mean useless</h3>
+<p>Some skills run once a quarter, and that one run matters, like a release checklist. <code>/skill-doctor</code> counts invocations. It doesn't measure value. For skills like that, demoting to <code>user-invocable-only</code> is safer than deleting.</p>
+<h3>2. Demotion changes behavior</h3>
+<p>At <code>name-only</code> the description is gone, so anything that relied on keyword auto-triggering stops working. <strong>Verify after the change.</strong> The official method is to pick a few realistic prompts and run each in a fresh session with the skill on and again with it off. For plugin skills, <code>claude plugin eval</code> adds a no-plugin baseline automatically.</p>
+<h3>3. The tooling needs hygiene too</h3>
+<p>Community dedup tools and cross-agent managers are new dependencies. They register hooks, create their own directories and need updating. Before you install two tools to clean up ten skills, do the math.</p>
+<div class="fail"><strong>Alternatives, cheapest first</strong>: install nothing and run <code>/skill-doctor</code> once a month → adjust states by hand in <code>/skills</code> → once names are consistent, run <code>skills-ref validate</code> over them → when skills overlap, use skill-creator's trigger evals → move to <code>npx skills</code> only when several agents share one library → install a community conflict scanner only when the library is too big to review by eye.</div>
+<div class="res">Sources: <a href="https://code.claude.com/docs/en/skills" target="_blank">Claude Code · Extend Claude with skills</a> (1% budget, same-name precedence, the four skillOverrides states, /skill-doctor, 5,000 / 25,000 tokens on compaction) · <a href="https://code.claude.com/docs/en/discover-plugins" target="_blank">Discover plugins</a> (Not used recently, claude plugin details) (both read 2026-10)</div>
+</div>
+<div class="combo">
+<h3>// One-page buyer's card</h3>
+<p><strong>Start with these three</strong>: 1. <code>/skill-doctor</code>. Once a month, read the never-invoked list from most to least expensive. 2. <code>/skills</code>. Press Space to demote suspects to <code>name-only</code> or <code>user-only</code>, wait two weeks, then switch them <code>off</code>. 3. <code>claude plugin details &lt;name&gt;</code> plus Not used recently in <code>/plugin</code>. Skills inside plugins ignore skillOverrides, so prune them here.</p>
+<p><strong>Add as needed</strong>: <code>skills-ref validate</code> (batch-check names after standardizing) · skill-creator's Description Optimization (retune the description after merging two overlapping skills) · <code>npx skills</code> (one library across several agents) · MindiveLabs/skill-doctor (when the library needs semantic conflict scanning and you have read its hooks).</p>
+<p><strong>Don't</strong>: raise <code>skillListingBudgetFraction</code> to hide the bloat · keep a same-name skill in both your personal and project directories · demote without verifying · stretch one or two rules into a whole skill.</p>
+</div>
+<div class="glossary">
+<h3>// Glossary</h3>
+<dl>
+<dt>skill listing</dt>
+<dd>Every skill's name and description, resident in context on every turn, budgeted at about 1% of the context window.</dd>
+<dt>skillOverrides</dt>
+<dd>A setting that puts a skill, by name, into one of four states (on / name-only / user-invocable-only / off) without editing its SKILL.md.</dd>
+<dt>name shadow</dt>
+<dd>When two skills share a name, only the higher-priority one runs and the other silently stops working, with no error.</dd>
+<dt>near-miss</dt>
+<dd>A request that shares keywords with a skill but shouldn't trigger it. These are the most valuable negatives in a trigger eval.</dd>
+<dt>symlink</dt>
+<dd>A filesystem shortcut that points to another file, letting several agent directories share one copy of a skill.</dd>
+</dl>
+</div>
+<div class="thinking">
+<h3>// Three open questions</h3>
+<details><summary>The official /skill-doctor and the community skill-doctor share a name. What happens if I install the community one?</summary><div>It depends on how you install it. Installed as a plugin, its skill is namespaced and <strong>coexists</strong> with the official command. Installed with the git clone in its README, it lands in <code>~/.claude/skills/skill-doctor</code> as a personal skill named <code>skill-doctor</code>. Under the official rules, in a terminal session a personal skill <strong>replaces a built-in command of the same name</strong>, so typing <code>/skill-doctor</code> no longer shows the official usage report, and nothing tells you. That little episode is the whole point of this issue: <strong>even a conflict-detection tool can walk into a naming conflict</strong>.</div></details>
+<details><summary>How many skills is "too many"?</summary><div>The docs don't give a count, only a budget: the listing gets 1% of the context window, and past that, descriptions get dropped. So the real ceiling depends on how long your descriptions are and how big the model's window is. Rather than counting, check the Skills row in <code>/context</code> and look for an over-budget warning in the <code>--debug</code> log. <strong>If the warning is there, you have too many.</strong></div></details>
+<details><summary>Should I merge my common skills into one big skill to save listing space?</summary><div>No. Merging saves a few description lines in the listing. In exchange, every invocation drags the whole body into context, and triggering gets fuzzier. The official authoring guide suggests keeping the body under 500 lines and using progressive disclosure across separate files. <strong>The reason to merge is overlapping triggers, not the count.</strong></div></details>
+</div>
+<div class="refs">
+<h3>// Further reading</h3>
+<ul>
+<li><a href="https://code.claude.com/docs/en/skills" target="_blank">Claude Code · Extend Claude with skills</a>: Find unused skills (<code>/skill-doctor</code>), Override skill visibility (<code>skillOverrides</code>), Resolve skills that share a name, Skill content lifecycle, Skill descriptions are cut short (official, read 2026-10)</li>
+<li><a href="https://code.claude.com/docs/en/discover-plugins" target="_blank">Claude Code · Discover and install plugins</a>: the Installed tab, Not used recently, <code>/plugin disable</code> / <code>uninstall</code>, <code>claude plugin details</code> (official)</li>
+<li><a href="https://code.claude.com/docs/en/plugin-evals" target="_blank">Claude Code · Test plugins with evals</a>: <code>claude plugin eval</code> and the no-plugin baseline (official, needs v2.1.269+)</li>
+<li><a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices" target="_blank">Skill authoring best practices</a>: naming conventions (gerunds; avoid helper/utils/tools), avoiding time-sensitive information, and the "Old patterns" section (official)</li>
+<li><a href="https://github.com/agentskills/agentskills/blob/main/docs/specification.mdx" target="_blank">Agent Skills specification</a>: rules for the <code>name</code> field and <code>skills-ref validate</code> (official source of the open spec)</li>
+<li><a href="https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md" target="_blank">anthropics/skills · skill-creator</a>: Description Optimization (20 trigger evals, near-miss negatives, <code>run_loop</code>) (official)</li>
+<li><a href="https://github.com/vercel-labs/skills" target="_blank">vercel-labs/skills</a>: <code>npx skills list / update / remove</code>, symlink vs. copy installs (about 33.1k stars on its GitHub repo page, read 2026-10)</li>
+<li><a href="https://github.com/MindiveLabs/skill-doctor" target="_blank">MindiveLabs/skill-doctor</a>: community conflict scanner, seven conflict types, read-only by default (MIT, 4 stars on its GitHub repo page, read 2026-10)</li>
+<li><a href="https://github.com/obra/superpowers/blob/main/skills/writing-skills/SKILL.md" target="_blank">obra/superpowers · writing-skills</a>: the Descriptive Naming section (verb-first names; gerunds for processes)</li>
+<li><a href="personal-skill-from-repetition-skill33.en.html">This site · Skill 33 Growing a Skill From Repetition</a>: the first half of this story</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Skill 34 · 2026-10-05</footer>
+</div>
+<script src="https://hub.cissychen.com/comments.js" defer></script>
+<script src="https://hub.cissychen.com/search.js" defer></script>
+<script src="https://hub.cissychen.com/index-button.js" defer></script>
+<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+</body></html>
