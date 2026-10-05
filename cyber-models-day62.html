@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="zh-CN"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Day 62 · 专用网安模型与漏洞发现成本的坍塌 — Super Individual</title>
 <style>
@@ -62,8 +63,8 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <div class="container">
 <header>
 <span class="week-tag">DAY 62 · SECURITY</span>
-<h1>专用网安模型与漏洞发现成本的坍塌</h1>
-<h2>能力侧的地面在移动：你依赖的开源库，正被这种量级的模型扫描</h2>
+<h1 data-tts="77f135a3fefc1ae8">专用网安模型与漏洞发现成本的坍塌</h1>
+<h2 data-tts="6117811259ba11cf">能力侧的地面在移动：你依赖的开源库，正被这种量级的模型扫描</h2>
 <div class="date">2026-10-05 · BigCat</div>
 <p class="pitch">找漏洞变便宜之后，补丁窗口、依赖升级节奏、报告质量这三件事的默认假设都要重算。</p>
 </header>
@@ -71,19 +72,18 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <a href="prompt-injection-day24.html">前置 → 本站 Day 24 提示注入</a> · <a href="guardrails-sandbox-day50.html">Day 50 LLM 安全护栏与沙箱</a>
 </div>
 <div class="intro">
-<h3>// WHY THIS MATTERS</h3>
+<h3 data-tts="d1bdf08fb1cf610a">// WHY THIS MATTERS</h3>
 <p>本站安全格子此前讲的都是<strong>防自己被打</strong>：Day 24 防注入，Day 50 建护栏。这一期讲另一侧——<strong>攻防能力本身在变</strong>。2026 年 2 月 Anthropic 披露 Claude Opus 4.6 在开源库里找出并验证了 500+ 个未知高危漏洞；3 月与 Mozilla 合作，两周在 Firefox 里找到 22 个漏洞。8 月 10 日 OpenAI 发布专为网安工作流训练的 <strong>GPT-5.6-Cyber</strong>，只经 Daybreak Red 准入发放；9 月 2 日 Google 跟进 <strong>Gemini 3.8 Flash Cyber</strong>，同样只发给 Fairwind 计划的审核通过者。三家走到了同一个形态：<strong>能力分档，准入即控制面</strong>。对超级个体，这不是"要不要申请 Red"的问题，而是你的依赖树、升级节奏和补丁窗口，都建立在"找漏洞很贵"这个已经失效的前提上。</p>
 </div>
-
 <!-- ============ 1 ============ -->
 <div class="section">
 <span class="num">// POINT 01</span>
-<h2>拒答率不是能力：专用化有代价</h2>
+<h2 data-tts="3dcd643acdab7c0d">拒答率不是能力：专用化有代价</h2>
 <p class="claim">GPT-5.6-Cyber 把"愿意做"从 1.5% 拉到 95%，却在自家的"找漏洞 + 写报告"评测上输给了通用版。</p>
-<h3>// 背景与原理</h3>
+<h3 data-tts="e8e4371fa8f3f7e3">// 背景与原理</h3>
 <p>OpenAI 用内部指标 <strong>Advanced Cybersecurity Completion Rate</strong> 衡量模型在利用链开发、认证绕过、提权这类请求上的完成率：标准防护下的 GPT-5.6 Sol 为 1.5%，经 Daybreak Blue 放宽后为 2.0%，前代 GPT-5.5-Cyber 为 57.3%，GPT-5.6-Cyber 为 95.0%。注意这个指标<strong>量的是意愿，不是准确率</strong>。同一份发布里，GPT-5.6-Cyber 在内部 <strong>Vulnerability Discovery and Report Writing</strong> 评测（找到可利用的严重漏洞、写出能跑的 PoC、提交高质量报告）上反而不如 Sol，官方给的原因是它"有时产出更短、更不详细的漏洞报告"。</p>
 <p>工程含义：<strong>意愿和能力是两根独立的轴</strong>。专用微调在意愿轴上大幅前进，却在"写得完整"这根轴上倒退了。这是微调的老规律：你调的分布之外，总有东西被挤掉。选模型前先判断你的任务<strong>卡在拒答还是卡在能力</strong>：审自己的仓库、查依赖、读 diff 找注入点，通用模型在授权语境下基本不拒；只有写利用链、做绕过验证这类活才会撞到 1.5% 那面墙。</p>
-<h3>// 实战示例</h3>
+<h3 data-tts="03a6377db4fa3360">// 实战示例</h3>
 <pre><code><span class="tag-com"># 通用模型做防御审计：把授权范围、输出契约、置信度写死</span>
 你在审计我本人拥有的仓库 ./src（授权范围：仅此目录，不联网）。
 任务：找出可被外部输入触达的内存安全 / 注入 / 认证缺陷。
@@ -96,18 +96,17 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <div class="fail"><strong>失败模式：</strong>把完成率当能力榜读，会选错模型；下游如果有人消费报告（工单、披露邮件），专用模型的"更短报告"会直接变成分诊成本。另一个坑是<strong>以为拿不到 Red 就落后</strong>——防御侧 80% 的活在通用模型 + 好的审计提示词上就能跑，真正的差距在验证流水线，而不在模型档位。</div>
 <div class="res">进阶资源：<a href="https://openai.com/index/expanding-daybreak-as-the-cyber-defense-window-narrows/" target="_blank">OpenAI · Expanding Daybreak as the Cyber Defense Window Narrows（2026-08）</a> · <a href="https://help.openai.com/en/articles/20001258-openai-daybreak-trusted-access-for-cyber-overview" target="_blank">OpenAI Help · Daybreak Trusted Access for Cyber Overview</a></div>
 </div>
-
 <!-- ============ 2 ============ -->
 <div class="section">
 <span class="num">// POINT 02</span>
-<h2>"找到便宜、利用昂贵"的差距正在关上</h2>
+<h2 data-tts="382d2feb44fd1015">"找到便宜、利用昂贵"的差距正在关上</h2>
 <p class="claim">3 月 Anthropic 说发现比利用便宜一个数量级、但这个差距不会持续太久；8 月就有模型把两个 V8 漏洞串成了沙箱逃逸。</p>
-<h3>// 背景与原理</h3>
+<h3 data-tts="5a1eab9c030c09a4">// 背景与原理</h3>
 <p>Firefox 合作的数字值得细看：Opus 4.6 两周扫了约 6,000 个 C++ 文件，提交 112 份报告，Mozilla 认定 22 个漏洞、其中 14 个高危，在 Firefox 148 中修复。但团队花了约 4,000 美元 API 额度尝试写 PoC 利用，几百次尝试<strong>只成功两次</strong>。Anthropic 的结论是"找漏洞的成本比写利用低一个数量级"，并补了一句：照进展速度，这个差距不太可能长久。</p>
 <p>五个月后，OpenAI 用 GPT-5.6-Cyber 研究 V8，找到<strong>两个可以串联的未知漏洞</strong>：优化编译器在把值转成整数时跳过了一个安全检查，<code>undefined</code> 会变成一个意外的大数，再被当作数组下标，编译器以为它在界内而省掉边界检查，于是可以越界读写；第二个漏洞用来<strong>逃出 V8 堆沙箱</strong>。前者被分配为 <strong>CVE-2026-15903</strong>（CVSS 8.8，Chrome 150.0.7871.128 修复）。对防守方，这意味着"公开修复 → 有人写出利用"的时间在缩短，<strong>你的补丁延迟（patch lag）成了主要风险</strong>：浏览器自动更新还好，但捆绑 Chromium 的 Electron 应用、钉死版本的容器镜像、半年没动的 lockfile，都在这个窗口里裸奔。</p>
-<h3>// 实战示例</h3>
+<h3 data-tts="fe7f3f8590aeb29f">// 实战示例</h3>
 <pre><code><span class="tag-com"># 量出你自己的补丁延迟：哪些已知漏洞有修复版本、公告挂了多少天你还没升</span>
-osv-scanner scan source -r . --format json 2>/dev/null \
+osv-scanner scan source -r . --format json 2&gt;/dev/null \
 | jq -r '.results[].packages[] | .package as $p | .vulnerabilities[]
     | [ $p.name, $p.version, .id,
         ([.affected[]?.ranges[]?.events[]?.fixed // empty] | first // "no-fix"),
@@ -118,16 +117,15 @@ osv-scanner scan source -r . --format json 2>/dev/null \
 <div class="fail"><strong>失败模式：</strong>osv-scanner 只看得见<strong>已入库的公告</strong>。AI 把发现成本打下来之后，最大的增量会落在没人维护的库上：漏洞被找到、甚至被公开，却永远没有修复版本，也可能永远不进数据库。"扫描全绿"只说明已知问题处理完了。另外，<code>published</code> 是公告日期而非修复日期，严格的延迟指标需要再对上修复版本的发布时间。</div>
 <div class="res">进阶资源：<a href="https://www.anthropic.com/news/mozilla-firefox-security" target="_blank">Anthropic · Partnering with Mozilla to improve Firefox's security（2026-03）</a> · <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-15903" target="_blank">NVD · CVE-2026-15903</a></div>
 </div>
-
 <!-- ============ 3 ============ -->
 <div class="section">
 <span class="num">// POINT 03</span>
-<h2>依赖升级拆成双车道：版本更新冷却，安全修复插队</h2>
+<h2 data-tts="ac03af995b9086ff">依赖升级拆成双车道：版本更新冷却，安全修复插队</h2>
 <p class="claim">"快升"防的是已知漏洞，"慢升"防的是投毒包；两个诉求不冲突，只要别用同一条规则管。</p>
-<h3>// 背景与原理</h3>
+<h3 data-tts="f99f5ac57d90743e">// 背景与原理</h3>
 <p>漏洞发现变便宜带来两股相反的压力。一边是 CVE 变多、利用变快，要求<strong>更快</strong>升级；另一边是供应链投毒——恶意版本往往在发布后不久被研究者和自动扫描识破，要求新版本<strong>先放一放</strong>。很多团队的做法是一刀切地"每周一统一升级"，结果两头都没照顾到。</p>
 <p>正确的做法是<strong>拆车道</strong>，而主流工具已经内置了这个区分。Renovate 的 <code>minimumReleaseAge</code> 让每个新版本等满指定时长才提 PR，文档明确写着<strong>安全更新绕过所有 minimumReleaseAge 检查</strong>；<code>vulnerabilityAlerts</code> 生成的 PR 还会无视 <code>schedule</code> 和按小时的限流，直接插队。Dependabot 的 <code>cooldown</code> 选项同理：<strong>只作用于版本更新，不作用于安全更新</strong>。</p>
-<h3>// 实战示例</h3>
+<h3 data-tts="abe10d3da2bdb82d">// 实战示例</h3>
 <pre><code><span class="tag-com">// renovate.json：常规更新冷却 7 天、major 冷却 14 天；安全修复自带快车道</span>
 {
   "extends": ["config:recommended"],
@@ -151,16 +149,15 @@ updates:
 <div class="fail"><strong>失败模式：</strong>快车道只在<strong>有公告时</strong>才触发，回到上一点的盲区。Renovate 的 OSV 告警<strong>只覆盖直接依赖</strong>，传递依赖要靠 GitHub 的 Dependabot alerts 或 osv-scanner 补位。安全修复开 automerge 要谨慎，文档警告错误的告警可能导致修复 PR 反复翻转。还有一个反直觉的点：冷却期越长，你越依赖<strong>别人</strong>当金丝雀——如果大家都设 14 天，第 14 天才是真正的首发日。</div>
 <div class="res">进阶资源：<a href="https://docs.renovatebot.com/key-concepts/minimum-release-age/" target="_blank">Renovate Docs · Minimum Release Age</a> · <a href="https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference" target="_blank">GitHub Docs · Dependabot options reference（cooldown）</a></div>
 </div>
-
 <!-- ============ 4 ============ -->
 <div class="section">
 <span class="num">// POINT 04</span>
-<h2>瓶颈从"发现"搬到了"验证"</h2>
+<h2 data-tts="6d288346f1028bd6">瓶颈从"发现"搬到了"验证"</h2>
 <p class="claim">发现便宜了，验证没有便宜：一份没有复现路径的 AI 报告，是把成本转嫁给维护者。</p>
-<h3>// 背景与原理</h3>
+<h3 data-tts="71f56d4c2229dcb6">// 背景与原理</h3>
 <p>同一年里有两个对照鲜明的数据点。curl 在 2026 年 1 月 31 日关闭了 HackerOne 漏洞赏金，Daniel Stenberg 的理由是低质量、疑似 AI 生成的报告太多，2025 年的提交里只有约 5% 是真漏洞。另一边，Anthropic 的 500+ 个漏洞<strong>每一个都由团队成员或外部研究者验证过</strong>；即便如此，Firefox 那次 112 份报告对应 22 个确认漏洞。前沿实验室的流水线尚且需要大量人工分诊，个人跑一遍模型就提交，噪声只会更大。</p>
 <p>对超级个体，这条线有两头。<strong>作为报告者</strong>：用 AI 扫别人的代码，"能复现"是门票，没有复现的发现只能当线索。<strong>作为维护者</strong>：把 AI 审查前移到自己的 CI，在别人找到之前先找到；同时在 SECURITY.md 里写明报告必须附可运行的复现。</p>
-<h3>// 实战示例</h3>
+<h3 data-tts="c08ef677f29e87b2">// 实战示例</h3>
 <pre><code><span class="tag-com"># .github/workflows/security.yml：Anthropic 官方 action，只扫 PR diff</span>
 name: Security Review
 permissions:
@@ -183,9 +180,8 @@ jobs:
 <div class="fail"><strong>失败模式：</strong>README 自己写明这个 action <strong>没有针对提示注入加固</strong>，只应审查可信 PR，并建议打开"外部贡献者需审批"——否则审查者本身就是 Day 24 讲的注入入口。它只看 diff，存量代码里的旧洞扫不到，需要定期对全仓再跑一次。误报过滤也会漏掉真问题，宁可多一轮人工确认。</div>
 <div class="res">进阶资源：<a href="https://github.com/anthropics/claude-code-security-review" target="_blank">anthropics/claude-code-security-review</a> · <a href="https://lwn.net/Articles/1055996/" target="_blank">LWN · Stenberg: The end of the curl bug-bounty program</a></div>
 </div>
-
 <div class="glossary">
-<h3>// 术语表</h3>
+<h3 data-tts="bb17ac8537cec375">// 术语表</h3>
 <dl>
 <dt>Daybreak Blue / Red</dt><dd>OpenAI 网安准入的两档：Blue 给防御者放宽防护的通用模型（如 GPT-5.6 Sol），Red 给经审核团队专用网安模型（如 GPT-5.6-Cyber），需身份核验、监控、法律承诺与访问控制。</dd>
 <dt>Fairwind</dt><dd>Google 发放 Gemini 3.8 Flash Cyber 的准入计划，优先政府、关键基础设施运营方与广泛使用软件的维护者。</dd>
@@ -196,17 +192,15 @@ jobs:
 <dt>coordinated disclosure（协调披露）</dt><dd>先私下报告厂商、等修复发布后再公开细节的披露流程。</dd>
 </dl>
 </div>
-
 <div class="thinking">
-<h3>// 深入思考</h3>
+<h3 data-tts="c4944f23f7ebdec0">// 深入思考</h3>
 <details><summary>能力分档 + 身份准入，会不会让攻防差距反而向攻击方倾斜？</summary><div>准入门槛挡住的是<strong>守规矩的人</strong>。有组织的攻击方可以用开源权重模型、被盗账号或自建微调绕开，防守方却要排队审核。厂商的赌注是：放宽给已核验的防御者，能让修复速度跑赢开源模型能力的追赶速度。这个赌注成立的前提是防御者真的去用，并且修复能真正发布到下游。对个人开发者来说，更实际的结论是：不要指望拿到 Red，要假设攻击方已经拿到了同等能力。</div></details>
 <details><summary>专用模型报告变短，是能力退化还是对齐目标偏了？</summary><div>更可能是训练分布的副作用：降拒答的数据大多是"直接给答案"的高风险请求，模型学到的是<strong>少铺垫、快交付</strong>，而好的漏洞报告恰恰需要铺垫（影响面、复现步骤、修复建议）。这提醒我们：微调目标里没写的质量维度，默认会被挤掉。如果你的流水线依赖报告质量，就把"报告完整度"写进自己的 eval，而不是相信模型名字里的 Cyber。</div></details>
 <details><summary>冷却期是一种"搭便车"，如果所有人都设 14 天会怎样？</summary><div>冷却有效的前提是总有人先装、总有扫描器先看。如果人人都等，发现投毒的责任就全落在 registry 的自动扫描和少数早期采用者身上，第 14 天就成了事实上的首发日。这是典型的公共品问题，可以类比分布式系统里的退避：大家用同一个固定退避值会同步撞车，需要抖动。实践上，把关键依赖的冷却期设成不同长度，或者在自己的沙箱里提前跑新版本的测试，等于主动承担一点金丝雀的角色。</div></details>
 <details><summary>"没人维护的库被找到漏洞"这件事，个人能做什么？</summary><div>三件事。<strong>盘点</strong>：依赖树里最后一次提交超过一年、只有一个维护者的包，列成清单。<strong>降暴露</strong>：能替换就替换，不能替换就收窄它接触的输入，比如只喂可信数据，或者放进隔离进程里跑。<strong>反哺</strong>：用 AI 找到问题时，附上复现和补丁一起提交，而不是只丢一份报告。在发现成本坍塌之后，"附带修复"才是对维护者真正有帮助的贡献。</div></details>
 </div>
-
 <div class="refs">
-<h3>// 延伸阅读</h3>
+<h3 data-tts="db36cafb0ac8e169">// 延伸阅读</h3>
 <ul>
 <li><a href="https://openai.com/index/expanding-daybreak-as-the-cyber-defense-window-narrows/" target="_blank">OpenAI · Expanding Daybreak as the Cyber Defense Window Narrows</a>：GPT-5.6-Cyber、Blue/Red 两档、V8 漏洞链</li>
 <li><a href="https://www.anthropic.com/news/mozilla-firefox-security" target="_blank">Anthropic · Partnering with Mozilla to improve Firefox's security</a>：发现与利用的成本差</li>
@@ -217,8 +211,8 @@ jobs:
 </div>
 <footer>BigCat · Super Individual · Day 62 · 2026-10-05</footer>
 </div>
-<script src="https://hub.cissychen.com/comments.js" defer></script>
-<script src="https://hub.cissychen.com/search.js" defer></script>
-<script src="https://hub.cissychen.com/index-button.js" defer></script>
-<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
 </body></html>
