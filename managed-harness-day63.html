@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="zh-CN"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Day 63 · 托管 Agent Harness — Super Individual</title>
 <style>
@@ -63,8 +64,8 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <div class="container">
 <header>
 <span class="week-tag">DAY 63 · HARNESS</span>
-<h1>托管 Agent Harness</h1>
-<h2>harness 从「自己搭」变成「可以租」之后，哪些还该自己留着</h2>
+<h1 data-tts="ec88af168b1cfbeb">托管 Agent Harness</h1>
+<h2 data-tts="55b34e360f05f5b9">harness 从「自己搭」变成「可以租」之后，哪些还该自己留着</h2>
 <div class="date">2026-10-06 · BigCat</div>
 <p class="pitch">会话持久、上下文压缩、崩溃恢复可以外包；压缩策略、重试语义、工具调用顺序从此不在你手里。</p>
 </header>
@@ -72,16 +73,15 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <a href="harness-eng-day3.html">前置 → 本站 Day 3 Harness 工程</a> · <a href="durable-agents-day58.html">Day 58 Durable Agent Execution</a>
 </div>
 <div class="intro">
-<h3>// WHY THIS MATTERS</h3>
+<h3 data-tts="291afceb9774d069">// WHY THIS MATTERS</h3>
 <p>Day 3 讲自己搭 harness，Day 58 讲自己做持久化执行。2026 年下半年，这两层<strong>都能租了</strong>：Anthropic 的 Claude Managed Agents（4 月起公测）把 agent 循环、会话存储和沙箱做成托管服务；OpenAI 在 9 月 10 日公测 Agents API，把 Codex 的 harness 放到一个 API 后面，9 月 29 日 DevDay 又加上了托管浏览器里的 computer use。两家形态几乎一样：<strong>平台握着循环和会话日志，你提供工具、挑执行环境</strong>。这期不讲怎么调用，讲怎么划线：哪些交出去划算，哪些交出去就再也拿不回来，以及「自托管沙箱」这条中间路线到底解决了什么。</p>
 </div>
-
 <!-- ============ 1 ============ -->
 <div class="section">
 <span class="num">// POINT 01</span>
-<h2>租的是「脑」和「会话」，「手」可以自己选</h2>
+<h2 data-tts="c00f8a7d9e653707">租的是「脑」和「会话」，「手」可以自己选</h2>
 <p class="claim">托管 harness 的切分线不在模型和代码之间，而在「决定下一步」和「执行这一步」之间。</p>
-<h3>// 背景与原理</h3>
+<h3 data-tts="55a1bd9b330f1892">// 背景与原理</h3>
 <p>Anthropic 工程博客 2026 年 4 月那篇 <em>Scaling Managed Agents</em> 把架构拆成三块：<strong>brain</strong>（Claude + harness 循环），<strong>hands</strong>（沙箱和工具，统一成 <code>execute(name, input) → string</code>），<strong>session</strong>（放在上下文窗口之外的持久事件日志）。harness 因此是无状态的：实例挂了，新实例用 <code>wake(sessionId)</code> 拉回日志，从最后一条事件接着跑。脑和手解耦后不必每个会话都先起容器，文中给的数字是 <strong>p50 TTFT 降约 60%，p95 降超过 90%</strong>。</p>
 <p>API 上对应四个对象：Agent（模型、system、工具、MCP、skills）、Environment（云沙箱或自托管沙箱）、Session、Events。OpenAI 那边同构：平台管会话、编排、上下文压缩和恢复，计算可以放在 OpenAI 托管沙箱、合作方沙箱或你自己的机器上。两家都<strong>不收 harness 本身的钱</strong>，按模型、工具和容器用量计费。差异在边角：OpenAI 9 月 29 日加的 computer use 跑在<strong>它托管的浏览器</strong>里，能访问哪些网站仍由开发者控制；Anthropic 一侧另有按 cron 触发的定时部署和多 agent 编排。选型时先对齐这些边角，核心循环两家差不多。</p>
 <div class="diagram">
@@ -92,7 +92,7 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 </div>
 <p class="legend">虚线框 = 唯一能由你决定放在哪里的一层。前两块换厂商时带不走。</p>
 </div>
-<h3>// 实战示例</h3>
+<h3 data-tts="592f0a2051731190">// 实战示例</h3>
 <pre><code><span class="tag-com"># Claude Managed Agents 最小闭环（beta 头由 SDK 自动加：managed-agents-2026-04-01）</span>
 from anthropic import Anthropic
 client = Anthropic()
@@ -121,17 +121,16 @@ with client.beta.sessions.events.stream(session.id) as stream:
 <div class="fail"><strong>失败模式：</strong>把它当成「更长的 Messages API」用。会话<strong>天生有状态</strong>：对话历史、沙箱状态、产出都存在服务端，所以 Managed Agents 目前<strong>不适用 ZDR 和 HIPAA BAA</strong>；据多家报道，OpenAI Agents API 公测期也只支持美国数据驻留、不支持 ZDR。有合规要求的工作负载，选型第一步就会被挡掉，跟性能无关。</div>
 <div class="res">进阶资源：<a href="https://www.anthropic.com/engineering/managed-agents" target="_blank">Anthropic Engineering · Scaling Managed Agents: Decoupling the brain from the hands（2026-04）</a> · <a href="https://platform.claude.com/docs/en/managed-agents/overview" target="_blank">Claude Docs · Managed Agents overview</a></div>
 </div>
-
 <!-- ============ 2 ============ -->
 <div class="section">
 <span class="num">// POINT 02</span>
-<h2>交出去的是控制权：给 harness 漂移装哨兵</h2>
+<h2 data-tts="599ad7676451c097">交出去的是控制权：给 harness 漂移装哨兵</h2>
 <p class="claim">托管 harness 会随模型一起悄悄升级，这是卖点，也是你回归测试失效的原因。</p>
-<h3>// 背景与原理</h3>
+<h3 data-tts="78bacf2103691125">// 背景与原理</h3>
 <p>同一篇博客讲了个例子：Sonnet 4.5 快到上下文上限时会<strong>提前收尾</strong>，团队就在 harness 里加了 context reset；换到 Opus 4.5，这个行为消失，reset 成了多余的。结论是 <strong>harness 编码的是「模型自己做不到什么」的假设，而这些假设会过期</strong>。托管的价值正在这里：厂商替你追模型，删掉过期的补丁。</p>
 <p>代价是对称的。压缩什么时候触发、留什么，工具失败重试几次，并行调用怎么排序，这些都由平台决定，文档也写明 beta 期间行为可能在版本之间调整。你自建时 harness 版本跟着 git 走；租来的 harness，<strong>同一个 agent 配置、同一个任务，下个月的工具调用轨迹可能不一样</strong>。能做的是把事件日志当观测面：定期跑一组固定任务，比对轨迹指纹。</p>
 <p>你还能握住的旋钮其实不多，要清楚有哪些：<strong>agent 配置带版本号</strong>（创建时返回 <code>version</code>），改配置要当成发版来做；工具集可以逐个开关、配 permission policy；网页工具可以设域名白名单。这些是「你的那一半」，应该和代码一起进 git（CLI 的 <code>ant apply</code> 会把 ID 记进 <code>claude-lock.json</code>）。剩下那一半只能观测，不能固定。</p>
-<h3>// 实战示例</h3>
+<h3 data-tts="542b37e2ac6400d1">// 实战示例</h3>
 <pre><code><span class="tag-com"># 漂移哨兵：固定任务的工具调用序列 + 模型请求次数，和基线对比</span>
 import json, hashlib
 TOOL_EVENTS = ("agent.tool_use", "agent.custom_tool_use", "agent.mcp_tool_use")
@@ -147,21 +146,20 @@ def trace(session_id):
             "fp": hashlib.sha1("|".join(names).encode()).hexdigest()[:10]}
 
 cur, base = trace(SESSION_ID), json.load(open("baseline.json"))
-if cur["fp"] != base["fp"] or cur["model_calls"] > 1.5 * base["model_calls"]:
+if cur["fp"] != base["fp"] or cur["model_calls"] &gt; 1.5 * base["model_calls"]:
     print("harness/模型行为漂移：先看产出质量，再决定是否更新基线", cur)</code></pre>
 <div class="fail"><strong>失败模式：</strong>轨迹变了不等于变差，平台优化后步数减少是好事，所以哨兵只用来<strong>触发人工复核</strong>，不能直接判失败。另一个坑是拿事件日志当可移植的审计记录：事件 schema 是厂商私有的，流式增量（<code>event_delta</code>）<strong>不进历史</strong>，换厂商时这份日志既不能重放，也对不上新平台的语义。</div>
 <div class="res">进阶资源：<a href="https://platform.claude.com/docs/en/managed-agents/events-and-streaming" target="_blank">Claude Docs · Session event stream</a> · <a href="https://www.anthropic.com/engineering/managed-agents" target="_blank">Anthropic Engineering · Scaling Managed Agents</a></div>
 </div>
-
 <!-- ============ 3 ============ -->
 <div class="section">
 <span class="num">// POINT 03</span>
-<h2>Build vs Buy：把副作用留在自己这边</h2>
+<h2 data-tts="989a9552e3ba13b2">Build vs Buy：把副作用留在自己这边</h2>
 <p class="claim">能租的是循环，该自己留的是「对外部世界做了什么」那一层。custom tool 就是这条边界。</p>
-<h3>// 背景与原理</h3>
+<h3 data-tts="d6f6d58de16e2933">// 背景与原理</h3>
 <p>按任务形状判断。<strong>适合租</strong>：跑几十分钟到几小时、要中途暂停续跑、工具以 bash/文件/搜索这类标准件为主、你的差异化在 prompt 和工具而不在循环本身。<strong>必须自建</strong>：harness 本身就是产品（自定义压缩、领域特化的规划）；要跨厂商切换模型；要能逐字节重放的审计；有 ZDR 或数据驻留要求。</p>
 <p>中间态最常见：循环租，副作用自己握。custom tool 调用时平台不执行，会话以 <code>stop_reason: requires_action</code> 停下，等你回 <code>user.custom_tool_result</code>。这意味着<strong>写库、发邮件、扣款都在你的进程里执行</strong>，Day 58 的幂等键照样能用；哪天换厂商，这一层原样搬走。</p>
-<h3>// 实战示例</h3>
+<h3 data-tts="160fffb695d9c3db">// 实战示例</h3>
 <pre><code><span class="tag-com"># custom tool 回路：平台只发请求，副作用在你这边做，用事件 id 当幂等键</span>
 events_by_id = {}
 with client.beta.sessions.events.stream(session.id) as stream:
@@ -182,17 +180,16 @@ with client.beta.sessions.events.stream(session.id) as stream:
 <div class="fail"><strong>失败模式：</strong>你的回路进程挂了，会话就一直停在 <code>requires_action</code>。平台替你持久化了会话，<strong>没替你持久化回路</strong>，所以回路要能从事件历史重建 <code>events_by_id</code>，再补发未完成的结果。另外，内置 bash 在沙箱里执行的副作用（比如 <code>git push</code>）不经过这条路，要么关掉对应工具，要么配 permission policy 要求确认。</div>
 <div class="res">进阶资源：<a href="https://platform.claude.com/docs/en/managed-agents/tools" target="_blank">Claude Docs · Managed Agents Tools（custom tools）</a> · <a href="https://openai.com/index/introducing-the-agents-api/" target="_blank">OpenAI · Introducing the Agents API（2026-09）</a></div>
 </div>
-
 <!-- ============ 4 ============ -->
 <div class="section">
 <span class="num">// POINT 04</span>
-<h2>自托管沙箱：搬走的是执行，不是数据流</h2>
+<h2 data-tts="c0f6b2d771d9be28">自托管沙箱：搬走的是执行，不是数据流</h2>
 <p class="claim">worker 跑在你机器上，文件和出网都留在你的边界里；但工具的输入输出照样要回到厂商的控制平面。</p>
-<h3>// 背景与原理</h3>
+<h3 data-tts="4f8b680fd2cac517">// 背景与原理</h3>
 <p>Managed Agents 的 <code>self_hosted</code> 环境是一个<strong>工作队列</strong>：会话入队，你的 environment worker 只需出站 HTTPS，认领任务、下载 skills 和 memory store，模型在 Anthropic 侧请求工具，worker 在本地执行再回传结果。没有 worker 在线时会话排队而不是失败。官方文档说得很直白：<strong>工具输入输出仍流向 Anthropic 的控制平面</strong>，模型需要看到结果才能决定下一步。OpenAI 一侧，据报道官方也明确表示：自带沙箱改变的是工具在哪执行，不改变编排状态存在哪。</p>
 <p>所以它解决的是三件事：<strong>内网服务可达、文件与进程不出边界、出网走你的网络策略</strong>。不解决的是：会话日志和工具结果的驻留、ZDR。还有些隐性限制：自托管环境只支持 <code>memory_store</code> 资源，挂 <code>file</code> 或 GitHub 仓库会直接 400；<code>web_search</code>/<code>web_fetch</code> 依然在 Anthropic 服务器上跑，不受你的网络策略约束。</p>
 <p>另外要分清两根轴。自托管沙箱决定<strong>代码在哪执行</strong>，MCP tunnel 决定<strong>厂商怎么够到你内网里的 MCP server</strong>，两者互相独立：云沙箱可以经 tunnel 用私有 MCP，自托管会话也可以用公网 MCP。要让执行和工具访问都留在边界内，就两个一起用；不想开 tunnel，也可以在 worker 里把 MCP server 包成 custom tool 直接提供。</p>
-<h3>// 实战示例</h3>
+<h3 data-tts="2c5fda9692d8623e">// 实战示例</h3>
 <pre><code><span class="tag-com"># worker 主机：只放环境密钥（Console 里生成），不放 API key</span>
 export ANTHROPIC_ENVIRONMENT_KEY="sk-ant-oat01-..."
 export ANTHROPIC_ENVIRONMENT_ID="env_..."
@@ -205,9 +202,8 @@ ant beta:environments:work stats --environment-id "$ANTHROPIC_ENVIRONMENT_ID"
 <div class="fail"><strong>失败模式：</strong>把 API key 放在 worker 主机上。agent 的 bash 调用能读到同一台机器的环境变量，文档特意要求 key <strong>不要放在 worker 上</strong>。再一个是把「自托管」当成合规答案报给法务：工具结果里只要出现客户数据，这份数据就已经进了厂商的会话存储，执行位置换了，<strong>数据流没变</strong>。</div>
 <div class="res">进阶资源：<a href="https://platform.claude.com/docs/en/managed-agents/self-hosted-sandboxes" target="_blank">Claude Docs · Self-hosted sandboxes</a> · <a href="https://platform.claude.com/docs/en/managed-agents/self-hosted-sandboxes-security" target="_blank">Claude Docs · Self-hosted sandbox security model</a></div>
 </div>
-
 <div class="glossary">
-<h3>// 术语表</h3>
+<h3 data-tts="c3f330b824aecf8f">// 术语表</h3>
 <dl>
 <dt>managed harness（托管 harness）</dt><dd>由平台运行的 agent 循环：调模型、路由工具、压缩上下文、持久化会话。</dd>
 <dt>brain / hands / session</dt><dd>Anthropic 对托管架构的三分：决策循环、执行环境、循环之外的持久事件日志。</dd>
@@ -218,17 +214,15 @@ ant beta:environments:work stats --environment-id "$ANTHROPIC_ENVIRONMENT_ID"
 <dt>harness drift（harness 漂移）</dt><dd>配置不变，平台升级循环逻辑导致 agent 行为轨迹变化。</dd>
 </dl>
 </div>
-
 <div class="thinking">
-<h3>// 深入思考</h3>
+<h3 data-tts="fd03fd61d2fc0b2d">// 深入思考</h3>
 <details><summary>「harness 假设会过期」是在论证租，还是在论证自建？</summary><div>两边都能用。对租的一方，厂商比你更早知道新模型不再需要哪个补丁；对自建的一方，<strong>你更早知道你的任务需要哪个补丁</strong>。分界在于你的任务离厂商的主流负载有多远：越接近「通用编码/研究」，厂商的优化越会落到你头上；越偏领域，厂商的默认值越可能是噪声。</div></details>
 <details><summary>会话日志在厂商那里，算不算一种新型锁定？</summary><div>算，而且比模型锁定更隐蔽。模型可以换，提示词可以迁，但几个月的会话历史、memory store、按厂商 schema 写的事件处理代码都带不走。类比数据库：换存储引擎容易，换数据格式难。对策是在自己这边<strong>镜像一份规范化的轨迹</strong>（任务、工具调用、结果、产出），只保留语义，不存厂商格式。</div></details>
 <details><summary>为什么两家不约而同把 harness 免费、按用量收钱？</summary><div>harness 的边际成本低，但它决定了 token 怎么花：压缩得多保守、重试得多积极、并行开多宽，都直接影响账单。免费的循环加按量计费，等于平台同时握着<strong>质量旋钮和成本旋钮</strong>。这不一定是坏事，但意味着成本优化的主导权部分交给了对方，Point 02 的 <code>model_calls</code> 计数就是为此准备的。</div></details>
 <details><summary>如果 MCP 把工具层标准化了，下一个被标准化的会是会话层吗？</summary><div>Day 60 讲 MCP 走向无状态，Day 61 讲 ACS 把护栏做成可移植策略。会话事件日志是剩下最明显的私有格式。要标准化，至少要统一事件类型、工具调用 id 语义和压缩记录方式。在那之前，「可移植」只能靠你自己的规范化镜像，这和分布式系统里先有各家 WAL、很久以后才有 CDC 标准的路径很像。</div></details>
 </div>
-
 <div class="refs">
-<h3>// 延伸阅读</h3>
+<h3 data-tts="8436c7ea7e28e45e">// 延伸阅读</h3>
 <ul>
 <li><a href="https://www.anthropic.com/engineering/managed-agents" target="_blank">Anthropic Engineering · Scaling Managed Agents: Decoupling the brain from the hands</a>：无状态 harness、会话即日志、TTFT 数据</li>
 <li><a href="https://platform.claude.com/docs/en/managed-agents/overview" target="_blank">Claude Docs · Managed Agents overview</a>：四个核心概念与数据保留限制</li>
@@ -239,8 +233,8 @@ ant beta:environments:work stats --environment-id "$ANTHROPIC_ENVIRONMENT_ID"
 </div>
 <footer>BigCat · Super Individual · Day 63 · 2026-10-06</footer>
 </div>
-<script src="https://hub.cissychen.com/comments.js" defer></script>
-<script src="https://hub.cissychen.com/search.js" defer></script>
-<script src="https://hub.cissychen.com/index-button.js" defer></script>
-<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
 </body></html>
