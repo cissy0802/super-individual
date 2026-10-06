@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Day 63 · Managed Agent Harnesses — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;overflow-x:auto}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking{margin:40px 0}
+.thinking h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+.boxes{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;font-size:0.82rem}.box{border:1px solid rgba(0,212,255,0.35);border-radius:8px;padding:12px;background:rgba(0,212,255,0.04)}.box b{display:block;color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-bottom:6px}.box.you{border-color:rgba(255,110,196,0.5);background:rgba(255,110,196,0.05)}.box.mix{border-style:dashed}.legend{font-size:0.8rem;color:#a0a4b8;margin-top:12px}@media(max-width:600px){.boxes{grid-template-columns:1fr}}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}}
+</style>
+</head><body>
+<div class="container">
+<header>
+<span class="week-tag">DAY 63 · HARNESS</span>
+<h1>Managed Agent Harnesses</h1>
+<h2>Once the harness can be rented instead of built, what should you still keep?</h2>
+<div class="date">2026-10-06 · BigCat</div>
+<p class="pitch">Session persistence, context compaction and crash recovery can be outsourced. Compaction strategy, retry semantics and tool-call ordering then leave your hands.</p>
+</header>
+<div class="xref">
+<a href="harness-eng-day3.en.html">Prerequisite → Day 3 Harness Engineering</a> · <a href="durable-agents-day58.en.html">Day 58 Durable Agent Execution</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>Day 3 covered building your own harness; Day 58 covered building durable execution yourself. In the second half of 2026, <strong>both layers became rentable</strong>. Anthropic's Claude Managed Agents (in beta since April) runs the agent loop, session storage and sandbox as a hosted service. OpenAI put the Agents API into public beta on September 10, exposing the Codex harness behind an API, and added computer use in a hosted browser at DevDay on September 29. The two products have nearly the same shape: <strong>the platform owns the loop and the session log; you supply tools and choose the execution environment</strong>. This issue isn't about how to call them. It's about where to draw the line: what is worth handing over, what you can never take back once handed over, and what the "self-hosted sandbox" middle path actually solves.</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// POINT 01</span>
+<h2>You rent the brain and the session; you choose the hands</h2>
+<p class="claim">A managed harness doesn't split model from code. It splits "deciding the next step" from "executing that step".</p>
+<h3>// Background</h3>
+<p>Anthropic's April 2026 engineering post <em>Scaling Managed Agents</em> splits the architecture into three parts: the <strong>brain</strong> (Claude plus the harness loop), the <strong>hands</strong> (sandboxes and tools, unified as <code>execute(name, input) → string</code>), and the <strong>session</strong> (a durable event log that lives outside the context window). That makes the harness stateless: when an instance dies, a new one calls <code>wake(sessionId)</code>, pulls the log back, and continues from the last event. With brain and hands decoupled, a session no longer has to wait for a container to start, and the post reports <strong>p50 TTFT down roughly 60% and p95 down over 90%</strong>.</p>
+<p>The API maps to four objects: Agent (model, system prompt, tools, MCP, skills), Environment (cloud or self-hosted sandbox), Session, and Events. OpenAI's design is isomorphic. The platform manages sessions, orchestration, context compaction and recovery, and compute can run in an OpenAI-hosted sandbox, a partner sandbox, or on your own machines. Neither vendor <strong>charges for the harness itself</strong>; you pay for model, tool and container usage. The differences are at the edges. OpenAI's September 29 computer use runs in <strong>a browser it hosts</strong>, and developers still control which sites it can reach. Anthropic adds cron-triggered scheduled deployments and multi-agent orchestration. Match on these edges when choosing; the core loops are close.</p>
+<div class="diagram">
+<div class="boxes">
+<div class="box"><b>BRAIN · platform</b>agent loop<br/>context compaction<br/>prompt caching<br/>retry &amp; recovery</div>
+<div class="box"><b>SESSION · platform</b>append-only event log<br/>SSE stream + history replay<br/>wake after crash</div>
+<div class="box mix"><b>HANDS · your choice</b>cloud sandbox (platform)<br/>self-hosted worker (you)<br/>custom tool (you)</div>
+</div>
+<p class="legend">Dashed box = the only layer whose location you decide. The first two don't come with you when you switch vendors.</p>
+</div>
+<h3>// Example</h3>
+<pre><code><span class="tag-com"># Minimal Claude Managed Agents loop (SDK adds the beta header: managed-agents-2026-04-01)</span>
+from anthropic import Anthropic
+client = Anthropic()
+
+agent = client.beta.agents.create(
+    name="repo-janitor", model="claude-opus-5-5",
+    tools=[{"type": "agent_toolset_20260401",
+            "configs": [{"name": "web_fetch", "enabled": False}]}],
+)
+env = client.beta.environments.create(
+    name="janitor-env",
+    config={"type": "cloud",
+            "networking": {"type": "limited", "allow_package_managers": True}},
+)
+session = client.beta.sessions.create(agent=agent.id, environment_id=env.id)
+
+with client.beta.sessions.events.stream(session.id) as stream:
+    client.beta.sessions.events.send(session.id, events=[{
+        "type": "user.message",
+        "content": [{"type": "text", "text": "List TODOs in the repo untouched for 90+ days"}]}])
+    for ev in stream:
+        if ev.type == "agent.tool_use":
+            print("[tool]", ev.name)
+        elif ev.type == "session.status_idle":
+            break</code></pre>
+<div class="fail"><strong>Failure mode:</strong> treating it as a longer Messages API. Sessions are <strong>stateful by design</strong>: conversation history, sandbox state and outputs are stored server-side, so Managed Agents is currently <strong>not eligible for ZDR or HIPAA BAA</strong>. According to several reports, the OpenAI Agents API beta likewise supports only US data residency and no ZDR. For regulated workloads, the selection fails at step one, and performance has nothing to do with it.</div>
+<div class="res">Further: <a href="https://www.anthropic.com/engineering/managed-agents" target="_blank">Anthropic Engineering · Scaling Managed Agents: Decoupling the brain from the hands (2026-04)</a> · <a href="https://platform.claude.com/docs/en/managed-agents/overview" target="_blank">Claude Docs · Managed Agents overview</a></div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// POINT 02</span>
+<h2>What you hand over is control: put a sentinel on harness drift</h2>
+<p class="claim">A managed harness gets upgraded quietly along with the model. That's the selling point, and it's also why your regression tests stop meaning anything.</p>
+<h3>// Background</h3>
+<p>The same post gives an example. Sonnet 4.5 would <strong>wrap up tasks early</strong> as it sensed its context limit approaching, so the team added context resets to the harness. On Opus 4.5 the behavior was gone and the resets were dead weight. The lesson: <strong>a harness encodes assumptions about what the model can't do on its own, and those assumptions go stale</strong>. That is exactly what you pay a managed harness for: the vendor tracks the model for you and removes the outdated patches.</p>
+<p>The cost is symmetric. When compaction fires and what it keeps, how many times a failed tool call is retried, how parallel calls are ordered: the platform decides all of these, and the docs say behavior may be refined between releases during the beta. A harness you build is versioned in git. With a rented one, <strong>the same agent config on the same task may produce a different tool-call trace next month</strong>. What you can do is treat the event log as your observability surface: run a fixed task set regularly and compare trace fingerprints.</p>
+<p>Be clear about the few knobs you still hold. <strong>Agent configs are versioned</strong> (creation returns a <code>version</code>), so treat config changes as releases. Tools can be switched on and off one by one and given permission policies. Web tools take domain allowlists. That is your half, and it belongs in git with your code (the CLI's <code>ant apply</code> records IDs in <code>claude-lock.json</code>). The other half you can observe but not pin.</p>
+<h3>// Example</h3>
+<pre><code><span class="tag-com"># Drift sentinel: tool-call sequence + model request count for a fixed task, vs. baseline</span>
+import json, hashlib
+TOOL_EVENTS = ("agent.tool_use", "agent.custom_tool_use", "agent.mcp_tool_use")
+
+def trace(session_id):
+    names, model_calls = [], 0
+    for e in client.beta.sessions.events.list(session_id):
+        if e.type in TOOL_EVENTS:
+            names.append(getattr(e, "name", e.type))
+        elif e.type == "span.model_request_end":
+            model_calls += 1
+    return {"tools": names, "model_calls": model_calls,
+            "fp": hashlib.sha1("|".join(names).encode()).hexdigest()[:10]}
+
+cur, base = trace(SESSION_ID), json.load(open("baseline.json"))
+if cur["fp"] != base["fp"] or cur["model_calls"] > 1.5 * base["model_calls"]:
+    print("harness/model drift: check output quality, then decide whether to rebaseline", cur)</code></pre>
+<div class="fail"><strong>Failure mode:</strong> a changed trace isn't a worse trace. Fewer steps after a platform optimization is good news, so the sentinel should only <strong>trigger human review</strong>, never fail the build on its own. The other trap is treating the event log as a portable audit record. The event schema is vendor-specific and streaming deltas (<code>event_delta</code>) <strong>are never persisted in history</strong>, so after a vendor switch the log can't be replayed and doesn't map onto the new platform's semantics.</div>
+<div class="res">Further: <a href="https://platform.claude.com/docs/en/managed-agents/events-and-streaming" target="_blank">Claude Docs · Session event stream</a> · <a href="https://www.anthropic.com/engineering/managed-agents" target="_blank">Anthropic Engineering · Scaling Managed Agents</a></div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// POINT 03</span>
+<h2>Build vs buy: keep the side effects on your side</h2>
+<p class="claim">The loop is rentable. What you should keep is the layer that acts on the outside world, and custom tools are that boundary.</p>
+<h3>// Background</h3>
+<p>Decide by task shape. <strong>Rent</strong> when the task runs for tens of minutes to hours, needs to pause and resume, uses mostly standard tools (bash, files, search), and your edge is in prompts and tools rather than the loop itself. <strong>Build</strong> when the harness is the product (custom compaction, domain-specific planning), when you need to switch model vendors, when you need byte-for-byte replayable audit, or when ZDR or data residency is a requirement.</p>
+<p>The most common outcome is in between: rent the loop, keep the side effects. When a custom tool is called, the platform doesn't execute it. The session stops with <code>stop_reason: requires_action</code> and waits for your <code>user.custom_tool_result</code>. That means <strong>database writes, emails and charges all execute in your process</strong>, so Day 58's idempotency keys still apply, and if you ever switch vendors this layer moves over unchanged.</p>
+<h3>// Example</h3>
+<pre><code><span class="tag-com"># Custom tool loop: the platform only sends requests; side effects run on your side, keyed by event id</span>
+events_by_id = {}
+with client.beta.sessions.events.stream(session.id) as stream:
+    for ev in stream:
+        if ev.type == "agent.custom_tool_use":
+            events_by_id[ev.id] = ev
+        elif ev.type == "session.status_idle":
+            if ev.stop_reason.type != "requires_action":
+                break
+            for eid in ev.stop_reason.event_ids:
+                call = events_by_id[eid]
+                out = ledger.run_once(key=eid,          <span class="tag-com"># redelivery executes once</span>
+                                      fn=TOOLS[call.name], args=call.input)
+                client.beta.sessions.events.send(session.id, events=[{
+                    "type": "user.custom_tool_result",
+                    "custom_tool_use_id": eid,
+                    "content": [{"type": "text", "text": out}]}])</code></pre>
+<div class="fail"><strong>Failure mode:</strong> if your loop process dies, the session sits in <code>requires_action</code> indefinitely. The platform persisted the session, <strong>not your loop</strong>, so the loop must be able to rebuild <code>events_by_id</code> from event history and resend any missing results. Also, side effects from the built-in bash tool inside the sandbox (a <code>git push</code>, say) bypass this path entirely. Either disable that tool or give it a permission policy that requires confirmation.</div>
+<div class="res">Further: <a href="https://platform.claude.com/docs/en/managed-agents/tools" target="_blank">Claude Docs · Managed Agents Tools (custom tools)</a> · <a href="https://openai.com/index/introducing-the-agents-api/" target="_blank">OpenAI · Introducing the Agents API (2026-09)</a></div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// POINT 04</span>
+<h2>Self-hosted sandboxes move execution, not data flow</h2>
+<p class="claim">The worker runs on your machine, and files and egress stay inside your boundary. Tool inputs and outputs still go back to the vendor's control plane.</p>
+<h3>// Background</h3>
+<p>A Managed Agents <code>self_hosted</code> environment is a <strong>work queue</strong>. Sessions are enqueued; your environment worker, which needs only outbound HTTPS, claims them and downloads the skills and memory stores. The model runs on Anthropic's side and requests tool calls, which the worker executes locally before posting results back. If no worker is online, sessions wait in the queue rather than fail. The docs are blunt: <strong>tool inputs and outputs still flow to Anthropic's control plane</strong>, because the model has to see results to decide what to do next. On the OpenAI side, OpenAI has reportedly stated the same thing: bringing your own sandbox changes where tools execute, not where orchestration state lives.</p>
+<p>So it solves three things: <strong>reaching internal services, keeping files and processes inside your boundary, and routing egress through your own network policy</strong>. It doesn't solve residency of session logs and tool results, or ZDR. There are quieter limits too. Self-hosted environments support only <code>memory_store</code> resources; attaching a <code>file</code> or GitHub repo returns a 400. <code>web_search</code>/<code>web_fetch</code> still run on Anthropic's servers and ignore your network policy.</p>
+<p>Keep two axes apart. A self-hosted sandbox decides <strong>where code executes</strong>; an MCP tunnel decides <strong>how the vendor reaches MCP servers inside your network</strong>. They're independent: a cloud sandbox can use private MCP through a tunnel, and a self-hosted session can use public MCP. To keep both execution and tool access inside your boundary, use both. To skip the tunnel, the worker can wrap the MCP server as custom tools and serve them directly.</p>
+<h3>// Example</h3>
+<pre><code><span class="tag-com"># Worker host: environment key only (generated in the Console), no API key</span>
+export ANTHROPIC_ENVIRONMENT_KEY="sk-ant-oat01-..."
+export ANTHROPIC_ENVIRONMENT_ID="env_..."
+sudo mkdir -p /workspace &amp;&amp; sudo chown "$USER" /workspace
+ant beta:worker poll --workdir /workspace
+
+<span class="tag-com"># Your own machine: confirm at least one worker is polling the queue</span>
+ant beta:environments:work stats --environment-id "$ANTHROPIC_ENVIRONMENT_ID"
+<span class="tag-com"># only route sessions here once workers_polling ≥ 1</span></code></pre>
+<div class="fail"><strong>Failure mode:</strong> putting your API key on the worker host. The agent's bash calls can read environment variables on that machine, which is why the docs specifically say to <strong>keep the key off the worker</strong>. The other mistake is offering "self-hosted" to your legal team as the compliance answer. Once customer data appears in a tool result, it is already in the vendor's session store. You moved where execution happens; <strong>the data flow is unchanged</strong>.</div>
+<div class="res">Further: <a href="https://platform.claude.com/docs/en/managed-agents/self-hosted-sandboxes" target="_blank">Claude Docs · Self-hosted sandboxes</a> · <a href="https://platform.claude.com/docs/en/managed-agents/self-hosted-sandboxes-security" target="_blank">Claude Docs · Self-hosted sandbox security model</a></div>
+</div>
+
+<div class="thinking">
+<h3>// Deeper Questions</h3>
+<details><summary>Does "harness assumptions go stale" argue for renting or for building?</summary><div>Both. For renting: the vendor learns before you do which patches a new model no longer needs. For building: <strong>you learn before the vendor does which patches your task needs</strong>. The deciding factor is how far your task sits from the vendor's mainstream workload. The closer it is to general coding or research, the more the vendor's optimizations land on you. The more domain-specific it is, the more the vendor's defaults become noise.</div></details>
+<details><summary>Is a session log held by the vendor a new kind of lock-in?</summary><div>Yes, and a quieter one than model lock-in. You can swap the model and port the prompts, but months of session history, memory stores, and event-handling code written against a vendor schema stay behind. Think of databases: changing the storage engine is easy, changing the data format is hard. The countermeasure is to <strong>mirror a normalized trace on your side</strong> (task, tool calls, results, outputs), keeping the semantics and dropping the vendor format.</div></details>
+<details><summary>Why did both vendors make the harness free and bill by usage?</summary><div>The harness costs little at the margin, but it decides how tokens get spent: how conservatively it compacts, how aggressively it retries, how wide it fans out. A free loop plus usage billing means the platform holds <strong>both the quality knob and the cost knob</strong>. That isn't necessarily bad, but some control over cost now sits with the vendor, which is what the <code>model_calls</code> counter in Point 02 is there to watch.</div></details>
+<details><summary>If MCP standardized the tool layer, is the session layer next?</summary><div>Day 60 covered MCP going stateless; Day 61 covered ACS making guardrails portable policy. The session event log is the most obvious proprietary format left. Standardizing it would require at least shared event types, tool-call id semantics, and a way to record compaction. Until then, portability depends on your own normalized mirror. Distributed systems went the same way: every vendor had its own WAL long before CDC standards arrived.</div></details>
+</div>
+
+<div class="refs">
+<h3>// Further Reading</h3>
+<ul>
+<li><a href="https://www.anthropic.com/engineering/managed-agents" target="_blank">Anthropic Engineering · Scaling Managed Agents: Decoupling the brain from the hands</a>: stateless harness, session as log, TTFT numbers</li>
+<li><a href="https://platform.claude.com/docs/en/managed-agents/overview" target="_blank">Claude Docs · Managed Agents overview</a>: the four core concepts and data-retention limits</li>
+<li><a href="https://platform.claude.com/docs/en/managed-agents/self-hosted-sandboxes" target="_blank">Claude Docs · Self-hosted sandboxes</a>: work-queue model, workers, and the data-flow boundary</li>
+<li><a href="https://platform.claude.com/docs/en/managed-agents/events-and-streaming" target="_blank">Claude Docs · Session event stream</a>: event types, requires_action, reconnecting</li>
+<li><a href="https://openai.com/index/introducing-the-agents-api/" target="_blank">OpenAI · Introducing the Agents API</a>: the hosted Codex harness</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Day 63 · 2026-10-06</footer>
+</div>
+<script src="https://hub.cissychen.com/comments.js" defer></script>
+<script src="https://hub.cissychen.com/search.js" defer></script>
+<script src="https://hub.cissychen.com/index-button.js" defer></script>
+<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+</body></html>
