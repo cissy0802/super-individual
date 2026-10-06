@@ -63,8 +63,8 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <div class="container">
 <header>
 <span class="week-tag">SKILL 35 / FRONTIER · DEEP DIVE</span>
-<h1>Agent Plugins 1.0.0</h1>
-<h2>skill 与 MCP server 终于有了一个厂商中立的打包格式——以及它故意不管的那一半</h2>
+<h1 data-tts="6172734c48df9a9e">Agent Plugins 1.0.0</h1>
+<h2 data-tts="c6a823e1c29634fa">skill 与 MCP server 终于有了一个厂商中立的打包格式——以及它故意不管的那一半</h2>
 <div class="date">2026-10-06 · BigCat</div>
 <p class="pitch">写好的一套 skill + MCP server，过去要为每个客户端各包一遍。<strong>Agent Plugins 把「包」这一层统一了：一个 <code>plugin.json</code>、一个 <code>skills/</code>、一个 <code>mcp.json</code>。</strong>下面点名规范本体、官方市场、五个首发客户端的装法，以及它和 Claude Code 自家格式差在哪。</p>
 </header>
@@ -72,13 +72,13 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <a href="skill-authoring-skill6.html">Skill 6 官方 authoring 精读</a> · <a href="agents-md-skill8.html">Skill 8 AGENTS.md 与可移植性</a> · <a href="mcp-security-skill12.html">Skill 12 接 MCP 的安全边界</a> · <a href="untrusted-skills-skill30.html">Skill 30 装别人的 Skill 有多危险</a>
 </div>
 <div class="intro">
-<h3>// WHY THIS MATTERS</h3>
+<h3 data-tts="032bd47da8909f25">// WHY THIS MATTERS</h3>
 <p>Agent Skills 统一了「一个 skill 长什么样」，MCP 统一了「一个工具服务怎么接」，但<strong>把它们装进一个可安装的包</strong>，此前每家各有一套：Claude Code 是 <code>.claude-plugin/plugin.json</code>，Cursor 是 <code>.cursor-plugin/plugin.json</code>，Kiro 叫 power。据 GitHub Changelog（2026-08-12），Agent Plugins 1.0 于 <strong>2026-08-06</strong> 发布，创始方为 AWS、Anysphere（Cursor）、Microsoft、OpenAI、Vercel。规范仓库的 MAINTAINERS 文件列出的五位核心维护者也正好来自这五家。</p>
 </div>
 <!-- ============ 1 ============ -->
 <div class="section">
 <span class="num">// 01</span>
-<h2>它替你干掉什么 · 装法 · 第一条能跑的用法</h2>
+<h2 data-tts="c53d1399972c5b9e">它替你干掉什么 · 装法 · 第一条能跑的用法</h2>
 <div class="claim">论断：它干掉的是「同一套工具为每个客户端各打一次包」；最小的合规插件只需要两个文件。</div>
 <p><strong>① 规范本体 <a href="https://github.com/agentplugins/agent-plugins-spec" target="_blank">agentplugins/agent-plugins-spec</a></strong>（据 GitHub 仓库页，2026-10 读取约 1.4k 星）——<code>spec/1.0.0.md</code> 是规范正文，<code>schemas/1.0.0/</code> 是两份 JSON Schema；1.1.0 仍是工作草案。最小插件：</p>
 <pre><code>hello-plugin/
@@ -102,24 +102,24 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <!-- ============ 2 ============ -->
 <div class="section">
 <span class="num">// 02</span>
-<h2>机制：它凭什么能跨客户端</h2>
+<h2 data-tts="8ef1e1ddc6004416">机制：它凭什么能跨客户端</h2>
 <div class="claim">论断：靠「少」——只标准化两种已有共识的组件，其余一律划进各家的命名空间。</div>
-<h3>① 固定位置，不做配置</h3>
+<h3 data-tts="33e2a66c69c7e4cc">① 固定位置，不做配置</h3>
 <p>skill 只在 <code>skills/</code> 的<strong>直接子目录</strong>里找 <code>SKILL.md</code>，规范明文禁止递归往下找；skill 本身照 Agent Skills 规范写，不合规的那一个被跳过，插件其余部分照常加载。MCP 只读根目录的 <code>mcp.json</code>，不认写在 <code>plugin.json</code> 里的。</p>
-<h3>② MCP 配置是一个封闭联合</h3>
+<h3 data-tts="1bbda7cd8953c214">② MCP 配置是一个封闭联合</h3>
 <p>每个 server 必须显式写 <code>type</code>：<code>stdio</code> / <code>streamable-http</code> / <code>sse</code>（旧版），多一个字段就判该条无效。理由写在规范的 Design Decisions 里：各家现有 MCP 配置形状互不兼容、推断传输的方式也不同。客户端只需支持 <code>stdio</code> 或 <code>streamable-http</code> 中的一种，不支持的条目跳过。</p>
 <pre><code>{ "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
   "mcpServers": {
     "lint": { "type": "stdio", "command": "./bin/lint-server",
               "args": ["--cache", "${PLUGIN_DATA}/cache"] } } }</code></pre>
 <p>只认两个占位符：<code>${PLUGIN_ROOT}</code>（插件根）与 <code>${PLUGIN_DATA}</code>（客户端管理、升级后仍保留的可写目录）；所有路径必须 <code>./</code> 开头且不能解析到插件根之外。</p>
-<h3>③ 各家私货放进反向域名目录</h3>
+<h3 data-tts="6ed60f51536e39c2">③ 各家私货放进反向域名目录</h3>
 <p>hooks、commands、agents、rules、LSP 被规范明确排除在 v1 之外——「太依赖具体客户端」。它们放进 <code>com.github.copilot/</code> 这类目录，或 <code>plugin.json</code> 的 <code>extensions</code> 字段；不认识的命名空间，客户端必须忽略、不得校验。</p>
 </div>
 <!-- ============ 3 ============ -->
 <div class="section">
 <span class="num">// 03</span>
-<h2>真实用法与边界：同一个文件夹喂 Claude Code 和其他五家</h2>
+<h2 data-tts="5183d38f7156d97f">真实用法与边界：同一个文件夹喂 Claude Code 和其他五家</h2>
 <div class="claim">论断：skills/ 两边天然共用；MCP 与清单各写一份——这是按两边官方文档推出来的做法，规范本身不保证 Claude Code 兼容。</div>
 <pre><code>my-tools/
 ├── plugin.json                <span class="tag-com"># Agent Plugins：$schema + name</span>
@@ -129,7 +129,7 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 ├── .mcp.json                  <span class="tag-com"># Claude Code 版 + ${CLAUDE_PLUGIN_ROOT}</span>
 └── com.github.copilot/hooks/  <span class="tag-com"># 某家专属的东西放这里</span></code></pre>
 <p>验货两条命令：Claude Code 这边 <code>claude --plugin-dir ./my-tools</code> 直接加载、<code>claude plugin validate ./my-tools</code> 校验清单；skill 那层用 <a href="https://github.com/agentskills/agentskills" target="_blank">agentskills/agentskills</a> 的 <code>skills-ref validate</code>。规范自己的 FUTURE_CONSIDERATIONS 承认<strong>还没有官方校验工具</strong>，Agent Plugins 那一侧只能靠两份 JSON Schema 和各客户端的报错。</p>
-<h3>判据：什么时候该打成 Agent Plugin</h3>
+<h3 data-tts="0692fe47c5a5b66d">判据：什么时候该打成 Agent Plugin</h3>
 <ul>
 <li><strong>只有一个 skill、只用一个客户端</strong> → 不打包。一份 SKILL.md 放进 skills 目录就够了。</li>
 <li><strong>一组 skill + 一个 MCP server，团队里有人用 Copilot、有人用 Cursor</strong> → 打成 Agent Plugin，放进一个 Git 仓库，各人按上面的装法装。</li>
@@ -140,25 +140,25 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <!-- ============ 4 ============ -->
 <div class="section">
 <span class="num">// 04</span>
-<h2>代价与替代品</h2>
+<h2 data-tts="255bd5bb6cf670d9">代价与替代品</h2>
 <div class="claim">论断：它统一了「包」，没统一「信任」——装之前的审查一步都省不了。</div>
-<h3>① 信任边界留给了客户端</h3>
+<h3 data-tts="22d170f713093f6a">① 信任边界留给了客户端</h3>
 <p>规范明确不定义安装、权限与信任模型、分发与市场、注册表、OAuth 与凭据。FUTURE_CONSIDERATIONS 列出的待办包括：清单里声明权限、签名与来源验证、密钥注入、企业白名单——<strong>这些在 1.0 里都还没有</strong>。一个 stdio 类型的 MCP server 就是一个会在你机器上跑的程序，审查照 <a href="untrusted-skills-skill30.html">Skill 30</a> 与 <a href="mcp-security-skill12.html">Skill 12</a> 的清单来。</p>
-<h3>② 「跨客户端」不等于「同样好用」</h3>
+<h3 data-tts="988b639db2ff4615">② 「跨客户端」不等于「同样好用」</h3>
 <p>规范只规定客户端在哪找组件，不规定「怎么把 skill 暴露给用户或模型」。同一个 skill 在不同客户端的触发方式、命名空间、上下文开销都可能不同，跨端发布前每家至少跑一遍。</p>
-<h3>③ 双份配置要同步</h3>
+<h3 data-tts="1cb135c239b75335">③ 双份配置要同步</h3>
 <p>为了兼顾 Claude Code 写两份 MCP 配置，就多了一个会漂移的地方。没有依赖声明（同样在待办里），插件之间也不能互相引用。</p>
 <div class="fail"><strong>替代品，按成本从低到高</strong>：一份 SKILL.md 直接放进各客户端的 skills 目录 → <a href="https://github.com/vercel-labs/skills" target="_blank">vercel-labs/skills</a> 的 <code>npx skills</code> 用符号链接把一份 skill 分发给多个 agent → 各家原生插件格式 → Agent Plugins。</div>
 <div class="res">来源：<a href="https://github.com/agentplugins/agent-plugins-spec/blob/main/spec/1.0.0.md" target="_blank">Agent Plugins Specification 1.0.0</a>（组件发现、MCP 封闭联合、占位符、Design Decisions） · <a href="https://github.com/agentplugins/agent-plugins-spec/blob/main/FUTURE_CONSIDERATIONS.md" target="_blank">FUTURE_CONSIDERATIONS</a> · <a href="https://code.claude.com/docs/en/plugins-reference" target="_blank">Claude Code plugins reference</a>（均 2026-10 读取）</div>
 </div>
 <div class="combo">
-<h3>// 一页选购卡</h3>
+<h3 data-tts="77bf6cc452b429e8">// 一页选购卡</h3>
 <p><strong>先看这三个</strong>：① <a href="https://github.com/agentplugins/agent-plugins-spec/blob/main/spec/1.0.0.md" target="_blank">spec/1.0.0.md</a> 的 Design Decisions 节——十分钟读完就知道它管什么、不管什么。② <a href="https://github.com/github/awesome-copilot" target="_blank">github/awesome-copilot</a>——在 VS Code 或 Copilot CLI 里装一个现成的规范插件，看真实目录长什么样。③ 你主力客户端的本地加载路径：Cursor 的 <code>~/.cursor/plugins/local/</code>、Claude Code 的 <code>--plugin-dir</code>、Kiro 的 Import power from GitHub。</p>
 <p><strong>按需再加</strong>：<code>skills-ref validate</code>（打包前校验每个 skill） · <code>claude plugin validate</code>（兼顾 Claude Code 时校验那份清单） · <code>codex plugin marketplace add</code>（团队有人用 Codex）。</p>
 <p><strong>明确别做</strong>：为一个 skill 建一整个插件 · 把 hooks 写在根目录指望各家都认 · 把「装得上」当成「审过了」 · 在 <code>mcp.json</code> 的 <code>env</code> 里自己设 <code>PLUGIN_ROOT</code>（规范禁止）。</p>
 </div>
 <div class="glossary">
-<h3>// 术语表</h3>
+<h3 data-tts="00e870b28f61b98f">// 术语表</h3>
 <dl>
 <dt>manifest（清单）</dt>
 <dd>插件根目录的 <code>plugin.json</code>，声明规范版本与插件名。</dd>
@@ -173,13 +173,13 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 </dl>
 </div>
 <div class="thinking">
-<h3>// 三个想不通的地方</h3>
+<h3 data-tts="6bc2cd89bd3b72d9">// 三个想不通的地方</h3>
 <details><summary>Anthropic 不在名单里，这个规范会不会只是「Claude Code 之外的联盟」？</summary><div>就仓库看，MAINTAINERS 列的五位来自 Amazon、Cursor、Microsoft、OpenAI、Vercel，没有 Anthropic；它组装的两块地基——Agent Skills 与 MCP——却都源自 Anthropic。治理章程写明「任何单一厂商不得占核心维护者多数」。<strong>Claude Code 会不会读根目录 <code>plugin.json</code>，目前没有官方说法</strong>，在那之前按 03 节双清单处理最稳。</div></details>
 <details><summary>为什么连 hooks 都不标准化？hooks 明明很常用。</summary><div>规范的回答是「太依赖具体客户端」：每家的生命周期事件名、输入输出、能不能拦截都不同，硬定一个公约数只会谁都不好用。所以 v1 只收已有独立规范、跨端已被采用的两样东西。<strong>代价是插件里最「确定性」的那部分，恰恰最不可移植。</strong></div></details>
 <details><summary>仓库的提交历史里最早叫 Open Plugin Specification，这说明什么？</summary><div>据仓库提交记录，2026-04-02 首次提交名为「Open Plugin Specification v1.0.0」，07-19 才统一改名 Agent Plugins，07-10 还删掉了一份 marketplace 附录。也就是说「分发与市场」曾在草案里、后来被主动拿掉——<strong>不管信任是刻意的取舍，不是疏忽</strong>，这一点决定了你该在客户端那边找安全保障，而不是在包格式里找。</div></details>
 </div>
 <div class="refs">
-<h3>// 延伸阅读</h3>
+<h3 data-tts="9e1555752106c9b7">// 延伸阅读</h3>
 <ul>
 <li><a href="https://github.com/agentplugins/agent-plugins-spec" target="_blank">agentplugins/agent-plugins-spec</a> — README、<code>spec/1.0.0.md</code>、<code>schemas/1.0.0/</code>、GOVERNANCE、MAINTAINERS（据 GitHub 仓库页 2026-10 读取约 1.4k 星）</li>
 <li><a href="https://github.blog/changelog/2026-08-12-agent-plugins-1-0-in-vs-code-copilot-cli-and-the-copilot-app/" target="_blank">GitHub Changelog · Agent Plugins 1.0 in VS Code, Copilot CLI, and the Copilot app</a> — 发布日期、创始方、<code>com.github.copilot/</code> 迁移、企业 <code>enabledPlugins</code>（2026-08-12）</li>
@@ -194,8 +194,8 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 </div>
 <footer>BigCat · Super Individual · Skill 35 · 2026-10-06</footer>
 </div>
-<script src="https://hub.cissychen.com/comments.js" defer></script>
-<script src="https://hub.cissychen.com/search.js" defer></script>
-<script src="https://hub.cissychen.com/index-button.js" defer></script>
-<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
 </body></html>
