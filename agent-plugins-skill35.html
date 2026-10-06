@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill 35 · Agent Plugins 1.0.0：skill 与 MCP 的统一打包格式 — Super Individual</title>
+<style>
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head>
+<body>
+<div class="container">
+<header>
+<span class="week-tag">SKILL 35 / FRONTIER · DEEP DIVE</span>
+<h1>Agent Plugins 1.0.0</h1>
+<h2>skill 与 MCP server 终于有了一个厂商中立的打包格式——以及它故意不管的那一半</h2>
+<div class="date">2026-10-06 · BigCat</div>
+<p class="pitch">写好的一套 skill + MCP server，过去要为每个客户端各包一遍。<strong>Agent Plugins 把「包」这一层统一了：一个 <code>plugin.json</code>、一个 <code>skills/</code>、一个 <code>mcp.json</code>。</strong>下面点名规范本体、官方市场、五个首发客户端的装法，以及它和 Claude Code 自家格式差在哪。</p>
+</header>
+<div class="xref">
+<a href="skill-authoring-skill6.html">Skill 6 官方 authoring 精读</a> · <a href="agents-md-skill8.html">Skill 8 AGENTS.md 与可移植性</a> · <a href="mcp-security-skill12.html">Skill 12 接 MCP 的安全边界</a> · <a href="untrusted-skills-skill30.html">Skill 30 装别人的 Skill 有多危险</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>Agent Skills 统一了「一个 skill 长什么样」，MCP 统一了「一个工具服务怎么接」，但<strong>把它们装进一个可安装的包</strong>，此前每家各有一套：Claude Code 是 <code>.claude-plugin/plugin.json</code>，Cursor 是 <code>.cursor-plugin/plugin.json</code>，Kiro 叫 power。据 GitHub Changelog（2026-08-12），Agent Plugins 1.0 于 <strong>2026-08-06</strong> 发布，创始方为 AWS、Anysphere（Cursor）、Microsoft、OpenAI、Vercel。规范仓库的 MAINTAINERS 文件列出的五位核心维护者也正好来自这五家。</p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>它替你干掉什么 · 装法 · 第一条能跑的用法</h2>
+<div class="claim">论断：它干掉的是「同一套工具为每个客户端各打一次包」；最小的合规插件只需要两个文件。</div>
+<p><strong>① 规范本体 <a href="https://github.com/agentplugins/agent-plugins-spec" target="_blank">agentplugins/agent-plugins-spec</a></strong>（据 GitHub 仓库页，2026-10 读取约 1.4k 星）——<code>spec/1.0.0.md</code> 是规范正文，<code>schemas/1.0.0/</code> 是两份 JSON Schema；1.1.0 仍是工作草案。最小插件：</p>
+<pre><code>hello-plugin/
+├── plugin.json
+└── skills/greet/SKILL.md
+
+<span class="tag-com"># plugin.json —— 只有 $schema 与 name 是必填</span>
+{ "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "hello-plugin" }</code></pre>
+<p>首发客户端的装法（均据各家官方文档，2026-10 检索）：</p>
+<ul>
+<li><strong>VS Code</strong>——命令面板跑 <code>Chat: Install Plugin From Source</code>，填 Git 仓库地址即可；默认已接 <code>copilot-plugins</code> 与 <code>awesome-copilot</code> 两个市场，加别的市场改 <code>chat.plugins.marketplaces</code>。</li>
+<li><strong>Copilot CLI</strong>——<code>copilot plugin install &lt;插件名&gt;@awesome-copilot</code>；旧版本先跑 <code>copilot plugin marketplace add github/awesome-copilot</code>。也可写进 settings 的 <code>enabledPlugins</code>。</li>
+<li><strong><a href="https://github.com/github/awesome-copilot" target="_blank">github/awesome-copilot</a></strong>——GitHub 官方维护的社区市场，VS Code、Copilot CLI、Copilot app 默认可见；规范插件从这里装。</li>
+<li><strong>Codex</strong>——<code>codex plugin marketplace add owner/repo</code> 加市场，<code>codex plugin add &lt;插件&gt;@&lt;市场&gt;</code> 安装；交互里 <code>/plugins</code> 看列表。</li>
+<li><strong>Cursor</strong>——同时认两种格式：根目录 <code>plugin.json</code>（Agent Plugins）与 <code>.cursor-plugin/plugin.json</code>（Cursor 自有）。本地调试把目录放进 <code>~/.cursor/plugins/local/</code> 后 Reload Window；市场里的用 <code>/add-plugin</code>。</li>
+<li><strong>Kiro</strong>——在 Powers 面板选「Import power from GitHub」贴仓库地址；<code>plugin.json</code> 与旧的 <code>POWER.md</code> 都认。插件里的 MCP server 由 Kiro 托管，不写进你的 <code>~/.kiro/settings/mcp.json</code>，随 power 启停。</li>
+</ul>
+<div class="fail"><strong>别装的时候</strong>：Claude Code 不在首发名单里，官方 plugins 文档（2026-10 读取）也没有提到这份规范——它读的仍是 <code>.claude-plugin/plugin.json</code> 与 <code>.mcp.json</code>。只用 Claude Code 的人，今天没有理由改格式。</div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>机制：它凭什么能跨客户端</h2>
+<div class="claim">论断：靠「少」——只标准化两种已有共识的组件，其余一律划进各家的命名空间。</div>
+<h3>① 固定位置，不做配置</h3>
+<p>skill 只在 <code>skills/</code> 的<strong>直接子目录</strong>里找 <code>SKILL.md</code>，规范明文禁止递归往下找；skill 本身照 Agent Skills 规范写，不合规的那一个被跳过，插件其余部分照常加载。MCP 只读根目录的 <code>mcp.json</code>，不认写在 <code>plugin.json</code> 里的。</p>
+<h3>② MCP 配置是一个封闭联合</h3>
+<p>每个 server 必须显式写 <code>type</code>：<code>stdio</code> / <code>streamable-http</code> / <code>sse</code>（旧版），多一个字段就判该条无效。理由写在规范的 Design Decisions 里：各家现有 MCP 配置形状互不兼容、推断传输的方式也不同。客户端只需支持 <code>stdio</code> 或 <code>streamable-http</code> 中的一种，不支持的条目跳过。</p>
+<pre><code>{ "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
+  "mcpServers": {
+    "lint": { "type": "stdio", "command": "./bin/lint-server",
+              "args": ["--cache", "${PLUGIN_DATA}/cache"] } } }</code></pre>
+<p>只认两个占位符：<code>${PLUGIN_ROOT}</code>（插件根）与 <code>${PLUGIN_DATA}</code>（客户端管理、升级后仍保留的可写目录）；所有路径必须 <code>./</code> 开头且不能解析到插件根之外。</p>
+<h3>③ 各家私货放进反向域名目录</h3>
+<p>hooks、commands、agents、rules、LSP 被规范明确排除在 v1 之外——「太依赖具体客户端」。它们放进 <code>com.github.copilot/</code> 这类目录，或 <code>plugin.json</code> 的 <code>extensions</code> 字段；不认识的命名空间，客户端必须忽略、不得校验。</p>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>真实用法与边界：同一个文件夹喂 Claude Code 和其他五家</h2>
+<div class="claim">论断：skills/ 两边天然共用；MCP 与清单各写一份——这是按两边官方文档推出来的做法，规范本身不保证 Claude Code 兼容。</div>
+<pre><code>my-tools/
+├── plugin.json                <span class="tag-com"># Agent Plugins：$schema + name</span>
+├── .claude-plugin/plugin.json <span class="tag-com"># Claude Code 自家清单（可选）</span>
+├── skills/review/SKILL.md     <span class="tag-com"># 两边共用，只写一份</span>
+├── mcp.json                   <span class="tag-com"># 显式 type + ${PLUGIN_ROOT}</span>
+├── .mcp.json                  <span class="tag-com"># Claude Code 版 + ${CLAUDE_PLUGIN_ROOT}</span>
+└── com.github.copilot/hooks/  <span class="tag-com"># 某家专属的东西放这里</span></code></pre>
+<p>验货两条命令：Claude Code 这边 <code>claude --plugin-dir ./my-tools</code> 直接加载、<code>claude plugin validate ./my-tools</code> 校验清单；skill 那层用 <a href="https://github.com/agentskills/agentskills" target="_blank">agentskills/agentskills</a> 的 <code>skills-ref validate</code>。规范自己的 FUTURE_CONSIDERATIONS 承认<strong>还没有官方校验工具</strong>，Agent Plugins 那一侧只能靠两份 JSON Schema 和各客户端的报错。</p>
+<h3>判据：什么时候该打成 Agent Plugin</h3>
+<ul>
+<li><strong>只有一个 skill、只用一个客户端</strong> → 不打包。一份 SKILL.md 放进 skills 目录就够了。</li>
+<li><strong>一组 skill + 一个 MCP server，团队里有人用 Copilot、有人用 Cursor</strong> → 打成 Agent Plugin，放进一个 Git 仓库，各人按上面的装法装。</li>
+<li><strong>核心价值在 hooks 或 subagent</strong> → v1 帮不了你，这部分照样每家写一份，放各自命名空间。</li>
+<li><strong>团队只用 Claude Code</strong> → 留在 <code>.claude-plugin/</code> 加 marketplace，见 <a href="skill-library-hygiene-skill34.html">Skill 34</a> 的插件管理。</li>
+</ul>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>代价与替代品</h2>
+<div class="claim">论断：它统一了「包」，没统一「信任」——装之前的审查一步都省不了。</div>
+<h3>① 信任边界留给了客户端</h3>
+<p>规范明确不定义安装、权限与信任模型、分发与市场、注册表、OAuth 与凭据。FUTURE_CONSIDERATIONS 列出的待办包括：清单里声明权限、签名与来源验证、密钥注入、企业白名单——<strong>这些在 1.0 里都还没有</strong>。一个 stdio 类型的 MCP server 就是一个会在你机器上跑的程序，审查照 <a href="untrusted-skills-skill30.html">Skill 30</a> 与 <a href="mcp-security-skill12.html">Skill 12</a> 的清单来。</p>
+<h3>② 「跨客户端」不等于「同样好用」</h3>
+<p>规范只规定客户端在哪找组件，不规定「怎么把 skill 暴露给用户或模型」。同一个 skill 在不同客户端的触发方式、命名空间、上下文开销都可能不同，跨端发布前每家至少跑一遍。</p>
+<h3>③ 双份配置要同步</h3>
+<p>为了兼顾 Claude Code 写两份 MCP 配置，就多了一个会漂移的地方。没有依赖声明（同样在待办里），插件之间也不能互相引用。</p>
+<div class="fail"><strong>替代品，按成本从低到高</strong>：一份 SKILL.md 直接放进各客户端的 skills 目录 → <a href="https://github.com/vercel-labs/skills" target="_blank">vercel-labs/skills</a> 的 <code>npx skills</code> 用符号链接把一份 skill 分发给多个 agent → 各家原生插件格式 → Agent Plugins。</div>
+<div class="res">来源：<a href="https://github.com/agentplugins/agent-plugins-spec/blob/main/spec/1.0.0.md" target="_blank">Agent Plugins Specification 1.0.0</a>（组件发现、MCP 封闭联合、占位符、Design Decisions） · <a href="https://github.com/agentplugins/agent-plugins-spec/blob/main/FUTURE_CONSIDERATIONS.md" target="_blank">FUTURE_CONSIDERATIONS</a> · <a href="https://code.claude.com/docs/en/plugins-reference" target="_blank">Claude Code plugins reference</a>（均 2026-10 读取）</div>
+</div>
+<div class="combo">
+<h3>// 一页选购卡</h3>
+<p><strong>先看这三个</strong>：① <a href="https://github.com/agentplugins/agent-plugins-spec/blob/main/spec/1.0.0.md" target="_blank">spec/1.0.0.md</a> 的 Design Decisions 节——十分钟读完就知道它管什么、不管什么。② <a href="https://github.com/github/awesome-copilot" target="_blank">github/awesome-copilot</a>——在 VS Code 或 Copilot CLI 里装一个现成的规范插件，看真实目录长什么样。③ 你主力客户端的本地加载路径：Cursor 的 <code>~/.cursor/plugins/local/</code>、Claude Code 的 <code>--plugin-dir</code>、Kiro 的 Import power from GitHub。</p>
+<p><strong>按需再加</strong>：<code>skills-ref validate</code>（打包前校验每个 skill） · <code>claude plugin validate</code>（兼顾 Claude Code 时校验那份清单） · <code>codex plugin marketplace add</code>（团队有人用 Codex）。</p>
+<p><strong>明确别做</strong>：为一个 skill 建一整个插件 · 把 hooks 写在根目录指望各家都认 · 把「装得上」当成「审过了」 · 在 <code>mcp.json</code> 的 <code>env</code> 里自己设 <code>PLUGIN_ROOT</code>（规范禁止）。</p>
+</div>
+<div class="glossary">
+<h3>// 术语表</h3>
+<dl>
+<dt>manifest（清单）</dt>
+<dd>插件根目录的 <code>plugin.json</code>，声明规范版本与插件名。</dd>
+<dt>$schema</dt>
+<dd>写在 JSON 里的规范地址，客户端据此判断按哪个版本解析；规定不得在加载时联网拉取。</dd>
+<dt>closed union（封闭联合）</dt>
+<dd>只允许几种固定形状、多一个字段就判无效的配置格式。</dd>
+<dt>extension namespace（扩展命名空间）</dt>
+<dd>形如 <code>com.github.copilot</code> 的反向域名，给某个客户端放专属数据或目录，免撞名。</dd>
+<dt>stdio / streamable-http</dt>
+<dd>MCP 的两种传输：前者在本机起进程、走标准输入输出；后者连远端 HTTP 服务。</dd>
+</dl>
+</div>
+<div class="thinking">
+<h3>// 三个想不通的地方</h3>
+<details><summary>Anthropic 不在名单里，这个规范会不会只是「Claude Code 之外的联盟」？</summary><div>就仓库看，MAINTAINERS 列的五位来自 Amazon、Cursor、Microsoft、OpenAI、Vercel，没有 Anthropic；它组装的两块地基——Agent Skills 与 MCP——却都源自 Anthropic。治理章程写明「任何单一厂商不得占核心维护者多数」。<strong>Claude Code 会不会读根目录 <code>plugin.json</code>，目前没有官方说法</strong>，在那之前按 03 节双清单处理最稳。</div></details>
+<details><summary>为什么连 hooks 都不标准化？hooks 明明很常用。</summary><div>规范的回答是「太依赖具体客户端」：每家的生命周期事件名、输入输出、能不能拦截都不同，硬定一个公约数只会谁都不好用。所以 v1 只收已有独立规范、跨端已被采用的两样东西。<strong>代价是插件里最「确定性」的那部分，恰恰最不可移植。</strong></div></details>
+<details><summary>仓库的提交历史里最早叫 Open Plugin Specification，这说明什么？</summary><div>据仓库提交记录，2026-04-02 首次提交名为「Open Plugin Specification v1.0.0」，07-19 才统一改名 Agent Plugins，07-10 还删掉了一份 marketplace 附录。也就是说「分发与市场」曾在草案里、后来被主动拿掉——<strong>不管信任是刻意的取舍，不是疏忽</strong>，这一点决定了你该在客户端那边找安全保障，而不是在包格式里找。</div></details>
+</div>
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://github.com/agentplugins/agent-plugins-spec" target="_blank">agentplugins/agent-plugins-spec</a> — README、<code>spec/1.0.0.md</code>、<code>schemas/1.0.0/</code>、GOVERNANCE、MAINTAINERS（据 GitHub 仓库页 2026-10 读取约 1.4k 星）</li>
+<li><a href="https://github.blog/changelog/2026-08-12-agent-plugins-1-0-in-vs-code-copilot-cli-and-the-copilot-app/" target="_blank">GitHub Changelog · Agent Plugins 1.0 in VS Code, Copilot CLI, and the Copilot app</a> — 发布日期、创始方、<code>com.github.copilot/</code> 迁移、企业 <code>enabledPlugins</code>（2026-08-12）</li>
+<li><a href="https://code.visualstudio.com/docs/agent-customization/agent-plugins" target="_blank">VS Code · Agent plugins</a> — Install Plugin From Source、<code>chat.plugins.marketplaces</code>（官方）</li>
+<li><a href="https://github.com/github/awesome-copilot" target="_blank">github/awesome-copilot</a> — <code>copilot plugin install &lt;name&gt;@awesome-copilot</code>（官方市场）</li>
+<li><a href="https://developers.openai.com/codex/plugins" target="_blank">Codex · Plugins</a> 与 <a href="https://developers.openai.com/codex/cli/reference" target="_blank">CLI reference</a> — <code>codex plugin marketplace add</code> / <code>codex plugin add</code>（官方）</li>
+<li><a href="https://cursor.com/docs/plugins" target="_blank">Cursor · Plugins</a> — 两种格式、<code>~/.cursor/plugins/local</code>、<code>/add-plugin</code>（官方）</li>
+<li><a href="https://kiro.dev/blog/powers-supports-plugins/" target="_blank">Kiro · Powers now support Agent Plugins</a> 与 <a href="https://kiro.dev/docs/powers/installation/" target="_blank">Install powers</a>（官方）</li>
+<li><a href="https://code.claude.com/docs/en/plugins-reference" target="_blank">Claude Code · Plugins reference</a> — <code>.claude-plugin/plugin.json</code>、<code>.mcp.json</code>、<code>${CLAUDE_PLUGIN_ROOT}</code>、<code>claude plugin validate</code>（官方，2026-10 读取）</li>
+<li><a href="https://github.com/agentskills/agentskills" target="_blank">agentskills/agentskills</a> — Agent Skills 规范与 <code>skills-ref</code></li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Skill 35 · 2026-10-06</footer>
+</div>
+<script src="https://hub.cissychen.com/comments.js" defer></script>
+<script src="https://hub.cissychen.com/search.js" defer></script>
+<script src="https://hub.cissychen.com/index-button.js" defer></script>
+<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+</body></html>

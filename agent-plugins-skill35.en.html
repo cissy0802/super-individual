@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Skill 35 · Agent Plugins 1.0.0: One Package Format for Skills and MCP — Super Individual</title>
+<style>
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.combo p{margin-bottom:8px;color:#d8d6e8;font-size:0.92rem}
+.thinking{margin:36px 0}
+.thinking h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+</style></head>
+<body>
+<div class="container">
+<header>
+<span class="week-tag">SKILL 35 / FRONTIER · DEEP DIVE</span>
+<h1>Agent Plugins 1.0.0</h1>
+<h2>Skills and MCP servers finally get a vendor-neutral package format, and the half it deliberately leaves alone</h2>
+<div class="date">2026-10-06 · BigCat</div>
+<p class="pitch">A set of skills plus an MCP server used to need a separate package for every client. <strong>Agent Plugins standardizes the package layer: one <code>plugin.json</code>, one <code>skills/</code>, one <code>mcp.json</code>.</strong> Below: the spec itself, the official marketplace, install steps for five launch clients, and how it differs from Claude Code's own format.</p>
+</header>
+<div class="xref">
+<a href="skill-authoring-skill6.en.html">Skill 6 Official Authoring Guide</a> · <a href="agents-md-skill8.en.html">Skill 8 AGENTS.md and Portability</a> · <a href="mcp-security-skill12.en.html">Skill 12 MCP Security Boundaries</a> · <a href="untrusted-skills-skill30.en.html">Skill 30 How Risky Are Other People's Skills</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>Agent Skills standardized what one skill looks like. MCP standardized how to connect a tool server. But <strong>bundling them into one installable package</strong> was different in every client: Claude Code uses <code>.claude-plugin/plugin.json</code>, Cursor uses <code>.cursor-plugin/plugin.json</code>, Kiro calls it a power. According to the GitHub Changelog (2026-08-12), Agent Plugins 1.0 was published on <strong>2026-08-06</strong> with AWS, Anysphere (Cursor), Microsoft, OpenAI and Vercel as founding partners. The five Core Maintainers listed in the spec repo's MAINTAINERS file come from exactly those five companies.</p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// 01</span>
+<h2>What it removes · how to install · a first runnable example</h2>
+<div class="claim">Claim: it removes "package the same toolkit once per client"; the smallest conformant plugin is two files.</div>
+<p><strong>1. The spec: <a href="https://github.com/agentplugins/agent-plugins-spec" target="_blank">agentplugins/agent-plugins-spec</a></strong> (about 1.4k stars per the GitHub repo page, read 2026-10). <code>spec/1.0.0.md</code> is the normative text and <code>schemas/1.0.0/</code> holds the two JSON Schemas; 1.1.0 is still a working draft. The smallest plugin:</p>
+<pre><code>hello-plugin/
+├── plugin.json
+└── skills/greet/SKILL.md
+
+<span class="tag-com"># plugin.json: only $schema and name are required</span>
+{ "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "hello-plugin" }</code></pre>
+<p>Install steps for the launch clients (all from each vendor's official docs, searched 2026-10):</p>
+<ul>
+<li><strong>VS Code</strong>: run <code>Chat: Install Plugin From Source</code> from the Command Palette and paste a Git repo URL. The <code>copilot-plugins</code> and <code>awesome-copilot</code> marketplaces are wired in by default; add others with <code>chat.plugins.marketplaces</code>.</li>
+<li><strong>Copilot CLI</strong>: <code>copilot plugin install &lt;plugin-name&gt;@awesome-copilot</code>; on older versions first run <code>copilot plugin marketplace add github/awesome-copilot</code>. You can also list it under <code>enabledPlugins</code> in settings.</li>
+<li><strong><a href="https://github.com/github/awesome-copilot" target="_blank">github/awesome-copilot</a></strong>: GitHub's community marketplace, visible by default in VS Code, Copilot CLI and the Copilot app; spec plugins install from here.</li>
+<li><strong>Codex</strong>: <code>codex plugin marketplace add owner/repo</code> to add a marketplace, <code>codex plugin add &lt;plugin&gt;@&lt;marketplace&gt;</code> to install; <code>/plugins</code> lists them interactively.</li>
+<li><strong>Cursor</strong>: reads both formats, a root <code>plugin.json</code> (Agent Plugins) and <code>.cursor-plugin/plugin.json</code> (Cursor's own). For local testing drop the folder into <code>~/.cursor/plugins/local/</code> and Reload Window; marketplace plugins install with <code>/add-plugin</code>.</li>
+<li><strong>Kiro</strong>: in the Powers panel choose "Import power from GitHub" and paste the repo URL; both <code>plugin.json</code> and the older <code>POWER.md</code> work. MCP servers inside the plugin are managed by Kiro, not written into your <code>~/.kiro/settings/mcp.json</code>, and switch on and off with the power.</li>
+</ul>
+<div class="fail"><strong>When to skip it</strong>: Claude Code is not on the launch list, and its official plugin docs (read 2026-10) don't mention the spec; it still reads <code>.claude-plugin/plugin.json</code> and <code>.mcp.json</code>. If Claude Code is your only client, there is no reason to change formats today.</div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// 02</span>
+<h2>Mechanism: why it can work across clients</h2>
+<div class="claim">Claim: by doing less. It standardizes only two component types that already have consensus, and fences everything else into per-client namespaces.</div>
+<h3>1. Fixed locations, no configuration</h3>
+<p>Skills are found only as <code>SKILL.md</code> in the <strong>immediate children</strong> of <code>skills/</code>; the spec explicitly forbids recursive search. Each skill follows the Agent Skills spec, and a non-conforming one is skipped while the rest of the plugin loads. MCP is read only from the root <code>mcp.json</code>, never from <code>plugin.json</code>.</p>
+<h3>2. MCP config is a closed union</h3>
+<p>Every server must state its <code>type</code>: <code>stdio</code>, <code>streamable-http</code> or legacy <code>sse</code>; one extra field makes that entry invalid. The Design Decisions section explains why: existing clients use incompatible MCP config shapes and infer transports differently. A client only needs to support one of <code>stdio</code> or <code>streamable-http</code> and skips entries it can't run.</p>
+<pre><code>{ "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
+  "mcpServers": {
+    "lint": { "type": "stdio", "command": "./bin/lint-server",
+              "args": ["--cache", "${PLUGIN_DATA}/cache"] } } }</code></pre>
+<p>Only two placeholders expand: <code>${PLUGIN_ROOT}</code> (the plugin root) and <code>${PLUGIN_DATA}</code> (a client-managed writable directory that survives updates). Every path must start with <code>./</code> and must not resolve outside the plugin root.</p>
+<h3>3. Client-specific extras go in reverse-domain directories</h3>
+<p>Hooks, commands, agents, rules and LSP servers are explicitly out of v1 as "too client-specific". They go in directories like <code>com.github.copilot/</code> or under the <code>extensions</code> field of <code>plugin.json</code>; clients must ignore namespaces they don't implement, without validating them.</p>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// 03</span>
+<h2>Real usage and limits: one folder for Claude Code and the other five</h2>
+<div class="claim">Claim: <code>skills/</code> is shared for free; MCP config and the manifest get one copy each. This layout is inferred from both sets of official docs; the spec itself promises nothing about Claude Code.</div>
+<pre><code>my-tools/
+├── plugin.json                <span class="tag-com"># Agent Plugins: $schema + name</span>
+├── .claude-plugin/plugin.json <span class="tag-com"># Claude Code manifest (optional)</span>
+├── skills/review/SKILL.md     <span class="tag-com"># shared, written once</span>
+├── mcp.json                   <span class="tag-com"># explicit type + ${PLUGIN_ROOT}</span>
+├── .mcp.json                  <span class="tag-com"># Claude Code copy + ${CLAUDE_PLUGIN_ROOT}</span>
+└── com.github.copilot/hooks/  <span class="tag-com"># one client's extras live here</span></code></pre>
+<p>Two checks: on the Claude Code side, <code>claude --plugin-dir ./my-tools</code> loads it directly and <code>claude plugin validate ./my-tools</code> checks the manifest; for the skill layer, use <code>skills-ref validate</code> from <a href="https://github.com/agentskills/agentskills" target="_blank">agentskills/agentskills</a>. The spec's own FUTURE_CONSIDERATIONS admits there is <strong>no official validator yet</strong>, so on the Agent Plugins side you rely on the two JSON Schemas and each client's error messages.</p>
+<h3>Criteria: when to package as an Agent Plugin</h3>
+<ul>
+<li><strong>One skill, one client</strong> → don't package. A single SKILL.md in the skills directory is enough.</li>
+<li><strong>Several skills plus an MCP server, and teammates split between Copilot and Cursor</strong> → package it, put it in one Git repo, and let each person install it as above.</li>
+<li><strong>The real value is in hooks or subagents</strong> → v1 can't help; write those once per client, each in its own namespace.</li>
+<li><strong>The team uses only Claude Code</strong> → stay with <code>.claude-plugin/</code> and a marketplace; see plugin management in <a href="skill-library-hygiene-skill34.en.html">Skill 34</a>.</li>
+</ul>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// 04</span>
+<h2>Costs and alternatives</h2>
+<div class="claim">Claim: it unified the package, not the trust. None of the review before installing goes away.</div>
+<h3>1. The trust boundary is left to clients</h3>
+<p>The spec explicitly does not define installation, permission or trust models, distribution and marketplaces, registries, or OAuth and credentials. FUTURE_CONSIDERATIONS lists what's pending: permission declarations in the manifest, signatures and provenance, secret injection, enterprise allowlists. <strong>None of that is in 1.0.</strong> A stdio MCP server is a program that runs on your machine; review it with the checklists in <a href="untrusted-skills-skill30.en.html">Skill 30</a> and <a href="mcp-security-skill12.en.html">Skill 12</a>.</p>
+<h3>2. "Works across clients" is not "works equally well"</h3>
+<p>The spec says where a client finds components, not how it exposes a skill to users or models. The same skill can trigger differently, get a different namespace, and cost different context in each client; run it at least once in each before publishing broadly.</p>
+<h3>3. Two configs drift</h3>
+<p>Supporting Claude Code means two MCP configs, which is one more place for things to drift. There are no dependency declarations either (also on the pending list), so plugins can't reference each other.</p>
+<div class="fail"><strong>Alternatives, cheapest first</strong>: drop one SKILL.md into each client's skills directory → use <code>npx skills</code> from <a href="https://github.com/vercel-labs/skills" target="_blank">vercel-labs/skills</a> to symlink one copy into several agents → each vendor's native plugin format → Agent Plugins.</div>
+<div class="res">Sources: <a href="https://github.com/agentplugins/agent-plugins-spec/blob/main/spec/1.0.0.md" target="_blank">Agent Plugins Specification 1.0.0</a> (component discovery, MCP closed union, placeholders, Design Decisions) · <a href="https://github.com/agentplugins/agent-plugins-spec/blob/main/FUTURE_CONSIDERATIONS.md" target="_blank">FUTURE_CONSIDERATIONS</a> · <a href="https://code.claude.com/docs/en/plugins-reference" target="_blank">Claude Code plugins reference</a> (all read 2026-10)</div>
+</div>
+<div class="combo">
+<h3>// Buyer's card</h3>
+<p><strong>Look at these three first</strong>: 1. The Design Decisions section of <a href="https://github.com/agentplugins/agent-plugins-spec/blob/main/spec/1.0.0.md" target="_blank">spec/1.0.0.md</a>: ten minutes tells you what it covers and what it doesn't. 2. <a href="https://github.com/github/awesome-copilot" target="_blank">github/awesome-copilot</a>: install a ready-made spec plugin in VS Code or Copilot CLI and look at a real directory. 3. Your main client's local loading path: Cursor's <code>~/.cursor/plugins/local/</code>, Claude Code's <code>--plugin-dir</code>, Kiro's Import power from GitHub.</p>
+<p><strong>Add as needed</strong>: <code>skills-ref validate</code> (check each skill before packaging) · <code>claude plugin validate</code> (check the Claude Code manifest if you support it) · <code>codex plugin marketplace add</code> (if teammates use Codex).</p>
+<p><strong>Don't</strong>: build a whole plugin for one skill · put hooks at the root and hope every client reads them · treat "it installed" as "it was reviewed" · set <code>PLUGIN_ROOT</code> yourself in an <code>mcp.json</code> <code>env</code> block (the spec forbids it).</p>
+</div>
+<div class="glossary">
+<h3>// Glossary</h3>
+<dl>
+<dt>manifest</dt>
+<dd>The <code>plugin.json</code> at the plugin root, declaring the spec version and plugin name.</dd>
+<dt>$schema</dt>
+<dd>The spec URL written into the JSON; clients use it to pick a version and must not fetch it over the network while loading.</dd>
+<dt>closed union</dt>
+<dd>A config format allowing only a few fixed shapes; one extra field makes the entry invalid.</dd>
+<dt>extension namespace</dt>
+<dd>A reverse-domain name like <code>com.github.copilot</code> that holds one client's private data or directory without collisions.</dd>
+<dt>stdio / streamable-http</dt>
+<dd>The two MCP transports: the first starts a local process over standard input and output; the second connects to a remote HTTP service.</dd>
+</dl>
+</div>
+<div class="thinking">
+<h3>// Three open questions</h3>
+<details><summary>Anthropic isn't on the list. Is this just a coalition outside Claude Code?</summary><div>From the repo: the five people in MAINTAINERS come from Amazon, Cursor, Microsoft, OpenAI and Vercel, with no one from Anthropic, yet both foundations it packages, Agent Skills and MCP, originated at Anthropic. The charter says no single vendor may hold a majority of Core Maintainer seats. <strong>Whether Claude Code will read a root <code>plugin.json</code> has no official answer yet</strong>; until it does, the dual-manifest layout in section 03 is the safe bet.</div></details>
+<details><summary>Why not standardize hooks? Everyone uses them.</summary><div>The spec's answer is "too client-specific": lifecycle event names, inputs and outputs, and whether a hook can block all differ, so a forced common subset would serve nobody. v1 only takes the two things that already have independent specs and cross-client adoption. <strong>The cost: the most deterministic part of a plugin is exactly the least portable.</strong></div></details>
+<details><summary>The repo's earliest commit calls it the Open Plugin Specification. What does that tell us?</summary><div>Per the commit history, the first commit on 2026-04-02 was "Add Open Plugin Specification v1.0.0"; it was renamed to Agent Plugins on 07-19, and on 07-10 a marketplace appendix was removed. So distribution and marketplaces were once in the draft and were taken out on purpose. <strong>Leaving trust out is a deliberate trade-off, not an oversight</strong>, which tells you to look for safety guarantees in the client, not in the package format.</div></details>
+</div>
+<div class="refs">
+<h3>// Further reading</h3>
+<ul>
+<li><a href="https://github.com/agentplugins/agent-plugins-spec" target="_blank">agentplugins/agent-plugins-spec</a>: README, <code>spec/1.0.0.md</code>, <code>schemas/1.0.0/</code>, GOVERNANCE, MAINTAINERS (about 1.4k stars per the GitHub repo page, read 2026-10)</li>
+<li><a href="https://github.blog/changelog/2026-08-12-agent-plugins-1-0-in-vs-code-copilot-cli-and-the-copilot-app/" target="_blank">GitHub Changelog · Agent Plugins 1.0 in VS Code, Copilot CLI, and the Copilot app</a>: release date, founding partners, <code>com.github.copilot/</code> migration, enterprise <code>enabledPlugins</code> (2026-08-12)</li>
+<li><a href="https://code.visualstudio.com/docs/agent-customization/agent-plugins" target="_blank">VS Code · Agent plugins</a>: Install Plugin From Source, <code>chat.plugins.marketplaces</code> (official)</li>
+<li><a href="https://github.com/github/awesome-copilot" target="_blank">github/awesome-copilot</a>: <code>copilot plugin install &lt;name&gt;@awesome-copilot</code> (official marketplace)</li>
+<li><a href="https://developers.openai.com/codex/plugins" target="_blank">Codex · Plugins</a> and <a href="https://developers.openai.com/codex/cli/reference" target="_blank">CLI reference</a>: <code>codex plugin marketplace add</code> / <code>codex plugin add</code> (official)</li>
+<li><a href="https://cursor.com/docs/plugins" target="_blank">Cursor · Plugins</a>: both formats, <code>~/.cursor/plugins/local</code>, <code>/add-plugin</code> (official)</li>
+<li><a href="https://kiro.dev/blog/powers-supports-plugins/" target="_blank">Kiro · Powers now support Agent Plugins</a> and <a href="https://kiro.dev/docs/powers/installation/" target="_blank">Install powers</a> (official)</li>
+<li><a href="https://code.claude.com/docs/en/plugins-reference" target="_blank">Claude Code · Plugins reference</a>: <code>.claude-plugin/plugin.json</code>, <code>.mcp.json</code>, <code>${CLAUDE_PLUGIN_ROOT}</code>, <code>claude plugin validate</code> (official, read 2026-10)</li>
+<li><a href="https://github.com/agentskills/agentskills" target="_blank">agentskills/agentskills</a>: the Agent Skills spec and <code>skills-ref</code></li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Skill 35 · 2026-10-06</footer>
+</div>
+<script src="https://hub.cissychen.com/comments.js" defer></script>
+<script src="https://hub.cissychen.com/search.js" defer></script>
+<script src="https://hub.cissychen.com/index-button.js" defer></script>
+<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+</body></html>
