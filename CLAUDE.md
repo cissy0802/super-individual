@@ -33,6 +33,47 @@ TOPICS.md 是本仓选题的**唯一真相源**。以下三条每次运行都适
 
 这样 CI 的 inject-comments 不会再对新页面追加自动提交。
 
+## 4. 页尾两节：越界 + 十条要点（2026-10-17 起，day / skill 两个系列都适用）
+
+**2026-10-17 起**，每篇新页（`*-day{N}.html` 与 `*-skill{N}.html`，中英两页都要）在**正文最后一个 `.section` 之后**、收尾框（`.combo` 选购卡 / `.glossary` 术语表 / `.thinking` 深入思考 / `.refs` 延伸阅读）**之前**，依次加两节。这条优先于 routine prompt 里旧的页面骨架；旧页面不补。
+
+1. **`.crossx` 越界 · 跨学科的联想**（2026-10-17 起，必写，**3–5 条**）：写本篇里的某个工程想法和另一个领域的什么东西是**同一个结构**——像在哪、不像在哪。每条 `<b>学科 · 概念/人物</b>：…`，约 60–90 字（一两句），只有展开的那 1 条可到约 120 字。往读者的深度兴趣挂：意识、佛学、量子力学、神经科学、东西方哲学、心理学、生物进化、复杂性科学；旁支领导力、投资、商业。**别挂回本仓自己的地盘**（AI / 软件工程 / 分布式系统 / 工具生态——这些本仓天天写，挂了等于没越界）。具体研究、人物、年份必须真实准确，拿不准就换一条。原作者或被介绍的 skill/文档自己点名引用的东西进正文；我们联想到的才进越界。英文页标题 `// Crossovers`。
+2. **`.takeaways` 十条要点**（2026-10-17 起，必写，**正好 10 条**）：读者拿它直接记笔记。每条一句完整的话，约 20–45 字，**单独抄出去也能看懂**：写出工具名、协议名、概念名，不用「它」「这个插件」这类要靠上下文的代词。人名/工具名不必每条都当主语开头：全组里主角的名字出现两三次就够，其余各条直接写观点、机制或事实。覆盖各节最值得记的判断、机制和代价（可含越界一两条）；顺序跟正文走。**只总结正文已经写过的东西**，不加新信息，不放引语，不放会过期的星数/安装量。英文页标题 `// Ten takeaways`。
+
+```html
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>学科 · 概念/人物</b>：…</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>…</li>
+</ol>
+</div>
+```
+
+CSS（最近一期页面的 `<style>` 里没有这段——2026-10-17 前的页都没有；拷完样式后**检查有没有，没有就追加进去**）：
+
+```css
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
+```
+
+篇幅：越界约 400 字、十条要点约 350 字，都从正文以外的新增预算里出，**别为它压缩正文**。`.maxchars` 维持 4000 不动（2026-10-17 核过：最近 5 篇中文页最多 3172 字，加两节约 750 字仍在上限内）。
+自检：`publish.sh` 已内置拦截——**只卡从未提交过的新页**，十条要点必须正好 10 个 `<li>`，越界必须 3–5 个 `<li>`；旧页面不查。
+
 ---
 
 # 系列二：「Skills 精选」（`*-skill{N}.html` · 真相源 `SKILLS.md`）
@@ -62,7 +103,7 @@ TOPICS.md 是本仓选题的**唯一真相源**。以下三条每次运行都适
 - **工具打底，判据收尾**（本系列的重心，别写反）：每期正文必须**点名 6 个以上真实可装/可读的具体条目**，每个都给链接 + 「替你干掉什么 / 怎么装怎么用 / 什么时候别装」三件事；判据放在后半程，用来在这些已点名的候选之间取舍。**跑偏自检**：点名不足 6 个、连着两节没出现具体条目名、或选购卡写成「装一个方法论型」这类占位而非具体名字 → 这期跑偏了，重写。判据是清单的附加值，不是替代品。
 - **每期骨架**：`[榜单]` = 01 选品表（6–10 条，先给表再讲道理）→ 02 为什么不能混着比 → 03 三分钟验货判据 → 04 诚实的代价 → 选购卡点名「先装这三个」。`[深挖]` = 01 它替你干掉什么 + 安装命令 + 第一条能跑的用法 → 02 机制 → 03 用法与边界 → 04 代价与替代品。
 - **引用日期写来源页自己的日期**，不是写稿日：一篇 2026-03 的榜单在 2026-08 引用要写 2026-03，值差得多时顺手核现值、两个数都给。
-- 篇幅、版式、双语、术语随名即释、`.maxchars`（4000 CJK）等，与 day 系列完全一致：**直接复用最近一期 day 页的内联 `<style>` 与 section 结构**（`.week-tag` / `.intro` / `.section`+`.num`+`.claim` / `.fail` / `.res` / `.glossary` / `.refs` / `.thinking`）。
+- 篇幅、版式、双语、术语随名即释、`.maxchars`（4000 CJK，2026-10-17 起含越界 + 十条要点）等，与 day 系列完全一致：**直接复用最近一期 day 页的内联 `<style>` 与 section 结构**（`.week-tag` / `.intro` / `.section`+`.num`+`.claim` / `.fail` / `.res` / `.glossary` / `.refs` / `.thinking`），2026-10-17 起再加上面第 4 节的 `.crossx` + `.takeaways`（放在最后一节之后、`.combo` 选购卡之前）。
 - `.week-tag` 写成 `SKILL {N} / {分类} · {榜单|深挖}`，例如 `SKILL 01 / CODING · ROUNDUP`。
 
 ## 发布：本系列有自己的索引页 `skills.html`

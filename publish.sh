@@ -114,6 +114,23 @@ for F in $NEW_FILES; do
     echo "       Use 「」 / 『』 or HTML entity &quot;"
     exit 1
   fi
+
+  # Crossovers (3–5) + ten takeaways (exactly 10), required from 2026-10-17.
+  # Only brand-new pages (never tracked by git): pages published before the rule
+  # never had these sections, and a later touch-up must not trip on them.
+  if ! git ls-files --error-unmatch "$F" >/dev/null 2>&1; then
+    read TK CX < <(python3 -c 'import sys,re;h=sys.stdin.read();c=lambda p:(lambda m:len(re.findall(r"<li[ >]",m.group(1))) if m else -1)(re.search(p,h,re.S));print(c(r"<ol class=\"takeaways\">(.*?)</ol>"),c(r"<div class=\"crossx\">.*?<ul>(.*?)</ul>"))' < "$F")
+    if [ "$TK" -ne 10 ]; then
+      [ "$TK" -lt 0 ] && echo "ERROR: $F has no <ol class=\"takeaways\"> (the 十条要点 section)." \
+                      || echo "ERROR: $F has $TK takeaways; it must be exactly 10."
+      exit 1
+    fi
+    if [ "$CX" -lt 3 ] || [ "$CX" -gt 5 ]; then
+      [ "$CX" -lt 0 ] && echo "ERROR: $F has no <div class=\"crossx\"><ul> (the 越界 section)." \
+                      || echo "ERROR: $F has $CX crossover items; it must be 3–5."
+      exit 1
+    fi
+  fi
 done
 
 # ---------- Duplicate N check (across same KIND, both lang variants) ----------
