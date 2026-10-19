@@ -310,7 +310,7 @@ client.messages.create(
 <p>实测：在一个 50 PR 的 eval 集上，从 flat Markdown prompt 改成上面这个结构 + cache 排布，结果是 — JSON valid rate 从 87% → 99.4%；blocking issue 召回率 +11%；每 PR 平均成本从 $0.18 → $0.022（cache 命中率 91%）。这就是 prompt 工程的真实回报。</p>
 </div>
 <div class="crossx">
-<h3>// 越界 · 跨学科的联想</h3>
+<h3 data-tts="f9e2a6b7f361fb5e">// 越界 · 跨学科的联想</h3>
 <ul>
 <li><b>心理学 · Asch 的印象形成实验（1946）</b>：同一串形容词，「聪明」排在前还是「嫉妒」排在前，被试对这个人的整体印象截然不同，先到的词给后面的词定调。这和前缀缓存一样是顺序决定一切；不像的是，人脑里的先入为主是模糊的偏移，cache 则是差一个字符就整段作废。</li>
 <li><b>进化生物学 · 冯·贝尔的胚胎法则（1828）</b>：越早出现的发育阶段在物种间越保守，越晚的越各不相同，因为早期一改，后面的结构都得跟着重来。这和「稳定层放头、易变层放尾」是同一种排序逻辑；不同在于演化是被淘汰逼出来的，prompt 排布是人主动设计的。</li>
@@ -319,7 +319,7 @@ client.messages.create(
 </ul>
 </div>
 <div class="tk">
-<h3>// 十条要点</h3>
+<h3 data-tts="ed663087e07ec4a1">// 十条要点</h3>
 <ol class="takeaways">
 <li>production-grade 的 prompt 要分层：Role、Task、Context、Examples、Format、Guardrails 各自独立、可缓存、可回归测试。</li>
 <li>prefix caching 从开头逐 token 匹配，所以稳定的部分放最前，每次都变的用户上下文放最后。</li>
