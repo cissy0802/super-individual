@@ -198,7 +198,7 @@ TensorRT-LLM, <a href="https://github.com/NVIDIA/TensorRT-LLM" target="_blank">g
 </div>
 <!-- ============ Crossovers ============ -->
 <div class="crossx">
-<h3>// 越界 · 跨学科的联想</h3>
+<h3 data-tts="4d152abdda767000">// 越界 · 跨学科的联想</h3>
 <ul>
 <li><b>管理学 · 高德拉特的约束理论（《目标》，1984）</b>：系统吞吐由唯一的瓶颈工序决定，优化非瓶颈环节只会堆出更多在制品。换 H100 吞吐只涨 20% 是同一件事：算力不是约束，显存带宽才是。不像的是，工厂瓶颈会随改进漂移，decode 的带宽瓶颈却是物理结构定死的。</li>
 <li><b>分子生物学 · 多聚核糖体（polysome）</b>：一条 mRNA 上同时串着多个核糖体，一个读完脱落，新的立刻从起点装上，模板读一遍服务很多份产物，这就是 continuous batching 的样子。不像在于，核糖体们造的是同一种蛋白，batch 里每个请求的输出各不相同。</li>
@@ -208,7 +208,7 @@ TensorRT-LLM, <a href="https://github.com/NVIDIA/TensorRT-LLM" target="_blank">g
 </div>
 <!-- ============ Takeaways ============ -->
 <div class="tk">
-<h3>// 十条要点</h3>
+<h3 data-tts="ba2318110e2d4c56">// 十条要点</h3>
 <ol class="takeaways">
 <li>LLM 逐 token 解码是 memory-bound：瓶颈在把权重搬出显存的带宽，算力大半闲着。</li>
 <li>推理优化的各种手段都在回答同一个问题：怎么用一次权重搬运多算几个 token。</li>

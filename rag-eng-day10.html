@@ -379,7 +379,7 @@ LangChain <em>Multi Query Retriever</em>, <a href="https://python.langchain.com/
 </div>
 <!-- ============ Crossovers ============ -->
 <div class="crossx">
-<h3>// 越界 · 跨学科的联想</h3>
+<h3 data-tts="55d1f866db2c9743">// 越界 · 跨学科的联想</h3>
 <ul>
 <li><b>心理学 · 编码特异性原则（Tulving &amp; Thomson，1973）</b>：提取线索和编码时的情境越吻合，记忆越容易被唤起。Contextual prefix 在编码端补情境，HyDE 把线索改写成答案的样子，都是在拉近两头。不像在于：人脑没法回头重编码旧记忆，RAG 却能离线把整个 corpus 重编一遍。</li>
 <li><b>神经科学 · 海马体的模式分离与模式完成</b>：齿状回把相似经历分开存，靠精确区分；CA3 凭残缺线索补全记忆，靠模糊联想，恰似 BM25 与 dense 的分工。不像的是，大脑里两者天然协作，检索系统得靠 RRF 拼起来。</li>
@@ -390,7 +390,7 @@ LangChain <em>Multi Query Retriever</em>, <a href="https://python.langchain.com/
 </div>
 <!-- ============ Takeaways ============ -->
 <div class="tk">
-<h3>// 十条要点</h3>
+<h3 data-tts="2dbc3db6994455d5">// 十条要点</h3>
 <ol class="takeaways">
 <li>固定 512 token 切块会切断语义，生产 RAG 应按文档结构切块，小块用来检索、大块交给 LLM。</li>
 <li>Contextual Retrieval 给每个 chunk 加上下文前缀再 embed，靠 prompt caching 每百万 token 只花约 1 美元。</li>
@@ -404,7 +404,6 @@ LangChain <em>Multi Query Retriever</em>, <a href="https://python.langchain.com/
 <li>query transformation 每次多调 1–2 次 LLM，应按查询类型路由，ID 类短查询直走 BM25。</li>
 </ol>
 </div>
-
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3 data-tts="c6707581746cf366">// 综合实战 · 把你的 demo 级 RAG 在一个周末升到生产级</h3>

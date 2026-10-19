@@ -238,7 +238,7 @@ HumanLayer <em>12-Factor Agents</em>（own your control flow / errors）, <a hre
 </div>
 </div>
 <div class="crossx">
-<h3>// 越界 · 跨学科的联想</h3>
+<h3 data-tts="626642ba52cff348">// 越界 · 跨学科的联想</h3>
 <ul>
 <li><b>神经科学 · 脊髓反射与皮层</b>：手碰到烫的东西，脊髓反射弧先把手缩回来，大脑稍后才知道；这和「传输层错误程序自己退避、不惊动模型」是同一种分层。不像的是，反射可以被大脑主动抑制，而 retry 层通常不接受模型的调节。</li>
 <li><b>复杂性科学 · 藏本模型（Kuramoto，1975）</b>：一群各自振荡的单元只要有一点耦合，就会自发同步，萤火虫齐闪就是这样。固定 backoff 让客户端同一时刻撞服务器，正是这种同步；full jitter 故意加噪声去拆散它。自然界常追求同步，工程这里要的是不同步。</li>
@@ -248,7 +248,7 @@ HumanLayer <em>12-Factor Agents</em>（own your control flow / errors）, <a hre
 </ul>
 </div>
 <div class="tk">
-<h3>// 十条要点</h3>
+<h3 data-tts="e4b36a9f5c028f8c">// 十条要点</h3>
 <ol class="takeaways">
 <li>生产环境 agent 的大部分工程量在 happy path 之外，韧性要靠 harness 设计，prompt 解决不了。</li>
 <li>Agent 的 retry 要分两层：429、超时这类瞬时故障由程序退避，参数错、文件不存在这类语义错误喂回模型。</li>

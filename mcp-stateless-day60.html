@@ -225,7 +225,7 @@ curl -X POST https://example.com/mcp \
 <div class="res">进阶资源：<a href="https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization/client-registration" target="_blank">MCP Spec 2026-07-28 · Client Registration</a>（CIMD 与 DCR 弃用的规范原文）· <a href="https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/" target="_blank">MCP Blog · Release Candidate</a>（授权侧六个 SEP）</div>
 </div>
 <div class="crossx">
-<h3>// 越界 · 跨学科的联想</h3>
+<h3 data-tts="386ad85913f2037b">// 越界 · 跨学科的联想</h3>
 <ul>
 <li><b>佛学 · 《弥兰陀王问经》的灯焰</b>：那先比丘说，一盏灯初夜、中夜、后夜的火焰既不是同一个，也不是另一个，是相续而来。无状态 server 也没有跨请求的「我」，连续性全靠每次请求带来的东西接上。不像的是，佛学说那个持续者本来就找不到，MCP 只是把它从协议挪到了客户端手里。</li>
 <li><b>神经科学 · 病人 H.M.</b>：Henry Molaison 1953 年切除双侧内侧颞叶后再也记不住新经历，研究他几十年的 Suzanne Corkin 每次见面都得重新自我介绍，就像客户端每个请求都要在 <code>_meta</code> 里自报身份。不像在于：H.M. 无法核对对方说的真假，server 至少能验签名、验头体一致。</li>
@@ -235,7 +235,7 @@ curl -X POST https://example.com/mcp \
 </ul>
 </div>
 <div class="tk">
-<h3>// 十条要点</h3>
+<h3 data-tts="1c4a5d5bdd925c47">// 十条要点</h3>
 <ol class="takeaways">
 <li>MCP 2026-07-28 规范删除了 initialize 握手与 Mcp-Session-Id，协议层不再有会话概念。</li>
 <li>客户端身份改由每个请求的 _meta 自带，能力发现变成可选的 server/discover 方法。</li>

@@ -228,7 +228,7 @@ OpenAI Batch API 文档, <a href="https://platform.openai.com/docs/guides/batch"
 </div>
 <!-- ============ Crossovers ============ -->
 <div class="crossx">
-<h3>// 越界 · 跨学科的联想</h3>
+<h3 data-tts="1689a445be9a7a81">// 越界 · 跨学科的联想</h3>
 <ul>
 <li><b>神经科学 · 预测编码（Rao &amp; Ballard，1999）</b>：大脑只占体重约 2%，却用掉约 20% 的静息能量，所以它尽量不重复处理已知的东西：高层先给出预测，往上传的主要是预测误差。这和 prompt caching 是同一笔账——稳定前缀打一折，只有新内容付全价。不像在于：大脑的「缓存」是模糊匹配，差一点也能用，还会被误差改写；prompt cache 要求前缀逐字节一致，错一个字节就整段重写。</li>
 <li><b>心理学 · 系统 1 / 系统 2（Kahneman，《思考，快与慢》，2011）</b>：快而省力的直觉处理大多数事，拿不准才调动慢而费力的推理，正是「便宜模型先试、不行再升档」的 cascading。不像在于：Kahneman 强调系统 1 往往不知道自己错了，这恰是正文说别信小模型自评、要靠外部 judge 的原因。</li>
@@ -237,7 +237,7 @@ OpenAI Batch API 文档, <a href="https://platform.openai.com/docs/guides/batch"
 </ul>
 </div>
 <div class="tk">
-<h3>// 十条要点</h3>
+<h3 data-tts="86763d537b9f569d">// 十条要点</h3>
 <ol class="takeaways">
 <li>LLM 成本该按每次调用的五项 token 分布和 feature 归因，而不是按模型名说「Opus 贵」。</li>
 <li>账单是 uncached input、cache write、cache read、output 与 batch 折扣的乘积，每一项都是一个杠杆。</li>
@@ -251,7 +251,6 @@ OpenAI Batch API 文档, <a href="https://platform.openai.com/docs/guides/batch"
 <li>最小成本监控看三个信号：per-request cost、cache 命中率和 model tier 分布；命中率突降是领先指标。</li>
 </ol>
 </div>
-
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3 data-tts="bea9828d803c9dc2">// 综合实战 · 一周把账单砍 70% 的复盘流程</h3>
