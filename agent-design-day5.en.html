@@ -39,6 +39,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -340,6 +351,31 @@ Hamel Husain <em>Your AI Product Needs Evals</em>, <a href="https://hamel.dev/bl
 </div>
 </div>
 
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Neuroscience · habitual vs goal-directed control (Anthony Dickinson)</b>: the brain hands recurring tasks to a habit system that is fast, cheap and stable, and calls on costly goal-directed control only when something is new; outcome-devaluation experiments tell the two apart. That is the workflow/agent split. The difference: the brain turns practiced routines into habits on its own, while in engineering a human has to hard-code the path.</li>
+<li><b>Leadership · Moltke the Elder and mission command</b>: Moltke held that no plan survives first contact with the enemy's main force, so he issued intent and let subordinates decide on the spot. That is exactly the Plan-and-Execute weakness of planning on incomplete information. The gap: Prussian officers shared one training and could read intent; a model gets only a one-line step.</li>
+<li><b>Psychology · conditions for intuitive expertise (Kahneman and Klein, 2009)</b>: their joint paper concluded that experience becomes reliable intuition only in environments with stable regularities and timely, valid feedback; firefighters can build it, stock pickers mostly cannot. Same structure as Reflexion needing a verifier: without trustworthy feedback, reflection accumulates confidence, not skill. The difference is speed: human feedback arrives over years, Reflexion gets test results in one round.</li>
+<li><b>Investing · diversification and correlation (Markowitz, 1952)</b>: a portfolio cuts risk only when its assets are uncorrelated; ten stocks that move together are one stock. Several agents played by the same base model are highly correlated assets, and debate rarely cancels their shared blind spots. Unlike investing, where returns cannot be checked in advance, an agent can be wired to a verifier.</li>
+<li><b>Neuroscience · perseveration (Brenda Milner, 1963)</b>: patients with frontal-lobe damage, doing the Wisconsin Card Sorting Test, keep sorting by the old rule after it changes, even when told they are wrong. It is nearly a clinical version of loop lock. The difference: the patient lacks an internal switching mechanism, while the agent's fix is a monitor bolted onto the harness.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>The difference between a workflow and an agent is not tool use but who controls the flow: code, or the LLM deciding at runtime.</li>
+<li>Agent reliability is roughly per-step success rate to the power N: at 95% per step, ten steps leave about 60%.</li>
+<li>If you can draw every possible path on a whiteboard, build a workflow; only when you cannot is it agent territory.</li>
+<li>ReAct is the default agent loop: read each Observation before choosing the next step, which keeps it simple, fast and forgiving.</li>
+<li>Plan-and-Execute suits only long, high-cost tasks with enough upfront information; a wrong plan forces a full replan.</li>
+<li>Reflexion works only on verifiable tasks with a verifier; without tests or a score, reflection is mostly the model talking to itself.</li>
+<li>Anthropic reports multi-agent setups use about 15x the tokens, worth it only when work is naturally parallel and subtasks need big context.</li>
+<li>Multi-agent systems should use an orchestrator-worker topology with no worker-to-worker chat; peer debate almost never wins on real tasks.</li>
+<li>The five classic ways production agents die are loop lock, over-planning, tool thrashing, context bloat and premature end_turn.</li>
+<li>Diagnose agent failures with per-turn traces rather than raw logs, and let a verifier, not the model, decide when a task is done.</li>
+</ol>
+</div>
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3>// Putting it together · 7-step decision checklist before starting a new agent project</h3>

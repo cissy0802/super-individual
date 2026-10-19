@@ -57,6 +57,17 @@ pre code{color:#d8e8e8}
 .thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style>
 </head><body>
 <div class="container">
@@ -202,6 +213,30 @@ v=$(opa eval -d ~/policies/tool_guard.rego -I --format raw \
 <div class="res">Further: <a href="https://code.claude.com/docs/en/hooks" target="_blank">Claude Code Docs · Hooks (PreToolUse permissionDecision / updatedInput)</a> · <a href="https://github.com/microsoft/agent-governance-toolkit" target="_blank">microsoft/agent-governance-toolkit</a></div>
 </div>
 
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Neuroscience · action selection in the basal ganglia</b>: Redgrave and colleagues (1999) proposed that the cortex offers many actions at once while the basal ganglia inhibit them all by default and release only the winner, much like a PEP/PDP split with default deny. The difference: the basal ganglia keep learning through dopamine and are stateful, while the ACS runtime must be stateless.</li>
+<li><b>Psychology · Kahneman's "noise"</b>: <i>Noise</i> (2021) shows that the same case file gets wildly different verdicts from different judges, and prescribes rules and "decision hygiene." ACS determinism is the same promise of same evidence, same verdict; unlike the book's remedy, it does not remove the noise but locks it inside annotator scores.</li>
+<li><b>Chinese philosophy · Han Feizi's fa (law)</b>: Han Fei held that law should be written down and proclaimed to the people so it does not bend to whoever enforces it, which is policy as data. The contrast: he also prized shu, methods hidden in the ruler's mind, while ACS wants even the reasoning replayable.</li>
+<li><b>Complexity science · Ashby's law of requisite variety</b>: Ross Ashby (1956) argued that a regulator needs at least as much variety as the disturbances it faces. An argument regex has few states while an attacker can encode a key into a URL, so deterministic rules hit a ceiling and can only be one layer of defense in depth.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>ACS uses a PEP/PDP split: the framework intercepts and enforces, while a stateless, deterministic runtime computes the verdict and denies on any error.</li>
+<li>Policy portability hinges on the snapshot contract: every framework adapter must pack the same facts into the same JSON shape.</li>
+<li>The ACS spec defines 8 intervention points, splitting both model calls and tool calls into a before and an after checkpoint.</li>
+<li>Guarding only pre_tool_call misses indirect injection, which enters the context from web pages and emails at post_tool_call.</li>
+<li>Annotators produce semantic scores and policies judge those scores deterministically, isolating nondeterminism in one auditable place.</li>
+<li>An escalate verdict becomes a liftable deny, and the enforced_identity hash binds approval to the exact arguments, closing the TOCTOU gap.</li>
+<li>Fail-closed has an availability cost: an annotator timeout means deny, so observe new policies in evaluate_only shadow mode first.</li>
+<li>With a single framework, Claude Code hooks are enough; an external PDP pays off across two or more frameworks or when audit is required.</li>
+<li>ACS manifest extends merging is additive only: a child manifest can add annotators but cannot loosen the base rules.</li>
+<li>By Ashby's law of requisite variety, deterministic rules cannot stop semantic attacks, so the policy layer is only one layer of defense in depth.</li>
+</ol>
+</div>
 <div class="thinking">
 <h3>// Reflections</h3>
 <details><summary>ACS claims to be vendor-neutral. Which layer does its portability actually get stuck on?</summary><div>The snapshot contract, not the policy language. Rego and Cedar are neutral already. The hard part is whether every framework's adapter packs the same facts into the same JSON: what the tool arguments are called, where annotation scores go, how "who is calling" is expressed in multi-agent setups. The spec leaves snapshot structure to the host. That is pragmatic (frameworks differ too much), but it means portability depends on adapters agreeing with each other. Compare OpenTelemetry: the protocol existed early, and what made it usable was the semantic conventions agreed later. That is exactly what ACS is missing.</div></details>

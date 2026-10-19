@@ -58,6 +58,17 @@ pre code{color:#d8e8e8}
 .thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style>
 </head><body>
 <div class="container">
@@ -197,6 +208,30 @@ v=$(opa eval -d ~/policies/tool_guard.rego -I --format raw \
 <p>快照的形状（<code>tool.clearance</code> / <code>policy_target</code>）一开始就按 ACS 的 policy input 来拼。这样<strong>适配器只写薄薄一层，策略只写一份</strong>，换框架时只需要重写那个十几行的适配器。</p>
 <div class="fail"><strong>失败模式：</strong>一是<strong>规范还在变</strong>：早期引擎里的 <code>bundle_url</code> 远程策略包在这一版已经被删掉，整个工具包也还是 Public Preview。深度绑定 SDK 的 API 等于签了一份迁移债，<strong>Rego 策略本身</strong>才是最稳的资产。二是 Rego 等于多学一门语言，策略写错同样会无声放行，所以要给策略写单测（OPA 自带 <code>opa test</code>）。三是确定性规则的天花板：参数正则拦得住 <code>rm -rf /</code>，拦不住"把密钥 base64 之后塞进一个看起来无害的 URL"。语义层面的攻击还得靠注解器和 Day 50 的沙箱兜底，<strong>策略层只是纵深防御里的一层</strong>。</div>
 <div class="res">进阶资源：<a href="https://code.claude.com/docs/en/hooks" target="_blank">Claude Code Docs · Hooks（PreToolUse 的 permissionDecision / updatedInput）</a> · <a href="https://github.com/microsoft/agent-governance-toolkit" target="_blank">microsoft/agent-governance-toolkit</a></div>
+</div>
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>神经科学 · 基底神经节的动作选择</b>：Redgrave 等人 1999 年提出，皮层同时提议多个动作，基底神经节默认抑制全部，只给胜出者放行，正像 PEP/PDP 分离加默认拒绝。不像在于：基底神经节靠多巴胺持续学习，是有状态的，ACS 运行时却必须无状态。</li>
+<li><b>心理学 · 卡尼曼的「噪声」</b>：《噪声》（2021）指出，同一案卷交给不同法官判决差得惊人，药方是规则和「决策卫生」。ACS 的确定性也是同样证据同样判决；不同的是它没消灭噪声，只把噪声关进注解器分数里。</li>
+<li><b>东方哲学 · 韩非的「法」</b>：韩非主张法要写成图籍、公布于百姓，不随执行者好恶而变，这就是策略即数据。不像在于：韩非还讲藏于君心的「术」，ACS 却要求判断过程也能复盘。</li>
+<li><b>复杂性科学 · 阿什比必要多样性定律</b>：Ashby 1956 年提出，调节器的多样性不能少于扰动的多样性。一条参数正则只有几种状态，攻击者却能把密钥编码进 URL，所以确定性规则必有天花板，只能做纵深防御的一层。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>ACS 采用 PEP/PDP 分离：框架负责拦截和执行，运行时无状态、确定性地算出判决，出错一律 deny。</li>
+<li>策略的可移植性卡在快照契约上：不同框架的适配器必须把同一件事拼成同样形状的 JSON。</li>
+<li>ACS 规范定义了 8 个拦截点，LLM 调用和工具调用各拆成调用前、调用后两个点。</li>
+<li>只守 pre_tool_call 会漏掉间接注入，网页和邮件里的注入是从 post_tool_call 进入 context 的。</li>
+<li>注解器给出语义分数，策略只对分数做确定性判断，把不确定性隔离在一处并留下审计记录。</li>
+<li>escalate 归一化为可解除的 deny，审批用 enforced_identity 哈希绑定确切参数，堵住 TOCTOU 漏洞。</li>
+<li>fail-closed 有可用性代价：注解器一超时就拒绝，上线前应先在 evaluate_only 影子模式下观察。</li>
+<li>只用一个框架时 Claude Code 的 hooks 就够了，跨两个以上框架或需要审计时外置 PDP 才划算。</li>
+<li>ACS 清单的 extends 合并只增不改，子清单能加注解器，却放宽不了基础规则。</li>
+<li>按阿什比必要多样性定律，确定性规则拦不住语义攻击，策略层只是纵深防御里的一层。</li>
+</ol>
 </div>
 <div class="glossary">
 <h3 data-tts="5415a941f29fe7ae">// 术语表</h3>

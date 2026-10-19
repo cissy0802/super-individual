@@ -47,6 +47,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -320,6 +331,31 @@ Cognition AI <em>Don't Build Multi-Agents</em>, <a href="https://cognition.ai/bl
 Anthropic <em>Building Effective Agents</em> — failure modes 段, <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">anthropic.com/.../building-effective-agents</a> ·
 Hamel Husain <em>Your AI Product Needs Evals</em>, <a href="https://hamel.dev/blog/posts/evals/" target="_blank">hamel.dev/blog/posts/evals</a>
 </div>
+</div>
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>神经科学 · 习惯与目标导向控制（Anthony Dickinson）</b>：大脑把反复出现的任务交给习惯系统，快、省、稳；只有遇到新情况才调用耗能的目标导向控制，结果贬值实验就是用来区分这两套的。workflow 与 agent 的分工同构。不像的是，大脑会自动把练熟的事转成习惯，工程里得靠人把路径写死。</li>
+<li><b>领导力 · 老毛奇与任务式指挥</b>：毛奇说作战计划撑不过与敌方主力的第一次接触，于是只下达意图、让下级临场决断，这正是 Plan-and-Execute 怕的「计划基于不完整信息」。不像的是，普鲁士军官受过同一套训练、能领会意图，模型拿到的只有一行 step。</li>
+<li><b>心理学 · 直觉专长的条件（Kahneman 与 Klein，2009）</b>：两人合写的论文结论是，只有在规律稳定、反馈及时而有效的环境里，经验才会变成可靠的直觉；消防员能练出来，股票分析师多半练不出来。这和 Reflexion 必须有 verifier 是同一个结构：没有可信的反馈，反思积累的只是自信，不是能力。不同在于，人的反馈窗口以年计，Reflexion 一轮就能拿到测试结果。</li>
+<li><b>投资 · 分散化与相关性（Markowitz，1952）</b>：组合降风险靠的是资产之间不相关，十只同涨同跌的股票等于一只。同一基座模型扮演的多个 agent 就是高度相关的资产，互相 debate 难以抵消共同的盲点。不像的是，投资里没有事先校验收益的办法，agent 却可以直接接一个 verifier。</li>
+<li><b>神经科学 · 持续性错误（Brenda Milner，1963）</b>：额叶受损的病人做威斯康星卡片分类测验，规则换了、明明被告知「错」，仍照旧规则分卡，这几乎就是 loop lock 的临床版。不像在于，病人缺的是脑内的切换机制，agent 的解法是在 harness 外面加一个 monitor。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>Workflow 与 agent 的区别不在用没用工具，而在控制流由代码决定还是由 LLM 动态决定。</li>
+<li>Agent 的可靠性约等于单步成功率的 N 次方：每步 95% 成功，跑 10 步只剩约 60%。</li>
+<li>能在白板上画出所有可能路径的任务就写成 workflow，画不出来才轮到 agent。</li>
+<li>ReAct 是默认的 agent loop：每一步看完 Observation 再决定下一步，简单、低延迟、容错好。</li>
+<li>Plan-and-Execute 只适合步数多、每步代价高、初始信息足以规划的任务，计划一错就得整体 replan。</li>
+<li>Reflexion 只在有 verifier 的可验证任务上有效，没有测试或评分时，反思多半是自说自话。</li>
+<li>Anthropic 的数据显示 multi-agent 约多用 15 倍 token，只在任务天然并行、子任务 context 大时才值得。</li>
+<li>Multi-agent 应采用 orchestrator-worker 拓扑，worker 之间不对话；peer debate 在真实任务里几乎没赢过。</li>
+<li>Agent 上线后的五种典型死法是 loop lock、过度规划、tool thrashing、context bloat 和提前 end_turn。</li>
+<li>诊断 agent 失败靠逐轮 trace 而不是翻 log，任务是否完成交给 verifier 判定而不是模型自报。</li>
+</ol>
 </div>
 <!-- ============ Combo ============ -->
 <div class="combo">
