@@ -37,6 +37,17 @@ pre code{color:#d8e8e8}
 .diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.7rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -321,6 +332,30 @@ client.messages.create(
 <p>Measured: on a 50-PR eval set, switching from a flat Markdown prompt to the layout above + cache plan moved JSON valid rate from 87% → 99.4%, blocking-issue recall +11%, and per-PR average cost from $0.18 → $0.022 (91% cache hit rate). That's the real ROI of prompt engineering.</p>
 </div>
 
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Psychology · Asch's impression-formation study (1946)</b>: give people the same list of traits, but put "intelligent" first or "envious" first, and their overall picture of the person flips; the early words set the tone for the rest. Like prefix caching, order is everything. Unlike it, a first impression is a fuzzy bias, while a cache is voided by a single changed character.</li>
+<li><b>Evolutionary biology · von Baer's laws of embryology (1828)</b>: the earlier a developmental stage, the more it is shared across species; later stages diverge, because changing something early forces everything downstream to be rebuilt. Same ordering logic as stable layers first, volatile layers last; the difference is that evolution gets there by selection, while a prompt layout is designed on purpose.</li>
+<li><b>Psychology · verbal overshadowing (Schooler, 1990)</b>: people who first describe a face in words later recognize it worse; forcing an intuitive judgment into language crowds out holistic perception. It mirrors CoT hurting classification and extraction tasks. Unlike it, the model's damage comes mostly from inventing intermediate steps to fill out the chain.</li>
+<li><b>Analytic philosophy · use vs. mention (Quine)</b>: put a sentence in quotation marks and it stops being a claim and becomes an object being talked about. Wrapping a document in XML tags tries to make the model mention its instructions, not obey them. Unlike logic, where quotation is absolute, tags are only a strong hint, so injections can still slip through.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>A production-grade prompt has layers: Role, Task, Context, Examples, Format and Guardrails, each independent, cacheable and regression-testable.</li>
+<li>Prefix caching matches token by token from the start, so stable content goes first and per-request user context goes last.</li>
+<li>Structured tags that separate data from instructions are what make a model treat data as data, the basic defense against indirect prompt injection.</li>
+<li>Claude saw heavy XML-tagged input in training, so XML works best on Claude, while OpenAI's GPT-4.1 guide recommends Markdown headings.</li>
+<li>The real value of XML tags is nested reference: a model can ground reliably to a specific document tag, while nested Markdown headings blur.</li>
+<li>Reasoning models already run a hidden chain of thought, so adding "think step by step" only makes output slower, costlier and noisier.</li>
+<li>Sprague et al. (2024) found chain-of-thought helps mainly on math and symbolic reasoning, and is flat or worse on classification and extraction.</li>
+<li>When a non-reasoning model truly needs to reason, separate scratchpad and answer tags and let downstream code parse only the answer.</li>
+<li>Anthropic prompt caching bills cache hits at 10% of the base price, but requires explicit cache_control markers, at most four breakpoints.</li>
+<li>Embedding the current time, a username or a session id in the system prompt invalidates the entire cached prefix.</li>
+</ol>
+</div>
 <!-- ============ Deep Thinking ============ -->
 <div class="thinking" style="background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.22);border-radius:10px;padding:22px 24px;margin:36px 0">
 <style>

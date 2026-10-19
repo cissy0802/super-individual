@@ -45,6 +45,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -187,6 +198,30 @@ assert tail_coverage(outputs) &gt; THRESH     <span class="tag-com"># 罕见类�
 <a href="https://arxiv.org/abs/2305.17493" target="_blank">arXiv 2305.17493</a> ·
 Is Collapse Inevitable?（累积破解）, <a href="https://arxiv.org/abs/2404.01413" target="_blank">arXiv 2404.01413</a>
 </div>
+</div>
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>进化生物学 · 突变与自然选择</b>：突变廉价，适应几乎全靠选择淘汰，正是「过量生成、激进过滤」。不像在于，自然选择没有评委、只数后代，蒸馏的 filter 是人定的标准，盲区会原样留下。</li>
+<li><b>心理学 · 选择盲（Johansson 与 Hall，2005）</b>：照片被偷换后，多数被试没察觉，还流利地为没选过的那张脸讲理由，是 backward rationalization 的人类版。不同在于，模型辩护的是自己真写的草稿，更难识破。</li>
+<li><b>科学哲学 · 波普尔的证伪</b>：一万只白天鹅证实不了「天鹅皆白」，一只黑天鹅就能推翻它；科学靠「驳倒比证立便宜」前进，和 verifier 撑起自改进同构。不像的是，单测通过在这里被当成正面证据，波普尔会说那只是暂未被驳倒，reward hacking 钻的正是这道缝。</li>
+<li><b>群体遗传学 · 遗传漂变与基因流</b>：小种群每代只是上代基因的有限抽样，稀有等位基因先丢，外来基因流能补回，正对应「累积真实数据」。不像在于，漂变纯随机，模型采样还偏爱高频输出，尾部丢得更快。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>合成数据集的质量上限由过滤器决定而不是生成器，多生成十倍再狠删九成几乎总是对的。</li>
+<li>Self-Instruct 真正的贡献是去重、去退化、去无效的过滤管线，而不是会生成指令。</li>
+<li>生成器和过滤器用同源模型时，teacher 的系统性盲区会被高置信度地写进 student。</li>
+<li>Constitutional AI 的核心是 critique→revise 算子，不做 RL 也能插进推理调用链。</li>
+<li>自我批评容易沦为替草稿找理由，要靠不同角色或不同模型、逐条 yes/no 勾选来制造对抗。</li>
+<li>模型能否靠自己变强，只取决于有没有比生成器更便宜、更可靠的 verifier。</li>
+<li>STaR 把 rejection sampling 做成迭代循环，并让模型为答错的题补一条推到正确答案的推理。</li>
+<li>verifier 有漏洞时自改进循环会专门学会钻漏洞，只留通过的样本还会让分布越收越窄。</li>
+<li>Model collapse 的危险是分布尾部无声消失：benchmark 还在涨，多样性已经塌了。</li>
+<li>防 model collapse 靠真实数据锚定、验证过滤、累积而非替换，并监控多样性而不只看准确率。</li>
+</ol>
 </div>
 <!-- ============ Combo ============ -->
 <div class="combo">

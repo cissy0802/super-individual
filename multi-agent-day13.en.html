@@ -41,6 +41,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -503,6 +514,33 @@ Shinn et al. · <em>Reflexion: Language Agents with Verbal Reinforcement Learnin
 Anthropic · <em>Model Context Protocol</em> (MCP), <a href="https://modelcontextprotocol.io/" target="_blank">modelcontextprotocol.io</a> ·
 Hong et al. · <em>MetaGPT: Meta Programming for Multi-Agent Framework</em>, <a href="https://arxiv.org/abs/2308.00352" target="_blank">arxiv.org/abs/2308.00352</a>
 </div>
+</div>
+
+<!-- ============ Crossovers ============ -->
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Consciousness · Baars's global workspace</b>: Bernard Baars's 1988 global workspace theory says the brain runs many specialist modules in parallel, and only what gets "broadcast" onto a shared stage becomes conscious and visible to all. Cognition's "share the full trace" is a call for a global workspace; Anthropic's isolated subagents look like unconscious parallel processing. The difference: the brain's broadcast is a capacity-limited competition, while a trace is copied wholesale and grows more expensive with length.</li>
+<li><b>Complexity science · Galton's wisdom of crowds</b>: In 1907 Francis Galton tallied about eight hundred fairgoers' guesses of an ox's weight, and the median landed almost exactly on target. Crowds are smart only when judgments are independent and diverse, which is the logic behind subagent prompt isolation and "diversity of source beats agent count".</li>
+<li><b>Psychology · Janis's groupthink</b>: In 1972 Irving Janis studied fiascos like the Bay of Pigs and found that homogeneous, consensus-seeking groups suppress dissent and confirm themselves. Same-model, same-prompt debate converging on mediocre consensus is the same disease, and the cure is the same: appoint a devil's advocate.</li>
+<li><b>Neuroscience · Gazzaniga's interpreter</b>: When a split-brain patient's right hemisphere sees an instruction and acts, the left hemisphere, which never saw it, instantly invents a plausible reason. A model defending its first answer through backward rationalization has the same shape: conclusion first, explanation after. That is why an outside reviewer is needed.</li>
+<li><b>Economics · Coase's theory of the firm</b>: In 1937 Ronald Coase asked why firms exist if markets work so well. His answer was transaction costs: work that is too costly to coordinate gets pulled inside one organization. Single agent versus many, plain function calls versus A2A, is the same weighing of coordination tax against the gains from splitting.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>The engineering value of multi-agent depends on whether a task splits into independent subtasks, not on how complex the task is.</li>
+<li>The hardest multi-agent failure is implicit decision conflict: each subagent is self-consistent in its own context, and the pieces clash on merge.</li>
+<li>Cognition's two principles are to share full traces rather than summaries and to admit every action carries an implicit decision, so sequential coding favors one agent.</li>
+<li>Splitting one agent into a PM, engineer, and reviewer pipeline usually just moves prompt complexity into message formats, and quality tends to drop.</li>
+<li>Anthropic's Research system, with an Opus 4 lead and Sonnet 4 subagents, scored 90.2% higher internally at roughly 15 times the tokens of plain chat.</li>
+<li>Orchestrator-Worker needs four constraints: explicit spawn criteria, isolated subagent prompts, cross-checking aggregation by a strong model, and a concurrency cap.</li>
+<li>Multi-agent debate helps on math and factual QA, but on open writing and subjective judgment it tends to converge on mediocre consensus.</li>
+<li>Multi-perspective gains come from the source of diversity, such as different models or opposed roles; running one model with one prompt N times just averages noise.</li>
+<li>An asymmetric cross-check, a primary agent plus a verifier from another model, costs about 2x and beats self-reflection, since models tend to defend their own answers.</li>
+<li>The coordination tax of multi-agent covers O(N²) communication, stacked latency, and hard failure attribution; MCP connects agents to tools, A2A connects agents to each other, and small systems should start with plain function calls.</li>
+</ol>
 </div>
 
 <!-- ============ Combo ============ -->

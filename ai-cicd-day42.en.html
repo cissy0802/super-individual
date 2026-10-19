@@ -46,6 +46,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -216,6 +227,31 @@ OpenAI Evals framework, <a href="https://github.com/openai/evals" target="_blank
 </div>
 </div>
 
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Evolutionary biology · Immune memory cells</b>: every infection leaves memory B and T cells behind, so the same pathogen is recognized fast next time, the same flywheel as turning every production incident into a test case. Unlike it, the immune system also pre-generates a vast random repertoire of receptors; a golden set only remembers failures it has actually met.</li>
+<li><b>Psychology · Within-subject design</b>: put the same participants through both conditions and compare the difference, and individual variation cancels out, so far fewer subjects are needed; the paired PR-vs-main difference is the same trick. Unlike people, a test case has no practice or order effects: rerunning it does not "remember" the last run.</li>
+<li><b>Neuroscience · REM atonia</b>: while you dream, the motor cortex still issues movement commands, but the brainstem temporarily disconnects the muscles, so you run in the dream and lie still in bed. That is shadow testing: the system really runs while every write is mocked. When the disconnect fails you get REM sleep behavior disorder, where people act out their dreams, much like shadow traffic that places the order twice. The difference: dreams run on self-generated input, shadows on real traffic.</li>
+<li><b>Complexity science · Critical slowing down (Scheffer et al., 2009)</b>: before ecosystems or climate tip, recovery slows and autocorrelation and variance rise; no single moment looks wrong, only a long time series shows the warning. That is exactly the canary's blind spot for slow drift. The difference: slowing down heralds a tipping point, while a model drifting toward sycophancy may never have one.</li>
+<li><b>Western philosophy · Popper's falsification</b>: no number of observations proves a theory true, they can only refute it; an eval gate likewise proves a change made things worse, never that it made them better. Unlike Popper's bold conjectures that court refutation, the pipeline's value is making experiments cheap so people dare to try more.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>LLM systems are nondeterministic, have no compile-time errors, and fail gradually, breaking CI's assumptions of reproducible, assertable, pass-or-fail results.</li>
+<li>LLM regression tests should assert properties such as key facts, valid JSON, semantic similarity, or rubric scores, not exact strings.</li>
+<li>Hamel Husain argues every production incident should become a new test case, so the golden set grows with real failures instead of rotting.</li>
+<li>Gating on a single run's score against a hard threshold gates on noise; run each case several times and ask whether the new version is significantly worse.</li>
+<li>The paired difference between old and new versions on the same cases is far more stable than either absolute score, just like a within-subject design.</li>
+<li>An LLM judge must be calibrated against human labels before it gates merges, and a silent judge-model upgrade shifts the scoring baseline.</li>
+<li>Shadow testing mirrors real traffic to a candidate and only logs its output; it must run asynchronously and switch write tools to dry-run.</li>
+<li>Shadow testing cannot capture downstream behavior like clicks or satisfaction; only a canary release that truly serves a few users can.</li>
+<li>A canary ramps 1% to 5% to 25% to 100%, watches quality guardrails as well as latency, and rolls back by flipping a feature flag in seconds.</li>
+<li>Canaries catch sudden breaks but miss slow drift, and rollback cannot undo side effects, so long baselines, targeted probes, and compensation logic are needed.</li>
+</ol>
+</div>
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3>// CAPSTONE · Wire a Pipeline Onto Your Prompt Repo</h3>

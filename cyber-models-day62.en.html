@@ -57,6 +57,17 @@ pre code{color:#d8e8e8}
 .thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style>
 </head><body>
 <div class="container">
@@ -184,6 +195,31 @@ jobs:
 <div class="res">Further resources: <a href="https://github.com/anthropics/claude-code-security-review" target="_blank">anthropics/claude-code-security-review</a> · <a href="https://lwn.net/Articles/1055996/" target="_blank">LWN · Stenberg: The end of the curl bug-bounty program</a></div>
 </div>
 
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Neuroscience · "wanting" vs "liking" (Kent Berridge)</b>: Berridge showed that the dopamine system drives "wanting," which runs on circuitry separable from the pleasure of "liking." A cyber completion rate and the skill to find bugs are likewise two independent axes. The difference: in the brain, the two coming apart is a pathological sign, as in addiction; in a model it is a routine side effect of fine-tuning.</li>
+<li><b>Evolutionary biology · the Red Queen hypothesis (Leigh Van Valen, 1973)</b>: Van Valen found that a group's chance of extinction does not fall the longer it has survived; his explanation was that rivals evolve too, so a species must keep running just to stay in place. Once both finding bugs and writing exploits get cheap, attack and defense speed up together, and your patch lag is the stretch where you stopped running. Where it breaks: a biological arms race tinkers slowly through random mutation, while a defender's upgrade cadence is a dial you can turn yourself.</li>
+<li><b>Animal behavior · social food preference in rats (Bennett Galef)</b>: rats are wary of new food, sample it cautiously, and after sniffing a companion's breath prefer what that companion ate, letting others serve as food tasters. That is the logic of a dependency cooldown. The difference: in a colony someone always eats first; with cooldowns, if everyone waits, nobody takes the first bite.</li>
+<li><b>Psychology · the replication crisis (Open Science Collaboration, 2015)</b>: when 100 psychology studies were rerun, only about 36% of the originally significant results came out significant again. Publishing is cheap and replicating is expensive, the same shape as AI bug reports. Unlike psychology, which needs years to rerun an experiment, a bug report's reproduction can be a test case you run on the spot.</li>
+<li><b>Investing · the shrinking arbitrage window</b>: the more people who see a mispricing, the shorter the time from discovery to its being arbitraged away. The "finding is an order of magnitude cheaper than exploiting" gap is closing like alpha erased by cheap compute. The difference: an arbitraged mispricing is gone for good, while a publicly patched bug stays live on every system that never upgraded.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>In 2026, Anthropic, OpenAI and Google converged on one shape for cyber models: tiered capability, with access as the control plane.</li>
+<li>OpenAI's cyber completion rate measures willingness, not correctness: 1.5% for the general model, 95% for GPT-5.6-Cyber.</li>
+<li>GPT-5.6-Cyber lost to the general model on finding bugs and writing reports; specialized fine-tuning squeezed out report quality nobody targeted.</li>
+<li>In two weeks Claude Opus 4.6 found 22 confirmed Firefox bugs, but about $4,000 of exploit attempts succeeded only twice.</li>
+<li>OpenAI used GPT-5.6-Cyber to chain two V8 bugs into a heap sandbox escape: the "cheap to find, costly to exploit" gap is closing.</li>
+<li>As exploitation speeds up, patch lag becomes the main risk, worst in Electron apps bundling Chromium and in version-pinned images.</li>
+<li>osv-scanner only sees advisories already in a database; unmaintained libraries may have bugs found that never get a fixed version.</li>
+<li>Split dependency upgrades into two lanes: routine version updates wait out a cooldown against poisoned packages, while security fixes skip the queue.</li>
+<li>Discovery got cheap but validation did not: curl shut its HackerOne bug bounty in January 2026 over floods of low-quality AI reports.</li>
+<li>Psychology's replication crisis mirrors AI bug reports: submitting is cheap, reproducing is costly, and a working reproduction is the price of entry.</li>
+</ol>
+</div>
 <div class="thinking">
 <h3>// Deeper questions</h3>
 <details><summary>Does tiered capability plus identity-gated access end up tilting the balance toward attackers?</summary><div>Access gates stop <strong>the people who follow the rules</strong>. Organized attackers can route around them with open-weight models, stolen accounts or their own fine-tunes, while defenders wait in an approval queue. The vendors' bet is that loosening access for verified defenders lets fixes outpace open models catching up. That bet only works if defenders actually use the access and fixes actually ship downstream. The practical conclusion for an individual developer: don't count on getting Red; assume attackers already have equivalent capability.</div></details>

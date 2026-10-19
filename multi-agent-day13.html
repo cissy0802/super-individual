@@ -47,6 +47,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -478,6 +489,33 @@ Anthropic · <em>Model Context Protocol</em> (MCP), <a href="https://modelcontex
 Hong et al. · <em>MetaGPT: Meta Programming for Multi-Agent Framework</em>, <a href="https://arxiv.org/abs/2308.00352" target="_blank">arxiv.org/abs/2308.00352</a>
 </div>
 </div>
+<!-- ============ Crossovers ============ -->
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>意识研究 · Baars 全局工作空间</b>：Baars 1988 年提出，大脑众多模块并行运作，只有被「广播」到公共舞台的内容才成为意识。「共享完整 trace」就是要一块全局工作空间，subagent 隔离则像无意识的并行加工。不像在：大脑的舞台容量有限、要竞争上台，trace 却全量照搬，越长越贵。</li>
+<li><b>复杂性科学 · Galton 的群体智慧</b>：1907 年 Galton 统计集市上近八百人猜牛重，中位数几乎正中。前提是判断独立、来源多样，正是 subagent 隔离和「diversity 来源胜过 agent 数量」的道理。</li>
+<li><b>心理学 · Janis 群体思维</b>：Janis 1972 年分析猪湾事件，发现同质、求一致的小组会压掉异议。同模型 debate 越辩越 yes-man 是同一种病，解药也一样：指定唱反调的人。</li>
+<li><b>神经科学 · Gazzaniga 的解释者</b>：裂脑病人右脑看到指令做了动作，左脑没看到，却当场编出理由。模型为已给的答案找证据，结构相同：先有结论再补解释，所以要外人来审。</li>
+<li><b>经济学 · Coase 企业的性质</b>：Coase 1937 年问，市场好用为何还要公司？答案是交易成本：协调太贵的事收进组织内部做。单 agent 还是多 agent，权衡的也是协调税与拆分收益。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>多 agent 值不值，取决于任务能否拆成独立子任务，而不是任务多复杂。</li>
+<li>多 agent 最难治的是隐式决策冲突：各 subagent 自洽，合并时互相打架。</li>
+<li>Cognition 主张共享完整 trace 而非摘要，串行编码任务单 agent 严格更优。</li>
+<li>拆成 PM、工程师、审阅者的角色 pipeline，只是把 prompt 复杂度转移到消息格式上。</li>
+<li>Anthropic Research 系统比单 agent 高 90.2%，代价约是普通聊天 15 倍的 token。</li>
+<li>Orchestrator-Worker 要守 spawn 准则、prompt 隔离、强模型聚合、并发上限四条约束。</li>
+<li>Multi-agent debate 在数学和事实问答上涨点，在开放写作上易收敛成平庸共识。</li>
+<li>多视角的增益来自 diversity 的来源；同模型同 prompt 跑 N 次只是平均噪声。</li>
+<li>换模型做 verifier 的不对称交叉验证约 2 倍成本，比自我反思更可靠。</li>
+<li>协调税是 O(N²) 通信、延迟叠加和失败难归因；小系统先用函数调用，别急着上 A2A。</li>
+</ol>
+</div>
+
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3 data-tts="ea32a77cf9d7efd6">// 综合实战 · 多 agent 系统的两周建设路径</h3>

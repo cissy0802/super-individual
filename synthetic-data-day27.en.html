@@ -39,6 +39,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -206,6 +217,30 @@ Is Collapse Inevitable? (accumulation breaks it), <a href="https://arxiv.org/abs
 </div>
 </div>
 
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Evolutionary biology · Mutation and natural selection</b>: mutation is random and cheap, and nearly all adaptation comes from selection culling variation, the same shape as "over-generate, filter hard." The difference: natural selection has no judge and only counts offspring, while a distillation filter is a human-written standard whose blind spots pass straight into the result.</li>
+<li><b>Psychology · Choice blindness (Johansson and Hall, 2005)</b>: participants picked the more attractive of two faces, the photos were secretly swapped, and most never noticed, fluently justifying a "choice" they never made. That is backward rationalization in humans. Unlike them, a model defends a draft it really wrote, which is harder to catch.</li>
+<li><b>Philosophy of science · Popper's falsification</b>: ten thousand white swans cannot prove "all swans are white," yet one black swan refutes it. Refuting is cheaper than establishing, and science advances on that asymmetry, the same structure a verifier gives self-improvement. The mismatch: here a passing unit test counts as positive evidence, where Popper would say it merely has not been refuted yet, and reward hacking lives in exactly that gap.</li>
+<li><b>Population genetics · Genetic drift and gene flow</b>: each generation of a small population is a finite sample of the last, so rare alleles vanish first; gene flow from outsiders restores diversity, much like accumulating real data. Unlike drift, which loses alleles purely at random, model sampling also favors high-probability outputs, so tails go faster.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>The quality ceiling of a synthetic dataset is set by the filter, not the generator; generating 10x and deleting 90% is almost always right.</li>
+<li>The real contribution of Self-Instruct is its filtering pipeline for duplicates, degenerate output and invalid items, not its ability to generate.</li>
+<li>When the generator and the filter come from the same model family, the teacher's systematic blind spots get written into the student with high confidence.</li>
+<li>The core of Constitutional AI is a critique-then-revise operator that can sit in an inference call chain with no RL at all.</li>
+<li>Self-critique tends to rationalize the draft, so force adversarial pressure with different roles or models and per-principle yes/no checks.</li>
+<li>Whether a model can improve itself depends on one thing: a verifier cheaper and more reliable than the generator.</li>
+<li>STaR turns rejection sampling into an iterative loop and has the model write rationales that reach the correct answer on problems it missed.</li>
+<li>A leaky verifier teaches the self-improvement loop to exploit the leak, and keeping only passing samples narrows the distribution over time.</li>
+<li>The danger of model collapse is that distribution tails disappear silently: benchmarks keep rising while diversity has already died.</li>
+<li>Preventing model collapse takes real-data anchoring, verified filtering and accumulating rather than replacing data, plus monitoring diversity, not just accuracy.</li>
+</ol>
+</div>
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3>// CAPSTONE · Build a Self-Improving Data Flywheel for Your Private Task</h3>

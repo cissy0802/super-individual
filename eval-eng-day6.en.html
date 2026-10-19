@@ -39,6 +39,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -377,6 +388,31 @@ Liang et al. <em>HELM: Holistic Evaluation of Language Models</em>, <a href="htt
 </div>
 </div>
 
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Psychology · serial position effects in juries (Bruine de Bruin, 2005)</b>: analyzing Eurovision and figure skating scores, she found that later performers score systematically higher, the same disease as an LLM judge's position bias. The difference: a human contest can't rerun the same performers in swapped order, while swapping A/B for an LLM judge costs a few cents.</li>
+<li><b>Social psychology · the minimal group paradigm (Henri Tajfel, 1970s)</b>: split people into groups by something as meaningless as a coin toss, and they still favor their own side. A judge favoring its own model family has the same shape; unlike Tajfel's subjects, the judge favors outputs because it recognizes its own style, not a group label.</li>
+<li><b>Philosophy of science · Popper's falsifiability</b>: a theory that nothing could refute says nothing. An eval that always passes 100%, or a CI that stays green when you deliberately break the prompt, is an unfalsifiable measurement. The mismatch: Popper asked whether a theory can be refuted by experience; here the question is whether the test itself is sharp enough.</li>
+<li><b>Neuroscience · double dissociation</b>: neuropsychologists show that damage to one region removes ability A but not B, and damage to another removes B but not A, turning a vague "speech is broken" into a specific deficit, just as a failing task eval should drill down to one capability. Unlike: brain functions grew their own boundaries and often overlap, while you draw the capability slices yourself, which is why you can demand they be atomic.</li>
+<li><b>Investing · backtest overfitting</b>: tune a strategy again and again on the same stretch of history and the backtest curve keeps improving while live trading fails; a golden set that evolves with the model, testing it on its own generated data, is the same loop. The difference: markets expose overfitting with losses, while an overfit eval often surfaces only through customer complaints.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>A first eval needs only 20 real inputs and one Python scoring function, with no framework and no LLM judge.</li>
+<li>Hand-pick the golden set as 10 happy paths, 5 edge cases and 5 adversarial inputs; it beats ten thousand random production logs.</li>
+<li>Choose scorers from cheap to expensive: code-based, then heuristic, then LLM-as-judge; drop a level whenever you can.</li>
+<li>A 100% pass rate means the golden set is too easy; an eval needs failures, read by category rather than as one number.</li>
+<li>The 2023 MT-Bench paper by Zheng et al. systematically documented LLM judge biases such as position, verbosity and self-preference.</li>
+<li>LLM judge biases come from training objectives, so asking the judge not to be biased fails; debias with position swaps, cross-family judges, rubrics and a human calibration set.</li>
+<li>A prompt is behavioral code: keep it as a file in git, pair it with a regression suite, and block merges in CI when the pass rate drops.</li>
+<li>Run prompt regressions at temperature=0 on a pinned model version, and list newly failing and newly passing cases, not just the pass rate.</li>
+<li>Split evals into capability evals and task evals, so a failing task can be traced to the atomic capability that regressed.</li>
+<li>An eval that always passes 100%, even when the prompt is deliberately broken, is like an unfalsifiable theory: it measures nothing.</li>
+</ol>
+</div>
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3>// Putting it together · Build a complete eval for one prompt in 90 minutes</h3>

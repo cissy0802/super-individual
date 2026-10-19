@@ -47,6 +47,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -191,6 +202,31 @@ Hamel Husain <em>LLM-as-a-Judge</em>, <a href="https://hamel.dev/blog/posts/llm-
 <strong>进阶资源</strong> · Eugene Yan <em>LLM Patterns</em>（defensive UX / guardrails）, <a href="https://eugeneyan.com/writing/llm-patterns/" target="_blank">eugeneyan.com/writing/llm-patterns</a> ·
 OpenAI Evals 框架, <a href="https://github.com/openai/evals" target="_blank">github.com/openai/evals</a>
 </div>
+</div>
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>生物进化 · 适应性免疫的记忆细胞</b>：每次感染后留下记忆 B/T 细胞，下次同一病原一来就快速识别——这正是「每个线上事故沉淀成一条用例」的飞轮。不像的是，免疫系统还会预先随机重组出海量受体去碰运气，golden set 却只记得真遇到过的失败。</li>
+<li><b>心理学 · 被试内设计</b>：同一批被试接受两种条件再比较差值，个体差异就被抵消，所需样本少得多；PR vs main 的配对差值是同一招。不像在于：人做过一次会有练习和顺序效应，同一条用例重跑不会「记住」上一次。</li>
+<li><b>神经科学 · REM 睡眠肌张力缺失</b>：做梦时运动皮层照样发出动作指令，脑干却把肌肉暂时「断开」，梦里奔跑身体不动——和影子测试一样，系统真跑，写操作全切成 mock。断开失灵就是 REM 睡眠行为障碍，人会把梦打出来，正如忘了隔离副作用的影子流量把订单真下了两遍。不像的是，梦的输入是自己编的，影子吃的是真实流量。</li>
+<li><b>复杂性科学 · 临界减速（Scheffer 等，2009）</b>：生态系统、气候在崩溃前恢复变慢、自相关和方差上升，单看某一刻毫无异样，只有拉长时序才看得出预警。这正是金丝雀抓不住缓变的盲区。不同在于，临界减速预示的是一个突变点，回答慢慢变谄媚可能根本没有临界点。</li>
+<li><b>西方哲学 · 波普尔的证伪</b>：再多的观察也证明不了一个理论为真，只能证伪它；eval 门同样只能证明「这个改动变差了」，证明不了它变好。不像的是，波普尔要大胆猜想去冒被证伪的险，流水线的意义恰恰是让实验变便宜、让人敢多试。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>LLM 系统没有确定性、没有编译期错误、失败是渐变的，传统 CI 的可复现、可断言、二值通过三大假设全部失效。</li>
+<li>LLM 回归测试要断言属性（含关键事实、合法 JSON、语义相似度、rubric 分），而不是断言确切字符串。</li>
+<li>Hamel Husain 主张让每个线上事故都沉淀成一条新用例，golden set 随真实失败增长，否则会出现 dataset rot。</li>
+<li>用单次跑分卡硬阈值，卡的是随机数；eval 门应每例跑多次，并卡「新版是否显著差于旧版」。</li>
+<li>同一批用例上新旧版本的配对差值，比各自的绝对分稳定得多，这和心理学的被试内设计同理。</li>
+<li>LLM-judge 当门之前必须用人工标注校准，judge 模型悄悄升级会让评分基线漂移。</li>
+<li>影子测试把真实流量镜像给候选版本、只记录不返用户，必须异步旁路，并把写操作类 tool 切到 dry-run。</li>
+<li>影子测试拿不到点击、满意度这类下游行为信号，这些只能靠金丝雀发布让候选真实服务一小撮用户。</li>
+<li>金丝雀按 1%→5%→25%→100% 渐进放量，护栏指标要含质量信号，回滚应是翻 feature flag 的秒级动作。</li>
+<li>金丝雀擅长抓突变、抓不住缓变；回滚也撤不回已发生的副作用，需要长基线、定向探针和补偿逻辑。</li>
+</ol>
 </div>
 <!-- ============ Combo ============ -->
 <div class="combo">

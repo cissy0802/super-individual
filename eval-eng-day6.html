@@ -47,6 +47,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -352,6 +363,31 @@ OpenAI Evals 框架源码, <a href="https://github.com/openai/evals" target="_bl
 Anthropic <em>Develop empirical tests</em>, <a href="https://docs.anthropic.com/en/docs/test-and-evaluate/develop-tests" target="_blank">docs.anthropic.com/.../develop-tests</a> ·
 Liang et al. <em>HELM: Holistic Evaluation of Language Models</em>, <a href="https://crfm.stanford.edu/helm/" target="_blank">crfm.stanford.edu/helm</a>
 </div>
+</div>
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>心理学 · 评委的顺序效应（Bruine de Bruin，2005）</b>：她分析欧洲歌唱大赛和花样滑冰的打分，发现出场越靠后的选手得分系统性越高，和 LLM judge 的位置偏见是同一种病。不像在于：人类比赛没法让同一组选手换个顺序再比一次，LLM judge 交换 A/B 重跑一遍只要几分钱。</li>
+<li><b>社会心理学 · 最简群体范式（Henri Tajfel，1970 年代）</b>：哪怕按抛硬币这种无意义标准分组，人也会偏袒「自己组」。judge 偏爱同家族模型的输出是同一个结构；不同的是，judge 的偏袒来自认出了自己的文风，而不是认了一个组标签。</li>
+<li><b>科学哲学 · 波普尔的可证伪性</b>：一个无论如何都不会被推翻的理论，什么也没说。pass rate 永远 100% 的 eval、把 prompt 故意改坏也不变红的 CI，都是不可证伪的测量。不像的是，波普尔谈的是理论能否被经验驳倒，这里是测试本身够不够锐。</li>
+<li><b>神经科学 · 双重分离（double dissociation）</b>：神经心理学家靠「甲脑区受损只丢能力 A、乙脑区受损只丢能力 B」，把笼统的「说话出了问题」拆到具体能力上，正如 task eval 失败要下钻到某个 capability。不像在于：大脑的功能边界是长出来的、常常互相缠绕，能力切片的边界是你自己划的，所以才能要求它原子化。</li>
+<li><b>投资 · 回测过拟合</b>：反复在同一段历史数据上调策略，回测曲线越来越好看，实盘却失效；golden set 跟着模型一起改、用模型生成的数据测自己，是同一个循环。区别是市场会用亏损来揭穿过拟合，eval 的过拟合往往要等客户投诉才暴露。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>第一版 eval 只需要 20 条真实输入加一个 Python 打分函数，不必先搭框架或上 LLM judge。</li>
+<li>golden set 按 10 条常规、5 条边缘、5 条对抗手挑，价值远超从生产日志随手抓的上万条。</li>
+<li>打分器按 code-based、heuristic、LLM-as-judge 由便宜到昂贵选，能往下落一级就别用上一级。</li>
+<li>pass rate 100% 说明 golden set 太简单；eval 要有 fail，并且按类别看 fail 的分布。</li>
+<li>Zheng 等人 2023 年的 MT-Bench 论文系统证明了 LLM judge 的位置、冗长、自我偏好等偏见。</li>
+<li>LLM judge 的偏见来自训练目标，提醒它别偏没用，要靠交换位置、异家族 judge、rubric 和人工校准集来去偏。</li>
+<li>prompt 是行为代码：存成文件进 git，配 regression suite，在 CI 里跑，pass rate 跌破阈值就挡住合并。</li>
+<li>prompt regression 要在 temperature=0、固定模型版本下跑，并列出新挂和新过的 case，不能只比 pass rate。</li>
+<li>eval 分 capability eval 和 task eval 两层，task 失败时要能下钻到具体哪个原子能力退化。</li>
+<li>pass rate 永远 100%、故意改坏也不变红的 eval 和不可证伪的理论一样，什么也没测出来。</li>
+</ol>
 </div>
 <!-- ============ Combo ============ -->
 <div class="combo">
