@@ -45,6 +45,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -162,6 +173,30 @@ extract       eval ✓          eval ✗      eval ✗
 <strong>进阶资源</strong> · Anthropic <em>Prompt engineering overview</em>（针对模型调优）, <a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview" target="_blank">docs.anthropic.com</a> ·
 本站 Day 23 <em>Personal AI Infra</em>（多模型路由）
 </div>
+</div>
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>生物进化 · 反应规范</b>：同一基因型在不同环境里长出不同表型，绣球花随土壤酸碱开蓝或开粉。prompt 换模型就变是同一结构：行为由文本和运行时共同决定。不像的是，生物学家会画整条反应曲线，多数人只在一个模型上试过 prompt。</li>
+<li><b>心理学 · 复现危机</b>：2015 年开放科学合作组织重做 100 项心理学研究，原本显著的结果只约 36% 再现。「试一两条 case 觉得好」就是没复现过的单次实验；eval set 加 holdout 近似预注册加复现。</li>
+<li><b>神经科学 · 记忆再巩固</b>：Nader 与 LeDoux 等 2000 年在大鼠身上发现，记忆每次被提取都会重新变得可改写。大脑像只有 latest、没有版本号的 prompt：每次调用都可能悄悄改写，旧版找不回来。</li>
+<li><b>复杂性科学 · 临界前兆</b>：Scheffer 等 2009 年总结，生态系统崩溃前常有恢复变慢、波动变大的前兆。用格式合规率这类快信号抢在点踩率之前发现退化是同一思路；不像的是湖泊崩了没有回滚。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>Prompt 应抽成 registry 里带 id 和版本号的工件，代码只按版本引用。</li>
+<li>Prompt registry 进 git 只解决留痕问题，一次改动好不好要交给 eval 来判断。</li>
+<li>LLM 输出不确定，单条 case 试着没问题毫无统计意义，要看 eval set 上的聚合分布。</li>
+<li>Eval 门是一道棘轮：新版 prompt 在 eval set 上的聚合分不得低于当前生产版。</li>
+<li>Prompt 上线走 shadow 影子比对、canary 灰度、再全量，任一步指标掉就停。</li>
+<li>Prompt 退化通常不报错，只是质量悄悄变差，所以必须靠线上指标主动监控。</li>
+<li>生产环境永远钉具体 prompt 版本、不用 latest，并真演练过一键回滚。</li>
+<li>Prompt 是写给特定模型的程序，换模型或模型小版本升级都等于换了运行时。</li>
+<li>模型升级当依赖升级：整列重跑回归 eval，并定期用固定 eval set 抓上游静默漂移。</li>
+<li>同一 prompt 在不同模型上表现不同，和同一基因型在不同环境下长出不同表型是同一结构。</li>
+</ol>
 </div>
 <!-- ============ Combo ============ -->
 <div class="combo">

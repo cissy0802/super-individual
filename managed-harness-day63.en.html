@@ -58,6 +58,17 @@ pre code{color:#d8e8e8}
 .boxes{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;font-size:0.82rem}.box{border:1px solid rgba(0,212,255,0.35);border-radius:8px;padding:12px;background:rgba(0,212,255,0.04)}.box b{display:block;color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-bottom:6px}.box.you{border-color:rgba(255,110,196,0.5);background:rgba(255,110,196,0.05)}.box.mix{border-style:dashed}.legend{font-size:0.8rem;color:#a0a4b8;margin-top:12px}@media(max-width:600px){.boxes{grid-template-columns:1fr}}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style>
 </head><body>
 <div class="container">
@@ -206,6 +217,30 @@ ant beta:environments:work stats --environment-id "$ANTHROPIC_ENVIRONMENT_ID"
 <div class="res">Further: <a href="https://platform.claude.com/docs/en/managed-agents/self-hosted-sandboxes" target="_blank">Claude Docs · Self-hosted sandboxes</a> · <a href="https://platform.claude.com/docs/en/managed-agents/self-hosted-sandboxes-security" target="_blank">Claude Docs · Self-hosted sandbox security model</a></div>
 </div>
 
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Neuroscience · Patient H.M. and the hippocampus</b>: after Henry Molaison had both medial temporal lobes removed in 1953, his short-term memory still worked, but he could no longer store new long-term memories and lived from one moment to the next. The session log is a hippocampus bolted onto the harness. The difference: human recall is reconstructed and drifts, while an append-only event log is the original, and wake replays it exactly.</li>
+<li><b>Buddhism · Continuity and the lamp flame</b>: in the <em>Milindapañha</em>, Nāgasena answers with a lamp burning all night: the flame of the first watch and of the last are neither the same nor different, carried by continuity rather than an abiding self. A stateless harness likewise swaps instances and carries on through the log. Unlike a causal stream, though, a log can be copied verbatim.</li>
+<li><b>Evolution · The cavefish that lost its eyes</b>: cave populations of the Mexican tetra (<em>Astyanax mexicanus</em>) lost their eyes in the dark; once the environment changed, an old adaptation became a cost. The context resets added for Sonnet 4.5 became dead weight on Opus 4.5 in the same way. The difference: evolution needs many generations to shed a trait, while a vendor deletes a patch in one release.</li>
+<li><b>Business · Asset specificity (Oliver Williamson)</b>: transaction cost economics says the more an asset is specific to one relationship, the more you should own it, or the other party can hold you up. The side-effect layer is such an asset to keep in house. The difference: session-log lock-in is never negotiated; it simply accumulates on someone else's books as you use the service.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>A managed harness splits "deciding the next step" from "executing it", not model from code.</li>
+<li>Anthropic divides managed agents into brain, hands and session, with the session log kept outside the context window.</li>
+<li>A stateless harness can wake from the session log after a crash, and decoupling brain from hands sharply cuts time to first token.</li>
+<li>Because sessions are stored server-side, Managed Agents currently isn't eligible for ZDR or HIPAA BAA, which rules out regulated workloads up front.</li>
+<li>A harness encodes assumptions about the model's weak spots; those patches go stale as models improve, and removing them for you is what the vendor sells.</li>
+<li>A managed harness drifts quietly, so rerun a fixed task set, compare tool-call trace fingerprints, and use mismatches only to trigger human review.</li>
+<li>The common middle path is to rent the loop and keep side effects: custom tools run database writes, emails and charges in your own process.</li>
+<li>The platform persists the session but not your custom-tool loop, which must rebuild from event history and resend missing results.</li>
+<li>A self-hosted sandbox moves where execution happens, but tool inputs and outputs still reach the vendor's control plane, so it is no compliance answer.</li>
+<li>Harness patches made obsolete by a new model resemble a cavefish's lost eyes, except a vendor can delete them in a single release.</li>
+</ol>
+</div>
 <div class="thinking">
 <h3>// Deeper Questions</h3>
 <details><summary>Does "harness assumptions go stale" argue for renting or for building?</summary><div>Both. For renting: the vendor learns before you do which patches a new model no longer needs. For building: <strong>you learn before the vendor does which patches your task needs</strong>. The deciding factor is how far your task sits from the vendor's mainstream workload. The closer it is to general coding or research, the more the vendor's optimizations land on you. The more domain-specific it is, the more the vendor's defaults become noise.</div></details>

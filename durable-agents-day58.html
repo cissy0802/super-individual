@@ -47,6 +47,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -215,6 +226,31 @@ Restate AI examples(agents/A2A/MCP), <a href="https://github.com/restatedev/ai-e
 <strong>进阶资源</strong> · Jack Vanlightly <em>Demystifying Determinism in Durable Execution</em>, <a href="https://jack-vanlightly.com/blog/2025/11/24/demystifying-determinism-in-durable-execution" target="_blank">jack-vanlightly.com</a> ·
 Temporal <em>Of course you can build dynamic AI agents</em>, <a href="https://temporal.io/blog/of-course-you-can-build-dynamic-ai-agents-with-temporal" target="_blank">temporal.io/blog</a>
 </div>
+</div>
+<!-- ============ Crossovers ============ -->
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>神经科学 · 海马体回放（Wilson 与 McNaughton，1994）</b>：大鼠睡觉时，海马体的位置细胞会把白天跑过的路线按原来的顺序再放一遍，像把当天的 journal 交给皮层存档。不像在于：大脑回放是为了巩固，回放时还会压缩、重组甚至改写；durable replay 要的是一字不差地还原，放出新东西就是 bug。</li>
+<li><b>佛学 · 唯识的种子与阿赖耶识</b>：唯识宗说，每个行为都在阿赖耶识里熏下种子，身心刹那生灭，相续靠的是这份记录而不是一个常住的我；workflow 也不住在哪个进程里，worker 换了照样续跑。不像的是，种子遇缘会结出新果，journal 只吐回旧值。</li>
+<li><b>进化生物学 · 魏斯曼的种质论</b>：August Weismann 把代代相传的种质和用完即弃的体细胞分开，身体是可以被杀掉的 worker，遗传信息才是那条持久日志。不像的是，发育并不逐字节确定，同一套基因在不同环境里会长出不同的身体。</li>
+<li><b>商业 · 复式记账（Pacioli，1494）</b>：会计账本只追加不涂改，记错了再记一笔冲销，余额永远由流水推出，这就是 event log 的思路；发票编号防止同一张单付两次，起的正是幂等键的作用。不像的是，账本为审计而存，journal 为重新执行而存。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>Durable execution 把 agent 的执行历史记成一条 journal，崩溃后 replay 到断点，已成功的步骤一步都不重跑。</li>
+<li>Temporal 每个持久步骤只多花约 10–50ms，相对 1–30 秒的 LLM 调用几乎可以忽略。</li>
+<li>DBOS 把 journal 直接存进已有的 Postgres，不需要额外的 broker 或控制面。</li>
+<li>持久步骤要切在每个昂贵或有副作用的边界上：一次 LLM 调用、一次工具调用各一个 step。</li>
+<li>LangGraph 的 checkpointer 只在节点边界存快照，节点跑到一半崩溃，整个节点会从头重放。</li>
+<li>用 checkpoint 类引擎时，每个节点最多放一个不可逆副作用，快照边界才能对齐危险边界。</li>
+<li>引擎只保证 step 结果在 journal 里物化一次，扣款、发信这类外部副作用还得靠幂等键去重。</li>
+<li>幂等键要从 workflow_id 加步骤序号派生，用 uuid4() 或时间戳会让每次重放换新键，去重失效。</li>
+<li>workflow 主体必须确定可重放，随机数、时钟、网络 IO 和 LLM 调用都要下沉到 step 或 activity。</li>
+<li>durable timer 加 signal 能让 agent 挂起几天等人审批，期间不占任何常驻进程。</li>
+</ol>
 </div>
 <!-- ============ Combo ============ -->
 <div class="combo">

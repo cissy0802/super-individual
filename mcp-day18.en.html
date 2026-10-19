@@ -42,6 +42,17 @@ pre code{color:#d8e8e8}
 .diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -201,6 +212,33 @@ client ─┤subprocess├ stdin/stdout  client ─┤ POST/GET├─▶ https:/
 <div class="fail"><strong>Failure mode (counterintuitive):</strong> "more servers = stronger agent" is wrong. Every added server raises opening tokens, selection difficulty, and latency, while the model is more likely to mis-pick among 30+ tools. Past a point, more tools is a <strong>net negative</strong> — MCP's composability tempts you into over-connecting.</div>
 
 <div class="res">Further: <a href="https://www.anthropic.com/engineering/code-execution-with-mcp" target="_blank">Anthropic · Code execution with MCP</a> (quantified context tax + progressive disclosure) · <a href="https://www.anthropic.com/engineering/advanced-tool-use" target="_blank">Anthropic · Advanced tool use</a></div>
+</div>
+
+<!-- ============ Crossovers ============ -->
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Molecular biology · Crick's adaptor hypothesis</b>: In 1955 Crick guessed that amino acids can't read the RNA code directly, so some "adaptor" molecule must sit in between; it turned out to be tRNA. Same structure as collapsing N×M into N+M: each side only plugs into the middle layer. The difference: the genetic code has stayed nearly frozen for billions of years, while MCP revises its spec several times a year.</li>
+<li><b>Psychology · the Hick–Hyman law</b>: In 1952–1953 Hick and Hyman found that human choice reaction time grows with the number of options, roughly logarithmically. Models picking the wrong tool from a longer list is the same structure. The difference: a person pays only in time, while a model pays tokens up front for every option it never uses.</li>
+<li><b>Consciousness · Baars's global workspace</b>: In 1988 Bernard Baars proposed that many unconscious processes wait in parallel and only a few contents get onto the "stage" to be broadcast brain-wide. Progressive disclosure likewise keeps tools in the wings until they're needed. The difference: the brain's attention picks who goes on stage automatically; an MCP client needs rules someone wrote.</li>
+<li><b>Leadership · Bezos's one-way and two-way doors</b>: In his 2015 shareholder letter Bezos split decisions into irreversible "one-way doors" that deserve care and reversible "two-way doors" that can be delegated. Gating Tools while letting the app inject Resources freely is the same move: authority allocated by consequence. The difference: MCP asks whether there are side effects, not whether they can be undone.</li>
+</ul>
+</div>
+<!-- ============ Ten takeaways ============ -->
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>MCP turns N×M integration, with glue code for every model and data source pair, into N+M: write a server once and every client reuses it.</li>
+<li>The three MCP primitives differ in control: the model invokes Tools, the application injects Resources, and the user triggers Prompts.</li>
+<li>Choosing a primitive draws a permission boundary: side-effecting actions are gated Tools, read-only data is a Resource, and the default when unsure is a Resource.</li>
+<li>In a FastMCP server, type hints become the JSON Schema automatically and the docstring becomes the tool description the model reads.</li>
+<li>Value ranges, formats and examples belong in the tool description; auto-generated schemas don't spare you from explaining constraints to the model.</li>
+<li>The stdio transport launches the server as a local subprocess: no network, no auth, but strictly one client per process.</li>
+<li>Streamable HTTP serves remote, multi-tenant clients from a single /mcp endpoint, replaces HTTP+SSE deprecated in 2025-03, and leaves auth to you.</li>
+<li>Under stdio, anything written to stdout is parsed as a JSON-RPC message, so all logging must go to stderr.</li>
+<li>The MCP context tax is twofold: every tool definition is preloaded up front, and large return values stay in context for every later turn.</li>
+<li>Anthropic had agents write code that calls MCP tools on demand and reported a workflow dropping from about 150k tokens to about 2k.</li>
+</ol>
 </div>
 
 <!-- ============ Deep Questions ============ -->

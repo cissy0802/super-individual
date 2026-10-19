@@ -45,6 +45,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -194,6 +205,31 @@ TRIFECTA = {
 <strong>进阶资源</strong> · Anthropic computer use tool 文档（prompt injection 一节）, <a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/computer-use-tool" target="_blank">platform.claude.com/.../computer-use-tool</a> ·
 Simon Willison <em>The lethal trifecta</em>, <a href="https://simonwillison.net/tags/lethal-trifecta/" target="_blank">simonwillison.net/tags/lethal-trifecta</a>
 </div>
+</div>
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>心理学 · 可供性（affordance，J. J. Gibson）</b>：Gibson 在 1979 年的《视知觉的生态学方法》里说，环境直接「供给」动作的可能，门把手本身就写着「可以拧」。DOM 路线的 a11y tree 就是一张现成的可供性清单。不像在于：这张清单是开发者手写的，没打标签的图片按钮，在 agent 眼里就不存在。</li>
+<li><b>神经科学 · 传出副本（efference copy）</b>：von Holst 与 Mittelstaedt 1950 年提出，大脑每发一个运动指令，都留一份副本去预测「动完之后该看到什么」，再和实际感觉比对；眼球转动时世界不跟着晃，靠的就是它。verify-after-act 是同一个结构：动作前先写好期望状态，动完立刻比对，不符就重新感知。不像在于：大脑每个动作都免费自动做这件事，agent 的 harness 得一条条显式写断言，漏写的那一步就是盲飞。</li>
+<li><b>生物进化 · 大杜鹃的巢寄生</b>：大杜鹃把蛋下进芦苇莺的巢，宿主默认「我巢里的蛋就是我的」，于是替别人孵。prompt injection 利用的是同一个漏洞：网页文字和用户指令落在同一个 context，来源没有标记。宿主进化出认蛋、弃蛋，杜鹃就把蛋长得更像，这就是分类器与新型注入的军备竞赛。</li>
+<li><b>心理学 · 瑞士奶酪模型（James Reason）</b>：Reason 研究人因事故时指出，每一层防线都有洞，事故发生在几片奶酪的洞恰好连成一线时。injection 分类器、沙箱、domain allowlist、人工闸门就是几片奶酪。不像的是，这里有主动找洞的对手，洞不是随机出现的。</li>
+<li><b>投资 · 回测与实盘</b>：量化策略在历史数据上回测漂亮，一上实盘就被滑点、流动性和手续费吃掉，WebVoyager 的分数和内部系统的落差是同一回事。不像的是，交易员能在回测里补上摩擦成本，GUI agent 却很难提前模拟你那个加载 3 秒的 CRM。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>能在浏览器里完成的任务几乎都该走 DOM 路线，截图给模型猜坐标是最后手段。</li>
+<li>Pixel 路线万能但慢且贵，每张截图约 1–1.5K image token，visual grounding 常点偏几十像素。</li>
+<li>DOM 路线把 accessibility tree 序列化并给元素打稳定 ref，模型输出 click(ref) 而不是坐标。</li>
+<li>Set-of-Mark prompting 在截图的可点区域叠数字标记，把坐标 grounding 难题变成选择题。</li>
+<li>Computer use 里模型只输出动作意图，harness 执行动作后回传新截图，循环往复构成 agentic loop。</li>
+<li>截图应缩到 XGA（约 1024×768）附近，harness 必须把缩放图上的坐标映射回真实屏幕像素。</li>
+<li>GUI agent 的可靠性主要靠 harness 纪律：等条件不等时间、用语义选择器、每个动作后立刻 verify。</li>
+<li>Benchmark 跑的是干净的公开网站，WebVoyager 89% 的分数不能拿来承诺内部系统的生产 SLA。</li>
+<li>Computer use 天然凑齐 Simon Willison 说的 lethal trifecta：私有数据、不可信内容、能向外发送。</li>
+<li>injection 分类器只降低被劫持的概率，沙箱、domain allowlist 和人工闸门才限制被劫持后的损失。</li>
+</ol>
 </div>
 <!-- ============ Combo ============ -->
 <div class="combo">

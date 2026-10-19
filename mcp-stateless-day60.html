@@ -58,6 +58,17 @@ pre code{color:#d8e8e8}
 .thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -212,6 +223,31 @@ curl -X POST https://example.com/mcp \
 9. 旧客户端：SDK 的 legacy 'stateless' 模式可同端点兼容 2025 流量</code></pre>
 <div class="fail"><strong>失败模式：</strong>最危险的是<strong><code>cacheScope: 'shared'</code> 用在按用户过滤的清单上</strong>——多租户 server 很容易这么干（"工具清单不就是静态的吗"），结果 A 用户缓存到的是 B 用户可见的工具集。凡 list 结果里出现过"因人而异"的内容，就只能 <code>private</code>。其次，CIMD 的机制是<strong>让授权服务器去 fetch 一个客户端提供的 URL</strong>，这天然是 SSRF 面：自建 AS 必须对该 fetch 做出网限制（禁内网与元数据端点、限超时与大小、不跟跳转）。最后是节奏误判：把"还有十二个月"读成"这次不用管"——Roots / Sampling 的替代路径尚未定型，现在深绑，一年后的迁移是被动的。</div>
 <div class="res">进阶资源：<a href="https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization/client-registration" target="_blank">MCP Spec 2026-07-28 · Client Registration</a>（CIMD 与 DCR 弃用的规范原文）· <a href="https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/" target="_blank">MCP Blog · Release Candidate</a>（授权侧六个 SEP）</div>
+</div>
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>佛学 · 《弥兰陀王问经》的灯焰</b>：那先比丘说，一盏灯初夜、中夜、后夜的火焰既不是同一个，也不是另一个，是相续而来。无状态 server 也没有跨请求的「我」，连续性全靠每次请求带来的东西接上。不像的是，佛学说那个持续者本来就找不到，MCP 只是把它从协议挪到了客户端手里。</li>
+<li><b>神经科学 · 病人 H.M.</b>：Henry Molaison 1953 年切除双侧内侧颞叶后再也记不住新经历，研究他几十年的 Suzanne Corkin 每次见面都得重新自我介绍，就像客户端每个请求都要在 <code>_meta</code> 里自报身份。不像在于：H.M. 无法核对对方说的真假，server 至少能验签名、验头体一致。</li>
+<li><b>生物进化 · 贝茨拟态（Henry Walter Bates，1862）</b>：无毒的蝴蝶长出有毒物种的警戒色，捕食者只看外表就放过；<code>Mcp-Name</code> 头也是一层外表，网关只读头不拆 body。不像在于：捕食者没法剖开验货，只能吃亏后学乖；MCP server 必须核对头与 body，不一致直接回 400。</li>
+<li><b>复杂性科学 · 共识主动性 stigmergy（Pierre-Paul Grassé，1959）</b>：白蚁不记工程进度，下一步做什么由环境里已堆好的泥团决定，任何一只都能接手；<code>requestState</code> 也把流程状态寄存在外部，任何实例都能续跑。不像在于：信息素会自己挥发，<code>requestState</code> 不会自动过期，签发时间得自己写进去。</li>
+<li><b>商业 · 提单的「一份已提，其余作废」</b>：海运提单通常一式三份正本，持正本者凭其一提货后其余失效。持有即权利、又可能被重复出示，这正是 <code>requestState</code> 的处境，所以副作用工具要靠幂等键挡住第二次兑付。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>MCP 2026-07-28 规范删除了 initialize 握手与 Mcp-Session-Id，协议层不再有会话概念。</li>
+<li>客户端身份改由每个请求的 _meta 自带，能力发现变成可选的 server/discover 方法。</li>
+<li>无状态协议让远程 MCP server 能直接跑在轮询负载均衡后面，不再需要粘性路由或共享会话存储。</li>
+<li>协议无状态不等于业务无状态：进程内的 per-client 缓存一扩到多实例，行为就会随机漂移。</li>
+<li>Streamable HTTP 请求必须带 Mcp-Method 与 Mcp-Name 头，网关不拆 JSON-RPC body 就能按工具限流。</li>
+<li>反代或 CDN 剥掉自定义头时，所有 MCP 请求会统一返回 400，上线前要在真实链路上验证。</li>
+<li>MRTR 让 server 返回 input_required 与 requestState，客户端补齐用户输入后重试原调用。</li>
+<li>requestState 在客户端手里走一圈，必须签名防篡改，副作用工具还要自带幂等键防重放。</li>
+<li>缓存提示 cacheScope 默认 private，把按用户过滤的工具清单标成 shared 就会跨用户泄漏。</li>
+<li>DCR 被弃用、转向 CIMD，弃用功能至少保留十二个月，自建授权服务器要防 CIMD 带来的 SSRF。</li>
+</ol>
 </div>
 <!-- ============ 下一步 ============ -->
 <div class="combo">

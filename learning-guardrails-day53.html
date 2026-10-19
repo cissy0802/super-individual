@@ -45,6 +45,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -141,6 +152,32 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 </ol>
 <div class="fail"><strong>单家理性、行业透支：</strong>「junior 反正有 AI，那就少招/不带」在单个季度是省钱的，拉到三五年是断代——要么高价挖别家的中级，要么没得挖。已经有 32% 因 AI 裁岗的经理在往回招人。给 junior 装对护栏，是这条曲线里唯一可持续的解。</div>
 </div>
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>东方哲学 · 孔子「不愤不启」</b>：《论语·述而》讲，学生不到想不通、说不出的地步就不点拨，举一隅不能以三隅反就不往下教。这正是「先试后揭晓」，也是导师版 GPT 只提示不给答案的做法。不像在：孔子靠读学生的神色判断火候，AI 护栏只能靠事先写好的规则。</li>
+<li><b>神经科学 · 奖赏预测误差</b>：Schultz、Dayan 与 Montague 1997 年提出，多巴胺神经元报的是「预期与结果之差」：没有预期就没有误差，大脑也就不更新。先预测再看 AI 答案，是在人为制造这个误差；不像在多巴胺管的是奖赏，不是知识对错。</li>
+<li><b>心理学 · 解释深度错觉</b>：Rozenblit 与 Keil 2002 年发现，人自以为懂拉链怎么工作，一被要求逐步讲清，自评就明显下跌。读完 AI 讲解「觉得懂了」是同一种错觉，「关掉 AI 能否复现」就是那道讲清题；不像在原研究测的是理解，不是动手做。</li>
+<li><b>生物进化 · 洞穴鱼的眼睛</b>：墨西哥丽脂鲤的洞穴种群在黑暗里眼睛退化，地表种群照样有眼：环境不再要求，能力就不再维持。只验证不生成、生成肌肉萎缩是同一结构；不像在进化要跨许多代，个人技能几个月就退，也能练回来。</li>
+<li><b>经济学 · Becker 的通用培训</b>：Gary Becker 1964 年在《人力资本》里指出，企业不愿为通用技能付培训费，因为员工学成可以跳槽带走。「少招少带 junior、等着挖别家中级」正是这个逻辑；不像在 Becker 的解法是学徒用低工资自付学费，少招 junior 等于连这个交换都取消了。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>2025 年 PNAS 随机对照实验中，用原味 GPT-4 练习的高中生撤掉 AI 后，成绩比从没用过 AI 的对照组低 17%。</li>
+<li>同一实验里带护栏的 GPT 导师让练习成绩提升 127%，且基本消除了撤掉 AI 后的损失。</li>
+<li>学习发生在自己挣扎产出、再被纠正的过程里，原味 AI 直接给答案，等于删掉了这段合意困难。</li>
+<li>区分用 AI 学还是用 AI 替，只问一句：关掉 AI，能否独立复现刚才的产出。</li>
+<li>干活模式是 AI 生成、人来验证；学习模式要倒过来，人先生成，AI 负责审稿和追问。</li>
+<li>只对正在学的新东西先试后揭晓，伪代码、思路草图或预测都算，已会的样板代码照常让 AI 先写。</li>
+<li>METR 2025 年的实验里，资深开源维护者用 AI 反而慢了 19%，事后却以为自己快了 20%。</li>
+<li>复杂代码库的瓶颈是读懂和验证，junior 要长成资深，练的正是这块验证能力。</li>
+<li>组织里应让 junior 当 AI 产出的第一验证者，AI 代码走同一套 review 门禁，并保留资深的直接带教。</li>
+<li>只验证不生成会让生成能力萎缩，就像洞穴鱼在黑暗里退化掉眼睛，环境不要求的能力不会被维持。</li>
+</ol>
+</div>
+
 <!-- ============ Checklist ============ -->
 <div class="combo">
 <h3 data-tts="c3e9caf984ceb8bb">// 一页护栏检查表</h3>

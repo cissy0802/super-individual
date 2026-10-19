@@ -59,6 +59,17 @@ pre code{color:#d8e8e8}
 .boxes{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;font-size:0.82rem}.box{border:1px solid rgba(0,212,255,0.35);border-radius:8px;padding:12px;background:rgba(0,212,255,0.04)}.box b{display:block;color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-bottom:6px}.box.you{border-color:rgba(255,110,196,0.5);background:rgba(255,110,196,0.05)}.box.mix{border-style:dashed}.legend{font-size:0.8rem;color:#a0a4b8;margin-top:12px}@media(max-width:600px){.boxes{grid-template-columns:1fr}}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style>
 </head><body>
 <div class="container">
@@ -201,6 +212,30 @@ ant beta:environments:work stats --environment-id "$ANTHROPIC_ENVIRONMENT_ID"
 <span class="tag-com"># workers_polling ≥ 1 才往这个环境派会话</span></code></pre>
 <div class="fail"><strong>失败模式：</strong>把 API key 放在 worker 主机上。agent 的 bash 调用能读到同一台机器的环境变量，文档特意要求 key <strong>不要放在 worker 上</strong>。再一个是把「自托管」当成合规答案报给法务：工具结果里只要出现客户数据，这份数据就已经进了厂商的会话存储，执行位置换了，<strong>数据流没变</strong>。</div>
 <div class="res">进阶资源：<a href="https://platform.claude.com/docs/en/managed-agents/self-hosted-sandboxes" target="_blank">Claude Docs · Self-hosted sandboxes</a> · <a href="https://platform.claude.com/docs/en/managed-agents/self-hosted-sandboxes-security" target="_blank">Claude Docs · Self-hosted sandbox security model</a></div>
+</div>
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>神经科学 · 病人 H.M. 与海马体</b>：Henry Molaison 1953 年切除双侧内侧颞叶后，短时记忆还在，却再也存不进新的长期记忆，只能从眼前这一刻接着活。会话日志就是给 harness 外挂的海马体。不像在于：人的回忆是重建出来的，会走样；事件日志是逐条追加的原件，wake 回放出来分毫不差。</li>
+<li><b>佛学 · 相续与灯焰之喻</b>：《弥兰王问经》里，那先用整夜燃烧的灯作答：初夜之焰与后夜之焰非一非异，靠相续延续，不靠常住的我。无状态 harness 换了实例也靠日志接着跑；不像的是，相续是因果之流，日志能原样复制。</li>
+<li><b>生物进化 · 洞穴鱼退化的眼睛</b>：墨西哥丽脂鲤的洞穴种群在黑暗里失去了眼睛，环境一变，旧适应成了负担；为 Sonnet 4.5 加的 context reset 到 Opus 4.5 也成了多余。不像在于：演化要很多代才淘汰，厂商一次发版就删掉。</li>
+<li><b>商业 · 资产专用性（Oliver Williamson）</b>：交易成本经济学认为，越专用于某段关系的资产越该自己持有，免得被敲竹杠；副作用层就是该自己握的专用资产。不像的是，会话日志的锁定不是谈出来的，是用着用着沉淀下来的。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>托管 harness 的切分线在「决定下一步」和「执行这一步」之间，而不在模型和代码之间。</li>
+<li>Anthropic 把托管架构拆成 brain、hands、session 三块，会话日志放在上下文窗口之外。</li>
+<li>harness 无状态后，实例崩溃可以用 wake 从会话日志续跑，脑手解耦也让首 token 延迟大降。</li>
+<li>有状态会话存在服务端，Managed Agents 目前不适用 ZDR 和 HIPAA BAA，合规负载第一步就被挡。</li>
+<li>harness 编码的是对模型短板的假设，模型升级后这些补丁会过期，由厂商替你删掉是托管的卖点。</li>
+<li>托管 harness 会随平台悄悄漂移，应定期跑固定任务比对工具调用轨迹指纹，只用来触发人工复核。</li>
+<li>最常见的中间态是循环租、副作用自己握：custom tool 让写库、发邮件、扣款都在自己进程里执行。</li>
+<li>平台持久化了会话，却没持久化你的 custom tool 回路，回路要能从事件历史重建并补发结果。</li>
+<li>自托管沙箱搬走的是执行位置，工具输入输出仍回到厂商控制平面，不能拿去当合规答案。</li>
+<li>被新模型淘汰的 harness 补丁像洞穴鱼退化的眼睛，不同在于厂商一次发版就能删掉它。</li>
+</ol>
 </div>
 <div class="glossary">
 <h3 data-tts="c3f330b824aecf8f">// 术语表</h3>

@@ -46,6 +46,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -244,6 +255,31 @@ Code: sierra-research/tau-bench, <a href="https://github.com/sierra-research/tau
 </div>
 </div>
 
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Ethology · Supernormal stimuli (Niko Tinbergen)</b>: an oystercatcher will abandon its own egg to brood an absurdly large fake one. The rule "bigger is better" works in nature and fails once something is built to exploit it. Same with benchmarks: a proxy holds up until someone optimizes against it. The difference is that birds do not build the fake eggs, while the industry actively trains toward the leaderboard.</li>
+<li><b>Psychology · There is no average pilot (Gilbert Daniels)</b>: in the early 1950s the US Air Force measured over four thousand pilots on ten body dimensions, and not one fell in the average range on all ten. A cockpit designed for the average fit nobody. An aggregate score of 90% may likewise describe no real slice at all.</li>
+<li><b>Philosophy · The hermeneutic circle (Gadamer)</b>: you understand the parts through the whole and the whole through the parts, approaching meaning by going back and forth. Criteria drift has the same shape: you need criteria to grade, and grading rewrites the criteria. Unlike hermeneutics, an eval eventually has to freeze into a version.</li>
+<li><b>Psychology · Outcome bias (Baron &amp; Hershey, 1988)</b>: people judge a decision by how it turned out, so a reckless bet that happened to pay off gets a good grade. An answer-only eval does exactly this, scoring a trajectory that skipped confirmation and got lucky as a success. The difference: a trajectory can be checked step by step, while a human decision process rarely can be replayed.</li>
+<li><b>Investing · Ergodicity economics (Ole Peters)</b>: the average payoff of many people betting once can differ sharply from what one person gets betting many times in a row. Pass@1 is the first, pass^k the second, and a single user lives through many turns in a row. Unlike investing, an agent failure usually does not compound; the user can retry.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>Public benchmark scores systematically overstate real ability, because they do not measure the input distribution you deploy into.</li>
+<li>Contamination, saturation and the construct gap decouple leaderboard scores from production reliability; underneath sits Goodhart's law.</li>
+<li>Public leaderboards are good only for a coarse cut that rules out weak models; the final pick needs an eval built on your own scenario.</li>
+<li>A trustworthy eval set comes from real production traces and deliberately oversamples hard cases such as thumbs-down, retries and fallbacks.</li>
+<li>Open coding reads the data and names failure modes before writing a rubric; EvalGen calls the way grading reshapes criteria "criteria drift".</li>
+<li>A 90% aggregate accuracy can hide a critical slice sitting at 45%, so the launch gate belongs on the worst slice.</li>
+<li>Slices cut too thin collapse into noise; each slice needs at least a dozen or so examples before its score means anything.</li>
+<li>Evaluating an agent means checking its trajectory and final database state; judging only the final answer lets lucky policy violations pass.</li>
+<li>The pass^k metric from tau-bench requires k consecutive successes on the same task, measuring consistency rather than one-shot ability.</li>
+<li>An answer-only eval commits the outcome bias from psychology: a risky run that happened not to break is recorded as a success.</li>
+</ol>
+</div>
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3>// Capstone · Wire a launch gate onto your agent</h3>

@@ -39,6 +39,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -214,6 +225,33 @@ You are a data analyst. Before any output you MUST:
 <strong>Going deeper</strong> · Spider 2.0 (why enterprise workflows need multi-step + verification), <a href="https://github.com/xlang-ai/Spider2" target="_blank">github.com/xlang-ai/Spider2</a> ·
 Anthropic <em>Building Effective Agents</em> (when to escalate to an agent), <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">anthropic.com/engineering/building-effective-agents</a>
 </div>
+</div>
+
+<!-- ============ Crossovers ============ -->
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Eastern philosophy · Confucius on "rectifying names"</b>: If names are not correct, speech will not follow; a business glossary rectifies names, pinning "active user" to one definition so the SQL makes sense. The difference: Confucius's names carried a moral order, while a metric definition is a convention that should change with the business.</li>
+<li><b>Philosophy of mind · The extended mind (Clark &amp; Chalmers, 1998)</b>: Otto, who has memory loss, finds his way with a notebook, which they count as part of his cognition; handing arithmetic to a sandbox likewise moves thinking outside the model. Unlike a notebook, the sandbox's result is fixed by the runtime and the model cannot rewrite it.</li>
+<li><b>Neuroscience · Gazzaniga's "interpreter"</b>: In split-brain studies, when the right hemisphere saw an instruction and moved the hand, the uninformed left hemisphere instantly invented a fluent, confident reason. An analysis agent spinning any number into a causal story has the same structure: narration outruns checking, and it cannot tell. The difference: people explain their own behavior, the model narrates someone else's data, so it needs enforced EDA from outside.</li>
+<li><b>Business · Double-entry bookkeeping (Luca Pacioli, 1494)</b>: Debits and credits must balance, and an imbalance means a recording error; "group sums equal the total" is the same balance check. Unlike bookkeeping, which forces balance at entry, an agent's reconciliation checks only after computing.</li>
+<li><b>Evolutionary biology · DNA polymerase proofreading</b>: The polymerase snips out mismatched bases as it copies, relying on a fixed chemical rule, base pairing, not on judgment, just as reconciliation must be hard-coded in SQL. Unlike a report, the cell keeps a few errors on purpose as raw material for evolution.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>On BIRD the best model of its day hit about 40% execution accuracy versus 93% for humans; on Spider 2.0, o1-preview reached about 21%.</li>
+<li>The real NL2SQL bottleneck is schema linking: mapping business terms onto specific tables, columns and join paths.</li>
+<li>Don't stuff a large database's whole DDL into context; retrieve the relevant tables first and add real sample values.</li>
+<li>A business glossary that fixes metric definitions often pays off more than a stronger model.</li>
+<li>Alert separately when SQL returns zero rows, since an empty result often signals a schema-linking failure.</li>
+<li>The code-interpreter pattern has the model write code that runs in a sandbox, handing computation to a deterministic runtime.</li>
+<li>An analysis agent's biggest danger is fluent narrative that dresses up statistical errors like Simpson's paradox as insight.</li>
+<li>Letting an agent explore data freely makes it an automatic p-hacking machine, so its findings are only unverified hypotheses.</li>
+<li>A reconciliation layer hard-codes deterministic checks (group sums, cross-path agreement, magnitude) in the harness instead of using another model as judge.</li>
+<li>"Group sums equal the total" mirrors the balance of double-entry bookkeeping and most often catches double counting from one-to-many joins.</li>
+</ol>
 </div>
 
 <!-- ============ Combo ============ -->

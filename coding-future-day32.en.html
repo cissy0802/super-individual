@@ -46,6 +46,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -216,6 +227,30 @@ Anthropic <em>Building Effective Agents</em>, <a href="https://www.anthropic.com
 </div>
 </div>
 
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Economics · Goodhart's law (Charles Goodhart, 1975)</b>: once a statistical indicator becomes a control target, the relationship that made it useful starts to slip; SWE-bench went from measuring ability to being a score to chase, and contamination and leaderboard gaming followed. The difference: Goodhart described markets routing around policy, while here the training data swallowed the exam itself.</li>
+<li><b>Neuroscience · reward prediction error (Schultz, Dayan &amp; Montague, 1997)</b>: dopamine neurons encode the gap between expected and actual outcome, and that error signal drives learning; a test suite is exactly this signal for an agent. Unlike the brain, which generates both expectation and error internally, an agent's oracle has to be installed from outside.</li>
+<li><b>Psychology · the two conditions for expert intuition (Kahneman &amp; Klein, 2009)</b>: their joint paper concluded that intuition is trustworthy only where the environment is regular enough and feedback is fast and clear; fireground commanders qualify, stock pickers and long-range political forecasters do not. Agent-readiness maps almost point for point: fast tests are fast feedback, clean boundaries are regularity. Where it differs is that they were asking how human intuition grows, which also hints at an answer to the taste problem in §3: judgment grows where feedback is dense, not necessarily where code is typed by hand.</li>
+<li><b>Philosophy · tacit knowledge (Michael Polanyi, The Tacit Dimension, 1966)</b>: Polanyi held that we know far more than we can say; writing gotchas and conventions into AGENTS.md turns part of that tacit knowledge into explicit knowledge. The catch: he argued that skills like riding a bike or recognizing a face can never be fully spelled out, so docs only cover part of it and tests must catch the rest.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>In 2026 OpenAI stopped reporting SWE-bench Verified scores, citing contamination and defects in more than half of the remaining problems.</li>
+<li>Public coding leaderboards measure a model-plus-harness combination; the same model on a different scaffold can swing by more than ten points.</li>
+<li>The only trustworthy coding eval is private and matches your own work, such as tasks pulled from merged PRs and graded by their original tests.</li>
+<li>METR's 50% time horizon measures how long a human task a model can finish at even odds, and it has doubled about every 7 months for six years.</li>
+<li>Time-horizon gains come mostly from better reliability, error recovery and tool use, not from stronger raw reasoning.</li>
+<li>Agent autonomy should be set by two axes, human-time and verifiability; as the curve shifts right, supervision gets lighter but verification never goes away.</li>
+<li>As code generation approaches free, value moves upstream to specification and downstream to verification, while boilerplate speed and API recall lose value.</li>
+<li>Large-scale code review and system-design taste are gaining value; engineers who cannot read AI output decay from gatekeepers into button-pushers.</li>
+<li>An agent-ready codebase has fast, broad tests, conventions written into AGENTS.md, reversible operations and clear module boundaries.</li>
+<li>Kahneman and Klein found intuition reliable only in regular, fast-feedback environments, which is exactly what an agent-ready setup provides.</li>
+</ol>
+</div>
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3>// CAPSTONE · Run an "AI Leverage Audit" on Yourself</h3>

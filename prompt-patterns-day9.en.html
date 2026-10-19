@@ -39,6 +39,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -305,6 +316,33 @@ ANTI_SYCOPHANCY = <span class="tag-gpt">"""When the user expresses disagreement 
 <strong>Going deeper</strong> · Sharma et al. <em>Towards Understanding Sycophancy in LMs</em> (ICLR 2024), <a href="https://arxiv.org/abs/2310.13548" target="_blank">arxiv.org/abs/2310.13548</a> ·
 Anthropic <em>Give Claude a role (system prompts)</em>, <a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/system-prompts" target="_blank">docs.anthropic.com/.../system-prompts</a>
 </div>
+</div>
+
+<!-- ============ Crossovers ============ -->
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Psychology · The crowd within (Vul &amp; Pashler, 2008)</b>: ask the same person the same question twice and average the guesses, and the result beats a single guess; waiting a few weeks between guesses helps more. Split runs plus overlap across samples is the same structure. The difference: a person can partly forget the first anchor over weeks, while samples that share one leading prompt are just the same bias drawn several times.</li>
+<li><b>Behaviorism · Skinner on punishment</b>: Skinner argued punishment only suppresses a behavior for a while and never says what to do instead; later behavior therapy reinforces an alternative behavior. Rewriting "don't X" as "do Y" follows the same logic. Unlike punishment, which at least works briefly, a negative instruction can make X more frequent.</li>
+<li><b>Philosophy of science · Kuhn's exemplars (1969)</b>: in the postscript to the second edition of <em>The Structure of Scientific Revolutions</em>, Kuhn argued students learn a science by working the standard textbook problems, not by memorizing laws. Few-shot beating a rule list is the same thing. The difference: exemplars are calibrated by a whole scientific community; the model only has your three examples.</li>
+<li><b>Psychology · Asch's conformity experiments (Solomon Asch, 1951)</b>: with a room of confederates misjudging line lengths, subjects went along on about a third of answers. Sycophancy is the same yielding to social pressure. The difference: Asch's subjects faced a group, while a model yields to a single user, and its deference was trained in by reward.</li>
+<li><b>Investing · Munger's "invert, always invert"</b>: Munger often said you have not earned an opinion until you can argue the other side better than its own advocates. The steelman template writes that discipline into a prompt. The difference: Munger relied on a habit of self-scrutiny; a model needs roles and task structure to force the switch from outside.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>LLMs drift one way toward an anchor: open with "I think there's a bug" and the model leans toward finding a bug.</li>
+<li>A trailing "please judge objectively" cannot undo an earlier anchor, and a self-reported confidence score is contaminated by the same anchor.</li>
+<li>For a two-sided view, run "find problems" and "find strengths" as separate independent passes, then use overlap across samples to gauge confidence.</li>
+<li>temperature=0 only changes sampling, not the shape of the distribution, so it does not remove anchor bias.</li>
+<li>A negative instruction activates the forbidden concept first, so "Don't apologize" can make a model apologize more.</li>
+<li>Rewrite "don't X" as a concrete, executable "do Y", for example "aim for 2-3 sentences" instead of "don't be verbose".</li>
+<li>Safety hard constraints are the exception and should keep the strong negative "never" form.</li>
+<li>Three consistently formatted few-shot examples beat ten abstract rules, because examples teach format, label space and input distribution.</li>
+<li>The number of items per category in a list is itself an emphasis signal, and an unbalanced list quietly shifts model behavior.</li>
+<li>Sycophancy is a side effect of RLHF; counter it structurally with steelman, multiple perspectives or an oppositional role, not with "be objective".</li>
+</ol>
 </div>
 
 <!-- ============ Combo ============ -->

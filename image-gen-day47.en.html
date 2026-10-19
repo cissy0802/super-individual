@@ -44,6 +44,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -223,6 +234,31 @@ c2patool input.png \
 
 <div class="fail"><strong>Failure modes:</strong> ① Relying only on metadata/EXIF watermarks—one screenshot and it's gone. ② Assuming "added a watermark, so I'm off the hook": copyright risk is on training data and style replication, which watermarks don't solve. ③ A commercial LoRA training set mixing in copyrighted/privacy-protected faces or works, planting downstream legal landmines. ④ Mistaking C2PA for tamper-proofing—it proves origin, doesn't prevent stripping; it must be paired with a robust watermark.</div>
 <div class="res">Resources: <a href="https://deepmind.google/technologies/synthid/" target="_blank">Google DeepMind · SynthID</a> · <a href="https://c2pa.org/" target="_blank">C2PA · Content Credentials standard</a></div>
+</div>
+
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Neuroscience · the "what / where" visual streams (Ungerleider &amp; Mishkin, 1982)</b>: the primate visual cortex splits into a ventral stream that recognizes objects and a dorsal stream that handles spatial location, the same division of labor as a control stack that gives identity to LoRA and composition to ControlNet. The difference: the two streams evolved together and talk constantly, while ControlNet is a bypass bolted onto the UNet, and stacking several makes them fight.</li>
+<li><b>Psychology · the white bear experiment (Daniel Wegner, 1987)</b>: people told "don't think of a white bear" think of it more, just as writing "don't add a hat" summons a hat. Unlike Wegner's account, where the rebound comes from a monitor that keeps checking for the forbidden thought, a diffusion model has no monitor: the token "hat" simply pushes sampling toward hatted regions.</li>
+<li><b>Immunology · antibody affinity maturation</b>: B cells in germinal centers mutate only the antibody's variable region, then get selected by how well they bind the antigen, with everything else kept intact, much like an inpainting loop that repaints only the masked bad region. The difference: the immune system runs huge numbers of cells in parallel, while an image agent gets three rounds before a human takes over.</li>
+<li><b>Philosophy · Benjamin's "aura" (1936)</b>: "The Work of Art in the Age of Mechanical Reproduction" says a copy loses the original's history rooted in a here and now; C2PA tries to reattach a checkable history to endlessly copyable images. Unlike aura, which can't be reissued, a C2PA signature falls off with one screenshot, hence the pairing with SynthID.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>The text prompt is the coarsest knob in image generation; composition and identity belong on dedicated control channels.</li>
+<li>The control stack layers orthogonally: ControlNet locks spatial structure, LoRA locks style and character, IP-Adapter transfers style from a reference image.</li>
+<li>Keep controlnet_conditioning_scale below 1.0, or the structure gets welded in place and the prompt stops mattering.</li>
+<li>A diffusion prompt is a coordinate in a conditional distribution, not an instruction, so writing "don't" in the positive prompt summons the very thing negated.</li>
+<li>CFG scale sets how obedient a diffusion model is; SDXL usually runs at 5–8, and pushing it too high causes oversaturation and artifacts.</li>
+<li>The CLIP text encoder reads only the first 77 tokens; quality incantations past that are silently dropped.</li>
+<li>Reliable image output comes from a generate, VLM-critique, local-inpaint loop with a max_iters cap and a human fallback.</li>
+<li>A fixed seed is version control for images; changing the seed every round fixes one spot and breaks another, so the loop never converges.</li>
+<li>Provenance needs two layers: a C2PA signature is verifiable but strippable, while SynthID's invisible watermark survives screenshots and compression.</li>
+<li>Watermarks don't solve copyright risk; the real landmines are training data and cloning a living artist's style.</li>
+</ol>
 </div>
 
 <!-- ============ Combo ============ -->

@@ -45,6 +45,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -225,6 +236,31 @@ Temporal <em>Durable Execution meets AI</em>, <a href="https://temporal.io/blog/
 <strong>进阶资源</strong> · Martin Fowler <em>CircuitBreaker</em>, <a href="https://martinfowler.com/bliki/CircuitBreaker.html" target="_blank">martinfowler.com/bliki/CircuitBreaker</a> ·
 HumanLayer <em>12-Factor Agents</em>（own your control flow / errors）, <a href="https://github.com/humanlayer/12-factor-agents" target="_blank">github.com/humanlayer/12-factor-agents</a>
 </div>
+</div>
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>神经科学 · 脊髓反射与皮层</b>：手碰到烫的东西，脊髓反射弧先把手缩回来，大脑稍后才知道；这和「传输层错误程序自己退避、不惊动模型」是同一种分层。不像的是，反射可以被大脑主动抑制，而 retry 层通常不接受模型的调节。</li>
+<li><b>复杂性科学 · 藏本模型（Kuramoto，1975）</b>：一群各自振荡的单元只要有一点耦合，就会自发同步，萤火虫齐闪就是这样。固定 backoff 让客户端同一时刻撞服务器，正是这种同步；full jitter 故意加噪声去拆散它。自然界常追求同步，工程这里要的是不同步。</li>
+<li><b>量子力学 · 投影测量 P² = P</b>：投影算符满足 P² = P，测完一次立刻再测，结果不变，这正是幂等的数学定义。但第一次测量会不可逆地改变状态，就像第一次扣款已经发生；幂等键只保证第二次什么都不做，撤销第一次得靠补偿，这也是幂等键和 Saga 要成对出现的原因。</li>
+<li><b>细胞生物学 · 细胞周期检查点（Hartwell，2001 诺贝尔奖）</b>：细胞分裂前会在检查点停下，DNA 有损伤就先修复再继续。名字和 agent 的 checkpoint 相同，结构却更像本篇缺的那一半：checkpoint 只是存档，细胞的检查点是「先查对不对，再往下走」，正好对应续跑前要做的循环检测。</li>
+<li><b>投资 · 股市熔断</b>：1987 年黑色星期一之后，美国股市引入全市场熔断，跌到阈值就暂停交易，冷却后再开。和软件熔断一样是阈值触发、强制冷却、再试探放行。不像的是，股市熔断是为了让所有人的恐慌冷下来，软件熔断是为了保护挂掉的下游别再被调用方压垮。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>生产环境 agent 的大部分工程量在 happy path 之外，韧性要靠 harness 设计，prompt 解决不了。</li>
+<li>Agent 的 retry 要分两层：429、超时这类瞬时故障由程序退避，参数错、文件不存在这类语义错误喂回模型。</li>
+<li>退避要用 full jitter，把等待时间随机化到整个窗口，避免客户端同步撞击同一时刻。</li>
+<li>401 或参数非法这类永久错误必须 fail-fast，重试只会推迟暴露故障并白烧配额。</li>
+<li>Agent 的重试有程序 backoff 和模型「再调一次」两个来源，所以有副作用的工具必须幂等。</li>
+<li>幂等键要从任务或规范化参数确定性地派生，每次随机生成就失去了去重作用。</li>
+<li>没有数据库事务可回滚时，用 Saga 给每个副作用步骤登记补偿动作，失败时逆序执行。</li>
+<li>长任务的 state 要外置并每步 checkpoint，崩溃后从断点续跑，且 checkpoint 必须和工具幂等配套。</li>
+<li>超时要分层设置单 tool、单 step 和 task 级总 deadline，熔断器让连续失败的依赖快速失败。</li>
+<li>并行 fan-out 中部分 worker 失败时，应收集成功结果并交给 orchestrator 决定降级还是停止。</li>
+</ol>
 </div>
 <!-- ============ Combo ============ -->
 <div class="combo">

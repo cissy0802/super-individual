@@ -47,6 +47,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.68rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <a href="https://cissy0802.github.io/" onmouseout="this.style.opacity=0.55" onmouseover="this.style.opacity=1" style="position:fixed;top:14px;left:14px;font-size:0.82rem;color:inherit;opacity:0.55;text-decoration:none;padding:6px 12px;border:1px solid currentColor;border-radius:20px;z-index:100;backdrop-filter:blur(6px);transition:opacity 0.2s">← Hub</a>
 <div class="container">
@@ -248,6 +259,30 @@ Compress the following turns into JSON with keys:
 MemGPT 论文, <a href="https://arxiv.org/abs/2310.08560" target="_blank">arxiv.org/abs/2310.08560</a> ·
 Simon Willison <em>Context engineering</em> 词条整理, <a href="https://simonwillison.net/tags/context-engineering/" target="_blank">simonwillison.net/tags/context-engineering</a>
 </div>
+</div>
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>心理学 · 系列位置效应（Bennet Murdock，1962）</b>：人自由回忆一串单词，开头（首因）和结尾（近因）记得最牢，中间塌下去，和 lost-in-the-middle 是同一条 U 形曲线。不像的是成因：人的首因来自开头几个词被反复默念、进了长时记忆，近因来自短时记忆；模型的 U 形来自位置编码和训练数据偏向。</li>
+<li><b>哲学 · 弗雷格的语境原则（1884）</b>：弗雷格主张词义只能在句子里问，不能孤立地问；contextless chunk 正是被拔出句子的词，「该条款」无从指认。不像在于，弗雷格谈意义从哪来，contextual retrieval 只是把丢掉的语境当前缀补回去。</li>
+<li><b>心理学 · 巴特利特的重构记忆（1932）</b>：被试反复复述陌生故事《幽灵之战》，细节被删、被改成熟悉的样子，LLM 自由摘要也会这样漂移。不像的是，人脑没法规定「原词永远保留」，compaction 能用固定 schema 把漂移压住。</li>
+<li><b>商业 · 金字塔原理（Barbara Minto）</b>：麦肯锡写作训练要求结论先行，把最贵的注意力位置留给最重要的话，和 anchor、restate 同理。方向却相反：Minto 把答案放最前给人读，Claude 的建议把问题放最后给模型读。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>context window 写着 200K，不等于模型对 200K 都有有效注意力。</li>
+<li>Liu et al. 2023 发现：关键文档放在首尾准确率最高，放在中段会塌成 U 形，甚至不如不检索。</li>
+<li>NIAH 单针测试只测字面查找，真实任务要多跳推理和整合，有效 context 比宣传短得多。</li>
+<li>先用自己的 NIAH 测出 (长度 × 位置) 命中表，只在命中率 ≥ 95% 的范围里放关键信息。</li>
+<li>长文档放在 prompt 最上方，问题放在 user turn 末尾，核心约束在末尾再复述一次。</li>
+<li>模型不会主动「重读」system prompt，新指令要在最近的 user turn 里复述才会被注意到。</li>
+<li>RAG 效果差多半错在 chunk 切法：固定大小切断语义，缺上下文的 chunk 无法消歧。</li>
+<li>Contextual Retrieval 给每个 chunk 加上它在原文档里的上下文前缀，配合 BM25 和 rerank，检索失败率大幅下降。</li>
+<li>长会话的 compaction 要按固定 schema 压成结构化摘要，代码、路径和标识符永远保留原文。</li>
+<li>lost-in-the-middle 的 U 形曲线和心理学里人类自由回忆的系列位置效应是同一个形状，成因却不同。</li>
+</ol>
 </div>
 <!-- ============ Combo ============ -->
 <div class="combo">

@@ -45,6 +45,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -191,6 +202,31 @@ Redis LLM Cache（scope / TTL 用法）, <a href="https://docs.redisvl.com/en/la
 <strong>进阶资源</strong> · Redis《What is Semantic Caching》（命中率与评估）, <a href="https://redis.io/blog/how-to-cache-semantic-search/" target="_blank">redis.io/blog/how-to-cache-semantic-search</a> ·
 GPTCache eval 模块, <a href="https://github.com/zilliztech/GPTCache" target="_blank">github.com/zilliztech/GPTCache</a>
 </div>
+</div>
+<!-- ============ Crossovers ============ -->
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>心理学 · 信号检测论（Green 与 Swets，1966）</b>：判断「有没有信号」有两个独立参数，辨别力 d′ 和判定标准 c。缓存阈值就是 c，只能在漏报和虚报之间挪来挪去；embedding 的好坏才是 d′，决定「该命中」和「不该命中」两团分布能分多开。不像的是，心理物理实验里错误的代价由实验者事先给定，语义缓存得自己标数据、做 shadow 对账，才知道一次 false hit 到底多贵。</li>
+<li><b>神经科学 · DRM 虚假记忆（Roediger 与 McDermott，1995）</b>：听过「床、休息、疲倦、做梦」一串词的人，常信心十足地「记得」从没出现过的「睡觉」。记忆按语义邻近补全，正是一次 false hit。不像的是，大脑没有抽样对账，错记往往一辈子没人发现。</li>
+<li><b>生物进化 · 免疫记忆与分子模拟</b>：记忆细胞让二次免疫应答又快又省，但识别是「够像就打」：链球菌抗原与心肌蛋白相似，抗体可能交叉攻击心脏，即风湿热。免疫系统同样把门槛收严，在胸腺里清掉会认错自身的细胞。</li>
+<li><b>经济学 · 古德哈特定律（Charles Goodhart，1975）</b>：一个统计量一旦被拿来施压管控，就会失去原本的信息量。命中率进了 KPI、阈值被越调越松，正是这个机制。不像的是，货币政策很难找到独立的护栏指标，语义缓存至少有 false-hit 率可以钉住。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>LLM 缓存分精确、前缀、语义三层，命中率、省钱幅度和出错风险随层级同向递增。</li>
+<li>三层缓存要按 exact、prefix、semantic 的顺序查询，语义缓存只处理前两层漏下的请求。</li>
+<li>Anthropic 的前缀缓存只省 input token，答案每次仍完整推理，所以没有语义风险。</li>
+<li>语义缓存里 false hit 的代价远大于 miss，相似度阈值是风险旋钮而非精度旋钮，宜偏严。</li>
+<li>阈值要拿人工标注的问题对来扫描，在 false-hit 上限约束下取命中率最高的点，而不是取 F1 最高。</li>
+<li>否定句、近义词和带数字的查询在通用 embedding 里距离极近，embedding 选型的影响比阈值还大。</li>
+<li>个性化、时效和上下文依赖都会让缓存答案失效，能否共享由 scope key 决定，而不是由查询相似度决定。</li>
+<li>把数据版本号写进 scope key，源数据一变就升版本，所有旧缓存自动失配，不用逐条删除。</li>
+<li>命中率是收益指标、false-hit 率是护栏指标，线上 false-hit 率要靠抽样 shadow eval 才能量化。</li>
+<li>按信号检测论，阈值只能在漏报和虚报之间取舍，embedding 的辨别力才决定两类请求能分多开。</li>
+</ol>
 </div>
 <!-- ============ Combo ============ -->
 <div class="combo">

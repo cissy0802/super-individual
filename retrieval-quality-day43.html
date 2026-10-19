@@ -47,6 +47,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -211,6 +222,31 @@ Anthropic Contextual Retrieval(reranking 实测层), <a href="https://www.anthro
 <strong>进阶资源</strong> · Pinecone <em>RAG Evaluation: Don't let customers tell you first</em>, <a href="https://www.pinecone.io/learn/series/vector-databases-in-production-for-busy-engineers/rag-evaluation/" target="_blank">pinecone.io/.../rag-evaluation</a> ·
 BEIR(nDCG/MRR/recall 标准指标), <a href="https://arxiv.org/abs/2104.08663" target="_blank">arXiv:2104.08663</a>
 </div>
+</div>
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>神经科学 · 特征整合理论（Treisman &amp; Gelade，1980）</b>：视觉先并行、廉价地扫出颜色、朝向等特征，再用注意力逐个对象做昂贵的串行绑定，正是先召回后精排。不像的是，大脑精排一次只看一个对象，cross-encoder 可以批量打分。</li>
+<li><b>心理学 · 信号检测论（Green &amp; Swets，1966）</b>：判断分成辨别力和判断标准两件事，漏报与虚报代价不对称时就该移动标准。把第一阶段的 k 调大，就是因漏召回不可恢复而主动放宽标准；不像的是，人的标准常在无意识中漂移。</li>
+<li><b>免疫学 · 克隆选择学说（Burnet，1957）</b>：免疫系统先随机造出海量抗体受体，抗原出现后再挑能结合的那一支扩增，先广撒网再精挑。库里若根本没有对应受体，扩增再强也救不回来，和漏召回一样；不同的是，免疫库在使用中还会靠体细胞突变继续进化，检索器只有重建索引才会变。</li>
+<li><b>社会选择 · 波达计数（Borda，18 世纪）</b>：每张选票按名次给分再相加，不问各人的打分尺度，和 RRF 只看排名不看分数同一个思路。不像的是，选民会策略性投票操纵名次，检索器不会为捧某篇文档故意压低对手。</li>
+<li><b>科学哲学 · 迪昂–奎因论题</b>：预测失败只说明理论、辅助假设和仪器这个整体出了错，挑不出是哪一环。RAG 答错也分不清是检索还是生成之过；区别是 golden set 能单独检验检索，科学假设常常没法单独检验。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>RAG 的瓶颈多半在检索：LLM 拿到对的文档几乎都能答对，拿不到就只能编。</li>
+<li>两阶段检索的第一阶段只看 recall@k，因为漏召回不可恢复，多召回却可以补救。</li>
+<li>先画召回曲线：recall@200 也低就修检索器，recall@100 高而 @5 低就上 reranker。</li>
+<li>第一阶段的 k 由 reranker 能吃下的候选数（50 到 200）决定，不由塞进 LLM 的条数决定。</li>
+<li>BM25 擅长型号、错误码等精确字面量，向量检索擅长语义，两者失败互补，混合检索几乎总胜单路。</li>
+<li>混合检索该用只看排名的 RRF 融合：BM25 分数无界、cosine 有界，直接加权是在拟合噪声。</li>
+<li>Anthropic 的 Contextual Retrieval 实测，上下文嵌入、BM25、reranking 三层叠加后 top-20 检索失败率降了 67%。</li>
+<li>Reranker 是 cross-encoder，每个候选都要现场推理一次，只能精排几十到一两百条，不能扫全库。</li>
+<li>RAG 答错时，要用 golden set 把检索失败和生成失败拆开归因，否则常在 prompt 上白费功夫。</li>
+<li>同一个 LLM 既生成又当 judge 会事后合理化，judge 最好换模型或用参考答案锚定。</li>
+</ol>
 </div>
 <!-- ============ Combo ============ -->
 <div class="combo">

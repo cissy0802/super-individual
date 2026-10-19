@@ -44,6 +44,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -228,6 +239,30 @@ Simon Willison <em>llama.cpp grammars to generate JSON</em>, <a href="https://ti
 </div>
 </div>
 
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Neuroscience · the bit-width of a synapse (Bartol et al., 2015)</b>: a Salk Institute team reconstructed rat hippocampal synapses and estimated only about 26 distinguishable strength levels, roughly 4.7 bits, so the brain itself runs at something like Q4 to Q5. The difference: the brain grew up at low precision rather than being trained in full precision and compressed afterwards, and it stays stable through massive redundancy, not post-hoc calibration.</li>
+<li><b>Investing · ergodicity (Ole Peters)</b>: perplexity averages over all tokens, like the ensemble average in economics; multi-step reasoning is a single path through time, where one wrong step breaks the chain the way one blow-up ends a gambler. The difference: a model can rerun, a ruined bettor cannot.</li>
+<li><b>Psychology · System 1 and System 2 (Kahneman)</b>: a small local model handles the fast, cheap default, and hard cases escalate to the slow, expensive cloud, the same division of labor. The closest match is the failure mode: human System 1 often fails to notice a problem is hard (Frederick's 2005 Cognitive Reflection Test), so when the triage layer misjudges, everything downstream is wrong.</li>
+<li><b>Philosophy of language · Chomsky's "Colorless green ideas sleep furiously" (1957)</b>: perfectly grammatical and empty of meaning, which is exactly the layer constrained decoding guarantees. The difference: Chomsky used the sentence to argue syntax is independent of semantics, while engineering needs the opposite reminder that valid is not the same as correct.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>Quantization shrinks FP16's 2 bytes per parameter to about 0.5, taking a 7B model from 14GB to roughly 4GB so it fits locally.</li>
+<li>GGUF Q4_K_M is the size/quality sweet spot, and an imatrix built from calibration text protects the most sensitive weights.</li>
+<li>Near-unchanged perplexity does not mean no loss; it systematically understates quantization damage to code, math and long reasoning.</li>
+<li>Small models have little redundancy, so aggressive quantization hurts them more; Q8 is the safe floor for KV cache, Q4 degrades long-context recall.</li>
+<li>Whether a model runs is weights plus KV cache plus 1-2GB overhead, and most OOMs come from the forgotten KV cache.</li>
+<li>Fitting is not the same as fitting the job: tolerant tasks, strict privacy and high call volume make local models pay off.</li>
+<li>Ollama's default num_ctx is small and silently drops what overflows, so set it explicitly in the Modelfile.</li>
+<li>On a Mac, switching to MLX to exploit unified memory often raises throughput outright; the wrong runtime costs more than the wrong model.</li>
+<li>Constrained decoding masks illegal tokens at sampling time, guaranteeing valid JSON syntax but not a correct judgment inside it.</li>
+<li>Hybrid routing gives local models the frequent, tolerant, privacy-sensitive work and escalates hard cases to the cloud, but at low volume it is over-engineering.</li>
+</ol>
+</div>
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3>// Capstone · Build Yourself a Local-First "Triage" Layer</h3>

@@ -47,6 +47,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -224,6 +235,30 @@ DeepSeek-R1 (RL-incentivized reasoning), <a href="https://arxiv.org/abs/2501.129
 </div>
 </div>
 
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Psychology · Kahneman's System 1 / System 2</b>: the mind runs on fast, effortless intuition by default and only recruits slow, effortful reasoning when a problem demands it, which is exactly the shape of a routing layer. The difference: human System 2 is lazy and often fails to switch on, while a routing table can state explicitly which task types get escalated.</li>
+<li><b>Evolutionary biology · The expensive tissue hypothesis (Aiello &amp; Wheeler, 1995)</b>: the brain is about 2% of body mass yet burns roughly 20% of resting energy, so evolution pays for it only when the payoff is large. Reasoning tiers are expensive compute spent by difficulty too; the difference is that evolution pays a fixed cost, while a router pays per request.</li>
+<li><b>Psychology · Sian Beilock on choking from overthinking</b>: in a 2002 study, skilled golfers putted worse when told to attend to each step of their stroke. Forcing "step by step" onto a reasoning model has the same shape: an outside instruction disrupts a process already internalized. Unlike golfers, the model is hurt mostly by redundant prompting, not by crowded attention.</li>
+<li><b>Neuroscience · Gazzaniga's left-brain interpreter</b>: when a split-brain patient's right hemisphere sees an instruction and acts on it, the left hemisphere, unaware of the cause, instantly invents a fluent reason. That is post-hoc rationalization, the same structure behind not treating a reasoning trace as audit evidence. Where it differs echoes the first deep-dive question: the interpreter's story is only an outward account, while a thinking block passed back really is working memory the model keeps computing on.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>A reasoning model should not be the default tier; it is a costly tier triggered on demand, multiplying latency and spend.</li>
+<li>Escalate to reasoning only when three conditions hold: the answer is verifiable, the steps cannot be pre-compressed into a workflow, and errors cost more than the overhead.</li>
+<li>A routing table should tune both model size and reasoning effort, since a small model on high effort often loses to a large one on low.</li>
+<li>Thinking budget has a sweet spot: too little causes underthinking, too much causes overthinking, and both lower accuracy.</li>
+<li>Find the budget sweet spot by sweeping low, medium and high on ground-truth tasks and taking the knee of the accuracy curve, not its peak.</li>
+<li>From version 4.6, Anthropic deprecates budget_tokens in favor of adaptive thinking driven by effort.</li>
+<li>With interleaved thinking, thinking blocks and their signatures must be passed back unchanged across turns; stripping them errors out or breaks the chain.</li>
+<li>Step-by-step templates with heavy few-shot examples, written for standard models, often hurt reasoning models.</li>
+<li>A reasoning trace may be post-hoc rationalization, so it is not audit evidence; trust verified final outputs instead.</li>
+<li>Evaluate reasoning on verifiable accuracy, p95 latency and cost per request, and never reward trace length.</li>
+</ol>
+</div>
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3>// Capstone · Add a "reasoning router + budget" layer to your agent</h3>

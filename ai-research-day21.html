@@ -45,6 +45,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -190,6 +201,31 @@ FINDINGS = [{claim, url, quote}, ...]   <span class="tag-com"># 来自 subagent�
 <strong>进阶资源</strong> · Anthropic <em>Introducing Citations on the API</em>, <a href="https://claude.com/blog/introducing-citations-api" target="_blank">claude.com/blog/introducing-citations-api</a> ·
 Simon Willison <em>Anthropic's new Citations API</em>, <a href="https://simonwillison.net/2025/Jan/24/anthropics-new-citations-api/" target="_blank">simonwillison.net/2025/Jan/24</a>
 </div>
+</div>
+<!-- ============ Crossx + Takeaways ============ -->
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>神经科学 · Yarbus 的眼动实验（1967）</b>：同一幅画，被问不同问题的人眼睛扫过的路线完全不同：视觉是看一眼再决定下一眼看哪，和「读完再搜」同构。不像在于，眼跳不经意识，agent 每轮都要显式写出 query。</li>
+<li><b>心理学 · Galton 的「众人猜牛」（1907）</b>：约 800 人猜一头牛的重量，中位数与真值差不到 1%。前提是各自独立判断；N 个网站转同一篇通稿，等于 800 人抄同一份答案，误差不抵消反而放大。不像的是，猜牛靠平均，核对引用靠回到一手出处。</li>
+<li><b>佛学 · 陈那的「二量」</b>：陈那只承认现量（感知）与比量（推理），把他人证言归进比量：证言可信与否，要推断说话人是否可靠。筛源同样是把转述还原为对出处的推断。不像在于，陈那追问知识从何而来，harness 只给域名打分。</li>
+<li><b>心理学 · Wason 的 2-4-6 任务（1960）</b>：被试猜规则时几乎只拿符合猜想的例子去试，很少找反例，这是确认偏误；同轮自检引用也只找支持的理由。不像在于，人要靠训练克服，agent 换一轮、换个挑刺的 prompt 即可。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>Deep Research 本质是 plan、search、read、再 search 的多轮 agent loop，而 RAG 的 query 在召回那一刻就定死了。</li>
+<li>判断该不该上 Deep Research 的标准：下一步搜什么，取决于上一步读到了什么。</li>
+<li>把 Deep Research 当事实查询用是浪费：跑十分钟综合二手解读，不如一次搜索拿一手数据。</li>
+<li>Anthropic 的研究系统由 Lead Researcher 拆题、并行派出上下文隔离的 subagent，内部评测比单 agent 强 90% 以上。</li>
+<li>多 agent 研究约烧普通对话 15 倍的 token，只有结果价值高、子方向弱依赖可并行时才划算。</li>
+<li>研究 harness 的主要调优杠杆是 orchestrator prompt：写清拆几个子方向、每个搜几轮、何时停。</li>
+<li>搜索结果按相关性而非可信度排序，所以筛源要在 fetch 之前做：一手来源优先，按内容去重。</li>
+<li>多个网站转载同一篇通稿是伪多源；正如 Galton 的众人猜牛，群体判断只有彼此独立时才可靠。</li>
+<li>综合层只许引用 subagent 实际取回的 {claim, url, quote}，找不到支撑句就写「证据不足」。</li>
+<li>生成和验证要拆成两轮：同轮自检会顺着刚写的结论合理化，独立一轮的对抗核对才抓得到编造的引用。</li>
+</ol>
 </div>
 <!-- ============ Combo ============ -->
 <div class="combo">

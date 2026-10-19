@@ -45,6 +45,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -211,6 +222,30 @@ CASES = [
 <strong>进阶资源</strong> · <em>AgentDojo</em> (NeurIPS 2024), <a href="https://arxiv.org/abs/2406.13352" target="_blank">arXiv:2406.13352</a> · <a href="https://github.com/ethz-spylab/agentdojo" target="_blank">github.com/ethz-spylab/agentdojo</a> ·
 Willison <em>Design Patterns for Securing LLM Agents</em> (2025), <a href="https://simonwillison.net/2025/Jun/13/prompt-injection-design-patterns/" target="_blank">simonwillison.net/2025/Jun/13</a>
 </div>
+</div>
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>心理学 · Daniel Gilbert「理解即相信」（1991）</b>：Gilbert 主张人读懂一句话时先默认信了它，「不信」要额外再走一步，认知负荷一高这一步就会掉。LLM 读到指令就倾向照做是同一个结构；不像在于人事后还能补一个「假」的标签，模型没有这道回头关。</li>
+<li><b>哲学 · 奥德修斯与塞壬（Jon Elster《Ulysses and the Sirens》，1979）</b>：奥德修斯想听塞壬的歌，就让水手用蜡封耳、把自己绑上桅杆：听歌的人没有手，划船的人听不见，正是 dual-LLM 里的 Q-LLM 和 P-LLM。Elster 拿它当「预先承诺」的范本：知道自己会被说服，就提前拿掉能力。不像在于绳子是奥德修斯自己系的，agent 的绳子得由 harness 替它系。</li>
+<li><b>分子生物学 · PKR 与翻译停摆</b>：核糖体照译任何 mRNA，分不清宿主的还是病毒的，就像模型分不清指令和数据。细胞的一招不是教核糖体辨认，而是 PKR 感到双链 RNA 就磷酸化 eIF2α，整体暂停翻译：砍能力，不比聪明。代价也像，宿主自己的蛋白一起停产。</li>
+<li><b>商业 · 职责分离（segregation of duties）</b>：财务内控要求批准付款、记账、保管现金不归同一个人，谁想舞弊都缺一条边，和 lethal trifecta「砍掉任一边就偷不走」同构。不像的是，内控靠的是几个人难以合谋，agent 的三条边却天然握在同一个模型手里，只能靠拆信任域。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>Prompt injection 难根治，因为 system prompt、用户输入和工具返回的内容在 LLM 眼里是同一条 token 流。</li>
+<li>Lethal trifecta：私有数据、不可信内容、外泄通道三者同时具备，agent 才会被注入偷走东西。</li>
+<li>对付 lethal trifecta 要砍掉任意一条边；不可信内容通常砍不掉，主力是最小化私有数据和控制出口。</li>
+<li>在 system prompt 里写「忽略邮件里的指令」只是提高门槛，prompt 层缓解是概率性的，不是结构性的。</li>
+<li>分隔符划界能挡低水平注入，但攻击者可以闭合标签再重写指令，所以它只是入门缓解。</li>
+<li>Dual-LLM 模式让没有工具的隔离模型处理脏内容，有权限的模型只看符号引用或净化后的结果。</li>
+<li>CaMeL 把可信请求编成程序、分离控制流与数据流，在 AgentDojo 上做到 77% 任务可证明安全。</li>
+<li>最硬的防线在 harness 层：最小权限、破坏性操作人审、出口 allowlist，再加 OS 级 sandbox 封底。</li>
+<li>Markdown 图片 URL 是最容易漏掉的外泄通道，前端一自动渲染，数据就随 GET 请求送了出去。</li>
+<li>注入防御会回归，要在 CI 里持续测攻击成功率（ASR），同时测 over-refusal，避免防过头。</li>
+</ol>
 </div>
 <!-- ============ Combo ============ -->
 <div class="combo">

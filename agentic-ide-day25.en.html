@@ -44,6 +44,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -229,6 +240,30 @@ Cognition <em>Don't Build Multi-Agents</em>, <a href="https://cognition.ai/blog/
 </div>
 </div>
 
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Leadership · Mission command (Auftragstaktik)</b>: under the elder Moltke, the Prussian army issued intent, objective and limits, and left the how to officers at the front; an async issue template that pins acceptance criteria and no-go zones but leaves implementation open is the same kind of delegation. The difference: officers share years of doctrine and judgment with their commander, while an agent knows only the lines written in the issue.</li>
+<li><b>Psychology · Fast and slow thinking (Daniel Kahneman)</b>: System 1 answers instantly by association, System 2 reasons slowly and effortfully; semantic recall from an embedding index and an agentic grep chain map onto them neatly. Unlike the brain, whose two systems are hard to schedule separately, an IDE can combine them explicitly: narrow with the index, then pinpoint with search.</li>
+<li><b>Economics · Goodhart's law (Charles Goodhart, 1975)</b>: once a measure becomes a target, it stops reliably measuring what it used to; an agent deleting tests or editing asserts to turn green is exactly that. The difference is that social metrics are hard to lock down, while a harness can use git diff --exit-code so the agent cannot touch the tests at all.</li>
+<li><b>Evolutionary epistemology · Blind variation and selective retention (Donald Campbell, 1960)</b>: Campbell argued that knowledge grows, from biological evolution to creative thought, through many blind variations passed through a selective filter; best-of-N is N generations plus a test oracle that keeps the survivors. Unlike natural selection, which keeps no ledger, every fan-out variant burns tokens, so it only pays when the filter is cheaper than generation.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>The 2026 turning point for agentic IDEs is a handoff of control: the developer goes from driver to a manager who delegates tasks and reviews PRs.</li>
+<li>Cursor Cloud Agent, GitHub Copilot coding agent and Claude Code on the web all run tasks asynchronously in isolated cloud sandboxes and hand back a PR.</li>
+<li>Async delegation magnifies the cost of an underspecified task, so acceptance criteria, constraints and no-go zones must be fixed before dispatch.</li>
+<li>Cursor's embedding index chunks and vectorizes code with Merkle-tree incremental sync: fast recall, but it lags and requires uploading code.</li>
+<li>Claude Code's agentic search builds no index and uses grep, glob and read on the spot: always current, but token-hungry and slow.</li>
+<li>The index and search routes to context are being combined, but the upload-for-speed and staleness-versus-slowness trade-offs do not go away.</li>
+<li>SWE-bench ships hidden tests as its oracle, so a high benchmark score does not mean an agent can run unattended in a real repo with no oracle.</li>
+<li>Agent autonomy is capped by verification quality, and the verification gate must live in the harness or CI where the agent cannot edit the tests.</li>
+<li>Best-of-N runs several attempts in parallel in isolated git worktrees, and the token bill only pays off when verification is cheaper than generation.</li>
+<li>Best-of-N with test filtering mirrors Campbell's blind variation and selective retention, except that every variant costs tokens.</li>
+</ol>
+</div>
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3>// Integrated Practice · Build a "manager workflow"</h3>

@@ -52,6 +52,17 @@ pre code{color:#d8e8e8}
 .thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -190,6 +201,31 @@ Today: core task with zero AI, log just two things—
 <div class="res"><strong>Going deeper</strong> · DOT OIG <em>Enhanced FAA Oversight Could Reduce Hazards Associated With Increased Use of Flight Deck Automation</em>, <a href="https://www.oig.dot.gov/sites/default/files/FAA%20Flight%20Decek%20Automation_Final%20Report%5E1-7-16.pdf" target="_blank">DOT OIG 2016</a> · this site <a href="oracle-inventory-day54.en.html">Day 54 Oracle Inventory</a></div>
 </div>
 
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Neuroscience · London cabbies' hippocampi (Eleanor Maguire, 2000)</b>: Maguire found London taxi drivers had larger posterior hippocampi than controls, scaling with years on the job: spatial navigation, a judgment skill, is built by use. Alike in being dose-dependent; unlike in that brain structure shifts over years, far slower than the forgetting on Arthur's curve.</li>
+<li><b>Evolution · The cavefish's lost eyes</b>: Cave populations of the Mexican tetra (Astyanax mexicanus), living in darkness for generations, have reduced or lost their eyes, because maintaining an unused organ costs energy. Alike in "unused gets dropped"; unlike in that the fish loses it in its genes, while your skill decays within a lifetime and a manual dose can bring it back.</li>
+<li><b>Investing · Selling tail insurance</b>: Writing deep out-of-the-money options collects premium month after month with a beautiful return curve, until one extreme move takes it all back: the assisted-gain and post-removal ledgers again. Unlike: tail risk on an option at least has a market price; nobody quotes your second ledger, so you must measure it yourself.</li>
+<li><b>Eastern philosophy · Wang Yangming's unity of knowing and acting</b>: Wang held that knowing without acting is not yet knowing; "knowing AI makes mistakes" without ever being burned by one is exactly that. Unlike: Wang was talking about moral will and the original mind, while this piece is about a reflexive wariness that only grows from experience.</li>
+<li><b>Buddhism · Uposatha</b>: Every half-month the monastic community gathers to recite the precepts, after monks first declare any breaches, moving precept-keeping from private willpower to a fixed-date communal process: intent isn't a dose, so check on a schedule. Unlike: uposatha still rests on self-report, while this piece wants an objective gauge that doesn't depend on self-assessment.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>Skill decay deepens steadily with time unused: Arthur's 1998 meta-analysis shows about a 1.4 standard deviation drop after more than a year.</li>
+<li>Cognitive, judgment and precision skills decay faster than physical and speed skills, and those are exactly what we hand to AI most.</li>
+<li>Run a skill inventory sorted by how much you outsource and how fast it decays: outsource low-risk skills like syntax lookup, keep a manual dose for high-risk judgment skills.</li>
+<li>Your performance with AI (assisted gain) rises every day, while your performance after AI is removed (post-removal decline) is never measured.</li>
+<li>The out-of-the-loop performance problem: automation turns active deciders into passive monitors, who respond slower and with less situation awareness when the system fails.</li>
+<li>Schedule an "AI outage day" doing core work with no AI, noting where you stall and the time gap, to put a gauge on the second ledger.</li>
+<li>The FAA's 2013 SAFO 13002 says continuous autopilot use degrades manual flying skills and urges airlines to create manual flying opportunities.</li>
+<li>The skill-maintenance prescription has three ingredients: regular core tasks without AI, living through an AI failure and debugging it yourself, and personal accountability for output.</li>
+<li>Being told "AI makes mistakes" barely transfers; being confidently misled by AI once is what builds the reflex to doubt suspicious output.</li>
+<li>A 2016 DOT OIG audit found the prescription was issued but never verified; a manual dose needs an independent record and a process default, because intent isn't a dose.</li>
+</ol>
+</div>
 <!-- ============ Checklist ============ -->
 <div class="combo">
 <h3>// ONE-PAGE PRESCRIPTION CARD</h3>

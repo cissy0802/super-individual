@@ -58,6 +58,17 @@ pre code{color:#d8e8e8}
 .thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -173,6 +184,31 @@ skill                 外包给AI程度   Arthur类别        风险
 <p>核心就一句：<strong>开处方是意图，核查是事实。</strong>技能保鲜栽的跟头，几乎从不是「不知道该手动」，而是「以为手动了，其实没有」。</p>
 <div class="fail"><strong>失败模式</strong>：① 把「我打算每周手动一次」当成已经在做——意图不是剂量；② 用主观「手感」替代客观量表，自评永远偏乐观（脱环鸿沟你本来就看不到）；③ 靠意志力硬扛而不固化成流程默认，两三周后在 KPI 压力下悄悄退回全自动。</div>
 <div class="res"><strong>进阶资源</strong> · DOT OIG <em>Enhanced FAA Oversight Could Reduce Hazards Associated With Increased Use of Flight Deck Automation</em>, <a href="https://www.oig.dot.gov/sites/default/files/FAA%20Flight%20Decek%20Automation_Final%20Report%5E1-7-16.pdf" target="_blank">DOT OIG 2016</a> · 本站 <a href="oracle-inventory-day54.html">Day 54 oracle 盘点</a></div>
+</div>
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>神经科学 · 伦敦出租车司机的海马（Eleanor Maguire，2000）</b>：Maguire 发现伦敦出租车司机的后海马体积比对照组大，且和开车年数相关，空间导航这项判断技能是「用出来」的。像在剂量依赖；不像在于，脑结构的变化以年计，比 Arthur 曲线上的技能遗忘慢得多。</li>
+<li><b>生物进化 · 洞穴盲鱼的退化眼睛</b>：墨西哥丽脂鲤（Astyanax mexicanus）的洞穴种群在黑暗里世代生活，眼睛退化甚至消失，因为维持一个用不上的器官有代价。像在「不用就撤」；不像在于，鱼丢的是写进基因的东西，人的技能退化在一生之内，补上手动剂量还能拿回来。</li>
+<li><b>投资 · 卖尾部保险</b>：长期卖出深度虚值期权，平时每月稳稳收权利金，收益曲线很漂亮，亏损集中在极端行情那一下，这就是「在场增益」和「撤后退化」的两本账。不像在于，期权的尾部风险至少有市场标价，你的第二本账没人报价，只能自己去测。</li>
+<li><b>东方哲学 · 王阳明的知行合一</b>：王阳明说知而不行，只是未知；「知道 AI 会错」却没被它坑过，就是这种未知。不像在于，王阳明讲的是道德意志和本心，本篇讲的是靠亲历才长出来的条件反射式警觉。</li>
+<li><b>佛学 · 布萨（uposatha）</b>：僧团每半月集会诵戒、先自陈有无违犯，把守戒从个人意志换成固定日子的集体流程，正是「意图不算剂量、要定期核查」。不像在于，布萨靠的仍是自我陈述，本篇要的是不依赖自评的客观量表。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>技能衰退随停用时间单调加深：Arthur 1998 年的元分析显示，停用超过一年约掉 1.4 个标准差。</li>
+<li>认知、判断、精度类技能比体力、速度类技能退化得更快，而这恰恰是交给 AI 最多的那类工作。</li>
+<li>先做技能盘点，按外包程度和衰减速度分流：查语法这类低危技能可以全外包，判断类高危技能要留手动剂量。</li>
+<li>用 AI 时的表现（在场增益）天天在涨，撤掉 AI 后的表现（撤后退化）却从来没人测量。</li>
+<li>脱环表现问题：自动化让人从主动决策退成被动监视，系统失效需要接管时反应更慢、情境觉知更差。</li>
+<li>定期安排「AI 宕机日」，全程不开 AI 做核心任务，记下卡壳点和耗时差，给第二本账装一次量表。</li>
+<li>FAA 2013 年的 SAFO 13002 指出持续使用自动驾驶会退化手飞技能，要求航司主动创造手飞机会。</li>
+<li>技能保鲜处方有三味药：定期无 AI 完成核心任务、亲历一次 AI 失效并亲手 debug、对产出负个人责任。</li>
+<li>口头叮嘱「AI 会出错」几乎不迁移，亲身被 AI 一本正经地坑过一次，才会长出看到可疑输出就起疑的警觉。</li>
+<li>DOT OIG 2016 年审计发现处方开了却没核查落地；手动剂量要有独立记录并固化进流程，意图不算剂量。</li>
+</ol>
 </div>
 <!-- ============ Checklist ============ -->
 <div class="combo">

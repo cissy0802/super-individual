@@ -45,6 +45,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -223,6 +234,30 @@ OpenAI Structured Outputs 指南, <a href="https://developers.openai.com/api/doc
 <strong>进阶资源</strong> · Outlines（FSM 约束解码，Willard &amp; Louf 2023）, <a href="https://github.com/dottxt-ai/outlines" target="_blank">github.com/dottxt-ai/outlines</a> ·
 Anthropic Prefill 文档, <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prefill-claudes-response" target="_blank">platform.claude.com/.../prefill</a>
 </div>
+</div>
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>语言学 · 乔姆斯基的「无色的绿色想法狂怒地睡觉」</b>：乔姆斯基 1957 年在《句法结构》里用这句话说明，句法完全合法的句子可以毫无意义。约束解码只保证前一半，<code>email</code> 填「无」照样通过。不像在于，他借此论证句法独立于语义，工程上却得把语义校验补回来。</li>
+<li><b>神经科学 · 加扎尼加的「解释器」</b>：裂脑病人右脑让手做了动作，左脑会当场编个理由，先有结果后有解释。answer 排在 reasoning 前，就是逼模型事后圆说。不像的是，人改不掉这习惯，模型调回字段顺序就能先推理。</li>
+<li><b>分子生物学 · DNA 校对与错配修复</b>：聚合酶靠碱基配对选料、边合成边校对，漏网的再交给错配修复，和容错栈一样层层兜底。不同在于细胞没有「降级给人工」，修不动的错留下来，成了进化的原料。</li>
+<li><b>经济学 · 古德哈特定律（1975）</b>：指标一旦成了目标，就不再是好指标。把「schema 合规率 100%」当交付标准正是此坑，该盯的是语义正确率。不像在于，古德哈特说的是人钻空子，这里是指标本身量错了东西。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>拿 JSON 有四档机制：prompt 加 prefill、JSON mode、tool use、约束解码，保证依次变强。</li>
+<li>JSON mode 只保证输出能解析，不保证符合 schema，字段拼错照样通过。</li>
+<li>约束解码把 schema 编译成语法，每步 mask 非法 token，结构上不可能出错。</li>
+<li>《Let Me Speak Freely?》发现强制 JSON/XML 格式会压低推理准确率，约束越严降得越多。</li>
+<li>.txt 团队的反驳说明，伤害推理的不是结构本身，而是挤掉推理空间的 schema 设计。</li>
+<li>把 reasoning 字段排在 answer 前，模型就能在结构内先推理再作答。</li>
+<li>schema 也是写给模型的指令：字段写 description、分类用 enum、结构拍平、缺值填 null。</li>
+<li>约束解码管不了截断、拒答和语义错误，解析前先查 stop_reason。</li>
+<li>生产级抽取靠校验-修复-降级链：Pydantic 校验，错误回喂自修，修不动再降级。</li>
+<li>结构合法不等于语义正确，就像乔姆斯基那句合乎语法却毫无意义的句子。</li>
+</ol>
 </div>
 <!-- ============ Combo ============ -->
 <div class="combo">

@@ -44,6 +44,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -250,6 +261,31 @@ HumanLayer <em>12-Factor Agents</em> (own your control flow / errors), <a href="
 </div>
 </div>
 
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Neuroscience · the spinal reflex and the cortex</b>: touch something hot and the spinal reflex arc pulls your hand back before the brain even knows. That is the same layering as letting the program back off on transport errors without bothering the model. The difference: the brain can actively suppress a reflex, while the retry layer usually takes no direction from the model.</li>
+<li><b>Complexity science · the Kuramoto model (1975)</b>: a population of independent oscillators with even weak coupling will spontaneously synchronize, which is how fireflies flash in unison. Fixed backoff makes clients hit the server at the same instant through exactly this kind of synchrony; full jitter injects noise on purpose to break it. Nature often seeks sync; here engineering wants the opposite.</li>
+<li><b>Quantum mechanics · projective measurement, P² = P</b>: a projection operator satisfies P² = P, so measuring again right after a measurement changes nothing, which is the mathematical definition of idempotence. But the first measurement irreversibly changes the state, just as the first charge has already happened. An idempotency key only guarantees the second call does nothing; undoing the first takes compensation, which is why idempotency keys and Sagas come as a pair.</li>
+<li><b>Cell biology · cell-cycle checkpoints (Hartwell, Nobel 2001)</b>: before dividing, a cell halts at a checkpoint and repairs damaged DNA before moving on. Same name as an agent checkpoint, but the structure is the half this piece says is missing: an agent checkpoint only saves state, while a cellular checkpoint verifies before proceeding, much like the loop detection a resume needs.</li>
+<li><b>Investing · stock market circuit breakers</b>: after Black Monday in 1987, US markets adopted market-wide circuit breakers that halt trading at a threshold and reopen after a pause. Like the software version: threshold trigger, forced cooldown, then a cautious reopening. Unlike it: a market halt cools everyone's panic, while a software breaker shields a failing downstream from being hammered by its callers.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>Most of the engineering in a production agent lives outside the happy path, and resilience comes from harness design, not prompts.</li>
+<li>Agent retry needs two layers: the program backs off on transient faults like 429s and timeouts, while semantic errors like bad arguments go back to the model.</li>
+<li>Backoff should use full jitter, randomizing the wait over the whole window so clients do not synchronize and collide.</li>
+<li>Permanent errors such as 401 or invalid arguments must fail fast; retrying only delays the failure and burns quota.</li>
+<li>Agent retries come from both program backoff and the model "trying once more", so every side-effecting tool must be idempotent.</li>
+<li>Idempotency keys must be derived deterministically from the task or normalized arguments; a random key per call defeats deduplication.</li>
+<li>Without a database transaction to roll back, a Saga registers a compensating action for each side-effecting step and runs them in reverse on failure.</li>
+<li>Long tasks need externalized state checkpointed every step so a crash resumes from the last checkpoint, and checkpoints only work alongside idempotent tools.</li>
+<li>Timeouts should be layered per tool, per step and as a task-level deadline, while a circuit breaker makes a repeatedly failing dependency fail fast.</li>
+<li>When some workers in a parallel fan-out fail, collect the successful results and let the orchestrator decide whether to degrade or stop.</li>
+</ol>
+</div>
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3>// PUTTING IT TOGETHER · Harden a toy agent into a recoverable one</h3>

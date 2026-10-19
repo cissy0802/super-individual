@@ -45,6 +45,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -203,6 +214,30 @@ r = client.chat.completions.create(model=<span class="tag-gpt">"qwen3-8k"</span>
 <strong>进阶资源</strong> · llama.cpp GBNF grammars, <a href="https://github.com/ggml-org/llama.cpp/blob/master/grammars/README.md" target="_blank">github.com/ggml-org/llama.cpp/.../grammars</a> ·
 Simon Willison <em>llama.cpp grammars 生成 JSON</em>, <a href="https://til.simonwillison.net/llms/llama-cpp-python-grammars" target="_blank">til.simonwillison.net</a>
 </div>
+</div>
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>神经科学 · 突触的「位宽」（Bartol 等，2015）</b>：Salk 研究所团队重建大鼠海马的突触，估计突触强度只有约 26 档可区分，折合约 4.7 bit，大脑本身就跑在「Q4–Q5」上。不像在于：大脑是在低精度下直接长出来的，不是先训好全精度再压缩，它靠海量冗余在噪声里求稳，不靠事后校准。</li>
+<li><b>投资 · 遍历性（Ole Peters）</b>：PPL 是对所有 token 的「集合平均」；多步推理却是一条时间路径，一步错整条链就断，像一次爆仓就出局。不像的是：模型可以重跑，爆仓不能。</li>
+<li><b>心理学 · 系统 1 与系统 2（Kahneman）</b>：本地小模型做快而便宜的默认处理，难题升级给慢而贵的云端，正是双系统分工。连失败模式都像：系统 1 常意识不到题目难（Frederick 2005 年的认知反射测验），分诊判错，下游全错。</li>
+<li><b>语言哲学 · 乔姆斯基的「无色的绿色思想狂暴地睡觉」（1957）</b>：句法完全合法，意义却是空的，约束解码保证的正是这一层。不像在于：乔姆斯基用这句话论证句法独立于语义，工程上却要反过来提醒，合法不等于对。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>4-bit 量化让 7B 模型从 FP16 的 14GB 降到约 4GB，这是本地能跑起来的前提。</li>
+<li>GGUF 的 Q4_K_M 是体积与质量的甜点，再挂上 imatrix 可用校准语料优先保护关键权重。</li>
+<li>Perplexity 几乎不变不等于没损失，它系统性低估了量化对代码、数学和长链推理的伤害。</li>
+<li>小模型冗余少，怕激进量化；KV cache 以 Q8 为安全线，量到 Q4 会拖垮长 context。</li>
+<li>能不能跑要算权重、KV cache 与开销之和，多数 OOM 死在被忽略的 KV cache 上。</li>
+<li>装得下不等于该用：任务越宽容、隐私要求越高、调用越频繁，本地模型越划算。</li>
+<li>Ollama 默认 num_ctx 很小，超出部分被静默丢弃，要在 Modelfile 里显式调大。</li>
+<li>Mac 上换用吃满统一内存的 MLX 往往直接提吞吐，运行时选错比模型选错更亏。</li>
+<li>约束解码在采样层屏蔽非法 token，只保语法合法，不保内容判断正确。</li>
+<li>Hybrid 路由让本地干高频、隐私敏感的脏活，难题升级云端；调用量小时反成过度工程。</li>
+</ol>
 </div>
 <!-- ============ Combo ============ -->
 <div class="combo">

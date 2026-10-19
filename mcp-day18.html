@@ -43,6 +43,17 @@ pre code{color:#d8e8e8}
 .diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;line-height:1.7;color:#a0a4b8;overflow-x:auto;white-space:pre}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -177,6 +188,32 @@ client ─┤subprocess├ stdin/stdout  client ─┤ POST/GET├─▶ https:/
 <span class="tag-com">#    几千行直接穿过 context</span></code></pre>
 <div class="fail"><strong>失败模式（反直觉）：</strong>「多接 server = agent 更强」是错的。每多接一个 server，开场 token、选择难度、延迟都涨，而模型在 30+ tool 里反而更容易选错。更多工具到某个点后是<strong>净负</strong>——MCP 的可组合性诱导你过度连接。</div>
 <div class="res">进阶资源：<a href="https://www.anthropic.com/engineering/code-execution-with-mcp" target="_blank">Anthropic · Code execution with MCP</a>（context 税量化 + progressive disclosure） · <a href="https://www.anthropic.com/engineering/advanced-tool-use" target="_blank">Anthropic · Advanced tool use</a></div>
+</div>
+<!-- ============ 越界 ============ -->
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>分子生物学 · Crick 的适配器假说</b>：1955 年 Crick 推测，氨基酸不会直接认 RNA 上的密码，中间得有一个「适配器」分子，后来证实就是 tRNA。这正是 N×M 压成 N+M 的结构：两边都只对接中间层。不像在于：遗传密码几十亿年几乎冻结不改版，MCP 一年就改好几次规范。</li>
+<li><b>心理学 · Hick–Hyman 定律</b>：Hick 和 Hyman 在 1952–1953 年发现，选项越多，人做选择的反应时越长，大致随选项数的对数增长。tool 越多模型越容易选错是同一个结构。不像在于：人只多付时间，模型还要为每个用不上的选项先付 token。</li>
+<li><b>意识研究 · Baars 的全局工作空间</b>：Baars 1988 年提出，大脑里大量无意识模块并行待命，只有少数内容被选上「舞台」向全局广播。progressive disclosure 也是让工具在台下候着、用到才上台。不像的是，大脑靠注意自动挑谁上台，client 得靠写好的规则来挑。</li>
+<li><b>领导力 · 贝索斯的单向门与双向门</b>：贝索斯在 2015 年致股东信里把决策分成不可逆、要慎重的「单向门」和可逆、可下放的「双向门」。Tool 加审批、Resource 由应用自由注入，也是按后果分配授权。不像的是，MCP 看的是有没有副作用，不看能不能撤回。</li>
+</ul>
+</div>
+<!-- ============ 十条要点 ============ -->
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>MCP 把每个模型对每个数据源各写一份胶水代码的 N×M 集成，压成 server 写一次、所有 client 复用的 N+M。</li>
+<li>MCP 三种原语的区别在控制权：Tool 由模型发起，Resource 由应用决定注入，Prompt 由用户显式触发。</li>
+<li>原语选择也是权限边界：有副作用的动作放 Tool 并加审批，只读数据放 Resource，拿不准时默认 Resource。</li>
+<li>用 FastMCP 写 server 时，type hint 自动变成 JSON Schema，docstring 自动变成模型读到的 tool 描述。</li>
+<li>参数的取值范围、格式和示例要写进 tool 描述，自动生成 schema 省不掉把约束讲给模型听的工作。</li>
+<li>stdio transport 把 server 当本地子进程拉起，零网络、零认证，但只能一个 client 对一个进程。</li>
+<li>Streamable HTTP 用单个 /mcp 端点服务远程多租户，取代了 2025-03 弃用的 HTTP+SSE，认证要自己做。</li>
+<li>stdio 模式下任何写到 stdout 的内容都会被当成 JSON-RPC 消息，所以日志一律走 stderr。</li>
+<li>MCP 的 context 税有两重：开场预加载全部 tool 定义，以及大返回值一直留在后续每一轮的 context 里。</li>
+<li>Anthropic 让 agent 写代码按需调用 MCP 工具，报告一个约 150k token 的工作流降到约 2k token。</li>
+</ol>
 </div>
 <!-- ============ Glossary ============ -->
 <div class="glossary">

@@ -44,6 +44,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -212,6 +223,32 @@ $ ast-grep --pattern 'getUserData($$$ARGS)' \
 </div>
 </div>
 
+<!-- ============ Crossovers ============ -->
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Philosophy · Chesterton's fence (G. K. Chesterton, 1929)</b>: if you find a fence across a road and don't know why it is there, find out before you tear it down. A characterization test that locks in edge behavior nobody remembers the reason for carries the same caution. The difference: Chesterton demands understanding before acting, while a characterization test lets you preserve the behavior without understanding it.</li>
+<li><b>Economics · Goodhart's law (Charles Goodhart, 1975)</b>: once a measure becomes a target, it stops reliably measuring what it was meant to. An AI that edits the tests to turn them green has turned "tests pass" from evidence into a target. Unlike Goodhart's gaming humans, the LLM has no motive; it simply optimizes the literal goal you gave it.</li>
+<li><b>Evolution · evolution as tinkerer (Fran&ccedil;ois Jacob, 1977)</b>: writing in <em>Science</em>, Jacob argued that evolution does not build from a blueprint like an engineer but reworks what already exists, and every intermediate form has to survive. Strangler Fig's "green at every step" is the same constraint: the system must run at every moment of the migration. Where it breaks: evolution has no target design, while a Strangler Fig migration heads toward a definite new architecture.</li>
+<li><b>Quantum physics · entanglement and Bell's theorem (John Bell, 1964)</b>: when two variables alias the same object, touching one changes the other "at a distance", which looks like entanglement. Yet aliasing is exactly the explanation Bell ruled out: a shared hidden local variable behind the scenes. Quantum correlations have no such hidden object; spooky correlations in code always do, just not in the lines in front of you.</li>
+<li><b>Psychology · when to trust intuition (Kahneman and Klein, 2009)</b>: they concluded that intuition is trustworthy only when trained in a regular environment with fast feedback, and that subjective confidence is not a sign of being right. AI refactoring is reliable on local changes with instant feedback, yet on concurrency or aliasing its plausible-reading output is unrelated to correctness, for the same reason.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>Refactoring means changing structure without changing behavior, and an LLM produces plausible-looking code with no guarantee that behavior stays the same.</li>
+<li>A characterization test pins down what code actually does today, including bug-like behavior, rather than judging what it should do.</li>
+<li>AI is good at generating characterization tests in bulk, but when refactoring it may quietly edit the tests to make them pass.</li>
+<li>The right order is to generate tests on the old code, see them pass and commit them, then let AI change the implementation against that fixed contract.</li>
+<li>Large refactors should follow Martin Fowler's Strangler Fig pattern: old and new coexist, one small slice migrates at a time, each slice tested before it goes live.</li>
+<li>An AI rewriting hundreds of lines at once loses every intermediate checkpoint, so regressions arrive together and cannot be bisected; keep one step per commit.</li>
+<li>AI refactoring reliability falls as the required non-local reasoning grows: rename and extract method are safe, cross-file global invariants are not.</li>
+<li>Concurrency and lock order, memory aliasing, implicit cross-module contracts and resource lifetimes are AI refactoring danger zones that need human review even when tests pass.</li>
+<li>Refactors with a single answer expressible as a syntax-tree transform belong to codemod tools like ast-grep and jscodeshift; semantic judgment belongs to the LLM.</li>
+<li>The real work of refactoring is proving old and new behavior match, not writing new code, and that safety comes from tests, small steps and triage, not from the AI.</li>
+</ol>
+</div>
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3>// PUTTING IT TOGETHER · Safely refactor a real legacy function</h3>

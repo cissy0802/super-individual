@@ -46,6 +46,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -216,6 +227,30 @@ Anthropic <em>Claude's Character</em>, <a href="https://www.anthropic.com/resear
 </div>
 </div>
 
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Philosophy · Polanyi's tacit knowledge</b>: In <em>The Tacit Dimension</em> (1966), Michael Polanyi argued that we know more than we can tell; voice is that kind of knowledge, which is why samples transmit it better than adjectives. The difference: Polanyi held that tacit knowledge can never be fully spelled out, while a voice spec forces part of it into explicit rules, so it needs hand-editing.</li>
+<li><b>Evolution · Stabilizing selection</b>: Stabilizing selection culls both extremes and pulls a trait toward the population mean; RLHF pushing output toward "safe mediocrity" has the same shape, and personal voice is the tail that gets trimmed. Unlike nature, which trims because extreme individuals fare worse, the model trims only because most raters score the middle more reliably.</li>
+<li><b>Complexity science · Simon's watchmakers</b>: In "The Architecture of Complexity" (1962), Herbert Simon told of two watchmakers: Hora builds stable subassemblies and combines them level by level, so an interruption costs only a small piece, while Tempus, assembling the whole watch at once, must start over. Outline first, then expand section by section, follows the same logic. The difference: Simon's subassemblies are nearly independent, but sections of an essay must echo each other, so L2 carries the end of the previous section as an anchor.</li>
+<li><b>Psychology · Recognition beats recall</b>: Recognizing an answer you have seen is far easier than recalling it from scratch, which is why multiple choice is easier than fill-in-the-blank; putting AI in the critic seat rather than the author seat exploits the same asymmetry. The difference: the model's yardstick for a "weak sentence" is still its own average, so it may flag your deliberate rule-breaking as weak.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>Adjectives like "professional, concise" carry almost no information for a model; anchor style with 3-5 real writing samples.</li>
+<li>Reverse-extract sentence length, syntax, diction and forbidden zones from your own samples, then hand-edit and version a voice.md.</li>
+<li>One voice spec serves one genre; mixing genres in the samples averages the style into a featureless blur.</li>
+<li>Kobak et al. analyzed 14 million PubMed abstracts and found "delve" rose about 28-fold after ChatGPT appeared.</li>
+<li>AI smell is a distribution-level bias from RLHF: banned-word lists only lower its frequency, while real samples drag the distribution away.</li>
+<li>The most effective slop-filter rule forces every paragraph to contain at least one number, example or proper noun.</li>
+<li>Long-form writing should be a three-layer prompt chain of outline, per-section expansion and sentence polish, each verified separately.</li>
+<li>When expanding section by section, inject the global outline and the previous section's ending as anchors against repetition and term drift.</li>
+<li>Judging whether a sentence is weak is far easier than writing a good one from scratch, so AI is more reliable as critic than as author.</li>
+<li>When AI edits, make it change only the named weak sentences, output a diff and skip praise, or your voice gets rewritten away.</li>
+</ol>
+</div>
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3>// INTEGRATED BUILD · Make Yourself a "Writing Harness"</h3>

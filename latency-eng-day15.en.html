@@ -39,6 +39,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -227,6 +238,30 @@ Anthropic AsyncAnthropic / rate-limit docs (concurrency and 429 handling).
 </div>
 </div>
 
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Psychology · The psychology of waiting (David Maister, 1985)</b>: Maister's first principle of queues is that occupied time feels shorter than unoccupied time. Streaming swaps a blank spinner for a wait with something to read. The difference: queues distract you with mirrors and ads, while streaming hands you the actual answer.</li>
+<li><b>Neuroscience · Action chunking in the basal ganglia (Ann Graybiel)</b>: Well-practiced action sequences get packed into a single chunk that fires as a unit instead of being computed step by step, much like prompt caching skipping prefill. Unlike a habit, which tolerates small variations, the cache is a byte-exact prefix match: one changed byte at the start voids the whole thing.</li>
+<li><b>Economics · O-ring theory (Michael Kremer, 1993)</b>: Named after the Challenger disaster, Kremer's model says that when many tasks are chained together, output is set by the weakest link, so small quality gaps per step become large gaps overall. Fan-out has the same weakest-link amplification, since aggregate latency is the slowest call; the O-ring multiplies success rates, while tail latency takes a maximum.</li>
+<li><b>Evolutionary biology · Bet-hedging (Dan Cohen, 1966)</b>: Desert annuals let only part of their seeds germinate each year, giving up a little average yield so that one bad year cannot wipe them out. A hedged request likewise spends about 5% extra calls to cut tail risk. The difference: the plant pays for both bets, while the hedged request keeps the first reply and cancels the other.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>End-to-end latency equals TTFT plus output tokens times TPOT; optimizing without decomposing usually cuts the wrong part.</li>
+<li>TTFT is queueing plus prefill plus network, and because prefill is compute-bound, longer prompts mean slower TTFT.</li>
+<li>TPOT is set by decode, which is memory-bound with near-constant per-token time, so long outputs hurt total duration.</li>
+<li>Streaming saves not a single token, yet it shrinks the user's perceived wait from total duration down to TTFT.</li>
+<li>If downstream code needs complete JSON, streaming gains vanish; split human-facing prose and machine-facing structure into separate calls.</li>
+<li>A prompt cache hit skips prefill on the cached prefix, making prompt caching the single largest lever on TTFT.</li>
+<li>Prompt caching is a byte-exact prefix match: put stable content first and volatile content last, or a timestamp up front means every request misses.</li>
+<li>The only hard evidence that caching works is the cache_read and cache_creation fields in the API usage object.</li>
+<li>Under fan-out, latency is set by the slowest sub-call; at K=100 the odds of at least one slow call are about 63%, so p99 becomes the upstream p50.</li>
+<li>A hedged request re-sends after p95 and takes the first reply, flattening p99 for about 5% extra calls, but it needs bounded concurrency.</li>
+</ol>
+</div>
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3>// SYNTHESIS · Run a Latency Checkup on Your LLM App</h3>

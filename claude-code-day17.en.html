@@ -39,6 +39,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -220,6 +231,31 @@ Anthropic <em>Building agents with the Claude Agent SDK</em>, <a href="https://w
 </div>
 </div>
 
+<!-- ============ Crossovers ============ -->
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Psychology · working-memory capacity (Nelson Cowan, 2001)</b>: Cowan estimated that people reliably hold only about four chunks at once, so longer checklists drop more items; a longer CLAUDE.md with lower adherence follows the same curve. The difference: the model's window can hold a lot, but holding is not obeying. The bottleneck is how attention gets spread, not raw capacity.</li>
+<li><b>Molecular biology · selective gene expression</b>: every cell carries the full genome, yet a liver cell switches on liver genes and a neuron switches on neuron genes. A skill shows only its one-line description until it is needed, and a subdirectory CLAUDE.md loads only when you enter; both express by context. The difference: a cell carries all its DNA and simply does not read most of it, while a skill body never enters the context at all.</li>
+<li><b>Complexity science · Herbert Simon's near-decomposability (1962)</b>: in "The Architecture of Complexity," Simon's parable of two watchmakers shows that subassemblies that are tight inside and talk through a narrow interface lose the least when interrupted. A subagent that seals the noise inside and hands back only a summary has exactly this shape. The difference: Simon's subassemblies are stable, reusable parts, whereas a subagent is disposable and blind to the main thread, so all the implicit context beyond the interface has to be fed in again.</li>
+<li><b>Philosophy · the Ulysses contract (Jon Elster, 1979)</b>: knowing the Sirens would undo him, Ulysses had his crew tie him to the mast while he was still clear-headed. Hard-coding an --allowedTools whitelist before a headless run is the same precommitment, made while a human is present, because no one will be there to say no at runtime. The difference: Ulysses guarded against his own future weakness; the whitelist guards against instructions someone else injected into an external PR.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>CLAUDE.md is a resident prompt budget injected every turn, not a README; keep it under 200 lines, since adherence drops as it grows.</li>
+<li>Claude Code memory has four layers (enterprise policy, project, project-local, user), and a large monorepo can push CLAUDE.md files down into subdirectories that load on entry.</li>
+<li>An @import in CLAUDE.md expands inline and is billed in full; its value is reuse and organization, not saving tokens.</li>
+<li>The core value of a subagent is context isolation: noisy work like test runs and log reading stays in its own window, and only a summary returns.</li>
+<li>A subagent cannot see the main conversation, so a task that depends on a plan just agreed in the main thread needs that background restated in its prompt.</li>
+<li>Custom slash commands have merged into skills, and a skill body loads only when invoked, so facts go in CLAUDE.md and procedures go in skills.</li>
+<li>The allowed-tools field narrows what a skill can run, for example to a git subset, so even a runaway procedure cannot reach rm or push.</li>
+<li>claude -p runs Claude Code headless inside CI and cron, and MCP plugs systems like GitHub and databases in as native tools.</li>
+<li>More MCP servers is not better: an exploding tool count degrades tool selection, and every server's schema consumes context.</li>
+<li>Unattended runs should rely on an --allowedTools whitelist; using --dangerously-skip-permissions on untrusted input like external PRs is the top entry point for prompt injection.</li>
+</ol>
+</div>
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3>// Capstone · "Configurize" One Real Repo</h3>

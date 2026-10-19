@@ -47,6 +47,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -189,6 +200,30 @@ Anthropic <em>Building Effective Agents</em>（prompt chaining 模式）, <a hre
 <strong>进阶资源</strong> · Anthropic <em>Building Effective Agents</em>（evaluator-optimizer）, <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">anthropic.com/engineering/building-effective-agents</a> ·
 Anthropic <em>Claude's Character</em>, <a href="https://www.anthropic.com/research/claude-character" target="_blank">anthropic.com/research/claude-character</a>
 </div>
+</div>
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>哲学 · 波兰尼的默会知识</b>：Michael Polanyi 在《默会的维度》（1966）里说，我们知道的多于我们能说出的；voice 就是这种知识，所以靠样本传比靠形容词传准。不像在于：波兰尼认为默会知识说不全，voice spec 却要把其中一部分硬写成规则，所以必须人工校。</li>
+<li><b>生物进化 · 稳定化选择</b>：稳定化选择淘汰两端的极值、把性状压向群体均值，RLHF 把输出推向「安全的平庸」是同一个形状，个人 voice 正是被削掉的那段长尾。不像的是，自然选择削尾是因为极端个体活得差，模型削尾只是因为多数人打分更稳。</li>
+<li><b>复杂性科学 · 西蒙的钟表匠寓言</b>：Herbert Simon 1962 年在《复杂性的架构》里讲，钟表匠 Hora 先把零件装成稳定的子组件再逐层组装，被打断只丢一小块，一次装整只表的 Tempus 却要从头再来；先定大纲再逐节扩写是同一个思路。不像在于：Simon 的子组件几乎互不相干，文章各节却要前后呼应，所以 L2 得带上一节结尾当锚点。</li>
+<li><b>心理学 · 再认比回忆容易</b>：认出见过的答案（再认）远比凭空想起来（回忆）容易，选择题比填空题简单就是这个道理；让 AI 当 critic 而不当 author，用的是同一种不对称。不像在于：模型判断「弱句」的标准仍是它自己的均值，可能把你刻意的破格判成弱。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>「专业、简洁」这类形容词对模型几乎零信息量，写作风格要用 3–5 段真实样本来锚定。</li>
+<li>从自己的样本里逆向提取句长、句式、用词和禁区，人工校改后存成可版本管理的 voice.md。</li>
+<li>一份 voice spec 只服务一种体裁，跨体裁混喂样本会把风格平均成四不像。</li>
+<li>Kobak 等人分析 1400 万篇 PubMed 摘要，发现 ChatGPT 出现后「delve」的频率涨了约 28 倍。</li>
+<li>AI 味是 RLHF 带来的分布层 bias，禁用词清单只能压低频率，根治要靠真实样本把分布拉走。</li>
+<li>Slop filter 里最有效的一条，是强制每段至少有一个数字、例子或专有名词。</li>
+<li>长文写作应拆成大纲、逐节扩写、句子打磨三层 prompt chain，每层独立验证。</li>
+<li>逐节扩写时注入全局大纲和上一节结尾作锚点，防止各节互相重复、术语前后漂移。</li>
+<li>判断一句话弱不弱远比从零写出好句子容易，所以 AI 当 critic 比当 author 可靠。</li>
+<li>让 AI 当编辑时，要它只改指定的弱句、输出 diff、不许夸奖，否则你的 voice 会被顺手抹掉。</li>
+</ol>
 </div>
 <!-- ============ Combo ============ -->
 <div class="combo">

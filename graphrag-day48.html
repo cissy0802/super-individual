@@ -45,6 +45,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -188,6 +199,32 @@ EXTRACT = <span class="tag-gpt">"""从文本抽取实体与关系，仅用以下
 <strong>进阶资源</strong> · GraphRAG <em>From Local to Global</em>（Edge et al., arXiv 2404.16130）+ <a href="https://github.com/microsoft/graphrag" target="_blank">microsoft/graphrag</a> · HippoRAG（arXiv 2405.14831）
 </div>
 </div>
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>东方哲学 · 盲人摸象</b>：盲人各摸到象的一部分，说像柱、像绳、像扇，都没错，却没人答得出「象是什么」。这正是 top-k 检索遇上全局问题：每个 chunk 都真，答案只在整体里。不像处：GraphRAG 会先把碎片聚成社区再汇总。</li>
+<li><b>西方哲学 · 弗雷格的晨星与暮星</b>：弗雷格 1892 年区分涵义与指称，「晨星」「暮星」说法不同，指的都是金星。实体消歧就是认出「OpenAI」「the company」同一指称；不像处：它不问两个名字为何能带来新知，只管合并。</li>
+<li><b>心理学 · 巴特莱特的重构记忆</b>：巴特莱特 1932 年让被试接力复述《幽灵之战》，故事越传越短，陌生细节被抹平、改写成熟悉的图式。global search 对社区摘要再做 rollup，也是层层压缩，精确数字因此丢失。不像处：机器没有文化偏好，它的偏差来自摘要提示和社区切分。</li>
+<li><b>神经科学 · 海马体索引理论</b>：Teyler 与 DiScenna 1986 年提出，海马体只存指向皮层记忆痕迹的索引，HippoRAG 之名即由此来。像在图谱当索引、原文当皮层；不像在大脑靠睡眠巩固悄悄重写索引，图谱改文档却可能要重建社区。</li>
+<li><b>生物进化 · 细胞功能模块</b>：Hartwell 等人 1999 年在 Nature 撰文，主张细胞功能由一个个相对独立、各管一摊的分子模块完成。社区检测在实体图里找的也是这种内紧外松的模块；不像处：演化选出的模块边界稳定，图谱社区边界却随抽取质量漂移。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>大多数 RAG 失败不在检索算法，而在文档进库前的解析已弄碎版面和阅读序。</li>
+<li>Docling 这类布局感知解析器先检测版面块，再按阅读序重组，地位等同 chunking。</li>
+<li>解析错误不报错却污染下游，扫描件和复杂表格要设置信度告警并人工抽查。</li>
+<li>表格单元格的意义由行表头和列表头共同决定，拍平成文本会丢掉这层绑定。</li>
+<li>大表按行拆成记录，每行注入表头、表标题和章节，检索回来的碎片才可读。</li>
+<li>LLM 抽取实体关系是 GraphRAG 最贵的一步，成本随语料线性增长而非随查询。</li>
+<li>跳过实体消歧，知识图谱会碎成孤岛，错误经社区摘要放大且没有报错。</li>
+<li>GraphRAG 的 local search 答实体关系问题，global search 汇总社区摘要答主题问题。</li>
+<li>对事实型查询用 GraphRAG 是过度工程，应按查询类型在几种 RAG 之间路由。</li>
+<li>global search 的层层摘要像重构记忆，会抹平细节，要精确数字就回 local 或 vanilla。</li>
+</ol>
+</div>
+
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3 data-tts="140417281d9a5365">// 综合实战 · 给自己的文档库造一个「双模式知识库」</h3>

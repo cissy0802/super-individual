@@ -45,6 +45,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -333,6 +344,30 @@ Output 200-400 words, dense and factual. No filler."""</span>
 Zhai et al. <em>SigLIP: Sigmoid Loss for Language-Image Pre-training</em>, <a href="https://arxiv.org/abs/2303.15343" target="_blank">arxiv.org/abs/2303.15343</a> ·
 Jina AI <em>Jina CLIP v2 multilingual benchmark</em>, <a href="https://jina.ai/news/jina-clip-v2-multilingual-multimodal-embeddings-for-text-and-images/" target="_blank">jina.ai/news/jina-clip-v2</a>
 </div>
+</div>
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>神经科学 · 中央凹与扫视</b>：人眼只有中央凹那约 2° 视角是高清的，其余靠一次次扫视拼起来，大脑从不处理「全分辨率画面」；1568px 上限是同一种节俭。不像的是，眼睛会主动挑看哪里，模型只能被动收下整张缩小后的图。</li>
+<li><b>佛学 · 内观的「标记」</b>：内观禅修练习看到就只记「看到」、听到就只记「听到」，把觉知和评判拆成两步；describe-first 也是先把观察落下来，再下结论。不像在于：模型写下的「描述」本身已经掺了解读，并不是纯粹的看。</li>
+<li><b>神经科学 · 知觉之视与行动之视（Goodale &amp; Milner，1992）</b>：视觉分成「看懂是什么」的腹侧通路和「引导手去抓」的背侧通路，病人 DF 认不出槽口朝向，却能准确把卡片塞进去。Computer Use 也是这样分工：vision 判断做什么，xdotool 负责精确执行。不像的是，大脑的「行动之视」本身就精准，agent 里精准的那一半却在模型之外。</li>
+<li><b>心理学 · 双重编码理论（Allan Paivio，1971）</b>：人对图像同时存一份视觉码和一份语言码，能被说出来的图更好记、更好找；caption-then-retrieve 正是给每张图配一份语言码做索引，原图留着当细节。不像在于：人脑两套码并行互通，CTR 只能从文字那一头进门。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>图像 token 成本由分辨率决定而不是文件大小，Claude 近似按宽×高÷750 计算。</li>
+<li>Claude 官方推荐长边不超过 1568px，传图前在客户端 resize 是最直接的省钱手段。</li>
+<li>手机原图要先按 EXIF 方向转正，否则模型看到的是躺着的图，识别率直接腰斩。</li>
+<li>PDF 分三档处理：文本抽取、Docling/MinerU 版面解析、视觉直读，成本依次升高。</li>
+<li>生产 PDF pipeline 主流是 hybrid：能抽文本的页走文本，失败页按 150 dpi 渲染后走 vision。</li>
+<li>Vision prompt 要强制模型先描述所见再回答，防止它跳过读图直接编结论。</li>
+<li>用 tool use 包装 structured output，模型会逐字段看图，下游还能做 schema 校验和重试。</li>
+<li>Claude/GPT 给出的 bounding box 精度约为图像的 1/100，像素级 UI 定位不能依赖它。</li>
+<li>CLIP/SigLIP 训练数据偏 web alt-text，在技术图表、PPT、中文长文档上召回常低于 40%。</li>
+<li>Caption-then-Retrieve 用文字 caption 当检索 key，命中后要把原图一起送回模型。</li>
+</ol>
 </div>
 <!-- ============ Combo ============ -->
 <div class="combo">

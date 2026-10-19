@@ -39,6 +39,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -229,6 +240,32 @@ Anthropic <em>Prompt Caching</em> docs, <a href="https://docs.claude.com/en/docs
 </div>
 </div>
 
+<!-- ============ Crossovers ============ -->
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Systems theory · Gall's law (John Gall, 1975)</b>: In <em>Systemantics</em>, Gall observed that a complex system that works has almost always grown out of a simple system that worked, and that complex systems designed from scratch rarely can be patched into working. That is the complexity ladder of §1. The difference: Gall only describes the pattern, while this issue also demands a receipt for every step up, a failure mode you can write down.</li>
+<li><b>Psychology · Skinner's "superstitious" pigeons (1948)</b>: Skinner fed pigeons on a fixed timer, regardless of what they did, and they locked in rituals like turning or head-bobbing because food happened to follow some movement. Magic phrases in prompts are the same accidental reinforcement. The difference: a pigeon cannot run a controlled experiment, but an engineer can delete the phrase and rerun the evals.</li>
+<li><b>Biology · Degeneracy (Gerald Edelman and Joseph Gally, 2001)</b>: In living systems, structurally different parts can perform the same function, so losing one degrades the whole gracefully instead of breaking it. "Delete any sentence and performance declines smoothly, not off a cliff" is the same test for a robust prompt; few-shot overfitting is the over-specialized species that falls off the cliff when the environment shifts. Unlike evolution, which accumulates redundancy slowly, a prompt gets it from clearly stated principles.</li>
+<li><b>Philosophy of science · Feynman's "cargo cult science" (1974)</b>: In his Caltech commencement address, Feynman described islanders who built runways and control towers and waited for planes that never landed: every form in place, no aircraft. Vibes-driven shipping is the same: trying three cases looks like testing but has no control that would expose a regression. Unlike the islanders, a team can find out what is missing by pulling 20 real cases.</li>
+<li><b>Buddhism · The Middle Way</b>: In his first sermon the Buddha rejected both indulgence and asceticism; §4 likewise calls lock-in and over-abstraction two wrong answers to one question. The difference: the Middle Way is not an average of the extremes, and neither is the fix here "half locked in"; it changes the axis, drawing the abstraction at the level of capabilities.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>Most AI projects die not from weak models but from four anti-patterns: over-engineering, missing evals, brittle prompts and vendor lock-in.</li>
+<li>Start with a single prompt, and justify every step up the complexity ladder with a concrete, observable failure mode.</li>
+<li>The test is fit with the problem's inherent complexity: clinging to one prompt when you truly need multiple agents is also wrong.</li>
+<li>An AI project without an eval suite is flying blind; your iteration speed is capped by your evaluation speed.</li>
+<li>Twenty real production cases written as deterministic assertions and wired into CI beat waiting for a perfect eval platform.</li>
+<li>Deterministic checks such as keywords, refusals and parseable JSON are cheap and unbiased; save LLM-as-judge for what needs semantic judgment.</li>
+<li>Prompt brittleness comes from magic phrases, overfitted few-shot examples and hardcoded strings, and one model upgrade can take production down.</li>
+<li>Versioned prompt files, pinned model versions and principles instead of incantations turn a model upgrade into a single CI run.</li>
+<li>Vendor lock-in and lowest-common-denominator wrappers are both wrong; the fix is a thin capability-level adapter that uses each provider's full feature set.</li>
+<li>Abstractions should be forced out by a second instance: a second tool forces routing, a second provider forces an adapter.</li>
+</ol>
+</div>
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3>// Integrated Practice · Run an "Anti-Pattern Health Check" on Your AI Project</h3>

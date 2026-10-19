@@ -48,6 +48,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -202,6 +213,32 @@ compiled = opt.compile(program, trainset=train)
 <strong>进阶资源</strong> · Opsahl-Ong et al. <em>MIPRO</em>（多阶段程序的指令+示例联合优化）, <a href="https://arxiv.org/abs/2406.11695" target="_blank">arXiv 2406.11695</a> ·
 DSPy <em>choosing an optimizer</em>, <a href="https://dspy.ai/learn/optimization/optimizers/" target="_blank">dspy.ai/learn/optimization</a>
 </div>
+</div>
+<!-- ============ Crossovers ============ -->
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>复杂性科学 · 适应度景观（Sewall Wright，1932）</b>：metric 就是一张景观，optimizer 在上面爬坡；布尔全对全错的 metric 像一片平台，没有坡可爬。不像在于：自然界的景观会随环境和对手一起变，eval set 却是冻结的，所以模型一更新，景观在你脚下挪了位置，这就是 prompt 漂移，也是 registry 要能触发重编译的原因。</li>
+<li><b>心理学 · 斯金纳的「迷信鸽子」（1948）</b>：鸽子定时得食，会把恰好在做的转圈、点头固定成仪式；「深呼吸」式神咒看上去也像仪式。不像的是，鸽子的仪式与食物无因果，神咒在那个模型上确实提分，只是换个模型就失灵。</li>
+<li><b>佛学 · 方便法门与应机说法</b>：同一个道理，佛陀对不同根器的人换不同说法；同一个 signature，对不同模型编译出不同 prompt，正对应结构与措辞的解耦。不像在于：应机说法靠理解听者，optimizer 并不理解模型，只是搜索。</li>
+<li><b>投资 · 回测过拟合（Marcos López de Prado 等）</b>：在同一段历史数据上反复试策略，总能试出一条漂亮的回测曲线，实盘却打回原形；在同一个 set 上又搜又验，是同一个错误。量化界的解法也相同：留出样本外数据，并把试过的次数算进去。</li>
+<li><b>生物进化 · 奠基者效应（Ernst Mayr）</b>：少数个体建立新种群，把它们碰巧携带的基因比例传给全族，多样性一开始就被收窄；几条同质的 few-shot 示例同样会把模型行为收窄到它们的分布里。不同在于，few-shot 可以重选，种群的起点回不去。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>自动 prompt 优化的前提是可信的 metric、数十条带标注样本，以及高频复用且稳定的任务。</li>
+<li>自动优化是只朝 metric 爬坡的黑盒搜索，metric 多糙优化就多歪，eval 质量是它的天花板。</li>
+<li>DSPy 让你声明 signature 和 module，再由 optimizer 从 metric 编译出 instruction 和 few-shot 示例。</li>
+<li>用 DSPy 时真正调的是 metric、trainset、optimizer 档位三个旋钮，compile 完要打印并存档最终 prompt。</li>
+<li>APE 让 LLM 生成候选指令并按 eval 分数选优，OPRO 把历史 (prompt, score) 喂回 LLM 迭代提议下一版。</li>
+<li>指令搜索搜出的 prompt 常常反直觉，而且几乎不跨模型迁移，换模型往往要重搜。</li>
+<li>候选指令要在 held-out val 上打分，定版前必须在从未参与搜索的 test 上验证，否则只是刷分咒语。</li>
+<li>很多任务上，自动 bootstrap 出的 few-shot 示例比微调 instruction 措辞收益更大，但也会带进样本的分布和偏见。</li>
+<li>自动优化要像模型训练一样做 train / val / test 三分，val 与 test 的分差就是过拟合温度计。</li>
+<li>优化产物要连同模型、数据、metric 的 provenance 存进 prompt registry，换模型或出现漂移时据此重编译。</li>
+</ol>
 </div>
 <!-- ============ Combo ============ -->
 <div class="combo">

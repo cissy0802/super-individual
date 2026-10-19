@@ -44,6 +44,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -174,6 +185,30 @@ This site, Day 33 <em>Legacy Governance</em> (ratchet / metric-driven)
 </div>
 </div>
 
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Psychology · Hick–Hyman law (1952)</b>: decision time grows with the logarithm of the number of choices; "a small, precise candidate set" is Hick's law applied to agents. The difference: more options only make a human slower, while an agent facing overlapping options doesn't slow down, it just picks wrong.</li>
+<li><b>Evolutionary biology · gene duplication (Susumu Ohno, 1970)</b>: after a gene is copied, the duplicate usually either gains or splits off a function, or decays into a pseudogene. That is exactly the test for "legitimate variant vs redundancy": keep it only if the difference does real work. Unlike evolution, which prunes redundancy slowly, a skill library has to dedup on purpose.</li>
+<li><b>Immunology · thymic selection</b>: maturing T cells pass two gates: positive selection keeps the ones that can recognize antigens (a quality gate), negative selection removes the ones that attack the body itself (a security gate), and only a small fraction get through. Same shape as the promotion gate, except the thymus simply kills the rejects, while a skill library keeps an experimental tier where they can keep growing.</li>
+<li><b>Neuroscience · synaptic pruning</b>: the young brain overproduces synapses, then prunes the little-used ones on a use-it-or-lose-it basis; Huttenlocher measured that rise-then-fall curve in frontal cortex in 1979. Usage-driven deprecation runs on the same logic, but the brain offers no migration period and no exemption flag for a connection used once a year yet critical.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>The north star of skill library governance is a small, precise candidate set for the agent, not the total number of skills.</li>
+<li>Every skill enters the library with a manifest contract: description, owner, schema, risk level, and a linked eval.</li>
+<li>A manifest's description is written for the agent to choose by, not as documentation for humans.</li>
+<li>A skill with no owner has nobody to call when it breaks, and ends up a zombie nobody dares touch.</li>
+<li>Each overlapping skill raises the odds the agent picks wrong, so dedup should alert proactively on embedding similarity.</li>
+<li>Expose the agent to a small candidate set retrieved for the task at hand, never the whole library at once.</li>
+<li>Skills run code and read data, so a shared skill library is a capability supply chain and an attack surface.</li>
+<li>A promotion gate requires passing eval, least privilege, versioning, and provenance; high-risk skills are restricted by default.</li>
+<li>Retire skills by call volume and success rate, but give a migration period: hard-deleting a skill in use breaks production agents.</li>
+<li>Decouple contributing from promotion to default capability: the experimental tier is easy to enter, the main candidate set is earned.</li>
+</ol>
+</div>
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3>// Hands-on · install a governance chassis for your org's skill library</h3>

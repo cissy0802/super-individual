@@ -46,6 +46,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -236,6 +247,31 @@ BEIR (nDCG/MRR/recall standard metrics), <a href="https://arxiv.org/abs/2104.086
 </div>
 </div>
 
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Neuroscience · Feature integration theory (Treisman &amp; Gelade, 1980)</b>: vision first runs a cheap, parallel preattentive pass that picks up features like color and orientation, then spends costly serial attention binding them object by object: recall first, rerank second. The difference: the brain's second stage handles one object at a time, while a cross-encoder scores candidates in parallel batches.</li>
+<li><b>Psychology · Signal detection theory (Green &amp; Swets, 1966)</b>: it separates sensitivity from the decision criterion, and says that when misses and false alarms cost different amounts, you should move the criterion. Raising k in stage one is a deliberate loosening of the criterion because a miss is unrecoverable; unlike that, human criteria tend to drift without anyone noticing.</li>
+<li><b>Immunology · Clonal selection theory (Burnet, 1957)</b>: the immune system first generates a huge, random variety of antibody receptors, then expands whichever clone binds the antigen that shows up: cast wide, then select. If no receptor in the repertoire fits an antigen, no amount of expansion can rescue it, much like a recall miss. The difference: the repertoire keeps evolving through somatic mutation while in use, whereas a retriever's recall only changes when you rebuild the index.</li>
+<li><b>Social choice · The Borda count (Borda, 18th century)</b>: each ballot awards points by rank and the points are summed, ignoring each voter's private scale, the same idea as RRF using ranks instead of raw scores. Unlike voters, though, retrievers never vote strategically, burying a rival to push a favorite to the top.</li>
+<li><b>Philosophy of science · The Duhem–Quine thesis</b>: a failed prediction only shows that the theory, its auxiliary assumptions and the instruments together went wrong; it cannot single out the guilty part. A wrong RAG answer has the same problem with retrieval versus generation. The difference: a golden set lets you test retrieval on its own, while scientific hypotheses often cannot be tested in isolation.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>The bottleneck of most RAG systems is retrieval, not generation: given the right document the LLM almost always answers correctly, and without it it can only make things up.</li>
+<li>Stage one of two-stage retrieval should be judged only on recall@k, because a missed document is unrecoverable while extra candidates only add downstream work.</li>
+<li>Plot recall@k against k first: if even recall@200 is low, fix the retriever; if recall@100 is high but recall@5 is low, add a reranker.</li>
+<li>The stage-one k should be set by how many candidates the reranker can handle (usually 50 to 200), not by how many chunks go into the LLM.</li>
+<li>BM25 excels at exact literals like model numbers and error codes, vector search excels at meaning, and their failures barely overlap, so hybrid search nearly always beats either alone.</li>
+<li>Fuse hybrid results with rank-only RRF, because BM25 scores are unbounded while cosine is bounded, so a weighted sum just fits noise.</li>
+<li>In Anthropic's Contextual Retrieval tests, stacking contextual embeddings, BM25 and reranking cut the top-20 retrieval failure rate by 67%.</li>
+<li>A reranker is a cross-encoder: accurate, but it runs a full inference per candidate, so it should rerank tens to a couple hundred candidates, never scan the whole corpus.</li>
+<li>When a RAG system answers wrong, use a golden set to separate retrieval failures from generation failures, or you will waste effort tuning prompts.</li>
+<li>Using the same LLM to generate and to judge invites backward rationalization, so the judge should be a different model or anchored to a reference answer.</li>
+</ol>
+</div>
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3>// Capstone · Quantify Your RAG Retrieval Quality in One Run</h3>

@@ -45,6 +45,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -238,6 +249,31 @@ docker run --rm \
 </div>
 </div>
 <!-- ============ Combo ============ -->
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>神经科学 · 加扎尼加的「解释器」</b>：裂脑实验里，左脑会为右脑发起的动作现编一个流畅的理由，自己毫不察觉。让主模型自审是同一个结构：生成者和审查者共用一套被污染的信息，解释得越顺越不可信。不像的是，脑没法外挂一个独立的审查器，系统可以。</li>
+<li><b>哲学 · 尤利西斯契约（Jon Elster，1979）</b>：奥德修斯不靠意志抵抗塞壬，而是事先让水手把他绑在桅杆上、给水手耳朵塞蜡。system prompt 里的「请不要」是意志，harness 是桅杆。不像在于：奥德修斯防的是将来的自己，护栏防的是借模型之口说话的外人。</li>
+<li><b>复杂性科学 · Perrow 的「正常事故」（1984）</b>：Charles Perrow 认为，交互复杂又紧耦合的系统，事故不是零件故障，而是结构必然；解法是解耦，而不是把零件做得更好。lethal trifecta 也是结构条件：三者俱全就一定能被注入，掐掉一条边就是解耦。不同在于，trifecta 能精确指出该断哪条边，Perrow 的系统往往断不开。</li>
+<li><b>商业 · 贝索斯的单向门与双向门</b>：贝索斯在 2015 年致股东信里把决策分成不可逆的「单向门」和可逆的「双向门」，前者要慢、要严，后者放手试。fail-closed 与 fail-open 按 blast radius 分级正是这条线。不像的是，贝索斯分的是人的决策速度，护栏分的是机器出错时的默认去向。</li>
+<li><b>佛学 · 守护根门（indriya-saṃvara）</b>：早期佛教教修行者在眼耳等感官门口设防，见色不取其相，别让外境直接牵动心。这是输入闸门的心法版。但根门守护靠的正是同一颗心的觉察，恰是工程上被判为反模式的「自己审自己」：修行可以，生产系统不行。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>模型自身的 safety fine-tuning 加 system prompt，挡不住 indirect prompt injection，护栏必须是工程架构。</li>
+<li>LLM 应用要在输入和输出两侧各放一道独立闸门，绝不能让主模型自己当闸门。</li>
+<li>主模型自审是反模式：同一个越狱串在生成和审查时会被一起绕过，因为二者共享被污染的 context。</li>
+<li>API key、JWT、卡号这类密钥要在输出闸门用确定性正则脱敏，高敏感字段宁可用 allowlist 输出。</li>
+<li>prompt 加固挡不住 universal jailbreak；Anthropic 的 Constitutional Classifiers 用独立的输入输出分类器来防。</li>
+<li>越狱分类器的阈值就是 helpfulness tax 的旋钮，拦和放之间要留一个送人工复核的 escalate 档。</li>
+<li>输出校验分 schema、业务策略、事实三层，业务规则要用确定性代码判，不用 LLM 判。</li>
+<li>校验不过时必须 fail-closed 走 fallback；re-ask 重试要设上限，到顶仍不过绝不放出最后一次输出。</li>
+<li>Simon Willison 的 lethal trifecta 是私有数据、不可信内容、外发通道三者俱全，移除任一条边系统就安全。</li>
+<li>执行沙箱要同时锁文件系统和网络，默认 deny-all egress，只放行 allowlist proxy，少一个都不算隔离。</li>
+</ol>
+</div>
 <div class="combo">
 <h3 data-tts="fc106b9c13319b38">// 综合实战 · 给你的 agent 配一套「最小可信边界」</h3>
 <p>把这一期四点拼成一个清单，套到任何会执行动作的 agent 上。每一条都对应前面一个具体失败模式：</p>

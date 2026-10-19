@@ -47,6 +47,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -285,6 +296,30 @@ client = anthropic.AsyncAnthropic()
 OpenAI <em>Parallel function calling</em>, <a href="https://platform.openai.com/docs/guides/function-calling#parallel-function-calling" target="_blank">platform.openai.com/.../parallel-function-calling</a> ·
 LangChain <em>Parallel tool calls</em> 实现参考, <a href="https://python.langchain.com/docs/how_to/tool_calling_parallel/" target="_blank">python.langchain.com/.../tool-calling-parallel</a>
 </div>
+</div>
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>哲学 · 维特根斯坦「意义即用法」</b>：《哲学研究》（1953）说词义多半在于它怎么被用，不在名字；模型认工具也看 description 里的使用场景，不看工具名。不像在于：维特根斯坦的用法要在共同生活里摸出来，模型只有几行字可读。</li>
+<li><b>心理学 · 选择过载（Iyengar &amp; Lepper，2000）</b>：摆 24 种果酱时，试吃者只有 3% 购买；摆 6 种时有 30%，和「20 个工具不如 6 个」同形。不像的是，Scheibehenne 等人 2010 年的元分析发现这个效应平均接近零、很看情境；工具退化的原因具体得多：相似工具互相干扰。</li>
+<li><b>神经科学 · 动作组块（Ann Graybiel）</b>：大鼠反复跑同一条迷宫，纹状体会把整串动作打包，主要在开头和结尾放电；先用原子工具跑出套路再固化成 macro，是同一步。不像在于：习惯不知不觉长成，macro 是有意写下、随时可改的。</li>
+<li><b>认知科学 · 特征整合理论（Anne Treisman，1980）</b>：颜色、朝向能并行处理，把它们绑到同一物体上却要注意力逐个串行完成；和 parallel tool call 一样，独立才能并行。不像的是，大脑并行不用提醒，模型要 system prompt 明说才肯一次发多个调用。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>Tool schema 是 prompt 的一部分：工具定义被序列化进 system prompt，模型读它决定调不调、调哪个。</li>
+<li>模型选工具主要看 description 和参数说明而不是工具名，写明「什么时候不该用」是降低误选最便宜的手段。</li>
+<li>每个参数都该写清单位、格式和默认推断规则，enum 值用全称，并附上每个值什么时候选。</li>
+<li>工具数量和准确率呈倒 U 曲线：3–7 个正交工具最好，超过约 20 个后误选、漏选明显增多。</li>
+<li>工具多了会退化：定义挤占 token，相似工具互相混淆，「不该调用」的判断路径爆炸。</li>
+<li>工具减肥三步：删掉调用不到 1% 的长尾工具，合并语义双胞胎，按场景而不是按 API 切分。</li>
+<li>原子工具灵活但要模型自己规划多步，组合工具可靠易测却覆盖窄，两类工具应该分层共存。</li>
+<li>先用原子工具跑出稳定套路再固化成组合工具；required 参数超过 5 个就该拆。</li>
+<li>Parallel tool calls 生效的四个前提：prompt 鼓励、工具无依赖、harness 真并发、审批不阻塞。</li>
+<li>工具报错要写明原因和下一步，工具最好幂等，因为 agent 会读报错自我纠正，也常常重试。</li>
+</ol>
 </div>
 <!-- ============ Combo ============ -->
 <div class="combo">

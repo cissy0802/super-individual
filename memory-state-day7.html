@@ -45,6 +45,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -326,6 +337,33 @@ Simon Willison <em>How ChatGPT memory works</em>, <a href="https://simonwillison
 Park et al. <em>Generative Agents: Interactive Simulacra of Human Behavior</em>（reflection/memory stream 设计）, <a href="https://arxiv.org/abs/2304.03442" target="_blank">arxiv.org/abs/2304.03442</a>
 </div>
 </div>
+<!-- ============ Crossovers ============ -->
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>心理学 · Tulving 的情景记忆与语义记忆（1972）</b>：Endel Tulving 把长期记忆分成记「那天发生了什么」的情景记忆和记「巴黎是法国首都」的语义记忆，正对应 event log 与 KV profile 的分工。不像在于：人的情景记忆会慢慢褪成语义知识，两者的界线是流动的；agent 的几套 store 却要靠写入路由显式切开。</li>
+<li><b>心理学 · Bartlett 的「幽灵之战」（1932）</b>：Frederic Bartlett 让英国被试反复复述一则北美原住民故事，陌生的细节一轮轮被磨掉、改写成熟悉的样子，这正是无脑 summarize 的损耗方式。不像的是，被试手里没有一张 PRESERVE 清单。</li>
+<li><b>神经科学 · 记忆再巩固（Nader 等，2000）</b>：Karim Nader 等发现，大鼠的恐惧记忆被唤起后会暂时变得不稳定，此时阻断杏仁核的蛋白质合成，记忆就被削弱：每次读取都是一次改写机会。self-maintained profile 也边用边改；不同在于大脑不留 changelog，agent 刻意留。</li>
+<li><b>佛学 · 唯识的种子与熏习</b>：唯识宗说，每个行为都在阿赖耶识里「熏」下种子，种子日后生起新的认知，决定你怎么看下一件事；就像对话不断写进 profile，profile 又注入下一次会话。不像在于：修行是要看破并转化这份积累，agent 却在努力让它越积越准。</li>
+<li><b>商业 · 会计的日记账与资产负债表</b>：会计先按时间逐笔记日记账，资产负债表只是某一天的余额快照，账错了可以回到流水重算；event log 与 profile 正是流水与快照的关系。不像的是，会计每一笔都要原始凭证，agent 要到加上 evidence_msg_id 才补上这条纪律。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>LLM 本身是无状态的，agent 的一切「记忆」都是开发者塞进 context window 的 token。</li>
+<li>Agent 的 state 至少分四层：conversation、scratchpad、user profile、knowledge base，生命周期和读写策略各不相同。</li>
+<li>四层 state 混进同一个 vector DB，会丢掉时序、淹没 profile 事实，还让旧 scratchpad 污染下一个任务。</li>
+<li>短期记忆默认先用 truncate 滑窗，只有确实要回查早期细节时才升级到 summarize 或 hierarchical。</li>
+<li>增量摘要的质量取决于 compaction prompt 的 PRESERVE 清单，决策和未完成的 TODO 最容易丢。</li>
+<li>Vector retrieval 只擅长找相似内容，精确事实该走 structured KV，时序查询该走 episodic event log。</li>
+<li>Letta（MemGPT 的产品版）把记忆分成 core、archival、recall 三层，分别对应 KV、vector 和事件日志。</li>
+<li>写入路由先判断一条信息是事实、事件还是文档，再决定进哪个 store：问题类型决定存储。</li>
+<li>Self-maintained profile 的每次写入都要挂 evidence_msg_id 并记 changelog，没有证据就不写，以挡住幻觉。</li>
+<li>Profile 需要遗忘机制和场景隔离：膨胀到几千 token 会吞掉 context 预算，跨 agent 共享会让 scope 失控。</li>
+</ol>
+</div>
+
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3 data-tts="1c12be2fb5841178">// 综合实战 · 给手头 agent 画出 state 拓扑（30 分钟）</h3>

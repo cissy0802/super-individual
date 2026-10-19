@@ -44,6 +44,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -210,6 +221,32 @@ TensorRT-LLM, <a href="https://github.com/NVIDIA/TensorRT-LLM" target="_blank">g
 </div>
 </div>
 
+<!-- ============ Crossovers ============ -->
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Management · Goldratt's Theory of Constraints (The Goal, 1984)</b>: a system's throughput is set by its single bottleneck, and speeding up anything else just piles up inventory. An H100 that only buys 20% more throughput is the same story: compute is not the constraint, memory bandwidth is. The difference: a factory bottleneck moves as you fix it, while decode's bandwidth bottleneck is fixed by the physics.</li>
+<li><b>Molecular biology · The polysome</b>: one mRNA carries many ribosomes at once; when one finishes and falls off, a new one loads at the start, so a single template read serves many products. That is continuous batching. Unlike a batch, though, every ribosome makes the same protein, while each request in a batch produces something different.</li>
+<li><b>Psychology · Kahneman's System 1 and System 2</b>: fast, effortless intuition proposes an answer and slow, effortful deliberation checks it, the same split as draft model and target model. The difference: Kahneman found System 2 lazy, often waving intuition's mistakes through, whereas speculative decoding checks every single token, which is why it is lossless.</li>
+<li><b>Buddhism · Dependent origination</b>: what a thing is depends on all the conditions that came before it; strip the conditions and it is no longer the same thing. KV cache works this way too: the same text after a different prefix yields different K/V, which is why only prefixes can be reused. Unlike dependent origination, which runs both ways, causal attention looks only backward.</li>
+</ul>
+</div>
+<!-- ============ Takeaways ============ -->
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>Token-by-token LLM decoding is memory-bound: the bottleneck is the bandwidth for moving weights out of HBM, while most compute sits idle.</li>
+<li>Every inference optimization answers one question: how to compute more tokens per trip of the weights through memory.</li>
+<li>Continuous batching adds and removes requests at every decode step and can reach 23x the throughput of a naive implementation.</li>
+<li>Throughput comes from bigger batches and latency from smaller ones, so the two trade off and need separate targets.</li>
+<li>Batch size is usually limited by the KV cache rather than the weights, and with long contexts the KV cache can outgrow the weights.</li>
+<li>PagedAttention manages the KV cache like paged virtual memory, cutting wasted GPU memory to under 4%.</li>
+<li>Prefix caching only hits when the prefix is byte-for-byte identical, so put stable content first and changing content last.</li>
+<li>Speculative decoding lets a small model guess and the large model verify in parallel, with rejection sampling keeping the output distribution unchanged.</li>
+<li>At high concurrency the GPU is already near compute-bound and speculative decoding stops paying off, so it is a low-concurrency lever.</li>
+<li>Quantization makes weights smaller and faster to move, but int4 loses accuracy on math and reasoning, so run your own eval before shipping.</li>
+</ol>
+</div>
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3>// Capstone · Stand up an inference service that measures itself</h3>

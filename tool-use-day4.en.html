@@ -39,6 +39,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -303,6 +314,30 @@ LangChain <em>Parallel tool calls</em> reference, <a href="https://python.langch
 </div>
 </div>
 
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Philosophy · Wittgenstein, meaning as use</b>: <em>Philosophical Investigations</em> (1953) holds that, for most words, meaning lies in how the word is used in the language, not in the name itself. A model reads a tool the same way: it goes by the use cases in the description, not the tool name. The difference: Wittgenstein's use is learned by living inside a shared practice; the model has only those few lines of text.</li>
+<li><b>Psychology · choice overload (Iyengar &amp; Lepper, 2000)</b>: with 24 jams on display, more shoppers stopped to taste but only 3% bought; with 6 jams, 30% bought. Same shape as "6 tools beat 20." The difference: a 2010 meta-analysis by Scheibehenne and colleagues found the average choice-overload effect close to zero and highly context-dependent, while the tool-count decline above has a more specific cause, near-duplicate tools interfering with each other.</li>
+<li><b>Neuroscience · action chunking (Ann Graybiel)</b>: after rats run the same maze over and over, the striatum packs the sequence into one chunk, firing mostly at the start and the end while the middle runs on autopilot. Running atomic tools until a stable pattern appears, then freezing it into a macro tool, is the same move. The difference: habits form without anyone deciding to; a macro is written on purpose and can be edited any time.</li>
+<li><b>Cognitive science · feature integration theory (Anne Treisman, 1980)</b>: the brain processes features like color and orientation in parallel, but binding them to one object takes attention, one item at a time. Like parallel tool calls, only independent work runs side by side; anything with a dependency waits in line. The difference: the brain parallelizes without being told, while the model needs the system prompt to say so before it emits several calls at once.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>A tool schema is part of the prompt: tool definitions are serialized into the system prompt, and the model reads them to decide whether and which tool to call.</li>
+<li>Models pick tools by the description and parameter docs, not the tool name; stating when not to use a tool is the cheapest fix for wrong picks.</li>
+<li>Every parameter needs its units, format and default-inference rule spelled out; enum values should be full words with a note on when to choose each.</li>
+<li>Tool count versus accuracy is an inverted U: 3 to 7 orthogonal tools work best, and past roughly 20 the wrong and missed calls climb fast.</li>
+<li>Too many tools hurt for three reasons: definitions eat tokens, near-duplicate tools get confused, and the "don't call" decision paths explode.</li>
+<li>The tool diet has three steps: drop the long tail called under 1% of the time, merge semantic twins, and split by use case rather than by API.</li>
+<li>Atomic tools are flexible but make the model plan every step; composite tools are reliable and easy to eval but narrow, so the two should be layered.</li>
+<li>Run atomic tools until a stable pattern emerges before freezing it into a composite tool, and split any composite tool with more than 5 required parameters.</li>
+<li>Parallel tool calls only pay off with four conditions: the prompt encourages them, the calls are independent, the harness truly runs them concurrently, and approvals do not block.</li>
+<li>Tool errors should say what went wrong and what to do next, and tools should be idempotent, because agents read errors to self-correct and retry often.</li>
+</ol>
+</div>
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3>// Putting it together · Anthropic engineering's 7 tool-design rules</h3>

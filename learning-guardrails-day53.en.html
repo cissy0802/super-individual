@@ -39,6 +39,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -152,6 +163,32 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 </ol>
 
 <div class="fail"><strong>Rational per firm, an overdraft for the industry:</strong> "juniors have AI anyway, so hire/mentor fewer" saves money this quarter and creates a generational gap over three to five years — you either poach someone else's mid-levels at a premium or find none to poach. Already 32% of managers who cut roles for AI are re-hiring. Guardrailing juniors correctly is the only sustainable point on that curve.</div>
+</div>
+
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Eastern philosophy · Confucius on when to teach</b>: in the <i>Analects</i> (7.8) Confucius says he does not enlighten a student who is not straining to understand, nor help one not struggling to put it into words, and stops if one corner shown does not yield the other three. That is attempt-first-reveal-second, and the tutor GPT's hints instead of answers. The difference: Confucius read the student's face to judge the moment; an AI guardrail runs on rules written in advance.</li>
+<li><b>Neuroscience · reward prediction error</b>: Schultz, Dayan and Montague (1997) proposed that dopamine neurons signal the gap between expected and actual outcome: no expectation, no error, no update. Predicting before you look at the AI's answer manufactures that error on purpose. Unlike dopamine, though, the signal here is about being right, not about reward.</li>
+<li><b>Psychology · illusion of explanatory depth</b>: Rozenblit and Keil (2002) found people rate their grasp of how a zipper works highly, then drop that rating once asked to explain it step by step. Feeling you get an AI explanation is the same illusion, and "can I reproduce it with AI off" is the step-by-step test. The original study measured understanding, not hands-on skill.</li>
+<li><b>Evolution · cavefish eyes</b>: cave populations of the Mexican tetra (<i>Astyanax mexicanus</i>) have lost their eyes in the dark while surface populations kept them: when the environment stops demanding a capability, it stops being maintained. Verify-only work atrophying the generation muscle has the same shape, except that evolution takes many generations while a person's skill fades in months and can be trained back.</li>
+<li><b>Economics · Becker on general training</b>: in <i>Human Capital</i> (1964) Gary Becker argued firms won't pay for general skills because trained workers can leave and take them along. "Hire fewer juniors and poach other firms' mid-levels" is that logic. Becker's way out was apprentices paying through lower wages; hiring fewer juniors cancels even that trade.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>In a 2025 PNAS randomized trial, high-school students who practiced with raw GPT-4 scored 17% worse than never-users once AI was removed.</li>
+<li>In the same trial a guardrailed GPT tutor raised practice scores by 127% and largely eliminated the loss after AI was removed.</li>
+<li>Learning happens in struggling to produce an answer and then being corrected; raw AI handing over answers deletes that desirable difficulty.</li>
+<li>To tell learning with AI from outsourcing to it, ask one thing: with the AI off, can I reproduce what I just produced?</li>
+<li>Production mode is AI generates, human verifies; learning mode flips it so the human generates first and AI reviews and probes.</li>
+<li>Attempt first, reveal second applies only to what you are learning; pseudocode, a sketch or a prediction counts, and known boilerplate can stay AI-first.</li>
+<li>In METR's 2025 trial, experienced open-source maintainers were 19% slower with AI yet believed afterward they had been 20% faster.</li>
+<li>In complex codebases the bottleneck is reading and verifying, so verification is exactly the skill a junior must practice to become senior.</li>
+<li>Teams should make juniors the first verifier of AI output, keep AI code under the same review gates, and preserve direct mentoring by seniors.</li>
+<li>Verifying without generating atrophies the ability to generate, much as cavefish lose eyes in the dark: an unused capability stops being maintained.</li>
+</ol>
 </div>
 
 <!-- ============ Checklist ============ -->

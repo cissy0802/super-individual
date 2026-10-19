@@ -53,6 +53,17 @@ pre code{color:#d8e8e8}
 .thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -185,6 +196,31 @@ report(case, mean, std)
 <div class="fail"><strong>Failure modes</strong>: ① nailing <code>temperature=0</code> on a creative task for "consistency" — output turns uniform and rigid; ② disabling batching globally in production for "reproducibility" — throughput halved, cost doubled, and nobody actually needed it; ③ doing RL but running inference and training on two numerical paths — train/inference mismatch makes the curve diverge weirdly.</div>
 
 <div class="res"><strong>Going deeper</strong> · The RL / on-policy section of Thinking Machines' "Defeating Nondeterminism…" (2025) · This site <a href="inference-opt-day14.en.html">Day 14 Inference Optimization</a> (batching & prefix caching)</div>
+</div>
+
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Complexity science · Lorenz's butterfly effect</b>: In 1961 Edward Lorenz restarted a weather simulation by typing in 0.506 from a printout instead of the stored 0.506127, and the simulated weather soon bore no resemblance to the first run; chaos theory grew from that moment. Same structure: a rounding error too small to notice, amplified by the system into an entirely different trajectory. The difference: Lorenz's divergence grows continuously and exponentially, while an LLM's error is usually swallowed by argmax and only flips the outcome at a near-tie token, after which autoregression does the amplifying.</li>
+<li><b>Evolutionary biology · Motoo Kimura's neutral theory (1968)</b>: When two alleles are almost equally fit, which one survives is settled not by selection but by random genetic drift. Near-tie tokens work the same way: once the logit gap is tiny, floating-point noise takes over the choice. Unlike drift, which accumulates over generations in a population, an LLM's flip happens inside a single forward pass.</li>
+<li><b>Neuroscience · Bistable perception (the Necker cube)</b>: When an image has two equally plausible readings, the brain switches between them on its own, and small fluctuations in neural activity are enough to tip it. That is argmax at a near-tie: with no clear winner, noise decides. The difference is that the brain keeps flipping back and forth, while an LLM commits to one token and follows that path to the end.</li>
+<li><b>Psychology · The replication crisis (Open Science Collaboration, 2015)</b>: Of 100 psychology studies redone, about 97% of the originals had significant results, but only about 36% stayed significant on replication. The lesson mirrors robust evals: a gap from a single run may be pure noise, so report distributions and confidence intervals. Unlike psychology, where noise is compounded by publication bias and p-hacking, an LLM's noise comes from arithmetic on hardware.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>Setting temperature to 0 switches off only one source of randomness, sampling, and does not make two calls return the same output.</li>
+<li>Floating-point addition is not associative at finite precision, so changing the reduction order changes the last few bits of the result.</li>
+<li>Inference kernels pick reduction strategies by batch size, and this lack of batch invariance is the real cause of run-to-run drift in LLM outputs.</li>
+<li>Floating-point error only flips argmax at near-tie tokens where two logits are almost equal, and autoregression then amplifies the fork into a different output.</li>
+<li>OpenAI's seed parameter promises only "mostly deterministic" outputs and is tied to system_fingerprint, so a backend change voids the reproducibility baseline.</li>
+<li>There are two ways to stop flaky evals: self-host with batch-invariant kernels for bit-level reproducibility, or rerun every case at least five times.</li>
+<li>When A/B testing on a closed API, report means with confidence intervals and check overlap; a three-point drop on one run is usually within variance.</li>
+<li>Determinism costs throughput: Thinking Machines' batch-invariant kernels roughly halved throughput before they were properly optimized.</li>
+<li>Debugging, compliance audits and regression baselines are worth paying for determinism, while creative generation and multiple candidates want diversity.</li>
+<li>In on-policy RL, if the sampler and trainer follow different numeric paths, training quietly degrades into biased off-policy learning.</li>
+</ol>
 </div>
 
 <!-- ============ Thinking ============ -->

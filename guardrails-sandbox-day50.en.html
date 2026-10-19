@@ -39,6 +39,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -259,6 +270,31 @@ docker run --rm \
 </div>
 
 <!-- ============ Combo ============ -->
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Neuroscience · Gazzaniga's "interpreter"</b>: in split-brain experiments the left hemisphere invents a fluent reason for an action the right hemisphere started, never noticing. Letting the main model review itself has the same shape: generator and reviewer share the same tainted information, so the smoother the explanation, the less it proves. The difference: a brain cannot bolt on an independent reviewer; a system can.</li>
+<li><b>Philosophy · The Ulysses contract (Jon Elster, 1979)</b>: Odysseus does not resist the Sirens by willpower; he has the crew tie him to the mast and plug their own ears with wax. A "please don't" in the system prompt is willpower; the harness is the mast. Unlike Odysseus, who guards against his future self, guardrails guard against outsiders speaking through the model.</li>
+<li><b>Complexity science · Perrow's "normal accidents" (1984)</b>: Charles Perrow argued that in interactively complex, tightly coupled systems, accidents are structural, not part failures, and the fix is decoupling rather than better parts. The lethal trifecta is a structural condition too, and cutting one edge is the decoupling. The difference: the trifecta tells you exactly which edge to cut; Perrow's systems often cannot be pulled apart.</li>
+<li><b>Business · Bezos's one-way and two-way doors</b>: in his 2015 shareholder letter Jeff Bezos split decisions into irreversible one-way doors, to be made slowly and carefully, and reversible two-way doors, to be made fast. Grading fail-closed versus fail-open by blast radius draws the same line. Unlike Bezos, guardrails are not setting how fast people decide but where a machine defaults when it errs.</li>
+<li><b>Buddhism · Guarding the sense doors (indriya-saṃvara)</b>: early Buddhist practice sets a watch at the eye, ear and other sense doors, seeing a form without grasping at its features, so outside objects do not seize the mind. It is the input gate as a contemplative discipline. But the guard is the same mind watching itself, exactly the self-review pattern engineering rejects: fine for a practitioner, not for a production system.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>A model's own safety fine-tuning plus a system prompt cannot stop indirect prompt injection, so guardrails have to be engineering architecture.</li>
+<li>An LLM application needs an independent gate on both the input side and the output side, and the main model must never be its own gate.</li>
+<li>Self-review by the main model is an anti-pattern: one jailbreak string bypasses generation and review together because both share the tainted context.</li>
+<li>Secrets such as API keys, JWTs and card numbers should be redacted at the output gate with deterministic regex, and highly sensitive fields output via an allowlist.</li>
+<li>Prompt hardening cannot stop a universal jailbreak; Anthropic's Constitutional Classifiers defend with independent input and output classifiers.</li>
+<li>A jailbreak classifier's threshold is the helpfulness-tax dial, and between block and allow there should be an escalate tier sent to human review.</li>
+<li>Output validation has three layers, schema, business policy and facts, and business rules should be checked by deterministic code, not by an LLM.</li>
+<li>When validation fails, the system must fail closed to a fallback; re-ask retries need a cap, and the last invalid output is never released.</li>
+<li>Simon Willison's lethal trifecta is private data, untrusted content and an exfiltration channel together; removing any one edge makes the system safe.</li>
+<li>An execution sandbox must lock down both the filesystem and the network, with deny-all egress plus an allowlist proxy; missing either is not isolation.</li>
+</ol>
+</div>
 <div class="combo">
 <h3>// Putting It Together · A "Minimal Trust Boundary" for Your Agent</h3>
 <p>Assemble the four points into a checklist you can drop onto any agent that takes actions. Each line maps to a specific failure mode above:</p>

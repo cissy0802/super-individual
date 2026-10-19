@@ -39,6 +39,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -297,6 +308,30 @@ Cognition <em>Don't Build Multi-Agents</em>, <a href="https://cognition.ai/blog/
 </div>
 </div>
 
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Buddhism · the five aggregates</b>: Buddhism holds that the "self" is a temporary gathering of form, feeling, perception, mental formations and consciousness, with no core to be found once you take it apart; Claude Code's agentic feel likewise lives not in the model but in the assembly of tools, permissions, loop and memory. The difference: nobody designed the aggregates, while every layer of a harness was written by someone.</li>
+<li><b>Neuroscience · patient H.M. (Henry Molaison)</b>: in 1953 William Scoville removed both of his medial temporal lobes to treat epilepsy, and afterwards he could no longer remember anything new; every visit from the researcher Brenda Milner felt like a first meeting. That is the stateless <code>messages.create()</code>, whose memory has to be supplied by people and notes outside it. Where it breaks: H.M. got better at mirror tracing day by day, so procedural learning survived; a model keeps nothing at all between calls.</li>
+<li><b>Philosophy · the Ulysses contract (Jon Elster, 1979)</b>: Elster used Odysseus having his crew tie him to the mast to ask how a rational person binds in advance the future self who will be talked round; putting the deny list in the harness rather than the prompt is the same move. The difference: Odysseus bound himself, while a harness binds another mind.</li>
+<li><b>Leadership · mission command (Auftragstaktik)</b>: from the elder Moltke on, the Prussian army gave subordinates the intent and the goal and let the front line decide how, because a battlefield cannot be planned in advance; that is exactly the case for handing control flow to an agent. The difference: officers had shared training and doctrine behind them and a model has none, which is why a workflow should come first.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>A harness is the runtime that stitches a stateless LLM API into something that completes multi-step tasks: tool dispatch, loop control, state, permissions and recovery.</li>
+<li>When a newer model makes an agent worse, the usual cause is an old harness parser that missed the new tool-call format.</li>
+<li>Claude Code keeps a small, orthogonal tool registry, because the more tools there are, the more often the model picks the wrong one.</li>
+<li>Claude Code's plan mode physically blocks Write, Edit and Bash at the harness layer; it is not a prompt instruction.</li>
+<li>Hooks should be sub-second checks; hanging a full e2e suite on PostToolUse pushes each turn's latency to minutes.</li>
+<li>A subagent runs a black-boxable subtask in its own context window and returns a summary, which is context isolation at heart.</li>
+<li>A deny list for dangerous commands must be enforced in the harness, since a model will occasionally get around a ban written only in the prompt.</li>
+<li>A home-built harness should return tool exceptions to the model as strings instead of raising them; that is what lets an agent repair itself.</li>
+<li>A workflow keeps control flow in code and an agent hands it to the model; Anthropic argues most needs are met by a workflow.</li>
+<li>Upgrade to an agent only when three signals coincide: unknown step count, each step depending on the last result, and verifiable output.</li>
+</ol>
+</div>
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3>// Putting it together · Build yourself a "research harness"</h3>

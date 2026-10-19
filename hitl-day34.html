@@ -45,6 +45,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -181,6 +192,31 @@ Microsoft <em>Guidelines for Human-AI Interaction</em>（G9–G11：可纠错 / 
 <div class="res">
 <strong>进阶资源</strong> · Anthropic <em>Agentic Misalignment</em>（对敏感动作降自主 / 加监督的建议）, <a href="https://www.anthropic.com/research/agentic-misalignment" target="_blank">anthropic.com/research/agentic-misalignment</a>
 </div>
+</div>
+<!-- ============ Crossovers ============ -->
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>管理学 · 泰勒的「例外原则」（1903）</b>：泰勒 1903 年在《车间管理》里批评经理桌上堆满报告、每份都要亲自签字盖章，主张常规的事按标准自动走，只把偏离标准的例外交给上级，这正是 auto / ask 的分工。不像在于，泰勒的标准由工程师事先定死，§4 的阈值却要从审批记录里回归出来。</li>
+<li><b>心理学 · 麦克沃思时钟实验（Norman Mackworth，1948）</b>：研究雷达兵时发现，人盯着屏幕等罕见信号，开始半小时后检出率就明显下降，称为警觉衰减。审批疲劳是同一个结构：要人盯的越多、真信号越稀，人越靠不住。不同在于，雷达兵是漏看，审批人是盲批。</li>
+<li><b>神经科学 · 冲突监测理论（Botvinick 等，2001）</b>：前扣带回监测不同反应之间的冲突，冲突高时才调动前额叶的慢速控制，平时让习惯化流程自动跑。像 self-consistency：多次采样打架就升级给人。不像的是，大脑信任自己的冲突信号，本篇恰恰不让模型自评把握。</li>
+<li><b>生物进化 · 缓步动物的隐生（cryptobiosis）</b>：水熊虫遇干旱缩成「桶状体」，代谢几乎停止，遇水再复苏，等于把挂起和恢复做进了身体。不像在于，它的「checkpoint」只存在自己体内，身体坏了就全丢；异步审批的铁律恰恰是状态必须落在进程外。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>Human-in-the-Loop 的工程难点不在要不要问人，而在问人的时候 agent 自己怎么办。</li>
+<li>置信度路由按置信度和影响两个轴，把每个动作分到 auto、ask、deny 三档。</li>
+<li>置信度不能让模型自评，要用检索命中、工具报错、self-consistency、schema 校验等可验证信号代理。</li>
+<li>越权或超预算的动作应直接 deny，不该混进人的审批队列淹没真正需要判断的 ask。</li>
+<li>后台 agent 用同步 input() 等人会卡死 worker，应改成状态落进程外、发通知、挂起退出、回调恢复。</li>
+<li>异步审批的 resume 必须幂等，每个审批还要挂 SLA 超时，超时默认 deny 或升级给备份审批人。</li>
+<li>人工介入除了批准和否决，还有 edit 和 takeover；人改过的计划必须回灌 agent 的上下文。</li>
+<li>edit 比 reject 更省人力：一次校正就把 agent 推回正轨，否决只会让它从头再来。</li>
+<li>每条审批都该落库，用历史批准率回归路由阈值：总在批的 ask 降为 auto，出过事的 auto 升为 ask。</li>
+<li>审批疲劳和雷达兵的警觉衰减是同一个结构：要人盯的越多、真信号越稀，人越容易出错。</li>
+</ol>
 </div>
 <!-- ============ Combo ============ -->
 <div class="combo">

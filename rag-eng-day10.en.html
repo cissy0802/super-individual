@@ -39,6 +39,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -388,6 +399,34 @@ client = anthropic.Anthropic()
 Zheng et al. <em>Take a Step Back: Evoking Reasoning via Abstraction (ICLR 2024)</em>, <a href="https://arxiv.org/abs/2310.06117" target="_blank">arxiv.org/abs/2310.06117</a> ·
 LangChain <em>Multi Query Retriever</em>, <a href="https://python.langchain.com/docs/how_to/MultiQueryRetriever/" target="_blank">python.langchain.com/.../MultiQueryRetriever</a>
 </div>
+</div>
+
+<!-- ============ Crossovers ============ -->
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Psychology · Encoding specificity (Tulving &amp; Thomson, 1973)</b>: the better a retrieval cue matches the context a memory was encoded in, the more easily it comes back. A contextual prefix adds context on the encoding side, HyDE reshapes the cue to look like an answer; both close the gap. Where it breaks: a brain can't go back and re-encode old memories, while RAG can re-encode the whole corpus offline.</li>
+<li><b>Neuroscience · Pattern separation and completion in the hippocampus</b>: the dentate gyrus keeps similar experiences apart through precise discrimination; CA3 rebuilds a memory from a partial cue through fuzzy association, much like the BM25 and dense division of labor. The difference: the brain runs both natively, a retrieval stack bolts them together with RRF.</li>
+<li><b>Psychology · Kahneman's System 1 and System 2</b>: fast, rough intuition proposes candidates and slow, effortful thought checks them, the same shape as bi-encoder recall followed by cross-encoder reranking. Unlike it: human System 2 is lazy and often waves things through, while a reranker rechecks all of the top 50.</li>
+<li><b>Investing · Greenblatt's Magic Formula (2005)</b>: rank stocks separately by return on capital and earnings yield, then add the ranks, sidestepping the metrics' different scales just as RRF looks only at ranks. The difference: summed ranks weigh every position equally, while RRF's 1/(k+rank) favors the top.</li>
+<li><b>Buddhism · The finger pointing at the moon (Shurangama Sutra)</b>: whoever mistakes the finger for the moon loses both. HyDE's fake answer is that finger; letting it into the final prompt is mistaking finger for moon. Where it breaks: the sutra's moon lies beyond words, HyDE's moon is still a passage of text.</li>
+</ul>
+</div>
+<!-- ============ Takeaways ============ -->
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>Fixed 512-token chunking cuts meaning apart; production RAG should chunk by document structure, retrieving small chunks and giving large ones to the LLM.</li>
+<li>Contextual Retrieval prepends a context line to each chunk before embedding, and prompt caching keeps the cost near $1 per million tokens.</li>
+<li>Dense embeddings win on paraphrase, BM25 wins on proper nouns and IDs, so production RAG needs hybrid retrieval.</li>
+<li>RRF merges result lists by rank alone, usually with k=60, sidestepping the mismatched scales of BM25 and cosine scores.</li>
+<li>In Anthropic's experiments, adding BM25 cut the retrieval failure rate from 5.7% to 2.9%, and a reranker cut it to 1.9%.</li>
+<li>A bi-encoder encodes query and document separately, fast but limited; a cross-encoder scores them together, slow but accurate.</li>
+<li>A reranker belongs in the second stage: hybrid retrieval recalls the top 50, then a cross-encoder picks the top 5-10.</li>
+<li>User queries are short, vague and question-shaped while chunks are answer-shaped, so the two sit far apart in embedding space.</li>
+<li>HyDE retrieves with an LLM-written fake answer, which is for embedding only and must never enter the final prompt.</li>
+<li>Query transformation adds one or two LLM calls per query, so route by query type and send short ID-style queries straight to BM25.</li>
+</ol>
 </div>
 
 <!-- ============ Combo ============ -->

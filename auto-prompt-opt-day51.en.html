@@ -42,6 +42,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -222,6 +233,32 @@ DSPy <em>choosing an optimizer</em>, <a href="https://dspy.ai/learn/optimization
 </div>
 </div>
 
+<!-- ============ Crossovers ============ -->
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Complexity science · Fitness landscapes (Sewall Wright, 1932)</b>: the metric is a landscape and the optimizer climbs it; an all-or-nothing boolean metric is a flat plateau with no slope to climb. The difference: in nature the landscape shifts with the environment and with rivals, while an eval set is frozen, so when the model updates, the landscape moves under your feet. That is prompt drift, and it is why the registry has to be able to trigger a recompile.</li>
+<li><b>Psychology · Skinner's "superstitious" pigeons (1948)</b>: pigeons fed on a fixed timer froze whatever they happened to be doing, a turn or a head bob, into a ritual; a "take a deep breath" incantation looks like one too. Unlike the pigeons' rituals, the incantation really does raise the score on that model; it just stops working on another.</li>
+<li><b>Buddhism · Skillful means (upaya)</b>: the Buddha taught the same point in different words to listeners of different capacities; one DSPy signature compiles into different prompts for different models, the same split between structure and wording. The difference: skillful means rests on understanding the listener, while an optimizer understands nothing about the model and only searches.</li>
+<li><b>Investing · Backtest overfitting (Marcos L&oacute;pez de Prado and colleagues)</b>: try enough strategies on the same stretch of history and one will always produce a beautiful backtest that falls apart in live trading; searching and validating on the same set is the same mistake. The quant fix is the same too: hold out data and count how many variants you tried.</li>
+<li><b>Evolutionary biology · The founder effect (Ernst Mayr)</b>: a few individuals start a new population and pass on whatever gene frequencies they happened to carry, narrowing diversity from day one; a handful of homogeneous few-shot examples likewise narrows the model's behavior to their distribution. The difference: few-shot examples can be reselected, a population cannot go back to its start.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>Automatic prompt optimization needs a trustworthy metric, dozens of labeled examples, and a stable task that runs at high volume.</li>
+<li>Automatic optimization is a black-box search that only climbs the metric, so a crude metric yields a skewed result; eval quality is the ceiling.</li>
+<li>DSPy has you declare signatures and modules, then an optimizer compiles the instructions and few-shot examples from your metric.</li>
+<li>With DSPy the real knobs are the metric, the trainset and the optimizer intensity; after compiling, print and archive the final prompt.</li>
+<li>APE has an LLM propose candidate instructions and keeps the best scorer; OPRO feeds past (prompt, score) pairs back to the LLM to propose the next version.</li>
+<li>Prompts found by instruction search are often counterintuitive and rarely transfer across models, so a new model usually means a new search.</li>
+<li>Score candidate instructions on a held-out val set, and verify the final version on a test set never touched by the search, or you have a score-gaming spell.</li>
+<li>On many tasks, automatically bootstrapped few-shot examples gain more than instruction tweaks, but they also import their distribution and biases.</li>
+<li>Treat prompt optimization like model training with a train / val / test split; the val-to-test gap is your overfitting thermometer.</li>
+<li>Store optimized prompts in a prompt registry with provenance (model, data, metric) so a model change or drift can trigger a recompile.</li>
+</ol>
+</div>
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3>// PUTTING IT TOGETHER · Auto-optimize One High-Frequency Prompt</h3>

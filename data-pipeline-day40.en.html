@@ -46,6 +46,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -225,6 +236,31 @@ feats = store.get_online_features(
 </div>
 </div>
 
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Western philosophy · The Ship of Theseus</b>: Plutarch's old puzzle: replace the planks one by one, and is it still the same ship? Keying the cache on "doc ID + chunk index" assumes that if the name stays, the ship stays, so you get the stale vector. The difference: philosophy never settled the question, while engineering simply rules that a new content hash means a new ship.</li>
+<li><b>Neuroscience · Active forgetting</b>: Forgetting is not just passive fading. In 2010 Yi Zhong's lab showed in fruit flies that the Rac1 signaling pathway actively erases memories; inhibit it and memories last longer. Like a tombstone, deletion needs its own machinery and never happens by itself. Unlike a vector store, the brain forgets by gradual weakening rather than a clean cut.</li>
+<li><b>Quantum mechanics · Choice of basis</b>: The same quantum state has entirely different components in different bases; taking an inner product between components written in the z basis and components written in the x basis gives a number with no physical meaning. Two embedding models are like two bases, and computing cosine across a mixed index is exactly that mistake. The difference: two quantum bases are linked by an exact unitary transformation, while two embedding models have no such map, which is why the only way across is a full re-embed.</li>
+<li><b>Psychology · Hindsight bias (Baruch Fischhoff, 1975)</b>: Once people know an outcome, they overrate how well they could have predicted it beforehand. Backfilling historical features with now() trains the model with hindsight. The difference: people struggle to unknow an outcome, while a feature store can wind the clock back to the exact moment of prediction.</li>
+<li><b>Evolutionary biology · Evolutionary mismatch</b>: A trait that helped in the ancestral environment can become a liability in a modern one, like the craving for sugar and fat. Strong offline metrics and a production collapse are likewise a skill learned in one environment failing in another. The difference: training-serving skew is usually one feature computed two ways by two codebases while the environment stays the same, so a shared definition fixes it.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>In an embedding ETL, extract and chunk are nearly free; embed is the bottleneck, crossing the network, billed per token and rate-limited.</li>
+<li>Treat embed as a pure function and key the cache on hash(model_id + chunk_text), so identical content is paid for only once.</li>
+<li>An embedding cache key must include a content hash; keying on doc ID plus chunk index silently returns stale vectors after an edit.</li>
+<li>Incremental indexing diffs a chunk_id → content_hash fingerprint table into adds, changes and deletes, at chunk rather than document granularity.</li>
+<li>Deletes are what incremental indexing most often misses; without tombstones, vectors of retired documents keep getting retrieved as ghost recall.</li>
+<li>Vectors from different embedding models live in different spaces and must never share an index: matching dimensions is not a matching space.</li>
+<li>Switching embedding models calls for a blue-green rebuild: fully re-embed a new index, cut over atomically once recall holds, keep the old one for rollback.</li>
+<li>A feature store such as Feast gives offline training and online serving one shared feature definition, preventing training-serving skew.</li>
+<li>Backfill training features with a point-in-time join at the prediction timestamp; backfilling with now() lets the model peek at the future.</li>
+<li>Ghost recall is an index lagging reality and point-in-time leakage is a feature running ahead of it; both come from ignoring the valid time of data.</li>
+</ol>
+</div>
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3>// Combined Drill · Give Your RAG a "Maintainable" Data Pipeline</h3>

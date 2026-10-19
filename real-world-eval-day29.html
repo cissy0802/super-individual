@@ -47,6 +47,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -218,6 +229,31 @@ EvalGen <em>Who Validates the Validators?</em> (arXiv:2404.12272), <a href="http
 <strong>进阶资源</strong> · τ-bench (Yao et al. 2024, arXiv:2406.12045), <a href="https://arxiv.org/abs/2406.12045" target="_blank">arxiv.org/abs/2406.12045</a> ·
 代码 sierra-research/tau-bench, <a href="https://github.com/sierra-research/tau-bench" target="_blank">github.com/sierra-research/tau-bench</a>
 </div>
+</div>
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>动物行为学 · 超常刺激（Niko Tinbergen）</b>：蛎鹬会弃自己的蛋去孵一只大得离谱的假蛋，「越大越好」这条规则在自然里够用，被人造物针对时就失灵。像 benchmark：代理指标没人刷时还算准。不像在于，鸟不会主动去造假蛋，而整个行业在主动朝榜单优化。</li>
+<li><b>心理学 · 「平均飞行员」不存在（Gilbert Daniels）</b>：1950 年代美国空军量了四千多名飞行员的十项身体尺寸，没有一个人十项都落在平均区间，按平均设计的座舱谁都不合身。聚合分数也一样，90% 的平均值可能不对应任何一个真实切片。</li>
+<li><b>东西方哲学 · 解释学循环（Gadamer）</b>：理解部分要靠整体，理解整体又要靠部分，人只能在来回往复中逼近意义。criteria drift 是同一个结构：要标准才能打分，打分又在改写标准。不像在于，eval 最终要冻结成版本，解释学从不承诺终点。</li>
+<li><b>心理学 · 结果偏差（Baron &amp; Hershey，1988）</b>：人倾向按结果好坏评判决策质量，碰巧没出事的冒险也被打高分。只判最终答案的 eval 正是这样，把绕过确认却侥幸没事的轨迹记成成功。不同在于，轨迹可以被机器逐步核查，人的决策过程往往无从回放。</li>
+<li><b>投资 · 遍历性经济学（Ole Peters）</b>：一群人同时赌一次的平均收益，和一个人连续赌很多次的收益可以完全不同。pass@1 是前者，pass^k 是后者，单个用户经历的是连续多轮。不像的是，投资里亏损会复利累积，agent 的失败通常可以重来。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>公开 benchmark 的分数系统性高估真实能力，因为它测的不是你部署时面对的输入分布。</li>
+<li>污染、饱和、construct gap 三道泄漏让榜单分数和生产可靠性脱钩，底层是 Goodhart 定律。</li>
+<li>公开榜单只适合粗筛、排除明显弱的模型，终选必须用你自己场景的 eval。</li>
+<li>可信的 eval 集来自真实生产 trace，而且要刻意过采样差评、重试、兜底这类难例。</li>
+<li>Open coding 先读数据、归纳 failure mode 再定 rubric，EvalGen 把标准随打分改变称为 criteria drift。</li>
+<li>聚合准确率 90% 可能掩盖某个关键切片只有 45%，上线门槛应挂在最差切片上。</li>
+<li>切片切得太细会落进噪声，每个切片至少要有十几条样本，分数才有统计意义。</li>
+<li>评估 agent 要查轨迹和最终数据库状态，只判最终答案会放过歪打正着的违规流程。</li>
+<li>τ-bench 的 pass^k 要求同一任务连跑 k 次全部成功，衡量的是一致性而不是单次能力。</li>
+<li>只看答案的 eval 犯的是心理学里的结果偏差：碰巧没出事的冒险被记成成功。</li>
+</ol>
 </div>
 <!-- ============ Combo ============ -->
 <div class="combo">

@@ -44,6 +44,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -214,6 +225,30 @@ AI at Meta research page, <a href="https://ai.meta.com/research/publications/pro
 </div>
 </div>
 
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Psycholinguistics · Universals of turn-taking (Stivers et al., 2009)</b>: recordings across 10 languages show human turn gaps cluster around 0–200ms, yet planning even a single word takes roughly 600ms, so listeners must predict the end of a turn and prepare a reply before the speaker finishes. A semantic turn detector is a crude version of that; unlike people, who guess continuously from prosody and content, the model only judges once silence appears.</li>
+<li><b>Cognitive neuroscience · Stop-signal task and the race model (Logan &amp; Cowan, 1984)</b>: a "go" process races a "stop" process; if stop wins, the action is cancelled, but commands past the point of no return cannot be recalled. Barge-in is the same race: audio already played is past that point, and only the buffer and the unwritten reply can still be saved.</li>
+<li><b>Psychology · Telling more than we can know (Nisbett &amp; Wilson, 1977)</b>: when people explain why they acted, they often give a plausible reconstruction rather than the actual process. Transcribing an end-to-end model's audio after an incident yields a reconstruction too; the difference is that cascaded text sits on the causal path, a genuinely replayable intermediate layer.</li>
+<li><b>Evolutionary biology · Cuckoo hosts' egg "signatures" (Stoddard, Kilner &amp; Town, 2014)</b>: the hosts under the heaviest cuckoo mimicry evolved the most recognizable egg patterns, marking their own eggs instead of learning to spot every forgery. That is why active watermarking beats passive detection; the twist is that hosts mark the genuine article, while AudioSeal marks the synthetic one.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>The hard part of a voice agent is not model quality but real-time turn-taking, since human turn gaps are only about 200ms.</li>
+<li>A cascaded pipeline (STT→LLM→TTS) keeps a greppable, auditable text layer, at the cost of stacked latency and lost tone.</li>
+<li>End-to-end speech models like Moshi reach about 200ms latency but make tool calling, RAG injection and auditing hard.</li>
+<li>Commercial voice agents that need tools, knowledge bases and audit trails default to cascades; end-to-end suits pure chit-chat.</li>
+<li>VAD only detects whether someone is speaking; semantic turn detection decides whether they are done, so run both in parallel.</li>
+<li>Use a dynamic endpointing threshold: reply after a short silence when the sentence is complete, wait longer when it is not.</li>
+<li>Barge-in must stop TTS playback, flush the audio buffer and cancel LLM generation together, then log the interruption in history.</li>
+<li>A sentence-level pipeline sends each finished sentence to TTS, often cutting voice-to-voice latency from 1.5s to under 700ms.</li>
+<li>Voice cloning needs a consent gate and provenance records on input, and active watermarks like AudioSeal on output.</li>
+<li>Do not judge a voice agent by WER alone; task success, interruption accuracy and false turn triggers predict experience.</li>
+</ol>
+</div>
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3>// Capstone · Build a Non-Dumb Local Voice Agent with Pipecat</h3>

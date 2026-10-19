@@ -41,6 +41,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -468,6 +479,30 @@ vLLM <em>Sampling parameters</em>, <a href="https://docs.vllm.ai/en/latest/servi
 </div>
 </div>
 
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Neuroscience · Complementary learning systems (McClelland, McNaughton &amp; O'Reilly, 1995)</b>: the brain lets the hippocampus record new experience fast while the cortex changes slowly, so new knowledge does not overwrite old. LoRA freezes the base weights and trains a small adapter: a fast module bolted onto a slow one. The difference: hippocampal memories reach the cortex through repeated replay during sleep, gradually; a LoRA merge is a single matrix addition, with no replay and no choice about what to keep.</li>
+<li><b>Evolutionary biology · Evo-devo and regulatory switches (Sean B. Carroll)</b>: in <em>Endless Forms Most Beautiful</em> (2005), Carroll argues that big changes in body form mostly come from tweaking a few regulatory switches, not from inventing new genes. LIMA's "unlock, don't teach" has the same shape: 1,000 examples just flip switches. Unlike evolution, though, someone hand-picks the examples instead of letting selection weed them out.</li>
+<li><b>Statistical physics · Boltzmann distribution and simulated annealing</b>: softmax(logits/T) has the same form as the Boltzmann distribution, and as T approaches 0 the system settles into its lowest-energy state, which is greedy decoding. Kirkpatrick et al.'s 1983 simulated annealing lowers the temperature step by step to find a global optimum; decoding usually keeps one fixed temperature for a whole generation.</li>
+<li><b>Psychology · Deliberate practice (Anders Ericsson, 1993)</b>: studying violin students at a Berlin music academy, Ericsson found that what separated the best was goal-directed solitary practice with feedback, not total time spent playing. That mirrors "50 curated examples beat 50,000 noisy ones." The difference: deliberate practice targets errors at the edge of ability, while LIMA-style data only shows good answers.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>Fine-tuning locks a model's output distribution onto the subspace of your examples; it neither teaches new knowledge nor raises intelligence.</li>
+<li>In ROI order: improve the prompt, add RAG, switch to a stronger model, add few-shot, and only then fine-tune.</li>
+<li>Fine-tuning is irreplaceable only for style or persona, strict formats, private domain language, small-model distillation, and hard latency or privacy limits.</li>
+<li>LoRA freezes the base weights and trains a pair of low-rank matrices; QLoRA also quantizes the base model to 4-bit to slash training memory.</li>
+<li>In LoRA, rank is capacity and alpha is a learning-rate multiplier; alpha equal to rank is usually more stable than the PEFT default of twice the rank.</li>
+<li>LoRA should target all linear layers rather than only q_proj and v_proj, because the MLP layers hold over 60% of the parameters.</li>
+<li>LIMA fine-tuned Llama 65B on 1,000 hand-picked examples, showing that fine-tuning data quality matters far more than quantity.</li>
+<li>Three rules of fine-tuning data engineering: semantic deduplication, a manual audit of 50 random samples, and distillation from a strong model as the training target.</li>
+<li>After fine-tuning the output distribution is sharper, so lower the temperature, use min-p instead of top-p, and keep repetition_penalty at 1.05–1.1.</li>
+<li>Temperature controls how sharp the distribution is, not creativity; dividing logits by T before softmax mirrors the Boltzmann distribution in statistical physics.</li>
+</ol>
+</div>
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3>// Combined playbook · A two-week prompt-to-FT decision path</h3>

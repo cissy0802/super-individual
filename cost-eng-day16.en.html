@@ -39,6 +39,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -231,6 +242,32 @@ batch = client.messages.batches.create(requests=[
 <strong>Going deeper</strong> · Anthropic <em>Introducing the Message Batches API</em>, <a href="https://www.anthropic.com/news/message-batches-api" target="_blank">anthropic.com/news/message-batches-api</a> ·
 OpenAI Batch API docs, <a href="https://platform.openai.com/docs/guides/batch" target="_blank">platform.openai.com/docs/guides/batch</a>
 </div>
+</div>
+
+<!-- ============ Crossovers ============ -->
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Neuroscience · Predictive coding (Rao &amp; Ballard, 1999)</b>: the brain is about 2% of body weight yet burns roughly 20% of resting energy, so it avoids reprocessing what it already knows: higher levels send down predictions, and mostly prediction errors travel up. Same ledger as prompt caching: the stable prefix is billed at a tenth, only the new content pays full price. Where it differs: the brain's "cache" is a fuzzy match that tolerates near misses and gets rewritten by errors; a prompt cache demands a byte-identical prefix, and one changed byte rewrites the whole block.</li>
+<li><b>Psychology · System 1 / System 2 (Kahneman, <em>Thinking, Fast and Slow</em>, 2011)</b>: fast, effortless intuition handles most things, and slow, costly reasoning is called in only when unsure, which is exactly cascading: cheap model first, escalate if needed. Where it differs: Kahneman stresses that System 1 often has no idea it is wrong, which is why the cascade should trust an external judge, not the small model's self-assessment.</li>
+<li><b>Evolutionary biology · CAM photosynthesis</b>: cacti and pineapples open their stomata at night, store CO₂ as malic acid, then photosynthesize by day with stomata shut, trading timing for water, much as non-urgent requests move into batch for half price. The difference: CAM is forced by drought and costs slower growth; batch is a choice that costs only waiting.</li>
+<li><b>Business · Theory of Constraints (Goldratt, <em>The Goal</em>, 1984)</b>: a system's output is set by its tightest bottleneck, and improving anything else is mostly wasted effort, which matches Day 1 of the playbook: hit the one or two features eating 60% of the bill first. The difference: removing a bottleneck speeds the whole line up; removing a cost hotspot produces nothing extra, it just spends less.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>Attribute LLM cost by feature and by each call's five-part token mix, not by model name ("Opus is expensive").</li>
+<li>The bill is a product of uncached input, cache writes, cache reads, output and the batch discount, and each term is a lever.</li>
+<li>Output usually costs 5x input per token, so capping output with max_tokens and structured output often saves more than switching models.</li>
+<li>A prompt caching hit bills input at 0.1x, a 5-minute cache write at 1.25x, and only a byte-identical prefix will hit.</li>
+<li>Put stable tools, system prompt and long documents first and changing content last; a date in the system prompt breaks the cache daily.</li>
+<li>A cache hit rate below 40% means the prefix is unstable: restructure the prompt instead of turning caching off.</li>
+<li>Routing predicts difficulty and picks a tier; cascading lets the cheap model try first and escalates, both suited to high-volume, low-stakes requests.</li>
+<li>Small models' self-assessment is unreliable, so a cascade should escalate based on an external judge or a task-native verifier.</li>
+<li>The Batch API halves every token price with a 24-hour turnaround, and stacked with caching can reach roughly 5% of list price.</li>
+<li>Minimal cost monitoring tracks per-request cost, cache hit rate and model tier mix; a sudden cache-hit drop is the leading indicator.</li>
+</ol>
 </div>
 
 <!-- ============ Combo ============ -->

@@ -52,6 +52,17 @@ pre code{color:#d8e8e8}
 .thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -185,6 +196,30 @@ independent = [<span class="tag-gpt">"learn SQL"</span>, <span class="tag-gpt">"
 <div class="res"><strong>Going deeper</strong> · Pashler, McDaniel, Rohrer & Bjork <em>Learning Styles: Concepts and Evidence</em>, <a href="https://journals.sagepub.com/doi/full/10.1111/j.1539-6053.2009.01038.x" target="_blank">PSPI 2008</a> · This site: <a href="learning-guardrails-day53.en.html">Day 53 Learning Guardrails</a> (the generate–verify inversion)</div>
 </div>
 
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Neuroscience · Memory reconsolidation (Nader, Schafe &amp; LeDoux, 2000)</b>: when a rat's fear memory was reactivated and protein synthesis in the amygdala was blocked right then, the memory was impaired. Retrieval makes a memory briefly malleable before it is stored again. That mirrors memory strengthening at the moment of recall, and shows the risk of self-testing without feedback: a wrong version gets stored again too. Unlike here, it studies the molecular fate of one memory, not long-term retention in behavior.</li>
+<li><b>Immunology · Prime-boost vaccine intervals</b>: in the Oxford-AstraZeneca COVID-19 vaccine trials, spacing the two doses 12 or more weeks apart gave clearly better protection than spacing them under 6 weeks. Immune memory also needs gaps and multiple doses. Unlike study spacing, the best interval is set by physiology, not scaled to when you will need it.</li>
+<li><b>Eastern philosophy · Confucius on not prompting too early</b>: in the Analects, Confucius does not enlighten a student who is not yet straining to understand, nor prompt one not yet struggling to put it into words. That is the retrieval coach who never reveals the answer first. Unlike here, Confucius relied on the teacher's judgment; this issue wants the discipline built into a tool's defaults.</li>
+<li><b>Investing · Graham's voting machine and weighing machine</b>: as Buffett retells Benjamin Graham, the market is a voting machine in the short run and a weighing machine in the long run. An immediate quiz and the feeling of fluency are votes; the delayed post-test is the weighing. Unlike the market, memory never weighs itself if you skip the delayed test, so the illusion can last.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>Dunlosky's 2013 review rated ten study techniques, and only practice testing and distributed practice earned high utility.</li>
+<li>In Roediger and Karpicke's 2006 experiment, retrieval practice clearly beat rereading on a test given a week later.</li>
+<li>Retrieval practice needs free recall rather than multiple choice, because multiple choice can be guessed and tests recognition, not recall.</li>
+<li>Self-testing without corrective feedback locks in wrong answers along with right ones, which is worse than not testing.</li>
+<li>Cepeda's 2008 ridgeline shows the optimal review gap grows with the retention interval but shrinks as a fraction of it.</li>
+<li>Expanding intervals win only in the short term; equal intervals do better long term, and what matters is a delayed, effortful first review.</li>
+<li>Interleaving trains discrimination between methods, so it pays off only when the items are easily confused with each other.</li>
+<li>Judge an AI learning tool by four questions: forced recall first, delayed post-tests, mixed confusable items, and feedback on every answer.</li>
+<li>Selling adaptation to your learning style is a red flag for an AI tool, since the meshing hypothesis lacks evidence (Pashler 2008).</li>
+<li>All three switches fade in real settings when the dose is too light, so building them into tool defaults beats relying on willpower.</li>
+</ol>
+</div>
 <!-- ============ Checklist ============ -->
 <div class="combo">
 <h3>// ONE-PAGE SWITCH CARD</h3>

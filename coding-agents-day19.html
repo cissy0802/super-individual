@@ -45,6 +45,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -191,6 +202,30 @@ Anthropic <em>Building Effective Agents</em>, <a href="https://www.anthropic.com
 <strong>进阶资源</strong> · OpenAI <em>Introducing SWE-bench Verified</em>, <a href="https://openai.com/index/introducing-swe-bench-verified/" target="_blank">openai.com/index/introducing-swe-bench-verified</a> ·
 Anthropic <em>Building Agents with the Claude Agent SDK</em>, <a href="https://www.anthropic.com/engineering/building-agents-with-the-claude-agent-sdk" target="_blank">anthropic.com/engineering/building-agents-with-the-claude-agent-sdk</a>
 </div>
+</div>
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>神经科学 · 小脑与运动皮层</b>：皮层定下「伸手拿杯子」的意图，小脑把它校准成精确的肌肉时序；Cursor 让 frontier 模型出意图、apply 模型落准 diff，是同一种分工。不像的是，小脑靠每次误差持续学习，apply 模型训练完就固定了。</li>
+<li><b>哲学 · 尤利西斯契约（Jon Elster，1979）</b>：奥德修斯让水手把自己绑上桅杆，Elster 借它讲「预先承诺」：不信任将来的自己，就提前拿掉选项。plan mode 在 harness 层禁写，也是不靠意志靠绳子。不像的是，奥德修斯自己绑自己，agent 的绳子是你替它系的。</li>
+<li><b>领导力 · 情境领导（Hersey 与 Blanchard，1969）</b>：管理者按下属的准备度，在指令、教练、支持、授权四档间切换；自主度光谱也是按情境选档。区别在依据：情境领导看人的能力和意愿，coding agent 看任务能否被客观验证。</li>
+<li><b>心理学 · 直觉何时可信（Kahneman 与 Klein，2009）</b>：立场相反的两人合写论文，结论是直觉只在规律稳定、反馈及时清晰的环境里练得出来。SWE-bench 是高反馈环境，测试当场判对错；没有测试的私有仓库是低效度环境，分数迁移不过来。不像的是，人的直觉要多年养成，agent 的闭环补一套测试就能造出来。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>Aider、Cursor 和 Claude Code 的差别不在底层模型，而在谁掌握控制流、改动怎么落进文件。</li>
+<li>Aider 适合心里已有明确改动的批量执行，Cursor 适合编辑器内的高频小迭代，Claude Code 适合开放探索任务。</li>
+<li>选错自主度档位的代价往往比选错模型更大，自主度要匹配任务的不确定性。</li>
+<li>很多 coding agent 的失败不是逻辑写错，而是模型生成的改动没能成功 apply 进文件。</li>
+<li>Edit format 的权衡：whole file 最易写对但最贵，unified diff 最省却易失败，search/replace 取中。</li>
+<li>Cursor 用专训的 apply 模型把 frontier 模型的粗略意图精确落成 diff，用第二个模型买可靠性。</li>
+<li>改大文件前先让 agent Read 精确片段，再用小粒度 search/replace，能明显降低 apply 失败。</li>
+<li>Plan mode 的价值不在让模型多想，而在给人一个低成本的纠偏检查点，且 harness 层物理禁写。</li>
+<li>Full-auto agent 只有在能闭环时才安全：自己跑测试、lint、类型检查，把报错回灌给自己再修。</li>
+<li>SWE-bench 高分不等于在你的仓库里同样靠谱，因为 benchmark 替 agent 闭了环，你的代码库未必有。</li>
+</ol>
 </div>
 <!-- ============ Combo ============ -->
 <div class="combo">

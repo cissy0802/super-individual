@@ -47,6 +47,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -191,6 +202,30 @@ Anthropic <em>Building Effective Agents</em>, <a href="https://www.anthropic.com
 <strong>进阶资源</strong> · Karpathy <em>Software 3.0</em> 中关于 agent infra（docs/memory/tests/feedback）的部分, <a href="https://www.latent.space/p/s3" target="_blank">latent.space/p/s3</a> ·
 Anthropic <em>Building Effective Agents</em>, <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">anthropic.com/engineering/building-effective-agents</a>
 </div>
+</div>
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>经济学 · 古德哈特定律（Charles Goodhart，1975）</b>：一个统计指标一旦被当成调控目标，让它有用的那层关系就会松掉；SWE-bench 从测量能力变成被追逐的分数，污染和刷榜随之而来。不像的是，Goodhart 讲的是市场行为绕开政策，这里是训练数据把考题本身吃了进去。</li>
+<li><b>神经科学 · 奖赏预测误差（Schultz、Dayan、Montague，1997）</b>：多巴胺神经元编码的是预期和结果之差，学习靠这个误差信号推动；测试套件对 agent 就是这条误差信号。不像在于，大脑的预期和误差都在体内生成，agent 的 oracle 得由人从外面装上。</li>
+<li><b>心理学 · 专家直觉的两个条件（Kahneman 与 Klein，2009）</b>：两人合写的论文结论是，直觉只在环境足够有规律、反馈又快又清楚时才可信，消防指挥符合，选股和长期政治预测不符合。agent-ready 的要求几乎一一对应：快测试是快反馈，清晰边界是规律性。不同在于他们谈的是人的直觉怎么长出来，这也给 §3 的品味难题一个线索：判断力长在反馈密集处，未必长在手写处。</li>
+<li><b>哲学 · 默会知识（Michael Polanyi，《默会维度》，1966）</b>：Polanyi 认为人知道的远多于能说出来的；把坑和约定写进 AGENTS.md，就是把一部分默会知识转成明言知识。不像的是，他认为骑车、认脸这类知识根本说不全，所以文档只能补一部分，剩下的仍要靠测试兜底。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>2026 年 OpenAI 停止报告 SWE-bench Verified 分数，原因是题目污染，以及剩余题目里超过一半有缺陷。</li>
+<li>公开 coding 榜单测的是「模型 + harness」的组合，同一个模型换一套 scaffold，分数能差十几个百分点。</li>
+<li>唯一可信的 coding eval 是私有的、和自己工作同分布的，例如从已合并 PR 里抽题，用当时的测试判对错。</li>
+<li>METR 的 50% 时间视界衡量模型能以一半成功率完成多长的人类任务，过去六年约每 7 个月翻一倍。</li>
+<li>时间视界的增长主要来自可靠性、错误恢复和工具使用的进步，而不是原始推理能力变强。</li>
+<li>给 agent 的自主度应按任务的人类耗时和可验证性两个维度来定；曲线右移只降低监督频率，不取消验证。</li>
+<li>代码生成趋近免费后，价值移向上游的 specification 和下游的 verification，手写样板和背 API 在贬值。</li>
+<li>大规模 code review 和系统设计品味在升值，读不懂 AI 产出的工程师会从把关人退化成按钮工。</li>
+<li>Agent-ready 的代码库要有快而全的测试、写进 AGENTS.md 的约定、可逆操作和清晰的模块边界。</li>
+<li>Kahneman 与 Klein 发现直觉只在有规律、反馈快的环境里可信，agent-ready 环境提供的正是这两样。</li>
+</ol>
 </div>
 <!-- ============ Combo ============ -->
 <div class="combo">

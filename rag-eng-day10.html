@@ -45,6 +45,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -366,6 +377,34 @@ Zheng et al. <em>Take a Step Back: Evoking Reasoning via Abstraction (ICLR 2024)
 LangChain <em>Multi Query Retriever</em>, <a href="https://python.langchain.com/docs/how_to/MultiQueryRetriever/" target="_blank">python.langchain.com/.../MultiQueryRetriever</a>
 </div>
 </div>
+<!-- ============ Crossovers ============ -->
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>心理学 · 编码特异性原则（Tulving &amp; Thomson，1973）</b>：提取线索和编码时的情境越吻合，记忆越容易被唤起。Contextual prefix 在编码端补情境，HyDE 把线索改写成答案的样子，都是在拉近两头。不像在于：人脑没法回头重编码旧记忆，RAG 却能离线把整个 corpus 重编一遍。</li>
+<li><b>神经科学 · 海马体的模式分离与模式完成</b>：齿状回把相似经历分开存，靠精确区分；CA3 凭残缺线索补全记忆，靠模糊联想，恰似 BM25 与 dense 的分工。不像的是，大脑里两者天然协作，检索系统得靠 RRF 拼起来。</li>
+<li><b>心理学 · 卡尼曼的系统 1 与系统 2</b>：快而粗的直觉先给候选，慢而费力的思考再核对，和 bi-encoder 召回、cross-encoder 精排同构。不像在于：人的系统 2 很懒、常常放行，reranker 对 top 50 逐条复核。</li>
+<li><b>投资 · 格林布拉特的神奇公式（2005）</b>：按资本回报率和盈利收益率分别给股票排名，再把名次相加，绕开两种指标尺度不同，和 RRF 只看名次一样。不像的是，名次直接相加一视同仁，RRF 的 1/(k+rank) 更偏向前排。</li>
+<li><b>佛学 · 指月之指（《楞严经》）</b>：以手指月，把手指当成月亮的人，月和指都丢了。HyDE 的假答案就是那根手指，混进最终 prompt 就是认指为月。不像在于：佛经的月在言语之外，HyDE 的月仍是一段文字。</li>
+</ul>
+</div>
+<!-- ============ Takeaways ============ -->
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>固定 512 token 切块会切断语义，生产 RAG 应按文档结构切块，小块用来检索、大块交给 LLM。</li>
+<li>Contextual Retrieval 给每个 chunk 加上下文前缀再 embed，靠 prompt caching 每百万 token 只花约 1 美元。</li>
+<li>dense embedding 擅长同义改写，BM25 擅长专有名词和 ID，生产 RAG 要两路混合检索。</li>
+<li>RRF 只按排名合并多路结果，k 常取 60，避开 BM25 与余弦分数尺度不一的问题。</li>
+<li>Anthropic 的实验中，加 BM25 让检索失败率从 5.7% 降到 2.9%，再加 reranker 降到 1.9%。</li>
+<li>bi-encoder 分开编码 query 和文档，快但精度有限；cross-encoder 拼在一起打分，慢但准。</li>
+<li>reranker 只做第二阶段精排：hybrid 先召回 top 50，cross-encoder 再排出 top 5–10。</li>
+<li>用户 query 是短而含混的问题样态，chunk 是答案样态，两者在 embedding 空间天然隔得远。</li>
+<li>HyDE 用 LLM 写的假答案做向量检索，假答案只用于 embedding，不能进最终 prompt。</li>
+<li>query transformation 每次多调 1–2 次 LLM，应按查询类型路由，ID 类短查询直走 BM25。</li>
+</ol>
+</div>
+
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3 data-tts="c6707581746cf366">// 综合实战 · 把你的 demo 级 RAG 在一个周末升到生产级</h3>

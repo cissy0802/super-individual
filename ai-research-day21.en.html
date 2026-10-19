@@ -44,6 +44,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -215,6 +226,31 @@ Simon Willison <em>Anthropic's new Citations API</em>, <a href="https://simonwil
 </div>
 </div>
 
+<!-- ============ Crossx + Takeaways ============ -->
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Neuroscience · Yarbus's eye-movement studies (1967)</b>: people shown the same painting but asked different questions scanned it along completely different paths. Vision is not one snapshot; you look, then decide where to look next, the same loop as read-then-search. The difference: saccades fire three or four times a second without awareness, while a research agent must write each next query explicitly.</li>
+<li><b>Psychology · Galton's ox-weighing crowd (1907)</b>: about 800 fairgoers guessed the weight of an ox, and the median landed within 1% of the true value. Crowd wisdom depends on independent judgments; ten websites rewriting one press release are 800 people copying one answer, so errors amplify instead of cancelling. Unlike the ox, citation checking is settled by going back to the primary source, not by averaging.</li>
+<li><b>Buddhism · Dignaga's two means of knowledge</b>: the Buddhist logician accepted only perception and inference as valid sources, folding testimony into inference: whether a report is credible is itself an inference about the speaker. Source curation likewise turns a retelling into a judgment about its origin. Unlike Dignaga, a harness only scores domains; it never asks where knowledge comes from.</li>
+<li><b>Psychology · Wason's 2-4-6 task (1960)</b>: when guessing a hidden rule, subjects mostly tested examples that fit their hunch and rarely looked for ones that could break it. That is confirmation bias, and same-turn self-checking of citations does the same thing. The difference: people need training to resist it, while an agent can simply run a separate round with a fault-finding prompt.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>Deep Research is a multi-turn agent loop of plan, search, read and search again, whereas RAG fixes its query at retrieval time.</li>
+<li>The test for using Deep Research: what to search next depends on what the previous step just read.</li>
+<li>Using Deep Research for a fact lookup is waste: ten minutes of second-hand synthesis loses to one search for primary data.</li>
+<li>Anthropic's research system has a Lead Researcher split the question and fan out isolated-context subagents, beating a single agent by 90%+ internally.</li>
+<li>Multi-agent research burns roughly 15x the tokens of a normal chat, so it only pays when results are valuable and sub-questions parallelize.</li>
+<li>The main tuning lever of a research harness is the orchestrator prompt: how many sub-questions, how many search rounds, when to stop.</li>
+<li>Search results are ranked by relevance, not credibility, so source curation must happen before fetch: prefer primary sources, dedupe by content.</li>
+<li>Many sites reposting one press release is fake corroboration; as with Galton's ox, crowd judgment only works when the judgments are independent.</li>
+<li>The synthesis step may only cite the {claim, url, quote} records subagents actually fetched, and must say evidence is insufficient otherwise.</li>
+<li>Split generation and verification into two rounds: same-turn self-checks rationalize, while an independent adversarial pass catches fabricated citations.</li>
+</ol>
+</div>
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3>// Capstone · Build a personal research agent this weekend</h3>

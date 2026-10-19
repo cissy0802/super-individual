@@ -45,6 +45,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -203,6 +214,30 @@ c2patool input.png \
 <span class="tag-com"># 双层：C2PA 签名（可剥离但可验）+ 平台侧 SynthID（鲁棒不可见）</span></code></pre>
 <div class="fail"><strong>失败模式：</strong>① 只靠 metadata/EXIF 水印——用户一次截图全没。② 以为「加了水印就免责」：版权问题在训练数据与风格复制侧，水印解决不了。③ 商用 LoRA 训练集混入受版权/隐私保护的人脸或作品，埋下下游法律雷。④ 误以为 C2PA 防篡改——它证明来源，不阻止剥离，必须配鲁棒水印。</div>
 <div class="res">进阶资源：<a href="https://deepmind.google/technologies/synthid/" target="_blank">Google DeepMind · SynthID</a> · <a href="https://c2pa.org/" target="_blank">C2PA · Content Credentials 标准</a></div>
+</div>
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>神经科学 · 视觉的「是什么 / 在哪里」双通路（Ungerleider 与 Mishkin，1982）</b>：灵长类视觉皮层分出腹侧通路认物体、背侧通路管空间位置，和控制栈把身份交给 LoRA、构图交给 ControlNet 是同一种分工。不像在于，两条通路是演化出来、彼此一直通气的；ControlNet 只是外挂在 UNet 旁边的一条旁路，叠多了就互相打架。</li>
+<li><b>心理学 · 白熊实验（Daniel Wegner，1987）</b>：被要求「别想白熊」的人反而想得更多，正像写 don't add a hat 召唤出帽子。不像的是，Wegner 认为反弹来自一个不停检查「有没有在想」的监控过程；扩散模型没有监控，只是 hat 这个 token 把采样推向了有帽子的区域。</li>
+<li><b>免疫学 · 抗体的亲和力成熟</b>：生发中心里的 B 细胞只在抗体可变区突变，再按与抗原结合的强弱筛选，其余部分原样保留，像只对坏区域 mask 重绘的 inpaint 循环。不同在于，免疫系统靠海量细胞并行试错，图像 agent 跑三轮就得转人审。</li>
+<li><b>哲学 · 本雅明的「灵晕」（1936）</b>：《机械复制时代的艺术作品》说复制品丢了原作扎根于此时此地的历史，C2PA 则想给无限可复制的图重新挂上一条可查的来历。不像的是，灵晕没法补发，C2PA 签名却一截图就掉，所以还得配 SynthID。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>文本 prompt 是图像生成里最粗的控制旋钮，构图和身份要交给专门的控制通道。</li>
+<li>控制栈分层叠加：ControlNet 锁空间结构，LoRA 锁风格与角色，IP-Adapter 迁移参考图的风格。</li>
+<li>controlnet_conditioning_scale 别给 1.0，否则结构被焊死，prompt 完全失效。</li>
+<li>扩散模型的 prompt 是条件分布的坐标而不是指令，在正向 prompt 里写 don't 反而召唤被否定的东西。</li>
+<li>CFG scale 决定扩散模型有多听话，SDXL 常用 5–8，拉得过高会过饱和、出伪影。</li>
+<li>CLIP 文本编码器只读前 77 个 token，超出部分的质量咒语会被静默丢弃。</li>
+<li>可靠的图像产出靠「生成—VLM 评审—局部 inpaint 重绘」的循环，并设 max_iters 和人工兜底。</li>
+<li>固定 seed 是图像的版本控制；每轮换 seed 会修好一处又弄坏另一处，永不收敛。</li>
+<li>Provenance 要双层：C2PA 签名可验证但可被剥离，SynthID 不可见水印能扛截图和压缩。</li>
+<li>水印解决不了版权风险，真正的雷在训练数据和复刻在世艺术家的画风。</li>
+</ol>
 </div>
 <!-- ============ Combo ============ -->
 <div class="combo">

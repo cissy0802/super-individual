@@ -45,6 +45,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -199,6 +210,33 @@ Anthropic <em>Advanced Tool Use</em>, <a href="https://www.anthropic.com/enginee
 Anthropic <em>Building Effective Agents</em>（何时该升级到 agent）, <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">anthropic.com/engineering/building-effective-agents</a>
 </div>
 </div>
+<!-- ============ Crossovers ============ -->
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>东方哲学 · 孔子的「正名」</b>：「名不正则言不顺」，业务词典就是正名：先把「活跃用户」钉成一个口径，SQL 才说得通。不像的是，孔子的名承载伦理秩序，口径只是组织约定，业务变了就该改。</li>
+<li><b>心灵哲学 · 延展心灵（Clark &amp; Chalmers，1998）</b>：失忆的 Otto 靠笔记本记路，笔记本就算他认知的一部分；模型把算术交给沙箱，也是把思考搬到脑外。不像在于，沙箱的结果由运行时算死，模型无法改写。</li>
+<li><b>神经科学 · Gazzaniga 的「解释器」</b>：裂脑研究里，右脑看到指令驱动了手，不知情的左脑会立刻编出流畅笃定的理由。分析 agent 把任意数字讲成因果故事是同一结构：叙述远强于核查，且自己察觉不到。不像的是，人在为自己的行为找理由，模型在替别人的数据编，更需要外部的强制 EDA 来拦。</li>
+<li><b>商业 · 复式记账（Luca Pacioli，1494）</b>：每笔账借贷两边必须相等，不平就说明记错了；「分组和 = 总量」是同一种平衡检查。不像在于，复式记账在记账那一刻就逼出平衡，agent 的对账是算完才查。</li>
+<li><b>生物进化 · DNA 聚合酶的校对</b>：聚合酶边合成边切掉错配碱基，靠的是碱基配对这种确定的化学规则，不靠「判断」，正像对账要用 SQL 写死。不像的是，细胞故意留一点错当进化原料，报表的错没这种用处。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>BIRD 上当年最强模型执行准确率 40% 出头、人类 93%；Spider 2.0 上 o1-preview 约 21%。</li>
+<li>NL2SQL 的真正瓶颈是 schema linking：把业务词对应到具体的表、列和 join 路径。</li>
+<li>大库别把整份 DDL 塞进 context，先检索相关表，再附上真实列值样例。</li>
+<li>一份固化指标口径的业务词典，收益往往大过换更强的模型。</li>
+<li>SQL 返回 0 行要单独告警，空集常是 schema linking 失败的信号。</li>
+<li>Code Interpreter 范式让模型写代码在沙箱执行，计算交给确定性运行时。</li>
+<li>分析 agent 最危险的是用流畅叙述把 Simpson 悖论这类统计错误包装成洞察。</li>
+<li>让 agent 自由探索数据等于自动 p-hacking，产出只能标为待验证假设。</li>
+<li>对账层用分组和、跨路径、量级这类确定性校验写死在 harness 里，不靠另一个模型当裁判。</li>
+<li>「分组和 = 总量」与复式记账的借贷平衡同构，最常抓出一对多 join 的重复计数。</li>
+</ol>
+</div>
+
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3 data-tts="95cb3b82c0329a59">// 综合实战 · 给自己造一个「可对账的分析 agent」</h3>

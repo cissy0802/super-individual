@@ -47,6 +47,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -279,6 +290,30 @@ agent(<span class="tag-gpt">"读 report.pdf 然后给我一页摘要"</span>)
 配套代码 anthropic-cookbook, <a href="https://github.com/anthropics/anthropic-cookbook/tree/main/patterns/agents" target="_blank">github.com/anthropics/anthropic-cookbook</a> ·
 Cognition <em>Don't Build Multi-Agents</em>, <a href="https://cognition.ai/blog/dont-build-multi-agents" target="_blank">cognition.ai/blog/dont-build-multi-agents</a>
 </div>
+</div>
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>佛学 · 五蕴和合</b>：佛教说「我」只是色、受、想、行、识五蕴的临时聚合，拆开找不到一个核心的我；Claude Code 的 Agentic 感也不住在模型里，是工具、权限、循环、记忆凑出来的。不像在于：五蕴背后没有设计者，harness 的每一层都有人写。</li>
+<li><b>神经科学 · H.M. 病人（Henry Molaison）</b>：1953 年 William Scoville 切除他双侧内侧颞叶以治癫痫，此后他再也记不住新发生的事，每次见研究者 Brenda Milner 都像初见，像极了无状态的 <code>messages.create()</code>，记忆只能靠外面的人和笔记补。不像的是，H.M. 练镜像描图会一天比一天熟，程序性学习还在；模型在两次调用之间什么也留不下。</li>
+<li><b>哲学 · 尤利西斯契约（Jon Elster，1979）</b>：Elster 借奥德修斯让水手把自己绑上桅杆，讨论理性的人如何预先捆住将来那个会被说服的自己；deny list 写在 harness 层而不是 prompt 里，是同一招。不像在于，奥德修斯绑的是自己，harness 绑的是另一个心智。</li>
+<li><b>领导力 · 任务式指挥（Auftragstaktik）</b>：普鲁士军队自老毛奇起只给下级意图和目标，怎么打由前线自己定，因为战场无法预先规划；这正是 agent 把控制流交给模型的理由。不像的是，军官背后有共享的训练和条令兜底，模型没有，所以更该先写 workflow 再放权。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>Harness 是把无状态的 LLM API 缝合成能做多步任务的运行时，负责工具派发、循环控制、状态、权限和恢复。</li>
+<li>换了更新的模型反而变差，常见原因是旧 harness 的解析器没跟上新模型的工具调用格式。</li>
+<li>Claude Code 的工具注册表少而正交，因为工具越多，模型选错工具的概率越高。</li>
+<li>Claude Code 的 plan mode 在 harness 层物理禁止 Write、Edit、Bash，靠的不是 prompt 约束。</li>
+<li>Hooks 应该是亚秒级的轻量验证，把整套 e2e 测试挂在 PostToolUse 上会让每轮延迟飙到几分钟。</li>
+<li>Subagent 用独立的 context window 执行可黑盒化的子任务，结果摘要回主 agent，本质是上下文隔离。</li>
+<li>危险命令的 deny list 必须在 harness 层拦截，只在 prompt 里禁止，模型偶尔会绕过去。</li>
+<li>自建 harness 时把工具异常转成字符串回给模型，而不是抛出，这是 agent 能自我修复的根因。</li>
+<li>Workflow 的控制流写在代码里，agent 的控制流交给模型；Anthropic 主张大多数需求写 workflow 就够。</li>
+<li>步数无法预知、下一步依赖上一步结果、输出能被验证，三个信号同时出现才值得升级成 agent。</li>
+</ol>
 </div>
 <!-- ============ Combo ============ -->
 <div class="combo">

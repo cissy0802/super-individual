@@ -59,6 +59,17 @@ pre code{color:#d8e8e8}
 .thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -168,6 +179,31 @@ report(case, mean, std)
 <div class="fail"><strong>失败模式</strong>：① 给创意任务强钉 <code>temperature=0</code> 求「一致」，产出千篇一律且僵化；② 为「可复现」在生产全局关 batching，吞吐腰斩、成本翻倍还没人真的需要；③ 做 RL 却让推理与训练走两套数值路径，train/inference mismatch 让曲线诡异发散。</div>
 <div class="res"><strong>进阶资源</strong> · Thinking Machines《Defeating Nondeterminism…》(2025) 的 RL 与 on-policy 章节 · 本站 <a href="inference-opt-day14.html">Day 14 推理优化</a>（batching 与 prefix caching）</div>
 </div>
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>复杂性科学 · Lorenz 的蝴蝶效应</b>：1961 年 Edward Lorenz 重跑天气模型，把中间值 0.506127 按打印稿输成 0.506，模拟出的天气很快面目全非，混沌研究由此起步。结构相同：小到看不见的舍入误差，被系统放大成完全不同的轨迹。不同在于：Lorenz 的偏差连续地、指数地拉开，LLM 的偏差平时被 argmax 吸收，只在 near-tie token 上一次性翻面，之后才由自回归放大。</li>
+<li><b>生物进化 · 木村资生的中性理论（1968）</b>：两个等位基因适应度几乎相等时，谁留下来不由选择决定，而由抽样的随机漂变决定。near-tie token 也一样：logit 差距一小，浮点噪声就接管了选择。不像在于，漂变是种群里一代代累积，LLM 的翻面发生在一次前向计算里。</li>
+<li><b>神经科学 · 双稳态知觉（Necker 立方体）</b>：一幅图有两种同样合理的解读时，大脑会在二者之间自发切换，神经活动里的微小波动就足以让知觉翻面，这和 near-tie 上的 argmax 一样，没有明显赢家时噪声说了算。不像的是，大脑会来回切换，LLM 选定一个 token 后就沿那条路一直走下去。</li>
+<li><b>心理学 · 重复危机（Open Science Collaboration，2015）</b>：重做 100 项心理学研究，原文约 97% 结果显著，重复后只有约 36% 仍显著。教训和 eval 稳健化同构：单次跑出的差距可能只是噪声，要报分布和置信区间。不同在于，心理学的噪声还叠着发表偏差和 p-hacking，LLM 的噪声来自硬件里的数值计算。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>把 temperature 调到 0 只关掉了采样这一个随机源，并不等于两次调用能跑出相同结果。</li>
+<li>浮点加法在有限精度下不满足结合律，归约顺序一变，结果就差最后几个 bit。</li>
+<li>推理 kernel 会按 batch 大小换归约策略，缺乏 batch-invariance 才是 LLM 输出 run-to-run 漂移的真凶。</li>
+<li>浮点误差只在两个 logit 几乎并列的 near-tie token 上让 argmax 翻面，之后自回归把分叉放大成完全不同的输出。</li>
+<li>OpenAI 的 seed 参数只承诺「mostly deterministic」，并绑定 system_fingerprint，后端配置一变复现基线就作废。</li>
+<li>让 eval 不 flaky 有两条路：自托管并换上 batch-invariant kernel 求 bit 复现，或每个样本重复跑 n≥5 次。</li>
+<li>用闭源 API 做 A/B 时要报均值和置信区间，看区间是否重叠，单次跑掉 3 分多半还在方差之内。</li>
+<li>确定性要拿吞吐来换：Thinking Machines 的 batch-invariant kernel 在未充分优化时吞吐近乎腰斩。</li>
+<li>debug、合规审计和回归基线值得为确定性付费，创意生成和多候选要的恰恰是多样性。</li>
+<li>on-policy RL 里推理端与训练端的数值路径若不一致，训练会悄悄退化成有偏的 off-policy。</li>
+</ol>
+</div>
+
 <!-- ============ Thinking ============ -->
 <div class="thinking">
 <h3 data-tts="82975bb3cf363023">// 深入思考</h3>

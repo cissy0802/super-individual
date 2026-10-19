@@ -47,6 +47,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -200,6 +211,31 @@ feats = store.get_online_features(
 <div class="res">
 <strong>进阶资源</strong> · Feast 官方文档（开源 feature store，离线/在线双 store + point-in-time），<a href="https://docs.feast.dev" target="_blank">docs.feast.dev</a>
 </div>
+</div>
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>西方哲学 · 忒修斯之船</b>：普鲁塔克记下的老问题：船板逐块换掉，它还是原来那条船吗？用「文档 ID + 块序号」当缓存键，就是认定名字不变船就不变，于是拿到旧向量。不像在于，哲学至今没有定论，工程直接规定：内容哈希变了，就是另一条船。</li>
+<li><b>神经科学 · 主动遗忘</b>：遗忘不只是记忆被动褪色；2010 年钟毅团队在果蝇身上发现，Rac1 信号通路会主动清除记忆，抑制它记忆就保留得更久。这和墓碑删除一样：删除要有专门机制，不会自己发生。不像的是，大脑的遗忘是渐进削弱，向量库的删除是一刀切。</li>
+<li><b>量子力学 · 基矢的选择</b>：同一个量子态，在不同基矢下写出的分量完全不同；拿一组 z 基下的分量和一组 x 基下的分量直接做内积，算出的数没有物理意义。两个 embedding model 也像两套基，混在一个索引里算余弦就是这个错误。不像在于，量子力学的两组基之间有精确的幺正变换可以换算，两个嵌入模型之间没有，所以只能全量重嵌。</li>
+<li><b>心理学 · 后见之明偏差（Baruch Fischhoff，1975）</b>：人一旦知道结果，就会高估自己事先能预测到它的程度。用 now() 回填历史特征，就是让模型带着后见之明训练。不像的是，人很难忘掉已知的结果，特征存储却能把时钟精确拨回预测那一刻。</li>
+<li><b>生物进化 · 演化失配（evolutionary mismatch）</b>：在祖先环境里有利的性状，到现代环境可能变成负担，比如对糖和脂肪的偏好。离线指标好、上线崩，也是一个环境里练出来、换个环境就失灵。不像在于，training-serving skew 多半是同一个特征被两套代码算出两个值，环境没变，靠共用定义就能修好。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>嵌入 ETL 里 extract 和 chunk 几乎免费，embed 才是走网络、按 token 计费、受限流的瓶颈。</li>
+<li>把 embed 当纯函数，用 hash(model_id + chunk_text) 做缓存键，相同内容只付一次嵌入费。</li>
+<li>嵌入缓存键必须含内容哈希；用文档 ID 加块序号当键，内容改了会静默拿到过期向量。</li>
+<li>增量索引靠 chunk_id → content_hash 的指纹表做 diff，得出新增、变更、删除三类操作，粒度到 chunk 而非整篇文档。</li>
+<li>增量索引最常漏的是删除；不走墓碑删除，已下架文档的向量会继续被检索到，形成幽灵召回。</li>
+<li>不同 embedding model 的向量不在同一空间，维度相同也不能混在一个索引里：维度兼容不等于空间兼容。</li>
+<li>换 embedding model 要蓝绿重建：新索引全量重嵌，对比召回不退化后原子切换，旧索引留作回滚。</li>
+<li>特征存储（如 Feast）让离线训练和线上服务共用同一份特征定义，防止 training-serving skew。</li>
+<li>回填训练特征要按预测时点做 point-in-time join，用 now() 回填等于让模型偷看未来。</li>
+<li>幽灵召回是索引落后于现实，point-in-time 泄漏是特征超前于现实，根因都是数据的有效时间没被严肃对待。</li>
+</ol>
 </div>
 <!-- ============ Combo ============ -->
 <div class="combo">

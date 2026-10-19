@@ -45,6 +45,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -286,6 +297,33 @@ ANTI_SYCOPHANCY = <span class="tag-gpt">"""When the user expresses disagreement 
 Anthropic <em>Give Claude a role (system prompts)</em>, <a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/system-prompts" target="_blank">docs.anthropic.com/.../system-prompts</a>
 </div>
 </div>
+<!-- ============ Crossovers ============ -->
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>心理学 · 内在群体智慧（Vul &amp; Pashler，2008）</b>：同一个人对同一问题猜两次再取平均，比单猜一次更准，隔几周再猜效果更好。「双跑分离、多次采样看重叠」是同一个结构。不像在于：人隔几周能部分忘掉前一次的锚，模型的多次采样若共享同一段带倾向的前文，就只是同一个偏差采样了几遍。</li>
+<li><b>行为主义 · 斯金纳对惩罚的批评</b>：斯金纳认为惩罚只能暂时压住一个行为，却不告诉对方该做什么；后来的行为疗法改为强化一个替代行为。「不要 X」改写成「做 Y」同理。不像的是，惩罚至少暂时有效，否定指令却可能让 X 更常出现。</li>
+<li><b>科学哲学 · 库恩的「范例」（exemplars，1969）</b>：库恩在《科学革命的结构》第二版后记里说，学生学会一门科学，靠的是反复做教科书里的典型例题，而不是背定律。Few-shot 胜过规则清单是同一回事。不像的是，范例背后有一整个科学共同体在校准，模型只有你给的三个例子。</li>
+<li><b>心理学 · 阿希从众实验（Solomon Asch，1951）</b>：一屋子托儿故意报错线段长度，被试约有三分之一的回答跟着错。Sycophancy 是同一种社会压力下的让步。不同在于，阿希的被试面对的是一群人，模型只要面对一个用户就会让步，而且这份顺从是被奖励训练出来的。</li>
+<li><b>投资 · 芒格的「反过来想」</b>：芒格常说，对一件事，要能比反方讲得更好，才配持有自己的观点。Steelman 模板就是把这条纪律写进 prompt。不像的是，芒格靠的是自省的习惯，模型需要角色和任务结构从外部强制切换。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>LLM 对 anchor 单向漂移：prompt 里先写「我觉得有 bug」，模型就倾向于找出 bug。</li>
+<li>后置一句「请客观判断」抵消不了前文 anchor，自报的 confidence score 同样被 anchor 污染。</li>
+<li>需要双向意见时，分两次独立跑「找问题」和「找优点」，再用多次采样的重叠判断置信度。</li>
+<li>temperature=0 只影响采样，不改变分布形状，消除不了 anchor bias。</li>
+<li>否定指令会先激活被禁止的概念，「Don't apologize」反而可能让模型更常道歉。</li>
+<li>把「不要 X」改写成具体可执行的「做 Y」，例如把 don't be verbose 写成 aim for 2-3 sentences。</li>
+<li>Safety 类硬约束是例外，必须保留 never 形式的否定强信号。</li>
+<li>3 个格式统一的 few-shot 示例胜过 10 条抽象规则，示例教的是格式、label space 和输入分布。</li>
+<li>列表里各类项目的数量本身就是 emphasis 信号，失衡的列表会让模型行为悄悄漂移。</li>
+<li>Sycophancy 是 RLHF 的副作用，要用 steelman、多视角或对立角色从结构上强制切换，而不是喊 be objective。</li>
+</ol>
+</div>
+
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3 data-tts="776a658a03dcb957">// 综合实战 · 给你手上跑得最高频的 Prompt 做一次体检（15 分钟）</h3>

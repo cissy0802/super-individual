@@ -44,6 +44,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -218,6 +229,31 @@ Simon Willison <em>The lethal trifecta</em>, <a href="https://simonwillison.net/
 </div>
 </div>
 
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Psychology · Affordances (J. J. Gibson)</b>: In his 1979 <i>The Ecological Approach to Visual Perception</i>, Gibson argued that the environment directly offers possibilities for action: a door handle announces "turn me." The DOM route's a11y tree is a ready-made list of affordances. The difference: that list is hand-written by developers, so an unlabeled image button simply does not exist for the agent.</li>
+<li><b>Neuroscience · Efference copy</b>: von Holst and Mittelstaedt proposed in 1950 that every motor command leaves a copy behind to predict what the senses should report next, then compares it with what actually arrives; it is why the world doesn't lurch when your eyes move. Verify-after-act is the same structure: write the expected state before acting, compare right after, re-perceive on mismatch. The difference: the brain does this for free on every movement, while the harness needs an explicit assertion per step, and any step without one is flown blind.</li>
+<li><b>Evolution · Cuckoo brood parasitism</b>: The common cuckoo lays its eggs in reed warbler nests, and the host assumes anything in its nest is its own. Prompt injection exploits the same gap: page text and user instructions land in one context with no source label. Hosts evolve egg rejection, cuckoos evolve better mimicry, the same arms race classifiers run against novel injections.</li>
+<li><b>Psychology · Swiss cheese model (James Reason)</b>: Studying human error, Reason argued that every layer of defense has holes, and accidents happen when the holes in several slices line up. The injection classifier, sandbox, domain allowlist and human gate are the slices. The difference: here an adversary actively searches for aligned holes, rather than waiting for chance.</li>
+<li><b>Investing · Backtest vs live trading</b>: A quant strategy that shines in backtests gets eaten by slippage, liquidity and fees once it trades live; the gap between WebVoyager scores and your internal system is the same thing. The difference: a trader can model friction costs in the backtest, while it is hard to pre-simulate that CRM of yours that takes 3 seconds to load.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>Almost any task that lives in a browser should take the DOM route; screenshots with guessed coordinates are a last resort.</li>
+<li>The pixel route works on any GUI but is slow and costly, about 1 to 1.5K image tokens per screenshot, and visual grounding often misses by tens of pixels.</li>
+<li>The DOM route serializes the accessibility tree with stable element refs, so the model outputs click(ref) instead of coordinates.</li>
+<li>Set-of-Mark prompting overlays numbered marks on clickable regions of a screenshot, turning coordinate grounding into multiple choice.</li>
+<li>In computer use the model only emits action intents; the harness executes them and returns a fresh screenshot, forming the agentic loop.</li>
+<li>Screenshots should be scaled to around XGA (about 1024x768), and the harness must map scaled coordinates back to real screen pixels.</li>
+<li>GUI agent reliability comes mostly from harness discipline: wait for conditions not time, use semantic selectors, verify after every action.</li>
+<li>Benchmarks run on clean public sites, so a WebVoyager score of 89% cannot back a production SLA on internal systems.</li>
+<li>Computer use naturally completes the lethal trifecta Simon Willison describes: private data, untrusted content, and a way to send data out.</li>
+<li>An injection classifier only lowers the odds of a hijack; sandboxing, a domain allowlist and human gates limit the damage when one happens.</li>
+</ol>
+</div>
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3>// Integrated Build · A "Verifiable, Hijack-Resistant" Browser Agent</h3>

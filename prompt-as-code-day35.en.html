@@ -44,6 +44,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -186,6 +197,30 @@ This site, Day 23 <em>Personal AI Infra</em> (multi-model routing)
 </div>
 </div>
 
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Evolutionary biology · Norm of reaction</b>: the same genotype grows different phenotypes in different environments; a hydrangea turns blue or pink depending on soil acidity. A prompt that behaves differently on another model has the same structure: the meaning lives in the pairing of text and runtime, not in the text alone. The difference: biologists chart the whole reaction curve, while most people have tested their prompt on exactly one model.</li>
+<li><b>Psychology · The replication crisis</b>: in 2015 the Open Science Collaboration reran 100 psychology studies, and only about 36% of the originally significant results came out significant again. "Tried a couple of cases, looked fine" is an unreplicated one-off experiment; an eval set with a holdout is preregistration plus independent replication.</li>
+<li><b>Neuroscience · Memory reconsolidation</b>: Nader, Schafe and LeDoux showed in rats in 2000 that a memory becomes editable again each time it is retrieved. The brain is a prompt with only <code>latest</code> and no version numbers: every call may quietly rewrite it, and the old version cannot be recovered.</li>
+<li><b>Complexity science · Early-warning signals</b>: Scheffer and colleagues showed in 2009 that ecosystems often slow down in recovery and grow noisier before they collapse. That is the same idea as using fast proxies like schema compliance and output length to catch degradation before thumbs-down rates move; unlike a lake, though, a prompt has a one-click rollback.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>Pull prompts out of the code into a registry as artifacts with an id and a version, and have code reference them by version.</li>
+<li>Putting the prompt registry in git only gives you a record; whether a change is better has to be decided by evals.</li>
+<li>LLM output is nondeterministic, so one case that looks fine means nothing; judge a prompt by its aggregate score across the eval set.</li>
+<li>The eval gate is a ratchet: a new prompt version must not score below the current production version on the eval set.</li>
+<li>Ship prompts through shadow runs, then a small canary slice of traffic, then full rollout, stopping at any step where metrics drop.</li>
+<li>Prompt degradation rarely throws errors; quality just slips quietly, so it has to be caught by actively monitored production metrics.</li>
+<li>Production should always pin a specific prompt version rather than latest, and the one-click rollback should be rehearsed for real.</li>
+<li>A prompt is a program written for a specific model, so switching models or even a minor model version changes the runtime.</li>
+<li>Treat a model upgrade as a dependency upgrade: rerun the regression column, and run a fixed eval set regularly to catch silent upstream drift.</li>
+<li>A prompt behaving differently across models has the same structure as one genotype producing different phenotypes in different environments.</li>
+</ol>
+</div>
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3>// Hands-on · build a prompt-as-code pipeline for your prompt assets</h3>

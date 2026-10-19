@@ -41,6 +41,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -222,6 +233,31 @@ summary quality         LLM-as-judge       fake oracle    <span class="tag-claud
 </div>
 </div>
 
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Eastern philosophy · Zhuangzi on unwinnable debates</b>: In the <i>Qiwulun</i>, Zhuangzi asks who should settle an argument between two people. Someone who agrees with you already agrees with you, so how could they judge? The same holds for someone who agrees with me. That is the bind of same-family LLMs grading each other. Unlike Zhuangzi, who concludes we should let go of right and wrong, engineering goes looking for a judge on neither side: a compiler or a test.</li>
+<li><b>Western philosophy · Wittgenstein's morning papers</b>: In <i>Philosophical Investigations</i> §265, checking a memory against itself is like buying several copies of the same morning paper to confirm what it says is true. LLM self-review works the same way: the second copy came off the same press. The difference: Wittgenstein uses this to doubt that a private language can have any criterion of correctness, while this issue assumes outside oracles exist and just need building.</li>
+<li><b>Evolutionary biology · Layered proofreading in DNA replication</b>: DNA polymerase alone errs about once in 100,000 bases; its built-in 3'→5' exonuclease proofreading cuts that roughly 100-fold, and mismatch repair cuts it another ~100-fold, to about one in a billion. That is the p·q of stacked independent checks. Independence is the point: in E. coli, mismatch repair uses methylation to tell the old template strand from the new one, so the judge comes from the template, not from the copy. Unlike software, the cell does not aim for zero errors; the few mutations that slip through are raw material for evolution.</li>
+<li><b>Complexity science · The independence condition of crowd wisdom</b>: In 1907 Francis Galton found that the median of several hundred guesses at an ox's weight landed within 1% of the true value. Surowiecki's <i>The Wisdom of Crowds</i> stresses the precondition: the judgments must be independent. Once people influence each other, errors pile up in one direction instead of cancelling. Multi-agent debate makes them influence each other first. The difference: a crowd at least comes from varied backgrounds, while same-family models share training data from the start.</li>
+<li><b>Business · Arthur Andersen and auditor independence</b>: Andersen audited Enron while collecting large consulting fees from it, and fell with Enron after the 2001 collapse; the next year Sarbanes-Oxley limited the non-audit work auditors can sell to their clients. A judge tied to the party it judges is a fake oracle. The difference: audit failures usually involve shared interests, while an LLM favoring its own output needs no motive. The shared structure is enough.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>A test oracle is whatever answers "is this output correct?"; Barr et al.'s 2015 survey sorts oracles into specified, implicit, derived, and human.</li>
+<li>A verification step is worth something not because it is strict but because it is independent of the failure modes of what it checks.</li>
+<li>Compilers, type checkers, unit tests, and property tests are strong independent oracles; asking an LLM to check again, or LLM-as-judge, is a weak or fake oracle.</li>
+<li>Two independent checks push the chance of both missing down to p·q; when their errors are highly correlated, a double check is barely better than one.</li>
+<li>Panickssery et al. (2024) showed LLM evaluators recognize their own generations and systematically score them higher: self-preference bias.</li>
+<li>Metamorphic and property-based testing need no reference answer; relations that hold in the problem itself act as a judge independent of the model.</li>
+<li>Draw the automation boundary by whether a cheap independent oracle exists, not by how hard the task looks.</li>
+<li>In METR's 2025 randomized trial, experienced developers took 19% longer with AI, largely because verification cost was underestimated.</li>
+<li>In Claude Code, wiring tests into a hook that exits with code 2 turns an independent oracle into a fail-closed gate.</li>
+<li>Formatting, correctness, and semantic oracles are independent of each other: code with a fully green lint can still be completely wrong.</li>
+</ol>
+</div>
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3>// PUT IT TOGETHER · Inventory the oracles of one pipeline</h3>

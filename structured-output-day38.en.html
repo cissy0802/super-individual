@@ -44,6 +44,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -249,6 +260,30 @@ Anthropic Prefill docs, <a href="https://platform.claude.com/docs/en/build-with-
 </div>
 </div>
 
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Linguistics · Chomsky's "Colorless green ideas sleep furiously"</b>: in <em>Syntactic Structures</em> (1957), Chomsky used this sentence to show that perfectly grammatical can still mean nothing. Constrained decoding guarantees only the first half: an <code>email</code> field holding "none" sails through. The difference: he used it to argue syntax is independent of meaning, while engineers have to bolt the semantic check back on.</li>
+<li><b>Neuroscience · Gazzaniga's "interpreter"</b>: when a split-brain patient's right hemisphere moves the hand, the left hemisphere instantly invents a reason, result first and explanation after. Putting answer before reasoning forces the model into the same after-the-fact story. The difference: people can't stop doing it, while the model reasons first once the field order is fixed.</li>
+<li><b>Molecular biology · DNA proofreading and mismatch repair</b>: the polymerase picks nucleotides by base pairing, proofreads as it builds, and passes what slips through to mismatch repair, the same layered defense as the fault-tolerance stack. The difference: a cell has no "fall back to a human," so unrepaired errors stay and become raw material for evolution.</li>
+<li><b>Economics · Goodhart's law (1975)</b>: once a measure becomes a target, it stops being a good measure. Treating "100% schema compliance" as the shipping bar is this trap; semantic accuracy is what to watch. The difference: Goodhart meant people gaming a metric, while here the metric simply measures the wrong thing.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>There are four tiers for getting JSON: prompting plus prefill, JSON mode, tool use, and constrained decoding, each guaranteeing more.</li>
+<li>JSON mode only guarantees output that parses, not conformance to your schema; a misspelled field still passes.</li>
+<li>Constrained decoding compiles the schema into a grammar and masks illegal tokens at each step, so structure cannot go wrong.</li>
+<li>"Let Me Speak Freely?" found that forcing JSON or XML formats lowers reasoning accuracy, more so as constraints tighten.</li>
+<li>The .txt team's rebuttal shows what hurts reasoning is not structure itself but schema design that squeezes out room to reason.</li>
+<li>Placing the reasoning field before the answer field lets the model reason inside the structure before answering.</li>
+<li>A schema is also an instruction to the model: describe every field, use enums for categories, keep it flat, and fill missing values with null.</li>
+<li>Constrained decoding cannot prevent truncation, refusals, or semantic errors, so check stop_reason before parsing.</li>
+<li>Production-grade extraction relies on a validate-repair-fallback chain: Pydantic validates, errors go back for self-repair, and the rest falls back.</li>
+<li>Valid structure is not correct meaning, just like Chomsky's sentence that is grammatical yet meaningless.</li>
+</ol>
+</div>
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3>// Capstone · Upgrade a Fragile Extractor to Production Grade</h3>

@@ -44,6 +44,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -210,6 +221,32 @@ text: {chunk}"""</span>
 <div class="res">
 <strong>Going deeper</strong> · GraphRAG <em>From Local to Global</em> (Edge et al., arXiv 2404.16130) + <a href="https://github.com/microsoft/graphrag" target="_blank">microsoft/graphrag</a> · HippoRAG (arXiv 2405.14831)
 </div>
+</div>
+
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Eastern philosophy · The blind men and the elephant</b>: Each blind man touches one part and calls the elephant a pillar, a rope, a fan. None is wrong, yet none can say what an elephant is. That is top-k retrieval facing a global question: every chunk is true, the answer lives only in the whole. Unlike the parable, GraphRAG first clusters the fragments into communities.</li>
+<li><b>Western philosophy · Frege's morning star and evening star</b>: In 1892 Frege split sense from reference: "morning star" and "evening star" differ, yet both name Venus. Entity resolution recognizes "OpenAI" and "the company" as one referent; unlike Frege, it never asks why two names can be informative, it just merges them.</li>
+<li><b>Psychology · Bartlett's reconstructive memory</b>: In 1932 Bartlett had people retell "The War of the Ghosts" in chains; the story shrank, odd details were smoothed away and the rest bent toward familiar schemas. Global search rolls up community summaries, compressing at each layer, so exact numbers vanish. Unlike people, the machine has no culture; its bias comes from the summary prompt and the community cuts.</li>
+<li><b>Neuroscience · Hippocampal indexing theory</b>: Teyler and DiScenna proposed in 1986 that the hippocampus stores only an index to cortical memory traces; HippoRAG takes its name from it. Alike: the graph is the index, the raw text the cortex. Unlike: the brain quietly rewrites its index during sleep, while a changed document may force rebuilding the communities.</li>
+<li><b>Evolutionary biology · Functional modules in the cell</b>: Hartwell and colleagues argued in Nature in 1999 that cell functions are carried out by discrete, semi-independent molecular modules. Community detection looks for similar modules, tightly knit inside and loose between, in an entity graph; unlike evolved modules, whose borders are stable, graph communities drift with extraction quality.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>Most RAG failures come not from the retrieval algorithm but from parsing that breaks layout and reading order before indexing.</li>
+<li>Layout-aware parsers such as Docling detect layout blocks, then rebuild reading order, and deserve the same status as chunking.</li>
+<li>Parsing errors are silent yet poison everything downstream, so scans and complex tables need confidence alerts and human spot-checks.</li>
+<li>A table cell's meaning comes from its row and column headers together, and flattening a table to text destroys that binding.</li>
+<li>Splitting large tables into row records, each carrying its headers, caption and section, keeps retrieved fragments readable.</li>
+<li>LLM entity and relation extraction is the most expensive step of GraphRAG, and its cost scales with the corpus, not with queries.</li>
+<li>Skipping entity resolution shatters a knowledge graph into islands, and the error is silently amplified through community summaries.</li>
+<li>GraphRAG local search answers how entities relate, while global search rolls up community summaries to answer thematic questions.</li>
+<li>Using GraphRAG for factoid queries is over-engineering; route each query by type to the right kind of RAG.</li>
+<li>Like reconstructive memory, the layered summaries of global search smooth away details, so exact numbers call for local or vanilla retrieval.</li>
+</ol>
 </div>
 
 <!-- ============ Combo ============ -->

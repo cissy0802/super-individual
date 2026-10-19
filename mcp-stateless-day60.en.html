@@ -58,6 +58,17 @@ pre code{color:#d8e8e8}
 .thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -222,6 +233,31 @@ curl -X POST https://example.com/mcp \
 <div class="res">Further reading: <a href="https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization/client-registration" target="_blank">MCP Spec 2026-07-28 · Client Registration</a> (the normative text on CIMD and the DCR deprecation) · <a href="https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/" target="_blank">MCP Blog · Release Candidate</a> (the six authorization SEPs)</div>
 </div>
 
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Buddhism · the lamp flame in the Milinda Pañha</b>: the monk Nāgasena says the flame of a lamp in the first, middle and last watch of the night is neither the same flame nor a different one; it arises in continuity. A stateless server likewise has no "self" that spans requests, and continuity comes only from what each request carries in. The difference: Buddhism says the persisting self was never there to find, while MCP merely moves it out of the protocol and into the client's hands.</li>
+<li><b>Neuroscience · patient H.M.</b>: after Henry Molaison's medial temporal lobes were removed on both sides in 1953, he could no longer form new memories, and Suzanne Corkin, who studied him for decades, had to reintroduce herself at every visit, much as a client now declares its identity in <code>_meta</code> on every request. Unlike H.M., though, a server can check signatures and header-body consistency.</li>
+<li><b>Evolution · Batesian mimicry (Henry Walter Bates, 1862)</b>: a harmless butterfly wears the warning colors of a toxic species, and predators judge by the surface alone; the <code>Mcp-Name</code> header is a surface too, read by gateways that never open the body. The difference: a predator cannot inspect the goods and learns only by getting burned, while an MCP server must compare header to body and return 400 on a mismatch.</li>
+<li><b>Complexity science · stigmergy (Pierre-Paul Grassé, 1959)</b>: termites keep no record of construction progress; the mud already piled up in the environment cues the next step, so any termite can take over. <code>requestState</code> also parks flow state outside the worker, so any instance can resume. The difference: pheromones evaporate on their own, whereas <code>requestState</code> never expires unless you write the issue time into it.</li>
+<li><b>Commerce · the bill of lading, "one being accomplished, the others to stand void"</b>: ocean bills of lading are usually issued as a set of three originals, and once goods are released against one, the rest are void. Possession is the right, yet the paper can be presented twice, which is exactly the position of <code>requestState</code>; side-effecting tools need an idempotency key to block the second redemption.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>The MCP 2026-07-28 spec removes the initialize handshake and Mcp-Session-Id, so the protocol no longer has sessions.</li>
+<li>Client identity now travels in the _meta of every request, and capability discovery is an optional server/discover call.</li>
+<li>A stateless protocol lets a remote MCP server sit behind a round-robin load balancer with no sticky routing or shared session store.</li>
+<li>A stateless protocol is not stateless business logic: in-process per-client caches drift unpredictably once you scale past one instance.</li>
+<li>Streamable HTTP requests must carry Mcp-Method and Mcp-Name headers, so gateways can rate-limit per tool without parsing the JSON-RPC body.</li>
+<li>If a reverse proxy or CDN strips custom headers, every MCP request fails with 400, so verify header pass-through on the real path before launch.</li>
+<li>With MRTR, a server returns input_required plus a requestState, and the client retries the original call once it has the user's input.</li>
+<li>Because requestState round-trips through the client, it must be signed against tampering, and side-effecting tools need idempotency keys against replay.</li>
+<li>The cacheScope hint defaults to private, and marking a per-user filtered tool list as shared leaks data across users.</li>
+<li>DCR is deprecated in favor of CIMD, deprecated features survive at least twelve months, and self-hosted authorization servers must guard CIMD fetches against SSRF.</li>
+</ol>
+</div>
 <!-- ============ What's next ============ -->
 <div class="combo">
 <h3>// WHERE THIS IS HEADED</h3>

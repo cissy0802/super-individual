@@ -44,6 +44,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -227,6 +238,31 @@ LiteLLM Virtual Keys, <a href="https://docs.litellm.ai/docs/proxy/virtual_keys" 
 </div>
 </div>
 
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Neuroscience · the thalamus as relay and gate</b>: every sense except smell passes through the thalamus before reaching cortex, a single entry point like the gateway. The difference: the thalamus takes heavy feedback from cortex and adjusts what it lets through, while the gateway forwards by a static config.</li>
+<li><b>Psychology · Kahneman's System 1 / System 2</b>: cheap tier by default, expensive tier on demand is fast thinking as the baseline and slow thinking called in for hard problems. Even the cost rhymes: System 1 errors usually go unnoticed, just as a fallback can quietly lower quality while nothing errors out. Unlike the brain, the gateway's switching rule is written down and auditable.</li>
+<li><b>Evolution · degeneracy (Edelman &amp; Gally, 2001)</b>: structurally different parts perform the same function, so one covers when another fails. Cross-provider fallback is the same idea, down to the backups behaving slightly differently. Unlike biology, where degenerate parts usually work in parallel, a fallback chain waits in line for an error.</li>
+<li><b>Psychology · DRM false memory (Roediger &amp; McDermott, 1995)</b>: people who hear "bed, dream, pillow" often swear they also heard "sleep"; semantic closeness passes for having seen it. A semantic cache serving the 2023 answer to a 2024 question makes the same mistake. The cache, unlike memory, has a tunable threshold.</li>
+<li><b>Behavioral economics · mental accounting (Richard Thaler, 1985)</b>: people sort money into budgeted accounts and resist moving funds between them; one budgeted virtual key per app is exactly that. The twist: for Thaler it is a bias, since money is fungible; here the separation is deliberate, so one runaway app cannot drain the rest.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>Scripts that each call a provider SDK directly form a system with no hub: model swaps touch N places, costs are invisible, failures leave no trace.</li>
+<li>An LLM gateway funnels every call into one OpenAI-compatible endpoint, so swapping the underlying model is a single config change.</li>
+<li>LiteLLM Proxy maps 100+ providers to unified model names in one config.yaml.</li>
+<li>The gateway becomes a single point of failure: restart it with systemd and keep a direct provider path for critical apps.</li>
+<li>Cost routing picks a cheaper tier on purpose, availability fallback catches failures; mixing the two silently degrades quality.</li>
+<li>Cross-provider fallback assumes models give equivalent output, so log which model actually served each call.</li>
+<li>Prompt caching reuses a byte-identical prefix; Anthropic cache reads cost about 0.1x the base input price.</li>
+<li>A semantic cache skips the model on a similar enough query, but a loose threshold serves last year's answer to this year's question.</li>
+<li>Observability tools like Langfuse should record tokens, cost and latency per app and per key; watching only total spend is no monitoring.</li>
+<li>Give each app a virtual key with its own budget, model allowlist and expiry, so a runaway app burns only its own allowance.</li>
+</ol>
+</div>
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3>// CAPSTONE · Stand Up Your Private AI Pipeline in One Weekend</h3>

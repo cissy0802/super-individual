@@ -46,6 +46,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -240,6 +251,31 @@ Temporal <em>Of course you can build dynamic AI agents</em>, <a href="https://te
 </div>
 </div>
 
+<!-- ============ Crossovers ============ -->
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Neuroscience · Hippocampal replay (Wilson &amp; McNaughton, 1994)</b>: while a rat sleeps, its hippocampal place cells fire through the day's routes again in the original order, like handing the day's journal to the cortex for archiving. The difference: the brain replays to consolidate, compressing, recombining and even rewriting as it goes; durable replay must reproduce the record exactly, and anything new it plays back is a bug.</li>
+<li><b>Buddhism · Seeds and the storehouse consciousness (Yogācāra)</b>: Yogācāra holds that every act plants a seed in the ālaya-vijñāna; body and mind arise and vanish moment by moment, and continuity rests on that record, not on an abiding self. A workflow likewise lives in no particular process and resumes when the worker is replaced. Unlike seeds, which ripen into new fruit, the journal only hands back old values.</li>
+<li><b>Evolutionary biology · Weismann's germ-plasm theory</b>: August Weismann separated the germ line, passed down the generations, from the disposable soma; the body is the killable worker and heredity is the durable log. The difference: development is not byte-for-byte deterministic, and the same genome grows different bodies in different environments.</li>
+<li><b>Business · Double-entry bookkeeping (Pacioli, 1494)</b>: a ledger is append-only; a mistake is fixed with a reversing entry, never an erasure, and every balance is derived from the transaction stream, which is exactly the event-log idea. Invoice numbers that stop the same bill being paid twice do an idempotency key's job. The difference: a ledger is kept for audit, a journal for re-execution.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>Durable execution records an agent's run as a journal and replays it to the crash point after a failure, so no completed step runs twice.</li>
+<li>Temporal adds only about 10–50ms per durable step, which is negligible next to an LLM call of 1–30 seconds.</li>
+<li>DBOS stores its journal in the Postgres you already run, with no extra broker or control plane.</li>
+<li>Durable steps belong at every expensive or side-effecting boundary: one step per LLM call and one per tool call.</li>
+<li>LangGraph's checkpointer snapshots state only at node boundaries, so a node that crashes halfway replays from its first line.</li>
+<li>With a checkpoint-style engine, keep at most one irreversible side effect per node so snapshot boundaries line up with danger boundaries.</li>
+<li>The engine only guarantees a step's result is materialized once in the journal; external effects like charges and emails still need idempotency keys.</li>
+<li>Idempotency keys must derive from the workflow ID plus step number; uuid4() or timestamps mint a new key on every replay and break deduplication.</li>
+<li>The workflow body must replay deterministically, so randomness, clocks, network IO and LLM calls all move into steps or activities.</li>
+<li>A durable timer plus a signal lets an agent sleep for days awaiting approval without holding any long-running process.</li>
+</ol>
+</div>
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3>// PUTTING IT TOGETHER · Give Your Long-Running Agent a "Resume Point"</h3>

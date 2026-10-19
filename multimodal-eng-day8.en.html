@@ -39,6 +39,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -356,6 +367,30 @@ Jina AI <em>Jina CLIP v2 multilingual benchmark</em>, <a href="https://jina.ai/n
 </div>
 </div>
 
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Neuroscience · The fovea and saccades</b>: only about 2° of the visual field, at the fovea, is seen sharply; the rest is stitched together from saccades, so the brain never processes a "full-resolution frame." The 1568px cap is the same thrift. The difference: eyes choose where to look, while a model passively receives the whole downscaled image.</li>
+<li><b>Buddhism · Noting in vipassana</b>: insight meditators practice labeling "seeing" when they see and "hearing" when they hear, splitting awareness from judgment; describe-first likewise sets down the observation before the verdict. Unlike noting, though, a model's "description" is already laced with interpretation, not pure seeing.</li>
+<li><b>Neuroscience · Vision for perception vs. vision for action (Goodale &amp; Milner, 1992)</b>: a ventral stream works out what something is, a dorsal stream guides the hand; patient DF could not report a slot's orientation yet posted a card through it accurately. Computer Use splits the same way: vision decides what to do, xdotool executes precisely. The mismatch: the brain's action stream is itself precise, while an agent's precise half lives outside the model.</li>
+<li><b>Psychology · Dual coding theory (Allan Paivio, 1971)</b>: people store images in both a visual code and a verbal code, and pictures that can be named are easier to recall; caption-then-retrieve gives every image a verbal code for indexing and keeps the original for detail. The difference: the brain's two codes run in parallel and talk to each other, while CTR can only be entered from the text side.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>Image token cost is set by resolution, not file size; Claude charges roughly width × height ÷ 750.</li>
+<li>Claude recommends a long edge of at most 1568px, so resizing client-side is the most direct way to cut the bill.</li>
+<li>Phone photos need an EXIF transpose first, or the model sees a sideways image and accuracy halves.</li>
+<li>PDFs fall into three tiers: text extraction, Docling/MinerU layout parsing, and vision reading, in rising cost.</li>
+<li>The mainstream production PDF pipeline is hybrid: extractable pages go as text, failed pages are rendered at 150 dpi for vision.</li>
+<li>A vision prompt should force the model to describe what it sees before answering, so it cannot skip the image and invent a conclusion.</li>
+<li>Wrapping structured output in tool use makes the model look field by field and lets downstream code validate and retry.</li>
+<li>Bounding boxes from Claude or GPT are accurate to about 1/100 of the image, too coarse for pixel-level UI targeting.</li>
+<li>CLIP/SigLIP training data leans on web alt-text, so recall on technical charts, slides, and Chinese long documents often falls below 40%.</li>
+<li>Caption-then-Retrieve uses a text caption as the retrieval key and sends the original image back to the model on a hit.</li>
+</ol>
+</div>
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3>// Combined Exercise · Run a "cost vs accuracy" audit on your vision pipeline (45 min)</h3>

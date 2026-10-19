@@ -47,6 +47,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -212,6 +223,32 @@ llm.complete(prompt)  <span class="tag-com"># ← caching/tools/结构化输出�
 <strong>进阶资源</strong> · HumanLayer <em>12-Factor Agents</em>, <a href="https://github.com/humanlayer/12-factor-agents" target="_blank">github.com/humanlayer/12-factor-agents</a> ·
 Anthropic <em>Prompt Caching</em> 文档, <a href="https://docs.claude.com/en/docs/build-with-claude/prompt-caching" target="_blank">docs.claude.com/.../prompt-caching</a>
 </div>
+</div>
+<!-- ============ Crossovers ============ -->
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>系统论 · Gall 定律（John Gall，1975）</b>：Gall 在《Systemantics》里观察到，能运转的复杂系统几乎都是从能运转的简单系统长出来的，从零设计的复杂系统往往修不好——这就是 §1 的复杂度阶梯。不像的是，Gall 只描述规律，本篇多要了一张升级凭证：每升一级都写得出失败模式。</li>
+<li><b>心理学 · 斯金纳的「鸽子迷信」（1948）</b>：斯金纳按固定时间喂鸽子，与动作无关，鸽子却固化出转圈、点头之类的「仪式」，因为食物恰好跟在某个动作后面。prompt 里的魔法咒语是同一种偶然强化。不同在于鸽子做不了对照实验，工程师可以删掉咒语再跑一遍 eval。</li>
+<li><b>生物学 · 简并性（Gerald Edelman 与 Joseph Gally，2001）</b>：生物体里结构不同的部件能完成同一功能，坏掉一个，整体只是平滑变差而不崩溃；本篇说健壮 prompt「删掉任何一句，性能平滑下降而非断崖」，是同一个标准。few-shot 过拟合则像高度特化的物种，环境一变就断崖。不像的是，生物的冗余靠演化慢慢攒，prompt 的冗余要靠写清原则。</li>
+<li><b>科学哲学 · 费曼的「货物崇拜科学」（1974）</b>：费曼在加州理工毕业演讲里讲，岛民仿造跑道和塔台等飞机降落，形式齐全，飞机却不来。凭感觉发版也是这样：试三个 case 的仪式像测试，却没有能暴露回归的对照。不像在于，岛民无从知道缺了什么，团队捞 20 条 case 就知道。</li>
+<li><b>佛学 · 中道</b>：佛陀初转法轮，说要离开纵欲与苦行两边；§4 也说锁定和过度抽象是同一道题的两个错误答案。不像在于，中道不是两端取平均，本篇的解也不是「锁一半」，而是换一个维度：把抽象画在「能力」这一层。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>AI 项目多半不是死于模型不够强，而是死于过度工程化、评估缺失、Prompt 脆弱性和供应商锁定四个反模式。</li>
+<li>复杂度要从单 prompt 起步，每升一级都要有一个写得出来、可观测的失败模式做凭证。</li>
+<li>复杂度的判据是匹配需求的内在复杂度：真需要 multi-agent 时还死守单 prompt，同样是错。</li>
+<li>没有 eval 集的 AI 项目是在盲飞，迭代速度的上限就是评估速度的上限。</li>
+<li>从线上捞 20 条真实 case 写成确定性断言并接进 CI，比等一个完美的评估平台有用得多。</li>
+<li>关键词、拒答、JSON 可解析这类确定性断言便宜又不偏，LLM-as-judge 只留给必须靠语义判断的部分。</li>
+<li>Prompt 脆弱性来自魔法咒语、few-shot 过拟合和硬编码字符串，一次模型升级就可能把线上打挂。</li>
+<li>把 prompt 抽成带版本号的外部文件、钉死模型版本、用原则代替咒语，模型升级就只是跑一遍 CI。</li>
+<li>供应商锁定和最小公分母式过度抽象是两个错误答案，正解是按能力抽象、内部用满自家特性的薄 adapter。</li>
+<li>抽象应该被第二个实例逼出来：第二个工具逼出 routing，第二个 provider 逼出 adapter。</li>
+</ol>
 </div>
 <!-- ============ Combo ============ -->
 <div class="combo">

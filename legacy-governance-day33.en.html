@@ -44,6 +44,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -187,6 +198,30 @@ This site, Day 31 <em>Personal AI Safety</em> (blast radius / reversibility) · 
 </div>
 </div>
 
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Evolutionary biology · François Jacob's "tinkerer"</b>: In a 1977 Science essay, Jacob argued that evolution works not like an engineer starting from a blueprint but like a tinkerer, reworking whatever structures are already at hand. Strangler-style rollout takes the same stance. The difference: evolution has no goal, while governance has a baseline it is trying to push down.</li>
+<li><b>Genetics · Muller's ratchet</b>: Hermann Muller showed in 1964 that asexual populations, lacking recombination, can only accumulate harmful mutations and never click back to a cleaner ancestral state; the ratchet turns only toward worse. The code ratchet is the same one-way structure pointed the other way: lock in each new low so debt only falls.</li>
+<li><b>Psychology · Habituation</b>: A stimulus that repeats without consequence draws a weaker and weaker response, one of the most basic forms of learning. A repo-wide scan that spits out thousands of alerts nobody fixes is training the team to habituate to red. In animals habituation usually saves effort; in CI it is the death of governance.</li>
+<li><b>Neuroscience · Attentional gating and the invisible gorilla</b>: The brain discards most incoming information before it reaches awareness, saving scarce attention for what matters, the same division of labor as a pre-human gate that blocks noise so people see only what machines cannot judge. But Simons and Chabris's 1999 experiment showed that about half of people counting basketball passes missed someone in a gorilla suit walking through: misses hide wherever attention was not allocated. Unlike the brain's filter, a machine gate's rules are written down, auditable and changeable.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>Forcing a new rule on an entire legacy repo at once unleashes an alert tsunami; the team learns to ignore red, and the rule gets switched off.</li>
+<li>Changed-files-only gating enforces new rules only on files a PR touches, so legacy code stays exempt but frozen and governance seeps in through normal edits.</li>
+<li>Mechanical legacy conversion belongs to codemods doing AST-level bulk edits; only the long tail goes to an agent, and it still passes the gates.</li>
+<li>A ratchet takes the current violation count as a baseline, fails only PRs that make it worse, and locks in every new low so it never rises.</li>
+<li>Guardrails-as-code turns architecture constraints such as dependency direction into fitness functions, replacing wiki rules and human vigilance with CI red and green.</li>
+<li>When AI speeds up writing code, the bottleneck shifts to review; the fix is letting machine gates filter first, not hiring more reviewers.</li>
+<li>Pre-human gates such as tests, types and secret scanning reject a failing PR outright, keeping it out of the human queue, and they must be fast.</li>
+<li>PRs that clear the machine gates are tiered by risk: payment, auth and migration paths get full review, low-risk changes get sampling plus post-merge audit.</li>
+<li>AI authors should start with lower default trust than senior human authors, adjusted by track record, and provenance of model and prompt enables bulk recall.</li>
+<li>The code ratchet mirrors Muller's ratchet in genetics: both lock in one click at a time and never go back, only in opposite directions.</li>
+</ol>
+</div>
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3>// Hands-on · give a legacy repo an "AI-ready governance chassis"</h3>

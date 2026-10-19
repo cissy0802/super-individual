@@ -41,6 +41,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -470,6 +481,32 @@ OpenAI <em>SimpleQA</em>, <a href="https://openai.com/index/introducing-simpleqa
 </div>
 </div>
 
+<!-- ============ Crossovers ============ -->
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Neuroscience · Michael Gazzaniga's split-brain "interpreter"</b>: a split-brain patient's right hemisphere sees a snow scene and the left hand picks a shovel; the left hemisphere, which saw only a chicken claw, instantly explains that you need a shovel to clean out the chicken shed, fluently and with full conviction. The match: when the speaking system has no access to the real cause, it fills the gap with a smooth story, not "I don't know." The mismatch: the brain does this as a normal function, while the model's confidence is something RLHF rewarded into it.</li>
+<li><b>Eastern philosophy · Confucius on not knowing</b>: "To know what you know and to know what you don't know, that is knowledge." Knowing the edge of your knowledge counts as knowledge itself, which is exactly the confidence function in selective prediction. The difference: Confucius preached it as a virtue; this issue's point is that preaching fails unless abstaining actually earns credit.</li>
+<li><b>Psychology · Philip Tetlock's expert forecasting studies</b>: tracking expert predictions for years, Tetlock found that confident "hedgehogs" with one big theory were worse calibrated than eclectic "foxes," yet the media preferred the hedgehogs. Same shape as raters preferring confident answers; his later use of Brier scores is a calibration eval for humans.</li>
+<li><b>Evolution · Batesian mimicry (Henry Bates, 1862)</b>: harmless butterflies evolve the warning colors of toxic species and fool birds that check only the pattern. A well-formed but nonexistent URL or arXiv ID has the same structure: right form, no substance, and the bird's countermove, taking a bite, is tool fact-checking. Unlike mimicry, the model has no intent to deceive; it just fills unremembered gaps with style.</li>
+<li><b>Investing · Buffett's "circle of competence"</b>: Buffett and Munger act only on businesses they understand and toss the rest into the "too hard" pile; few bets, high hit rate, the model with the bulging coverage-accuracy curve. The difference: an investor can sit still for years, while a product model that abstains too often goes unused, so confidence needs tiers, not blanket refusal.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>Hallucination is a structural by-product of RLHF: raters prefer confident answers, so the reward model scores "I don't know" low.</li>
+<li>Kadavath et al.'s 2022 probe experiments show the model's hidden states strongly encode P(True), yet generation almost never says "I don't know."</li>
+<li>Writing "do not make things up" in the system prompt barely works; give abstention explicit positive credit, then calibrate with logprobs or self-consistency.</li>
+<li>Self-reported 1-to-10 confidence is unreliable; Tian et al. (2023) show it is backward rationalization and badly overconfident.</li>
+<li>URLs, DOIs, arXiv IDs, commit hashes, function signatures and citation page numbers are hallucination hot spots, since such high-entropy strings have no learnable pattern.</li>
+<li>The specificity reverse principle says the more specific the question, the more detailed the fabrication, but it is a tendency, and well-covered domains get more accurate.</li>
+<li>Grounding needs three stacked layers: after-the-fact tool fact-checks, structured output whose enums close off invention, and an independent verifier.</li>
+<li>A verifier that shares the generator's model, or just asks "is this right?", endorses its hallucinations; use another model family and ask for unverifiable claims.</li>
+<li>Accuracy@all scores abstaining and answering wrong both as zero, rewarding guessing; hallucination evals should track coverage-accuracy curves, ECE and abstention F1.</li>
+<li>A well-formed citation that does not exist is like Batesian mimicry in biology: right form, no substance, so any check that looks only at format will be fooled.</li>
+</ol>
+</div>
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3>// Putting it all together · Bringing hallucination mitigation into your product</h3>

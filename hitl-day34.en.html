@@ -44,6 +44,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -205,6 +216,31 @@ Microsoft <em>Guidelines for Human-AI Interaction</em> (G9–G11: correctable / 
 </div>
 </div>
 
+<!-- ============ Crossovers ============ -->
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Management · Taylor's "exception principle" (1903)</b>: In <em>Shop Management</em> (1903), Frederick Taylor mocked the manager buried in reports he felt obliged to initial, and argued that routine work should run by standard while only deviations reach the boss. That is the auto / ask split. The difference: Taylor's standards were fixed in advance by engineers, while the thresholds in §4 are regressed out of the approval log.</li>
+<li><b>Psychology · Mackworth's clock test (Norman Mackworth, 1948)</b>: Studying radar operators, Mackworth found that people watching for rare signals start missing them noticeably within about half an hour, the vigilance decrement. Approval fatigue has the same shape: the more you ask people to watch and the rarer the real signal, the less reliable they become. Unlike radar operators, who miss things, tired approvers rubber-stamp them.</li>
+<li><b>Neuroscience · Conflict monitoring (Botvinick et al., 2001)</b>: The anterior cingulate cortex watches for conflict between competing responses and recruits slow prefrontal control only when conflict runs high; otherwise habits run on autopilot. That mirrors self-consistency: when samples disagree, escalate to a human. The difference is that the brain trusts its own conflict signal, whereas this issue forbids the model from grading its own confidence.</li>
+<li><b>Evolutionary biology · Tardigrade cryptobiosis</b>: In drought a tardigrade curls into a "tun," metabolism nearly stops, and it revives when water returns, suspend and resume built into the body. The difference: its "checkpoint" lives only inside itself, so if the body is destroyed everything is lost, while the iron rule of async approval is that state lives outside the process.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>The hard part of human-in-the-loop engineering is not whether to ask a human, but what the agent does while it waits.</li>
+<li>Confidence routing uses two axes, confidence and impact, to send every action to one of three tiers: auto, ask, or deny.</li>
+<li>Never let the model grade its own confidence; proxy it with verifiable signals such as retrieval hits, tool errors, self-consistency and schema checks.</li>
+<li>Unauthorized or over-budget actions should be denied outright, not dumped into the human approval queue where they bury real decisions.</li>
+<li>A background agent that waits on a synchronous input() freezes its worker; checkpoint state outside the process, notify, suspend, and resume on callback.</li>
+<li>Resuming from an async approval must be idempotent, and every approval needs an SLA timeout that defaults to deny or escalates to a backup approver.</li>
+<li>Human intervention means more than approve or reject: edit and takeover matter too, and a human-edited plan must be fed back into the agent's context.</li>
+<li>Editing costs less human effort than rejecting: one correction puts the agent back on track, while a rejection sends it back to start over.</li>
+<li>Log every approval and use historical approval rates to retune thresholds: always-approved asks become auto, and autos that caused incidents become asks.</li>
+<li>Approval fatigue mirrors the radar operator's vigilance decrement: the more people must watch and the rarer the real signal, the more they miss.</li>
+</ol>
+</div>
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3>// Hands-on · add an async HITL layer to a background agent</h3>

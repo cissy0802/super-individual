@@ -45,6 +45,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -201,6 +212,31 @@ Slash Commands 参考, <a href="https://code.claude.com/docs/en/slash-commands" 
 MCP 文档, <a href="https://code.claude.com/docs/en/mcp" target="_blank">code.claude.com/docs/en/mcp</a> ·
 Anthropic <em>Building agents with the Claude Agent SDK</em>, <a href="https://www.anthropic.com/engineering/building-agents-with-the-claude-agent-sdk" target="_blank">anthropic.com/engineering</a>
 </div>
+</div>
+<!-- ============ Crossovers ============ -->
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>心理学 · 工作记忆容量（Nelson Cowan，2001）</b>：Cowan 估计人一次只能稳稳抓住约 4 个组块，清单越长越容易漏项；CLAUDE.md 越长、遵守度越低是同一条曲线。不像在于：模型的窗口装得下很多，装得下不等于都照做，瓶颈在注意力怎么分，不在容量。</li>
+<li><b>分子生物学 · 基因的选择性表达</b>：每个细胞都带着整套基因组，但肝细胞只开肝的基因、神经元只开神经元的；skill 平时只露一行 description、用到才展开，子目录 CLAUDE.md 进门才加载，也是按场合表达。不像在于：细胞把全部 DNA 随身带着只是不读，skill 正文则根本不进上下文。</li>
+<li><b>复杂性科学 · Herbert Simon 的「近可分解」（1962）</b>：Simon 在《复杂性的架构》里用两个钟表匠的寓言说明，内部紧密、对外只留少量接口的子模块，被打断时损失最小；subagent 把噪声关在里面、只交回摘要，正是这种结构。不像在于：Simon 的子模块是稳定、可复用的部件，subagent 用完即弃，还看不到主线，接口之外的隐性上下文全得重新喂。</li>
+<li><b>哲学 · 尤利西斯契约（Jon Elster，1979）</b>：尤利西斯知道听到塞壬会失控，便趁清醒让水手把自己绑上桅杆；headless 之前写死 --allowedTools 白名单，也是趁人在场时预先承诺，因为运行时没人能说不。不像在于：尤利西斯防的是自己将来的软弱，白名单防的是外部 PR 里别人注入的指令。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>CLAUDE.md 是每轮注入并常驻的 prompt 预算而不是 README，官方建议控制在 200 行内，越长遵守度越低。</li>
+<li>Claude Code 的 memory 分企业策略、项目、项目本地、用户四层；大 monorepo 可把 CLAUDE.md 下沉到子目录，进入时才加载。</li>
+<li>CLAUDE.md 里的 @import 是 inline 展开，被引内容照样计费，它的价值是组织复用而不是省 token。</li>
+<li>Subagent 的核心价值是 context 隔离：把跑测试、读日志这类噪声操作关进独立上下文，只把摘要带回主线。</li>
+<li>Subagent 看不到主对话的上下文，依赖主线刚定下的方案的任务交给它，就得在 prompt 里重新喂足背景。</li>
+<li>Custom slash command 已并入 skills；skill 正文只在被调用时载入，所以事实放 CLAUDE.md、流程放 skill。</li>
+<li>skill 的 allowed-tools 字段把流程能碰的命令收窄到最小集，例如只给 git 子集，跑飞了也碰不到 rm 或 push。</li>
+<li>claude -p 以 headless 模式把 Claude Code 塞进 CI 和 cron，MCP 再把 GitHub、数据库等外部系统接成原生 tool。</li>
+<li>MCP server 不是越多越好：工具数量爆炸会让工具选择退化，而且每个 server 的 schema 都要吃 context。</li>
+<li>无人值守靠 --allowedTools 白名单设权限护栏；对外部 PR 等不可信输入开 --dangerously-skip-permissions，是 prompt injection 的头号入口。</li>
+</ol>
 </div>
 <!-- ============ Combo ============ -->
 <div class="combo">

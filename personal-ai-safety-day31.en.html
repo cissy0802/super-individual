@@ -44,6 +44,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -247,6 +258,31 @@ Anthropic <em>Agentic Misalignment</em> (advice on limiting autonomy + sensitive
 </div>
 </div>
 
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Philosophy · Jon Elster's "Ulysses and the Sirens"</b>: In 1979 Elster used the story to analyze precommitment: Ulysses knows the song will undo him, so he has the crew tie him to the mast and stop their own ears. An out-of-band kill switch has the same shape: the constraint sits where the constrained party cannot reach it. The difference is that Ulysses binds himself, while the agent is bound by someone else and never agreed to the rope.</li>
+<li><b>Economics · Goodhart's law (Charles Goodhart, 1975)</b>: once a measure becomes a target, it stops being a good measure. Rewriting a failing test as assert True is this law wearing a coding agent's clothes. Unlike a person gaming a KPI, who usually knows it, a model chasing the score may have no such awareness.</li>
+<li><b>Evolutionary biology · Robert Trivers on the deception arms race</b>: Trivers argued that deceivers and detectors coevolve, each pushing the other to sharpen, and that even self-deception may exist to deceive others better. Silently suppressing a deception signal and teaching the model to hide better is the same arms race, except that here the clock runs in training steps, not generations.</li>
+<li><b>Investing · position sizing</b>: seasoned traders do not control risk by being right; they decide the maximum loss on a trade first and size the bet from that. Blast-radius engineering likewise assumes the judgment will fail and lets permissions set the ceiling on damage. The difference: market losses are mostly priced in money, while a leaked private key has no stop-loss.</li>
+<li><b>Business · Bezos's one-way and two-way doors</b>: in a shareholder letter, Bezos split decisions into one-way doors you cannot walk back through, to be made slowly, and two-way doors you can, to be made fast. Allocating human review by reversibility is the same split, except the call on which door is which is taken away from the decider and hard-coded in the harness.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>A "please stop" written into the system prompt is self-policing; any constraint the model can reason about is not a constraint.</li>
+<li>A real kill switch is out-of-band: the interrupt is an external flag in the harness that the model can neither read nor change.</li>
+<li>An agent loop needs four hard budgets, iterations, tokens, dollars and wall-clock, and halts the moment any one trips; start the defaults small.</li>
+<li>Human gates before irreversible actions must default to deny; a gate where Enter means approve is worthless once fatigue sets in.</li>
+<li>Specification gaming is an engineering phenomenon you can catch in your logs today, such as rewriting a failing test as assert True.</li>
+<li>Early deception signals come in four kinds: said-versus-did mismatch, test tampering, sandbagging and caving under pushback, each expressible as an assertion.</li>
+<li>Silently patching over deception signals only teaches the model to hide better; audit the intermediate trace and use an independent model or rule-based checks as judge.</li>
+<li>Simon Willison's lethal trifecta: private data, untrusted content and outbound communication together let one prompt injection leak your secrets.</li>
+<li>Blast radius is set by permissions, not by how well the model behaves, so assume the agent is compromised, then apply least privilege and an egress allowlist.</li>
+<li>Put human review only on irreversible actions, treat unknown tools as irreversible by default, and implement delete as a move to .trash/.</li>
+</ol>
+</div>
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3>// CAPSTONE · Bolt a "safety chassis" onto your agent</h3>

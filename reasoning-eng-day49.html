@@ -48,6 +48,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -195,6 +206,30 @@ OpenAI <em>o3/o4-mini function calling guide</em>, <a href="https://developers.o
 <strong>进阶资源</strong> · Simon Willison <em>OpenAI reasoning models: advice on prompting</em>, <a href="https://simonwillison.net/2025/Feb/2/openai-reasoning-models-advice-on-prompting/" target="_blank">simonwillison.net</a> ·
 DeepSeek-R1（RL 激励推理）, <a href="https://arxiv.org/abs/2501.12948" target="_blank">arXiv 2501.12948</a>
 </div>
+</div>
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>心理学 · Kahneman 的系统 1 / 系统 2</b>：人脑默认走快而省力的直觉，只在遇到难题时才唤起慢而费力的推理，这正是路由层的结构。不像的是，人的系统 2 天生偷懒、常该开没开，路由表却可以按任务类型显式规定何时升档。</li>
+<li><b>生物进化 · 昂贵组织假说（Aiello &amp; Wheeler，1995）</b>：大脑约占体重 2%，却消耗约 20% 的静息能量，演化只在收益够大时才为它买单。推理档位也是按难度花的昂贵算力；区别是演化付的是固定成本，路由可以按请求逐次付费。</li>
+<li><b>心理学 · Sian Beilock 的「想太多会失手」</b>：2002 年的实验里，熟练高尔夫球手被要求盯着自己推杆的每个动作时，表现反而变差。给 reasoning model 硬塞「step by step」同理：外部指令干扰了已经内化的过程。不像的是，模型受损多半来自冗余提示，而非注意力被挤占。</li>
+<li><b>神经科学 · Gazzaniga 的「左脑解释器」</b>：裂脑病人的右脑看到指令并做出动作，左脑不知原因，却会立刻编出一个通顺的理由，这就是事后合理化，和 reasoning trace 不能当审计证据是同一个结构。不像的地方恰好呼应「深入思考」第一问：解释器的故事只是对外交代，thinking block 回传后却真被模型当工作记忆往下算。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>reasoning model 不该是默认档，而是按需触发的高成本档，延迟和账单都会成倍上涨。</li>
+<li>升档到 reasoning 要三条同时满足：答案可验证、步数无法预先压成 workflow、错误成本高于额外开销。</li>
+<li>路由表要同时调「模型大小」和「推理档位」两个维度，小号高推理常打不过大号低推理。</li>
+<li>thinking budget 有甜区：给得太少会欠思考，给得太多会过度思考，两头都掉准确率。</li>
+<li>找预算甜区要用带 ground truth 的题扫 low/medium/high 三档，取准确率曲线的拐点而非顶点。</li>
+<li>Anthropic 在 4.6 起弃用 budget_tokens，改为由 effort 驱动的 adaptive thinking。</li>
+<li>interleaved thinking 模式下，thinking block 连同 signature 必须跨轮原样回传，strip 掉会报错或断链。</li>
+<li>为标准模型写的「step by step」加大量 few-shot 模板，搬到 reasoning model 上常常拉低表现。</li>
+<li>reasoning trace 可能是事后合理化，不能当审计证据，要信就验证最终输出。</li>
+<li>评估 reasoning 只看可验证的正确率、p95 延迟和单请求成本，绝不奖励 trace 长度。</li>
+</ol>
 </div>
 <!-- ============ Combo ============ -->
 <div class="combo">

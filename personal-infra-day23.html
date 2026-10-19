@@ -45,6 +45,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -203,6 +214,31 @@ client = OpenAI(base_url=<span class="tag-gpt">"http://localhost:4000/v1"</span>
 Langfuse 源码, <a href="https://github.com/langfuse/langfuse" target="_blank">github.com/langfuse/langfuse</a> ·
 LiteLLM Virtual Keys, <a href="https://docs.litellm.ai/docs/proxy/virtual_keys" target="_blank">docs.litellm.ai/docs/proxy/virtual_keys</a>
 </div>
+</div>
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>神经科学 · 丘脑的中继与门控</b>：除嗅觉外，各路感觉信号都先经丘脑中继再进皮层，像 gateway 这个唯一入口。不像在于：丘脑接收皮层大量反馈、动态决定放行什么，gateway 只照静态 config 转发。</li>
+<li><b>心理学 · 卡尼曼的系统 1 / 系统 2</b>：便宜档默认、贵档按需，就是快思考打底、慢思考遇难题才出场。连代价都像：系统 1 出错常不自知，正如 fallback 悄悄降了质量却「没报错」。不像的是，人脑何时切档没有显式规则，gateway 的路由写在明处、可以审计。</li>
+<li><b>生物进化 · 简并性（Edelman &amp; Gally，2001）</b>：结构不同的元件完成同一功能，一个坏了另一个顶上，跨 provider fallback 正是如此，连替补略有差异都像。不像的是，生物的简并元件多半并行在岗，fallback 链却排队等出错。</li>
+<li><b>心理学 · DRM 错误记忆（Roediger &amp; McDermott，1995）</b>：听过「床、梦、枕头」的人常确信也听过「睡」，语义相近就当见过；语义缓存把 2023 年的答案给 2024 年的问题是同一种错。不同在于缓存的阈值可调。</li>
+<li><b>行为经济学 · 心理账户（Richard Thaler，1985）</b>：人把钱分进各自有预算的「账户」、互不挪用，每个 app 一把限额 virtual key 正是如此。不像的是，塞勒说这是偏差（钱本可互换），这里分账却是故意的，为的是一处失控不殃及别处。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>各脚本直连 provider SDK 等于没有中枢：换模型改 N 处，成本看不见，出错没有 trace。</li>
+<li>LLM Gateway 把调用收口到一个 OpenAI 兼容端点，换底层模型只改一处配置。</li>
+<li>LiteLLM Proxy 用一个 config.yaml 把 100 多家 provider 映射成统一模型名。</li>
+<li>Gateway 会成为单点故障：用 systemd 自动拉起，关键 app 保留直连 provider 的路径。</li>
+<li>成本路由是主动选便宜档，可用性 fallback 是被动兜底，两者混用会悄悄降低质量。</li>
+<li>跨 provider fallback 假设各家输出等价，所以要记录每次实际命中的模型。</li>
+<li>Prompt cache 复用逐字节一致的前缀，Anthropic 的 cache read 约为基础 input 价的 0.1 倍。</li>
+<li>语义缓存命中相似 query 就不调模型，但阈值过松会把旧年份的答案给新问题。</li>
+<li>Langfuse 这类观测工具要按 app 和 key 记 token、成本与延迟，只看总花费等于没监控。</li>
+<li>每个 app 一把带预算、模型白名单和过期时间的 virtual key，失控只伤自己的额度。</li>
+</ol>
 </div>
 <!-- ============ Combo ============ -->
 <div class="combo">

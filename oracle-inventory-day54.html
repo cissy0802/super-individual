@@ -47,6 +47,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -202,6 +213,31 @@ SQL 生成            在只读库上 EXPLAIN  implicit       <span class="tag-g
 <div class="res">
 <strong>进阶资源</strong> · Claude Code Hooks 文档, <a href="https://docs.claude.com/en/docs/claude-code/hooks" target="_blank">docs.claude.com/.../hooks</a> · Anthropic <em>Building Effective Agents</em>（升级成 agent 的判据）, <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">anthropic.com/engineering</a>
 </div>
+</div>
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>东方哲学 · 庄子《齐物论》「辩无胜」</b>：庄子问两人争辩该请谁来裁决——请和你相同的人，「既与若同矣，恶能正之」；请和我相同的人也一样。这正是同族 LLM 互评的困境。不像在于，庄子由此走向齐是非、放下裁判，工程上却是去找一个不站任何一方的编译器或测试。</li>
+<li><b>西方哲学 · 维特根斯坦「买几份同一天的早报」</b>：《哲学研究》第 265 节说，拿记忆核对记忆，就像买好几份同一天的早报来确认报上写的是真的。LLM 自查也是这样，第二份和第一份出自同一台印刷机。不像在于，维特根斯坦借此质疑私人语言有没有正确标准，本篇则认定外部 oracle 存在，只是得去搭。</li>
+<li><b>生物进化 · DNA 复制的多层校对</b>：DNA 聚合酶单独出错率约十万分之一，自带的 3'→5' 外切酶校对再降约百倍，错配修复又降约百倍，最终约十亿分之一，正是独立检查让漏检率相乘的 p·q。关键是独立：大肠杆菌的错配修复靠甲基化标记认出哪条是旧模板链，裁判来自模板而非新链。不像在于，细胞并不追求零错误，留下的少量突变正是进化的原料。</li>
+<li><b>复杂性科学 · 群体智慧的独立性条件</b>：高尔顿 1907 年统计几百人猜一头牛的体重，中位数离真值不到 1%。Surowiecki 在《群体的智慧》里强调前提是判断彼此独立，一旦互相影响，错误同向叠加就不再抵消。多 agent 辩论恰恰先让它们互相影响。不像在于，人群至少出身各异，同族模型从一开始就共用训练语料。</li>
+<li><b>商业 · 安达信与审计独立性</b>：安达信既给安然做审计又收大笔咨询费，2001 年安然崩塌后它也随之倒下，次年《萨班斯法案》限制审计方给客户做非审计业务。裁判和被审者绑在一起，就是伪 oracle。不像在于，审计失灵多半有利益共谋，LLM 偏袒自己的生成却不需要动机，结构相同就够了。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>Test oracle 是回答「这个输出对不对」的信息源，Barr 等人 2015 年的综述把它分成 specified、implicit、derived 和靠人四类。</li>
+<li>一个验证环节的价值不取决于它多严格，而取决于它是否独立于被验证者的失败模式。</li>
+<li>编译器、类型检查、单元测试和 property test 是独立的强 oracle，让 LLM 再查一遍或 LLM-as-judge 只是弱 oracle 甚至伪 oracle。</li>
+<li>两道独立检查能把双漏概率压到 p·q，两者错误高度相关时，双重检查几乎等于单次检查。</li>
+<li>Panickssery 等人 2024 年发现 LLM 评判者能认出自己的生成并系统性打高分，这叫 self-preference bias。</li>
+<li>Metamorphic testing 与 property-based testing 不需要标准答案，用问题本身成立的关系充当独立于模型的裁判。</li>
+<li>自动化边界该按有没有便宜的独立 oracle 来画，而不是按任务难不难来画。</li>
+<li>METR 2025 年的随机对照实验里资深开发者用 AI 反而多花 19% 时间，验证成本被低估是主要来源之一。</li>
+<li>在 Claude Code 里把测试挂成 hook 并用 exit 2 阻断，就把独立 oracle 变成了不过就拦的 fail-closed gate。</li>
+<li>格式 oracle、正确性 oracle 和语义 oracle 彼此独立，lint 全绿的代码逻辑照样可以全错。</li>
+</ol>
 </div>
 <!-- ============ Combo ============ -->
 <div class="combo">

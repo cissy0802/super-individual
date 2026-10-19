@@ -44,6 +44,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -215,6 +226,31 @@ GPTCache eval module, <a href="https://github.com/zilliztech/GPTCache" target="_
 </div>
 </div>
 
+<!-- ============ Crossovers ============ -->
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Psychology · Signal detection theory (Green &amp; Swets, 1966)</b>: deciding "is there a signal?" rests on two independent parameters, sensitivity d′ and the criterion c. A cache threshold is c: it can only slide errors between misses and false alarms. Embedding quality is d′: it decides how far apart the "should hit" and "should not hit" distributions sit. The difference: in a psychophysics lab the experimenter sets the cost of each error in advance, while a semantic cache has to label data and run shadow checks to learn what a false hit actually costs.</li>
+<li><b>Neuroscience · The DRM false-memory effect (Roediger &amp; McDermott, 1995)</b>: people who hear "bed, rest, tired, dream" often confidently "remember" the word "sleep," which was never on the list. Memory completes by semantic proximity, which is a false hit. Unlike a cache, the brain runs no sampled audit, so the error may never be caught.</li>
+<li><b>Evolution · Immune memory and molecular mimicry</b>: memory cells make a second immune response fast and cheap, but recognition works on "close enough": streptococcal antigens resemble heart-muscle proteins, so antibodies can cross-attack the heart, as in rheumatic fever. The immune system also keeps its bar strict, culling self-reactive cells in the thymus.</li>
+<li><b>Economics · Goodhart's law (Charles Goodhart, 1975)</b>: a statistic loses its information once it is used as a lever of control. Put hit rate in a KPI and the threshold drifts looser; same mechanism. The difference: monetary policy rarely has an independent guardrail metric, while a semantic cache can pin itself to the false-hit rate.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>LLM caching has three tiers, exact, prefix and semantic, and hit rate, savings and error risk all rise together down the stack.</li>
+<li>Query the cache tiers in order, exact then prefix then semantic, so the semantic cache only handles what the safer tiers let through.</li>
+<li>Anthropic's prefix cache saves only input tokens and still runs a full inference, so it carries no semantic risk.</li>
+<li>In a semantic cache a false hit costs far more than a miss, so the similarity threshold is a risk dial, not a precision dial, and should lean strict.</li>
+<li>Pick the threshold by sweeping human-labeled query pairs and taking the highest hit rate under a false-hit cap, not the best F1.</li>
+<li>Negations, near-synonyms and number-bearing queries sit very close in generic embeddings, so the embedding choice matters more than the threshold.</li>
+<li>Personalization, freshness and context dependence can all invalidate a cached answer; the scope key, not query similarity, decides what may be shared.</li>
+<li>Putting a data version in the scope key means a source update bumps the version and every stale cache entry stops matching at once.</li>
+<li>Hit rate is the payoff metric and false-hit rate the guardrail metric, and only sampled shadow evals can measure false hits in production.</li>
+<li>In signal-detection terms, a threshold only trades misses against false alarms; the embedding's sensitivity decides how well the two classes separate.</li>
+</ol>
+</div>
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3>// Capstone · Add a "Safe" Semantic Cache to Your Own RAG/Agent</h3>

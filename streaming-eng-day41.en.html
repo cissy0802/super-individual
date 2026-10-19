@@ -44,6 +44,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -231,6 +242,32 @@ This series Day 39 <em>Agent Error Recovery & Resilience</em> (idempotency / com
 </div>
 </div>
 
+<!-- ============ Crossovers ============ -->
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Psychology · Maister's psychology of waiting (1985)</b>: David Maister's first rule of queues is that occupied time feels shorter than unoccupied time; mirrors by elevator doors work on that principle. TTFT has the same structure: total duration is unchanged, only the empty gap shrinks. The difference: a mirror merely distracts, while streamed tokens are real progress the user can use to decide whether to hit stop.</li>
+<li><b>Neuroscience · Blind-spot filling-in</b>: Where the optic nerve leaves the retina there are no photoreceptors, yet the brain patches the hole with surrounding texture, so you never notice a gap in your visual field. A tolerant parser closing a dangling quote also completes first and displays second. Unlike the brain, though, which never labels its patch as a preview, this issue's red line is exactly that completed intermediate states may be rendered but never trusted.</li>
+<li><b>Neuroscience · Libet and the "veto" (1983)</b>: Benjamin Libet found the readiness potential rising about 350 ms before subjects felt the urge to move, and proposed that consciousness may not start an action but can veto it in the last ~150 ms before the movement. Abort has the same shape: generation is already running downstream, and "stop" is an after-the-fact veto. The difference: Libet's veto lands before the movement, while an agent's cancel often lands after the side effect, leaving only compensation. The interpretation is also contested; Schurger and colleagues argued in 2012 that the readiness potential may be accumulated noise.</li>
+<li><b>Buddhism · Momentariness (kṣaṇikavāda)</b>: Abhidharma schools such as the Sarvāstivāda and Sautrāntika held that every phenomenon arises and ceases in a single moment, so a "thing" is only a continuum of moments. Streaming splits a "result" into countless intermediate frames, turning a noun back into a process. The difference: a stream ends with message_stop and a final state you can persist, while Buddhism denies any such settled endpoint.</li>
+</ul>
+</div>
+<!-- ============ Takeaways ============ -->
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>Streaming does not shorten total generation time; it swaps a blank wait for a wait with continuous feedback, optimizing perception.</li>
+<li>For a streaming endpoint, watch the p95 of TTFT rather than total latency; streaming a pure background batch job is pointless.</li>
+<li>When TTFT itself is high, a typewriter effect cannot help: cache the prefix, trim the system prompt, or stream a skeleton first.</li>
+<li>Standard Markdown renderers and JSON.parse assume complete input, so feeding them streamed chunks either crashes or degrades back to buffering.</li>
+<li>Streamdown and partial JSON parsers are built for incomplete input, patching unclosed syntax before rendering so the UI fills in as tokens arrive.</li>
+<li>Intermediate states from partial parsing are for rendering previews only and must never drive decisions or side effects.</li>
+<li>In Anthropic's stream, tool arguments arrive as input_json_delta fragments that must be concatenated in order; by default valid JSON arrives only at content_block_stop.</li>
+<li>Fine-grained tool streaming skips buffering and validation, trading lower latency for possibly incomplete JSON if max_tokens cuts the stream.</li>
+<li>A client disconnect does not stop generation; abort the connection explicitly with AbortController or tokens keep burning.</li>
+<li>Mark output from a cancelled stream as partial and keep it out of storage; roll back executed side effects with idempotency keys and compensation.</li>
+</ol>
+</div>
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3>// PUTTING IT TOGETHER · Harden a streaming endpoint for "partial safety"</h3>

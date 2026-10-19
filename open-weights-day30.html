@@ -45,6 +45,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -197,6 +208,30 @@ active_params = 37    <span class="tag-com"># → 决定每 token 算力/吞吐<
 DeepSeek-V3 (arXiv:2412.19437), <a href="https://arxiv.org/abs/2412.19437" target="_blank">arxiv.org/abs/2412.19437</a> ·
 Qwen3 Technical Report, <a href="https://github.com/QwenLM/Qwen3" target="_blank">github.com/QwenLM/Qwen3</a>
 </div>
+</div>
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>生物进化 · 艾根的误差阈值（Manfred Eigen，1971）</b>：复制时每个碱基都有一点出错概率，基因组越长，整条抄对的概率按乘法塌下去，越过阈值就是「误差灾变」，信息传不下去。长 agentic loop 就是一条太长的基因组；拆回 workflow、在节点处校验，相当于给聚合酶加上校对，更长的链也能存活。不像在于：进化靠海量拷贝让选择筛掉坏的，一次生产调用没有这份冗余。</li>
+<li><b>神经科学 · 突触约 4.7 bit（Bartol 等，2015）</b>：Bartol 团队在大鼠海马体里测突触大小，分辨出约 26 档，折合每个突触约 4.7 bit。大脑看来也停在「4 bit 左右够用」的甜点。不像的是，大脑从一开始就在低精度上学习，量化模型是把训好的高精度权重事后削掉。</li>
+<li><b>心理学 · 卡尼曼的系统 1 与系统 2</b>：快而省力的直觉处理日常，慢而费劲的推理留给难题。Qwen3 的思考 / 非思考双模式和 reasoning budget 是同一种分工。不像的是，人往往察觉不到该切到系统 2，模型的开关则由工程师按任务显式决定。</li>
+<li><b>东西方哲学 · 荀子的「化性起伪」</b>：孟子相信人性本善、靠自觉扩充；荀子认为不能指望自觉，要靠礼法从外部约束。受约束解码站在荀子这边：不求模型守格式，让不合法的 token 根本选不出来。不像在于，荀子盼着礼最终改变性情，grammar 永远改不了模型本身，一撤约束就原样。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>选开源模型是关于控制权、隐私和可微调的决策，而不是一个省钱决策。</li>
+<li>开源模型在短、闭、可验证的任务上够用，到了长 agentic loop 会因误差累积跌下能力悬崖。</li>
+<li>把 agent 拆回确定性 workflow、让开源模型只在节点做短任务，往往胜过闭源模型加裸 agent。</li>
+<li>Llama 许可证禁止用其输出训练非 Llama 模型，计划蒸馏或做合成数据时应选 Apache 或 MIT 许可的模型。</li>
+<li>显存预算要算权重、KV cache 和框架开销三块，KV cache 随上下文长度和并发线性增长。</li>
+<li>4-bit 量化（如 GGUF 的 Q4_K_M）是质量与显存的甜点，低于 4-bit 后推理能力退化陡峭。</li>
+<li>llama.cpp 与 Ollama 适合本地单用户，vLLM 靠 PagedAttention 扛生产并发，两类场景不要混用。</li>
+<li>用错 chat template 模型不会报错、只会悄悄变笨，应始终用官方 tokenizer 的 apply_chat_template。</li>
+<li>受约束解码在采样时把不合法 token 概率置零，保证输出格式合法，但不保证内容正确。</li>
+<li>MoE 的算力按激活参数算、显存按总参数算，DeepSeek-V3 每 token 激活 37B 却要装下全部 671B。</li>
+</ol>
 </div>
 <!-- ============ Combo ============ -->
 <div class="combo">

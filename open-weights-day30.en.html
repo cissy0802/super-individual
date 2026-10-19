@@ -39,6 +39,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -216,6 +227,30 @@ Qwen3 Technical Report, <a href="https://github.com/QwenLM/Qwen3" target="_blank
 </div>
 </div>
 
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Evolutionary biology · Eigen's error threshold (Manfred Eigen, 1971)</b>: every base copied carries a small chance of error, so the odds of copying a whole genome correctly shrink multiplicatively with length; past a threshold comes "error catastrophe" and the information stops being inherited. A long agentic loop is a genome that is too long; breaking it back into a workflow with checks at each node is like giving the polymerase proofreading, so longer chains survive. The difference: evolution relies on huge numbers of copies and lets selection weed out the bad ones, while a single production call has no such redundancy.</li>
+<li><b>Neuroscience · about 4.7 bits per synapse (Bartol et al., 2015)</b>: measuring synapse sizes in rat hippocampus, Bartol's team distinguished roughly 26 levels, about 4.7 bits per synapse. The brain seems to sit at the same "around 4 bits is enough" sweet spot. Unlike a quantized model, though, the brain learns at low precision from the start rather than shaving down high-precision weights after training.</li>
+<li><b>Psychology · Kahneman's System 1 and System 2</b>: fast, effortless intuition handles everyday life, and slow, effortful reasoning is saved for hard problems. Qwen3's thinking / non-thinking modes and the reasoning budget are the same division of labor. The difference: people often fail to notice when to switch to System 2, while a model's switch is set explicitly by an engineer per task.</li>
+<li><b>Chinese philosophy · Xunzi on reshaping nature through ritual</b>: Mencius trusted innate goodness to grow through self-cultivation; Xunzi held that self-discipline cannot be relied on and that ritual and law must constrain from outside. Constrained decoding sides with Xunzi: rather than hoping the model keeps the format, it makes illegal tokens impossible to pick. Unlike Xunzi's hope that ritual eventually changes character, a grammar never changes the model itself; remove it and the old behavior returns.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>Choosing an open model is a decision about control, privacy and fine-tuning, not a decision to save money.</li>
+<li>Open models suffice for short, closed, verifiable tasks but fall off a capability cliff on long agentic loops because errors compound.</li>
+<li>Breaking an agent back into a deterministic workflow, with the open model doing short tasks at each node, often beats a closed model running a bare agent.</li>
+<li>The Llama license forbids using its outputs to train non-Llama models, so plans for distillation or synthetic data should start from Apache- or MIT-licensed models.</li>
+<li>A VRAM budget must cover weights, KV cache and framework overhead, and the KV cache grows linearly with context length and concurrency.</li>
+<li>4-bit quantization such as GGUF Q4_K_M is the sweet spot between quality and memory; below 4 bits, reasoning degrades steeply.</li>
+<li>llama.cpp and Ollama suit local single-user use, while vLLM handles production concurrency through PagedAttention; do not mix up the two.</li>
+<li>A wrong chat template raises no error but quietly makes the model dumber, so always use the official tokenizer's apply_chat_template.</li>
+<li>Constrained decoding zeroes out illegal tokens during sampling, guaranteeing a valid output format but not correct content.</li>
+<li>MoE compute scales with active parameters but VRAM with total parameters: DeepSeek-V3 activates 37B per token yet must hold all 671B.</li>
+</ol>
+</div>
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3>// Integrated Practice · Port One Claude Task to Open Source</h3>

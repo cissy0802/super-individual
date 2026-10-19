@@ -45,6 +45,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.62rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -219,6 +230,31 @@ Evidently 开源库, <a href="https://github.com/evidentlyai/evidently" target="
 <strong>进阶资源</strong> · Arize Phoenix <em>Evaluation / Online Evals</em>, <a href="https://arize.com/docs/phoenix/evaluation/llm-evals" target="_blank">arize.com/docs/phoenix · llm-evals</a> ·
 本系列 Day 6 Eval 工程（LLM-as-judge 去偏）· Day 29 Eval Beyond Benchmark
 </div>
+</div>
+<!-- ============ Crossovers ============ -->
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>神经科学 · 双重分离（Hans-Lukas Teuber，1955）</b>：神经心理学靠「甲损伤只坏 A 不坏 B、乙损伤正相反」来锁定是哪个模块出了问题；输入、输出两轴交叉的漂移矩阵也是用交叉比对来归因。不像在于：病例只能等它自然发生，探针 prompt 却能主动把一个变量钉死。</li>
+<li><b>心理学 · 噪声审计（Kahneman、Sibony、Sunstein《Noise》，2021）</b>：把同一份案卷交给多位核保员或法官，判断的离散度就是噪声；固定探针 prompt 同样是「输入不变、只看输出」。不像的是，噪声审计比的是同一时刻的不同人，探针比的是同一个模型在不同日子。</li>
+<li><b>投资 · 业绩归因（Brinson、Hood、Beebower，1986）</b>：把基金回报拆成资产配置和个股选择各贡献多少，经理才知道该改哪一块；按 feature、轮数、prompt 版本拆账单是同一个动作。不像在于：业绩归因通常只拆一两层，span 树可以一路拆到单次工具调用。</li>
+<li><b>量子力学 · 测量扰动与弱测量（Aharonov、Albert、Vaidman，1988）</b>：量子测量原则上会扰动被测系统；弱测量的思路是每次只取一点信息、扰动也小，靠大量重复把信号攒出来。在线 eval 只采样 5%、旁路异步打分，结构很像：单条说明不了什么，分布才说话。不像的是，工程上的观测扰动可以压到几乎为零，量子测量的扰动却是物理定律给定的。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>一次 agent run 是一棵 span 树而不是一串 log，看不到树形结构就只能猜中间发生了什么。</li>
+<li>OpenTelemetry 的 GenAI 语义约定把 LLM 调用的属性统一成 gen_ai.*，不该自创字段名。</li>
+<li>prompt 与 completion 原文不该全量塞进 span，默认只记 token 和元数据，原文按比例采样。</li>
+<li>LLM 成本要沿 span 树按 feature、用户、prompt 版本和步骤归因，只看总账单不知道哪里贵。</li>
+<li>成本监控最该盯三个派生指标：cache 命中率、每任务轮数、每任务成本的 p95。</li>
+<li>输入漂移可以用 PSI、KS 或 JS 散度检测，Evidently 的经验阈值是 PSI 大于 0.25。</li>
+<li>输入分布稳定而输出漂移，几乎一定是模型侧或配置侧变了，例如供应商静默更新模型。</li>
+<li>每天定时跑 20 到 50 条输入恒定的探针 prompt，是发现供应商静默更新最便宜的哨兵。</li>
+<li>在线 eval 分三层：规则检查跑全量，LLM-as-judge 跑采样，人工反馈用来校准 judge。</li>
+<li>在线 eval 必须异步旁路，绝不能挡在用户响应的关键路径上拖慢产品。</li>
+</ol>
 </div>
 <!-- ============ Combo ============ -->
 <div class="combo">

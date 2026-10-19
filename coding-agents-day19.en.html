@@ -44,6 +44,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -215,6 +226,30 @@ Anthropic <em>Building Agents with the Claude Agent SDK</em>, <a href="https://w
 </div>
 </div>
 
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Neuroscience · cerebellum and motor cortex</b>: the cortex sets the intent (reach for the cup) and the cerebellum calibrates it into precise muscle timing. Cursor splits work the same way: the frontier model states intent, the apply model lands the exact diff. The difference: the cerebellum keeps learning from every error, while the apply model is frozen once trained.</li>
+<li><b>Philosophy · the Ulysses contract (Jon Elster, 1979)</b>: Odysseus has his crew tie him to the mast, and Elster uses the story to explain precommitment: if you distrust your future self, remove the option in advance. Plan mode blocks writes at the harness layer, rope rather than willpower. Unlike Odysseus, the agent does not tie itself; you tie the rope for it.</li>
+<li><b>Leadership · situational leadership (Hersey and Blanchard, 1969)</b>: a manager shifts between directing, coaching, supporting and delegating according to a report's readiness; the autonomy spectrum is likewise a choice of gear by situation. The basis differs: situational leadership reads a person's ability and willingness, a coding agent's gear depends on whether the task can be verified objectively.</li>
+<li><b>Psychology · when intuition can be trusted (Kahneman and Klein, 2009)</b>: two researchers from opposing camps co-wrote a paper concluding that intuition is only learnable in environments with stable regularities and timely, clear feedback. SWE-bench is such an environment, where tests judge right and wrong on the spot; a private repo with no tests is a low-validity environment, so the score does not transfer. Unlike human intuition, which takes years to grow, an agent's feedback loop can be built today by adding a test suite.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>Aider, Cursor and Claude Code differ not in the underlying model but in who owns control flow and how edits land in files.</li>
+<li>Aider suits batch execution of a change you already know, Cursor suits fast small iterations in the editor, Claude Code suits open-ended exploration.</li>
+<li>Picking the wrong autonomy level usually costs more than picking the wrong model; autonomy should match the task's uncertainty.</li>
+<li>Many coding agent failures are not logic errors but edits that never get applied to the file successfully.</li>
+<li>The edit format trade-off: whole file is easiest to get right but most expensive, unified diff is cheapest but fails often, search/replace sits in between.</li>
+<li>Cursor uses a specially trained apply model to turn the frontier model's rough intent into an exact diff, buying reliability with a second model.</li>
+<li>Having the agent Read the exact snippet before editing a large file, then using small search/replace edits, sharply reduces apply failures.</li>
+<li>Plan mode pays off not because the model thinks longer but because it gives a human a cheap checkpoint, with writes blocked at the harness layer.</li>
+<li>A full-auto agent is only safe when it can close the loop: run tests, lint and type checks itself and feed failures back to fix them.</li>
+<li>A high SWE-bench score does not mean the agent is as reliable in your repo, because the benchmark closed the loop for it and your codebase may not.</li>
+</ol>
+</div>
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3>// PUTTING IT TOGETHER · Pick the right harness + level for one task</h3>

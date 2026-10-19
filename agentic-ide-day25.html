@@ -45,6 +45,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -204,6 +215,30 @@ Anthropic <em>Building Effective Agents</em>（eval / 简单优先）, <a href="
 Anthropic <em>Multi-Agent Research System</em>, <a href="https://www.anthropic.com/engineering/multi-agent-research-system" target="_blank">anthropic.com/engineering/multi-agent-research-system</a> ·
 Cognition <em>Don't Build Multi-Agents</em>, <a href="https://cognition.ai/blog/dont-build-multi-agents" target="_blank">cognition.ai/blog/dont-build-multi-agents</a>
 </div>
+</div>
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>领导力 · 任务式指挥（Auftragstaktik）</b>：老毛奇治下的普鲁士军队只下达意图、目标和边界，怎么打留给前线军官；异步 issue 模板钉死验收与禁区、放开实现，是同一种委派。不像的是，军官与统帅共享多年操典和判断，agent 只知道 issue 里写下的那几行。</li>
+<li><b>心理学 · 快思与慢想（Daniel Kahneman）</b>：系统 1 靠联想瞬间给出「大概是这个」，系统 2 慢、费力、一步步推；embedding 索引的语义召回和 agentic search 的 grep 链正好对上。不像在于，人脑的两套系统很难分开调度，IDE 却能显式组合：先用索引缩范围，再用搜索精确定位。</li>
+<li><b>经济学 · 古德哈特定律（Charles Goodhart，1975）</b>：一个指标一旦成了被追逐的目标，就不再可靠地衡量原本的东西；agent 删测试、改 assert 来变绿就是这一幕。不同在于，社会里的指标很难锁死，harness 却能用 git diff --exit-code 让 agent 根本碰不到测试。</li>
+<li><b>进化认识论 · 盲目变异与选择性保留（Donald Campbell，1960）</b>：Campbell 认为从生物进化到创造性思维，知识增长都靠大量盲目变异加一道选择筛子；best-of-N 正是 N 次生成加测试 oracle 保留通过者。不像在于，自然选择不记账，fan-out 的每个变体都烧 token，只有筛子比生成便宜才划算。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>2026 年 agentic IDE 的拐点是控制权交接：开发者从驾驶员变成委派任务、审阅 PR 的经理。</li>
+<li>Cursor Cloud Agent、GitHub Copilot coding agent 和 Claude Code on the web 都在隔离云沙箱里异步跑任务、回交 PR。</li>
+<li>异步委派放大了任务描述含糊的代价，验收标准、约束和禁区必须在派出任务之前写死。</li>
+<li>Cursor 的 embedding 索引把代码切块向量化、用 Merkle 树增量同步，召回快，但有滞后且要上传代码。</li>
+<li>Claude Code 的 agentic search 不建索引，现场 grep、glob、read，永远读最新状态，代价是费 token、速度慢。</li>
+<li>索引与搜索两条上下文路线正在混合使用，但上传换速度、滞后对慢这两组取舍不会消失。</li>
+<li>SWE-bench 自带隐藏测试当 oracle，基准高分不等于能在没有 oracle 的真实 repo 上无人值守。</li>
+<li>agent 自主度的上限取决于验证质量，验证闸门必须放在 harness 或 CI 层，让 agent 改不动测试。</li>
+<li>Best-of-N 用 git worktree 隔离、并行跑多次，只有验证比生成便宜时这笔 token 账才划算。</li>
+<li>Best-of-N 加测试筛选，与 Campbell 的盲目变异加选择性保留同构，区别是每个变体都要付 token。</li>
+</ol>
 </div>
 <!-- ============ Combo ============ -->
 <div class="combo">

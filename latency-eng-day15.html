@@ -45,6 +45,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -207,6 +218,30 @@ results = <span class="tag-key">await</span> asyncio.gather(*(ask(q) <span class
 <strong>进阶资源</strong> · Dean &amp; Barroso《The Tail at Scale》, CACM 2013, <a href="https://cacm.acm.org/research/the-tail-at-scale/" target="_blank">cacm.acm.org/research/the-tail-at-scale</a> ·
 Anthropic AsyncAnthropic / rate limit 文档（并发与 429 处理）。
 </div>
+</div>
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>心理学 · 等待心理学（David Maister，1985）</b>：Maister 总结排队体验的第一条：有事可做的时间比空等的时间显得短。streaming 正是把空白 spinner 换成有内容可读的等待。不像的是，排队可以靠镜子、广告分心，流式给的是真正的答案本身。</li>
+<li><b>神经科学 · 基底节的动作组块（Ann Graybiel）</b>：反复练习的动作序列会被打包成一个「组块」，之后整段调用、不再逐步计算，像 prompt caching 跳过 prefill。不像在于：习惯容得下小变化，缓存是逐字节 prefix-match，开头错一个字就整段作废。</li>
+<li><b>经济学 · O 型环理论（Michael Kremer，1993）</b>：Kremer 用挑战者号失事作比喻：多道工序串在一起时，产出由最弱的一环决定，所以单环质量的小差距会被放大成整体的大差距。fan-out 里聚合延迟取最慢那次调用，是同一种「短板放大」结构；只是 O 型环乘的是成功率，尾延迟取的是最大值。</li>
+<li><b>进化生物学 · 两头下注（bet-hedging，Dan Cohen，1966）</b>：沙漠一年生植物每年只让部分种子发芽，牺牲一点平均产出，换来坏年份不至于全军覆没。hedged request 也是花约 5% 额外调用压低尾部风险。不像的是，植物两份都要承担代价，补发请求取先到的一份、取消另一份。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>端到端延迟等于 TTFT 加上输出 token 数乘以 TPOT，不先分解就优化多半砍错地方。</li>
+<li>TTFT 由排队、prefill 和网络构成，prefill 计算密集，输入 prompt 越长 TTFT 越慢。</li>
+<li>TPOT 由 decode 决定，decode 访存密集，单 token 耗时近似恒定，长输出伤的是总时长。</li>
+<li>Streaming 一个 token 都没省，却把用户感知的等待从总时长压到 TTFT。</li>
+<li>下游要完整 JSON 才能用时流式收益归零，应把给人看的散文和给机器的结构拆成两次调用。</li>
+<li>Prompt caching 命中即跳过 prefix 的 prefill，是降低 TTFT 杠杆最大的一招。</li>
+<li>Prompt caching 是逐字节 prefix-match，稳定内容放前、易变内容放后，开头塞时间戳会让缓存永远 miss。</li>
+<li>判断缓存是否生效，唯一硬证据是 usage 里的 cache_read 和 cache_creation 两个字段。</li>
+<li>fan-out 下整体延迟取最慢的子调用，K=100 时至少一个慢的概率约 63%，p99 会变成上游的 p50。</li>
+<li>Hedged request 过了 p95 就补发一份取先到者，用约 5% 额外调用压平 p99，但要配合有界并发。</li>
+</ol>
 </div>
 <!-- ============ Combo ============ -->
 <div class="combo">

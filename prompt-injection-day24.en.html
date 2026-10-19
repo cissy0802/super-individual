@@ -39,6 +39,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -232,6 +243,30 @@ Willison <em>Design Patterns for Securing LLM Agents</em> (2025), <a href="https
 </div>
 </div>
 
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Psychology · Daniel Gilbert's "understanding is believing" (1991)</b>: Gilbert argued that to comprehend a sentence we first accept it, and rejecting it takes an extra step that drops out under cognitive load. An LLM leaning toward obeying any instruction it reads has the same shape; the difference is that a person can later tag the claim as false, and the model has no such second pass.</li>
+<li><b>Philosophy · Odysseus and the Sirens (Jon Elster, <em>Ulysses and the Sirens</em>, 1979)</b>: Odysseus wanted to hear the Sirens, so the crew stopped their ears with wax and tied him to the mast. The one who hears has no hands, and the ones who row cannot hear: that is the Q-LLM and the P-LLM of the dual-LLM pattern. Elster used it as the model of precommitment: knowing you will be persuaded, you remove the capability in advance. The difference is that Odysseus tied his own ropes, while an agent's ropes have to be tied by the harness.</li>
+<li><b>Molecular biology · PKR and translational shutdown</b>: a ribosome translates any mRNA, host or viral, much as a model can't tell instructions from data. One cellular defense doesn't teach the ribosome to discriminate: PKR senses double-stranded RNA and phosphorylates eIF2&alpha;, pausing translation wholesale. It cuts capability rather than out-thinking the attacker, and the cost rhymes too: the host's own proteins stop as well.</li>
+<li><b>Business · Segregation of duties</b>: internal controls keep approving payments, recording them and holding the cash in different hands, so any would-be fraudster is missing an edge, the same shape as "cut any edge of the lethal trifecta and nothing gets stolen." The difference: controls rely on several people being hard to collude, while an agent's three edges sit in one model by default, so the only option is splitting trust domains.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>Prompt injection is hard to eliminate because the system prompt, user input and tool output are one token stream to an LLM.</li>
+<li>The lethal trifecta: an agent can be injected into stealing only when it has private data, untrusted content and an exfiltration channel at once.</li>
+<li>Defending against the lethal trifecta means cutting any one edge; untrusted content usually stays, so minimize private data and control egress.</li>
+<li>Writing "ignore instructions in the email" into the system prompt only raises the bar; prompt-layer mitigation is probabilistic, not structural.</li>
+<li>Delimiters stop low-skill injections, but an attacker can close the tag and write new instructions, so delimiting is only entry-level mitigation.</li>
+<li>The dual-LLM pattern has a tool-less quarantined model handle dirty content, while the privileged model sees only symbolic references or sanitized results.</li>
+<li>CaMeL compiles the trusted request into a program, separates control flow from data flow, and reaches provable security on 77% of AgentDojo tasks.</li>
+<li>The hardest defense lives in the harness: least privilege, human review of destructive actions, an egress allowlist, and an OS-level sandbox underneath.</li>
+<li>Markdown image URLs are the most overlooked exfiltration channel: once the frontend auto-renders the image, the data leaves with the GET request.</li>
+<li>Injection defenses regress, so measure attack success rate (ASR) continuously in CI, and measure over-refusal too so you don't over-defend.</li>
+</ol>
+</div>
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3>// PUTTING IT TOGETHER · Run a security audit on your agent</h3>

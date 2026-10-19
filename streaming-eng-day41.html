@@ -45,6 +45,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -204,6 +215,32 @@ stopBtn.onclick = () =&gt; ctrl.abort();          <span class="tag-com">// 断�
 <strong>进阶资源</strong> · MDN <em>AbortController</em>, <a href="https://developer.mozilla.org/en-US/docs/Web/API/AbortController" target="_blank">developer.mozilla.org/.../AbortController</a> ·
 本系列 Day 39 <em>Agent 错误恢复与韧性</em>（幂等 / 补偿 / checkpoint）
 </div>
+</div>
+<!-- ============ Crossovers ============ -->
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>心理学 · Maister 的等待心理学（1985）</b>：David Maister 总结排队体验，头一条是「有事做的时间比空等显得短」。TTFT 同构：总时长不变，改的是空窗。不像在于，电梯口的镜子只转移注意力，流式的字是真进展，用户能据此喊停。</li>
+<li><b>神经科学 · 盲点的「填补」（filling-in）</b>：视神经出口处没有感光细胞，大脑用周围纹理把空洞补齐，你从不觉得视野缺一块；容错解析器补临时引号也是先补全再呈现。不像的是，大脑从不给补出的部分贴「预览」标签。</li>
+<li><b>神经科学 · Libet 实验与「否决权」（1983）</b>：Libet 测到准备电位比自觉「想动」早约 350 毫秒，认为意识来不及发起动作，但能在动作前最后约 150 毫秒否决它；abort 同样是否决一个已在跑的过程。不像在于，agent 的取消常落在副作用之后，只能补偿；这套解释本身也有争议，Schurger 2012 年认为准备电位可能只是噪声累积。</li>
+<li><b>佛学 · 刹那生灭</b>：阿毗达磨论师主张诸法刹那生灭，「一件东西」只是刹那的相续；流式把结果劈成中间帧，也是把名词还原成过程。不像在于，流式有 message_stop 交付终态，佛学否认有这样落定的终点。</li>
+</ul>
+</div>
+<!-- ============ Takeaways ============ -->
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>streaming 不缩短总生成时间，只把空白等待换成有反馈的等待。</li>
+<li>流式接口该盯 TTFT 的 p95 而非总延迟；后台批处理开 streaming 无意义。</li>
+<li>TTFT 本身高时打字机救不了，要先缓存前缀、缩短系统提示或先流骨架屏。</li>
+<li>标准 Markdown 渲染器和 JSON.parse 假设输入完整，遇到流式 chunk 会崩溃或退化成 buffering。</li>
+<li>Streamdown 和 partial JSON 解析器先修补未闭合语法再渲染，让界面边流边填。</li>
+<li>部分解析出的中间态只能渲染预览，绝不能驱动决策或副作用。</li>
+<li>tool 参数以 input_json_delta 片段流出，须按序拼接，默认到 content_block_stop 才是合法 JSON。</li>
+<li>fine-grained tool streaming 不缓冲不校验，用更低延迟换可能被截断的残缺 JSON。</li>
+<li>客户端断开不等于生成停止，要用 AbortController 真正中止连接。</li>
+<li>取消后的输出标为 partial 不入库，已发出的副作用靠幂等键和补偿回滚。</li>
+</ol>
 </div>
 <!-- ============ Combo ============ -->
 <div class="combo">

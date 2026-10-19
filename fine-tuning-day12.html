@@ -47,6 +47,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -445,6 +456,30 @@ resp = client.chat.completions.create(
 Nguyen et al. <em>Min-p Sampling: Balancing Creativity and Coherence</em>, <a href="https://arxiv.org/abs/2407.01082" target="_blank">arxiv.org/abs/2407.01082</a> ·
 vLLM <em>Sampling parameters</em>, <a href="https://docs.vllm.ai/en/latest/serving/openai_compatible_server.html" target="_blank">docs.vllm.ai/.../openai_compatible_server</a>
 </div>
+</div>
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>神经科学 · 互补学习系统（McClelland、McNaughton、O'Reilly，1995）</b>：大脑让海马体快速记下新经验，皮层慢慢改，免得新知识冲掉旧知识；LoRA 冻结主权重、只训一小块 adapter，也是把快模块挂在慢模块上。不像在于：海马体的记忆要靠睡眠中反复重放，才一点点并入皮层；LoRA merge 只是一次矩阵加法，没有重放，也不会自己挑哪些该留。</li>
+<li><b>进化生物学 · 演化发育与调控开关（Sean B. Carroll）</b>：Carroll 在《Endless Forms Most Beautiful》（2005）里强调，形态的大变化多半来自改动少数调控开关，而不是发明新基因；LIMA 的「解锁而非教会」同构，1000 条样本只是拨开关。不像的是，演化没有人挑样本，靠的是淘汰。</li>
+<li><b>统计物理 · 玻尔兹曼分布与模拟退火</b>：softmax(logits/T) 和玻尔兹曼分布同形，T 趋近 0 时系统落进能量最低态，正对应贪婪解码。Kirkpatrick 等人 1983 年的模拟退火让温度逐步降低来找全局最优；解码不同，一次生成里的温度通常固定不变。</li>
+<li><b>心理学 · 刻意练习（Anders Ericsson，1993）</b>：Ericsson 研究柏林音乐学院的小提琴学生，发现拉开差距的是有目标、有反馈的独自练习，而不是笼统的练琴量；这和「50 条精挑胜过 5 万条噪声」同构。不同在于：刻意练习专盯能力边缘的错处，LIMA 式数据只示范好答案。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>Fine-tuning 的本质是把模型输出分布锁定到样本子空间，既不是教会新知识，也不是提升智能。</li>
+<li>按 ROI 排序，应先改 prompt、再加 RAG、再换更强模型、再做 few-shot，最后才 fine-tune。</li>
+<li>Fine-tuning 不可替代的场景只有风格人设、格式严格化、私有领域语言、小模型蒸馏和延迟隐私硬约束。</li>
+<li>LoRA 冻结基础权重、只训一对低秩矩阵；QLoRA 再把 base 模型量化到 4-bit，大幅降低训练显存。</li>
+<li>LoRA 的 rank 是容量、alpha 是学习率乘子；alpha 等于 rank 通常比 PEFT 默认的两倍更稳。</li>
+<li>LoRA 应训全部线性层而不只是 q_proj 和 v_proj，因为 MLP 层占了模型参数的六成以上。</li>
+<li>LIMA 用 1000 条人工精挑样本微调 Llama 65B，说明微调数据的质量远比数量重要。</li>
+<li>微调数据工程有三条铁律：语义去重、随机抽 50 条人工审计、用强模型蒸馏生成训练目标。</li>
+<li>Fine-tuning 后输出分布更尖锐，应降低 temperature、用 min-p 代替 top-p、repetition_penalty 控制在 1.05–1.1。</li>
+<li>temperature 控制的是分布锐度而非创造力，softmax 除以 T 与统计物理的玻尔兹曼分布同形。</li>
+</ol>
 </div>
 <!-- ============ Combo ============ -->
 <div class="combo">

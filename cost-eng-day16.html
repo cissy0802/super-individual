@@ -45,6 +45,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -215,6 +226,32 @@ batch = client.messages.batches.create(requests=[
 OpenAI Batch API 文档, <a href="https://platform.openai.com/docs/guides/batch" target="_blank">platform.openai.com/docs/guides/batch</a>
 </div>
 </div>
+<!-- ============ Crossovers ============ -->
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>神经科学 · 预测编码（Rao &amp; Ballard，1999）</b>：大脑只占体重约 2%，却用掉约 20% 的静息能量，所以它尽量不重复处理已知的东西：高层先给出预测，往上传的主要是预测误差。这和 prompt caching 是同一笔账——稳定前缀打一折，只有新内容付全价。不像在于：大脑的「缓存」是模糊匹配，差一点也能用，还会被误差改写；prompt cache 要求前缀逐字节一致，错一个字节就整段重写。</li>
+<li><b>心理学 · 系统 1 / 系统 2（Kahneman，《思考，快与慢》，2011）</b>：快而省力的直觉处理大多数事，拿不准才调动慢而费力的推理，正是「便宜模型先试、不行再升档」的 cascading。不像在于：Kahneman 强调系统 1 往往不知道自己错了，这恰是正文说别信小模型自评、要靠外部 judge 的原因。</li>
+<li><b>生物进化 · 景天酸代谢（CAM 光合作用）</b>：仙人掌、菠萝夜里开气孔，把 CO₂ 存成苹果酸，白天关着气孔再做光合作用，用时间错位换省水，就像把不急的请求挪进 batch 换半价。不像的是，CAM 是干旱逼出来的，代价是长得慢；batch 是主动选择，代价只是等待。</li>
+<li><b>商业 · 约束理论（Goldratt，《目标》，1984）</b>：系统产出由最紧的那个瓶颈决定，改善非瓶颈环节几乎白忙，对应复盘流程第一天：先打吃掉 60% 成本的那一两个 feature。不像在于：瓶颈卡的是产出，压掉它整条线变快；成本热点压掉后，系统不会多产出什么，只是少花钱。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>LLM 成本该按每次调用的五项 token 分布和 feature 归因，而不是按模型名说「Opus 贵」。</li>
+<li>账单是 uncached input、cache write、cache read、output 与 batch 折扣的乘积，每一项都是一个杠杆。</li>
+<li>Output 单价通常是 input 的 5 倍，用 max_tokens 和结构化输出压 output，往往比换模型更省。</li>
+<li>Prompt caching 命中时 input 只付 0.1×，5 分钟缓存写入付 1.25×，前缀必须逐字节一致才能命中。</li>
+<li>不变的 tools、system、长文档放前面，变的放后面；在 system prompt 里插当前日期会让缓存每天失效。</li>
+<li>缓存命中率低于 40% 说明前缀不稳，该重构 prompt 结构，而不是关掉 cache。</li>
+<li>Routing 先预判难度再分档，cascading 让便宜模型先试、不达标再升级，适合高量、出错代价低的请求。</li>
+<li>小模型的自评信号不可靠，cascade 该靠外部 judge 或任务自带的 verifier 决定是否升级。</li>
+<li>Batch API 所有 token 价减半、24 小时内返回，和 caching 叠加理论上可压到原价约 5%。</li>
+<li>最小成本监控看三个信号：per-request cost、cache 命中率和 model tier 分布；命中率突降是领先指标。</li>
+</ol>
+</div>
+
 <!-- ============ Combo ============ -->
 <div class="combo">
 <h3 data-tts="bea9828d803c9dc2">// 综合实战 · 一周把账单砍 70% 的复盘流程</h3>

@@ -39,6 +39,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -344,6 +355,33 @@ silently override the profile."""</span></code></pre>
 Simon Willison <em>How ChatGPT memory works</em>, <a href="https://simonwillison.net/2024/Apr/16/llm-memory/" target="_blank">simonwillison.net/2024/Apr/16</a> ·
 Park et al. <em>Generative Agents: Interactive Simulacra of Human Behavior</em> (reflection / memory stream design), <a href="https://arxiv.org/abs/2304.03442" target="_blank">arxiv.org/abs/2304.03442</a>
 </div>
+</div>
+
+<!-- ============ Crossovers ============ -->
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Psychology · Tulving's episodic vs semantic memory (1972)</b>: Endel Tulving split long-term memory into episodic memory ("what happened that day") and semantic memory ("Paris is the capital of France"), which is exactly the event log vs KV profile split. Where it breaks: in people, episodes slowly fade into general knowledge and the line keeps shifting, while an agent's stores only stay separate because a write router keeps them apart.</li>
+<li><b>Psychology · Bartlett's "War of the Ghosts" (1932)</b>: Frederic Bartlett had English subjects retell a Native American folk tale again and again; unfamiliar details wore away and got rewritten into familiar shapes, which is how careless summarization loses information. The difference: his subjects had no PRESERVE list.</li>
+<li><b>Neuroscience · Memory reconsolidation (Nader et al., 2000)</b>: Karim Nader and colleagues found that a rat's fear memory turns unstable right after it is recalled, and blocking protein synthesis in the amygdala at that moment weakens it, so every read is a chance to rewrite. A self-maintained profile is also edited as it is used; unlike the brain, the agent deliberately keeps a changelog.</li>
+<li><b>Buddhism · Yogacara seeds and "perfuming"</b>: Yogacara holds that every act perfumes a seed into the storehouse consciousness (alaya-vijnana), and those seeds later sprout into new perceptions, shaping how you see the next thing, much as conversations are written into a profile that is injected into the next session. The difference: practice aims to see through and transform that accumulation, while the agent works to make it ever more accurate.</li>
+<li><b>Business · The accounting journal and the balance sheet</b>: Accountants record every transaction in a dated journal; the balance sheet is just a snapshot of balances on one day, and errors are fixed by replaying the journal. Event log and profile have the same journal-and-snapshot relationship. The difference: every journal entry needs a source document, a discipline the agent only gains once evidence_msg_id is required.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>The LLM itself is stateless; everything an agent "remembers" is tokens the developer puts into the context window.</li>
+<li>Agent state has at least four layers, conversation, scratchpad, user profile and knowledge base, each with its own lifetime and read/write policy.</li>
+<li>Dumping all four layers into one vector DB loses ordering, buries profile facts, and lets stale scratchpad output pollute the next task.</li>
+<li>Short-term memory should default to a truncating sliding window, moving to summarize or hierarchical only when early details really need to be recalled.</li>
+<li>Incremental summary quality hinges on the compaction prompt's PRESERVE list; decisions and open TODOs are what usually get lost.</li>
+<li>Vector retrieval is only good at finding similar content; exact facts belong in structured KV and time-based questions in an episodic event log.</li>
+<li>Letta, the product version of MemGPT, splits memory into core, archival and recall tiers, matching KV, vector and event log.</li>
+<li>A write router first classifies each item as fact, event or document, then picks the store: the type of question decides the storage.</li>
+<li>Every self-maintained profile write should cite an evidence_msg_id and land in a changelog; no evidence, no write, which blocks hallucinated facts.</li>
+<li>A profile needs forgetting and per-scenario isolation: bloated to thousands of tokens it eats the context budget, and shared across agents it loses scope control.</li>
+</ol>
 </div>
 
 <!-- ============ Combo ============ -->

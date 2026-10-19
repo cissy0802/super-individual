@@ -47,6 +47,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.66rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 
@@ -248,6 +259,32 @@ X-PAYMENT-RESPONSE: {<span class="tag-gpt">"settled"</span>:true,<span class="ta
 <div class="res">
 <strong>Further</strong> · <em>Identity Management for Agentic AI</em> (a survey of authorization/authentication/accountability in an agent world), <a href="https://arxiv.org/abs/2510.25819" target="_blank">arXiv 2510.25819</a>
 </div>
+</div>
+
+<!-- ============ Crossovers ============ -->
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Business · The principal-agent problem (Jensen &amp; Meckling, 1976)</b>: a principal who hands decisions to an agent pays "agency costs" for monitoring, bonding and constraints. The Intent Mandate's price cap, merchant allowlist and expiry are those constraint clauses written as code. The difference: an economic agent has interests of its own, while a software agent's risk comes mostly from misunderstanding, not shirking or self-dealing.</li>
+<li><b>Psychology · Implementation intentions (Peter Gollwitzer, 1999)</b>: decide in advance "if X happens, I do Y," and in the moment you no longer deliberate, so plans actually get carried out. The Intent Mandate moves human approval forward to the moment of signing in the same way. Unlike a personal plan, a mandate is enforced: an out-of-scope purchase gets blocked by the verifier.</li>
+<li><b>Evolutionary biology · Exaptation (Gould &amp; Vrba, 1982)</b>: feathers first evolved for insulation and only later were used for flight; an old structure finds a new use in a new environment. HTTP 402 is a structure grown early and left idle for 30-plus years until stablecoins and agents arrived. The mismatch: 402 was reserved for payment from the start, so the environment changed, not the function.</li>
+<li><b>Eastern philosophy · Sun Tzu, "first make yourself invincible"</b>: the Art of War's chapter on disposition says to secure your own position first, then wait for the enemy's opening. On-chain settlement has no chargeback to fall back on, so the safety net has to move before payment: limits, allowlists, idempotency, circuit breakers. Unlike Sun Tzu, the threat here includes your own agent's buggy logic, not just an adversary.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>AP2, ACP and x402 are not rival protocols to choose between; they are separate authorization, checkout and settlement layers that stack.</li>
+<li>Pick an agent payment protocol by the missing layer: AP2 for cross-merchant delegated buying, ACP to be bought by agents, x402 to sell an API per call.</li>
+<li>Google's AP2 targets the agent payment trilemma of authorization, authenticity and accountability, and carries all three in a Mandate.</li>
+<li>An AP2 Mandate is a signed W3C Verifiable Credential holding a price cap, merchant allowlist, expiry and an anti-replay nonce.</li>
+<li>An Intent Mandate pre-authorizes purchases when the human is absent; a Cart Mandate is signed on the spot with the present user's hardware key.</li>
+<li>A signature proves an authorization wasn't tampered with, not that it wasn't exceeded; verifiers must also check the Mandate's constraints.</li>
+<li>x402 folds payment into one HTTP round-trip: the server answers 402 with a quote, and the client retries with an EIP-3009 signature in the X-PAYMENT header.</li>
+<li>x402's stablecoin settlement is instant and hard to reverse, with no chargeback protection, so it suits small machine micropayments you can afford to lose.</li>
+<li>A pre-purchase guard for an agent runs in order: verify signature, block replay, check scope, tiered human review, audit, then settle.</li>
+<li>An Intent Mandate is human-in-the-loop moved earlier in time, the same structure as implementation intentions in psychology.</li>
+</ol>
 </div>
 
 <!-- ============ Combo ============ -->

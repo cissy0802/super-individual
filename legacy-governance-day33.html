@@ -45,6 +45,17 @@ pre code{color:#d8e8e8}
 .combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
 footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 @media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}.diagram{font-size:0.6rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
 </style></head><body>
 <div class="container">
 <header>
@@ -163,6 +174,30 @@ provenance = { <span class="tag-gpt">"ai_generated"</span>: <span class="tag-key
 <strong>进阶资源</strong> · SLSA <em>Supply-chain provenance / attestation</em>, <a href="https://slsa.dev" target="_blank">slsa.dev</a> ·
 本站 Day 31 <em>Personal AI Safety</em>（blast radius / 可逆性）· Day 34 <em>HITL</em>（审批审计回归）
 </div>
+</div>
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>进化生物学 · François Jacob 的「修补匠」</b>：Jacob 1977 年说，进化不像照图纸施工的工程师，而像修补匠，只拿现成结构改一点用一点，Strangler 正是这个姿态。不像在于：进化没有目标，治理有一条要压低的 baseline。</li>
+<li><b>遗传学 · 穆勒棘轮</b>：Hermann Muller 1964 年指出，无性繁殖的种群缺少重组，有害突变只累积、回不到更干净的状态。代码棘轮是同一个只进不退的结构，方向反过来：变好就锁新低点。</li>
+<li><b>心理学 · 习惯化</b>：反复出现又没有后果的刺激，反应会越来越弱。全库扫描冒出几千个没人修的告警，就是在训练团队对红色习惯化。不同的是，生物的习惯化多半是省力的好事，在 CI 上却是治理之死。</li>
+<li><b>神经科学 · 注意门控与「看不见的大猩猩」</b>：大脑在信息进入意识前就筛掉了大部分输入，把注意留给要紧的事，和机器门先挡噪音是同一种分工。可 Simons 与 Chabris 1999 年的实验里，约一半数传球的人没看见走过的大猩猩：漏检藏在没分到注意的地方。不像的是，机器门的规则写在明处，能审计也能改。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>在 legacy 库里一次性全库强制新规则会引发告警海啸，团队学会无视红灯，规则最后被关掉。</li>
+<li>只对 PR 改动的文件强制新规则，存量豁免但冻结，治理就能随日常改动慢慢渗透。</li>
+<li>机械的存量改造交给 codemod 批量改，它写不动的长尾才交给 agent，而且同样要过门。</li>
+<li>棘轮以当前违规数为 baseline，只挡更差的 PR，变好就锁定新低点，不许回升。</li>
+<li>护栏即代码把依赖方向等架构约束写成可执行测试，治理从 wiki 加人盯变成 CI 红绿。</li>
+<li>AI 让写代码提速后瓶颈平移到 review，解法是让机器门先过滤，而不是招更多 reviewer。</li>
+<li>测试、类型、密钥扫描等人审前的机器门任一不过就直接打回，不占人审队列，门还必须够快。</li>
+<li>过了机器门的 PR 按风险分级：支付、认证、迁移全审，低风险抽样加全量事后审计。</li>
+<li>AI 作者的默认信任应低于资深人类，并随记录调整；溯源记下模型和 prompt，出事能批量召回。</li>
+<li>代码棘轮和遗传学的穆勒棘轮同构，都是一档档只进不退，只是方向相反。</li>
+</ol>
 </div>
 <!-- ============ Combo ============ -->
 <div class="combo">
