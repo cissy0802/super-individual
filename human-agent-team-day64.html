@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Day 64 · 团队里的 Agent 同事 — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;overflow-x:auto}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking{margin:40px 0}
+.thinking h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
+.section table{width:100%;border-collapse:collapse;margin:14px 0;font-size:0.88rem}.section th,.section td{border:1px solid rgba(255,255,255,0.1);padding:8px 10px;text-align:left;vertical-align:top;color:#d8d6e8}.section th{color:#ffd166;font-family:"SF Mono",Menlo,monospace;font-size:0.8rem;background:rgba(0,212,255,0.05)}.combo ol{margin:0 0 0 20px}.combo li{margin-bottom:9px;color:#d8d6e8;font-size:0.93rem}.combo li b{color:#ffd166}
+</style>
+</head><body>
+<div class="container">
+<header>
+<span class="week-tag">DAY 64 · TEAMWORK</span>
+<h1>团队里的 Agent 同事</h1>
+<h2>人机共同开发的操作手册：任务怎么交、评审怎么守、上下文怎么存、效果怎么量</h2>
+<div class="date">2026-11-14 · BigCat</div>
+<p class="pitch">Agent 可以是作者，不能是负责人。每个 agent PR 背后都要有一个具名的人。</p>
+</header>
+<div class="xref">
+<a href="hitl-day34.html">前置 → 本站 Day 34 Human-in-the-loop 工程</a> · <a href="legacy-governance-day33.html">Day 33 大规模 Legacy 代码库的 AI 治理</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>Agent 和人协作有三种形态：<strong>同步结对</strong>（一个人在 IDE 里盯着一个 agent）、<strong>异步委派</strong>（把 issue 派给云端 agent，回来一个 PR）、<strong>频道同事</strong>（在团队频道里 @ 它，全组都能看、都能改方向）。第三种以 Claude Tag 为代表：在 Slack 里 <code>@Claude</code>，每个线程起一个临时云沙箱，代码任务通常以一个 draft PR 收尾（公测中，据其文档，2026-11 读取）。形态一变，问题就从「怎么用」变成「怎么分工」。这期是一份能照着做的手册，四件事各给一个可以直接抄走的模板，最后是 30 天落地清单。</p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// POINT 01</span>
+<h2>任务单：把「帮我看看」换成可验收的委派</h2>
+<p class="claim">Agent 交回来的质量上限，由交出去的那张任务单决定。</p>
+<h3>// 背景与原理</h3>
+<p>先定哪些活能交。四条判据要同时满足：<strong>范围说得清</strong>（能列出动哪些目录）、<strong>有 agent 自己能跑的验证</strong>（测试、lint、构建）、<strong>出错影响小</strong>（能靠 revert 收场）、<strong>不依赖只在人脑里的知识</strong>。</p>
+<table>
+<tr><th>先交这些</th><th>暂时别交</th></tr>
+<tr><td>过期 feature flag 清理<br/>补测试、修 lint<br/>依赖小版本升级<br/>文档与代码不一致<br/>有稳定复现的小 bug</td><td>跨团队接口设计<br/>没有测试覆盖的核心路径<br/>schema、权限、计费<br/>要生产数据才能验证的改动</td></tr>
+</table>
+<p>任务单固定五栏：<strong>任务、范围、完成标准、不要做、卡住时</strong>。完成标准必须是 agent 自己能检查的命令或事实，否则它会自己宣布完成。</p>
+<h3>// 实战示例</h3>
+<pre><code><span class="tag-com"># 频道里的一条委派消息，五栏齐全</span>
+@Claude 仓库 acme/shop
+任务：删除已全量 30 天的 flag checkout_v2，保留开启分支的行为
+范围：只动 checkout/ 及其测试；不改公共接口
+完成标准：
+  1. grep -r checkout_v2 无结果
+  2. make test-checkout 全绿，把输出贴在线程里
+  3. 开 draft PR，描述里写 Requested-by: @alice 和删掉的分支清单
+不要做：顺手重构；动其他 flag
+卡住时：在本线程提问，不要猜</code></pre>
+<div class="fail"><strong>失败模式：</strong>线程里人人都能改方向。Claude Tag 的文档写明，频道里任何人在线程里回复都能引导正在运行的会话，不限于发起人。好处是谁都能纠偏，坏处是范围会被旁人一句话悄悄扩大。团队约定一条：<strong>只有发起人改范围和完成标准</strong>，其他人只补充事实。另一个坑是进度靠原地编辑的清单显示，Slack 不为编辑发通知，安静的线程不等于没在干活。</div>
+<div class="res">进阶资源：<a href="https://claude.com/docs/claude-tag/concepts/how-it-works" target="_blank">Claude Tag Docs · How it works</a> · <a href="https://claude.com/docs/claude-tag/users/getting-started" target="_blank">Claude Tag Docs · Get started</a></div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// POINT 02</span>
+<h2>评审与问责：每个 agent PR 有一个具名的人</h2>
+<p class="claim">谁发起谁负责，谁批准谁共担。PR 作者栏写着机器人，on-call 找的仍然是人。</p>
+<h3>// 背景与原理</h3>
+<p>规则一：<strong>发起人就是 DRI</strong>（直接负责人）。合并后出问题找发起人，所以 PR 描述里必须有 <code>Requested-by</code>。</p>
+<p>规则二：<strong>堵住「一个人走完全程」的口子</strong>。Claude Tag 文档讲得很直白：PR 的作者是 Claude，GitHub「不能批准自己的 PR」这条限制落在 Claude 身上，不落在发起人身上；在只要求一个批准的分支上，发起人可以独自批准并合并。文档给的修法有两个：要求两个批准，或者加一个只针对 <code>claude[bot]</code> PR 的必过状态检查。两种都要同时打开「新提交后作废旧批准」。</p>
+<p>规则三：<strong>按风险分级</strong>，别对所有 PR 用同一把尺子。</p>
+<table>
+<tr><th>级别</th><th>例子</th><th>谁批准</th></tr>
+<tr><td>低</td><td>测试、文档、flag 清理</td><td>发起人以外的任意一人</td></tr>
+<tr><td>中</td><td>业务逻辑改动</td><td>该目录的 CODEOWNER</td></tr>
+<tr><td>高</td><td>schema、权限、计费</td><td>先评审计划，再评审 diff</td></tr>
+</table>
+<h3>// 实战示例</h3>
+<pre><code><span class="tag-com"># .github/workflows/agent-pr-second-review.yml（示意，先在测试仓验证）</span>
+<span class="tag-com"># 机器人开的 PR：必须写明发起人，且有发起人以外的一位批准</span>
+name: agent-pr-second-review
+on:
+  pull_request: {types: [opened, edited, synchronize]}
+  pull_request_review: {types: [submitted, dismissed]}
+jobs:
+  check:
+    if: github.event.pull_request.user.type == 'Bot'
+    runs-on: ubuntu-latest
+    permissions: {pull-requests: read}
+    steps:
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          REQ=$(gh pr view "$PR" -R "$REPO" --json body -q .body \
+                | grep -oiE 'Requested-by: *@[A-Za-z0-9-]+' | sed 's/.*@//')
+          [ -n "$REQ" ] || { echo "missing Requested-by: @user"; exit 1; }
+          N=$(gh pr view "$PR" -R "$REPO" --json latestReviews -q \
+              "[.latestReviews[]|select(.state==\"APPROVED\" and .author.login!=\"$REQ\")]|length")
+          [ "$N" -ge 1 ] || { echo "need an approval from someone other than @$REQ"; exit 1; }</code></pre>
+<div class="fail"><strong>失败模式：</strong>橡皮图章。Agent PR 的数量上来以后，评审会退化成点赞。三个对策：每人同时在飞的 agent PR 不超过 3 个；单个 PR 超过 400 行先拆；每周抽两个已合并的 agent PR 做深审。让 AI 做第一道评审可以滤掉机械问题，但它<strong>不算</strong>那一位「发起人以外的批准」。</div>
+<div class="res">进阶资源：<a href="https://claude.com/docs/claude-tag/admins/configure-github" target="_blank">Claude Tag Docs · Configure GitHub（Require a second approval）</a> · <a href="https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches" target="_blank">GitHub Docs · About protected branches</a> · <a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners" target="_blank">GitHub Docs · About code owners</a></div>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// POINT 03</span>
+<h2>共享上下文：把纠正写进仓库，不要写进聊天</h2>
+<p class="claim">口头纠正只管这一次，写进指令文件才管以后每一次。</p>
+<h3>// 背景与原理</h3>
+<p>Agent 每次从零开始，团队的隐性知识它一概不知。载体是仓库根目录的指令文件：<code>AGENTS.md</code>（多家工具通用的约定）或 <code>CLAUDE.md</code>。把它当代码管：<strong>agent 犯了一次同类错误，就提一个 PR 改这个文件</strong>，和代码一样评审。文件本身该写什么、各家工具怎么加载，见 <a href="agents-md-skill8.html">Skill 8</a>；这里只讲团队怎么让它一直是对的。</p>
+<p>四节就够，按重要性排：</p>
+<ol>
+<li><strong>验证</strong>：改完必须跑哪些命令，各要多久。这一节最值钱，agent 能自己跑的验证越多，人越不用当测试机。</li>
+<li><strong>禁区</strong>：哪些目录和文件不能动。</li>
+<li><strong>约定</strong>：PR 多大、行为变更要不要挂 flag。</li>
+<li><strong>踩过的坑</strong>：每条带日期和 PR 链接，方便日后清理。</li>
+</ol>
+<p>验证慢的大系统要多做一步：把验证分级写清楚（秒级静态检查、分钟级单测、小时级回放），并规定「本地验证不了就停下来说明缺什么」。没有这句话，agent 会交一个没验证过的 PR 并写上「已完成」。</p>
+<h3>// 实战示例</h3>
+<pre><code><span class="tag-com"># AGENTS.md 骨架：只写 agent 需要而代码里读不出来的东西</span>
+## 验证（改完必须跑，把结果贴进 PR）
+- make lint                 # 秒级
+- make test-&lt;module&gt;        # 分钟级，只跑你动过的模块
+- 本地验证不了的改动：停下，在线程里说明缺什么
+
+## 禁区（需要改就先问）
+- schema/**、billing/**、已发布的 *.proto 字段
+
+## 约定
+- 一个 PR 只做一件事，超过 400 行先拆
+- 行为变更挂 flag，默认关
+- PR 描述必须有 Requested-by: @发起人
+
+## 踩过的坑
+- &lt;日期&gt; &lt;一句话&gt;，见 &lt;PR 链接&gt;</code></pre>
+<div class="fail"><strong>失败模式：</strong>指令文件长成没人读的 wiki。规则互相矛盾、一次性的偏好也写进去，agent 的遵守率反而下降。每季度清一次，像清过期 flag 一样删掉不再成立的条目；文件太长就按目录拆成子文件。另外注意，Claude Tag 运行中的线程读不到之后才授予的仓库，文档建议授权后开新线程。</div>
+<div class="res">进阶资源：<a href="https://agents.md/" target="_blank">AGENTS.md · 开放约定说明</a> · <a href="https://code.claude.com/docs/en/memory" target="_blank">Claude Code Docs · Memory（CLAUDE.md）</a></div>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// POINT 04</span>
+<h2>节奏与度量：先量排队，再谈提速</h2>
+<p class="claim">写代码变快以后，时间都花在等上：等评审、等验证、等发布。</p>
+<h3>// 背景与原理</h3>
+<p>三个固定节奏：</p>
+<ul>
+<li><strong>每天</strong>：发起人当天处理自己发起的 agent PR，不留过夜。</li>
+<li><strong>每周 20 分钟回顾</strong>：把被打回或回滚的 agent PR 逐个归因到四类之一，每类对应修一处。</li>
+<li><strong>随时</strong>：同一个模块同时只有一个写者，人或 agent 都算，在线程里认领。</li>
+</ul>
+<table>
+<tr><th>归因</th><th>修哪里</th></tr>
+<tr><td>任务单不清</td><td>改任务单模板</td></tr>
+<tr><td>缺团队知识</td><td>给 AGENTS.md 加一条</td></tr>
+<tr><td>缺验证</td><td>补测试或检查</td></tr>
+<tr><td>本就不该交</td><td>改「暂时别交」清单</td></tr>
+</table>
+<p>只盯四个数：agent PR 从开到合的时间、<strong>首次通过率</strong>（不用人改就能合的比例）、合并后的回滚率（和人写的对比）、人均在飞 PR 数。别量代码行数和 agent PR 总数，这两个数只会涨。</p>
+<h3>// 实战示例</h3>
+<pre><code><span class="tag-com"># 过去 30 天的 agent PR：开到合的中位小时数，单提交直接合并的比例（首次通过率的粗略代理）</span>
+gh pr list --state merged --limit 200 \
+  --search "author:app/claude merged:&gt;=2026-10-15" \
+  --json createdAt,mergedAt,commits \
+| jq '[.[] | {h: (((.mergedAt|fromdate) - (.createdAt|fromdate)) / 3600),
+              c: (.commits|length)}]
+      | {n: length,
+         median_hours: (map(.h) | sort | .[length/2|floor]),
+         one_commit_ratio: ((map(select(.c == 1)) | length) / length)}'</code></pre>
+<div class="fail"><strong>失败模式：</strong>产出涨了就宣布成功，没发现评审队列和回滚率也在涨。发布周期以周计的大系统尤其要小心：agent 几分钟交出 PR，然后和所有改动一起排几周的队。这时候再加 agent 只会加长队伍，该投的是<strong>更快的验证信号</strong>：分级测试、flag 级灰度、自动给出「安全 / 不安全 / 证据不足」的结论。</div>
+<div class="res">进阶资源：<a href="ai-cicd-day42.html">本站 Day 42 AI 测试与 CI/CD</a> · <a href="hitl-day34.html">本站 Day 34 Human-in-the-loop 工程</a></div>
+</div>
+<div class="crossx">
+<h3>// 越界 · 跨学科的联想</h3>
+<ul>
+<li><b>心理学 · 责任分散与社会惰化</b>：Darley 与 Latané 1968 年的实验发现，在场的人越多，每个人出手相助的概率越低；Latané 等人 1979 年又测到，一起喊叫鼓掌时人均出力随人数下降。频道里人人都能引导 agent，正是这种局面，所以要点名一个发起人。不像在于：agent 不会偷懒，会偷懒的是以为别人已经看过的评审者。</li>
+<li><b>复杂性科学 · 共识主动性（stigmergy）</b>：Grassé 1959 年研究白蚁筑巢时提出，个体不直接沟通，靠在环境里留下痕迹来协调。指令文件和线程就是这样的痕迹。不像的是，白蚁的痕迹会自然挥发，过期的规则得有人去删。</li>
+<li><b>领导力 · 机组资源管理（CRM）</b>：1977 年特内里费空难后，航空业把「副驾驶敢不敢质疑机长」做成了训练科目。任何人都能在线程里叫停 agent，是同一种设计；区别是这里被质疑的一方不会觉得丢面子。</li>
+<li><b>佛学 · 羯磨</b>：僧团的重要决定要在大众面前公开宣告、公开征询，白四羯磨是一次提议加三次征询。任务在频道里公开发起、公开收尾，同样把过程摊在众人眼前；不同的是羯磨要全体无异议，线程只要没人喊停。</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// 十条要点</h3>
+<ol class="takeaways">
+<li>人和 agent 协作有三种形态：同步结对、异步委派、在团队频道里 @ 它的频道同事。</li>
+<li>能交给 agent 的任务要同时满足四条：范围清楚、可自行验证、出错影响小、不靠隐性知识。</li>
+<li>任务单固定五栏：任务、范围、完成标准、不要做、卡住时；完成标准必须能由 agent 自己检查。</li>
+<li>Claude Tag 线程里任何人都能改方向，团队要约定只有发起人能改范围和完成标准。</li>
+<li>发起人就是直接负责人，agent PR 的描述里必须写明 Requested-by，合并后出问题找这个人。</li>
+<li>在只要求一个批准的分支上，发起人能独自批准并合并 Claude 的 PR，需要用分支保护堵住。</li>
+<li>评审按风险分三级：低风险找任意第二人，中风险找 CODEOWNER，高风险先评审计划再评审 diff。</li>
+<li>Agent 犯一次同类错误，就提 PR 修改 AGENTS.md，其中「验证」一节最值钱。</li>
+<li>每周回顾把被打回的 agent PR 归因到任务单、团队知识、验证、不该交四类，每类修一处。</li>
+<li>发布慢的大系统里再加 agent 只会加长队伍，该优先投资的是更快的验证信号。</li>
+</ol>
+</div>
+<div class="combo">
+<h3>// 30 天落地清单</h3>
+<ol>
+<li><b>第 1 周 · 装护栏</b>：选一个频道和一个仓库；打开分支保护和 Requested-by 检查；写第一版 AGENTS.md，只写「验证」和「禁区」；记下四个度量的基线。</li>
+<li><b>第 2 周 · 小范围跑</b>：只交「先交这些」里的任务，全部用五栏任务单；发起人当天处理 PR；每人在飞不超过 3 个。</li>
+<li><b>第 3 周 · 第一次回顾</b>：把被打回和回滚的 PR 逐个归因，每个修一处；上线三级风险评审。</li>
+<li><b>第 4 周 · 做决定</b>：对比基线。首次通过率高、回滚率不高于人写的，就扩大任务类型；时间主要花在等验证上，就先补验证，不加 agent。</li>
+</ol>
+</div>
+<div class="glossary">
+<h3>// 术语表</h3>
+<dl>
+<dt>DRI（Directly Responsible Individual）</dt><dd>直接负责人：对一件事的结果负责的那一个具名的人。</dd>
+<dt>draft PR</dt><dd>草稿状态的 pull request，标记为尚未准备好合并。</dd>
+<dt>branch protection（分支保护）</dt><dd>GitHub 对指定分支设置的合并前置条件，如批准数和必过检查。</dd>
+<dt>CODEOWNERS</dt><dd>仓库里声明「哪些路径归谁评审」的文件。</dd>
+<dt>AGENTS.md</dt><dd>放在仓库里、写给编码 agent 看的说明文件，多家工具都读。</dd>
+<dt>首次通过率</dt><dd>agent 交出的 PR 不经人修改就能合并的比例。</dd>
+<dt>stigmergy（共识主动性）</dt><dd>个体通过改变共同环境来间接协调的机制。</dd>
+</dl>
+</div>
+<div class="thinking">
+<h3>// 深入思考</h3>
+<details><summary>发起人能批准自己发起的 agent PR，是漏洞还是合理设计？</summary><div>看你把发起人当成什么。如果当成作者，那是自己批自己，等于零评审。如果当成第一位评审者，那么发起人确实读过 diff，是一次真评审。差别在于发起人有<strong>确认偏误</strong>：任务是自己提的，倾向于认为结果是对的。所以低风险改动可以接受单人，其余要第二双眼睛。</div></details>
+<details><summary>人写代码越来越少，还评审得动吗？</summary><div>这是 <a href="skill-maintenance-day59.html">Day 59</a> 讲的技能衰退问题在团队层面的版本。评审能力来自写的经验，长期只审不写会退化。可行的做法是保留一部分核心模块由人亲手写，并让每周深审成为固定动作，而不是有空才做。</div></details>
+<details><summary>验证要几周的系统里，这份手册还剩什么用？</summary><div>任务单、问责和指令文件照样成立，它们决定 PR 的质量。失效的是「快」：agent 省下的几小时，相对几周的验证周期可以忽略。这种系统的正确顺序是先把验证信号做快、做成 agent 能调用的接口，再谈扩大 agent 的使用面。</div></details>
+<details><summary>要不要给 agent 也设「绩效」？</summary><div>设给 agent 没有意义，它不会因此改变行为。有意义的是把同样的数字当成<strong>团队流程的体检</strong>：首次通过率低，说明任务单或指令文件有问题；回滚率高，说明验证有缺口。被考核的是人搭的这套系统。</div></details>
+</div>
+<div class="refs">
+<h3>// 延伸阅读</h3>
+<ul>
+<li><a href="https://claude.com/docs/claude-tag/concepts/how-it-works" target="_blank">Claude Tag Docs · How it works</a>：线程、沙箱、进度清单、谁能引导会话（公测，2026-11 读取）</li>
+<li><a href="https://claude.com/docs/claude-tag/admins/configure-github" target="_blank">Claude Tag Docs · Configure GitHub</a>：仓库授权，以及如何要求第二个批准</li>
+<li><a href="https://claude.com/docs/claude-tag/concepts/agent-identity" target="_blank">Claude Tag Docs · Agent identity</a>：agent 自己的身份和凭据作用域</li>
+<li><a href="https://agents.md/" target="_blank">AGENTS.md</a>：写给编码 agent 的仓库说明文件约定</li>
+<li><a href="https://code.claude.com/docs/en/memory" target="_blank">Claude Code Docs · Memory</a>：CLAUDE.md 的层级与写法</li>
+<li><a href="https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches" target="_blank">GitHub Docs · About protected branches</a>：批准数、必过检查、作废旧批准</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Day 64 · 2026-11-14</footer>
+</div>
+<script src="https://hub.cissychen.com/comments.js" defer></script>
+<script src="https://hub.cissychen.com/search.js" defer></script>
+<script src="https://hub.cissychen.com/index-button.js" defer></script>
+<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+</body></html>

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Day 64 · The Agent on Your Team — Super Individual</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"SF Pro Display","Noto Sans SC",sans-serif;background:linear-gradient(135deg,#1a0b2e 0%,#16213e 50%,#0a0e1a 100%);color:#e8e6f5;line-height:1.75;min-height:100vh}
+.container{max-width:780px;margin:0 auto;padding:24px 20px 80px}
+header{text-align:center;padding:60px 0 28px}
+.week-tag{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;border:1px solid rgba(0,212,255,0.4);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+header h1{font-size:1.95rem;font-weight:800;background:linear-gradient(135deg,#ff6ec4 0%,#7b61ff 50%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;line-height:1.3}
+header h2{font-size:1rem;color:#a0a4b8;margin-top:8px;font-weight:400;letter-spacing:1px}
+header .date{font-size:0.82rem;color:#6a6e88;margin-top:14px;font-family:"SF Mono",Menlo,monospace}
+header .pitch{margin-top:20px;font-size:0.95rem;color:#ff6ec4;font-style:italic}
+.xref{display:block;text-align:center;margin:0 0 8px;font-size:0.85rem}
+.xref a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.intro{background:rgba(123,97,255,0.08);border-left:3px solid #7b61ff;padding:20px 22px;border-radius:8px;margin:36px 0;font-size:0.96rem}
+.intro h3{font-size:0.85rem;color:#7b61ff;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.section{margin:48px 0;background:rgba(255,255,255,0.03);padding:28px 26px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.section .num{display:inline-block;font-size:0.78rem;color:#00d4ff;font-family:"SF Mono",Menlo,monospace;letter-spacing:2px;margin-bottom:8px}
+.section h2{font-size:1.35rem;color:#fff;margin-bottom:6px;font-weight:700;line-height:1.35}
+.section .claim{font-size:0.95rem;color:#ff6ec4;font-style:italic;margin-bottom:20px;border-bottom:1px dashed rgba(255,110,196,0.2);padding-bottom:14px}
+.section h3{font-size:0.95rem;color:#7b61ff;margin:22px 0 10px;letter-spacing:1px;font-family:"SF Mono",Menlo,monospace}
+.section p{margin-bottom:12px;color:#d8d6e8;font-size:0.95rem}
+.section ul,.section ol{margin:8px 0 14px 20px}
+.section li{margin-bottom:6px;color:#d8d6e8;font-size:0.94rem}
+pre{background:#0a0e1a;border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:0.82rem;line-height:1.6}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;color:#7be9d4}
+pre code{color:#d8e8e8}
+.tag-claude{color:#ff6ec4}.tag-gpt{color:#7be9d4}.tag-key{color:#ffd166}.tag-com{color:#6a6e88}
+.fail{background:rgba(255,87,87,0.08);border-left:3px solid #ff5757;padding:12px 16px;border-radius:6px;margin:14px 0;font-size:0.9rem}
+.fail strong{color:#ff8a8a}
+.res{font-size:0.86rem;color:#a0a4b8;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.res a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.4)}
+.glossary{background:rgba(0,212,255,0.05);border-radius:10px;padding:22px 24px;margin:36px 0;border:1px solid rgba(0,212,255,0.15)}
+.glossary h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.glossary dl{font-size:0.9rem}
+.glossary dt{color:#ffd166;font-family:"SF Mono",Menlo,monospace;margin-top:10px;font-size:0.85rem}
+.glossary dd{color:#d8d6e8;margin-left:0;margin-top:2px}
+.refs{margin-top:30px}
+.refs h3{color:#7b61ff;font-size:0.9rem;letter-spacing:2px;margin-bottom:12px;font-family:"SF Mono",Menlo,monospace}
+.refs ul{list-style:none;margin-left:0}
+.refs li{margin-bottom:8px;font-size:0.88rem}
+.refs a{color:#00d4ff;text-decoration:none;border-bottom:1px dotted rgba(0,212,255,0.3)}
+.diagram{background:#0a0e1a;border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:24px;margin:20px 0;overflow-x:auto}
+.combo{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(123,97,255,0.06));border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:26px 26px;margin:36px 0}
+.combo h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking{margin:40px 0}
+.thinking h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.thinking details{background:rgba(10,14,26,0.4);border:1px solid rgba(0,212,255,0.18);border-radius:8px;padding:12px 16px;margin:10px 0;transition:all 0.2s}
+.thinking details[open]{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.4)}
+.thinking summary{cursor:pointer;color:#7be9d4;font-weight:600;font-size:0.93rem;list-style:none;outline:none;line-height:1.55}
+.thinking summary::-webkit-details-marker{display:none}
+.thinking summary::before{content:"▸ ";color:#00d4ff;font-family:monospace;display:inline-block;width:1.2em}
+.thinking details[open] summary::before{content:"▾ "}
+.thinking summary:hover{color:#fff}
+.thinking details > div{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(0,212,255,0.2);color:#d8d6e8;font-size:0.9rem;line-height:1.75}
+.thinking details > div code{color:#7be9d4;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-size:0.85rem}
+footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
+@media(max-width:600px){header h1{font-size:1.5rem}.section{padding:20px 18px}.section h2{font-size:1.15rem}}
+.crossx{background:rgba(255,110,196,0.05);border:1px solid rgba(255,110,196,0.25);border-radius:12px;padding:22px 24px;margin:36px 0}
+.crossx h3{color:#ff6ec4;font-size:0.95rem;letter-spacing:2px;margin-bottom:10px;font-family:"SF Mono",Menlo,monospace}
+.crossx ul{list-style:none;margin:0;padding:0}
+.crossx li{margin:12px 0;color:#d8d6e8;font-size:0.92rem;line-height:1.75}
+.crossx b{color:#ffb3e0}
+.tk{margin:36px 0}
+.tk h3{color:#00d4ff;font-size:0.95rem;letter-spacing:2px;margin-bottom:14px;font-family:"SF Mono",Menlo,monospace}
+.takeaways{counter-reset:tk;list-style:none;margin:0;padding:0;border:1px solid rgba(0,212,255,0.25);border-radius:12px;background:rgba(0,212,255,0.04)}
+.takeaways li{counter-increment:tk;position:relative;margin:0;padding:11px 18px 11px 52px;border-top:1px solid rgba(0,212,255,0.12);font-size:0.93rem;line-height:1.75;color:#d8d6e8}
+.takeaways li:first-child{border-top:none}
+.takeaways li::before{content:counter(tk,decimal-leading-zero);position:absolute;left:18px;top:12px;font-family:"SF Mono",Menlo,monospace;font-size:0.78rem;color:#00d4ff}
+.section table{width:100%;border-collapse:collapse;margin:14px 0;font-size:0.88rem}.section th,.section td{border:1px solid rgba(255,255,255,0.1);padding:8px 10px;text-align:left;vertical-align:top;color:#d8d6e8}.section th{color:#ffd166;font-family:"SF Mono",Menlo,monospace;font-size:0.8rem;background:rgba(0,212,255,0.05)}.combo ol{margin:0 0 0 20px}.combo li{margin-bottom:9px;color:#d8d6e8;font-size:0.93rem}.combo li b{color:#ffd166}
+</style>
+</head><body>
+<div class="container">
+<header>
+<span class="week-tag">DAY 64 · TEAMWORK</span>
+<h1>The Agent on Your Team</h1>
+<h2>An operating manual for human-agent co-development: how to hand off, how to review, where context lives, what to measure</h2>
+<div class="date">2026-11-14 · BigCat</div>
+<p class="pitch">An agent can be the author. It cannot be the owner. Every agent PR needs a named person behind it.</p>
+</header>
+<div class="xref">
+<a href="hitl-day34.en.html">Prerequisite → Day 34 Human-in-the-Loop Engineering</a> · <a href="legacy-governance-day33.en.html">Day 33 AI Governance for Large Legacy Codebases</a>
+</div>
+<div class="intro">
+<h3>// WHY THIS MATTERS</h3>
+<p>People work with agents in three modes: <strong>synchronous pairing</strong> (one person steering one agent in an IDE), <strong>asynchronous delegation</strong> (assign an issue to a cloud agent, get a PR back), and the <strong>ambient teammate</strong> (tag it in a team channel, where everyone can watch and redirect). Claude Tag is an example of the third: you type <code>@Claude</code> in Slack, each thread gets its own temporary cloud sandbox, and code work usually ends in a draft PR (public beta, per its docs as read in 2026-11). Once the mode changes, the question shifts from how to use the tool to how to divide the work. This issue is a manual you can follow. Each of the four parts comes with a template you can copy, and a 30-day rollout checklist closes it.</p>
+</div>
+<!-- ============ 1 ============ -->
+<div class="section">
+<span class="num">// POINT 01</span>
+<h2>The task brief: replace "take a look" with a handoff you can accept</h2>
+<p class="claim">The quality of what an agent returns is capped by the brief you gave it.</p>
+<h3>// Background</h3>
+<p>Decide first which work can be handed off. All four tests must pass: <strong>the scope can be stated</strong> (you can list the directories), <strong>the agent can verify it alone</strong> (tests, lint, build), <strong>a mistake is cheap</strong> (a revert fixes it), and <strong>it needs no knowledge that lives only in people's heads</strong>.</p>
+<table>
+<tr><th>Hand off first</th><th>Hold back for now</th></tr>
+<tr><td>Expired feature flag cleanup<br/>Adding tests, fixing lint<br/>Minor dependency upgrades<br/>Docs that disagree with code<br/>Small bugs with a stable repro</td><td>Cross-team interface design<br/>Core paths with no test coverage<br/>Schema, permissions, billing<br/>Changes only production data can verify</td></tr>
+</table>
+<p>A brief has five fixed fields: <strong>task, scope, done criteria, do not, when stuck</strong>. The done criteria must be commands or facts the agent can check on its own. Otherwise it will declare itself done.</p>
+<h3>// In practice</h3>
+<pre><code><span class="tag-com"># One delegation message in the channel, all five fields present</span>
+@Claude repo acme/shop
+Task: remove the flag checkout_v2 (fully rolled out for 30 days); keep the enabled branch
+Scope: only checkout/ and its tests; no public interface changes
+Done when:
+  1. grep -r checkout_v2 returns nothing
+  2. make test-checkout is green; paste the output in this thread
+  3. a draft PR is open, with Requested-by: @alice and the list of removed branches
+Do not: refactor along the way; touch other flags
+When stuck: ask in this thread, do not guess</code></pre>
+<div class="fail"><strong>Failure mode:</strong> everyone in the thread can redirect the work. The Claude Tag docs state that anyone in the channel can steer a running session by replying in its thread, not only the person who started it. That lets anyone correct course, and it also lets a passing comment quietly widen the scope. Agree on one rule: <strong>only the requester changes scope and done criteria</strong>; everyone else adds facts. A second trap: progress shows as a checklist edited in place, and Slack sends no notification for edits, so a quiet thread does not mean nothing is happening.</div>
+<div class="res">Further reading: <a href="https://claude.com/docs/claude-tag/concepts/how-it-works" target="_blank">Claude Tag Docs · How it works</a> · <a href="https://claude.com/docs/claude-tag/users/getting-started" target="_blank">Claude Tag Docs · Get started</a></div>
+</div>
+<!-- ============ 2 ============ -->
+<div class="section">
+<span class="num">// POINT 02</span>
+<h2>Review and accountability: a named person behind every agent PR</h2>
+<p class="claim">Whoever asks owns it, and whoever approves shares it. The author field says bot; the pager still goes to a person.</p>
+<h3>// Background</h3>
+<p>Rule one: <strong>the requester is the DRI</strong> (directly responsible individual). If something breaks after merge, the requester gets the call, so the PR description must carry <code>Requested-by</code>.</p>
+<p>Rule two: <strong>close the path where one person does everything</strong>. The Claude Tag docs are direct about it: Claude is the author of the PR, so GitHub's rule against approving your own pull request applies to Claude and not to the person who asked. On a branch that requires one approving review, the requester can approve and merge alone. The docs offer two fixes: require two approvals, or add a required status check that only <code>claude[bot]</code> PRs must pass. With either, also dismiss stale approvals when new commits are pushed.</p>
+<p>Rule three: <strong>tier by risk</strong> instead of holding every PR to the same bar.</p>
+<table>
+<tr><th>Tier</th><th>Examples</th><th>Who approves</th></tr>
+<tr><td>Low</td><td>Tests, docs, flag cleanup</td><td>Anyone other than the requester</td></tr>
+<tr><td>Medium</td><td>Business logic changes</td><td>The CODEOWNER for that path</td></tr>
+<tr><td>High</td><td>Schema, permissions, billing</td><td>Review the plan first, then the diff</td></tr>
+</table>
+<h3>// In practice</h3>
+<pre><code><span class="tag-com"># .github/workflows/agent-pr-second-review.yml (a sketch; try it in a test repo first)</span>
+<span class="tag-com"># Bot-authored PRs must name a requester and carry an approval from someone else</span>
+name: agent-pr-second-review
+on:
+  pull_request: {types: [opened, edited, synchronize]}
+  pull_request_review: {types: [submitted, dismissed]}
+jobs:
+  check:
+    if: github.event.pull_request.user.type == 'Bot'
+    runs-on: ubuntu-latest
+    permissions: {pull-requests: read}
+    steps:
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          REQ=$(gh pr view "$PR" -R "$REPO" --json body -q .body \
+                | grep -oiE 'Requested-by: *@[A-Za-z0-9-]+' | sed 's/.*@//')
+          [ -n "$REQ" ] || { echo "missing Requested-by: @user"; exit 1; }
+          N=$(gh pr view "$PR" -R "$REPO" --json latestReviews -q \
+              "[.latestReviews[]|select(.state==\"APPROVED\" and .author.login!=\"$REQ\")]|length")
+          [ "$N" -ge 1 ] || { echo "need an approval from someone other than @$REQ"; exit 1; }</code></pre>
+<div class="fail"><strong>Failure mode:</strong> rubber-stamping. Once agent PRs pile up, review decays into clicking approve. Three countermeasures: no more than 3 agent PRs in flight per person; split any PR over 400 lines; deep-review two merged agent PRs every week. An AI first-pass review filters out mechanical issues, but it <strong>does not count</strong> as the approval from someone other than the requester.</div>
+<div class="res">Further reading: <a href="https://claude.com/docs/claude-tag/admins/configure-github" target="_blank">Claude Tag Docs · Configure GitHub (Require a second approval)</a> · <a href="https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches" target="_blank">GitHub Docs · About protected branches</a> · <a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners" target="_blank">GitHub Docs · About code owners</a></div>
+</div>
+<!-- ============ 3 ============ -->
+<div class="section">
+<span class="num">// POINT 03</span>
+<h2>Shared context: write corrections into the repo, not into chat</h2>
+<p class="claim">A spoken correction covers this one run. A line in the instruction file covers every run after it.</p>
+<h3>// Background</h3>
+<p>An agent starts from zero every time and knows none of the team's tacit knowledge. The carrier is an instruction file at the repo root: <code>AGENTS.md</code> (a convention several tools read) or <code>CLAUDE.md</code>. Manage it like code: <strong>when an agent makes the same kind of mistake once, open a PR against this file</strong> and review it like any other change. What belongs in the file and how each tool loads it is covered in <a href="agents-md-skill8.en.html">Skill 8</a>; this section is only about how a team keeps it correct.</p>
+<p>Four sections are enough, in order of value:</p>
+<ol>
+<li><strong>Verification</strong>: which commands must run after a change, and how long each takes. This is the most valuable section. The more an agent can verify alone, the less a person has to act as the test harness.</li>
+<li><strong>Off limits</strong>: directories and files that must not be touched.</li>
+<li><strong>Conventions</strong>: how large a PR may be, whether behavior changes need a flag.</li>
+<li><strong>Lessons learned</strong>: each with a date and a PR link, so it can be cleaned up later.</li>
+</ol>
+<p>Large systems with slow verification need one more step: spell out the tiers (static checks in seconds, unit tests in minutes, replays in hours) and add the rule "if you cannot verify locally, stop and say what is missing." Without that sentence, an agent will hand back an unverified PR marked done.</p>
+<h3>// In practice</h3>
+<pre><code><span class="tag-com"># AGENTS.md skeleton: only what an agent needs and cannot read from the code</span>
+## Verification (run after every change; paste results in the PR)
+- make lint                 # seconds
+- make test-&lt;module&gt;        # minutes; only the modules you touched
+- Changes you cannot verify locally: stop and say what is missing
+
+## Off limits (ask before changing)
+- schema/**, billing/**, published *.proto fields
+
+## Conventions
+- One PR does one thing; split anything over 400 lines
+- Behavior changes go behind a flag, default off
+- PR description must include Requested-by: @requester
+
+## Lessons learned
+- &lt;date&gt; &lt;one sentence&gt;, see &lt;PR link&gt;</code></pre>
+<div class="fail"><strong>Failure mode:</strong> the instruction file grows into a wiki nobody reads. Rules contradict each other, one-off preferences get written down, and the agent follows the file less well. Prune it every quarter the way you prune expired flags, and split a long file into per-directory files. Also note that a running Claude Tag thread does not pick up a repository granted afterwards; the docs say to start a fresh thread after granting.</div>
+<div class="res">Further reading: <a href="https://agents.md/" target="_blank">AGENTS.md · the open convention</a> · <a href="https://code.claude.com/docs/en/memory" target="_blank">Claude Code Docs · Memory (CLAUDE.md)</a></div>
+</div>
+<!-- ============ 4 ============ -->
+<div class="section">
+<span class="num">// POINT 04</span>
+<h2>Cadence and metrics: measure the queue before chasing speed</h2>
+<p class="claim">Once writing code gets fast, the time goes to waiting: for review, for verification, for release.</p>
+<h3>// Background</h3>
+<p>Three fixed rhythms:</p>
+<ul>
+<li><strong>Daily</strong>: requesters handle the agent PRs they started the same day. Nothing sits overnight.</li>
+<li><strong>A 20-minute weekly review</strong>: take each agent PR that was sent back or reverted, assign it one of four causes, and fix one thing per cause.</li>
+<li><strong>Always</strong>: one writer per module at a time, human or agent, claimed in the thread.</li>
+</ul>
+<table>
+<tr><th>Cause</th><th>What to fix</th></tr>
+<tr><td>Unclear brief</td><td>The brief template</td></tr>
+<tr><td>Missing team knowledge</td><td>Add a line to AGENTS.md</td></tr>
+<tr><td>Missing verification</td><td>Add a test or a check</td></tr>
+<tr><td>Should not have been handed off</td><td>The "hold back" list</td></tr>
+</table>
+<p>Watch four numbers only: time from open to merge for agent PRs, <strong>first-pass rate</strong> (the share merged without human edits), revert rate after merge (compared with human-written PRs), and PRs in flight per person. Do not measure lines of code or total agent PRs. Those two only go up.</p>
+<h3>// In practice</h3>
+<pre><code><span class="tag-com"># Agent PRs from the last 30 days: median hours from open to merge, and the share merged with a single commit (a rough proxy for first-pass rate)</span>
+gh pr list --state merged --limit 200 \
+  --search "author:app/claude merged:&gt;=2026-10-15" \
+  --json createdAt,mergedAt,commits \
+| jq '[.[] | {h: (((.mergedAt|fromdate) - (.createdAt|fromdate)) / 3600),
+              c: (.commits|length)}]
+      | {n: length,
+         median_hours: (map(.h) | sort | .[length/2|floor]),
+         one_commit_ratio: ((map(select(.c == 1)) | length) / length)}'</code></pre>
+<div class="fail"><strong>Failure mode:</strong> declaring success because output rose, without noticing that the review queue and the revert rate rose too. Large systems that release on a cycle of weeks need particular care: an agent delivers a PR in minutes, then it waits weeks in the same line as every other change. Adding agents at that point only lengthens the line. The investment that pays is a <strong>faster verification signal</strong>: tiered tests, flag-level rollouts, and an automatic verdict of safe, unsafe, or insufficient evidence.</div>
+<div class="res">Further reading: <a href="ai-cicd-day42.en.html">Day 42 AI Testing and CI/CD</a> · <a href="hitl-day34.en.html">Day 34 Human-in-the-Loop Engineering</a></div>
+</div>
+<div class="crossx">
+<h3>// Crossovers</h3>
+<ul>
+<li><b>Psychology · diffusion of responsibility and social loafing</b>: Darley and Latané found in 1968 that the more bystanders are present, the less likely any one of them is to help. In 1979 Latané and colleagues measured individual effort dropping as group size grew when people shouted and clapped together. A channel where anyone can steer the agent is that situation, which is why one requester gets named. The difference: the agent does not slack off. The reviewer who assumes someone else already looked does.</li>
+<li><b>Complexity science · stigmergy</b>: studying termite nest building in 1959, Grassé proposed that individuals coordinate without talking to each other, by leaving traces in a shared environment. Instruction files and threads are such traces. Unlike termite traces, stale rules do not evaporate; someone has to delete them.</li>
+<li><b>Leadership · crew resource management (CRM)</b>: after the 1977 Tenerife disaster, aviation turned "will the first officer challenge the captain" into a trained skill. Letting anyone stop the agent in a thread is the same design. The difference is that here the party being challenged does not lose face.</li>
+<li><b>Buddhism · sangha procedure (karman)</b>: the monastic community makes important decisions by announcing and asking for objections in front of the assembly; the fourfold procedure is one motion followed by three calls. A task opened and closed in a public channel puts the process in front of everyone in the same way. The difference: the procedure needs no objection from anyone, while a thread only needs nobody to hit stop.</li>
+</ul>
+</div>
+<div class="tk">
+<h3>// Ten takeaways</h3>
+<ol class="takeaways">
+<li>People work with agents in three modes: synchronous pairing, asynchronous delegation, and the ambient teammate tagged in a team channel.</li>
+<li>A task is ready to hand to an agent only if scope is clear, it can self-verify, mistakes are cheap, and no tacit knowledge is needed.</li>
+<li>A task brief has five fixed fields: task, scope, done criteria, do not, when stuck. The agent must be able to check the done criteria itself.</li>
+<li>Anyone in a Claude Tag thread can redirect the work, so the team should agree that only the requester changes scope and done criteria.</li>
+<li>The requester is the directly responsible individual; an agent PR must say Requested-by, and that person gets the call if it breaks.</li>
+<li>On a branch that requires one approval, the requester can approve and merge Claude's PR alone; branch protection has to close that.</li>
+<li>Review in three risk tiers: any second person for low, the CODEOWNER for medium, plan review before diff review for high.</li>
+<li>When an agent repeats a kind of mistake, open a PR against AGENTS.md; its verification section is the most valuable part.</li>
+<li>A weekly review assigns each rejected agent PR to one of four causes (brief, team knowledge, verification, wrong handoff) and fixes one thing per cause.</li>
+<li>In a slow-release system, adding agents only lengthens the queue; the first investment should be a faster verification signal.</li>
+</ol>
+</div>
+<div class="combo">
+<h3>// 30-day rollout checklist</h3>
+<ol>
+<li><b>Week 1 · guardrails</b>: pick one channel and one repository; turn on branch protection and the Requested-by check; write a first AGENTS.md with only "Verification" and "Off limits"; record a baseline for the four numbers.</li>
+<li><b>Week 2 · small scope</b>: hand off only tasks from the "hand off first" list, each with the five-field brief; requesters handle PRs the same day; at most 3 in flight per person.</li>
+<li><b>Week 3 · first review</b>: assign a cause to every rejected or reverted PR and fix one thing for each; start the three-tier risk review.</li>
+<li><b>Week 4 · decide</b>: compare with the baseline. If first-pass rate is high and revert rate is no worse than human PRs, widen the task types. If most of the time goes to waiting on verification, fix verification first and add no agents.</li>
+</ol>
+</div>
+<div class="glossary">
+<h3>// Glossary</h3>
+<dl>
+<dt>DRI (Directly Responsible Individual)</dt><dd>The one named person accountable for an outcome.</dd>
+<dt>draft PR</dt><dd>A pull request marked as not yet ready to merge.</dd>
+<dt>branch protection</dt><dd>Merge preconditions GitHub enforces on a branch, such as approval count and required checks.</dd>
+<dt>CODEOWNERS</dt><dd>A repository file declaring who reviews which paths.</dd>
+<dt>AGENTS.md</dt><dd>A file in the repository written for coding agents, read by several tools.</dd>
+<dt>first-pass rate</dt><dd>The share of agent PRs merged without a human editing them.</dd>
+<dt>stigmergy</dt><dd>Indirect coordination through changes individuals make to a shared environment.</dd>
+</dl>
+</div>
+<div class="thinking">
+<h3>// Think deeper</h3>
+<details><summary>A requester can approve the agent PR they asked for. Loophole or reasonable design?</summary><div>It depends on what you take the requester to be. As the author, it is self-approval and amounts to no review. As the first reviewer, the requester did read the diff, and that is a real review. The catch is <strong>confirmation bias</strong>: the requester framed the task and leans toward believing the result is right. So one person is acceptable for low-risk changes, and everything else needs a second pair of eyes.</div></details>
+<details><summary>If people write less and less code, can they still review it?</summary><div>This is the team-level version of the skill decay problem in <a href="skill-maintenance-day59.en.html">Day 59</a>. Review ability comes from experience writing, and reviewing without writing erodes it over time. A workable practice is to keep some core modules hand-written and make the weekly deep review a fixed habit, not something done when there is spare time.</div></details>
+<details><summary>In a system where verification takes weeks, what is left of this manual?</summary><div>The brief, the accountability rules, and the instruction file all still hold; they determine PR quality. What stops working is speed: the hours an agent saves are negligible next to a verification cycle of weeks. The right order for such a system is to make the verification signal fast and callable by an agent first, and only then widen agent use.</div></details>
+<details><summary>Should an agent have performance metrics of its own?</summary><div>Setting them for the agent is pointless; it will not change its behavior in response. What does help is reading the same numbers as a <strong>health check on the team's process</strong>: a low first-pass rate points at the brief or the instruction file, and a high revert rate points at a verification gap. What is being evaluated is the system people built.</div></details>
+</div>
+<div class="refs">
+<h3>// Further reading</h3>
+<ul>
+<li><a href="https://claude.com/docs/claude-tag/concepts/how-it-works" target="_blank">Claude Tag Docs · How it works</a>: threads, sandboxes, the progress checklist, who can steer a session (public beta, read 2026-11)</li>
+<li><a href="https://claude.com/docs/claude-tag/admins/configure-github" target="_blank">Claude Tag Docs · Configure GitHub</a>: granting repositories and requiring a second approval</li>
+<li><a href="https://claude.com/docs/claude-tag/concepts/agent-identity" target="_blank">Claude Tag Docs · Agent identity</a>: the agent's own identity and credential scope</li>
+<li><a href="https://agents.md/" target="_blank">AGENTS.md</a>: the convention for a repository file written for coding agents</li>
+<li><a href="https://code.claude.com/docs/en/memory" target="_blank">Claude Code Docs · Memory</a>: how CLAUDE.md files are layered and written</li>
+<li><a href="https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches" target="_blank">GitHub Docs · About protected branches</a>: approval counts, required checks, dismissing stale approvals</li>
+</ul>
+</div>
+<footer>BigCat · Super Individual · Day 64 · 2026-11-14</footer>
+</div>
+<script src="https://hub.cissychen.com/comments.js" defer></script>
+<script src="https://hub.cissychen.com/search.js" defer></script>
+<script src="https://hub.cissychen.com/index-button.js" defer></script>
+<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+</body></html>
