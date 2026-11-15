@@ -75,8 +75,8 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <div class="container">
 <header>
 <span class="week-tag">DAY 64 · TEAMWORK</span>
-<h1>团队里的 Agent 同事</h1>
-<h2>人机共同开发的操作手册：任务怎么交、评审怎么守、上下文怎么存、效果怎么量</h2>
+<h1 data-tts="64b9a382236069dd">团队里的 Agent 同事</h1>
+<h2 data-tts="ff4663e95e183ef2">人机共同开发的操作手册：任务怎么交、评审怎么守、上下文怎么存、效果怎么量</h2>
 <div class="date">2026-11-14 · BigCat</div>
 <p class="pitch">Agent 可以是作者，不能是负责人。每个 agent PR 背后都要有一个具名的人。</p>
 </header>
@@ -84,22 +84,22 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <a href="hitl-day34.html">前置 → 本站 Day 34 Human-in-the-loop 工程</a> · <a href="legacy-governance-day33.html">Day 33 大规模 Legacy 代码库的 AI 治理</a>
 </div>
 <div class="intro">
-<h3>// WHY THIS MATTERS</h3>
+<h3 data-tts="ec8f2532cd845b6a">// WHY THIS MATTERS</h3>
 <p>Agent 和人协作有三种形态：<strong>同步结对</strong>（一个人在 IDE 里盯着一个 agent）、<strong>异步委派</strong>（把 issue 派给云端 agent，回来一个 PR）、<strong>频道同事</strong>（在团队频道里 @ 它，全组都能看、都能改方向）。第三种以 Claude Tag 为代表：在 Slack 里 <code>@Claude</code>，每个线程起一个临时云沙箱，代码任务通常以一个 draft PR 收尾（公测中，据其文档，2026-11 读取）。形态一变，问题就从「怎么用」变成「怎么分工」。这期是一份能照着做的手册，四件事各给一个可以直接抄走的模板，最后是 30 天落地清单。</p>
 </div>
 <!-- ============ 1 ============ -->
 <div class="section">
 <span class="num">// POINT 01</span>
-<h2>任务单：把「帮我看看」换成可验收的委派</h2>
+<h2 data-tts="9cd853beccbf6682">任务单：把「帮我看看」换成可验收的委派</h2>
 <p class="claim">Agent 交回来的质量上限，由交出去的那张任务单决定。</p>
-<h3>// 背景与原理</h3>
+<h3 data-tts="241185f8c0279484">// 背景与原理</h3>
 <p>先定哪些活能交。四条判据要同时满足：<strong>范围说得清</strong>（能列出动哪些目录）、<strong>有 agent 自己能跑的验证</strong>（测试、lint、构建）、<strong>出错影响小</strong>（能靠 revert 收场）、<strong>不依赖只在人脑里的知识</strong>。</p>
 <table>
 <tr><th>先交这些</th><th>暂时别交</th></tr>
 <tr><td>过期 feature flag 清理<br/>补测试、修 lint<br/>依赖小版本升级<br/>文档与代码不一致<br/>有稳定复现的小 bug</td><td>跨团队接口设计<br/>没有测试覆盖的核心路径<br/>schema、权限、计费<br/>要生产数据才能验证的改动</td></tr>
 </table>
 <p>任务单固定五栏：<strong>任务、范围、完成标准、不要做、卡住时</strong>。完成标准必须是 agent 自己能检查的命令或事实，否则它会自己宣布完成。</p>
-<h3>// 实战示例</h3>
+<h3 data-tts="0c786dbc4fff9dfd">// 实战示例</h3>
 <pre><code><span class="tag-com"># 频道里的一条委派消息，五栏齐全</span>
 @Claude 仓库 acme/shop
 任务：删除已全量 30 天的 flag checkout_v2，保留开启分支的行为
@@ -116,9 +116,9 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <!-- ============ 2 ============ -->
 <div class="section">
 <span class="num">// POINT 02</span>
-<h2>评审与问责：每个 agent PR 有一个具名的人</h2>
+<h2 data-tts="7a7d7d1139190525">评审与问责：每个 agent PR 有一个具名的人</h2>
 <p class="claim">谁发起谁负责，谁批准谁共担。PR 作者栏写着机器人，on-call 找的仍然是人。</p>
-<h3>// 背景与原理</h3>
+<h3 data-tts="cbffc30c389d5139">// 背景与原理</h3>
 <p>规则一：<strong>发起人就是 DRI</strong>（直接负责人）。合并后出问题找发起人，所以 PR 描述里必须有 <code>Requested-by</code>。</p>
 <p>规则二：<strong>堵住「一个人走完全程」的口子</strong>。Claude Tag 文档讲得很直白：PR 的作者是 Claude，GitHub「不能批准自己的 PR」这条限制落在 Claude 身上，不落在发起人身上；在只要求一个批准的分支上，发起人可以独自批准并合并。文档给的修法有两个：要求两个批准，或者加一个只针对 <code>claude[bot]</code> PR 的必过状态检查。两种都要同时打开「新提交后作废旧批准」。</p>
 <p>规则三：<strong>按风险分级</strong>，别对所有 PR 用同一把尺子。</p>
@@ -128,7 +128,7 @@ footer{text-align:center;padding:50px 0 12px;font-size:0.82rem;color:#6a6e88}
 <tr><td>中</td><td>业务逻辑改动</td><td>该目录的 CODEOWNER</td></tr>
 <tr><td>高</td><td>schema、权限、计费</td><td>先评审计划，再评审 diff</td></tr>
 </table>
-<h3>// 实战示例</h3>
+<h3 data-tts="1385101e7d7fd41d">// 实战示例</h3>
 <pre><code><span class="tag-com"># .github/workflows/agent-pr-second-review.yml（示意，先在测试仓验证）</span>
 <span class="tag-com"># 机器人开的 PR：必须写明发起人，且有发起人以外的一位批准</span>
 name: agent-pr-second-review
@@ -158,9 +158,9 @@ jobs:
 <!-- ============ 3 ============ -->
 <div class="section">
 <span class="num">// POINT 03</span>
-<h2>共享上下文：把纠正写进仓库，不要写进聊天</h2>
+<h2 data-tts="4d781bf0fce79d12">共享上下文：把纠正写进仓库，不要写进聊天</h2>
 <p class="claim">口头纠正只管这一次，写进指令文件才管以后每一次。</p>
-<h3>// 背景与原理</h3>
+<h3 data-tts="6778011713009c64">// 背景与原理</h3>
 <p>Agent 每次从零开始，团队的隐性知识它一概不知。载体是仓库根目录的指令文件：<code>AGENTS.md</code>（多家工具通用的约定）或 <code>CLAUDE.md</code>。把它当代码管：<strong>agent 犯了一次同类错误，就提一个 PR 改这个文件</strong>，和代码一样评审。文件本身该写什么、各家工具怎么加载，见 <a href="agents-md-skill8.html">Skill 8</a>；这里只讲团队怎么让它一直是对的。</p>
 <p>四节就够，按重要性排：</p>
 <ol>
@@ -170,7 +170,7 @@ jobs:
 <li><strong>踩过的坑</strong>：每条带日期和 PR 链接，方便日后清理。</li>
 </ol>
 <p>验证慢的大系统要多做一步：把验证分级写清楚（秒级静态检查、分钟级单测、小时级回放），并规定「本地验证不了就停下来说明缺什么」。没有这句话，agent 会交一个没验证过的 PR 并写上「已完成」。</p>
-<h3>// 实战示例</h3>
+<h3 data-tts="3df4745a6ce44d83">// 实战示例</h3>
 <pre><code><span class="tag-com"># AGENTS.md 骨架：只写 agent 需要而代码里读不出来的东西</span>
 ## 验证（改完必须跑，把结果贴进 PR）
 - make lint                 # 秒级
@@ -193,9 +193,9 @@ jobs:
 <!-- ============ 4 ============ -->
 <div class="section">
 <span class="num">// POINT 04</span>
-<h2>节奏与度量：先量排队，再谈提速</h2>
+<h2 data-tts="c1d8c1cb92658416">节奏与度量：先量排队，再谈提速</h2>
 <p class="claim">写代码变快以后，时间都花在等上：等评审、等验证、等发布。</p>
-<h3>// 背景与原理</h3>
+<h3 data-tts="05f05874eae8013e">// 背景与原理</h3>
 <p>三个固定节奏：</p>
 <ul>
 <li><strong>每天</strong>：发起人当天处理自己发起的 agent PR，不留过夜。</li>
@@ -210,7 +210,7 @@ jobs:
 <tr><td>本就不该交</td><td>改「暂时别交」清单</td></tr>
 </table>
 <p>只盯四个数：agent PR 从开到合的时间、<strong>首次通过率</strong>（不用人改就能合的比例）、合并后的回滚率（和人写的对比）、人均在飞 PR 数。别量代码行数和 agent PR 总数，这两个数只会涨。</p>
-<h3>// 实战示例</h3>
+<h3 data-tts="dd870c902cce49bd">// 实战示例</h3>
 <pre><code><span class="tag-com"># 过去 30 天的 agent PR：开到合的中位小时数，单提交直接合并的比例（首次通过率的粗略代理）</span>
 gh pr list --state merged --limit 200 \
   --search "author:app/claude merged:&gt;=2026-10-15" \
@@ -224,7 +224,7 @@ gh pr list --state merged --limit 200 \
 <div class="res">进阶资源：<a href="ai-cicd-day42.html">本站 Day 42 AI 测试与 CI/CD</a> · <a href="hitl-day34.html">本站 Day 34 Human-in-the-loop 工程</a></div>
 </div>
 <div class="crossx">
-<h3>// 越界 · 跨学科的联想</h3>
+<h3 data-tts="8ae3fe0f9dadc68b">// 越界 · 跨学科的联想</h3>
 <ul>
 <li><b>心理学 · 责任分散与社会惰化</b>：Darley 与 Latané 1968 年的实验发现，在场的人越多，每个人出手相助的概率越低；Latané 等人 1979 年又测到，一起喊叫鼓掌时人均出力随人数下降。频道里人人都能引导 agent，正是这种局面，所以要点名一个发起人。不像在于：agent 不会偷懒，会偷懒的是以为别人已经看过的评审者。</li>
 <li><b>复杂性科学 · 共识主动性（stigmergy）</b>：Grassé 1959 年研究白蚁筑巢时提出，个体不直接沟通，靠在环境里留下痕迹来协调。指令文件和线程就是这样的痕迹。不像的是，白蚁的痕迹会自然挥发，过期的规则得有人去删。</li>
@@ -233,7 +233,7 @@ gh pr list --state merged --limit 200 \
 </ul>
 </div>
 <div class="tk">
-<h3>// 十条要点</h3>
+<h3 data-tts="d978e6f5c55e938c">// 十条要点</h3>
 <ol class="takeaways">
 <li>人和 agent 协作有三种形态：同步结对、异步委派、在团队频道里 @ 它的频道同事。</li>
 <li>能交给 agent 的任务要同时满足四条：范围清楚、可自行验证、出错影响小、不靠隐性知识。</li>
@@ -248,7 +248,7 @@ gh pr list --state merged --limit 200 \
 </ol>
 </div>
 <div class="combo">
-<h3>// 30 天落地清单</h3>
+<h3 data-tts="4ddefde09b93e472">// 30 天落地清单</h3>
 <ol>
 <li><b>第 1 周 · 装护栏</b>：选一个频道和一个仓库；打开分支保护和 Requested-by 检查；写第一版 AGENTS.md，只写「验证」和「禁区」；记下四个度量的基线。</li>
 <li><b>第 2 周 · 小范围跑</b>：只交「先交这些」里的任务，全部用五栏任务单；发起人当天处理 PR；每人在飞不超过 3 个。</li>
@@ -257,7 +257,7 @@ gh pr list --state merged --limit 200 \
 </ol>
 </div>
 <div class="glossary">
-<h3>// 术语表</h3>
+<h3 data-tts="7ebb5294a25b1bad">// 术语表</h3>
 <dl>
 <dt>DRI（Directly Responsible Individual）</dt><dd>直接负责人：对一件事的结果负责的那一个具名的人。</dd>
 <dt>draft PR</dt><dd>草稿状态的 pull request，标记为尚未准备好合并。</dd>
@@ -269,14 +269,14 @@ gh pr list --state merged --limit 200 \
 </dl>
 </div>
 <div class="thinking">
-<h3>// 深入思考</h3>
+<h3 data-tts="68390b0dfd7d20a6">// 深入思考</h3>
 <details><summary>发起人能批准自己发起的 agent PR，是漏洞还是合理设计？</summary><div>看你把发起人当成什么。如果当成作者，那是自己批自己，等于零评审。如果当成第一位评审者，那么发起人确实读过 diff，是一次真评审。差别在于发起人有<strong>确认偏误</strong>：任务是自己提的，倾向于认为结果是对的。所以低风险改动可以接受单人，其余要第二双眼睛。</div></details>
 <details><summary>人写代码越来越少，还评审得动吗？</summary><div>这是 <a href="skill-maintenance-day59.html">Day 59</a> 讲的技能衰退问题在团队层面的版本。评审能力来自写的经验，长期只审不写会退化。可行的做法是保留一部分核心模块由人亲手写，并让每周深审成为固定动作，而不是有空才做。</div></details>
 <details><summary>验证要几周的系统里，这份手册还剩什么用？</summary><div>任务单、问责和指令文件照样成立，它们决定 PR 的质量。失效的是「快」：agent 省下的几小时，相对几周的验证周期可以忽略。这种系统的正确顺序是先把验证信号做快、做成 agent 能调用的接口，再谈扩大 agent 的使用面。</div></details>
 <details><summary>要不要给 agent 也设「绩效」？</summary><div>设给 agent 没有意义，它不会因此改变行为。有意义的是把同样的数字当成<strong>团队流程的体检</strong>：首次通过率低，说明任务单或指令文件有问题；回滚率高，说明验证有缺口。被考核的是人搭的这套系统。</div></details>
 </div>
 <div class="refs">
-<h3>// 延伸阅读</h3>
+<h3 data-tts="12301749c06d2982">// 延伸阅读</h3>
 <ul>
 <li><a href="https://claude.com/docs/claude-tag/concepts/how-it-works" target="_blank">Claude Tag Docs · How it works</a>：线程、沙箱、进度清单、谁能引导会话（公测，2026-11 读取）</li>
 <li><a href="https://claude.com/docs/claude-tag/admins/configure-github" target="_blank">Claude Tag Docs · Configure GitHub</a>：仓库授权，以及如何要求第二个批准</li>
@@ -288,8 +288,8 @@ gh pr list --state merged --limit 200 \
 </div>
 <footer>BigCat · Super Individual · Day 64 · 2026-11-14</footer>
 </div>
-<script src="https://hub.cissychen.com/comments.js" defer></script>
-<script src="https://hub.cissychen.com/search.js" defer></script>
-<script src="https://hub.cissychen.com/index-button.js" defer></script>
-<script src="https://hub.cissychen.com/i18n-tts.js" defer></script>
+<script defer="" src="https://hub.cissychen.com/comments.js"></script>
+<script defer="" src="https://hub.cissychen.com/search.js"></script>
+<script defer="" src="https://hub.cissychen.com/index-button.js"></script>
+<script defer="" src="https://hub.cissychen.com/i18n-tts.js"></script>
 </body></html>
